@@ -94,13 +94,7 @@ class gevOrgUnitUtils {
 		$type1 = ilOrgUnitType::getInstance($type_name1);
 		$ou_ids1 = $type1->getOrgUnitIDs(false);
 		
-		$evg_ref_id = gevOrgUnitUtils::getEVGOrgUnitRefId();
-		$ou_ids2 = array();
-		foreach (gevOrgUnitUtils::getAllChildren(array($evg_ref_id)) as $ids) {
-			$ou_ids2[] = $ids["obj_id"];
-		}
-
-		$ou_info = gevAMDUtils::getInstance()->getTable(array_merge($ou_ids1, $ou_ids2), array(gevSettings::ORG_AMD_CITY => "city"));
+		$ou_info = gevAMDUtils::getInstance()->getTable($ou_ids1, array(gevSettings::ORG_AMD_CITY => "city"));
 
 		gevOrgUnitUtils::$venue_names = array();
 		foreach ($ou_info as $values) {
