@@ -2565,40 +2565,6 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 <#81>
 <?php
-	require_once "Customizing/class.ilCustomInstaller.php";
-	ilCustomInstaller::maybeInitClientIni();
-	ilCustomInstaller::maybeInitPluginAdmin();
-	ilCustomInstaller::maybeInitObjDefinition();
-	ilCustomInstaller::maybeInitAppEventHandler();
-	ilCustomInstaller::maybeInitTree();
-	ilCustomInstaller::maybeInitRBAC();
-	ilCustomInstaller::maybeInitObjDataCache();
-	ilCustomInstaller::maybeInitUserToRoot();
-
-	require_once "Services/GEV/Utils/classes/class.gevOrgUnitUtils.php";
-	
-	$res = $ilDB->query("SELECT DISTINCT oref.ref_id "
-						."  FROM object_data od "
-						."  JOIN object_reference oref ON oref.obj_id = od.obj_id "
-						." WHERE ".$ilDB->in("import_id", array("gev_base"), false, "text")
-						."   AND oref.deleted IS NULL"
-						."   AND od.type = 'orgu'"
-						);
-	
-	while($rec = $ilDB->fetchAssoc($res)) {
-		gevOrgUnitUtils::grantPermissionsRecursivelyFor($rec["ref_id"], "superior",
-				array( "view_employee_bookings"
-					 , "view_employee_bookings_rcrsv"
-					 , "book_employees"
-					 , "book_employees_rcrsv"
-					 , "cancel_employee_bookings"
-					 , "cancel_employee_bookings_rcrsv"
-					 ));
-	}
-?>
-
-<#82>
-<?php
 	//set indizes for the history table - wow, such performance!
 	$queries =  array(
 		 "ALTER TABLE hist_course ADD INDEX hist_historic (hist_historic);"
@@ -2623,7 +2589,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#83>
+<#82>
 <?php
 	require_once "Customizing/class.ilCustomInstaller.php";
 
@@ -2712,7 +2678,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	ilCustomInstaller::reloadStructure();
 ?>
 
-<#84>
+<#83>
 <?php
 	//more fields in history
 	if(!$ilDB->tableColumnExists('hist_user', "is_active")){
@@ -2735,7 +2701,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	}
 ?>
 
-<#85>
+<#84>
 <?php
 	//deadline fields in course history
 	$deadlines = array(
@@ -2757,7 +2723,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	}
 ?>
 
-<#86>
+<#85>
 <?php
 
 	// calendar entry weight
@@ -2786,7 +2752,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#87>
+<#86>
 <?php
 	if(!$ilDB->tableExists('hist_tep_individ_days'))
 	{
@@ -2823,7 +2789,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#88>
+<#87>
 <?php
 
 	// calendar entry weight
@@ -2840,7 +2806,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#89>
+<#88>
 <?php
 
 	if (!$ilDB->tableColumnExists("hist_tep", "orgu_title")) {
