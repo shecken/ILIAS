@@ -168,6 +168,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		if ($bookable && !$booking_deadline_expired) {
 			$this->tpl->setCurrentBlock("booking_deadline");
 			$this->tpl->setVariable("BOOKING_LINK", gevCourseUtils::getBookingLinkTo($a_set["obj_id"], $this->user_id));
+			$this->tpl->setVariable("BOOKING_LINK_CAPTION", $this->lng->txt("gev_to_booking"));
 			$this->tpl->parseCurrentBlock();
 		}
 		else if ($status == $this->almost_not_bookable_img) {
@@ -179,14 +180,17 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 											 ? $this->lng->txt("gev_unlimited")
 											 : $a_set["free_places"]
 											 );
+		$this->tpl->setVariable("FREE_PLACES_CAPTION", $this->lng->txt("gev_free_places2"));
 		if ($a_set["booking_date"] !== null) {
 			$this->tpl->setCurrentBlock("booking_deadline");
 			$this->tpl->setVariable("BOOKING_DEADLINE", ilDatePresentation::formatDate($a_set["booking_date"]));
+			$this->tpl->setVariable("BOOKING_DEADLINE_CAPTION", $this->lng->txt("gev_bookable_till"));
 			$this->tpl->parseCurrentBlock();
 		}		
 		if ($a_set["cancel_date"] !== null && $show_cancel_date) {
 			$this->tpl->setCurrentBlock("cancel_deadline");
 			$this->tpl->setVariable("CANCEL_DEADLINE", ilDatePresentation::formatDate($a_set["cancel_date"]));
+			$this->tpl->setVariable("CANCEL_DEADLINE_CAPTION", $this->lng->txt("gev_free_cancellation_till"));
 			//$this->tpl->setVariable("CANCEL_DEADLINE", $a_set["cancel_date"]);
 			$this->tpl->parseCurrentBlock();
 		}
