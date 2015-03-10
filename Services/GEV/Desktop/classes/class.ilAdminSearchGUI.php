@@ -164,6 +164,11 @@ class ilAdminSearchGUI {
 		
 		$form->setId('gevCourseSearchForm');
 		
+		$form->setAdditionalTemplateVariables(array
+			( "GEV_CLOSE_X" => $this->lng->txt("gev_close_x")
+			, "GEV_RESET" => $this->lng->txt("gev_reset")
+			));
+		
 		global $tpl;
 		// http://www.jacklmoore.com/colorbox/
 		$tpl->addJavaScript("Services/CaTUIComponents/js/colorbox-master/jquery.colorbox-min.js");

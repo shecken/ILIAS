@@ -18,6 +18,9 @@ class catPropertyFormGUI extends ilPropertyFormGUI {
 	protected $tpl_filename = "tpl.property_form.html";
 	protected $tpl_location = "Services/Form";
 	
+	// silly hack for internationalisation
+	protected $additional_tpl_vars = array();
+	
 	public function __construct() {
 		parent::ilPropertyFormGUI();
 	}
@@ -48,6 +51,13 @@ class catPropertyFormGUI extends ilPropertyFormGUI {
 		return $ret;
 	}
 	
+	// Expects a dictionary and will insert the defined values in the
+	// placeholders defined by keys.
+	// silly hack for internationalisation
+	public function setAdditionalTemplateVariables($a_vars) {
+		$this->additional_tpl_vars = $a_vars;
+	}
+	
 	/**
 	* Get Content.
 	*
@@ -68,6 +78,10 @@ class catPropertyFormGUI extends ilPropertyFormGUI {
 
 
 		$this->tpl = new ilTemplate($this->getTemplateFilename(), true, true, $this->getTemplateLocation());
+		
+		foreach ($this->additional_tpl_vars as $var => $content) {
+			$this->tpl->setVariable($var, $content);
+		}
 
 		// check if form has not title and first item is a section header
 		// -> use section header for title and remove section header
