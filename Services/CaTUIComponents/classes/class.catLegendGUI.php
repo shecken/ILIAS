@@ -44,6 +44,7 @@ class catLegendGUI {
 			$tpl->setCurrentBlock("item");
 			$tpl->setVariable("ICON_HTML", $item[0]);
 			$tpl->setVariable("TEXT", $this->lng->txt($item[1]));
+			$tpl->setVariable("LEGEND_CAPTION", $this->lng->txt("gev_legend"));
 			$tpl->parseCurrentBlock();
 		}
 		
