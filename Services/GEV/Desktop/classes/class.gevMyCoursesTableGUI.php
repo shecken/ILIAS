@@ -150,22 +150,30 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("FEE", $a_set["fee"]);
 		$this->tpl->setVariable("ACTIONS", $action);
 		$this->tpl->setVariable("TARGET_GROUP", $a_set["target_group"]);
+		$this->tpl->setVariable("TARGET_GROUP_CAPTION", $this->lng->txt("gev_target_group"));
 		$this->tpl->setVariable("GOALS", $a_set["goals"]);
+		$this->tpl->setVariable("GOALS_CAPTION", $this->lng->txt("gev_targets_and_benefit"));
 		$this->tpl->setVariable("CONTENTS", $a_set["content"]);
+		$this->tpl->setVariable("CONTENTS_CAPTION", $this->lng->txt("gev_contents"));
 		$this->tpl->setVariable("CRS_LINK", gevCourseUtils::getLinkTo($a_set["obj_id"]));
+		$this->tpl->setVariable("CRS_LINK_CAPTION", $this->lng->txt("gev_to_course_view"));
+		$this->tpl->setVariable("ACCOMODATION_NOTE", $this->lng->txt("gev_accomodation_note"));
 		if ($a_set["overnights"]) {
 			$this->tpl->setCurrentBlock("overnights");
 			$this->tpl->setVariable("OVERNIGHTS", $a_set["overnights"]);
+			$this->tpl->setVariable("OVERNIGHTS_CAPTION", $this->lng->txt("gev_accomodations"));
 			$this->tpl->parseCurrentBlock();
 		}
 		if ($show_cancel_link && $show_cancel_date) {
 			$this->tpl->setCurrentBlock("cancel_date");
 			$this->tpl->setVariable("CANCEL_DATE", $cancel_date);
+			$this->tpl->setVariable("CANCEL_DATE_CAPTION", $this->lng->txt("gev_free_cancellation_till"));
 			$this->tpl->parseCurrentBlock();
 		}
 		if ($show_cancel_link && $show_absolute_cancel_date) {
 			$this->tpl->setCurrentBlock("absolute_cancel_date");
 			$this->tpl->setVariable("ABSOLUTE_CANCEL_DATE", $absolute_cancel_date);
+			$this->tpl->setVariable("ABSOLUTE_CANCEL_DATE_CAPTION", $this->lng->txt("gev_cancellation_till"));
 			$this->tpl->parseCurrentBlock();
 		}
 
