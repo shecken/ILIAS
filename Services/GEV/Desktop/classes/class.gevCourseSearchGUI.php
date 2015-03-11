@@ -223,10 +223,14 @@ class gevCourseSearchGUI {
 		$categorie = new ilSelectInputGUI($this->lng->txt("gev_course_categorie"), "categorie");
 		$categorie->setOptions(gevCourseUtils::getCategorieOptions());
 		$form->addItem($categorie);
-		
+
 		$location = new ilSelectInputGUI($this->lng->txt("udf_type_venueselect"), "location");
 		$location->setOptions(gevCourseUtils::getLocationOptions());
 		$form->addItem($location);
+		
+		$language = new ilSelectInputGUI($this->lng->txt("language"), "language");
+		$language->setOptions(gevCourseUtils::getLanguageOptions());
+		$form->addItem($language);
 		
 		/*$provider = new ilSelectInputGUI($this->lng->txt("udf_type_providerselect"), "provider");
 		$provider->setOptions(gevCourseUtils::getProviderOptions());
