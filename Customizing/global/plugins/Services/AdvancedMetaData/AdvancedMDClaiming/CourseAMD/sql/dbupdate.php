@@ -126,12 +126,12 @@ array( "Zeitraum"
 	 	   					 , $tselect
 	 	   					 )
 	 	   		, "Maximalteilnehmerzahl" =>
-	 	   					array( gevSettings::CRS_AMD_MAX_PARTICIPANTS
-	 	   						 , null
-	 	   						 , false
-	 	   						 , array("min" => 0)
-	 	   						 , $tinteger
-	 	   						 )
+	 	   				array( gevSettings::CRS_AMD_MAX_PARTICIPANTS
+	 	   					 , null
+	 	   					 , false
+	 	   					 , array("min" => 0)
+	 	   					 , $tinteger
+	 	   					 )
 	 	   		, "Stornofrist" =>
 	 	   				array( gevSettings::CRS_AMD_CANCEL_DEADLINE
 	 	   					 , "Tage vor dem Seminar, bis zu denen noch kostenfrei storniert werden kann."
@@ -240,7 +240,7 @@ array( "Zeitraum"
 							 		, "Internet / Intranet"
 							 		)
 							 , $tmultiselect
-							 )#
+							 )
 				, "Sprache" =>
 						array( gevSettings::CRS_AMD_LANG
 							 , ""
@@ -270,39 +270,6 @@ array( "Zeitraum"
 		   					 , $tlongtext
 		   					 )
 		   ))
-	 , "Bewertung"
-	 	=> array("Bewertung des Trainings für die WBD und den ASTD-Report",
-	 	   array( "Weiterbildungspunkte" =>
-	 	   				array( gevSettings::CRS_AMD_CREDIT_POINTS
-	 	   					 , "An die WBD zu meldende Zahl von Bildungspunkten"
-	 	   					 , false
-	 	   					 , array("min" => 0)
-	 	   					 , $tinteger
-	 	   					 )
-	 	   		, "GDV-Lerninhalt" =>
-	 	   				array( gevSettings::CRS_AMD_GDV_TOPIC
-	 	   					 , "An die WBD zu meldendes Thema des Seminars"
-	 	   					 , false
-	 	   					 , array( "Privat-Vorsorge-Lebens-/Rentenversicherung"
-	 	   					 		, "Privat-Vorsorge-Kranken-/Pflegeversicherung"
-	 	   					 		, "Firmenkunden-Sach-/Schadensversicherung"
-	 	   					 		, "Spartenübergreifend"
-	 	   					 		, "Firmenkunden-Vorsorge (bAV/Personenversicherung)"
-	 	   					 		, "Beratungskompetenz"
-	 	   					 		, "Privat-Sach-/Schadenversicherung"
-	 	   					 		)
-	 	   					 , $tselect
-	 	   					 )
-	 	   		, "Fachschulung" =>
-	 	   				array( gevSettings::CRS_AMD_EXPERT_TRAINING
-	 	   					 , "Ist das Training eine Fachschulung?"
-	 	   					 , false
-	 	   					 , array( "Ja"
-	 	   					 		, "Nein"
-	 	   					 		)
-	 	   					 , $tselect
-	 	   					 )
-	 	   		))
 	 , "Abrechnung"
 	 	=> array( null,
 	 	   array( "Teilnahmegebühr" =>
@@ -331,6 +298,7 @@ array( "Zeitraum"
 	 	   					 )
 	 	   		, "Währung" =>
 	 	   				array( gevSettings::CRS_AMD_CURRENCY
+	 	   					 , ""
 	 	   					 , false
 	 	   					 , array( "EUR"
 									, "USD"

@@ -408,10 +408,8 @@ class gevUserUtils {
 				 //, gevSettings::CRS_AMD_START_DATE => "status"
 				 , gevSettings::CRS_AMD_TYPE 				=> "type"
 				 , gevSettings::CRS_AMD_VENUE 				=> "location"
-				 , gevSettings::CRS_AMD_CREDIT_POINTS 		=> "points"
 				 , gevSettings::CRS_AMD_FEE					=> "fee"
 				 , gevSettings::CRS_AMD_TARGET_GROUP_DESC	=> "target_group"
-				 , gevSettings::CRS_AMD_TARGET_GROUP		=> "target_group_list"
 				 , gevSettings::CRS_AMD_GOALS 				=> "goals"
 				 , gevSettings::CRS_AMD_CONTENTS 			=> "content"
 			);

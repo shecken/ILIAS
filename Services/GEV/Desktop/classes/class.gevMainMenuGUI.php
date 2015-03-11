@@ -65,8 +65,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 		$manage_users = $this->access->checkAccess("visible", "", $user_mgmt);
 		$manage_org_units = $this->access->checkAccess("visible", "", $org_mgmt);
 		$manage_mails = $this->access->checkAccess("visible", "", $mail_mgmt);
-		$manage_competences = $this->access->checkAccess("visible", "", $competence_mgmt);
-		$has_managment_menu = ($manage_courses || $search_courses || $manage_users || $manage_org_units || $manage_mails || $manage_competences)
+		$has_managment_menu = ($manage_courses || $search_courses || $manage_users || $manage_org_units || $manage_mails)
 							&& !$this->userUtils->hasRoleIn(array("OD/BD", "FD", "UA", "ID FK", "DBV UVG", "HA 84"))
 							;
 		
@@ -76,26 +75,20 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 		$tep_permissions = ilTEPPermissions::getInstance($this->user->getId());
 
 		$employee_booking = count($this->userUtils->getEmployeesForBookingCancellations()) > 0;
-		$my_org_unit = false;
-		$tep = $this->userUtils->isAdmin() || $tep_permissions->isTutor();
-		$pot_participants = false;
-		$apprentices = false;
 		require_once("Services/GEV/Utils/classes/class.gevHAUtils.php");
 		$can_create_ha_unit = $this->userUtils->hasRoleIn(array("HA 84")) && !gevHAUtils::getInstance()->hasHAUnit($this->userUtils->getId());
 		$local_user_admin = $this->userUtils->isSuperior(); //Local User Administration Permission
 
-		$has_others_menu = $employee_booking || $my_org_unit || $tep || $pot_participants || $apprentices || $local_user_admin || $can_create_ha_unit;
+		$has_others_menu = $employee_booking || $local_user_admin || $can_create_ha_unit;
 
 		require_once("Services/GEV/Reports/classes/class.gevReportingPermissions.php");
 		$report_permissions = gevReportingPermissions::getInstance($this->user->getId());
 		
-		$report_permission_billing = $this->userUtils->isAdmin() || $report_permissions->viewAnyReport();
 		$report_permission_attendancebyuser =  $this->userUtils->isAdmin() || $this->userUtils->isSuperior();
 		$report_permission_bookingsbyvenue =  $this->userUtils->isAdmin() || $this->userUtils->hasRoleIn(array("Veranstalter"));
 		$report_permission_employee_edu_bio = $this->userUtils->isAdmin();// || $this->userUtils->isSuperior();
 		$report_permission_wbd = $this->userUtils->isAdmin() && false;
-		$has_reporting_menu =  $report_permission_billing 
-							|| $report_permission_attendancebyuser 
+		$has_reporting_menu =  $report_permission_attendancebyuser 
 							|| $report_permission_bookingsbyvenue 
 							|| $report_permission_employee_edu_bio
 							|| $report_permission_wbd; //$report_permission_attendancebyuser; // || ....
@@ -126,18 +119,11 @@ class gevMainMenuGUI extends ilMainMenuGUI {
   											  //url
 				                              //link title
 				  "gev_my_courses" => array(true, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses",$this->lng->txt("gev_my_courses"))
-				, "gev_edu_bio" => array(false, "NYI!",$this->lng->txt("gev_edu_bio"))
-				, "gev_my_profile" => array(true, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyProfile",$this->lng->txt("gev_my_profile"))
 				, "gev_my_settings" => array(true, "ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSettings",$this->lng->txt("gev_my_settings"))
-				, "gev_my_groups" => array(false, "NYI!",$this->lng->txt("gev_my_groups"))
-				, "gev_my_roadmap" => array(false, "NYI!",$this->lng->txt("gev_my_roadmap"))
 				, "gev_my_trainer_ap" => array($is_trainer, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAp",$this->lng->txt("gev_my_trainer_ap"))
-
 				), $this->lng->txt("gev_me_menu"))
 			, "gev_others_menu" => array(false, $has_others_menu, array(
 				  "gev_employee_booking" => array($employee_booking, "ilias.php?baseClass=gevDesktopGUI&cmd=toEmployeeBookings",$this->lng->txt("gev_employee_booking"))
-				, "gev_my_org_unit" => array($my_org_unit, "NYI!",$this->lng->txt("gev_my_org_unit"))
-				, "gev_tep" => array($tep, "ilias.php?baseClass=ilTEPGUI",$this->lng->txt("gev_tep"))
 				, "gev_pot_participants" => array($pot_participants, "NYI!",$this->lng->txt("gev_pot_participants"))
 				, "gev_my_apprentices" => array($apprentices, "NYI!",$this->lng->txt("gev_my_apprentices"))
 				, "gev_create_org_unit" => array($can_create_ha_unit, "ilias.php?baseClass=gevDesktopGUI&cmd=createHAUnit", $this->lng->txt("gev_create_ha_org_unit"))
@@ -152,7 +138,6 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 			, "gev_reporting_menu" => array(false, $has_reporting_menu, array(
 				  "gev_report_attendance_by_employee" => array($report_permission_attendancebyuser, "ilias.php?baseClass=gevDesktopGUI&cmd=toReportAttendanceByEmployee",$this->lng->txt("gev_report_attendance_by_employee"))
 				, "gev_report_employee_edu_bio" => array($report_permission_employee_edu_bio, "ilias.php?baseClass=gevDesktopGUI&cmd=toReportEmployeeEduBios",$this->lng->txt("gev_report_employee_edu_bios"))
-				, "gev_report_billing" => array($report_permission_billing, "ilias.php?baseClass=gevDesktopGUI&cmd=toBillingReport",$this->lng->txt("gev_report_billing"))
 				, "gev_report_bookingbyvenue" => array($report_permission_bookingsbyvenue, "ilias.php?baseClass=gevDesktopGUI&cmd=toReportBookingsByVenue",$this->lng->txt("gev_report_bookingbyvenue"))
 				, "gev_report_wbd_edupoints" => array($report_permission_wbd, "ilias.php?baseClass=gevDesktopGUI&cmd=toReportWBDEdupoints",$this->lng->txt("gev_report_wbd_edupoints"))
 				), $this->lng->txt("gev_reporting_menu"))
@@ -162,7 +147,6 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 				, "gev_user_mgmt" => array($manage_users, "ilias.php?baseClass=ilAdministrationGUI&ref_id=7&cmd=jump",$this->lng->txt("gev_user_mgmt"))
 				, "gev_org_mgmt" => array($manage_org_units, "ilias.php?baseClass=ilAdministrationGUI&ref_id=56&cmd=jump",$this->lng->txt("gev_org_mgmt"))
 				, "gev_mail_mgmt" => array($manage_mails, "ilias.php?baseClass=ilAdministrationGUI&ref_id=12&cmd=jump",$this->lng->txt("gev_mail_mgmt"))
-				, "gev_competence_mgmt" => array($manage_competences, "ilias.php?baseClass=ilAdministrationGUI&ref_id=41&cmd=jump",$this->lng->txt("gev_competence_mgmt"))
 				), $this->lng->txt("gev_admin_menu"))
 			, self::IL_STANDARD_ADMIN => array(false, $has_super_admin_menu, null)
 			);
