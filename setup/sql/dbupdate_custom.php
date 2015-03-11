@@ -2502,36 +2502,10 @@ if(!$ilDB->tableExists('hist_tep'))
 
 <#77>
 <?php
-
-	$ilDB->manipulate("UPDATE adv_mdf_definition SET field_values = '".serialize(array(
-			  "Fachwissen"
-			, "SUHK - Privatkunden"
-			, "SUHK - Firmenkunden"
-			, "Leben und Rente"
-			, "Betriebliche Altersvorsorge"
-			, "Kooperationspartner"
-			, "Vertrieb"
-			, "Akquise / Verkauf"
-			, "Beratungs- und Tarifierungstools"
-			, "Büromanagement"
-			, "Neue Medien"
-			, "Unternehmensführung"
-			, "Agenturmanagement"
-			, "Führung"
-			, "Persönlichkeit"
-			, "Grundausbildung"
-			, "Ausbilder"
-			, "Erstausbildung"
-			, "Qualifizierungsprogramm"
-		))."' WHERE title = 'Trainingskategorie'");
-?>
-
-<#78>
-<?php
 	$ilCtrlStructureReader->getStructure();
 ?>
 
-<#79>
+<#78>
 <?php
 	if(!$ilDB->tableExists('gev_na_tokens'))
 	{
@@ -2555,7 +2529,7 @@ if(!$ilDB->tableExists('hist_tep'))
 ?>
 
 
-<#80>
+<#79>
 <?php
 
 $ilDB->manipulate("UPDATE tep_type SET title = 'AD-Begleitung' WHERE title = 'AD Begleitung'");
@@ -2563,7 +2537,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#81>
+<#80>
 <?php
 	//set indizes for the history table - wow, such performance!
 	$queries =  array(
@@ -2589,7 +2563,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#82>
+<#81>
 <?php
 	require_once "Customizing/class.ilCustomInstaller.php";
 
@@ -2678,7 +2652,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	ilCustomInstaller::reloadStructure();
 ?>
 
-<#83>
+<#82>
 <?php
 	//more fields in history
 	if(!$ilDB->tableColumnExists('hist_user', "is_active")){
@@ -2701,7 +2675,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	}
 ?>
 
-<#84>
+<#83>
 <?php
 	//deadline fields in course history
 	$deadlines = array(
@@ -2723,7 +2697,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	}
 ?>
 
-<#85>
+<#84>
 <?php
 
 	// calendar entry weight
@@ -2752,7 +2726,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#86>
+<#85>
 <?php
 	if(!$ilDB->tableExists('hist_tep_individ_days'))
 	{
@@ -2789,7 +2763,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#87>
+<#86>
 <?php
 
 	// calendar entry weight
@@ -2806,7 +2780,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#88>
+<#87>
 <?php
 
 	if (!$ilDB->tableColumnExists("hist_tep", "orgu_title")) {

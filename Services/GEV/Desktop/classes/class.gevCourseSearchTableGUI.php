@@ -49,8 +49,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->lng->txt("gev_learning_type"), "type");
 		$this->addColumn($this->lng->txt("gev_location"), "location");
 		$this->addColumn($this->lng->txt("date"), "date");
-		$this->addColumn($this->lng->txt("gev_points"), "points");
-		$this->addColumn("&euro;", "fee");
+		$this->addColumn($this->lng->txt("language"), "lang");
 		//$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "", "20px");
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', null, "20px", false);
 		
@@ -129,10 +128,10 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		else if ($a_set["free_places"] == 0 && !$a_set["waiting_list_active"]) {
 			$status = $this->not_bookable_img;
 			if ($a_set["type"] == "Webinar") {
-				$action = $contact_onside_action;
-			}
-			else if(preg_match("/^Pr..senztraining$/", $a_set["type"])) {
 				$action = $contact_webinar_action;
+			}
+			else if($a_set["type"] == "Live Training") {
+				$action = $contact_onside_action;
 			}
 		}
 		else {
@@ -140,7 +139,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 			if ($a_set["type"] == "Webinar") {
 				$action = $contact_webinar_action;
 			}
-			else if(preg_match("/^Pr.*senztraining$/", $a_set["type"])) {
+			else if($a_set["type"] == "Live Training") {
 				$action = $contact_onside_action;	
 			}
 		}
@@ -159,8 +158,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("TYPE", $a_set["type"]);
 		$this->tpl->setVariable("LOCATION", $a_set["location"]);
 		$this->tpl->setVariable("DATE", $date);
-		$this->tpl->setVariable("POINTS", $a_set["points"]);
-		$this->tpl->setVariable("FEE", gevCourseUtils::formatFee($a_set["fee"]));
+		$this->tpl->setVariable("LANG", $a_set["lang"]);
 		$this->tpl->setVariable("ACTIONS", $action);
 		$this->tpl->setVariable("TARGET_GROUP", $a_set["target_group"]);
 		$this->tpl->setVariable("GOALS", $a_set["goals"]);

@@ -737,10 +737,10 @@ class gevUserUtils {
 				 "   AND cs.activation_end > ".time().
 				 "   AND oref.deleted IS NULL".
 				 "   AND is_template.value = ".$this->db->quote("Nein", "text").
-				 "   AND (   ( (ltype.value LIKE 'Pr_senztraining' OR ltype.value = 'Webinar' OR ltype.value = 'Virtuelles Training')".
+				 "   AND (   ( (ltype.value LIKE 'Live Training' OR ltype.value = 'Webinar')".
 				 "            AND start_date.value > ".$this->db->quote(date("Y-m-d"), "text").
 				 "		     )".
-				 "		  OR (".$this->db->in("ltype.value", array("Selbstlernkurs"), false, "text").
+				 "		  OR (".$this->db->in("ltype.value", array("Online Training"), false, "text").
 				 "			 )".
 				 "		 )".
 				 $additional_where.
@@ -809,6 +809,7 @@ class gevUserUtils {
 				 , gevSettings::CRS_AMD_MAX_PARTICIPANTS	=> "max_participants"
 				 , gevSettings::CRS_AMD_CANCEL_DEADLINE		=> "cancel_date"
 				 , gevSettings::CRS_AMD_SCHEDULE			=> "schedule"
+				 , gevSettings::CRS_AMD_LANG				=> "lang"
 			);
 			
 		$city_amd_id = $this->gev_set->getAMDFieldId(gevSettings::ORG_AMD_CITY);
@@ -845,12 +846,6 @@ class gevUserUtils {
 				unset($info[$key]);
 				continue;
 			}*/
-			
-			$list = "";
-			foreach ($info[$key]["target_group_list"] as $val) {
-				$list .= "<li>".$val."</li>";
-			}
-			$info[$key]["target_group"] = "<ul>".$list."</ul>".$info[$key]["target_group"];
 			
 			//$info[$key]["location"] = $orgu_utils->getLongTitle();
 			$info[$key]["booking_date"] = gevCourseUtils::mkDeadlineDate( $value["start_date"]
