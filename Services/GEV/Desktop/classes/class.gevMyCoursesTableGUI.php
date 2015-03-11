@@ -52,8 +52,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->lng->txt("gev_learning_type"), "type");
 		$this->addColumn($this->lng->txt("gev_location"), "location");
 		$this->addColumn($this->lng->txt("date"), "start_date");
-		$this->addColumn($this->lng->txt("gev_points"), "points");
-		$this->addColumn("&euro;", "fee");
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "actions", "20px", false);
 
 		$this->cancel_img = '<img src="'.ilUtil::getImagePath("gev_cancel_action.png").'" />';
@@ -112,7 +110,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 				   )
 			   )
 			)
-			&& $a_set["type"] != "Selbstlernkurs"
+			&& $a_set["type"] != "Online Training"
 			;
 		if ($show_cancel_link) {
 			$action = '<a href="'.gevCourseUtils::getCancelLinkTo($a_set["obj_id"], $this->user_id).'">'.
