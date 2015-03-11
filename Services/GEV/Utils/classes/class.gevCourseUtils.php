@@ -937,14 +937,6 @@ class gevCourseUtils {
 		return array_merge(array($all => $all), $arr);
 	}
 	
-	public static function getTargetGroupOptions() {
-		global $lng;
-		$all = $lng->txt("gev_crs_srch_all");
-		require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-		$arr = gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_TARGET_GROUP);
-		return array_merge(array($all => $all), $arr);
-	}
-	
 	public static function getLocationOptions() {
 		global $lng;
 		$all = $lng->txt("gev_crs_srch_all");

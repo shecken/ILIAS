@@ -224,10 +224,6 @@ class gevCourseSearchGUI {
 		$categorie->setOptions(gevCourseUtils::getCategorieOptions());
 		$form->addItem($categorie);
 		
-		$target_group = new ilSelectInputGUI($this->lng->txt("gev_target_group"), "target_group");
-		$target_group->setOptions(gevCourseUtils::getTargetGroupOptions());
-		$form->addItem($target_group);
-
 		$location = new ilSelectInputGUI($this->lng->txt("udf_type_venueselect"), "location");
 		$location->setOptions(gevCourseUtils::getLocationOptions());
 		$form->addItem($location);
