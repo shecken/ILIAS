@@ -262,28 +262,7 @@ array( "Zeitraum"
 				))
 	 , "Zielgruppen"
 		=> array( "Zielgruppen des Trainings",
-		   array( "Zielgruppen" => 
-		   				array( gevSettings::CRS_AMD_TARGET_GROUP
-		   					 , "Zielgruppe des Trainings"
-		   					 , true
-		   					 , array( 
-		   					 		"AD-Auszubildende (EVG)"
-		   					 		, "Ausbildungsverantwortliche in Agenturen (EVG), die über einen Ausbildereignungsschein verfügen"
-		   					 		, "Agenturleiter und Ausbilder in Agenturen (EVG)"
-		   					 		, "Angestellter Außendienst (freie Vertriebe, EVG)"
-		   					 		, "selbstständiger Außendienst (EVG)"
-		   					 		, "Innenvertrieb (EVG)"
-		   					 		, "Innenvertrieb gemeinsam mit Agenturleiter (EVG)"
-		   					 		, "selbstständiger Außendienst (EVG) ab Karrierestufe GA"
-		   					 		, "selbstständiger Außendienst (EVG) ab Karrierestufe HA"
-		   					 		, "selbstständiger Außendienst (EVG) ab Karrierestufe BGA"
-		   					 		, "Verkaufsleiter (EVG)"
-		   					 		, "Agenturverkaufsleiter (EVG)"
-							
-		   					 		)
-		   					 , $tmultiselect
-		   					 )
-		   		, "Zielgruppenbeschreibung" =>
+		   array( "Zielgruppenbeschreibung" =>
 		   				array( gevSettings::CRS_AMD_TARGET_GROUP_DESC
 		   					 , "Beschreibung der Zielgruppe des Trainings"
 		   					 , false
@@ -334,6 +313,22 @@ array( "Zeitraum"
 	 	   					 		,"decimals" => 2)
 	 	   					 , $tfloat
 	 	   					 )
+	 	   		, "Fixe Kosten" =>
+	 	   				array( gevSettings::CRS_AMD_FIXED_COST
+	 	   					 , ""
+	 	   					 , false
+	 	   					 , array("min" => 0
+	 	   					 		,"decimals" => 2)
+	 	   					 , $tfloat
+	 	   					 )
+	 	   		, "Variable Kosten" =>
+	 	   				array( gevSettings::CRS_AMD_VARIABLE_COST
+	 	   					 , ""
+	 	   					 , false
+	 	   					 , array("min" => 0
+	 	   					 		,"decimals" => 2)
+	 	   					 , $tfloat
+	 	   					 )
 	 	   		, "Währung" =>
 	 	   				array( gevSettings::CRS_AMD_CURRENCY
 	 	   					 , false
@@ -351,13 +346,6 @@ array( "Zeitraum"
 	 	   					 		)
 	 	   					 , $tselect
 	 	   					 )
-	 			, "Mice-ID" =>
-	 					array( gevSettings::CRS_AMD_MICE_ID
-	 						 , ""
-	 						 , false
-	 						 , null
-	 						 , $ttext
-	 						 )
 	 	   		))
 	, "Verwaltung"
 		=> 	array( "Einstellungen zur Verwaltung der Trainings", 

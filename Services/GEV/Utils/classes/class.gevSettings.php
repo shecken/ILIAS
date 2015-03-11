@@ -66,24 +66,19 @@ class gevSettings {
 	const CRS_AMD_LANG				= "crs_amd_lang";
 
 
-	// Zielgruppe für Suche
-	const CRS_AMD_TARGET_GROUP		= "crs_amd_target_group";
 	// Zielgruppenbeschreibung
 	const CRS_AMD_TARGET_GROUP_DESC	= "crs_amd_target_group_desc";
 
-	// Fachschulung
-	const CRS_AMD_EXPERT_TRAINING	= "crs_amd_expert_training";
-	// Bildungspunkte
-	const CRS_AMD_CREDIT_POINTS		= "crs_amd_credit_points";
-	// GEV Lerninhalt
-	const CRS_AMD_GDV_TOPIC			= "crs_amd_gdv_topic";
 	
 	// Teilnahmegebühr
 	const CRS_AMD_FEE				= "crs_amd_fee";
+	// Fixe Kosten
+	const CRS_AMD_FIXED_COST		= "crs_amd_fixed_cost";
+	// Variable Kosten
+	const CRS_AMD_VARIABLE_COST		= "crs_amd_variable_cost";
+	
 	// Währung
 	const CRS_AMD_CURRENCY			= "crs_amd_currency";
-	// Mice-ID
-	const CRS_AMD_MICE_ID			= "crs_amd_mice_id";
 	
 	// Mindestteilnehmerzahl
 	const CRS_AMD_MIN_PARTICIPANTS	= "crs_amd_min_participants";
