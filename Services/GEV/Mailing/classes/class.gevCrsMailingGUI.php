@@ -490,29 +490,29 @@ class gevCrsMailingGUI extends ilMailingGUI {
 		$form->addCommandButton("updateAdditionalSettings", $this->lng->txt("save"));
 		
 		$accom_mails = new ilFormSectionHeaderGUI();
-		$accom_mails->setTitle("Teilnehmerlisten");
+		$accom_mails->setTitle($this->lng->txt("gev_memberlists"));
 		$form->addItem($accom_mails);
 		
 		$send_list_to_accom = new ilCheckboxInputGUI();
-		$send_list_to_accom->setTitle("Übernachtungsort");
+		$send_list_to_accom->setTitle($this->lng->txt("gev_accomodation"));
 		$send_list_to_accom->setPostvar("send_list_to_accom");
 		$send_list_to_accom->setOptionTitle("Mails mit Teilnehmerlisten an Übernachtungsort automatisch versenden");
 		$send_list_to_accom->setChecked($this->getAdditionalMailSettings()->getSendListToAccomodation());
 		$form->addItem($send_list_to_accom);
 		
 		$send_list_to_venue = new ilCheckboxInputGUI();
-		$send_list_to_venue->setTitle("Veranstaltungsort");
+		$send_list_to_venue->setTitle($this->lng->txt("gev_venue"));
 		$send_list_to_venue->setPostvar("send_list_to_venue");
 		$send_list_to_venue->setOptionTitle("Mails mit Teilnehmerlisten an Veranstaltungsort automatisch versenden");
 		$send_list_to_venue->setChecked($this->getAdditionalMailSettings()->getSendListToVenue());
 		$form->addItem($send_list_to_venue);
 		
 		$mailing_dates = new ilFormSectionHeaderGUI();
-		$mailing_dates->setTitle("Versanddaten");
+		$mailing_dates->setTitle($this->lng->txt("gev_mailing_dates"));
 		$form->addItem($mailing_dates);
 		
 		$inv_mailing_date = new ilNumberInputGUI();
-		$inv_mailing_date->setTitle("Einladungsmail");
+		$inv_mailing_date->setTitle($this->lng->txt("gev_invitation_mail"));
 		$inv_mailing_date->setPostvar("inv_mailing_date");
 		$inv_mailing_date->setMinValue(0);
 		$inv_mailing_date->setDecimals(0);
@@ -521,7 +521,7 @@ class gevCrsMailingGUI extends ilMailingGUI {
 		$form->addItem($inv_mailing_date);
 		
 		$suppress_mails = new ilFormSectionHeaderGUI();
-		$suppress_mails->setTitle("Mailversand");
+		$suppress_mails->setTitle($this->lng->txt("gev_mail_transport"));
 		$form->addItem($suppress_mails);
 		
 		$suppress_mails = new ilCheckboxInputGUI();

@@ -1085,3 +1085,8 @@ gev#:#gev_cancellation_till#:#Stornierung bis
 gev#:#gev_accomodation_note#:#Sollten Sie Anpassungen an den von Ihnen gewählten Übernachtungen wünschen,<br>wenden Sie sich bitte an <a href="mailto:"Ad-Schulung.de@generali.com">Ad-Schulung.de@generali.com</a>
 gev#:#gev_inv_mail_settings#:#Einstellungen für Einladungsmails
 gev#:#gev_inv_mail_settings_note#:#Bitte speichern sie die Einstellungen, bevor sie auf Vorschau klicken. Bitte beachten sie bei der Auswahl der Anhänge, dass nicht beliebig große Emails verschickt werden können, da einige Mailanbieter nur Mails bis 3 Mb Größe annehmen.
+gev#:#gev_memberlists#:#Teilnehmerlisten
+gev#:#gev_accomodation#:#Übernachtungsort
+gev#:#gev_mailing_dates#:#Versanddaten
+gev#:#gev_invitation_mail#:#Einladungsmail
+gev#:#gev_mail_transport#:#Mailversand
