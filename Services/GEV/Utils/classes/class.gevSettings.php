@@ -62,6 +62,8 @@ class gevSettings {
 	const CRS_AMD_MEDIA				= "crs_amd_media";
 	// Bildungsprogramm
 	const CRS_AMD_EDU_PROGRAMM		= "crs_amd_edu_program";
+	// Sprache
+	const CRS_AMD_LANG				= "crs_amd_lang";
 
 
 	// Zielgruppe für Suche
@@ -78,6 +80,8 @@ class gevSettings {
 	
 	// Teilnahmegebühr
 	const CRS_AMD_FEE				= "crs_amd_fee";
+	// Währung
+	const CRS_AMD_CURRENCY			= "crs_amd_currency";
 	// Mice-ID
 	const CRS_AMD_MICE_ID			= "crs_amd_mice_id";
 	
@@ -106,7 +110,6 @@ class gevSettings {
 	//const CRS_AMD_WEB_LOCATION		= "crs_amd_web_location";
 	const CRS_AMD_WEBEX_LINK		= "crs_amd_webex_link";			// these are general webinar links now
 	const CRS_AMD_WEBEX_PASSWORD	= "crs_amd_webex_password";		// these are general webinar passwords now
-	const CRS_AMD_CSN_LINK			= "crs_amd_csn_link";	// this is not used anymore
 	// Organisationseinheit TEP
 	const CRS_AMD_TEP_ORGU			= "crs_amd_tep_orgu";
 	

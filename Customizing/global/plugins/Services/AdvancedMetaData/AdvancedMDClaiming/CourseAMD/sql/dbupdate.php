@@ -17,6 +17,7 @@ $tvenue = ilAdvancedMDFieldDefinition::TYPE_VENUE_SELECT;
 $tprovider = ilAdvancedMDFieldDefinition::TYPE_PROVIDER_SELECT;
 $tlongtext = ilAdvancedMDFieldDefinition::TYPE_LONG_TEXT;
 $tschedule = ilAdvancedMDFieldDefinition::TYPE_SCHEDULE;
+$tteporgu = ilAdvancedMDFieldDefinition::TYPE_TEP_ORGU_SELECT;
 
 $gev_set = gevSettings::getInstance();
 
@@ -46,6 +47,13 @@ array( "Zeitraum"
 	 	   					 , null
 	 	   					 , $tschedule
 	 	   					 )
+				, "geplant für" =>
+						array( gevSettings::CRS_AMD_SCHEDULED_FOR
+							 , ""
+							 , false
+							 , null
+							 , $ttext
+							 )
 	 	   		))
 	 , "Orte und Anbieter"
 	 	=> array( null, 
@@ -69,6 +77,34 @@ array( "Zeitraum"
 	 	   					 , true
 	 	   					 , null
 	 	   					 , $tvenue
+	 	   					 )
+				, "Webinar Link" =>
+						array( gevSettings::CRS_AMD_WEBEX_LINK
+							 , "Link zum virtuellen Klassenraum"
+							 , false
+							 , null
+							 , $ttext
+							 )
+				, "Webinar Passwort" =>
+						array( gevSettings::CRS_AMD_WEBEX_PASSWORD
+							 , "Passwort zum virtuellen Klassenraum"
+							 , false
+							 , null
+							 , $ttext
+	 	   					 )
+				, "Organisatorisches" =>
+						array( gevSettings::CRS_AMD_ORGA
+							 , ""
+							 , false
+							 , null
+							 , $tlongtext
+							 )
+				, "für Organisationseinheit" =>
+						array( gevSettings::CRS_AMD_TEP_ORGU
+							 , ""
+							 , false
+							 , null
+							 , $tteporgu
 	 	   					 )
 	 	   		))
 	 , "Buchungsmodalitäten"
@@ -103,6 +139,13 @@ array( "Zeitraum"
 	 	   					 , array("min" => 0)
 	 	   					 , $tinteger
 	 	   					 )
+				, "harte Stornofrist" =>
+						array( gevSettings::CRS_AMD_ABSOLUTE_CANCEL_DEADLINE
+							 , "Tage vor dem Seminar, bis zu denen noch storniert werden kann."
+							 , false
+							 , array("min" => 0)
+							 , $tinteger
+							 )
 	 	   		, "Buchungsfrist" =>
 	 	   				array( gevSettings::CRS_AMD_BOOKING_DEADLINE
 	 	   					 , "Tage vor dem Seminar, bis zu denen das Seminar gebucht werden kann."
@@ -126,25 +169,22 @@ array( "Zeitraum"
 				 		array( gevSettings::CRS_AMD_TOPIC
 				 			 , null
 				 			 , true
-				 			 , array( "Fachwissen"
-				 			 		, "SUHK - Privatkunden"
-				 			 		, "SUHK - Firmenkunden"
-				 			 		, "Leben und Rente"
-				 			 		, "Betriebliche Altersvorsorge"
-				 			 		, "Kooperationspartner"
-				 			 		, "Vertrieb"
-				 			 		, "Akquise / Verkauf"
-				 			 		, "Beratungs- und Tarifierungstools"
-				 			 		, "Büromanagment"
-				 			 		, "Neue Medien"
-				 			 		, "Unternehmensführung"
-				 			 		, "Agenturmanagment"
-				 			 		, "Führung"
-				 			 		, "Persönlichkeit"
-				 			 		, "Erstausbildung"
-				 			 		, "Ausbilder"
-				 			 		, "Azubi"
-				 			 		, "Qualifizierungsprogramme")
+				 			 , array( "Leadership | Communication (L-CO)"
+									, "Leadership | Strategy (L-SY)"
+									, "Leadership | Corporate Culture (L-CU)"
+									, "Leadership | Appraisal Interviews (L-AI)"
+									, "Leadership | Coaching and Mentoring (L-CM)"
+									, "Leadership | Basic Knowledge (L-BK)"
+									, "Professional Expertise | Marketing & Sales (E-MS)"
+									, "Professional Expertise | Product Portfolio (E-PP)"
+									, "Professional Expertise | Technology (E-TY)"
+									, "Professional Expertise | Business Administration (E-BA)"
+									, "Professional Expertise | Information Technology (E-IT)"
+									, "Professional Expertise | Law (E-LA)"
+									, "Professional Expertise | Languages (E-LG)"
+									, "Professional Expertise | Protection and Safety (E-PS)"
+									, "Professional Expertise | Methods & Instruments (E-MI)"
+									)
 				 			 , $tmultiselect
 				 			 )
 				, "Trainingsinhalte" =>
@@ -158,10 +198,10 @@ array( "Zeitraum"
 						array( gevSettings::CRS_AMD_EDU_PROGRAMM
 							 , null
 							 , true
-							 , array( "zentrales Training"
-									, "dezentrales Training"
-									, "Grundausbildung"
-									, "Azubi-Ausbildung"
+							 , array( "High Potentials (SPX-HP)"
+									, "Onboarding (SPX-OB)"
+									, "Azubi-Ausbildung (SPX-AA)"
+									, "Dezentrales Training "
 							 	    )
 							 , $tselect
 							 )
@@ -200,6 +240,24 @@ array( "Zeitraum"
 							 		, "Internet / Intranet"
 							 		)
 							 , $tmultiselect
+							 )#
+				, "Sprache" =>
+						array( gevSettings::CRS_AMD_LANG
+							 , ""
+							 , true
+							 , array( "DE (Deutsch)"
+									, "EN (English)"
+									, "ZH (中文)"
+									, "ES (Español)"
+									, "FR (Français)"
+									, "SV (Svenska)"
+									, "DA (Dansk)"
+									, "NO (Norsk)"
+									, "FI (Suomi)"
+									, "PO (Język polski)"
+									, "RU (Русский)"
+									)
+							 , $tselect
 							 )
 				))
 	 , "Zielgruppen"
@@ -276,6 +334,23 @@ array( "Zeitraum"
 	 	   					 		,"decimals" => 2)
 	 	   					 , $tfloat
 	 	   					 )
+	 	   		, "Währung" =>
+	 	   				array( gevSettings::CRS_AMD_CURRENCY
+	 	   					 , false
+	 	   					 , array( "EUR"
+									, "USD"
+									, "GBP"
+									, "MYR"
+									, "CNY"
+									, "SEK"
+									, "NOK"
+									, "DKK"
+									, "AUD"
+									, "JPY"
+									, "RUB"
+	 	   					 		)
+	 	   					 , $tselect
+	 	   					 )
 	 			, "Mice-ID" =>
 	 					array( gevSettings::CRS_AMD_MICE_ID
 	 						 , ""
@@ -295,16 +370,15 @@ array( "Zeitraum"
 							 // if this is changed, the custom id logic in gevCourseUtils
 							 // needs to be changed as well!!
 							 )
-				 , "Lernart" =>
+				 , "Trainingstyp" =>
 				 		array( gevSettings::CRS_AMD_TYPE
-				 			 , "Art des Trainings"
+				 			 , "Typ des Trainings"
 				 			 , true
 				 			 // if this is changed, gevUserUtils::getPotentiallyBookableCourses
 				 			 // needs to be changed as well!!
-				 			 , array( "Präsenztraining"
+				 			 , array( "Live Training"
+				 			 		, "Online Training"
 				 			 		, "Webinar"
-				 			 		, "Selbstlernkurs"
-				 			 		, "Virtuelles Training"
 									)
 				 			 // if this is changed, gevUserUtils::getCourseHighlights
 				 			 // needs to be changed as well!!
@@ -335,237 +409,22 @@ array( "Zeitraum"
 				 			 , array("min" => 0)
 				 			 , $tinteger
 				 			 )
+				 , "Nummernkreis" =>
+				 		array( gevSettings::CRS_AMD_CUSTOM_ID_TEMPLATE
+							 , "Zu verwendender Nummernkreis für diese Vorlage"
+							 , false
+							 , array( "SPX-HP High Potentials"
+									, "SPX-OB Onboarding"
+									, "SPX-AA Azubi-Ausbildung"
+									, "SPX internal Training"
+									, "CT Customer Training"
+									, "DT Distributor Training"
+									)
+							 , $tselect
+							 )
 				 ))
 
 	);
 
 gevAMDUtils::createAMDRecords($records, array("crs"));
-?>
-
-<#2>
-<?php
-
-require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-
-gevAMDUtils::addAMDField( "Verwaltung"
-						, "Nummernkreis"
-						, gevSettings::CRS_AMD_CUSTOM_ID_TEMPLATE
-						, "Zu verwendender Nummernkreis für diese Vorlage"
-						, false
-						, array( "AD20000 Veranstaltungen zum Vertriebswegebudget"
-							   , "AD30000 Azubiseminare"
-							   , "AD40000 FFS"
-							   , "AD50000 Grund- und IHK-Ausbildung"
-							   , "AD55000 GEP BA (ehem. Postphase)"
-							   , "AD60000 Weiterbildung"
-							   , "AD65000 Generali Entwicklungsprogramme"
-							   , "AD70000 Webinare"
-							   , "ST10000 Spezialistenveranstaltungen (SpezialistenTrainings)"
-							   , "SL10000 Selbstlernkurse"
-							   )
-						, ilAdvancedMDFieldDefinition::TYPE_SELECT
-						);
-
-?>
-
-<#3>
-<?php
-
-require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-
-gevAMDUtils::addAMDField( "Orte und Anbieter"
-						, "Link WebEx"
-						, gevSettings::CRS_AMD_WEBEX_LINK
-						, "Link zum virtuellen Klassenraum"
-						, false
-						, null
-						, ilAdvancedMDFieldDefinition::TYPE_TEXT
-						);
-
-?>
-
-<#4>
-<?php
-
-require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-
-gevAMDUtils::addAMDField( "Zeitraum"
-						, "geplant für"
-						, gevSettings::CRS_AMD_SCHEDULED_FOR
-						, ""
-						, false
-						, null
-						, ilAdvancedMDFieldDefinition::TYPE_TEXT
-						);
-
-?>
-
-<#5>
-<?php
-
-require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-
-global $ilDB;
-
-gevAMDUtils::addAMDField( "Orte und Anbieter"
-						, "Passwort WebEX"
-						, gevSettings::CRS_AMD_WEBEX_PASSWORD
-						, "Passwort zum virtuellen Klassenraum"
-						, false
-						, null
-						, ilAdvancedMDFieldDefinition::TYPE_TEXT
-						);
-
-gevAMDUtils::addAMDField( "Orte und Anbieter"
-						, "Link CSN"
-						, gevSettings::CRS_AMD_CSN_LINK
-						, "Link zu CSN"
-						, false
-						, null
-						, ilAdvancedMDFieldDefinition::TYPE_TEXT
-						);
-
-?>
-
-<#6>
-<?php
-
-require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-
-gevAMDUtils::addAMDField( "Orte und Anbieter"
-						, "Organisatorisches"
-						, gevSettings::CRS_AMD_ORGA
-						, ""
-						, false
-						, null
-						, ilAdvancedMDFieldDefinition::TYPE_LONG_TEXT
-						);
-?>
-
-<#7>
-<?php
-
-global $ilDB;
-
-$ilDB->manipulate("UPDATE adv_mdf_definition SET title = 'Webinar Link' WHERE title = 'Link WebEX'");
-$ilDB->manipulate("UPDATE adv_mdf_definition SET title = 'Webinar Passwort' WHERE title = 'Passwort WebEX'");
-
-?>
-
-<#8>
-<?php
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-
-gevAMDUtils::removeAMDField(gevSettings::CRS_AMD_CSN_LINK);
-
-?>
-
-<#9>
-<?php
-$def = serialize(
-	array( "AD20000 Veranstaltungen zum Vertriebswegebudget"
-		   , "AD30000 Azubiseminare"
-		   , "AD40000 FFS"
-		   , "AD50000 Grund- und IHK-Ausbildung"
-		   , "AD55000 GEP BA (ehem. Postphase)"
-		   , "AD60000 Weiterbildung"
-		   , "AD65000 Generali Entwicklungsprogramme"
-		   , "AD70000 Webinare"
-		   , "ST10000 Dezentrales Training"
-		   , "SL10000 Selbstlernkurse"
-		   , "AD80000 Weiterbildung / Bildungskatalog für Führungskräfte"
-	)
-);
-
-global $ilDB;
-$ilDB->manipulate("UPDATE adv_mdf_definition SET field_values = '$def' WHERE title = 'Nummernkreis'");
-?>
-
-<#10>
-<?php
-//Trainingstyp
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-$amdutils = gevAMDUtils::getInstance();
-$amdutils->updateTitleOfAMDField(gevSettings::CRS_AMD_TYPE, 'Trainingstyp', 'Typ des Trainings');
-
-?>
-
-
-<#11>
-<?php
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-$options = array(
-	"Partnerverkäufer § 59"
-	,"§ 84"
-	,"Organisierende Partnerverkäufer"
-	,"Leiter einer Filialdirektion" 
-	,"Nebenberufsagenten"
-	,"Vertriebsassistenten"
-	,"DBV UVG"
-	,"DBV EVG"
-	,"Inhaber einer Unternehmeragentur" 
-	,"Innenvertrieb FD / OD / BD"
-	,"Innenvertrieb HV"
-	,"Organisationsdirektor"
-	,"Nachwuchsführungskräfte" 
-	,"Unabhängige Vertriebspartner"
-	,"Trainer"
-	,"Auszubildende"
-	,"Ausbildungsverantwortliche in den Agenturen mit ADA-Schein"
-	,"Innenvertrieb Agenturen"
-
-);
-
-$amdutils = gevAMDUtils::getInstance();
-$amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_TARGET_GROUP, $options);
-
-?>
-
-<#12>
-<?php
-
-require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-
-gevAMDUtils::addAMDField( "Orte und Anbieter"
-						, "für Organisationseinheit"
-						, gevSettings::CRS_AMD_TEP_ORGU
-						, ""
-						, false
-						, null
-						, ilAdvancedMDFieldDefinition::TYPE_TEP_ORGU_SELECT
-						);
-
-?>
-
-<#13>
-<?php
-
-require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-
-gevAMDUtils::addAMDField( "Buchungsmodalitäten"
-						, "harte Stornofrist"
-						, gevSettings::CRS_AMD_ABSOLUTE_CANCEL_DEADLINE
-						, "Tage vor dem Seminar, bis zu denen noch storniert werden kann."
-						, false
-						, array("min" => 0)
-						, ilAdvancedMDFieldDefinition::TYPE_INTEGER
-						);
-
 ?>
