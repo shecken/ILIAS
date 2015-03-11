@@ -56,10 +56,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 						->column("venue", "gev_location")
 						->column("provider", "gev_provider")
 						->column("tutor", "il_crs_tutor")
-						->column("credit_points", "gev_points")
-						->column("fee", "gev_costs")
 						->column("status", "status")
-						->column("wbd", "gev_wbd_relevant")
 						->column("action", $this->action_img, true, "", true)
 						->template('tpl.gev_edu_bio_row.html', 'Services/GEV/Reports')
 						;
