@@ -61,8 +61,6 @@ class gevCourseHighlightsSliderGUI extends catSliderGUI {
 				 , gevSettings::CRS_AMD_END_DATE => "end_date"
 				 , gevSettings::CRS_AMD_TYPE => "type"
 				 , gevSettings::CRS_AMD_VENUE => "venue"
-				 , gevSettings::CRS_AMD_FEE => "fee"
-				 , gevSettings::CRS_AMD_CREDIT_POINTS => "credit_points"
 				 );
 		
 		$crs_data = gevAMDUtils::getInstance()->getTable($this->highlight_ids, $crs_amd);
@@ -71,7 +69,6 @@ class gevCourseHighlightsSliderGUI extends catSliderGUI {
 		
 		foreach ($crs_data as $crs) {
 			$tpl = new ilTemplate("tpl.gev_course_highlight_slide.html", false, false, "Services/GEV/Desktop");
-			$tpl->setVariable("CREDIT_POINT", $crs["credit_points"]);
 			$tpl->setVariable("TYPE", $crs["type"]);
 
 			$org_title = $this->limit_entry_length($crs["title"], 48);
@@ -93,7 +90,6 @@ class gevCourseHighlightsSliderGUI extends catSliderGUI {
 				$tpl->setVariable("VENUE", $venue_title);
 				$tpl->parseCurrentBlock();
 			}
-			$tpl->setVariable("FEE", gevCourseUtils::formatFee($crs["fee"])." €");
 			$tpl->setVariable("BOOK_ACTION", gevCourseUtils::getBookingLinkTo($crs["obj_id"],$this->user_id)); // TODO: Implement that properly
 			$ret .= $tpl->get();
 		}

@@ -151,8 +151,7 @@ class ilCourseHistorizingHelper
 	 */
 	public static function isExpertCourse($course)
 	{
-		return gevCourseUtils::getInstanceByObjOrId($course)
-							 ->getIsExpertTraining();
+		return false;
 	}
 
 	/**
@@ -190,8 +189,7 @@ class ilCourseHistorizingHelper
 	 */
 	public static function getMaxCreditPointsOf($course)
 	{
-		return gevCourseUtils::getInstanceByObjOrId($course)
-							 ->getCreditPoints();
+		return 0;
 	}
 
 	/**
@@ -252,8 +250,7 @@ class ilCourseHistorizingHelper
 	 */
 
 	public static function getWBDTopicOf($course) {
-		$utils = gevCourseUtils::getInstanceByObjOrId($course);
-		return $utils->getWBDTopic();
+		return null;
 	}
 
 	public static function getEduProgramOf($course) {

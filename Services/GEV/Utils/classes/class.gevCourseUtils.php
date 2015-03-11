@@ -491,20 +491,8 @@ class gevCourseUtils {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_EDU_PROGRAMM);
 	}
 	
-	public function getTargetGroup() {
-		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_TARGET_GROUP);
-	}
-	
 	public function getTargetGroupDesc() {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_TARGET_GROUP_DESC);
-	}
-	
-	public function getIsExpertTraining() {
-		return "Ja" == $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_EXPERT_TRAINING);
-	}
-	
-	public function getCreditPoints() {
-		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_CREDIT_POINTS);
 	}
 	
 	public function getFee() {
@@ -521,10 +509,6 @@ class gevCourseUtils {
 	static public function formatFee($a_fee) {
 		require_once("Services/GEV/Utils/classes/class.gevBillingUtils.php");
 		return gevBillingUtils::formatPrize($a_fee);
-	}
-	
-	public function getMiceId() {
-		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_MICE_ID);
 	}
 	
 	public function getMinParticipants() {
@@ -1818,30 +1802,10 @@ class gevCourseUtils {
 		return null;
 	}
 	
-	public function getCreditPointsOf($a_user_id) {
-		$sp = $this->getParticipations()->getStatusAndPoints($a_user_id);
-		if ($sp["status"] == ilParticipationStatus::STATUS_NOT_SET) {
-			return $this->getCreditPoints();
-		}
-		if ($sp["status"] == ilParticipationStatus::STATUS_SUCCESSFUL) {
-			if ($sp["points"] !== null) {
-				return $sp["points"];
-			}
-			return $this->getCreditPoints();
-		}
-		return 0;
-	}
-	
 	public function userFullfilledPrecondition($a_user_id) {
 		require_once("Services/AccessControl/classes/class.ilConditionHandler.php");
 		$ref_id = gevObjectUtils::getRefId($this->crs_id);
 		return ilConditionHandler::_checkAllConditionsOfTarget($ref_id, $this->crs_id, "crs", $a_user_id);
-	}
-
-
-	public function getWBDTopic(){
-		//CRS_AMD_GDV_TOPIC
-		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_GDV_TOPIC);
 	}
 
 	// Common gui-elements for a course

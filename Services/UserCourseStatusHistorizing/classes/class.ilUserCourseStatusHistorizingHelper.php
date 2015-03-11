@@ -55,8 +55,7 @@ class ilUserCourseStatusHistorizingHelper
 	 */
 	public static function getCreditPointsOf($user, $course)
 	{
-		return gevCourseUtils::getInstanceByObjOrId($course)
-							 ->getCreditPointsOf(self::getId($user));
+		return 0;
 	}
 
 	/**
