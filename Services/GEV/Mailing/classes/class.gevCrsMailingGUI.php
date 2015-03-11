@@ -228,6 +228,8 @@ class gevCrsMailingGUI extends ilMailingGUI {
 	protected function showInvitationMails() {
 		$tpl = new ilTemplate("tpl.invitation_mail_settings.html", false, true, "Services/GEV/Mailing");
 
+		$tpl->setVariable("INVITATION_MAIL_SETTINGS", $this->lng->txt("gev_inv_mail_settings"));
+		$tpl->setVariable("INVITATION_MAIL_SETTINGS_NOTE", $this->lng->txt("gev_inv_mail_settings_note"));
 		$tpl->setVariable("FORM_ACTION", $this->ctrl->getFormAction($this));
 		$tpl->setVariable("TXT_SAVE", $this->lng->txt("save"));
 		$tpl->setVariable("TXT_INVITATION_MAILS", $this->lng->txt("gev_crs_settings_invitation"));
