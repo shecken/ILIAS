@@ -298,10 +298,6 @@ class gevBookingGUI {
 				   , true
 				   , implode(", ", $this->crs_utils->getType())
 				   )
-			, array( $this->lng->txt("gev_methods")
-				   , true
-				   , implode(", ", $this->crs_utils->getMethods())
-				   )
 			, array( $this->lng->txt("appointment")
 				   , $appointment
 				   , $appointment."<br/><br />".$this->crs_utils->getFormattedSchedule()
@@ -342,10 +338,6 @@ class gevBookingGUI {
 			, array( $this->lng->txt("gev_training_fee")
 				   , $this->isWithPayment()
 				   , str_replace(".", ",", "".$this->crs_utils->getFormattedFee()) . " &euro;"
-				   )
-			, array( $this->lng->txt("gev_credit_points")
-				   , true
-				   , $this->crs_utils->getCreditPoints()
 				   )
 			//, array( $this->lng->txt("precondition")
 			//	   , true
