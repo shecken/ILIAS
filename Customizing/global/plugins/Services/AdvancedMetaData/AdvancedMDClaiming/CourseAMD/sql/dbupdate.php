@@ -22,9 +22,9 @@ $tteporgu = ilAdvancedMDFieldDefinition::TYPE_TEP_ORGU_SELECT;
 $gev_set = gevSettings::getInstance();
 
 $records = 
-array( "Zeitraum"
+array( "Period"
 	 	=> array(null,
-	 	   array( "Startdatum" =>	
+	 	   array( "Start-Date" =>	
 	 	   				array( gevSettings::CRS_AMD_START_DATE
 	 	   					 , null
 	 	   					 , true
@@ -33,21 +33,21 @@ array( "Zeitraum"
 	 	   					 // if this is changed, gevUserUtils::getPotentiallyBookableCourses
 				 			 // needs to be changed as well!!
 	 	   					 )
-	 	   		, "Enddatum" =>
+	 	   		, "End-Date" =>
 	 	   				array( gevSettings::CRS_AMD_END_DATE
 	 	   					 , null
 	 	   					 , true
 	 	   					 , null
 	 	   					 , $tdate
 	 	   					 )
-	 	   		, "Zeitplan" =>
+	 	   		, "Schedule" =>
 	 	   				array( gevSettings::CRS_AMD_SCHEDULE
 	 	   					 , null
 	 	   					 , false
 	 	   					 , null
 	 	   					 , $tschedule
 	 	   					 )
-				, "geplant für" =>
+				, "Planned for" =>
 						array( gevSettings::CRS_AMD_SCHEDULED_FOR
 							 , ""
 							 , false
@@ -55,23 +55,23 @@ array( "Zeitraum"
 							 , $ttext
 							 )
 	 	   		))
-	 , "Orte und Anbieter"
+	 , "Locations and Provider"
 	 	=> array( null, 
-	 	   array( "Anbieter" =>
+	 	   array( "Provider" =>
 	 	   				array( gevSettings::CRS_AMD_PROVIDER
 	 	   					 , null
 	 	   					 , true
 	 	   					 , null
 	 	   					 , $tprovider
 	 	   					 )
-	 	   		, "Veranstaltungsort" =>
+	 	   		, "Venue" =>
 	 	   				array( gevSettings::CRS_AMD_VENUE
 	 	   					 , null
 	 	   					 , true
 	 	   					 , null
 	 	   					 , $tvenue
 	 	   					 )
-	 	   		, "Übernachtungsort" =>
+	 	   		, "Hotel Accomodation" =>
 	 	   				array( gevSettings::CRS_AMD_ACCOMODATION
 	 	   					 , null
 	 	   					 , true
@@ -80,43 +80,43 @@ array( "Zeitraum"
 	 	   					 )
 				, "Webinar Link" =>
 						array( gevSettings::CRS_AMD_WEBEX_LINK
-							 , "Link zum virtuellen Klassenraum"
+							 , null
 							 , false
 							 , null
 							 , $ttext
 							 )
-				, "Webinar Passwort" =>
+				, "Webinar Password" =>
 						array( gevSettings::CRS_AMD_WEBEX_PASSWORD
-							 , "Passwort zum virtuellen Klassenraum"
+							 , ""
 							 , false
 							 , null
 							 , $ttext
 	 	   					 )
-				, "Organisatorisches" =>
+				, "Organizational" =>
 						array( gevSettings::CRS_AMD_ORGA
-							 , ""
+							 , null
 							 , false
 							 , null
 							 , $tlongtext
 							 )
-				, "für Organisationseinheit" =>
+				, "for Organisation Unit" =>
 						array( gevSettings::CRS_AMD_TEP_ORGU
-							 , ""
+							 , null
 							 , false
 							 , null
 							 , $tteporgu
 	 	   					 )
 	 	   		))
-	 , "Buchungsmodalitäten"
-	 	=> array( "Fristen und Teilnehmerzahlen", 
-	 	   array( "Mindestteilnehmerzahl" =>
+	 , "Booking Modalities"
+	 	=> array( null, 
+	 	   array( "Minimum Number of Participants" =>
 	 	   				array( gevSettings::CRS_AMD_MIN_PARTICIPANTS
 	 	   					 , null
 	 	   					 , false
 	 	   					 , array("min" => 0)
 	 	   					 , $tinteger
 	 	   					 )
-	 	   		, "Warteliste"	=>
+	 	   		, "Waiting List"	=>
 	 	   				array( gevSettings::CRS_AMD_WAITING_LIST_ACTIVE
 	 	   					 , null
 	 	   					 , false
@@ -125,30 +125,30 @@ array( "Zeitraum"
 	 	   					 		)
 	 	   					 , $tselect
 	 	   					 )
-	 	   		, "Maximalteilnehmerzahl" =>
+	 	   		, "Maximum Number of Participants" =>
 	 	   				array( gevSettings::CRS_AMD_MAX_PARTICIPANTS
 	 	   					 , null
 	 	   					 , false
 	 	   					 , array("min" => 0)
 	 	   					 , $tinteger
 	 	   					 )
-	 	   		, "Stornofrist" =>
+	 	   		, "Deadline for Cancellation" =>
 	 	   				array( gevSettings::CRS_AMD_CANCEL_DEADLINE
-	 	   					 , "Tage vor dem Seminar, bis zu denen noch kostenfrei storniert werden kann."
+	 	   					 , null
 	 	   					 , false
 	 	   					 , array("min" => 0)
 	 	   					 , $tinteger
 	 	   					 )
-				, "harte Stornofrist" =>
+				, "fixed Deadline for Cancellation" =>
 						array( gevSettings::CRS_AMD_ABSOLUTE_CANCEL_DEADLINE
-							 , "Tage vor dem Seminar, bis zu denen noch storniert werden kann."
+							 , null
 							 , false
 							 , array("min" => 0)
 							 , $tinteger
 							 )
 	 	   		, "Buchungsfrist" =>
 	 	   				array( gevSettings::CRS_AMD_BOOKING_DEADLINE
-	 	   					 , "Tage vor dem Seminar, bis zu denen das Seminar gebucht werden kann."
+	 	   					 , null
 	 	   					 , false
 	 	   					 , array("min" => 0)
 	 	   					 , $tinteger
@@ -157,15 +157,15 @@ array( "Zeitraum"
 	 	   					 )
 	 	   		, "Absage Wartelist" =>
 	 	   				array( gevSettings::CRS_AMD_CANCEL_WAITING
-	 	   					 , "Tag vor dem Seminar, an dem die Warteliste abgesagt wird."
+	 	   					 , null
 	 	   					 , false
 	 	   					 , array("min" => 0)
 	 	   					 , $tinteger
 	 	   					 )
 	 	   		))
-	 , "Inhalte" 
-		=> array( "Inhalte und Medien des Trainings",
-		   array( "Trainingskategorie" =>
+	 , "Topic" 
+		=> array( null,
+		   array( "Training Category" =>
 				 		array( gevSettings::CRS_AMD_TOPIC
 				 			 , null
 				 			 , true
@@ -187,63 +187,23 @@ array( "Zeitraum"
 									)
 				 			 , $tmultiselect
 				 			 )
-				, "Trainingsinhalte" =>
+				, "Training Topics" =>
 						array( gevSettings::CRS_AMD_CONTENTS
-							 , "Beschreibung der Trainingsinhalte"
+							 , null
 							 , false
 							 , null
 							 , $tlongtext
 							 )
-				, "Bildungsprogramm" =>
-						array( gevSettings::CRS_AMD_EDU_PROGRAMM
-							 , null
-							 , true
-							 , array( "High Potentials (SPX-HP)"
-									, "Onboarding (SPX-OB)"
-									, "Azubi-Ausbildung (SPX-AA)"
-									, "Dezentrales Training "
-							 	    )
-							 , $tselect
-							 )
-				, "Ziele und Nutzen" =>
+				, "Objectives and Use" =>
 						array( gevSettings::CRS_AMD_GOALS
-							 , "Beschreibung des Nutzens der Teilnehmer"
+							 , null
 							 , false
 							 , null
 							 , $tlongtext 
 							 )
-				, "Methoden" =>
-						array( gevSettings::CRS_AMD_METHODS
-							 , "Beim Training eingesetzte Methoden"
-							 , true
-							 , array( "Vortrag"
-							 		, "Gruppenarbeit"
-							 		, "Partnerarbeit"
-							 		, "Einzelarbeit"
-							 		, "Diskussion"
-							 		, "Brainstorming"
-							 		, "Rollenspiele"
-							 		)
-							 , $tmultiselect
-							 )
-				, "Medien" =>
-						array( gevSettings::CRS_AMD_MEDIA
-							 , "Beim Training eingesetzte Medien"
-							 , true
-							 , array( "PowerPoint"
-							 		, "Flipchart"
-							 		, "Metakarten"
-							 		, "myGenerali"
-							 		, "Spezialsoftware"
-							 		, "Arbeitsblatt / Handout"
-							 		, "Film"
-							 		, "Internet / Intranet"
-							 		)
-							 , $tmultiselect
-							 )
-				, "Sprache" =>
+				, "Language" =>
 						array( gevSettings::CRS_AMD_LANG
-							 , ""
+							 , null
 							 , true
 							 , array( "DE (Deutsch)"
 									, "EN (English)"
@@ -260,45 +220,45 @@ array( "Zeitraum"
 							 , $tselect
 							 )
 				))
-	 , "Zielgruppen"
-		=> array( "Zielgruppen des Trainings",
-		   array( "Zielgruppenbeschreibung" =>
+	 , "Target Groups"
+		=> array( null,
+		   array( "Description of Target Group" =>
 		   				array( gevSettings::CRS_AMD_TARGET_GROUP_DESC
-		   					 , "Beschreibung der Zielgruppe des Trainings"
+		   					 , null
 		   					 , false
 		   					 , null
 		   					 , $tlongtext
 		   					 )
 		   ))
-	 , "Abrechnung"
+	 , "Accounting"
 	 	=> array( null,
-	 	   array( "Teilnahmegebühr" =>
+	 	   array( "Participation Fee" =>
 	 	   				array( gevSettings::CRS_AMD_FEE
-	 	   					 , ""
+	 	   					 , null
 	 	   					 , false
 	 	   					 , array("min" => 0
 	 	   					 		,"decimals" => 2)
 	 	   					 , $tfloat
 	 	   					 )
-	 	   		, "Fixe Kosten" =>
+	 	   		, "Fixed Cost" =>
 	 	   				array( gevSettings::CRS_AMD_FIXED_COST
-	 	   					 , ""
+	 	   					 , null
 	 	   					 , false
 	 	   					 , array("min" => 0
 	 	   					 		,"decimals" => 2)
 	 	   					 , $tfloat
 	 	   					 )
-	 	   		, "Variable Kosten" =>
+	 	   		, "Variable Cost" =>
 	 	   				array( gevSettings::CRS_AMD_VARIABLE_COST
-	 	   					 , ""
+	 	   					 , null
 	 	   					 , false
 	 	   					 , array("min" => 0
 	 	   					 		,"decimals" => 2)
 	 	   					 , $tfloat
 	 	   					 )
-	 	   		, "Währung" =>
+	 	   		, "Currency" =>
 	 	   				array( gevSettings::CRS_AMD_CURRENCY
-	 	   					 , ""
+	 	   					 , null
 	 	   					 , false
 	 	   					 , array( "EUR"
 									, "USD"
@@ -315,20 +275,20 @@ array( "Zeitraum"
 	 	   					 , $tselect
 	 	   					 )
 	 	   		))
-	, "Verwaltung"
-		=> 	array( "Einstellungen zur Verwaltung der Trainings", 
-			array( "Trainingsnummer" => 
+	, "Administration"
+		=> 	array( null, 
+			array( "Training Number" => 
 						array( gevSettings::CRS_AMD_CUSTOM_ID		# 0 to save in settings
-							 , "Trainingsnummer oder Nummernkreis"  # 1 description
+							 , null  								# 1 description
 							 , true 								# 2 searchable
 							 , null 								# 3 definition
 							 , $ttext 								# 4 type
 							 // if this is changed, the custom id logic in gevCourseUtils
 							 // needs to be changed as well!!
 							 )
-				 , "Trainingstyp" =>
+				 , "Training Type" =>
 				 		array( gevSettings::CRS_AMD_TYPE
-				 			 , "Typ des Trainings"
+				 			 , null
 				 			 , true
 				 			 // if this is changed, gevUserUtils::getPotentiallyBookableCourses
 				 			 // needs to be changed as well!!
@@ -340,34 +300,45 @@ array( "Zeitraum"
 				 			 // needs to be changed as well!!
 				 			 , $tselect
 				 			 )
-				 , "Vorlage" =>
+				, "Educational Program" =>
+						array( gevSettings::CRS_AMD_EDU_PROGRAMM
+							 , null
+							 , true
+							 , array( "High Potentials (SPX-HP)"
+									, "Onboarding (SPX-OB)"
+									, "Azubi-Ausbildung (SPX-AA)"
+									, "Dezentrales Training "
+							 	    )
+							 , $tselect
+							 )
+				 , "Template" =>
 				 		array( gevSettings::CRS_AMD_IS_TEMPLATE
-				 			 , "Ist dieses Objekt ein Vorlagenobjekt?"
+				 			 , null
 				 			 , false
-				 			 , array ( "Ja"
-				 			 		 , "Nein"
+				 			 , array ( "Yes"
+				 			 		 , "No"
 				 			 		 )
 				 			 , $tselect
 				 			 // if this is changed, gevUserUtils::getPotentiallyBookableCourses
 				 			 // needs to be changed as well!!
 				 			 )
-				 , "Vorlagentitel" =>
+				 , "Template Title" =>
 				 		array( gevSettings::CRS_AMD_TEMPLATE_TITLE
-				 			 , "Name der verwendeten Vorlage (nicht ändern)"
+				 			 , "don't change"
 				 			 , true
 				 			 , null
 				 			 , $ttext
 				 			 )
-				 , "Referenz-Id der Vorlage" =>
+				 , "Reference ID (template)" =>
 				 		array( gevSettings::CRS_AMD_TEMPLATE_REF_ID
-				 			 , "ILIAS-Referenz-Id der verwendeten Vorlage (nicht ändern)"
+				 			 , "don't change"
 				 			 , false
 				 			 , array("min" => 0)
 				 			 , $tinteger
 				 			 )
-				 , "Nummernkreis" =>
+				 , "Range of Numbers" =>
 				 		array( gevSettings::CRS_AMD_CUSTOM_ID_TEMPLATE
-							 , "Zu verwendender Nummernkreis für diese Vorlage"
+							 , null
 							 , false
 							 , array( "SPX-HP High Potentials"
 									, "SPX-OB Onboarding"
