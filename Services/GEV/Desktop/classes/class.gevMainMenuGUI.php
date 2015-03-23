@@ -93,7 +93,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 							|| $report_permission_employee_edu_bio
 							|| $report_permission_wbd; //$report_permission_attendancebyuser; // || ....
 
-		$is_trainer = $tep; // $tep_permissions->isTutor();
+		$is_trainer = $tep_permissions->isTutor();
 
 		//get all OrgUnits of superior
 		$arr_org_units_of_superior = $this->userUtils->getOrgUnitsWhereUserIsDirectSuperior();
