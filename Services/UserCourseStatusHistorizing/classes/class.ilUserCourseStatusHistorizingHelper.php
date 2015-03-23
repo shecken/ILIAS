@@ -10,6 +10,7 @@
  */
 
 require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 require_once("Services/GEV/Utils/classes/class.gevBillingUtils.php");
 
@@ -197,7 +198,7 @@ class ilUserCourseStatusHistorizingHelper
 	 * @return bool
 	 */
 	public function courseHasIndividualStartAndEnd($course) {
-		return gevCourseUtils::getInstanceByObjOrId($course)->getType() == "Selbstlernkurs";
+		return gevCourseUtils::getInstanceByObjOrId($course)->getType() == gevSettings::WBT;
 	}
 	
 	/**

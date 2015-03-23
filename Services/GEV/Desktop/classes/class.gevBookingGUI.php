@@ -191,14 +191,14 @@ class gevBookingGUI {
 	
 	protected function isSelfLearningCourse() {
 		if ($this->is_self_learning === null) {
-			$this->is_self_learning = $this->crs_utils->getType() == "Selbstlernkurs";
+			$this->is_self_learning = $this->crs_utils->getType() == gevSettings::WBT;
 		}
 		return $this->is_self_learning;
 	}
 	
 	protected function isWebinar() {
 		if ($this->is_webinar === null) {
-			$this->is_webinar = $this->crs_utils->getType() == "Webinar";
+			$this->is_webinar = $this->crs_utils->getType() == gevSettings::WEBINAR;
 		}
 		return $this->is_webinar;
 	}

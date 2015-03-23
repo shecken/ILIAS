@@ -453,7 +453,7 @@ class gevCourseUtils {
 	public function getAmountHours() {
 		$type = $this->getType();
 		if ( $type === null
-		  || in_array($type, array("POT-Termin", "Selbstlernkurs"))) {
+		  || in_array($type, array(gevSettings::WBT))) {
 			return null;
 		}
 		$schedule = $this->getSchedule();

@@ -117,13 +117,11 @@ class ilParticipationStatusHelper
 		require_once("Services/ParticipationStatus/classes/class.ilParticipationStatus.php");
 		$type = $this->utils->getType();
 		switch ($type) {
-			case "Präsenztraining":
+			case gevSettings::LIVE_TRAINING:
 				return ilParticipationStatus::MODE_NON_REVIEWED;
-			case "Selbstlernkurs":
+			case gevSettings::WBT:
 				return ilParticipationStatus::MODE_CONTINUOUS;
-			case "Webinar":
-				return ilParticipationStatus::MODE_NON_REVIEWED;
-			case "Virtuelles Training":
+			case gevSettings::WEBINAR:
 				return ilParticipationStatus::MODE_NON_REVIEWED;
 			default:
 				$this->log->write( "ilParticipationStatusHelper::getParticipationStatusMode: "
