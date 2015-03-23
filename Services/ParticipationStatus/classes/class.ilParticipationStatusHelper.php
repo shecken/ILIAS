@@ -137,7 +137,7 @@ class ilParticipationStatusHelper
 	 */
 	public function getMaxCreditPoints()
 	{
-		return $this->utils->getCreditPoints();
+		return 0;
 	}
 	
 	/**

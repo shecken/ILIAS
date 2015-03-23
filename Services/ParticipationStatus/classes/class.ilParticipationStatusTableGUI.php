@@ -46,7 +46,9 @@ class ilParticipationStatusTableGUI extends ilTable2GUI
 		$this->addColumn($this->lng->txt("login"), "login");
 		$this->addColumn($this->lng->txt("objs_orgu"), "org");
 		$this->addColumn($this->lng->txt("ptst_admin_status"), "status");
-		$this->addColumn($this->lng->txt("ptst_admin_credit_points"), "cpoints");
+		// spx-patch start
+		//$this->addColumn($this->lng->txt("ptst_admin_credit_points"), "cpoints");
+		// spx-patch end
 		$this->addColumn($this->lng->txt("ptst_admin_changed_by"), "changed_on");
 		
 		$this->setDefaultOrderField("name");
