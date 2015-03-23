@@ -2138,7 +2138,6 @@ class gevCourseUtils {
 				 , gevSettings::CRS_AMD_START_DATE			=> "start_date"
 				 , gevSettings::CRS_AMD_END_DATE 			=> "end_date"
 				 //trainer
-				 , gevSettings::CRS_AMD_CREDIT_POINTS 		=> "points"
 				 , gevSettings::CRS_AMD_FEE					=> "fee"
 				 //status (online/offline)
 				 , gevSettings::CRS_AMD_MIN_PARTICIPANTS	=> "min_participants"
