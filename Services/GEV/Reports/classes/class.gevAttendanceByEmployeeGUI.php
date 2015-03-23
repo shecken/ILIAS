@@ -38,17 +38,12 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 						->column("lastname", "lastname")
 						->column("firstname", "firstname")
 						->column("email", "email")
-						->column("adp_number", "gev_adp_number")
-						->column("job_number", "gev_job_number")
-						->column("od_bd", "gev_od_bd")
 						->column("org_unit", "gev_org_unit_short")
-						->column("position_key", "gev_agent_key")
 						->column("custom_id", "gev_training_id")
 						->column("title", "title")
 						->column("venue", "gev_location")
 						->column("type", "gev_learning_type")
 						->column("date", "date")
-						->column("credit_points", "gev_credit_points")
 						->column("booking_status", "gev_booking_status")
 						->column("participation_status", "gev_participation_status")
 						->template("tpl.gev_attendance_by_employee_row.html", "Services/GEV/Reports")
@@ -159,11 +154,6 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 	}
 
 	protected function transformResultRow($rec) {
-		// credit_points
-		if ($rec["credit_points"] == -1) {
-			$rec["credit_points"] = $this->lng->txt("gev_table_no_entry");
-		}
-
 		//date
 		if( $rec["begin_date"] && $rec["end_date"] 
 			&& ($rec["begin_date"] != '0000-00-00' && $rec["end_date"] != '0000-00-00' )
@@ -177,19 +167,6 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 		}
 		$rec['date'] = $date;
 		
-		// od_bd
-		if ( $rec["org_unit_above2"] == "-empty-") {
-			if ($rec["org_unit_above1"] == "-empty-") {
-				$rec["od_bd"] = $this->lng->txt("gev_table_no_entry");
-			}
-			else {
-				$rec["od_bd"] = $rec["org_unit_above1"];
-			}
-		}
-		else {
-			$rec["od_bd"] = $rec["org_unit_above2"]."/".$rec["org_unit_above1"];
-		}
-
 		return $this->replaceEmpty($rec);
 	}
 	
