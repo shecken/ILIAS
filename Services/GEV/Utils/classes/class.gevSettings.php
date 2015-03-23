@@ -20,6 +20,11 @@ class gevSettings {
 	
 	const MODULE_NAME = "gev";
 	
+	# For queries
+	const LIVE_TRAINING = "Live Training";
+	const WEBINAR = "Webinar";
+	const WBT = "Online Training";
+	
 	// vgl. Konzept, Abschnitt Trainingsvorlagen
 	
 	// Block "Trainingsverwaltung"

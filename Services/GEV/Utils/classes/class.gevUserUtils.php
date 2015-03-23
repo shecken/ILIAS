@@ -187,10 +187,6 @@ class gevUserUtils {
 		, "DBV EVG"
 	);
 
-
-	
-
-
 	protected function __construct($a_user_id) {
 		global $ilDB;
 		global $ilAccess;
@@ -340,11 +336,11 @@ class gevUserUtils {
 				 "   AND NOT start_date.value IS NULL ".
 				 // generali konzept "Trainingsbewerbung"
 				 "   AND (".
-				 "            (   ltype.value LIKE 'Live Training' ".
+				 "            (   ltype.value = ".$this->db->quote(gevSettings::LIVE_TRAINING, "text").
 				 "            AND ADDDATE(start_date.value, -1 * bk_deadl.value) < ".
 				 			     $this->db->quote(date("Y-m-d", time() + 14 * 24 * 60 * 60), "date").
 				 "            )".
-				 "       OR   (   ltype.value = ".$this->db->quote("Webinar", "text").
+				 "       OR   (   ltype.value = ".$this->db->quote(gevSettings::WEBINAR, "text").
 				 "            AND ADDDATE(start_date.value, -1 * bk_deadl.value) < ".	
 				 				 $this->db->quote(date("Y-m-d", time() + 7 * 24 * 60 * 60), "date").
 				 "            )".
@@ -737,10 +733,12 @@ class gevUserUtils {
 				 "   AND cs.activation_end > ".time().
 				 "   AND oref.deleted IS NULL".
 				 "   AND is_template.value = ".$this->db->quote("Nein", "text").
-				 "   AND (   ( (ltype.value LIKE 'Live Training' OR ltype.value = 'Webinar')".
+				 "   AND (   ( (ltype.value = ".$this->db->quote(gevSettings::LIVE_TRAINING, "text").
+				 "              OR ltype.value = ".$this->db->quote(gevSettings::WEBINAR, "text").
+				 "              )".
 				 "            AND start_date.value > ".$this->db->quote(date("Y-m-d"), "text").
 				 "		     )".
-				 "		  OR (".$this->db->in("ltype.value", array("Online Training"), false, "text").
+				 "		  OR (".$this->db->in("ltype.value", array(gevSettings::LIVE_TRAINING), false, "text").
 				 "			 )".
 				 "		 )".
 				 $additional_where.
