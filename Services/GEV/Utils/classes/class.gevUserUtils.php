@@ -543,7 +543,6 @@ class gevUserUtils {
 				 , gevSettings::CRS_AMD_MAX_PARTICIPANTS	=> "mbr_max"
 				 , gevSettings::CRS_AMD_MIN_PARTICIPANTS	=> "mbr_min"
 				 
-				 , gevSettings::CRS_AMD_TARGET_GROUP		=> "target_group"
 				 , gevSettings::CRS_AMD_TARGET_GROUP_DESC	=> "target_group_desc"
 				 , gevSettings::CRS_AMD_GOALS 				=> "goals"
 				 , gevSettings::CRS_AMD_CONTENTS 			=> "content"
@@ -651,18 +650,6 @@ class gevUserUtils {
 				;
 			$additional_where .=
 				" AND categorie.value LIKE ".$this->db->quote("%".$a_search_options["categorie"]."%", "text");
-		}
-		if (array_key_exists("target_group", $a_search_options)) {
-			$target_group_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_TARGET_GROUP);
-			
-			// this is knowledge from the course amd plugin!
-			$additional_join .= 
-				" LEFT JOIN adv_md_values_text target_group".
-				"   ON cs.obj_id = target_group.obj_id ".
-				"   AND target_group.field_id = ".$this->db->quote($target_group_field_id, "integer")
-				;
-			$additional_where .=
-				" AND target_group.value LIKE ".$this->db->quote("%".$a_search_options["target_group"]."%", "text");
 		}
 		if (array_key_exists("location", $a_search_options)) {
 			$location_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_VENUE);
