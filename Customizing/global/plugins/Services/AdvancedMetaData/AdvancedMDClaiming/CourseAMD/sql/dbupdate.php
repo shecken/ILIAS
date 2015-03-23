@@ -79,14 +79,14 @@ array( "Period"
 	 	   					 , $tvenue
 	 	   					 )
 				, "Webinar Link" =>
-						array( gevSettings::CRS_AMD_WEBEX_LINK
+						array( gevSettings::CRS_AMD_WEBINAR_LINK
 							 , null
 							 , false
 							 , null
 							 , $ttext
 							 )
 				, "Webinar Password" =>
-						array( gevSettings::CRS_AMD_WEBEX_PASSWORD
+						array( gevSettings::CRS_AMD_WEBINAR_PASSWORD
 							 , ""
 							 , false
 							 , null

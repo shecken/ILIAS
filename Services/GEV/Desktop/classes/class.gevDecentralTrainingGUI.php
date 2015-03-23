@@ -263,9 +263,9 @@ class gevDecentralTrainingGUI {
 		
 		if ($crs_utils->isWebinar()) {
 			$link = $a_form->getInput("webinar_link");
-			$crs_utils->setWebExLink($link ? $link : " ");
+			$crs_utils->setWebinarLink($link ? $link : " ");
 			$password = $a_form->getInput("webinar_password");
-			$crs_utils->setWebExPassword($password ? $password : " ");
+			$crs_utils->setWebinarPassword($password ? $password : " ");
 		}
 		
 		$tep_orgu_id = $a_form->getInput("orgu_id");
@@ -434,8 +434,8 @@ class gevDecentralTrainingGUI {
 					, "end_datetime" => new ilDateTime("1970-01-01 ".$sched[1].":00", IL_CAL_DATETIME)
 					, "time" => null
 					, "venue" => $crs_utils->getVenueId()
-					, "webinar_link" => $crs_utils->getWebExLink()
-					, "webinar_password" => $crs_utils->getWebExPassword()
+					, "webinar_link" => $crs_utils->getWebinarLink()
+					, "webinar_password" => $crs_utils->getWebinarPassword()
 					, "orgu_id" => $crs_utils->getTEPOrguId()
 					, "invitation_preview" => $crs_utils->getInvitationMailPreview()
 					, "suppress_mails" => $mail_settings->getSuppressMails()
@@ -521,7 +521,7 @@ class gevDecentralTrainingGUI {
 			$form->addItem($venue);
 		}
 		
-		if ($training_info["ltype"] == "Webinar") {
+		if ($training_info["ltype"] == gevSettings::WEBINAR) {
 			$webinar_link = new ilTextInputGUI($this->lng->txt("gev_webinar_link"), "webinar_link");
 			$webinar_link->setDisabled($no_changes_allowed);
 			if ($training_info["webinar_link"] && $a_fill) {

@@ -855,20 +855,20 @@ class gevCourseUtils {
 			&& ($this->getEndDate() !== null);
 	}
 	
-	public function getWebExLink() {
-		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_WEBEX_LINK);
+	public function getWebinarLink() {
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_WEBINAR_LINK);
 	}
 	
-	public function setWebExLink($a_value) {
-		return $this->amd->setField($this->crs_id, gevSettings::CRS_AMD_WEBEX_LINK, $a_value);
+	public function setWebinarLink($a_value) {
+		return $this->amd->setField($this->crs_id, gevSettings::CRS_AMD_WEBINAR_LINK, $a_value);
 	}
 	
-	public function getWebExPassword() {
-		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_WEBEX_PASSWORD);
+	public function getWebinarPassword() {
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_WEBINAR_PASSWORD);
 	}
 	
-	public function setWebExPassword($a_value) {
-		return $this->amd->setField($this->crs_id, gevSettings::CRS_AMD_WEBEX_PASSWORD, $a_value);
+	public function setWebinarPassword($a_value) {
+		return $this->amd->setField($this->crs_id, gevSettings::CRS_AMD_WEBINAR_PASSWORD, $a_value);
 	}
 	
 	/*public function getCSNLink() {
