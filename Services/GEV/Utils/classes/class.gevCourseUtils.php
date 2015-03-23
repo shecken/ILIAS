@@ -333,12 +333,12 @@ class gevCourseUtils {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_TYPE);
 	}
 	
-	public function isPraesenztraining() {
-		return preg_match("/.*senztraining/", $this->getType());
+	public function isLiveTraining() {
+		return $this->getType() == gevSettings::LIVE_TRAINING;
 	}
 	
 	public function isWebinar() {
-		return $this->getType() == "Webinar";
+		return $this->getType() == gevSettings::WEBINAR;
 	}
 	
 	public function isDecentralTraining() {
@@ -1558,7 +1558,7 @@ class gevCourseUtils {
 			unset($arr["Bildungspunkte"]);
 		}
 		
-		if ($this->isPraesenztraining()) {
+		if ($this->isLiveTraining()) {
 			$arr["Bei Rückfragen"] = "Ad-Schulung.de@generali.com";
 		}
 		return $arr;

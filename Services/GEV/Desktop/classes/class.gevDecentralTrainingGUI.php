@@ -256,7 +256,7 @@ class gevDecentralTrainingGUI {
 		$time = array($start[0].":".$start[1]."-".$end[0].":".$end[1]);
 		$crs_utils->setSchedule($time);
 		
-		if ($crs_utils->isPraesenztraining()) {
+		if ($crs_utils->isLiveTraining()) {
 			$venue = $a_form->getInput("venue");
 			$crs_utils->setVenueId($venue);
 		}
@@ -324,8 +324,6 @@ class gevDecentralTrainingGUI {
 		$ltype_choice = new ilRadioGroupInputGUI($this->lng->txt("gev_course_type"), "ltype");
 		$form->addItem($ltype_choice);
 		foreach ($templates as $ltype => $tmplts) {
-		//foreach (array("Präsenztraining", "Webinar") as $ltype) {
-			//$tmplts = $templates[$ltype];
 			$key = strtolower(str_replace(" ", "_", $ltype));
 			$ltype_opt = new ilRadioOption($ltype, $key);
 			$ltype_choice->addOption($ltype_opt);
@@ -335,7 +333,6 @@ class gevDecentralTrainingGUI {
 
 			$ltype_opt->addSubItem($training_select);
 		}
-		$ltype_choice->setValue("präsenztraining");
 		
 		
 		// maybe choice of trainers
@@ -510,7 +507,7 @@ class gevDecentralTrainingGUI {
 		$trainers->setDisabled($no_changes_allowed);
 		$form->addItem($trainers);
 		
-		if ($crs_utils->isPraesenztraining()) {
+		if ($crs_utils->isLiveTraining()) {
 			$venue = new ilSelectInputGUI($this->lng->txt("gev_venue"), "venue");
 			$venues = array(0 => "-") + gevOrgUnitUtils::getVenueNames();
 			$venue->setOptions($venues);

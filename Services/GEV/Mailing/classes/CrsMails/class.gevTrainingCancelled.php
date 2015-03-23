@@ -40,7 +40,7 @@ class gevTrainingCancelled extends gevCrsAutoMail {
 	}
 	
 	public function getMail($a_recipient) {
-		if (!$this->getCourseUtils()->isPraesenztraining()) {
+		if (!$this->getCourseUtils()->isLiveTraining()) {
 			return null;
 		}
 		

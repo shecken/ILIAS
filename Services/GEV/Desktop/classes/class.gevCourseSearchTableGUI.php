@@ -11,6 +11,7 @@
 
 require_once("Services/CaTUIComponents/classes/class.catAccordionTableGUI.php");
 require_once("Services/Utilities/classes/class.ilUtil.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 require_once("Services/Calendar/classes/class.ilDatePresentation.php");
@@ -127,19 +128,19 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		}
 		else if ($a_set["free_places"] == 0 && !$a_set["waiting_list_active"]) {
 			$status = $this->not_bookable_img;
-			if ($a_set["type"] == "Webinar") {
+			if ($a_set["type"] == gevSettings::WEBINAR) {
 				$action = $contact_webinar_action;
 			}
-			else if($a_set["type"] == "Live Training") {
+			else if($a_set["type"] == gevSettings::LIVE_TRAINING) {
 				$action = $contact_onside_action;
 			}
 		}
 		else {
 			$status = $this->almost_not_bookable_img;
-			if ($a_set["type"] == "Webinar") {
+			if ($a_set["type"] == gevSettings::WEBINAR) {
 				$action = $contact_webinar_action;
 			}
-			else if($a_set["type"] == "Live Training") {
+			else if($a_set["type"] == gevSettings::LIVE_TRAINING) {
 				$action = $contact_onside_action;	
 			}
 		}
@@ -193,7 +194,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 			$this->tpl->parseCurrentBlock();
 		}
 
-		if ($a_set["type"] == "Webinar") {
+		if ($a_set["type"] == gevSettings::WEBINAR) {
 			$this->tpl->setCurrentBlock("webinar_time");
 			$this->tpl->setVariable("TIME", $a_set["schedule"][0]);
 			$this->tpl->parseCurrentBlock();

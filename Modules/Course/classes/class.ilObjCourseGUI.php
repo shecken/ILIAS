@@ -1714,7 +1714,7 @@ class ilObjCourseGUI extends ilContainerGUI
 				
 				// gev-patch start
 				require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
-				if (gevCourseUtils::getInstanceByObj($this->object)->isPraesenztraining()) {
+				if (gevCourseUtils::getInstanceByObj($this->object)->isLiveTraining()) {
 					$this->ctrl->setParameterByClass('ilmateriallistgui', 'ref_id', $this->object->getRefId());
 					$this->tabs_gui->addSubTabTarget('matlist',
 						$this->ctrl->getLinkTargetByClass('ilmateriallistgui',''), 
@@ -2173,12 +2173,14 @@ class ilObjCourseGUI extends ilContainerGUI
 		//$ilToolbar->addButton($this->lng->txt("crs_print_list"),
 			$this->ctrl->getLinkTarget($this, 'printMembers'));
 		*/
+		require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+
 		$utils = gevCourseUtils::getInstanceByObj($this->object);
 		$ilToolbar->addSeparator();
 		$ilToolbar->addButton( $this->lng->txt("gev_member_list")
 							 , "ilias.php?ref_id=".$_GET["ref_id"]."&cmd=trainer&baseClass=gevMemberListDeliveryGUI"
 							 );
-		if (in_array($utils->getType(), array("Webinar", "Spezialistenschulung Webinar"))) {
+		if (in_array($utils->getType(), array(gevSettings::WEBINAR))) {
 			$ilToolbar->addButton( $this->lng->txt("gev_csn_list")
 								 , "ilias.php?ref_id=".$_GET["ref_id"]."&cmd=csn&baseClass=gevMemberListDeliveryGUI"
 								 );

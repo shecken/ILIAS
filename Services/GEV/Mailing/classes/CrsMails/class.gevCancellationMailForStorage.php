@@ -16,7 +16,7 @@ class gevCancellationMailForStorage extends gevCrsAutoMail {
 	}
 	
 	public function shouldBeSend() {
-		if (!$this->getCourseUtils()->isPraesenztraining()) {
+		if (!$this->getCourseUtils()->isLiveTraining()) {
 			return false;
 		}
 		
@@ -59,7 +59,7 @@ class gevCancellationMailForStorage extends gevCrsAutoMail {
 	}
 	
 	public function getMail($a_recipient) {
-		if (!$this->getCourseUtils()->isPraesenztraining()) {
+		if (!$this->getCourseUtils()->isLiveTraining()) {
 			return null;
 		}
 		
