@@ -407,7 +407,8 @@ class ilObjCourseGUI extends ilContainerGUI
 		//	
 		// access
 		//
-		
+		// spx-patch start
+		/*
 		// #10360
 		$this->lng->loadLanguageModule("rep");
 		$info->addSection($this->lng->txt("rep_activation_availability"));
@@ -481,7 +482,8 @@ class ilObjCourseGUI extends ilContainerGUI
 						$this->object->getSubscriptionMaxMembers() - ilParticipants::lookupNumberOfMembers($this->object->getRefId()))
 				);
 			}
-		}
+		}*/
+		// spx-patch end
 		
 		// archive
 		if($this->object->getViewMode() == IL_CRS_VIEW_ARCHIVE)

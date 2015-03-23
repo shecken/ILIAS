@@ -307,6 +307,9 @@ class ilInfoScreenGUI
 	*/
 	function addMetaDataSections($a_rep_obj_id,$a_obj_id, $a_type)
 	{
+		// spx-patch start
+		return;
+		// spx-patch end
 		global $lng;
 
 		$lng->loadLanguageModule("meta");

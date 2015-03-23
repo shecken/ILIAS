@@ -395,9 +395,16 @@ class ilAdvancedMDRecordGUI
 		
 			$defs = $a_values->getDefinitions();									
 			foreach($a_values->getADTGroup()->getElements() as $element_id => $element)				
-			{								
+			{
+				// spx-patch start
+				if (in_array($defs[$element_id]->getTitle(), array( "Template", "Template Title"
+																  , "Reference ID (template)"
+																  , "Range of Numbers"))) {
+					continue;
+				}
+				// spx-patch end
 				if(!$element->isNull())
-				{									
+				{
 					$this->info->addProperty($defs[$element_id]->getTitle(),
 						ilADTFactory::getInstance()->getPresentationBridgeForInstance($element)->getHTML());					
 				}
