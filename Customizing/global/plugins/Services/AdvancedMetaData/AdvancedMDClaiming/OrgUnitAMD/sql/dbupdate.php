@@ -18,30 +18,30 @@ $tmultiselect = ilAdvancedMDFieldDefinition::TYPE_MULTI_SELECT;
 $gev_set = gevSettings::getInstance();
 
 $records_org = 
-array( "Adresse"
-		=> 	array( "Adressdaten der Organisationseinheit", 
-			array( "Straße" => 
+array( "Address"
+		=> 	array( "Address of Organizational Unit", 
+			array( "Street" => 
 						array( gevSettings::ORG_AMD_STREET			# 0 to save in settings
 							 , null									# 1 description
 							 , true 								# 2 searchable
 							 , null 								# 3 definition
 							 , $ttext 								# 4 type
 							 )
-				 , "Hausnummer" =>
+				 , "House Number" =>
 				 		array( gevSettings::ORG_AMD_HOUSE_NUMBER
 				 			 , null
 				 			 , true
 				 			 , null
 				 			 , $ttext
 				 			 )
-				 , "Postleitzahl" =>
+				 , "Zipcode" =>
 				 		array( gevSettings::ORG_AMD_ZIPCODE
 				 			 , null
 				 			 , true
 				 			 , null
 				 			 , $ttext
 				 			 )
-				 , "Stadt" =>
+				 , "City" =>
 				 		array( gevSettings::ORG_AMD_CITY
 				 			 , null
 				 			 , true
@@ -49,23 +49,23 @@ array( "Adresse"
 				 			 , $ttext
 				 			 )
 				 ))
-	 , "Kontaktdaten" 
-		=> array( "Ansprechpartner in der Organisationseinheit",
-		   array( "Kontaktperson" =>
+	 , "Contact Information" 
+		=> array( "Contact Person in the Organizational Unit",
+		   array( "Name" =>
 				 		array( gevSettings::ORG_AMD_CONTACT_NAME
 				 			 , null
 				 			 , true
 				 			 , null
 				 			 , $ttext
 				 			 )
-				, "Telefon" =>
+				, "Telephone Number" =>
 						array( gevSettings::ORG_AMD_CONTACT_PHONE
 							 , null
 							 , true
 							 , null
 							 , $ttext
 							 )
-				, "Fax" =>
+				, "Fax Number" =>
 						array( gevSettings::ORG_AMD_CONTACT_FAX
 							 , null
 							 , true
@@ -93,9 +93,9 @@ array( "Adresse"
 
 
 $records_venue = 
-array("Ort"
+array("Location"
 	 	=> array(null,
-	 	   array( "Ort" =>
+	 	   array( "Location" =>
 	 	   				array( gevSettings::VENUE_AMD_LOCATION
 	 	   					 , null
 	 	   					 , false
@@ -103,9 +103,9 @@ array("Ort"
 	 	   					 , $tlocation
 	 	   					 )
 	 	   		))
-	 , "Preise"
-		=> array( "Übernachtungs- und Verpflegungspreise",
-		   array( "Kosten je Übernachtung" => 
+	 , "Pricing"
+		=> array( "Prices for Accomodation and Catering",
+		   array( "Price per Overnight Stay" => 
 		   				array( gevSettings::VENUE_AMD_COSTS_PER_ACCOM
 		   					 , null
 		   					 , true
@@ -114,7 +114,7 @@ array("Ort"
 		   					 		)
 		   					 , $tfloat
 		   					 )
-				, "Pauschale Frühstück" => 
+				, "Breakfast All Inclusive" => 
 		   				array( gevSettings::VENUE_AMD_COSTS_BREAKFAST
 		   					 , null
 		   					 , true
@@ -123,7 +123,7 @@ array("Ort"
 		   					 		)
 		   					 , $tfloat
 		   					 )
-				, "Pauschale Mittagessen" => 
+				, "Dinner All Inclusive" => 
 		   				array( gevSettings::VENUE_AMD_COSTS_LUNCH
 		   					 , null
 		   					 , true
@@ -132,7 +132,7 @@ array("Ort"
 		   					 		)
 		   					 , $tfloat
 		   					 )
-				, "Nachmittagspauschale" => 
+				, "Coffee Break All Inclusive" => 
 		   				array( gevSettings::VENUE_AMD_COSTS_COFFEE
 		   					 , null
 		   					 , true
@@ -141,7 +141,7 @@ array("Ort"
 		   					 		)
 		   					 , $tfloat
 		   					 )
-				, "Pauschale Abendessen" => 
+				, "Dinner All Inclusive" => 
 		   				array( gevSettings::VENUE_AMD_COSTS_DINNER
 		   					 , null
 		   					 , true
@@ -150,7 +150,7 @@ array("Ort"
 		   					 		)
 		   					 , $tfloat
 		   					 )
-				, "Pauschale Tagesverpflegung" => 
+				, "Catering All Inclusive" => 
 		   				array( gevSettings::VENUE_AMD_COSTS_FOOD
 		   					 , null
 		   					 , true
@@ -159,7 +159,7 @@ array("Ort"
 		   					 		)
 		   					 , $tfloat
 		   					 )
-		   		, "Vollkostenpauschale Hotel" =>
+		   		, "Overnight All Inclusive" =>
 		   				array( gevSettings::VENUE_AMD_COSTS_HOTEL
 		   					 , null
 		   					 , true
@@ -168,7 +168,7 @@ array("Ort"
 		   					 		)
 		   					 , $tfloat
 		   					 )
-		   		, "Tagespauschale Hotel" =>
+		   		, "Overnight and Catering All Inclusive" =>
 		   				array( gevSettings::VENUE_AMD_ALL_INCLUSIVE_COSTS
 		   					 , null
 		   					 , true
@@ -206,9 +206,9 @@ require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 $ttext = ilAdvancedMDFieldDefinition::TYPE_TEXT;
 
 $records_org_default = 
-array( "Kostenstelle"
-		=> 	array( "Kostenstelle der Organisationseinheit", 
-			array( "Kostenstelle" => 
+array( "Cost Center"
+		=> 	array( "Cost Center of Organizational Unit", 
+			array( "Cost Center" => 
 						array( gevSettings::ORG_AMD_FINANCIAL_ACCOUNT	# 0 to save in settings
 							 , null									# 1 description
 							 , true 								# 2 searchable
