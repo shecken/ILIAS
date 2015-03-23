@@ -675,6 +675,18 @@ class gevUserUtils {
 			$additional_where .=
 				" AND provider.value LIKE ".$this->db->quote("%".$a_search_options["provider"]."%", "text");
 		}
+		if (array_key_exists("language", $a_search_options)) {
+			$language_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_LANG);
+			
+			// this is knowledge from the course amd plugin!
+			$additional_join .= 
+				" LEFT JOIN adv_md_values_text language".
+				"   ON cs.obj_id = language.obj_id ".
+				"   AND language.field_id = ".$this->db->quote($language_field_id, "integer")
+				;
+			$additional_where .=
+				" AND language.value LIKE ".$this->db->quote("%".$a_search_options["language"]."%", "text");
+		}
 		if (array_key_exists("period", $a_search_options)) {
 			$end_date_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_START_DATE);
 			
