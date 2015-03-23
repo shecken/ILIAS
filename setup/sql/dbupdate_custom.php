@@ -2048,7 +2048,7 @@ foreach ($txt_fields_hist_user as $field) {
 <?php
 // missing fields for wbd, hist_course
 $txt_fields_hist_course = array(
-	'wbd_topic' //CRS_AMD_GDV_TOPIC, study-contents
+	'wbd_topic'
 );
 foreach ($txt_fields_hist_course as $field) {
 	if(!$ilDB->tableColumnExists('hist_course', $field)){
