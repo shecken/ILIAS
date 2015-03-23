@@ -419,10 +419,14 @@ class ilPersonalSettingsGUI
 		}
 
 		include_once 'Services/Mail/classes/class.ilMailGlobalServices.php';
-		if($rbacsystem->checkAccess('internal_mail', ilMailGlobalServices::getMailObjectRefId()))
+		// spx-patch start
+		/*if($rbacsystem->checkAccess('internal_mail', ilMailGlobalServices::getMailObjectRefId()))
 		{
 			$ilTabs->addTarget("mail_settings", $this->ctrl->getLinkTarget($this, "showMailOptions"), "", "", "", $showMailOptions);
-		}
+		}*/
+		
+		$ilTabs->addTarget("language", $this->ctrl->getLinkTarget($this, "showLangOptions"), "", "", "", true);
+		// spx-patch end
 
 		$chatSettings = new ilSetting('chatroom');
 		$notificationSettings = new ilSetting('notifications');
@@ -1483,5 +1487,58 @@ class ilPersonalSettingsGUI
 		
 		ilUtil::redirect("login.php?accdel=1");		 		
 	}
+	
+	// spx-patch start
+	protected function showLangOptions() {
+		global $ilTabs, $ilUser;
+		
+		$this->__initSubTabs();
+		$ilTabs->activateTab("language");
+
+		$this->setHeader();
+
+		$this->initLangForm();
+		$this->tpl->setContent($this->form->getHTML());
+		$this->tpl->show();
+	}
+	
+	protected function initLangForm($from_prev = true) {
+		global $lng, $ilUser, $ilSetting;
+		$lng->loadLanguageModule("meta");
+		
+		require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
+		$this->form = new ilPropertyFormGUI();
+		$this->form->setTitle($lng->txt("language"));
+		$this->form->setFormAction($this->ctrl->getFormAction($this));
+		$this->form->addCommandButton("saveLanguage", $lng->txt("save"));
+
+		require_once("Services/Form/classes/class.ilSelectInputGUI.php");
+		$lng_select = new ilSelectInputGUI($lng->txt("language"), "language");
+		$installed = $lng->getInstalledLanguages();
+		$options = array();
+		foreach ($installed as $key) {
+			$options[$key] = $lng->txt("meta_l_$key");
+		}
+		$lng_select->setOptions($options);
+		if ($from_prev) {
+			$lng_select->setValue($ilUser->getLanguage());
+		}
+		
+		$this->form->addItem($lng_select);
+	}
+	
+	protected function saveLanguage() {
+		global $tpl, $lng, $ilCtrl, $ilUser, $ilSetting;
+	
+		$this->initLangForm(false);
+		$this->form->setValuesByPost();
+		if ($this->form->checkInput()) {
+			$ilUser->setLanguage($this->form->getItemByPostVar("language")->getValue());
+			$ilUser->update();
+		}
+		
+		$ilCtrl->redirect($this, "showLangOptions");
+	}
+	// spx-patch end
 }
 ?>
