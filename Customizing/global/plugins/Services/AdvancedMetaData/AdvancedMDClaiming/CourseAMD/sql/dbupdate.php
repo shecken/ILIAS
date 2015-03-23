@@ -301,7 +301,7 @@ array( "Period"
 				 			 , $tselect
 				 			 )
 				, "Educational Program" =>
-						array( gevSettings::CRS_AMD_EDU_PROGRAMM
+						array( gevSettings::CRS_AMD_EDU_PROGRAM
 							 , null
 							 , true
 							 , array( "High Potentials (SPX-HP)"

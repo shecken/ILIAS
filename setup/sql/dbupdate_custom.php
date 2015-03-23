@@ -2217,7 +2217,7 @@ while($rec = $ilDB->fetchAssoc($res)) {
 <?php
 // missing fields, hist_course
 $txt_fields_hist_course = array(
-	'edu_program' //CRS_AMD_EDU_PROGRAMM
+	'edu_program' //CRS_AMD_EDU_PROGRAM
 );
 foreach ($txt_fields_hist_course as $field) {
 	if(!$ilDB->tableColumnExists('hist_course', $field)){
@@ -2462,50 +2462,10 @@ if(!$ilDB->tableExists('hist_tep'))
 
 <#76>
 <?php
-	require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-
-	$res = $ilDB->query("SELECT record_id FROM adv_md_record"
-					   ." WHERE title = 'Verwaltung'");
-	$rec = $ilDB->fetchAssoc($res);
-	$record_id = $rec["record_id"];
-	
-	$res = $ilDB->query("SELECT field_id FROM adv_mdf_definition"
-					   ." WHERE title = 'Bildungsprogramm'");
-	$rec = $ilDB->fetchAssoc($res);
-	$field_id = $rec["field_id"];
-	
-	$ilDB->manipulate("UPDATE adv_mdf_definition "
-					 ."   SET record_id = ".$ilDB->quote($record_id, "integer")
-					 ." WHERE title = 'Bildungsprogramm'"
-					 );
-	$ilDB->manipulate("UPDATE settings "
-					 ."   SET value = ".$this->db->quote($record_id." ".$field_id, "text")
-					 ." WHERE keyword = ".$this->db->quote(gevSettings::CRS_AMD_EDU_PROGRAMM, "text")
-					 );
-
-	$pos = array( 1 => "Trainingsnummer"
-				, 2 => "Trainingtyp"
-				, 3 => "Bildungsprogramm"
-				, 4 => "Vorlage"
-				, 5 => "Vorlagentitel"
-				, 6 => "Referenz-Id der Vorlage"
-				, 7 => "Nummernkreis"
-				);
-	
-	foreach ($pos as $key => $value) {
-		$ilDB->manipulate("UPDATE adv_mdf_definition"
-						 ."   SET position = ".$ilDB->quote($key, "integer")
-						 ." WHERE title = ".$ilDB->quote($value, "text")
-						 );
-	}
-?>
-
-<#77>
-<?php
 	$ilCtrlStructureReader->getStructure();
 ?>
 
-<#78>
+<#77>
 <?php
 	if(!$ilDB->tableExists('gev_na_tokens'))
 	{
@@ -2529,7 +2489,7 @@ if(!$ilDB->tableExists('hist_tep'))
 ?>
 
 
-<#79>
+<#78>
 <?php
 
 $ilDB->manipulate("UPDATE tep_type SET title = 'AD-Begleitung' WHERE title = 'AD Begleitung'");
@@ -2537,7 +2497,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#80>
+<#79>
 <?php
 	//set indizes for the history table - wow, such performance!
 	$queries =  array(
@@ -2563,7 +2523,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#81>
+<#80>
 <?php
 	require_once "Customizing/class.ilCustomInstaller.php";
 
@@ -2652,7 +2612,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	ilCustomInstaller::reloadStructure();
 ?>
 
-<#82>
+<#81>
 <?php
 	//more fields in history
 	if(!$ilDB->tableColumnExists('hist_user', "is_active")){
@@ -2675,7 +2635,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	}
 ?>
 
-<#83>
+<#82>
 <?php
 	//deadline fields in course history
 	$deadlines = array(
@@ -2697,7 +2657,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	}
 ?>
 
-<#84>
+<#83>
 <?php
 
 	// calendar entry weight
@@ -2726,7 +2686,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#85>
+<#84>
 <?php
 	if(!$ilDB->tableExists('hist_tep_individ_days'))
 	{
@@ -2763,7 +2723,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#86>
+<#85>
 <?php
 
 	// calendar entry weight
@@ -2780,7 +2740,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
-<#87>
+<#86>
 <?php
 
 	if (!$ilDB->tableColumnExists("hist_tep", "orgu_title")) {

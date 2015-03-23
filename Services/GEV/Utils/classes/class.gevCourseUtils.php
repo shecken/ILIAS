@@ -488,7 +488,7 @@ class gevCourseUtils {
 	}
 	
 	public function getEduProgramm() {
-		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_EDU_PROGRAMM);
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_EDU_PROGRAM);
 	}
 	
 	public function getTargetGroupDesc() {
@@ -943,7 +943,7 @@ class gevCourseUtils {
 		global $lng;
 		$all = $lng->txt("gev_crs_srch_all");
 		require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
-		$arr = gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_EDU_PROGRAMM);
+		$arr = gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_EDU_PROGRAM);
 		return array_merge(array($all => $all), $arr);
 	}
 	
@@ -2043,7 +2043,7 @@ class gevCourseUtils {
 
 
 		if (array_key_exists("program", $a_search_options)) {
-			$custom_id_field_id = $gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
+			$custom_id_field_id = $gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAM);
 			// this is knowledge from the course amd plugin!
 			$additional_join .= 
 				" LEFT JOIN adv_md_values_text edu_program".

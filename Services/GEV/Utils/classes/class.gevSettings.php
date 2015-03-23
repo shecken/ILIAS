@@ -69,7 +69,7 @@ class gevSettings {
 	// Medien
 	const CRS_AMD_MEDIA				= "crs_amd_media";
 	// Bildungsprogramm
-	const CRS_AMD_EDU_PROGRAMM		= "crs_amd_edu_program";
+	const CRS_AMD_EDU_PROGRAM		= "crs_amd_edu_program";
 	// Sprache
 	const CRS_AMD_LANG				= "crs_amd_lang";
 
