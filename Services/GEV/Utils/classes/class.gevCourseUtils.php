@@ -322,11 +322,11 @@ class gevCourseUtils {
 	}
 	
 	public function isTemplate() {
-		return "Ja" == $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_IS_TEMPLATE);
+		return gevSettings::YES == $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_IS_TEMPLATE);
 	}
 	
 	public function setIsTemplate($a_val) {
-		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_IS_TEMPLATE, ($a_val === true)? "Ja" : "Nein" );
+		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_IS_TEMPLATE, ($a_val === true)? gevSettings::YES : gevSettings::NO );
 	}
 	
 	public function getType() {
@@ -533,11 +533,11 @@ class gevCourseUtils {
 	}
 
 	public function getWaitingListActive() {
-		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_WAITING_LIST_ACTIVE) == "Ja";
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_WAITING_LIST_ACTIVE) == gevSettings::YES;
 	}
 
 	public function setWaitingListActive($a_active, $a_update_course = true) {
-		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_WAITING_LIST_ACTIVE, $a_active ? "Ja" : "Nein");
+		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_WAITING_LIST_ACTIVE, $a_active ? gevSettings::YES : gevSettings::NO);
 		
 		if ($a_update_course) {
 			$this->getCourse()->enableSubscriptionMembershipLimitation(true);
@@ -1416,7 +1416,7 @@ class gevCourseUtils {
 				{
 					// vfstep3.1
 					$worksheet->write($row, 4, $user_utils->getFormattedOvernightDetailsForCourse($this->getCourse()), $format_wrap);
-					$worksheet->write($row, 5, $user_utils->paysPrearrival() ? "Ja" : "Nein", $format_wrap);
+					$worksheet->write($row, 5, $user_utils->paysPrearrival() ? gevSettings::YES : gevSettings::NO, $format_wrap);
 
 					//$txt[] = $lng->txt("vofue_crs_book_overnight_details").": ".$user_data["ov"];
 				}
@@ -1429,7 +1429,7 @@ class gevCourseUtils {
 					$worksheet->write($row, 4, $user_utils->getIDHGBAADStatus(), $format_wrap);
 					$worksheet->write($row, 5, $user_utils->getFormattedBirthday(), $format_wrap);
 					$worksheet->write($row, 6, " ".$user_utils->getMobilePhone());
-					$worksheet->write($row, 7, $user_utils->hasFullfilledPreconditionOf($this->crs_id) ? "Ja" : "Nein");
+					$worksheet->write($row, 7, $user_utils->hasFullfilledPreconditionOf($this->crs_id) ? gevSettings::YES : gevSettings::NO);
 					$worksheet->write($row, 8, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
 					
 					//$txt[] = $lng->txt("vofue_udf_join_date").": ".$user_data["jdate"];
@@ -2120,7 +2120,7 @@ class gevCourseUtils {
 				 $additional_join.
 				 " WHERE ".
 				 "   oref.deleted IS NULL".
-				 "   AND is_template.value = ".$db->quote("Nein", "text").
+				 "   AND is_template.value = ".$db->quote(gevSettings::NO, "text").
 
 				 $additional_where;
 

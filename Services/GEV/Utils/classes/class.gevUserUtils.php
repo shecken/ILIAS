@@ -331,7 +331,7 @@ class gevUserUtils {
 				 "   AND cs.activation_start < ".time().
 				 "   AND cs.activation_end > ".time().
 				 "   AND oref.deleted IS NULL".
-				 "   AND tmplt.value = ".$this->db->quote("Nein", "text").
+				 "   AND tmplt.value = ".$this->db->quote(gevSettings::NO, "text").
 				 "   AND start_date.value > ".$this->db->quote(date("Y-m-d"), "date").
 				 "   AND NOT start_date.value IS NULL ".
 				 // generali konzept "Trainingsbewerbung"
@@ -491,7 +491,7 @@ class gevUserUtils {
 			."   AND ua.usr_id = ".$this->db->quote($this->user_id, "integer")
 			."   AND od2.type = 'crs'"
 			."   AND oref.deleted IS NULL"
-			."   AND is_template.value = 'Nein'"
+			."   AND is_template.value = ".$this->db->quote(gevSettings::NO, "text")
 			);
 
 		$crs_ids = array();
@@ -719,7 +719,7 @@ class gevUserUtils {
 				 "   AND cs.activation_start < ".time().
 				 "   AND cs.activation_end > ".time().
 				 "   AND oref.deleted IS NULL".
-				 "   AND is_template.value = ".$this->db->quote("Nein", "text").
+				 "   AND is_template.value = ".$this->db->quote(gevSettings::NO, "text").
 				 "   AND (   ( (ltype.value = ".$this->db->quote(gevSettings::LIVE_TRAINING, "text").
 				 "              OR ltype.value = ".$this->db->quote(gevSettings::WEBINAR, "text").
 				 "              )".
@@ -2031,14 +2031,14 @@ class gevUserUtils {
 	}
 	
 	public function hasDoneWBDRegistration() {
-		return ($this->udf_utils->getField($this->user_id, gevSettings::USR_WBD_DID_REGISTRATION) == "1 - Ja");
+		return ($this->udf_utils->getField($this->user_id, gevSettings::USR_WBD_DID_REGISTRATION) == "1 - ".gevSettings::YES);
 	}
 	
 	public function setWBDRegistrationDone() {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_WBD_DID_REGISTRATION, "1 - Ja");
+		$this->udf_utils->setField($this->user_id, gevSettings::USR_WBD_DID_REGISTRATION, "1 - ".gevSettings::YES);
 	}
 	public function setWBDRegistrationNotDone() {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_WBD_DID_REGISTRATION, "0 - Nein");
+		$this->udf_utils->setField($this->user_id, gevSettings::USR_WBD_DID_REGISTRATION, "0 - ".gevSettings::NO);
 	}
 	
 	public function canBeRegisteredAsTPService() {

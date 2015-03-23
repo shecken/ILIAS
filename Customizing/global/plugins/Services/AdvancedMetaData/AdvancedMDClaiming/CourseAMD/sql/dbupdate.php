@@ -120,8 +120,8 @@ array( "Period"
 	 	   				array( gevSettings::CRS_AMD_WAITING_LIST_ACTIVE
 	 	   					 , null
 	 	   					 , false
-	 	   					 , array( "Ja"
-	 	   					 		, "Nein"
+	 	   					 , array( gevSettings::YES
+	 	   					 		, gevSettings::NO
 	 	   					 		)
 	 	   					 , $tselect
 	 	   					 )

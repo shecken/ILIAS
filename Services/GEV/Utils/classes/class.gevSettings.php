@@ -25,6 +25,9 @@ class gevSettings {
 	const WEBINAR = "Webinar";
 	const WBT = "Online Training";
 	
+	const YES = "Yes";
+	const NO = "No";
+	
 	// vgl. Konzept, Abschnitt Trainingsvorlagen
 	
 	// Block "Trainingsverwaltung"

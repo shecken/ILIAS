@@ -234,10 +234,10 @@ class ilCourseHistorizingHelper
 	public static function getIsTemplate($course) {
 		if (gevCourseUtils::getInstanceByObjOrId($course)
 						  ->isTemplate()) {
-			return "Ja";
+			return gevSettings::YES;
 		}
 		else {
-			return "Nein";
+			return gevSettings::NO;
 		}
 	}
 

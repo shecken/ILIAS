@@ -301,10 +301,10 @@ class gevCrsMailData extends ilMailData {
 					$tmp = $this->usr_utils->getOvernightDetailsForCourse($this->crs_utils->getCourse());
 					if (   count($tmp) > 0 
 						&& $tmp[0]->get(IL_CAL_DATE) < $this->crs_utils->getStartDate()->get(IL_CAL_DATE)) {
-						$val = "Ja";
+						$val = gevSettings::YES;
 					}
 					else {
-						$val = "Nein";
+						$val = gevSettings::NO;
 					}
 				}
 				break;
@@ -313,10 +313,10 @@ class gevCrsMailData extends ilMailData {
 					$tmp = $this->usr_utils->getOvernightDetailsForCourse($this->crs_utils->getCourse());
 					if (   count($tmp) > 0 
 						&& $tmp[count($tmp)-1]->get(IL_CAL_DATE) == $this->crs_utils->getEndDate()->get(IL_CAL_DATE)) {
-						$val = "Ja";
+						$val = gevSettings::YES;
 					}
 					else {
-						$val = "Nein";
+						$val = gevSettings::NO;
 					}
 				}
 				break;

@@ -468,8 +468,8 @@ gevUDFUtils::createUDFFields(array(
 												   , "changeable_lua"		=> false
 												   , "certificate"			=> false
 												   )
-											, array( "0 - Nein"
-												   , "1 - Ja"
+											, array( "0 - ".gevSettings::NO
+												   , "1 - ".gevSettings::YES
 												   )
 											)
 	));
