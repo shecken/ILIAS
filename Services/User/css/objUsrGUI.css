@@ -17,7 +17,7 @@
 #il_prop_cont_institution + .ilFormValue,
 #il_prop_cont_department,
 #il_prop_cont_department + .ilFormValue {
-	display:none;
+	/*display:none*/;
 }
 
 #il_prop_cont_country,
