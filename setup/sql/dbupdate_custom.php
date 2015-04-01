@@ -1960,11 +1960,7 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "EventHandling", "evhk", "GEV
 
 <#52>
 <?php
-// init helper class
-require_once "Customizing/class.ilCustomInstaller.php";
 
-ilCustomInstaller::initPluginEnv();
-ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "User", "udfc", "GEVUserData");
 ?>
 
 
