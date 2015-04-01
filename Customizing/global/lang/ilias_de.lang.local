@@ -102,6 +102,12 @@ common#:#usr_without_courses#:#Benutzer ohne Training zugewiesen
 common#:#webshop#:#Webshop
 common#:#show_hidden_sections#:#Weitere Informationen anzeigen &raquo;
 common#:#hide_visible_sections#:#Weitere Informationen verbergen &raquo;
+common#:#institution#:#Company, AD
+common#:#department#:#Company, Text
+common#:#require_department#:#Pflichteingabe Company, AD
+common#:#require_institution#:#Pflichteingabe Company, Text
+certificate#:#certificate_ph_department#:#Company, Text, des Teilnehmers oder der Teilnehmerin
+certificate#:#certificate_ph_institution#:#Company, AD, des Teilnehmers oder der Teilnehmerin
 content#:#seq_abandonall#:#Die Trainingsitzung wurde abgebrochen.
 content#:#seq_coursecomplete#:#Das aktuelle Training wurde vollständig bearbeitet.
 content#:#seq_endsession#:#Die aktuelle Trainingssitzung wurde beendet.
