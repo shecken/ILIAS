@@ -1631,7 +1631,7 @@ class ilObjUserGUI extends ilObjectGUI
 	//gev-patch start
 		require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 		$field_order = gevSettings::$UDF_FIELD_ORDER;
-		$orderes_defs = array();
+		$ordered_defs = array();
 		$unaccounted_defs = array();
 
 
