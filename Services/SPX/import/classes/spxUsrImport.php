@@ -25,11 +25,15 @@
 	$rec=mysql_query($sql);
 
 	while($res=mysql_fetch_assoc($rec)) {
+/**
 
+*/
 		$res["passwd_type"] = IL_PASSWD_PLAIN;
 		$res["passwd"] = "CaT12345++";
 		$res["time_limit_unlimited"]=1;
+/**
 
+*/
 		$usr->create()
 		$usr->createReference();
 		$usr->assignData($res);

@@ -3,12 +3,11 @@
 
 include("./_launchDate.php");
 
-if( $delta <= 0 
-	&& $_SERVER['SERVER_NAME'] != 'generali.test.cat06.de'
-	&& $_SERVER['SERVER_NAME'] != 'localhost'){
+if( $delta <= 0 ){
     header('Location: ./index.php');
     die();
 }
+
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
