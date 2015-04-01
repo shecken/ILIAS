@@ -14,7 +14,7 @@ if( $delta <= 0
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title> Generali Online Akademie</title>
+	<title> SEEPEX.CAMPUS </title>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta http-equiv="content-language" content="" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -121,41 +121,38 @@ if( $delta <= 0
 			margin:0px 0px; 
 			padding:0px;
 			text-align:center;
-			background-color: #353535; 
+			background-color: #eaeef9; 
 			
 		}
 		#stage{
-			background-image: url(./poster_s.png);
+			background-image: url(./seepex_login.jpg);
 			background-repeat: no-repeat;
-			width: 782px;
-			height: 950px;
+			width: 678px;
+			height: 470px;
 			/*border: 1px solid white;*/
 			text-align: left;
-			margin: auto;
-			color: white;
+			margin: 100px auto auto;
+			color: black;
 			font-family: Arial;
 		}
 
 		#text {
-			padding-top: 80px;
-			padding-left: 130px;
-			padding-right: 120px;
-			font-size: 26px;
+			padding-top: 290px;
+			padding-left: 80px;
+			padding-right: 80px;
+			font-size: 20px;
+			color: #8591a0;
+		}
+		#text span{
+			display: inline-block;
+			padding-left: 58px;
 		}
 		
-		#text h1 {
-			font-size: 70px;
-
-		}
 
 		#numbers, #labels{
-			
+			color: #eaeef9;
 			width: 600px;
 			font-weight:bold;
-		}
-
-		#numbers{
-			margin-top: 20px;
 		}
 
 		.number{
@@ -183,17 +180,17 @@ if( $delta <= 0
 </head>
 <body>
 
-	<div style="background-image: url(repetitiveBG_s.png); background-repeat:repeat-x"> 
-
+	
 		<div id="stage">
 
 			<div id="text">
-				<h1>Punkten Sie mit Wissen.</h1>
-				Die Generali Online Akademie <br>
-				öffnet ihre Pforten.
-				<br>
-				<br>
-				Bald ist es soweit:
+				<span>
+					Because of upgrades and data migration the <br>
+					SEEPEX CAMPUS is down for maintenance.
+					<br>
+					We'll flow again in:
+				</span>
+				
 
 				<div id="numbers">
 					<div id="days" class="number">dd</div>
@@ -203,19 +200,22 @@ if( $delta <= 0
 				</div>
 
 				<div id="labels">
-					<div id="l_days" class="label">Tage</div>
-					<div id="l_hours" class="label">Stunden</div>
-					<div id="l_minutes" class="label">Minuten</div>
-					<div id="l_seconds" class="label">Sekunden</div>
+					<div id="l_days" class="label">days</div>
+					<div id="l_hours" class="label">hours</div>
+					<div id="l_minutes" class="label">minutes</div>
+					<div id="l_seconds" class="label">seconds</div>
 				</div>
 
 						
 			</div>
 			
+			<div id="textbelow">
+				
+			</div>
+
 		</div>
 
 
-	</div>
 	
 	<script type="text/javascript">
 		__init__();
