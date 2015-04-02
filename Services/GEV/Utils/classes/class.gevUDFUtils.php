@@ -74,8 +74,8 @@ class gevUDFUtils {
 		
 		if ($rec = $this->db->fetchAssoc($res)) {
 			return intval($rec["field_type"]);
-		}
-		
+		} 
+
 		throw new Exception("gevUDFUtils::getFieldType: Unknown field with id '".$a_field_id."'.");
 	}
 	

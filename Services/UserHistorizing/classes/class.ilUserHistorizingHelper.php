@@ -67,12 +67,7 @@ class ilUserHistorizingHelper
 	 */
 	public static function getPositionKeyOf($user)
 	{
-		$agent_key = gevUserUtils::getInstanceByObjOrId($user)->getAgentKey();
-		if(trim($agent_key) == '' || $agent_key == '-empty-'){
-			return gevUserUtils::getInstanceByObjOrId($user)->getAgentPositionVFS();
-		} else {
-			return $agent_key;
-		}
+		return null;
 	}
 
 	/**
@@ -84,7 +79,7 @@ class ilUserHistorizingHelper
 	 */
 	public static function getExitDateOf($user)
 	{
-		return gevUserUtils::getInstanceByObjOrId($user)->getExitDate();
+			return null;
 	}
 
 	/**
@@ -96,7 +91,7 @@ class ilUserHistorizingHelper
 	 */
 	public static function getEntryDateOf($user)
 	{
-		return gevUserUtils::getInstanceByObjOrId($user)->getEntryDate();
+			return null;
 	}
 
 	/**
@@ -108,8 +103,7 @@ class ilUserHistorizingHelper
 	 */
 	public static function getBWVIdOf($user)
 	{
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		return gevUserUtils::getInstanceByObjOrId($user)->getWBDBWVId();
+		return null;
 	}
 
 	/**
@@ -121,8 +115,7 @@ class ilUserHistorizingHelper
 	 */
 	public static function getBeginOfCertificationPeriodOf($user)
 	{
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		return gevUserUtils::getInstanceByObjOrId($user)->getWBDFirstCertificationPeriodBegin();
+		return null;
 	}
 
 	/**
@@ -134,8 +127,7 @@ class ilUserHistorizingHelper
 	 */
 	public static function getOKZOf($user)
 	{
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		return gevUserUtils::getInstanceByObjOrId($user)->getWBDOKZ();
+		return null;
 	}
 
 
@@ -148,10 +140,7 @@ class ilUserHistorizingHelper
 	 */
 	public static function getWBDAgentStatusOf($user)
 	{
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		//return gevUserUtils::getInstanceByObjOrId($user)->getAgentStatus();
-		return gevUserUtils::getInstanceByObjOrId($user)->getWBDAgentStatus();
-		//USR_WBD_STATUS
+		return null;
 	}
 
 
@@ -167,10 +156,7 @@ class ilUserHistorizingHelper
 	 */
 	public static function getWBDTypeOf($user)
 	{
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		//return gevUserUtils::getInstanceByObjOrId($user)->getAgentStatus();
-		return gevUserUtils::getInstanceByObjOrId($user)->getWBDTPType();
-		//USR_WBD_STATUS
+		return null;
 	}
 
 
@@ -222,8 +208,7 @@ class ilUserHistorizingHelper
 
 	public static function getWBDEMailOf($user)
 	{
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		return gevUserUtils::getInstanceByObjOrId($user)->getWBDCommunicationEmail();
+		return null;
 	}
 
 
@@ -272,29 +257,19 @@ class ilUserHistorizingHelper
  	//Vermittlernummer GEV, USR_UDF_JOB_NUMMER
 	public static function getJobNumberOf($user)
 	{
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		return gevUserUtils::getInstanceByObjOrId($user)->getJobNumber();
+		return null;
 	}
  	
  	//ADP-Nummer GEV, USR_UDF_ADP_NUMBER
 	public static function getADPNumberOf($user)
 	{
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		$gev_adp = gevUserUtils::getInstanceByObjOrId($user)->getADPNumberGEV();
-		if ($gev_adp === null) {
-			return gevUserUtils::getInstanceByObjOrId($user)->getADPNumberVFS();
-		}
-		else {
-			return $gev_adp;
-		}
+		return null;
+		
 	}
  	
  
 	public static function isVFSOf($user){
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		$user_utils = gevUserUtils::getInstanceByObjOrId($user);
-		//return $user_utils->hasRoleIn(array('VFS'));
-		return $user_utils->isVFS();
+		return null;
 	}
 
 

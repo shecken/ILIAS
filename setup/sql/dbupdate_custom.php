@@ -1960,7 +1960,7 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "EventHandling", "evhk", "GEV
 
 <#52>
 <?php
-
+//
 ?>
 
 
