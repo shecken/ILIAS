@@ -50,12 +50,12 @@
 			while($res=mysql_fetch_assoc($rolehandler)) {
 
 				$roleId=$a_role->getRoleIdByName($res["roleName"]);
-
 				if(!$roleId) {
 					$a_role->createGlobalRole($res["roleName"],"");
-					$roleId=$a_role->getRoleIdByName($res["roleName"]);
+				} else {
+					echo "Role ".$res["roleName"]." allready exists! Do not create...\r\n";
 				}
-
+				
 
 				$sql="UPDATE SEEPEXroles SET roleid = ".$ilDB->quote($roleId,"text")
 					." WHERE roleName = ".$ilDB->quote($res["roleName"],"text");

@@ -33,7 +33,7 @@
 
 		private function queryspxdb ($query) {
 			$foo=mysql_query($query, self::$spxdb);
-			var_dump($foo);
+
 			return $foo;
 		}
 
@@ -85,6 +85,8 @@
 		}
 
 
+
+
 		private function buildOS($parent) {
 			$rec = self::findChildren($parent);
 
@@ -103,7 +105,8 @@
 
 			self::connectspxdb();
 			self::$root=array("OUshort"=>"root","refid"=>ilObjOrgUnit::getRootOrgRefId());
- 
+
+
 			self::buildOS(self::$root);
 
 			self::closespxdb();

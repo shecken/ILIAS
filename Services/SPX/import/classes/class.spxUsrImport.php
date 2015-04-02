@@ -36,9 +36,6 @@
 		}
 
 		static public function UsrImport() {
-			
-			return; //do not create users!
-
 			self::connectspxdb();
 			self::getUsrDataHandler();
 			$usr = new ilObjUser();
@@ -46,7 +43,7 @@
 			while ($res = mysql_fetch_assoc(self::$UsrDataHandler)) {
 				
 				$res["passwd_type"] = IL_PASSWD_PLAIN;
-				$res["passwd"] = "XXX";
+				$res["passwd"] = $ilClientIniFile->readVariable('generic_usr_data', 'passwd');
 				$res["time_limit_unlimited"] = 1;
 				$res["agree_date"] = ilUtil::now();
 
