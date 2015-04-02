@@ -7,6 +7,9 @@
 	display:none;
 }
 
+
+#il_prop_cont_title,
+#il_prop_cont_title + .ilFormValue,
 #il_prop_cont_userfile,
 #il_prop_cont_userfile + .ilFormValue {
 	display:none;
@@ -25,6 +28,12 @@
 	display:none;
 }
 
+#il_prop_cont_street,
+#il_prop_cont_street + .ilFormValue,
+#il_prop_cont_phone_office,
+#il_prop_cont_phone_office + .ilFormValue,
+#il_prop_cont_phone_mobile,
+#il_prop_cont_phone_mobile + .ilFormValue,
 #il_prop_cont_phone_home,
 #il_prop_cont_phone_home + .ilFormValue,
 #il_prop_cont_fax,
@@ -33,6 +42,8 @@
 }
 
 
+#il_prop_cont_birthday,
+#il_prop_cont_birthday + .ilFormValue,
 #il_prop_cont_hobby,
 #il_prop_cont_hobby + .ilFormValue,
 #il_prop_cont_referral_comment,
