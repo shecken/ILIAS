@@ -250,7 +250,11 @@ class gevUserUtils {
 				 , gevSettings::CRS_AMD_TARGET_GROUP_DESC	=> "target_group"
 				 , gevSettings::CRS_AMD_GOALS 				=> "goals"
 				 , gevSettings::CRS_AMD_CONTENTS 			=> "content"
-			);
+				 , gevSettings::CRS_AMD_CUSTOM_ID			=> "custom_id"
+				 , gevSettings::CRS_AMD_SCHEDULE 			=> "schedule"
+				 , gevSettings::CRS_AMD_WEBINAR_LINK 		=> "webinar_link"				 
+				 , gevSettings::CRS_AMD_WEBINAR_PASSWORD	=> "webinar_password"			
+			 );
 		
 		
 		$booked = $this->getBookedCourses();

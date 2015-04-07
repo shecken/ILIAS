@@ -52,6 +52,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->lng->txt("gev_learning_type"), "type");
 		$this->addColumn($this->lng->txt("gev_location"), "location");
 		$this->addColumn($this->lng->txt("date"), "start_date");
+		$this->addColumn($this->lng->txt("gev_custom_id"), "custom_id");
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "actions", "20px", false);
 
 		$this->cancel_img = '<img src="'.ilUtil::getImagePath("gev_cancel_action.png").'" />';
@@ -90,6 +91,10 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		}
 		else {
 			$date = ilDatePresentation::formatPeriod($a_set["start_date"], $a_set["end_date"]);
+		}
+
+		if($a_set["type"] == "webinar") {
+			$date = $date."<br>".$a_set["schedule"][0];
 		}
 
 		if ($a_set["status"] == ilCourseBooking::STATUS_BOOKED) {
@@ -138,7 +143,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 			$show_absolute_cancel_date = ilDateTime::_before($now, $a_set["absolute_cancel_date"]);;
 		}
 
-
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("STATUS", $status);
 		$this->tpl->setVariable("TYPE", $a_set["type"]);
@@ -156,6 +160,28 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("CRS_LINK", gevCourseUtils::getLinkTo($a_set["obj_id"]));
 		$this->tpl->setVariable("CRS_LINK_CAPTION", $this->lng->txt("gev_to_course_view"));
 		$this->tpl->setVariable("ACCOMODATION_NOTE", $this->lng->txt("gev_accomodation_note"));
+		$this->tpl->setVariable("CUSTOMID", $a_set["custom_id"]);
+
+		if (count($a_set["schedule"]) > 1) {
+			$this->tpl->setCurrentBlock("schedule");
+			$this->tpl->setVariable("SCHEDULE_CAPTION", $this->lng->txt("gev_schedule"));
+			foreach($a_set["schedule"] as $key => $val) {
+				$numday = $key+1;
+				$schedule = $schedule.$this->lng->txt("day")." $numday: $val<br>";
+			}
+			$this->tpl->setVariable("SCHEDULE", $schedule);
+			$this->tpl->parseCurrentBlock();	
+		}
+
+		if($a_set["type"] == "Webinar") {
+			$this->tpl->setCurrentBlock("webinar");
+			$this->tpl->setVariable("WEBINAR_CAPTION", $this->lng->txt("gev_webinar_details"));
+			$this->tpl->setVariable("WEBINAR_LINK", $a_set["webinar_link"]);
+			$this->tpl->setVariable("WEBINAR_LINK_TITLE", $a_set["title"]);
+			$this->tpl->setVariable("WEBINAR_PASSWORD", $this->lng->txt("password").": ".$a_set["webinar_password"]);			
+			$this->tpl->parseCurrentBlock();		
+		}
+
 		if ($a_set["overnights"]) {
 			$this->tpl->setCurrentBlock("overnights");
 			$this->tpl->setVariable("OVERNIGHTS", $a_set["overnights"]);
