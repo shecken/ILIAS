@@ -597,16 +597,9 @@ class ilPersonalSettingsGUI
 			require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 			$utils = gevUserUtils::getInstance($ilUser->getId());
 			
-			if ($utils->iv_isActivated()) {
-				ilUtil::sendInfo(
-					$this->lng->txt('password_change_on_first_login_demand')
+			ilUtil::sendInfo(
+					$this->lng->txt("gev_set_password_on_first_login")
 				);
-			}
-			else {
-				ilUtil::sendInfo(
-						$this->lng->txt("gev_set_password_on_first_login")
-					);
-			}
 			// gev-patch end
 		}
 		else if($ilUser->isPasswordExpired())
@@ -650,7 +643,7 @@ class ilPersonalSettingsGUI
 			// first login via script after iv import
 			require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 			$utils = gevUserUtils::getInstance($ilUser->getId());
-			if($ilUser->getAuthMode(true) == AUTH_LOCAL && $utils->iv_isActivated())
+			if($ilUser->getAuthMode(true) == AUTH_LOCAL)
 			// gev-patch end
 			{
 				// current password
