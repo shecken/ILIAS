@@ -75,8 +75,6 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 		$tep_permissions = ilTEPPermissions::getInstance($this->user->getId());
 
 		$employee_booking = count($this->userUtils->getEmployeesForBookingCancellations()) > 0;
-		require_once("Services/GEV/Utils/classes/class.gevHAUtils.php");
-		$can_create_ha_unit = $this->userUtils->hasRoleIn(array("HA 84")) && !gevHAUtils::getInstance()->hasHAUnit($this->userUtils->getId());
 		$local_user_admin = $this->userUtils->isSuperior(); //Local User Administration Permission
 
 		$has_others_menu = $employee_booking || $local_user_admin || $can_create_ha_unit;
@@ -126,7 +124,6 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 				  "gev_employee_booking" => array($employee_booking, "ilias.php?baseClass=gevDesktopGUI&cmd=toEmployeeBookings",$this->lng->txt("gev_employee_booking"))
 				, "gev_pot_participants" => array($pot_participants, "NYI!",$this->lng->txt("gev_pot_participants"))
 				, "gev_my_apprentices" => array($apprentices, "NYI!",$this->lng->txt("gev_my_apprentices"))
-				, "gev_create_org_unit" => array($can_create_ha_unit, "ilias.php?baseClass=gevDesktopGUI&cmd=createHAUnit", $this->lng->txt("gev_create_ha_org_unit"))
 				), $this->lng->txt("gev_others_menu"))
 			, "gev_process_menu" => array(false, false, array(
 				  "gev_apprentice_grant" => array(true, "NYI!",$this->lng->txt("gev_apprentice_grant"))

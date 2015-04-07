@@ -998,24 +998,6 @@ class gevUserUtils {
 		return "";
 	}
 
-	public function isNA() {
-		return $this->hasRoleIn(array("NA"));
-	}
-	
-	public function getNAAdviserUtils() {
-		if (!$this->isNA()) {
-			throw new Exception("User ".$this->user_id." is no NA.");
-		}
-		
-		require_once("Services/GEV/Utils/classes/class.gevNAUtils.php");
-		$adviser_id = gevNAUtils::getInstance()->getAdviserOf($this->user_id);
-		if ($adviser_id === null) {
-			return null;
-		}
-		
-		return gevUserUtils::getInstance($adviser_id);
-	}
-
 	public function getOD() {
 		if ($this->od !== false) {
 			return $this->od;
@@ -1024,13 +1006,7 @@ class gevUserUtils {
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php");
 		$tree = ilObjOrgUnitTree::_getInstance();
 		
-		if (!$this->isNA()) {
-			$ous = $tree->getOrgUnitOfUser($this->user_id);
-		}
-		else {
-			require_once("Services/GEV/Utils/classes/class.gevNAUtils.php");
-			$ous = $tree->getOrgUnitOfUser(gevNAUtils::getInstance()->getAdviserOf($this->user_id));
-		}
+g		$ous = $tree->getOrgUnitOfUser($this->user_id);
 		foreach($ous as $ou_ref) {
 			while ($ou_ref !== null) {
 				$ou_id = ilObject::_lookupObjectId($ou_ref);
