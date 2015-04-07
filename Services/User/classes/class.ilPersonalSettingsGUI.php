@@ -764,7 +764,7 @@ class ilPersonalSettingsGUI
 			// first login via script after iv import
 			require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 			$utils = gevUserUtils::getInstance($ilUser->getId());
-			if($ilUser->getAuthMode(true) == AUTH_LOCAL && $utils->iv_isActivated())
+			if($ilUser->getAuthMode(true) == AUTH_LOCAL)
 			{
 				ilSession::set("orig_request_target", "index.php");
 				// gev-patch end
@@ -829,7 +829,6 @@ class ilPersonalSettingsGUI
 				// gev-patch start
 				// iv imported user has set his new password, password form
 				// works normally now.
-				$utils->iv_setActivated();
 				// gev-patch end
 				if(ilSession::get('orig_request_target'))
 				{
