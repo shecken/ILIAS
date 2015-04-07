@@ -361,3 +361,5 @@ class ilCourseHistorizing extends ilHistorizingStorage
 		return $topic_ids;
 	}
 }
+
+?>

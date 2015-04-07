@@ -226,3 +226,5 @@ class ilUserCourseStatusHistorizing extends ilHistorizingStorage
 
 
 }
+
+?>
