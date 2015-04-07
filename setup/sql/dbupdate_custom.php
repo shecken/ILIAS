@@ -1891,10 +1891,10 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "
 <#45>
 <?php
 // init helper class
-require_once "Customizing/class.ilCustomInstaller.php";
+// require_once "Customizing/class.ilCustomInstaller.php";
 
-ilCustomInstaller::initPluginEnv();
-ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "EventHandling", "evhk", "GEVBilling");
+// ilCustomInstaller::initPluginEnv();
+// ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "EventHandling", "evhk", "GEVBilling");
 
 ?>
 
