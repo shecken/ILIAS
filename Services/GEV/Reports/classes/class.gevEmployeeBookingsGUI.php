@@ -201,8 +201,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 		
 		if ($o_status == ilCourseBooking::STATUS_BOOKED) {
 			if ($n_status == ilCourseBooking::STATUS_CANCELLED_WITH_COSTS) {
-				$automails->send("superior_cancel_booked_to_cancelled_with_costs"
-								, array($this->target_user_id));
+				throw new ilException("Workflow 'Cancellation with Costs' not implemented.");
 			}
 			else {
 				$automails->send("superior_cancel_booked_to_cancelled_without_costs"

@@ -116,7 +116,7 @@ class gevMyCoursesGUI {
 				$automails->send("self_cancel_booked_to_cancelled_without_costs", array($user_id));
 			}
 			else if ($new_status == ilCourseBooking::STATUS_CANCELLED_WITH_COSTS) {
-				$automails->send("self_cancel_booked_to_cancelled_with_costs", array($user_id));
+				throw new ilException("Workflow 'Cancellation with Costs' not implemented.");
 			}
 		}
 		

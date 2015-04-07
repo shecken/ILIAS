@@ -1074,30 +1074,7 @@ class ilCourseBookingAdminGUI
 	 */
 	protected function userActionCancelWithCosts()
 	{
-		global $ilCtrl, $lng, $ilLog;
-		
-		$user_id = $this->isUserActionPossible(ilCourseBooking::STATUS_CANCELLED_WITH_COSTS);
-		if($user_id)
-		{								
-			$bookings = ilCourseBookings::getInstance($this->getCourse());
-			if($bookings->cancelWithCosts($user_id))
-			{
-				// gev-patch start
-				$ilLog->write("ilCourseBookingAdminGUI::userActionCancelWithCosts:"
-					." send cancellation (admin_cancel_booked_to_cancelled_with_costs)"
-					." course=" . $this->getCourse()->getId()
-					." user=" . $user_id
-				);
-
-				require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
-				$automails = new gevCrsAutoMails($this->getCourse()->getId());
-				$automails->sendDeferred("admin_cancel_booked_to_cancelled_with_costs", array($user_id));
-				// gev-patch end
-				ilUtil::sendSuccess($lng->txt("crsbook_admin_user_action_done"), true);
-			}
-		}
-		
-		$ilCtrl->redirect($this, "listBookings");
+		throw new ilException("Workflow 'Cancellation with Costs' not implemented.");
 	}
 	
 	

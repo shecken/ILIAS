@@ -1713,9 +1713,6 @@ class gevCourseUtils {
 		// Send mail C08 to hotel
 		$mails->send("training_cancelled");
 		
-		// Send mail C16 to material storage
-		$mails->send("cancellation_mail_for_storage");
-		
 		// Set training offline
 		$crs = $this->getCourse();
 		$crs->setOfflineStatus(true);
