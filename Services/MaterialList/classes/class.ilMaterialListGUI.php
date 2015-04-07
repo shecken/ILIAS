@@ -534,7 +534,7 @@ class ilMaterialListGUI
 			$u = gevCourseUtils::getInstance($id);
 			$p = ilMaterialListPermissions::getInstanceByRefId(gevObjectUtils::getRefId($id));
 			
-			if (!$p->editMaterialList() || $u->isMaterialListSend()) {
+			if (!$p->editMaterialList()) {
 				continue;
 			}
 			
