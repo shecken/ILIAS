@@ -21,11 +21,11 @@ class gevInvitation extends gevCrsAutoMail {
 	}
 
 	public function getTitle() {
-		return "Einladung Teilnehmer";
+		return "Invitation Participant";
 	}
 
 	public function getDescription() {
-		return $this->days_before_course_start." Tage vor Trainingsbeginn";
+		return $this->days_before_course_start." Days before Begin of Training";
 	}
 	
 	public function _getDescription() {

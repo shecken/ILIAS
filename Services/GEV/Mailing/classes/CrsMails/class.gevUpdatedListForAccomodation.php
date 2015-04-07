@@ -6,14 +6,14 @@ class gevUpdatedListForAccomodation extends gevCrsAutoMail {
 	const DAYS_BEFORE_COURSE_START = 4;
 	
 	public function getTitle() {
-		return "Teilnehmerliste Hotel";
+		return "List of Participants for Accomodation";
 	}
 	
 	public function _getDescription() {
 		// Mail is send after the third day before training is over.
 		// Thus we need to subtract, since after the third day is on the
 		// second day.
-		return (self::DAYS_BEFORE_COURSE_START - 1)." Tage vor Trainingsbeginn";
+		return (self::DAYS_BEFORE_COURSE_START - 1)." Days before Begin of Training";
 	}
 	
 	public function getScheduledFor() {

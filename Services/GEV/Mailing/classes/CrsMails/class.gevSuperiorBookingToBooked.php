@@ -4,11 +4,11 @@ require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevSuperiorBookingToBooked extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Teilnehmer";
+		return "Info Participant";
 	}
 	
 	public function _getDescription() {
-		return "Teilnehmer erhält Buchungsstatus 'gebucht' durch Buchung durch Führungskraft";
+		return "Participant gets Status 'booked' by Superior-Booking";
 	}
 	
 	public function getScheduledFor() {

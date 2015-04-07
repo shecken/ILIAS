@@ -4,11 +4,11 @@ require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevSelfCancelWaitingToCancelledWithoutCosts extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Teilnehmer";
+		return "Info Participant";
 	}
 	
 	public function _getDescription() {
-		return "Teilnehmer (auf Warteliste) erhält Buchungsstatus 'kostenfrei storniert' durch Selbststornierung";
+		return "Participant (on waiting list) gets Status 'cancelled' by Self-Cancellation";
 	}
 	
 	public function getScheduledFor() {

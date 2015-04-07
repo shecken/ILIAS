@@ -4,11 +4,11 @@ require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevParticipantLeftCorporation extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Teilnehmer";
+		return "Info Participant";
 	}
 	
 	public function _getDescription() {
-		return "Teilnehmer verlässt Unternehmen";
+		return "Participant leaves Cooperation";
 	}
 	
 	public function getScheduledFor() {

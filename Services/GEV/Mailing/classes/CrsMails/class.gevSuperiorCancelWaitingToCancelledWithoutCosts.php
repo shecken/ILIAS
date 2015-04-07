@@ -4,11 +4,11 @@ require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevSuperiorCancelWaitingToCancelledWithoutCosts extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Teilnehmer";
+		return "Info Participant";
 	}
 	
 	public function _getDescription() {
-		return "Teilnehmer (auf Warteliste) erhält Buchungsstatus 'kostenfrei storniert' durch Stornierung durch Führungskraft";
+		return "Participant (on waiting list) gets Status 'cancelled' by Superior-Cancellation";
 	}
 	
 	public function getScheduledFor() {

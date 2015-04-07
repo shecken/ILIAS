@@ -8,7 +8,7 @@ class gevTrainerRemoved extends gevCrsAutoMail {
 	}
 	
 	public function _getDescription() {
-		return "Trainer wird vom Training entfernt";
+		return "Trainer gets removed from Training";
 	}
 	
 	public function getScheduledFor() {

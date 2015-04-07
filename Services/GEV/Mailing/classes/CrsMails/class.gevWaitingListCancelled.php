@@ -4,11 +4,11 @@ require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevWaitingListCancelled extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Teilnehmer";
+		return "Info Participant";
 	}
 	
 	public function _getDescription() {
-		return "Warteliste wird automatisch abgesagt";
+		return "Waiting List is cancelled automatically.";
 	}
 	
 	public function getScheduledFor() {

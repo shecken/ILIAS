@@ -6,11 +6,11 @@ class gevParticipationStatusNotSet extends gevCrsAutoMail {
 	const DAYS_AFTER_COURSE_END = 2;
 	
 	public function getTitle() {
-		return "Erinnerung Trainer";
+		return "Reminder Trainer";
 	}
 	
 	public function _getDescription() {
-		return "Trainer hat Teilnahmestatus noch nicht gesetzt";
+		return "Trainer did not set Status of Participants";
 	}
 	
 	public function getScheduledFor() {

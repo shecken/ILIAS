@@ -4,11 +4,11 @@ require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevParticipantSuccessfull extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Teilnehmer";
+		return "Info Participant";
 	}
 	
 	public function _getDescription() {
-		return "Teilnehmer erhält Teilnahmestatus 'teilgenommen'";
+		return "Participant gets Status 'successful'";
 	}
 	
 	public function getScheduledFor() {

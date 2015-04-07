@@ -6,14 +6,14 @@ class gevReminderParticipants extends gevInvitation {
 	const DAYS_BEFORE_COURSE_START = 4;
 
 	public function getTitle() {
-		return "Erinnerung Teilnehmer (Einladungsmail)";
+		return "Reminder Particant (Invitationmail)";
 	}
 
 	public function getDescription() {
 		// Mail is send after the fourth day before training is over.
 		// Thus we need to subtract, since after the fourth day is on the
 		// third day.
-		return (self::DAYS_BEFORE_COURSE_START - 1)." Tage vor Trainingsbeginn";
+		return (self::DAYS_BEFORE_COURSE_START - 1)." Days before Begin of Training";
 	}
 
 	public function getScheduledFor() {

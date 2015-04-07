@@ -8,7 +8,7 @@ class gevTrainerAdded extends gevCrsAutoMail {
 	}
 	
 	public function _getDescription() {
-		return "Trainer wird auf Training hinzugefügt";
+		return "Trainer gets added to Training";
 	}
 	
 	public function getScheduledFor() {

@@ -4,11 +4,11 @@ require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevSelfBookingToWaiting extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Teilnehmer";
+		return "Info Participant";
 	}
 	
 	public function _getDescription() {
-		return "Teilnehmer erhält Buchungsstatus 'auf Warteliste' durch Selbstbuchung";
+		return "Participant gets Status 'on waiting list' by Self-Booking";
 	}
 	
 	public function getScheduledFor() {

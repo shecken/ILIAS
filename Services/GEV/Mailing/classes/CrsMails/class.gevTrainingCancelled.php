@@ -4,11 +4,11 @@ require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevTrainingCancelled extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Hotel";
+		return "Info Accomodation";
 	}
 	
 	public function _getDescription() {
-		return "Training wird vom Admin storniert";
+		return "Training gets cancelled by Admin";
 	}
 	
 	public function getScheduledFor() {

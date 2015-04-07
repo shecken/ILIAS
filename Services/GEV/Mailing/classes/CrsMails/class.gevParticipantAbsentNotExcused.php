@@ -4,11 +4,11 @@ require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevParticipantAbsentNotExcused extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Teilnehmer";
+		return "Info Participant";
 	}
 	
 	public function _getDescription() {
-		return "Teilnehmer erhält Teilnahmestatus 'fehlt unentschuldigt'";
+		return "Participant gets Status 'absent not excused'";
 	}
 	
 	public function getScheduledFor() {
