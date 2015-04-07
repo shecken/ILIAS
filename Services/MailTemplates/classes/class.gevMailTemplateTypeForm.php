@@ -64,10 +64,10 @@ class gevMailTemplateTypeForm extends ilMailTemplateTypeForm {
 	}
 	
 	protected function getAvailableTypeOptions() {
-		return array( "crs_invitation" => "Einladungsmail für Training"
-					, "crs_auto" => "automatische Mail für Trainings"
-					, "registration" => "Mails während der Makler-Registrierung"
-					, "na_registration" => "Mails während der NA-Registrierung"
+		return array( "crs_invitation" => "Invitiationmail for Trainings"
+					, "crs_auto" => "Automatic Mail for Training"
+					//, "registration" => "Mails während der Makler-Registrierung"
+					//, "na_registration" => "Mails während der NA-Registrierung"
 					);
 	}
 	
