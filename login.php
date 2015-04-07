@@ -12,6 +12,10 @@
 */
 
 
+
+include('./countdown.inc.php');
+
+
 // jump to setup if ILIAS3 is not installed
 if (!file_exists(getcwd()."/ilias.ini.php"))
 {
