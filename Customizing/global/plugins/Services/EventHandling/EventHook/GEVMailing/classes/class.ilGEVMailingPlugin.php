@@ -90,7 +90,7 @@ class ilGEVMailingPlugin extends ilEventHookPlugin
 		$type = $crs_utils->getType();
 		$mails = new gevCrsAutoMails($crs_id);
 		
-		if ($type == "Webinar" || $type == "Spezialistenschulung Webinar") {
+		if ($type == gevSettings::WEBINAR) {
 			return;
 		}
 		
