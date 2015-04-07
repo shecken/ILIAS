@@ -194,6 +194,8 @@ assessment#:#autosave_info#:#If checked, answers are saved in intervals without 
 assessment#:#autosave_ival#:#Interval
 assessment#:#autosave_ival_info#:#Interval in which answers are saved automatically. (seconds)
 assessment#:#for#:#for
+assessment#:#tst_dyn_quest_set_pool_deleted#:#The currently configured questionpool "%s" has been deleted.
+assessment#:#tst_old_style_rnd_quest_set_broken#:#This random test is in a irreparable state, because one or more connected question pools have been deleted. Therefor participants cannot take the test any longer.
 assessment#:#solution_contain_keywords#:#Score is granted based on the occurrence of the following keywords:
 assessment#:#essay_scoring_mode#:#Scoring Mode
 assessment#:#essay_scoring_mode_without_keywords#:#No Automatic Scoring
@@ -404,13 +406,13 @@ assessment#:#errors_section#:#Error Data
 assessment#:#errors#:#Errors
 assessment#:#errortext_info#:#Please enter the error text. To mark a word as an error please insert a hash sign (#) in front of the word. To mark a group of words as an error please encapsulate the words group between double brackets (i.e.: here is ((an example)) of it). If you press the &quot;Analyze Error Text&quot; button, all marked words will be extracted for further processing.
 assessment#:#errortext#:#Error Text
-assessment#:#ass_quest_process_lock#:#Use Locking on Participant Solution Submits
-assessment#:#ass_quest_process_lock_desc#:#Without the use of any locking mechanism, race conditions during the submit of solution data are possible. This can lead to inconsistent test results.
-assessment#:#ass_quest_process_lock_mode#:#Lock Mode during Submit of Participant Solutions
-assessment#:#ass_quest_process_lock_mode_file#:#Use Filesystem Locks
-assessment#:#ass_quest_process_lock_mode_file_desc#:#This locking mechanism requests locks on empty files in the filesystem. Concurrent processes for the same user and the same question are waiting until the other process releases his lock.
-assessment#:#ass_quest_process_lock_mode_db#:#Use Database Table Locks
-assessment#:#ass_quest_process_lock_mode_db_desc#:#This locking mechanism locks tables within the database. Concurrent Processes for the same or other users in the same or in another test are waiting until the other process releases his locks.
+assessment#:#ass_process_lock#:#Use Lockings during Test Passes
+assessment#:#ass_process_lock_desc#:#Without the use of any locking mechanism, race conditions are possible. This can lead to inconsistent test results.
+assessment#:#ass_process_lock_mode#:#Lock Mode during Test Pass
+assessment#:#ass_process_lock_mode_file#:#Use Filesystem Locks
+assessment#:#ass_process_lock_mode_file_desc#:#This locking mechanism requests locks on empty files in the filesystem. Concurrent processes for the same user and the same test/question are waiting until the other process releases his lock.
+assessment#:#ass_process_lock_mode_db#:#Use Database Table Locks
+assessment#:#ass_process_lock_mode_db_desc#:#This locking mechanism locks tables within the database. Concurrent processes for the same or other users in the same or in another test for the same or another question are waiting until the other process releases his locks.
 assessment#:#eval_all_users#:#Evaluation for All Users
 assessment#:#eval_choice_result#:#The choice with the value %s is %s. You received %s points.
 assessment#:#eval_cloze_result#:#Gap number %s with the value %s is %s. You received %s points.
@@ -1129,8 +1131,11 @@ assessment#:#tst_type_comment#:#Warning: Changing the test type of a running tes
 assessment#:#tst_type#:#Test Type
 assessment#:#tst_types#:#Test Types
 assessment#:#exam_id#:#Exam Id: 
-assessment#:#examid_in_kiosk#:#Display Exam Id in Kiosk mode 
-assessment#:#show_exam_id#:#Display Exam Id 
+assessment#:#examid_in_test_pass#:#Display Exam ID
+assessment#:#examid_in_test_pass_desc#:#A testpass ID is diplayed in the test. A new ID is generated for every testpass.
+assessment#:#show_exam_id#:#Display Exam ID
+assessment#:#examid_in_test_res#:#Display Exam ID
+assessment#:#examid_in_test_res_desc#:#The ILIAS Testpass ID will be included in the test results.
 assessment#:#tst_use_javascript#:#Use Javascript for drag and drop actions
 assessment#:#tst_use_previous_answers_description#:#If checked, a participant may choose to use previous answers as default values in future test passes, otherwise previous answers are not shown in future test passes. An option is shown on the information screen, which is deactivated by default.
 assessment#:#tst_use_previous_answers_user#:#Use my previous answers as default values in future test passes
@@ -2365,7 +2370,7 @@ common#:#exc_schedule#:#Schedule
 common#:#exc_search_for#:#Search for
 common#:#exc_select_one_file#:#Please select exactly one file.
 common#:#exc_send_exercise#:#Send exercise by mail
-common#:#exc_sent_at#:#Sent at <br />%s
+common#:#exc_sent_at#:#Sent on <br />%s
 common#:#exc_sent#:#The exercise has been sent to the selected users
 common#:#exc_status_resubmitted#:#Resubmitted
 common#:#exc_status_saved#:#Exercise updated
@@ -5469,7 +5474,7 @@ crs#:#crs_grp_no_course_selected#:#Please select one course.
 crs#:#crs_grp_no_courses_assigned#:#No assigned courses.
 crs#:#crs_grp_table_assigned_courses#:#Assigned courses
 crs#:#crs_header_archives#:#Course Archives
-crs#:#crs_header_delete_members#:#Delete Members
+crs#:#crs_header_delete_members#:#Would you like to remove the following members from this course?
 crs#:#crs_header_delete_subscribers#:#Delete subscribers
 crs#:#crs_header_edit_members#:#Edit Members
 crs#:#crs_header_members#:#Course members
@@ -10120,7 +10125,7 @@ dateplaner#:#cal_adm_notification_info#:#Choose this option, to send optional ma
 rbac#:#rbac_add_new_local_role#:#Add New Local Role
 search#:#search_item_filter#:#Search by Type
 search#:#search_item_filter_form#:#Search by Type
-search#:#search_item_filter_form_info#:#If enabled, a search can be restricted to the chosen item types.
+search#:#search_item_filter_form_info#:#Search can be restricted to the chosen file types.
 administration#:#group_export#:#Visible in Groups
 tbl#:#tbl_export_csv#:#Export .csv
 tbl#:#tbl_export_excel#:#Export .xls
@@ -10240,11 +10245,11 @@ dateplaner#:#cal_cancel_booking_confirmed#:#The booking has been cancelled succe
 crs#:#crs_reg_code#:#Admission per Link
 crs#:#crs_reg_code_link#:#Link for Direct Admission
 crs#:#crs_reg_code_value#:#Link
-crs#:#crs_reg_code_enabled_info#:#Besides the chosen registration procedure this option allows users to enter directly by using the following link.
+crs#:#crs_reg_code_enabled_info#:#Besides the chosen registration procedure and permissions this option allows users to enter directly by using the following link.
 grp#:#grp_reg_code#:#Admission per Link
 grp#:#grp_reg_code_link#:#Link for Direct Admission
 grp#:#grp_reg_code_value#:#Link
-grp#:#grp_reg_code_enabled_info#:#Besides the chosen registration procedure this option allows users to enter directly by using the following link.
+grp#:#grp_reg_code_enabled_info#:#Besides the chosen registration procedure and permissions this option allows users to enter directly by using the following link.
 forum#:#add_re_to_subject#:#Add 'Re: ' to subject on reply
 forum#:#add_re_to_subject_info#:#If activated, 'Re: ' is added to the subject on reply.
 forum#:#enter_new_subject#:#Please enter a new subject
@@ -13641,11 +13646,15 @@ prtf#:#prtf_create_template_from_portfolio_info#:#Select a portfolio to use its 
 prtf#:#prtf_template_import_quota_failure#:#This portfolio template cannot be copied because it would exceed your disk quota.
 cntr#:#prtf_create_portfolio_from_template#:#Create Portfolio From Template
 content#:#content_plugin_not_activated#:#The page content element plugin is currently not activated.
-administration#:#vc_information#:#Show SVN Revision
+administration#:#vc_information#:#Show Version Control Information
+administration#:#vc_information_not_determined#:#ILIAS could not determine any version control information.
 administration#:#svn_revision_current#:#Current Revision: %s
 administration#:#svn_revision_last_change#:#Last Changed Revision: %s
 administration#:#svn_root#:#Root: %s
 administration#:#svn_path#:#Path: %s
+administration#:#git_revision#:#Number: %s
+administration#:#git_hash_short#:#Commit Hash (short): %s
+administration#:#git_last_commit#:#Last Commit: %s
 content#:#cont_verification_placeh#:#Click and edit to insert certificate
 content#:#cont_verification_placehl#:#Certificate Placeholder
 content#:#cont_ed_plachverification#:#Placeholder Certificate
@@ -13853,7 +13862,7 @@ search#:#search_mime_image#:#Images
 search#:#lucene_show_sub_relevance#:#Show Subitem Relevance
 search#:#search_mime_filter_form#:#Mime Type Filter
 search#:#lucene_prefix_wildcard#:#Prefix Wildcard Queries
-search#:#lucene_prefix_wildcard_info#:#If enabled, prefix wildcard queries (*LIAS finds ILIAS) are supported.
+search#:#lucene_prefix_wildcard_info#:#Supports prefix wildcard queries: ‘*LIAS’ finds ‘ILIAS’
 content#:#cont_activate_multi_lang#:#Activate Multilinguality
 obj#:#obj_select_master_lang#:#Please select the master language. The current content will be assigned to the master language. The master language cannot be changed afterwards.
 assessment#:#show_answer_overview#:#Show Answer Overview
@@ -13875,8 +13884,8 @@ content#:#cont_current_lang#:#Current Language
 obj#:#obj_deactivate_content_lang#:#Deactivate Translation for Page Editing
 content#:#cont_edit_language_version#:#Edit Version
 content#:#cont_page_translation_does_not_exist#:#The translation page does not exist yet and will be created by copying the content of the current master page. Language of the translation page
-search#:#search_user_search_form#:#User Search
-search#:#search_user_search_info_form#:#If enabled, users data will be indexed and is searchable.
+search#:#search_user_search_form#:#Search in Personal Profiles
+search#:#search_user_search_info_form#:#Data in personal profiles of users is indexed and can be used to search for users.
 adve#:#adve_blocking_mode#:#Edit Lock
 adve#:#adve_minutes#:#Minutes
 adve#:#adve_minutes_info#:#Minutes of inactivity before an edit lock expires and a page can be edited by another user.
@@ -14341,3 +14350,13 @@ news#:#news_inactive_private_feed_info#:#Your private news feed is deactivated. 
 adve#:#char_selector_msg_blocks_or_custom_needed#:#When you activate the selector, please choose a character block or enter a special selection!
 exc#:#exc_assignment_type#:#Type Of Submission
 ecs#:#ecs_refresh_participants#:#Refresh ECS-Participants
+search#:#search_minimum_info#:#Your search must be at least %s characters long
+assessment#:#user_has_finished_a_test#:#A participant has finished a test.
+assessment#:#tst_attached_xls_file#:#You find the test result for this participant in the attached Excel file.
+assessment#:#tst_notification_explanation_admin#:#You receive this mail from ILIAS because you activated the notification.
+grp#:#grp_admission_link_failure_registration_period#:#Can't registrate: Group is out of registration period.
+crs#:#crs_admission_link_failure_registration_period#:#Can't registrate: Course is out of registration period.
+grp#:#grp_admission_link_failure_membership_limited#:#Can't registrate: Group membership is limited.
+crs#:#crs_admission_link_failure_membership_limited#:#Can't registrate: Course membership is limited.
+grp#:#grp_admission_link_success_registration#:#Successfully registrated to group "%s".
+crs#:#crs_admission_link_success_registration#:#Successfully registrated to course "%s".

@@ -569,15 +569,17 @@ class SurveyImportParser extends ilSaxParser
 					if (is_object($this->survey) && 
 						$this->spl_id > 0)
 					{						
-						$question_id = $this->activequestion->duplicate(TRUE);
-						$this->survey->addQuestion($question_id);						
+						$question_id = $this->activequestion->duplicate(TRUE);										
 					}
 					else
 					{
 						$question_id = $this->activequestion->getId();
 					}
-					$this->questions[$this->original_question_id] = $question_id;
-					
+					if (is_object($this->survey)) // #15452
+					{
+						$this->survey->addQuestion($question_id);		
+					}
+					$this->questions[$this->original_question_id] = $question_id;					
 					$this->activequestion = NULL;
 				}
 				$this->textblock = "";
@@ -698,6 +700,27 @@ class SurveyImportParser extends ilSaxParser
 							case "evaluation_access":
 								$this->survey->setEvaluationAccess($value["entry"]);
 								break;
+							case "pool_usage":
+								$this->survey->setPoolUsage($value["entry"]);
+								break;							
+							case "mode_360":
+								$this->survey->set360Mode($value["entry"]);
+								break;
+							case "mode_360_self_eval":
+								$this->survey->set360SelfEvaluation($value["entry"]);
+								break;
+							case "mode_360_self_rate":
+								$this->survey->set360SelfRaters($value["entry"]);
+								break;
+							case "mode_360_self_appr":
+								$this->survey->set360SelfAppraisee($value["entry"]);
+								break;
+							case "mode_360_results":
+								$this->survey->set360Results($value["entry"]);
+								break;
+							case "mode_360_skill_service":
+								$this->survey->set360SkillService($value["entry"]);
+								break;						
 						}
 					}
 				}

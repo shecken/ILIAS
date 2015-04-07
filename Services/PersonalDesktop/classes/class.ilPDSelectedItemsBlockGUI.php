@@ -427,24 +427,29 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 		foreach($items as $key => $obj_id)
 		{
 			$item_references = ilObject::_getAllReferences($obj_id);
-			if(is_array($item_references) && count($item_references))
+			foreach($item_references as $ref_id)
 			{
-				foreach($item_references as $ref_id)
+				if($tree->isInTree($ref_id))
 				{
 					$title = $ilObjDataCache->lookupTitle($obj_id);
-					$type = $ilObjDataCache->lookupType($obj_id);
-					
-					$references[$title.$ref_id] =
-						array('ref_id' => $ref_id,
-							  'obj_id' => $obj_id, 
-							  'type' => $type,
-							  'title' => $title,
-							  'description' => $ilObjDataCache->lookupDescription($obj_id),
-							  'parent_ref' => $tree->getParentId($ref_id));
-				}	
-			}		
+					$type  = $ilObjDataCache->lookupType($obj_id);
+
+					$parent_ref_id = $tree->getParentId($ref_id);
+					$par_left      = $tree->getLeftValue($parent_ref_id);
+					$par_left      = sprintf("%010d", $par_left);
+
+					$references[$par_left . $title . $ref_id] = 	array(
+						'ref_id'      => $ref_id,
+						'obj_id'      => $obj_id,
+						'type'        => $type,
+						'title'       => $title,
+						'description' => $ilObjDataCache->lookupDescription($obj_id),
+						'parent_ref'  => $parent_ref_id
+					);
+				}
+			}
 		}
-		ksort($references);		
+		ksort($references);
 		return is_array($references) ? $references : array();
 	}
 	
@@ -525,6 +530,19 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 				
 				if (is_object($item_list_gui))
 				{
+					// #15232
+					if($this->manage)
+					{
+						if(!$rbacsystem->checkAccess("leave", $item["ref_id"]))
+						{
+							$item_list_gui->enableCheckbox(false);
+						}
+						else
+						{
+							$item_list_gui->enableCheckbox(true);
+						}
+					}
+					
 					$html = $item_list_gui->getListItemHTML($item["ref_id"],
 					$item["obj_id"], $item["title"], $item["description"]);
 					$ilBench->stop("ilPersonalDesktopGUI", "getListHTML");
@@ -705,6 +723,19 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 					}
 					// render item row
 					$ilBench->start("ilPersonalDesktopGUI", "getListHTML");
+					
+					// #15232
+					if($this->manage)
+					{
+						if(!$rbacsystem->checkAccess("leave", $item["ref_id"]))
+						{
+							$item_list_gui->enableCheckbox(false);
+						}
+						else
+						{
+							$item_list_gui->enableCheckbox(true);
+						}
+					}
 					
 					$html = $item_list_gui->getListItemHTML($item["ref_id"],
 					$item["obj_id"], $item["title"], $item["description"]);

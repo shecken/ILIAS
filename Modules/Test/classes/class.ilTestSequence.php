@@ -574,6 +574,7 @@ class ilTestSequence
 			return false;
 		}
 		
+		// WTF ?? heard about tests with only one question !?
 		if( $testSession->getLastSequence() == $this->getFirstSequence() )
 		{
 			return false;
@@ -585,6 +586,11 @@ class ilTestSequence
 	public function openQuestionExists()
 	{
 		return $this->getFirstSequence() !== false;
+	}
+
+	public function questionExists($questionId)
+	{
+		return in_array($questionId, $this->questions);
 	}
 }
 

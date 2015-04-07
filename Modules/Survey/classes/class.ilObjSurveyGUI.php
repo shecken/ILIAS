@@ -1539,7 +1539,8 @@ class ilObjSurveyGUI extends ilObjectGUI
 			if ($anonymous_code)
 			{
 				$code_input = true;
-				if(!$this->object->isUnusedCode($anonymous_code, $ilUser->getId()))
+				// if(!$this->object->isUnusedCode($anonymous_code, $ilUser->getId()))
+				if(!$this->object->checkSurveyCode($anonymous_code)) // #15031 - valid as long survey is not finished
 				{
 					$anonymous_code = null;
 				}				
@@ -1714,7 +1715,8 @@ class ilObjSurveyGUI extends ilObjectGUI
 			
 			if($this->object->get360Mode() &&
 				$this->object->get360SelfAppraisee() && 
-				!$this->object->isAppraisee($ilUser->getId()))
+				!$this->object->isAppraisee($ilUser->getId()) &&
+				$ilUser->getId() != ANONYMOUS_USER_ID) // #14968
 			{
 				$link = $this->ctrl->getLinkTargetByClass("ilsurveyparticipantsgui", "addSelfAppraisee");
 				$link = '<a href="'.$link.'">'.$this->lng->txt("survey_360_add_self_appraisee").'</a>';						

@@ -152,11 +152,11 @@ class ilLPCollectionOfRepositoryObjects extends ilLPCollection
 		$target_collection = new static($target_obj_id, $this->mode);
 		
 		// clone (active) groupings
-		foreach($this->getGroupedItemsForLPStatus() as $key => $group)
-		{
+		foreach($this->getGroupedItemsForLPStatus() as $grouping_id => $group)
+		{			
 			// gev-patch start
 			// #898 - this is the no grouping group id...
-			if ($key == 0) {
+			if ($grouping_id == 0) {
 				continue;
 			}
 			// gev-patch end
@@ -171,13 +171,21 @@ class ilLPCollectionOfRepositoryObjects extends ilLPCollection
 				$target_item_ids[] = $mappings[$item];	 	
 			}
 			
-			// single item left after copy?
-			if(sizeof($target_item_ids) > 1)
+			// grouping - if not only single item left after copy?
+			if($grouping_id && sizeof($target_item_ids) > 1)
 			{
 				// should not be larger than group
 				$num_obligatory = min(sizeof($target_item_ids), $group["num_obligatory"]);
 				
 				$target_collection->createNewGrouping($target_item_ids, $num_obligatory);
+			}
+			else
+			{
+				// #15487 - single items
+				foreach($target_item_ids as $item_id)
+				{
+					$this->addEntry($item_id);
+				}				
 			}
 		}
 	}	
@@ -438,8 +446,9 @@ class ilLPCollectionOfRepositoryObjects extends ilLPCollection
 			if(count((array)$grouped_items['items']) > 1)
 			{
 				foreach($grouped_items['items'] as $grouped_item_id)
-				{
-					if($grouped_item_id == $item_id)
+				{					
+					if($grouped_item_id == $item_id ||
+						!is_array($items[$grouped_item_id])) // #15498
 					{
 						continue;
 					}

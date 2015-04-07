@@ -1222,6 +1222,8 @@ class ilExAssignment
 		$ass_ids = array();
 		foreach(self::getAssignmentDataOfExercise($a_exc_id) as $item)
 		{
+			self::updateStatusOfUser($item["id"], $a_user_id, "notgraded"); // #14900
+			
 			$ass_ids[] = $item["id"];
 		}		
 		if($ass_ids)
@@ -1872,28 +1874,24 @@ class ilExAssignment
 	function getMemberListData($a_exc_id, $a_ass_id)
 	{
 		global $ilDB;
-
+		
 		$mem = array();
 		
 		// first get list of members from member table
-		$set = $ilDB->query("SELECT * FROM exc_members ".
-			"WHERE obj_id = ".$ilDB->quote($a_exc_id, "integer"));
+		$set = $ilDB->query("SELECT ud.usr_id, ud.lastname, ud.firstname, ud.login".
+			" FROM exc_members excm".
+			" JOIN usr_data ud ON (ud.usr_id = excm.usr_id)".
+			" WHERE excm.obj_id = ".$ilDB->quote($a_exc_id, "integer"));
 		while($rec = $ilDB->fetchAssoc($set))
-		{
-			if (ilObject::_exists($rec["usr_id"]) &&
-				(ilObject::_lookupType($rec["usr_id"]) == "usr"))
-			{
-				$name = ilObjUser::_lookupName($rec["usr_id"]);
-				$login = ilObjUser::_lookupLogin($rec["usr_id"]);
-				$mem[$rec["usr_id"]] =
-					array(
-					"name" => $name["lastname"].", ".$name["firstname"],
-					"login" => $login,
-					"usr_id" => $rec["usr_id"],
-					"lastname" => $name["lastname"],
-					"firstname" => $name["firstname"]
-					);
-			}
+		{			
+			$mem[$rec["usr_id"]] =
+				array(
+				"name" => $rec["lastname"].", ".$rec["firstname"],
+				"login" => $rec["login"],
+				"usr_id" => $rec["usr_id"],
+				"lastname" => $rec["lastname"],
+				"firstname" => $rec["firstname"]
+				);			
 		}
 
 		$q = "SELECT * FROM exc_mem_ass_status ".
@@ -2462,11 +2460,12 @@ class ilExAssignment
 					// 1st peer
 					else
 					{
-						$peer_id = array_rand($possible_peer_ids);
-						$matrix[$rater_id] = array($peer_id);	
+						if(sizeof($possible_peer_ids)) // #14947
+						{
+							$peer_id = array_rand($possible_peer_ids);
+							$matrix[$rater_id] = array($peer_id);	
+						}
 					}
-					
-					unset($run_ids[$peer_id]);
 				}
 			}	
 			

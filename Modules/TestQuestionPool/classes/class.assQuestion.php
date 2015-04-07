@@ -1194,7 +1194,7 @@ abstract class assQuestion
 			if( $row['hint_count'] === null ) $row['hint_count'] = 0;
 			if( $row['hint_points'] === null ) $row['hint_points'] = 0;
 
-			$exam_identifier = self::getExamId( $active_id, $pass );
+			$exam_identifier = ilObjTest::buildExamId( $active_id, $pass );
 			
 			if( is_object($processLocker) )
 			{
@@ -1271,34 +1271,6 @@ abstract class assQuestion
 			'obligations_answered' => $obligations_answered,
 			'exam_id' => $exam_identifier
 		);
-	}
-
-	/**
-	 * @deprecated Use method in ilObjTest.
-	 * @param $active_id
-	 * @param $pass
-	 * @return array
-	 */
-	public function getExamId($active_id, $pass)
-	{
-		/** @TODO Move this to a proper place. */
-		global $ilDB, $ilSetting;
-
-		$exam_id_query  = 'SELECT exam_id FROM tst_pass_result WHERE active_fi = %s AND pass = %s';
-		$exam_id_result = $ilDB->queryF( $exam_id_query, array( 'integer', 'integer' ), array( $active_id, $pass ) );
-		if ($ilDB->numRows( $exam_id_result ) == 1)
-		{
-			$exam_id_row = $ilDB->fetchAssoc( $exam_id_result );
-			
-			if ($exam_id_row['exam_id'] != null)
-			{
-				return $exam_id_row['exam_id'];
-			}
-		}
-
-		$inst_id = $ilSetting->get( 'inst_id', null );
-		$obj_id  = $this->obj_id;
-		return 'I' . $inst_id . '_T' . $obj_id . '_A' . $active_id . '_P' . $pass;
 	}
 
 	/**
@@ -2798,6 +2770,7 @@ abstract class assQuestion
 		$this->syncXHTMLMediaObjectsOfQuestion();
 
 		$this->onSyncWithOriginal($original, $this->getId());
+		$this->syncHints();
 	}
 
 	function createRandomSolution($test_id, $user_id)
@@ -3373,7 +3346,42 @@ abstract class assQuestion
 		}
 		return 0;
 	}
-		
+
+	public function syncHints()
+	{
+		global $ilDB;
+
+		// delete hints of the original
+		$ilDB->manipulateF("DELETE FROM qpl_hints WHERE qht_question_fi = %s",
+			array('integer'),
+			array($this->original_id)
+		);
+
+		// get hints of the actual question
+		$result = $ilDB->queryF("SELECT * FROM qpl_hints WHERE qht_question_fi = %s",
+			array('integer'),
+			array($this->getId())
+		);
+
+		// save hints to the original
+		if ($result->numRows())
+		{
+			while ($row = $ilDB->fetchAssoc($result))
+			{
+				$next_id = $ilDB->nextId('qpl_hints');
+				/** @var ilDB $ilDB */
+				$ilDB->insert('qpl_hints', array(
+						'qht_hint_id'     => array('integer', $next_id),
+						'qht_question_fi' => array('integer', $this->original_id),
+						'qht_hint_index'  => array('integer', $row["qht_hint_index"]),
+						'qht_hint_points' => array('integer', $row["qht_hint_points"]),
+						'qht_hint_text'   => array('text', $row["qht_hint_text"]),
+					)
+				);
+			}
+		}
+	}
+	
 	/**
 	* Collects all text in the question which could contain media objects
 	* which were created with the Rich Text Editor

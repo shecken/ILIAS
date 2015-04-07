@@ -17,7 +17,7 @@ require_once './Modules/TestQuestionPool/interfaces/interface.ilObjFileHandlingQ
  * 
  * @ingroup		ModulesTestQuestionPool
  */
-class assFileUpload extends assQuestion //implements ilObjQuestionScoringAdjustable, ilObjFileHandlingQuestionType
+class assFileUpload extends assQuestion implements ilObjFileHandlingQuestionType // ilObjQuestionScoringAdjustable
 {
 	protected $maxsize;
 	
@@ -596,8 +596,6 @@ class assFileUpload extends assQuestion //implements ilObjQuestionScoringAdjusta
 			$checkUploadResult = false;
 		}
 		
-		$this->getProcessLocker()->requestUserSolutionUpdateLock();
-
 		$result = $ilDB->queryF("SELECT test_fi FROM tst_active WHERE active_id = %s",
 			array('integer'),
 			array($active_id)
@@ -608,6 +606,8 @@ class assFileUpload extends assQuestion //implements ilObjQuestionScoringAdjusta
 			$row = $ilDB->fetchAssoc($result);
 			$test_id = $row["test_fi"];
 		}
+
+		$this->getProcessLocker()->requestUserSolutionUpdateLock();
 
 		$entered_values = false;
 		if( $_POST['cmd']['handleQuestionAction'] == $this->lng->txt('delete') )

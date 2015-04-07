@@ -197,17 +197,10 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 				if (!$remove)
 				{
 					// build the evaluation row
-					$userfields = ilObjUser::_lookupFields($userdata->getUserID());
-					foreach ($userfields as $key => $value)
-					{
-						$evaluationrow[$key] = strlen($value) ? $value : ' ';
-					}
 					$evaluationrow = array();
-					$fullname = "";
 					if ($this->object->getAnonymity())
 					{
-						$fullname = $counter;
-						$evaluationrow['name'] = $fullname;
+						$evaluationrow['name'] = $counter;
 						$evaluationrow['login'] = '';
 					}
 					else
@@ -988,6 +981,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 		if ($this->object->getNrOfTries() == 1)
 		{
+
 			$this->tpl->setVariable("BACK_TEXT", $this->lng->txt("tst_results_back_introduction"));
 			$this->tpl->setVariable("BACK_URL", $this->ctrl->getLinkTargetByClass("ilobjtestgui", "infoScreen"));
 		}
@@ -1134,13 +1128,14 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 			$signature = $this->getResultsSignature();
 			$template->setVariable("SIGNATURE", $signature);
-			if ($this->object->getShowExamid())
+			if ($this->object->isShowExamIdInTestResultsEnabled())
 			{
-				$template->setVariable('EXAM_ID', $this->object->getExamId(
-							$testSession->getActiveId(), $testSession->getPass()
+				$template->setCurrentBlock('exam_id_footer');
+				$template->setVariable('EXAM_ID_VAL', $this->object->lookupExamId(
+					$testSession->getActiveId(), $pass
 				));
-				
 				$template->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
+				$template->parseCurrentBlock();
 			}
 		}
 		if ($this->object->getAnonymity()) {
@@ -1246,6 +1241,15 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		{
 			$template->setVariable("SIGNATURE", $signature);
 		}
+		if ($this->object->isShowExamIdInTestResultsEnabled())
+		{
+			$template->setCurrentBlock('exam_id_footer');
+			$template->setVariable('EXAM_ID_VAL', $this->object->lookupExamId(
+				$testSession->getActiveId(), $pass
+			));
+			$template->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
+			$template->parseCurrentBlock();
+		}
 		$this->tpl->setVariable("ADM_CONTENT", $template->get());
 
 		$this->tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_print.css", "Modules/Test"), "print");
@@ -1289,9 +1293,15 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 			$this->ctrl->redirectByClass("ilobjtestgui", "infoScreen");
 		}
 
-		$activeId = $this->testSessionFactory->getSession()->getActiveId();
+		$testSession = $this->testSessionFactory->getSession();
+		$activeId = $testSession->getActiveId();
 		
 		if( !($activeId > 0) )
+		{
+			$this->ctrl->redirectByClass("ilobjtestgui", "infoScreen");
+		}
+
+		if( !$this->object->canShowTestResults($testSession, $testSession->getUserId()) )
 		{
 			$this->ctrl->redirectByClass("ilobjtestgui", "infoScreen");
 		}
@@ -1299,8 +1309,17 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		$this->ctrl->saveParameter($this, "pass");
 		$pass = (int)$_GET['pass'];
 
-		$questionId = (int)$_GET['evaluation'];
+		$testSequence = $this->testSequenceFactory->getSequenceByPass($testSession, $pass);
+		$testSequence->loadFromDb();
+		$testSequence->loadQuestions();
 
+		$questionId = (int)$_GET['evaluation'];
+		
+		if( !$testSequence->questionExists($questionId) )
+		{
+			$this->ctrl->redirectByClass("ilobjtestgui", "infoScreen");
+		}
+		
 		$this->tpl->addBlockFile("ADM_CONTENT", "adm_content", "tpl.il_as_tst_correct_solution.html", "Modules/Test");
 
 		include_once("./Services/Style/classes/class.ilObjStyleSheet.php");
@@ -1505,6 +1524,11 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		{
 			$this->ctrl->redirect($this, 'outUserResultsOverview');
 		}
+
+		if( !$this->object->isDynamicTest() && $pass == $this->object->_getResultPass($active_fi) )
+		{
+			$this->ctrl->redirect($this, 'outUserResultsOverview');
+		}
 			
 			// Get information
 			$result = $ilDB->query("
@@ -1545,6 +1569,11 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 				$must_renumber = false;
 			}
 
+		if( !$this->object->isDynamicTest() && $isActivePass )
+		{
+			$this->ctrl->redirect($this, 'outUserResultsOverview');
+		}
+		
 			if( $pass == 0 && (
 				($lastFinishedPass == 0 && $tries == 1 && $tries != $row['pass'])
 				|| ($isActivePass == true) // should be equal to || ($lastFinishedPass == -1 && $tries == 0)

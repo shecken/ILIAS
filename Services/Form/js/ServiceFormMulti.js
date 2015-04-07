@@ -30,7 +30,7 @@ var ilMultiFormValues = {
 		$('input:image[id*="ilMultiAdd"]').each(function() {						
 			var id = $(this).attr('id').split('~');	
 			// only text inputs are supported yet
-			$('div[id*="ilFormField~' + id[1] + '~' + id[2] + '"]').find('input:text[id*="' + id[1] + '"]').bind('keydown', function(e) {
+			$('div[id="ilFormField~' + id[1] + '~' + id[2] + '"]').find('input:text[id*="' + id[1] + '"]').bind('keydown', function(e) {
 				ilMultiFormValues.keyDown(e);
 			});		
 		});
@@ -69,10 +69,10 @@ var ilMultiFormValues = {
 
 		
 		if($('div[id*="ilFormField~' +  id[1] + '"]').length > 1) {
-			$('div[id*="ilFormField~' + id[1] + '~' + id[2] + '"]').remove();
+			$('div[id="ilFormField~' + id[1] + '~' + id[2] + '"]').remove();
 		}
 		else {
-			$('div[id*="ilFormField~' + id[1] + '~' + id[2] + '"]').find('input:text[id*="' + id[1] + '"]').attr('value', '');
+			$('div[id="ilFormField~' + id[1] + '~' + id[2] + '"]').find('input:text[id*="' + id[1] + '"]').attr('value', '');
 		}
 	},
 	
@@ -83,7 +83,7 @@ var ilMultiFormValues = {
 	 */
 	downEvent: function(e) {
 		var id = $(e.target).attr('id').split('~');		
-		var original_element = $('div[id*="ilFormField~' + id[1] + '~' + id[2] + '"]');
+		var original_element = $('div[id="ilFormField~' + id[1] + '~' + id[2] + '"]');
 		var next = $(original_element).next();
 		if(next[0])
 		{
@@ -98,7 +98,7 @@ var ilMultiFormValues = {
 	 */
 	upEvent: function(e) {
 		var id = $(e.target).attr('id').split('~');
-		var original_element = $('div[id*="ilFormField~' + id[1] + '~' + id[2] + '"]');		
+		var original_element = $('div[id="ilFormField~' + id[1] + '~' + id[2] + '"]');		
 		var prev = $(original_element).prev();
 		if(prev[0])
 		{
@@ -128,7 +128,7 @@ var ilMultiFormValues = {
 		});	
 		new_id = new_id + 1;
 
-		var original_element = $('div[id*="ilFormField~' + group_id + '~' + index + '"]');
+		var original_element = $('div[id="ilFormField~' + group_id + '~' + index + '"]');
 
 		// clone original element
 		var new_element = $(original_element).clone();

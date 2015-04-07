@@ -148,7 +148,7 @@ class ilObjTestGUI extends ilObjectGUI
 
 		if( !$this->getCreationMode() && $this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken() )
 		{
-			if( !$this->isValidRequestOnBrokenQuestionSetDepencies($next_class, $cmd) )
+			if( !$this->testQuestionSetConfigFactory->getQuestionSetConfig()->isValidRequestOnBrokenQuestionSetDepencies($next_class, $cmd) )
 			{
 				$this->ctrl->redirectByClass('ilObjTestGUI', 'infoScreen');
 			}
@@ -615,46 +615,7 @@ class ilObjTestGUI extends ilObjectGUI
 			$this->tpl->show();
 		}
 	}
-
 	
-	public function isValidRequestOnBrokenQuestionSetDepencies($nextClass, $cmd)
-	{
-		//vd($nextClass, $cmd);
-		
-		if( !$this->object->participantDataExist() )
-		{
-			return true;
-		}
-		
-		switch( $nextClass )
-		{
-			case 'ilobjtestdynamicquestionsetconfiggui':
-				
-			case 'ilmdeditorgui':
-			case 'ilpermissiongui':
-				
-				return true;
-				
-			case 'ilobjtestgui':
-			case '':
-				
-				$cmds = array(
-					'infoScreen', 'participants', 'npSetFilter', 'npResetFilter',
-					'deleteAllUserResults', 'confirmDeleteAllUserResults',
-					'deleteSingleUserResults', 'confirmDeleteSelectedUserData', 'cancelDeleteSelectedUserData'
-				);
-				
-				if( in_array($cmd, $cmds) )
-				{
-					return true;
-				}
-				
-				break;
-		}
-		
-		return false;
-	}
-
 	private function questionsTabGatewayObject()
 	{
 		switch( $this->object->getQuestionSetType() )
@@ -1238,6 +1199,8 @@ class ilObjTestGUI extends ilObjectGUI
 			$this->object->setShowSolutionListComparison(isset($_POST['solution_compare']) && $_POST['solution_compare']);
 			$this->object->setExportSettingsSingleChoiceShort((is_array($_POST['export_settings']) && in_array('exp_sc_short', $_POST['export_settings'])) ? 1 : 0);
 
+			$this->object->setShowExamIdInTestResultsEnabled(isset($_POST['examid_in_test_res']) && $_POST['examid_in_test_res']);
+
 			$this->object->setPrintBestSolutionWithResult((int) $_POST['print_bs_with_res'] ? true : false);
 			
 			$this->object->setPassDeletionAllowed((bool)$_POST['pass_deletion_allowed']);
@@ -1458,6 +1421,12 @@ class ilObjTestGUI extends ilObjectGUI
 			$signatureOption->setDisabled(true);
 		}
 		$form->addItem($results_presentation);
+
+		// show signature placeholder
+		$showExamId = new ilCheckboxInputGUI($this->lng->txt('examid_in_test_res'), 'examid_in_test_res');
+		$showExamId->setInfo($this->lng->txt('examid_in_test_res_desc'));
+		$showExamId->setChecked($this->object->isShowExamIdInTestResultsEnabled());
+		$form->addItem($showExamId);
 
 		// misc properties
 		$header_misc = new ilFormSectionHeaderGUI();
@@ -3325,7 +3294,7 @@ class ilObjTestGUI extends ilObjectGUI
 		$extratime->setInfo($this->lng->txt('tst_extratime_info'));
 		$extratime->setRequired(true);
 		$extratime->setMinValue(0);
-		$extratime->setMinvalueShouldBeGreater(true);
+		$extratime->setMinvalueShouldBeGreater(false);
 		$extratime->setSuffix($this->lng->txt('minutes'));
 		$extratime->setSize(5);
 		$form->addItem($extratime);
@@ -3550,14 +3519,21 @@ class ilObjTestGUI extends ilObjectGUI
 		$this->getQuestionsSubTabs();
 		$template = new ilTemplate("tpl.il_as_tst_print_test_confirm.html", TRUE, TRUE, "Modules/Test");
 
-		$this->ctrl->setParameter($this, "pdf", "1");
-		$template->setCurrentBlock("pdf_export");
-		$template->setVariable("PDF_URL", $this->ctrl->getLinkTarget($this, "print"));
-		$this->ctrl->setParameter($this, "pdf", "");
-		$template->setVariable("PDF_TEXT", $this->lng->txt("pdf_export"));
-		$template->setVariable("PDF_IMG_ALT", $this->lng->txt("pdf_export"));
-		$template->setVariable("PDF_IMG_URL", ilUtil::getHtmlPath(ilUtil::getImagePath("application-pdf.png")));
-		$template->parseCurrentBlock();
+		if(!array_key_exists("pdf", $_GET) || $_GET["pdf"] != 1) // #15243
+		{
+			$this->ctrl->setParameter($this, "pdf", "1");
+			$template->setCurrentBlock("pdf_export");
+			$template->setVariable("PDF_URL", $this->ctrl->getLinkTarget($this, "print"));
+			$this->ctrl->setParameter($this, "pdf", "");
+			$template->setVariable("PDF_TEXT", $this->lng->txt("pdf_export"));
+			$template->setVariable("PDF_IMG_ALT", $this->lng->txt("pdf_export"));
+			$template->setVariable("PDF_IMG_URL", ilUtil::getHtmlPath(ilUtil::getImagePath("application-pdf.png")));
+			$template->parseCurrentBlock();
+
+			$template->setCurrentBlock("navigation_buttons");
+			$template->setVariable("BUTTON_PRINT", $this->lng->txt("print"));
+			$template->parseCurrentBlock();
+		}
 
 		$this->tpl->addCss(ilUtil::getStyleSheetLocation("output", "test_print.css", "Modules/Test"), "print");
 		
@@ -3590,10 +3566,6 @@ class ilObjTestGUI extends ilObjectGUI
 			$max_points += $question_gui->object->getMaximumPoints();
 		}
 
-		$template->setCurrentBlock("navigation_buttons");
-		$template->setVariable("BUTTON_PRINT", $this->lng->txt("print"));
-		$template->parseCurrentBlock();
-		
 		$template->setVariable("TITLE", ilUtil::prepareFormOutput($this->object->getTitle()));
 		$template->setVariable("PRINT_TEST", ilUtil::prepareFormOutput($this->lng->txt("tst_print")));
 		$template->setVariable("TXT_PRINT_DATE", ilUtil::prepareFormOutput($this->lng->txt("date")));
@@ -3992,7 +3964,8 @@ class ilObjTestGUI extends ilObjectGUI
 		{
 			if ((!$this->object->getFixedParticipants() || $online_access) && $ilAccess->checkAccess("read", "", $this->ref_id))
 			{
-				$executable = $this->object->isExecutable($testSession, $ilUser->getId(), $allowPassIncrease = TRUE);
+				$executable = $this->object->isExecutable($testSession, $ilUser->getId(), $allowPassIncrease = TRUE
+				);
 				if ($executable["executable"])
 				{
 					if( $this->object->areObligationsEnabled() && $this->object->hasObligations($this->object->getTestId()) )
@@ -4003,8 +3976,15 @@ class ilObjTestGUI extends ilObjectGUI
 					if ($testSession->getActiveId() > 0)
 					{
 						// resume test
+						require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+						$testPassesSelector = new ilTestPassesSelector($GLOBALS['ilDB'], $this->object);
+						$testPassesSelector->setActiveId($testSession->getActiveId());
+						$testPassesSelector->setLastFinishedPass($testSession->getLastFinishedPass());
 						
-						if ($testSequence->hasStarted($testSession))
+						$closedPasses = $testPassesSelector->getReportablePasses();
+						$existingPasses = $testPassesSelector->getExistingPasses();
+						
+						if ($existingPasses > $closedPasses)
 						{
 							$resumeTestLabel = $this->lng->txt("tst_resume_test");
 							$big_button[] = array('resumePlayer', $resumeTestLabel, true);
@@ -4029,7 +4009,13 @@ class ilObjTestGUI extends ilObjectGUI
 				if ($testSession->getActiveId() > 0)
 				{
 					// test results button
-					if ($this->object->canShowTestResults($testSession, $ilUser->getId())) 
+					
+					require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+					$testPassesSelector = new ilTestPassesSelector($GLOBALS['ilDB'], $this->object);
+					$testPassesSelector->setActiveId($testSession->getActiveId());
+					$testPassesSelector->setLastFinishedPass($testSession->getLastFinishedPass());
+					
+					if ($this->object->canShowTestResults($testSession, $ilUser->getId()) && count($testPassesSelector->getReportablePasses())) 
 					{
 						//$info->addFormButton("outUserResultsOverview", $this->lng->txt("tst_show_results"));
 						$big_button[] = array("outUserResultsOverview", $this->lng->txt("tst_show_results"), false);
@@ -4062,7 +4048,7 @@ class ilObjTestGUI extends ilObjectGUI
 			}
 		}
 
-		if( !$this->object->isOnline() )
+		if( !$this->object->isOnline() && !$testQuestionSetConfig->areDepenciesBroken() )
  		{
 			$message = $this->lng->txt("test_is_offline");
 
@@ -4859,9 +4845,7 @@ class ilObjTestGUI extends ilObjectGUI
 		
 		if( $this->testQuestionSetConfigFactory->getQuestionSetConfig()->areDepenciesBroken() )
 		{
-			$hideTabs = array(
-				'settings', 'manscoring', 'scoringadjust', 'statistics', 'history', 'export'
-			);
+			$hideTabs = $this->testQuestionSetConfigFactory->getQuestionSetConfig()->getHiddenTabsOnBrokenDepencies();
 			
 			foreach($hideTabs as $tabId)
 			{

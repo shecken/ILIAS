@@ -1753,3 +1753,113 @@ if( !(int)$settings->get('quest_process_lock_mode_autoinit', 0) )
 }
 
 ?>
+<#59>
+<?php
+if( $ilDB->tableColumnExists('tst_tests', 'examid_in_kiosk') )
+{
+	$ilDB->renameTableColumn('tst_tests', 'examid_in_kiosk', 'examid_in_test_pass');
+}
+?>
+<#60>
+<?php
+if( $ilDB->tableColumnExists('tst_tests', 'show_exam_id') )
+{
+	$ilDB->renameTableColumn('tst_tests', 'show_exam_id', 'examid_in_test_res');
+}
+?>
+<#61>
+<?php
+if( !$ilDB->tableColumnExists('tst_active', 'start_lock'))
+{
+	$ilDB->addTableColumn('tst_active', 'start_lock',
+		array(
+			'type' => 'text',
+			'length' => 128,
+			'notnull' => false,
+			'default' => null
+		)
+	);
+}
+?>
+<#62>
+<?php
+$row = $ilDB->fetchAssoc($ilDB->queryF(
+	"SELECT count(*) cnt FROM settings WHERE module = %s AND keyword = %s",
+	array('text', 'text'), array('assessment', 'ass_process_lock_mode')
+));
+
+if( $row['cnt'] )
+{
+	$ilDB->manipulateF(
+		"DELETE FROM settings WHERE module = %s AND keyword = %s",
+		array('text', 'text'), array('assessment', 'quest_process_lock_mode')
+	);
+}
+else
+{
+	$ilDB->update('settings',
+		array(
+			'keyword' => array('text', 'ass_process_lock_mode')
+		),
+		array(
+			'module' => array('text', 'assessment'),
+			'keyword' => array('text', 'quest_process_lock_mode')
+		)
+	);
+}	
+?>
+<#63>
+<?php
+	if(!$ilDB->sequenceExists('booking_reservation_group'))
+	{
+		$ilDB->createSequence('booking_reservation_group');
+	}
+?>
+<#64>
+<?php
+$ilDB->manipulate('DELETE FROM addressbook WHERE login NOT IN(SELECT login FROM usr_data) AND email IS NULL');
+$ilDB->manipulate(
+	'DELETE FROM addressbook_mlist_ass WHERE addr_id NOT IN(
+		SELECT addr_id FROM addressbook
+	)'
+);
+?>
+<#65>
+<?php
+	if(!$ilDB->indexExistsByFields('page_question',array('page_parent_type','page_id', 'page_lang')))
+	{
+		$ilDB->addIndex('page_question',array('page_parent_type','page_id', 'page_lang'),'i1');
+	}
+?>
+<#66>
+<?php
+
+$query = "
+	UPDATE tst_rnd_quest_set_qpls SET pool_title = (
+		COALESCE(
+			(SELECT title FROM object_data WHERE obj_id = pool_fi), %s 
+		)
+	) WHERE pool_title IS NULL OR pool_title = %s
+";
+
+$ilDB->manipulateF($query, array('text', 'text'), array('*** unknown/deleted ***', ''));
+
+?>
+<#67>
+<?php
+
+if( !$ilDB->tableColumnExists('tst_tests', 'broken'))
+{
+	$ilDB->addTableColumn('tst_tests', 'broken',
+		array(
+			'type' => 'integer',
+			'length' => 1,
+			'notnull' => false,
+			'default' => null
+		)
+	);
+	
+	$ilDB->queryF("UPDATE tst_tests SET broken = %s", array('integer'), array(0));
+}
+
+?>

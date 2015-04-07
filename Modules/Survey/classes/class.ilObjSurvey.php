@@ -2181,14 +2181,15 @@ class ilObjSurvey extends ilObject
 * @return integer The database id of the newly created questionblock
 * @access public
 */
-	function _addQuestionblock($title = "", $owner = 0)
+	function _addQuestionblock($title = "", $owner = 0,  $show_questiontext = true, $show_blocktitle = false)
 	{
 		global $ilDB;
 		$next_id = $ilDB->nextId('svy_qblk');
-		$affectedRows = $ilDB->manipulateF("INSERT INTO svy_qblk (questionblock_id, title, owner_fi, tstamp) " .
-			"VALUES (%s, %s, %s, %s)",
-			array('integer','text','integer','integer'),
-			array($next_id, $title, $owner, time())
+		$ilDB->manipulateF("INSERT INTO svy_qblk (questionblock_id, title, show_questiontext,".
+			" show_blocktitle, owner_fi, tstamp) " .
+			"VALUES (%s, %s, %s, %s, %s, %s)",
+			array('integer','text','integer','integer','integer','integer'),
+			array($next_id, $title, $show_questiontext, $show_blocktitle, $owner, time())
 		);
 		return $next_id;
 	}
@@ -3266,7 +3267,39 @@ class ilObjSurvey extends ilObject
 	function isSurveyStarted($user_id, $anonymize_id, $appr_id = 0)
 	{
 		global $ilDB;
+		
+		// #15031 - should not matter if code was used by registered or anonymous (each code must be unique)
+		if($anonymize_id)
+		{
+			$result = $ilDB->queryF("SELECT * FROM svy_finished".
+				" WHERE survey_fi = %s AND anonymous_id = %s AND appr_id = %s",
+				array('integer','text','integer'),
+				array($this->getSurveyId(), $anonymize_id, $appr_id)
+			);
+		}
+		else
+		{
+			$result = $ilDB->queryF("SELECT * FROM svy_finished".
+				" WHERE survey_fi = %s AND user_fi = %s AND appr_id = %s",
+				array('integer','integer','integer'),
+				array($this->getSurveyId(), $user_id, $appr_id)
+			);
+		}
+		if ($result->numRows() == 0)
+		{
+			return false;
+		}			
+		else
+		{
+			$row = $ilDB->fetchAssoc($result);
+			
+			// yes, we are doing it this way
+			$_SESSION["finished_id"][$this->getId()] = $row["finished_id"];
+			
+			return (int)$row["state"];
+		}
 
+		/*
 		if ($this->getAnonymize())
 		{
 			if ((($user_id != ANONYMOUS_USER_ID) && sizeof($anonymize_id)) && (!($this->isAccessibleWithoutCode() && $this->isAllowedToTakeMultipleSurveys())))
@@ -3303,7 +3336,8 @@ class ilObjSurvey extends ilObject
 			$row = $ilDB->fetchAssoc($result);
 			$_SESSION["finished_id"][$this->getId()] = $row["finished_id"];
 			return (int)$row["state"];
-		}
+		}		
+		*/
 	}
 
 	/**
@@ -3316,7 +3350,37 @@ class ilObjSurvey extends ilObject
 	function getActiveID($user_id, $anonymize_id, $appr_id)
 	{
 		global $ilDB;
+		
+		// see self::isSurveyStarted()
+		
+		// #15031 - should not matter if code was used by registered or anonymous (each code must be unique)
+		if($anonymize_id)
+		{
+			$result = $ilDB->queryF("SELECT finished_id FROM svy_finished".
+				" WHERE survey_fi = %s AND anonymous_id = %s AND appr_id = %s",
+				array('integer','text','integer'),
+				array($this->getSurveyId(), $anonymize_id, $appr_id)
+			);
+		}
+		else
+		{
+			$result = $ilDB->queryF("SELECT finished_id FROM svy_finished".
+				" WHERE survey_fi = %s AND user_fi = %s AND appr_id = %s",
+				array('integer','integer','integer'),
+				array($this->getSurveyId(), $user_id, $appr_id)
+			);
+		}
+		if ($result->numRows() == 0)
+		{
+			return false;
+		}			
+		else
+		{
+			$row = $ilDB->fetchAssoc($result);
+			return $row["finished_id"];
+		}	
 
+		/*
 		if ($this->getAnonymize())
 		{
 			if ((($user_id != ANONYMOUS_USER_ID) && (strlen($anonymize_id) == 0)) && (!($this->isAccessibleWithoutCode() && $this->isAllowedToTakeMultipleSurveys())))
@@ -3352,7 +3416,8 @@ class ilObjSurvey extends ilObject
 		{
 			$row = $ilDB->fetchAssoc($result);
 			return $row["finished_id"];
-		}
+		}		 
+		*/
 	}
 	
 /**
@@ -3942,21 +4007,32 @@ class ilObjSurvey extends ilObject
 		
 		// add the rest of the preferences in qtimetadata tags, because there is no correspondent definition in QTI
 		$a_xml_writer->xmlStartTag("metadata");
-
-		$a_xml_writer->xmlStartTag("metadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "evaluation_access");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getEvaluationAccess());
-		$a_xml_writer->xmlEndTag("metadatafield");
-
-		$a_xml_writer->xmlStartTag("metadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "status");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getStatus());
-		$a_xml_writer->xmlEndTag("metadatafield");
-
-		$a_xml_writer->xmlStartTag("metadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "display_question_titles");
-		$a_xml_writer->xmlElement("fieldentry", NULL, $this->getShowQuestionTitles());
-		$a_xml_writer->xmlEndTag("metadatafield");
+		
+		$custom_properties = array();
+		$custom_properties["evaluation_access"] = $this->getEvaluationAccess();
+		$custom_properties["status"] = $this->getStatus();
+		$custom_properties["display_question_titles"] = $this->getShowQuestionTitles();
+		$custom_properties["pool_usage"] = (int)$this->getPoolUsage();
+		
+		// #14967
+		$custom_properties["mode_360"] = (int)$this->get360Mode();
+		$custom_properties["mode_360_self_eval"] = (int)$this->get360SelfEvaluation();
+		$custom_properties["mode_360_self_rate"] = (int)$this->get360SelfRaters();
+		$custom_properties["mode_360_self_appr"] = (int)$this->get360SelfAppraisee();
+		$custom_properties["mode_360_results"] = $this->get360Results();
+		$custom_properties["mode_360_skill_service"] = (int)$this->get360SkillService();
+				
+		// :TODO: skills?
+				
+		// reminder/tutor notification are (currently?) not exportable
+		
+		foreach($custom_properties as $label => $value)
+		{
+			$a_xml_writer->xmlStartTag("metadatafield");
+			$a_xml_writer->xmlElement("fieldlabel", NULL, $label);
+			$a_xml_writer->xmlElement("fieldentry", NULL, $value);
+			$a_xml_writer->xmlEndTag("metadatafield");
+		}
 
 		$a_xml_writer->xmlStartTag("metadatafield");
 		$a_xml_writer->xmlElement("fieldlabel", NULL, "SCORM");
@@ -4330,7 +4406,7 @@ class ilObjSurvey extends ilObject
 		foreach ($questionblocks as $key => $value)
 		{
 			$questionblock = ilObjSurvey::_getQuestionblock($key);
-			$questionblock_id = ilObjSurvey::_addQuestionblock($questionblock["title"], $questionblock["owner_fi"]);
+			$questionblock_id = ilObjSurvey::_addQuestionblock($questionblock["title"], $questionblock["owner_fi"], $questionblock["show_questiontext"], $questionblock["show_blocktitle"]);
 			$questionblocks[$key] = $questionblock_id;
 		}
 		// create new questionblock questions

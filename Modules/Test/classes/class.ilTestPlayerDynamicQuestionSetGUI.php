@@ -62,6 +62,9 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 
 		$testSessionFactory = new ilTestSessionFactory($this->object);
 		$this->testSession = $testSessionFactory->getSession($_GET['active_id']);
+
+		$this->ensureExistingTestSession($this->testSession);
+		$this->initProcessLocker($this->testSession->getActiveId());
 		
 		$testSequenceFactory = new ilTestSequenceFactory($ilDB, $lng, $ilPluginAdmin, $this->object);
 		$this->testSequence = $testSequenceFactory->getSequence($this->testSession);
@@ -143,12 +146,6 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 	protected function startTestCmd()
 	{
 		global $ilUser;
-		
-		// ensure existing test session
-		$this->testSession->setRefId($this->object->getRefId());
-		$this->testSession->setTestId($this->object->getTestId());
-		$this->testSession->setUserId($ilUser->getId());
-		$this->testSession->setAnonymousId($_SESSION['tst_access_code'][$this->object->getTestId()]);
 		
 		$this->testSession->setCurrentQuestionId(null); // no question "came up" yet
 		
@@ -546,7 +543,22 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		$question_gui = $this->object->createQuestionGUI(
 				"", $this->testSession->getCurrentQuestionId()
 		);
-		
+
+		if( !is_object($question_gui) )
+		{
+			global $ilLog;
+
+			$ilLog->write(
+				"INV SEQ: active={$this->testSession->getActiveId()} qId={$this->testSession->getCurrentQuestionId()} "
+				.serialize($this->testSequence)
+			);
+
+			$ilLog->logStack('INV SEQ');
+
+			$this->resetCurrentQuestion();
+			$this->ctrl->redirect($this, 'showQuestion');
+		}
+
 		$question_gui->setTargetGui($this);
 		
 		$question_gui->setQuestionCount(
@@ -772,11 +784,11 @@ class ilTestPlayerDynamicQuestionSetGUI extends ilTestPlayerAbstractGUI
 		
 		$this->tpl->setVariable("PAGETITLE", "- " . $this->object->getTitle());
 		
-		if ($this->object->getShowExamid() && !$this->object->getKioskMode())
+		if ($this->object->isShowExamIdInTestPassEnabled() && !$this->object->getKioskMode())
 		{
 			$this->tpl->setCurrentBlock('exam_id');
-			$this->tpl->setVariable('EXAM_ID', $this->object->getExamId(
-					$this->testSession->getActiveId(), $this->testSession->getPass()
+			$this->tpl->setVariable('EXAM_ID', ilObjTest::lookupExamId(
+				$this->testSession->getActiveId(), $this->testSession->getPass(), $this->object->getId()
 			));
 			$this->tpl->setVariable('EXAM_ID_TXT', $this->lng->txt('exam_id'));
 			$this->tpl->parseCurrentBlock();

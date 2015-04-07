@@ -290,6 +290,8 @@ assessment#:#autosave_info#:#Wenn ausgewählt, werden Antworten im Hintergrund g
 assessment#:#autosave_ival#:#Intervall
 assessment#:#autosave_ival_info#:#Intervall, in dem Antworten im Hintergrund gespeichert werden (in Sekunden)
 assessment#:#for#:#für
+assessment#:#tst_dyn_quest_set_pool_deleted#:#Der aktuell konfigurierte Fragenpool "%s" ist gelöscht worden.
+assessment#:#tst_old_style_rnd_quest_set_broken#:#Dieser Random Test befindet sich in einem irreparablen Zustand, da angeschlossene Fragepools gelöscht wurden. Aus diesem Grund können Teilnehmer diesen Test nicht länger absolvieren.
 assessment#:#solution_contain_keywords#:#Punkte werden auf Basis des Vorkommens der folgenden Begriffe vergeben:
 assessment#:#essay_scoring_mode#:#Bewertungs Modus
 assessment#:#essay_scoring_mode_without_keywords#:#Keine automatische Bewertung
@@ -513,13 +515,13 @@ assessment#:#errors#:#Fehler
 assessment#:#errors_section#:#Fehlerdaten
 assessment#:#errortext#:#Fehler/Worte markieren
 assessment#:#errortext_info#:#Bitte geben Sie einen Text ein. Um ein Wort als fehlerhaft zu markieren, setzen Sie bitte eine Raute (#) direkt vor das gewünschte Wort. Um eine Gruppe von Fehlerwörtern zu definieren, umklammern Sie die Wörter mit doppelten Klammern (z.B.: Dies ist ((ein Beispiel)) für mehrere Wörter). Wenn Sie auf die Schaltfläche &quot;Text analysieren&quot; klicken, werden die markierten Wörter für die weitere Bearbeitung extrahiert.
-assessment#:#ass_quest_process_lock#:#Verwende Lock Mechanismus während der Einreichung von Teilnehmer-Lösungen
-assessment#:#ass_quest_process_lock_desc#:#Ohne die Verwendung eines Locking Mechanismus sind Race Conditions während der Einreichung von Lösungsdaten möglich. Diese können zu inkosistenten Test Ergebnissen führen.
-assessment#:#ass_quest_process_lock_mode#:#Lock Modus während der Einreichung von Teilnehmer-Lösungen
-assessment#:#ass_quest_process_lock_mode_file#:#Verwende Dateisystem Locks
-assessment#:#ass_quest_process_lock_mode_file_desc#:#Dieser Locking Mechanismus erstellt Locks auf leeren Dateien im Dateisystem. Konkurrierende Prozesse für den selben Benutzer und die selbe Frage müssen warten, bis der andere Prozess den Lock wieder freigibt.
-assessment#:#ass_quest_process_lock_mode_db#:#Verwende Datenbank Tabellen Locks
-assessment#:#ass_quest_process_lock_mode_db_desc#:#Dieser Locking Mechanismus erstellt Locks auf den entsprechenden Tabellen der Datenbank. Konkurrierende Prozesse für des selben oder anderer Benutzer im selben oder einem anderen Test müssen warten, bis der andere Prozess den Lock wieder freigibt.
+assessment#:#ass_process_lock#:#Verwende Lock Mechanismus während Test Durchläufen
+assessment#:#ass_process_lock_desc#:#Ohne die Verwendung eines Locking Mechanismus sind Race Conditions möglich. Diese können zu inkosistenten Test Ergebnissen führen.
+assessment#:#ass_process_lock_mode#:#Lock Modus während der Einreichung von Teilnehmer-Lösungen
+assessment#:#ass_process_lock_mode_file#:#Verwende Dateisystem Locks
+assessment#:#ass_process_lock_mode_file_desc#:#Dieser Locking Mechanismus erstellt Locks auf leeren Dateien im Dateisystem. Konkurrierende Prozesse für den selben Benutzer und den selben Test / die selbe Frage müssen warten, bis der andere Prozess den Lock wieder freigibt.
+assessment#:#ass_process_lock_mode_db#:#Verwende Datenbank Tabellen Locks
+assessment#:#ass_process_lock_mode_db_desc#:#Dieser Locking Mechanismus erstellt Locks auf den entsprechenden Tabellen der Datenbank. Konkurrierende Prozesse für den selben oder anderere Benutzer im selben oder einem anderen Test für die selbe oder andere Fragen müssen warten, bis der andere Prozess den Lock wieder freigibt.
 assessment#:#eval_all_users#:#Auswertung für alle Benutzer
 assessment#:#eval_choice_result#:#Die Auswahl mit dem Wert %s ist %s. Sie erreichten %s Punkte.
 assessment#:#eval_cloze_result#:#Die Lücke Nummer %s mit dem Wert %s ist %s. Sie erreichten %s Punkte.
@@ -1305,8 +1307,10 @@ assessment#:#tst_total_questions_description#:#Wenn Sie diesen Wert setzen, werd
 assessment#:#tst_tst_date#:#Datum des Tests
 assessment#:#tst_type#:#Test-Typ
 assessment#:#exam_id#:#Klausurnummer: 
-assessment#:#examid_in_kiosk#:#Klausurnummer im Kiosk-Modus anzeigen 
-assessment#:#show_exam_id#:#Klausurnummer anzeigen 
+assessment#:#examid_in_test_pass#:#ILIAS-Prüfungsnummer anzeigen
+assessment#:#examid_in_test_pass_desc#:#Im Test wird eine ILIAS-Prüfungsnummer angezeigt. Für jeden Testdurchlauf wird eine eigene Nummer erzeugt.
+assessment#:#examid_in_test_res#:#ILIAS-Prüfungsnummer anzeigen
+assessment#:#examid_in_test_res_desc#:#In den Testergebnissen wird die ILIAS-Prüfungsnummer dargestellt.
 assessment#:#tst_type_changed#:#Sie haben den Testtyp geändert. Alle bereits durchgeführten Tests wurden gelöscht!
 assessment#:#tst_type_comment#:#Warnung: Das Ändern des Testtyps bei einem laufenden Test löscht alle bereits durchgeführten Tests!
 assessment#:#tst_types#:#Test-Typen
@@ -3223,7 +3227,7 @@ common#:#grp_count_members#:#Anzahl der Mitglieder
 common#:#grp_create#:#Neue Gruppe anlegen
 rbac#:#grp_delete#:#Gruppe löschen oder verschieben
 common#:#grp_deleted_export_files#:#Die ausgewählte Datei wurde gelöscht.
-common#:#grp_dismiss_member#:#Sind Sie sicher, dass folgende Mitglieder aus der Gruppe ausgetragen werden sollen?
+common#:#grp_dismiss_member#:#Möchten Sie folgende Mitglieder aus der Gruppe austragen?
 common#:#grp_dismiss_myself#:#Möchten Sie sich aus der Gruppe austragen?
 common#:#grp_edit#:#Einstellungen der Gruppe
 rbac#:#grp_edit_learning_progress#:#Lernfortschritt anderer Benutzer einsehen und Einstellungen bearbeiten
@@ -6378,7 +6382,7 @@ crs#:#crs_grp_no_course_selected#:#Bitte wählen Sie mindestens einen Kurs aus.
 crs#:#crs_grp_no_courses_assigned#:#Keine zugeordneten Kurse.
 crs#:#crs_grp_table_assigned_courses#:#Zugeordnete Kurse
 crs#:#crs_header_archives#:#Kursarchive
-crs#:#crs_header_delete_members#:#Mitglieder löschen
+crs#:#crs_header_delete_members#:#Möchten Sie folgende Mitglieder aus dem Kurs austragen?
 crs#:#crs_header_delete_subscribers#:#Anträge löschen
 crs#:#crs_header_edit_members#:#Mitglieder bearbeiten
 crs#:#crs_header_members#:#Kursmitglieder
@@ -6573,7 +6577,7 @@ crs#:#crs_print_list#:#Liste erstellen
 crs#:#crs_question_assignment#:#Fragen-Zuordnung
 crs#:#crs_reg#:#Selbständiger Beitritt durch Benutzer
 crs#:#crs_reg_code#:#Beitritt per Link
-crs#:#crs_reg_code_enabled_info#:#Unabhängig vom ausgewählten Beitrittsverfahren ermöglicht diese Option einen direkten Beitritt durch Aufruf eines Links.
+crs#:#crs_reg_code_enabled_info#:#Unabhängig vom ausgewählten Beitrittsverfahren und den Kursrechten ermöglicht diese Option einen direkten Beitritt durch Aufruf eines Links.
 crs#:#crs_reg_code_link#:#Link für direkten Beitritt
 crs#:#crs_reg_code_value#:#Link
 crs#:#crs_reg_deactivated#:#Anmeldung ausgeschaltet
@@ -7855,7 +7859,7 @@ grp#:#grp_presentation_type#:#Ansicht
 grp#:#grp_public#:#Öffentliche Gruppe
 grp#:#grp_public_info#:#Die Gruppe ist auch für Nicht-Mitglieder sichtbar. Es gelten jedoch besondere Regelungen, um die Mitgliedschaft zu erlangen.
 grp#:#grp_reg_code#:#Beitritt per Link
-grp#:#grp_reg_code_enabled_info#:#Unabhängig vom ausgewählten Beitrittsverfahren ermöglicht diese Option einen direkten Beitritt durch Aufruf eines Links.
+grp#:#grp_reg_code_enabled_info#:#Unabhängig vom ausgewählten Beitrittsverfahren und den Gruppenrechten ermöglicht diese Option einen direkten Beitritt durch Aufruf eines Links.
 grp#:#grp_reg_code_link#:#Link für direkten Beitritt
 grp#:#grp_reg_code_value#:#Link
 grp#:#grp_reg_deac_info_screen#:#Zur Zeit ist keine Aufnahme möglich.
@@ -8146,7 +8150,7 @@ mail#:#mail_email_forbidden#:#Sie sind nicht berechtigt E-Mails zu verschicken
 mail#:#mail_empty_trash#:#Papierkorb leeren
 mail#:#mail_empty_trash_confirmation#:#Sind Sie sicher, dass alle Mails im Papierkorb gelöscht werden sollen?
 mail#:#mail_enable_crs_member_notification#:#Kursbenachrichtigung
-mail#:#mail_enable_crs_member_notification_info#:#Wenn aktiviert, werden Teilnehmer automatisch über Änderungen ihrer Kursmitgliedschaften per Mail informatiert.
+mail#:#mail_enable_crs_member_notification_info#:#Wenn aktiviert, werden Teilnehmer automatisch über Änderungen ihrer Kursmitgliedschaften per Mail informiert.
 mail#:#mail_enable_grp_member_notification#:#Gruppenbenachrichtigung
 mail#:#mail_enable_grp_member_notification_info#:#Wenn aktiviert, werden Teilnehmer automatisch über Änderungen ihrer Gruppenmitgliedschaften per Mail informiert.
 mail#:#mail_enter_login_or_email_addr#:#Bitte geben Sie einen Benutzernamen oder eine E-Mail-Adresse ein.
@@ -10424,7 +10428,7 @@ search#:#search_inactive#:#Inaktive Benutzer
 search#:#search_index#:#Indizierte Suche
 search#:#search_item_filter#:#Suche nach Typ
 search#:#search_item_filter_form#:#Suche nach Typ
-search#:#search_item_filter_form_info#:#Wenn aktiviert, kann die Suche auf die ausgewählten Objekttypen beschränkt werden.
+search#:#search_item_filter_form_info#:#Beschränkt die Suche auf die ausgewählten Dateitypen
 search#:#search_like_info#:#Wählen Sie diese Suchart, um möglichst genaue Treffer zu erhalten. Auf größeren Installationen kann die Suchgeschwindigkeit jedoch zu langsam sein.
 search#:#search_limit_reached#:#Ihre Suche ergab mehr als %s Treffer. Sie können die Abfrage weiter einschränken, um detailliertere Treffer zu erhalten.
 search#:#search_lm_content#:#Lernmaterialien (Inhalt)
@@ -13634,11 +13638,15 @@ prtf#:#prtf_create_template_from_portfolio#:#Portfolio
 prtf#:#prtf_create_template_from_portfolio_info#:#Wählen Sie ein Portfolio um dessen Inhalte und Einstellungen für die Vorlage zu übernehmen.
 prtf#:#prtf_template_import_quota_failure#:#Diese Portfoliovorlage kann nicht kopiert werden, da Ihre Disk-Quota überschritten würde.
 cntr#:#prtf_create_portfolio_from_template#:#Portfolio aus Vorlage erstellen
-administration#:#vc_information#:#Zeige SVN-Revision
+administration#:#vc_information#:#Zeige Version Control-Information
+administration#:#vc_information_not_determined#:#Es konnten keine Version Control-Informationen ermittelt werden.
 administration#:#svn_revision_current#:#Aktuelle Revision: %s
 administration#:#svn_revision_last_change#:#Zuletzt geänderte Revision: %s
 administration#:#svn_root#:#Root: %s
 administration#:#svn_path#:#Pfad: %s
+administration#:#git_revision#:#Nummer: %s
+administration#:#git_hash_short#:#Commit Hash (kurz): %s
+administration#:#git_last_commit#:#Letzter Commit: %s
 content#:#cont_verification_placeh#:#Klicken und bearbeiten, um ein Zertifikat einzufügen
 content#:#cont_verification_placehl#:#Zertifikat-Platzhalter
 content#:#cont_ed_plachverification#:#Platzhalter Zertifikat
@@ -13850,7 +13858,7 @@ search#:#search_mime_image#:#Bilder
 search#:#lucene_show_sub_relevance#:#Relevanz von Unterobjekten anzeigen
 search#:#search_mime_filter_form#:#Dateityp-Filter
 search#:#lucene_prefix_wildcard#:#Platzhalter am Wortbeginn
-search#:#lucene_prefix_wildcard_info#:#Wenn aktiviert, können Platzhalter auch am Beginn eines Suchbegriffes genutzt werden.
+search#:#lucene_prefix_wildcard_info#:#Erlaubt die Nutzung von Platzhaltern auch am Beginn eines Suchbegriffes: "*LIAS" findet "ILIAS"
 rep#:#rep_new_item_group_add_separator#:#Spalten-Trenner hinzufügen
 assessment#:#show_answer_overview#:#Antwortübersicht zeigen
 forum#:#forums_notification#:#Benachrichtigung
@@ -13876,8 +13884,8 @@ common#:#ps_password_must_not_contain_loginame_info#:#Falls aktiviert, darf der 
 common#:#password_contains_parts_of_login_err#:#Das von Ihnen gewählte Passwort enthält Teile des Benutzernamens. Bitte tragen Sie ein anderes Passwort ein.
 common#:#password_must_contain_lcase_chars#:#Das Passwort muss mindestens %s Kleinbuchstaben enthalten.
 common#:#password_must_contain_ucase_chars#:#Das Passwort muss mindestens %s Großbuchstaben enthalten.
-search#:#search_user_search_form#:#Personensuche
-search#:#search_user_search_info_form#:#Wenn aktiviert, werden Benutzerdaten indexiert und können über die globale Suche gefunden werden.
+search#:#search_user_search_form#:#Suche in Persönlichen Profilen
+search#:#search_user_search_info_form#:#Benutzerdaten in Persönlichen Profilen werden indexiert und können genutzt werden, um Benutzer über die globale Suche zu finden.
 exc#:#exc_fb_tutor_info#:#Durch eine hochgeladene Feedback-Datei wird eine Benachrichtigung an den Benutzer gesendet, und die Datei wird in dessen Übungseinheiten-Übersicht gelistet.
 obj#:#svy_results#:#Ergebnisse
 survey#:#svy_result_mail_notification_info#:#Nach Beenden einer Umfrage werden die Antworten des Teilnehmers an die eingetragen Empfänger gesendet.
@@ -14340,3 +14348,14 @@ news#:#news_inactive_private_feed_info#:#Ihr privater Newsfeed ist deaktiviert. 
 adve#:#char_selector_msg_blocks_or_custom_needed#:#Wenn Sie die Auswahl aktivieren, wählen Sie bitte einen Zeichenblock oder geben Sie eine eigene Auswahl von Zeichen ein!
 exc#:#exc_assignment_type#:#Abgabetyp
 ecs#:#ecs_refresh_participants#:#ECS-Teilnehmer aktualisieren
+search#:#search_minimum_info#:#Die Suchbegriffe müssen mindestens %s Zeichen lang sein
+assessment#:#user_has_finished_a_test#:#Ein Teilnehmer hat einen Test beendet.
+assessment#:#tst_attached_xls_file#:#Sie finden die Testergebnisse für diesen Teilnehmer in der angehängten Excel-Datei.
+assessment#:#tst_notification_explanation_admin#:#Sie erhalten diese Mail, da Sie die Benachrichtigungsfunktion aktiviert haben.
+grp#:#grp_admission_link_failure_registration_period#:#Kein Beitritt möglich. Die Gruppe ist ausserhalb des Beitrittszeitraumes.
+crs#:#crs_admission_link_failure_registration_period#:#Kein Beitritt möglich. Der Kurs ist ausserhalb des Beitrittszeitraumes.
+grp#:#grp_admission_link_failure_membership_limited#:#Kein Beitritt möglich. Die Mitgliederzahl der Gruppe ist begrenzt.
+crs#:#crs_admission_link_failure_membership_limited#:#Kein Beitritt möglich. Die Mitgliederzahl der Gruppe ist begrenzt.
+grp#:#grp_admission_link_success_registration#:#Erfolgreich zur Gruppe "%s" beigetreten.
+crs#:#crs_admission_link_success_registration#:#Erfolgreich zum Kurs "%s" beigetreten.
+assessment#:#show_exam_id#:#Display Exam ID###01 02 2015 new variable

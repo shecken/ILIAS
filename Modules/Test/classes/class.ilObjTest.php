@@ -483,11 +483,11 @@ ilObjTest extends ilObject
 	 */
 	private $redirection_url = NULL;
 	
-	/** @var bool $examid_in_kiosk */
-	protected $examid_in_kiosk;
+	/** @var bool $show_exam_id_in_test_pass_enabled */
+	protected $show_exam_id_in_test_pass_enabled;
 
-	/** @var bool $show_exam_id */
-	protected $show_exam_id;
+	/** @var bool $show_exam_id_in_test_results_enabled */
+	protected $show_exam_id_in_test_results_enabled;
 	
 	/** @var bool $sign_submission */
 	protected $sign_submission;
@@ -497,7 +497,11 @@ ilObjTest extends ilObject
 	
 	/** @var string definition of selector for special characters  */
 	protected $char_selector_definition;
-
+	
+	/**
+	 * @var bool
+	 */
+	protected $testFinalBroken;
 	
 	#endregion
 	
@@ -600,11 +604,13 @@ ilObjTest extends ilObject
         $this->template_id = '';
 		$this->redirection_mode = 0;
 		$this->redirection_url = NULL;
-		$this->examid_in_kiosk = false;
-		$this->show_exam_id = false;
+		$this->show_exam_id_in_test_pass_enabled = false;
+		$this->show_exam_id_in_test_results_enabled = false;
 		$this->sign_submission = false;
 		$this->char_selector_availability = 0;
 		$this->char_selector_definition = null;
+
+		$this->testFinalBroken = false;
 		
 		$this->ilObject($a_id, $a_call_by_reference);
 	}
@@ -1298,12 +1304,13 @@ ilObjTest extends ilObject
 				'redirection_mode' => array('integer', (int)$this->getRedirectionMode()),
 				'redirection_url' => array('text', (string)$this->getRedirectionUrl()),
 				'enable_archiving' => array('integer', (int)$this->getEnableArchiving()),
-				'examid_in_kiosk' => array('integer', (int)$this->getExamidInKiosk()),
-				'show_exam_id' => array('integer', (int)$this->getShowExamid()),
+				'examid_in_test_pass' => array('integer', (int)$this->isShowExamIdInTestPassEnabled()),
+				'examid_in_test_res' => array('integer', (int)$this->isShowExamIdInTestResultsEnabled()),
 				'sign_submission' => array('integer', (int)$this->getSignSubmission()),
 				'question_set_type' => array('text', $this->getQuestionSetType()),
 				'char_selector_availability' => array('integer', (int)$this->getCharSelectorAvailability()),
-				'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition())
+				'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition()),
+				'broken' => array('integer', (int)$this->isTestFinalBroken())
 			));
 				    
 			$this->test_id = $next_id;
@@ -1407,12 +1414,13 @@ ilObjTest extends ilObject
 						'redirection_mode' => array('integer', (int)$this->getRedirectionMode()),
 						'redirection_url' => array('text', (string)$this->getRedirectionUrl()),
 						'enable_archiving' => array('integer', (int)$this->getEnableArchiving()),
-						'examid_in_kiosk' => array('integer', (int)$this->getExamidInKiosk()),
-						'show_exam_id' => array('integer', (int)$this->getShowExamid()),
+						'examid_in_test_pass' => array('integer', (int)$this->isShowExamIdInTestPassEnabled()),
+						'examid_in_test_res' => array('integer', (int)$this->isShowExamIdInTestResultsEnabled()),
 						'sign_submission' => array('integer', (int)$this->getSignSubmission()),
 						'question_set_type' => array('text', $this->getQuestionSetType()),
 						'char_selector_availability' => array('integer', (int)$this->getCharSelectorAvailability()),
-						'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition())
+						'char_selector_definition' => array('text', (string)$this->getCharSelectorDefinition()),
+						'broken' => array('integer', (int)$this->isTestFinalBroken())
 					),
 					array(
 						'test_id' => array('integer', (int)$this->getTestId())
@@ -1890,12 +1898,13 @@ ilObjTest extends ilObject
 			$this->setShowExamviewHtml((bool)$data->show_examview_html);
 			$this->setShowExamviewPdf((bool)$data->show_examview_pdf);
 			$this->setEnableArchiving((bool)$data->enable_archiving);
-			$this->setExamidInKiosk( (bool)$data->examid_in_kiosk);
-			$this->setShowExamid( (bool)$data->show_exam_id);
+			$this->setShowExamIdInTestPassEnabled( (bool)$data->examid_in_test_pass);
+			$this->setShowExamIdInTestResultsEnabled( (bool)$data->examid_in_test_res);
 			$this->setSignSubmission( (bool)$data->sign_submission );
 			$this->setQuestionSetType($data->question_set_type);
 			$this->setCharSelectorAvailability((int)$data->char_selector_availability);
 			$this->setCharSelectorDefinition($data->char_selector_definition);
+			$this->setTestFinalBroken((bool)$data->broken);
 			$this->loadQuestions();
 		}
 
@@ -4844,7 +4853,7 @@ function getAnswerFeedbackPoints()
 			}
 
 			$passObject->addAnsweredQuestion(
-				$row["question_fi"], $row["maxpoints"], $row["points"], $row['answered']
+				$row["question_fi"], $row["maxpoints"], $row["points"], $row['answered'], null, $row['manual']
 			);
 		}
 
@@ -5893,10 +5902,12 @@ function getAnswerFeedbackPoints()
 					$this->setRedirectionUrl($metadata['entry']);
 					break;
 				case 'examid_in_kiosk':
-					$this->setExamidInKiosk($metadata['entry']);
+				case 'examid_in_test_pass':
+					$this->setShowExamIdInTestPassEnabled($metadata['entry']);
 					break;
 				case 'show_exam_id':
-					$this->setShowExamid($metadata['entry']);
+				case 'examid_in_test_res':
+					$this->setShowExamIdInTestResultsEnabled($metadata['entry']);
 					break;
 				case 'enable_archiving':
 					$this->setEnableArchiving($metadata['entry']);
@@ -6111,16 +6122,16 @@ function getAnswerFeedbackPoints()
 		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->getResultsPresentation()));
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
-		// examid in kiosk
+		// examid in test pass
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "examid_in_kiosk");
-		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->getExamidInKiosk()));
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "examid_in_test_pass");
+		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->isShowExamIdInTestPassEnabled()));
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 
 		// examid in kiosk
 		$a_xml_writer->xmlStartTag("qtimetadatafield");
-		$a_xml_writer->xmlElement("fieldlabel", NULL, "show_exam_id");
-		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->getShowExamid()));
+		$a_xml_writer->xmlElement("fieldlabel", NULL, "examid_in_test_res");
+		$a_xml_writer->xmlElement("fieldentry", NULL, sprintf("%d", $this->isShowExamIdInTestResultsEnabled()));
 		$a_xml_writer->xmlEndTag("qtimetadatafield");
 		
 		// solution details
@@ -6883,8 +6894,8 @@ function getAnswerFeedbackPoints()
 		$newObj->setTemplate($this->getTemplate());
 		$newObj->setPoolUsage($this->getPoolUsage());
 		$newObj->setPrintBestSolutionWithResult($this->isBestSolutionPrintedWithResult());
-		$newObj->setExamidInKiosk($this->getExamidInKiosk());
-		$newObj->setShowExamid($this->getShowExamid());
+		$newObj->setShowExamIdInTestPassEnabled($this->isShowExamIdInTestPassEnabled());
+		$newObj->setShowExamIdInTestResultsEnabled($this->isShowExamIdInTestResultsEnabled());
 		$newObj->setEnableExamView($this->getEnableExamview());
 		$newObj->setShowExamViewHtml($this->getShowExamviewHtml());
 		$newObj->setShowExamViewPdf($this->getShowExamviewPdf());
@@ -7543,6 +7554,7 @@ function getAnswerFeedbackPoints()
 
 	/**
 	 * returns if number of tries are reached
+	 * @deprecated: tries field differs per situation, outside a pass it's the number of tries, inside a pass it's the current pass number.
 	 */
 
 	function isNrOfTriesReached($tries)
@@ -7944,11 +7956,21 @@ function getAnswerFeedbackPoints()
 			}
 		}
 
-		if ($this->hasNrOfTriesRestriction() && ($active_id > 0) && $this->isNrOfTriesReached($testSession->getPass()))
+		if ($this->hasNrOfTriesRestriction() && ($active_id > 0))
 		{
-			$result["executable"] = false;
-			$result["errormessage"] = $this->lng->txt("maximum_nr_of_tries_reached");
-			return $result;
+			require_once 'Modules/Test/classes/class.ilTestPassesSelector.php';
+			$testPassesSelector = new ilTestPassesSelector($GLOBALS['ilDB'], $this);
+			$testPassesSelector->setActiveId($active_id);
+			$testPassesSelector->setLastFinishedPass($testSession->getLastFinishedPass());
+
+			$closedPasses = $testPassesSelector->getReportablePasses();
+
+			if( count($closedPasses) >= $this->getNrOfTries() )
+			{
+				$result["executable"] = false;
+				$result["errormessage"] = $this->lng->txt("maximum_nr_of_tries_reached");
+				return $result;
+			}
 		}
 
 		return $result;
@@ -8036,12 +8058,15 @@ function getAnswerFeedbackPoints()
 * @return mixed The unix timestamp if the user started the test, FALSE otherwise
 * @access public
 */
-	function getStartingTimeOfUser($active_id)
+	function getStartingTimeOfUser($active_id, $pass = null)
 	{
 		global $ilDB;
 
 		if ($active_id < 1) return FALSE;
+		if($pass === null)
+		{
 		$pass = ($this->getResetProcessingTime()) ? $this->_getPass($active_id) : 0;
+		}
 		$result = $ilDB->queryF("SELECT tst_times.started FROM tst_times WHERE tst_times.active_fi = %s AND tst_times.pass = %s ORDER BY tst_times.started",
 			array('integer', 'integer'),
 			array($active_id, $pass)
@@ -9385,6 +9410,9 @@ function getAnswerFeedbackPoints()
 			"ShowFinalStatement" => $this->getShowFinalStatement(),
 			"SequenceSettings" => $this->getSequenceSettings(),
 			"ScoreReporting" => $this->getScoreReporting(),
+			"ScoreCutting" => $this->getScoreCutting(),
+			'SpecificAnswerFeedback' => $this->getSpecificAnswerFeedback(),
+			'PrintBsWithRes'	=> (int)$this->isBestSolutionPrintedWithResult(),
 			"InstantFeedbackSolution" => $this->getInstantFeedbackSolution(),
 			"AnswerFeedback" => $this->getAnswerFeedback(),
 			"AnswerFeedbackPoints" => $this->getAnswerFeedbackPoints(),
@@ -9458,6 +9486,9 @@ function getAnswerFeedbackPoints()
 		$this->setShowFinalStatement($testsettings["ShowFinalStatement"]);
 		$this->setSequenceSettings($testsettings["SequenceSettings"]);
 		$this->setScoreReporting($testsettings["ScoreReporting"]);
+		$this->setScoreCutting($testsettings['ScoreCutting']);
+		$this->setSpecificAnswerFeedback($testsettings['SpecificAnswerFeedback']);
+		$this->setPrintBestSolutionWithResult((bool)$testsettings['PrintBsWithRes']);
 		$this->setInstantFeedbackSolution($testsettings["InstantFeedbackSolution"]);
 		$this->setAnswerFeedback($testsettings["AnswerFeedback"]);
 		$this->setAnswerFeedbackPoints($testsettings["AnswerFeedbackPoints"]);
@@ -9514,8 +9545,22 @@ function getAnswerFeedbackPoints()
 		$this->setHighscoreTopTable($testsettings['highscore_top_table']);
 		$this->setHighscoreTopNum($testsettings['highscore_top_num']);
 		$this->setPassDeletionAllowed($testsettings['pass_deletion_allowed']);
-		$this->setExamidInKiosk($testsettings['examid_in_kiosk']);
-		$this->setShowExamid($testsettings['show_exam_id']);
+		if( isset($testsettings['examid_in_kiosk']) )
+		{
+			$this->setShowExamIdInTestPassEnabled($testsettings['examid_in_kiosk']);
+		}
+		else
+		{
+			$this->setShowExamIdInTestPassEnabled($testsettings['examid_in_test_pass']);
+		}
+		if( isset($testsettings['show_exam_id']) )
+		{
+			$this->setShowExamIdInTestResultsEnabled($testsettings['show_exam_id']);
+		}
+		else
+		{
+			$this->setShowExamIdInTestResultsEnabled($testsettings['examid_in_test_res']);
+		}
 		$this->setEnableExamview($testsettings['enable_examview']);
 		$this->setShowExamviewHtml($testsettings['show_examview_html']);
 		$this->setShowExamviewPdf($testsettings['show_examview_pdf']);
@@ -10083,29 +10128,12 @@ function getAnswerFeedbackPoints()
 	
 	public function sendSimpleNotification($active_id)
 	{
-		include_once "./Services/Mail/classes/class.ilMail.php";
-		$mail = new ilMail(ANONYMOUS_USER_ID);
-
-		$usr_data = $this->userLookupFullName(ilObjTest::_getUserIdFromActiveId($active_id));
-		$message = new ilTemplate("tpl.il_as_tst_finish_notification_simple.html", TRUE, TRUE, "Modules/Test");
-		$message->setVariable('TEXT_TEST_TITLE', $this->lng->txt('title'));
-		$message->setVariable('VALUE_TEST_TITLE', $this->getTitle());
-		$message->setVariable('TEXT_USER_NAME', $this->lng->txt('username'));
-		$message->setVariable('VALUE_USER_NAME', $usr_data);
-		$message->setVariable('TEXT_FINISH_TIME', $this->lng->txt('tst_finished'));
-		ilDatePresentation::setUseRelativeDates(false);
-		$message->setVariable('VALUE_FINISH_TIME', ilDatePresentation::formatDate(new ilDateTime(time(), IL_CAL_UNIX)));
+		include_once "./Modules/Test/classes/class.ilTestMailNotification.php";
 		
-		$res = $mail->sendMail(
-			ilObjUser::_lookupLogin($this->getOwner()), // to
-			"", // cc
-			"", // bcc
-			sprintf($this->lng->txt('tst_user_finished_test'), $this->getTitle()), // subject
-			$message->get(), // message
-			array(), // attachments
-			array('normal') // type
-		);	
-		global $ilLog; $ilLog->write("sending mail: " . $res);
+		$mail = new ilTestMailNotification();
+		$owner_id = $this->getOwner();
+		$usr_data = $this->userLookupFullName(ilObjTest::_getUserIdFromActiveId($active_id));
+		$mail->sendSimpleNotification($owner_id, $this->getTitle(), $usr_data);
 	}
 	
 	/**
@@ -10123,18 +10151,11 @@ function getAnswerFeedbackPoints()
 
 	public function sendAdvancedNotification($active_id)
 	{
-		include_once "./Services/Mail/classes/class.ilMail.php";
-		$mail = new ilMail(ANONYMOUS_USER_ID);
+		include_once "./Modules/Test/classes/class.ilTestMailNotification.php";
 
+		$mail = new ilTestMailNotification();
+		$owner_id = $this->getOwner();
 		$usr_data = $this->userLookupFullName(ilObjTest::_getUserIdFromActiveId($active_id));
-		$message = new ilTemplate("tpl.il_as_tst_finish_notification_simple.html", TRUE, TRUE, "Modules/Test");
-		$message->setVariable('TEXT_TEST_TITLE', $this->lng->txt('title'));
-		$message->setVariable('VALUE_TEST_TITLE', $this->getTitle());
-		$message->setVariable('TEXT_USER_NAME', $this->lng->txt('username'));
-		$message->setVariable('VALUE_USER_NAME', $usr_data);
-		$message->setVariable('TEXT_FINISH_TIME', $this->lng->txt('tst_finished'));
-		ilDatePresentation::setUseRelativeDates(false);
-		$message->setVariable('VALUE_FINISH_TIME', ilDatePresentation::formatDate(new ilDateTime(time(), IL_CAL_UNIX)));
 
 		include_once "./Modules/Test/classes/class.ilTestExport.php";
 		$exportObj = new ilTestExport($this, "results");
@@ -10143,15 +10164,9 @@ function getAnswerFeedbackPoints()
 		$fd = new ilFileDataMail(ANONYMOUS_USER_ID);
 		$fd->copyAttachmentFile($file, "result_" . $active_id . ".xls");
 		$file_names[] = "result_" . $active_id . ".xls";
-		$result = $mail->sendMail(
-			ilObjUser::_lookupLogin($this->getOwner()), // to
-			"", // cc
-			"", // bcc
-			sprintf($this->lng->txt('tst_user_finished_test'), $this->getTitle()), // subject
-			$message->get(), // message
-			count($file_names) ? $file_names : array(), // attachments
-			array('normal') // type
-		);
+
+		$mail->sendAdvancedNotification($owner_id, $this->getTitle(), $usr_data, $file_names);
+	
 		if(count($file_names))
 		{
 			$fd->unlinkFiles($file_names);
@@ -11244,7 +11259,7 @@ function getAnswerFeedbackPoints()
 	 * @param $pass
 	 * @return array
 	 */
-	public function getExamId($active_id, $pass)
+	public function lookupExamId($active_id, $pass)
 	{
 		/** @TODO Move this to a proper place. */
 		global $ilDB, $ilSetting;
@@ -11260,42 +11275,54 @@ function getAnswerFeedbackPoints()
 				return $exam_id_row['exam_id'];
 			}
 		}
+		
+		return null;
+	}
+
+	/**
+	 * @param  $active_id
+	 * @param  $pass
+	 * @param  $test_obj_id
+	 * @return array
+	 */
+	public static function buildExamId($active_id, $pass)
+	{
+		/** @TODO Move this to a proper place. */
+		global $ilSetting;
 
 		$inst_id = $ilSetting->get( 'inst_id', null );
-		$obj_id  = ilObject::_lookupObjId($this->ref_id);
-		return 'I' . $inst_id . '_T' . $obj_id . '_A' . $active_id . '_P' . $pass;
+
+		$obj_id  = self::_getObjectIDFromActiveID($active_id);
+
+		$examId = 'I' . $inst_id . '_T' . $obj_id . '_A' . $active_id . '_P' . $pass;
+
+		return $examId;
 	}
 
-	/**
-	 * @param boolean $examid_in_kiosk
-	 */
-	public function setExamidInKiosk($examid_in_kiosk)
+	public function setShowExamIdInTestPassEnabled($show_exam_id_in_test_pass_enabled)
 	{
-		$this->examid_in_kiosk = $examid_in_kiosk;
+		$this->show_exam_id_in_test_pass_enabled = $show_exam_id_in_test_pass_enabled;
 	}
 
-	/**
-	 * @return boolean
-	 */
-	public function getExamidInKiosk()
+	public function isShowExamIdInTestPassEnabled()
 	{
-		return $this->examid_in_kiosk;
+		return $this->show_exam_id_in_test_pass_enabled;
 	}
 
 	/**
 	 * @param boolean $show_exam_id
 	 */
-	public function setShowExamid($show_exam_id)
+	public function setShowExamIdInTestResultsEnabled($show_exam_id_in_test_results_enabled)
 	{
-		$this->show_exam_id = $show_exam_id;
+		$this->show_exam_id_in_test_results_enabled = $show_exam_id_in_test_results_enabled;
 	}
 
 	/**
 	 * @return boolean
 	 */
-	public function getShowExamid()
+	public function isShowExamIdInTestResultsEnabled()
 	{
-		return $this->show_exam_id;
+		return $this->show_exam_id_in_test_results_enabled;
 	}
 
 	/**
@@ -11492,5 +11519,21 @@ function getAnswerFeedbackPoints()
 		}
 		
 		return $objIds;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isTestFinalBroken()
+	{
+		return $this->testFinalBroken;
+	}
+
+	/**
+	 * @param boolean $testFinalBroken
+	 */
+	public function setTestFinalBroken($testFinalBroken)
+	{
+		$this->testFinalBroken = $testFinalBroken;
 	}
 }
