@@ -19,13 +19,10 @@ class gevCrsAutoMails extends ilAutoMails {
 		, "superior_booking_to_waiting"							=> "gevSuperiorBookingToWaiting"
 		, "admin_booking_to_booked" 							=> "gevAdminBookingToBooked"
 		, "admin_booking_to_waiting" 							=> "gevAdminBookingToWaiting"
-		, "self_cancel_booked_to_cancelled_with_costs" 			=> "gevSelfCancelBookedToCancelledWithCosts"
 		, "self_cancel_booked_to_cancelled_without_costs" 		=> "gevSelfCancelBookedToCancelledWithoutCosts"
 		, "self_cancel_waiting_to_cancelled_without_costs" 		=> "gevSelfCancelWaitingToCancelledWithoutCosts"
-		, "superior_cancel_booked_to_cancelled_with_costs" 		=> "gevSuperiorCancelBookedToCancelledWithCosts"
 		, "superior_cancel_booked_to_cancelled_without_costs" 	=> "gevSuperiorCancelBookedToCancelledWithoutCosts"
 		, "superior_cancel_waiting_to_cancelled_without_costs" 	=> "gevSuperiorCancelWaitingToCancelledWithoutCosts"
-		, "admin_cancel_booked_to_cancelled_with_costs" 		=> "gevAdminCancelBookedToCancelledWithCosts"
 		, "admin_cancel_booked_to_cancelled_without_costs" 		=> "gevAdminCancelBookedToCancelledWithoutCosts"
 		, "admin_cancel_waiting_to_cancelled_without_costs" 	=> "gevAdminCancelWaitingToCancelledWithoutCosts"
 		, "participant_waiting_to_booked" 						=> "gevParticipantWaitingToBooked"		
@@ -35,7 +32,6 @@ class gevCrsAutoMails extends ilAutoMails {
 		, "participant_successfull" 							=> "gevParticipantSuccessfull"
 		, "participant_absent_excused" 							=> "gevParticipantAbsentExcused"
 		, "participant_absent_not_excused"						=> "gevParticipantAbsentNotExcused"
-		, "na_successfull"										=> "gevNASuccessfull"
 		
 		, "trainer_added" 										=> "gevTrainerAdded"
 		, "trainer_removed" 									=> "gevTrainerRemoved"
@@ -51,10 +47,6 @@ class gevCrsAutoMails extends ilAutoMails {
 		, "invitation" 											=> "gevInvitation"
 		
 		, "waiting_list_cancelled"								=> "gevWaitingListCancelled"
-		, "bill_mail"											=> "gevCrsBillMail"
-		
-		, "materiallist_for_storage"							=> "gevMaterialListForStorage"
-		, "cancellation_mail_for_storage"						=> "gevCancellationMailForStorage"
 		);
 
 		parent::__construct($a_obj_id);
