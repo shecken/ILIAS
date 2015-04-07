@@ -149,30 +149,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 
 		$this->renderAcademyPoints($tpl);
 		
-		if ($user_utils->transferPointsFromWBD()) {
-			$this->renderWBDPoints($tpl);
-			$tpl->setVariable("WBDPOINTSVISIBIBLE", "visible");
-		}
-		else {
-			$tpl->setVariable("WBDPOINTSVISIBIBLE", "invisible");
-			if($user_utils->transferPointsToWBD()) {
-				$tpl->setVariable("WBDTRANSVISIBIBLE", "visible");
-				$tpl->setCurrentBlock("wbd_transfer");
-				$tpl->setVariable("TRANSFER_TITLE", $this->lng->txt("gev_wbd_transfer_on"));
-				$tpl->parseCurrentBlock();
-			}
-			else if ($user_utils->wbdRegistrationIsPending()){
-				$tpl->setVariable("WBDPOINTSVISIBIBLE", "invisible");
-				$tpl->setCurrentBlock("wbd_reg_pending");
-				$tpl->setVariable("WBDREGPENDINGVISIBIBLE", "visible");
-				$tpl->setVariable("WBD_REG_PENDING", $this->lng->txt("gev_wbd_reg_pending"));
-				$tpl->parseCurrentBlock();
-			}
-			else {
-				$tpl->setVariable("WBDTRANSVISIBIBLE", "visible");
-			}
-		}
-		
+		$tpl->setVariable("WBDPOINTSVISIBIBLE", "invisible");
 		return $tpl->get();
 	}
 	
@@ -214,76 +191,6 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 				;
 	}
 	
-	protected function renderWBDPoints($tpl) {
-		require_once("Services/Calendar/classes/class.ilDatePresentation.php");
-		$user_utils = gevUserUtils::getInstance($this->target_user_id);
-
-		$tpl->setVariable("WBD_SUM_TITLE", $this->lng->txt("gev_points_in_wbd"));
-		$tpl->setVariable("WBD_SUM_CERT_PERIOD_TITLE", $this->lng->txt("gev_points_in_wbd_cert_period"));
-		$tpl->setVariable("WBD_SUM_CUR_YEAR_TITLE", $this->lng->txt("gev_points_in_wbd_cert_year"));
-		$tpl->setVariable("WBD_SUM_CUR_YEAR_PRED_TITLE", $this->lng->txt("gev_points_at_end_of_cert_year"));
-		
-		$cy_start = $user_utils->getStartOfCurrentCertificationYear();
-		$cy_end = $user_utils->getStartOfCurrentCertificationYear();
-		$cy_end->increment(ilDateTime::YEAR, 1);
-		
-		$cp_start = $user_utils->getStartOfCurrentCertificationPeriod();
-		$cp_end = $user_utils->getStartOfCurrentCertificationPeriod();
-		$cp_end->increment(ilDateTime::YEAR, 5);
-		
-		$tpl->setVariable("WBD_CERT_PERIOD", ilDatePresentation::formatPeriod($cp_start, $cp_end));
-		$tpl->setVariable("WBD_CERT_YEAR", ilDatePresentation::formatPeriod($cy_start, $cy_end));
-		
-		$period = $this->filter->get("period");
-		
-		$query = $this->wbdQuery($period["start"], $period["end"]);
-		$res = $this->db->query($query);
-		if ($rec = $this->db->fetchAssoc($res)) {
-			$tpl->setVariable("WBD_SUM", $rec["sum"] ? $rec["sum"] : 0);
-		}
-		
-		$query = $this->wbdQuery($cy_start, $cy_end);
-		$res = $this->db->query($query);
-		if ($rec = $this->db->fetchAssoc($res)) {
-			$tpl->setVariable("WBD_SUM_CUR_YEAR", $rec["sum"] ? $rec["sum"] : 0);
-		}
-		
-		$query = $this->wbdQuery($cp_start, $cp_end);
-		$res = $this->db->query($query);
-		if ($rec = $this->db->fetchAssoc($res)) {
-			$tpl->setVariable("WBD_SUM_CERT_PERIOD", $rec["sum"] ? $rec["sum"] : 0);
-		}
-		
-		$query = "SELECT SUM(usrcrs.credit_points) sum "
-				." FROM hist_usercoursestatus usrcrs"
-				." JOIN hist_user usr ON usr.user_id = usrcrs.usr_id AND usr.hist_historic = 0"
-				." JOIN hist_course crs ON crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0"
-				.$this->queryWhere($cy_start, $cy_end)
-				." AND usrcrs.booking_status = 'gebucht'"
-				." AND ".$this->db->in("usrcrs.participation_status", array("teilgenommen", "nicht gesetzt"), false, "text")
-				." AND (".$this->db->in("usrcrs.okz", array("OKZ1", "OKZ2", "OKZ3"), false, "text")
-				."      OR crs.crs_id < 0 "
-				."     )"
-				;
-		$res = $this->db->query($query);
-		if ($rec = $this->db->fetchAssoc($res)) {
-			$tpl->setVariable("WBD_SUM_CUR_YEAR_PRED", $rec["sum"] ? $rec["sum"] : 0);
-		}
-	}
-	
-	protected function wbdQuery(ilDate $start, ilDate $end) {
-		return   "SELECT SUM(usrcrs.credit_points) sum "
-				." FROM hist_usercoursestatus usrcrs"
-				." JOIN hist_user usr ON usr.user_id = usrcrs.usr_id AND usr.hist_historic = 0"
-				." JOIN hist_course crs ON crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0"
-				.$this->queryWhere($start, $end)
-				." AND usrcrs.participation_status = 'teilgenommen'"
-				." AND (".$this->db->in("usrcrs.okz", array("OKZ1", "OKZ2", "OKZ3"), false, "text")
-				."      OR crs.crs_id < 0 "
-				."     )"
-				;
-	}
-	
 	protected function transformResultRow($rec) {
 		$no_entry = $this->lng->txt("gev_table_no_entry");
 		
@@ -319,10 +226,6 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
 			$rec["date"] = ilDatePresentation::formatDate($start)." - <br/>".ilDatePresentation::formatDate($end);
 		}
-		
-		$rec["wbd"] = in_array($rec["okz"], array("OKZ1", "OKZ2", "OKZ3"))
-					? $this->lng->txt("yes")
-					: $this->lng->txt("no");
 		
 		$rec["action"] = "";
 		if ($rec["bill_id"] != -1 && $rec["bill_id"] != "-empty-") {
