@@ -538,11 +538,8 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 	}
 	
 	protected function maybeSuperiorsCC($a_recipient) {
-		return array();
-		if ($this->getCourseUtils()->isLiveTraining()) {
-			require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-			return gevUserUtils::getInstance($a_recipient)->getDirectSuperiors();
-		}
+		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		return gevUserUtils::getInstance($a_recipient)->getDirectSuperiors();
 	}
 
 }
