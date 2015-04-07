@@ -396,7 +396,8 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 	// Turn template to mail content. Returns
 	// a dict containing fields "subject", "plain" and "html"
 	protected function getMessageFromTemplate($a_templ_id, $a_user_id, $a_email, $a_name) {
-		$this->initTemplateObjects($a_templ_id, "de");
+		require_once("Services/User/classes/class.ilObjUser.php");
+		$this->initTemplateObjects($a_templ_id, ilObjUser::_lookupLanguage($a_user_id));
 
 		require_once "./Services/GEV/Mailing/classes/class.gevCrsMailData.php";
 
