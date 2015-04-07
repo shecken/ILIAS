@@ -1825,16 +1825,6 @@ class gevCourseUtils {
 				   , $officer_contact
 				   , $officer_contact
 				   )
-			, array( $this->lng->txt("gev_overall_prize")
-				   , ($bill !== null)
-				   , $bill_utils->formatPrize(
-				   			$bill !== null?$bill->getAmount():0
-				   		)." &euro;"
-				   	)
-			, array( $this->lng->txt("gev_credit_points")
-				   , true
-				   , $this->getCreditPoints()
-				   )
 			);
 		
 		foreach ($vals as $val) {

@@ -972,17 +972,17 @@ class gevUserUtils {
 	
 	
 	public function paysFees() {
-		return !$this->hasRoleIn(gevSettings::$NO_PAYMENT_ROLES);
+		return false;
 	}
 	
 	public function paysPrearrival() {
-		return !$this->hasRoleIn(gevSettings::$NO_PREARRIVAL_PAYMENT_ROLES);
+		return false;
 	}
 
 	// Soll für den Benutzer  bei der Selbstbuchung der Hinweis "Vorabendanreise 
 	// mit Führungskraft klären" angezeigt werden?
 	public function showPrearrivalNoteInBooking() {
-		return $this->hasRoleIn(gevUserUtils::$roles_with_prearrival_note);
+		return false;
 	}
 	
 	public function isAdmin() {
