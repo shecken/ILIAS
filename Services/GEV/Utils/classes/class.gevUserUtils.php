@@ -824,16 +824,7 @@ class gevUserUtils {
 	}
 
 	public function isProfileComplete() {
-		require_once("Services/GEV/Desktop/classes/class.gevUserProfileGUI.php");
-		$email = $this->getPrivateEmail();
-		$mobile = $this->getMobilePhone();
-		$bday = $this->getUser()->getBirthday();
-		$street = $this->getUser()->getStreet();
-		$city = $this->getUser()->getCity();
-		$zipcode = $this->getUser()->getZipcode();
-		
-		return $email && $mobile && preg_match(gevUserProfileGUI::$telno_regexp, $mobile)
-				&& $mobile && $bday && $city && $zipcode;
+		return true;
 	}
 	
 	
@@ -948,218 +939,13 @@ class gevUserUtils {
 		return $date;
 	}
 	
-	public function getADPNumberGEV() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_ADP_GEV_NUMBER);
-	}
-
-	public function setADPNumberGEV($a_adp) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_ADP_GEV_NUMBER, $a_adp);
-	}	
-
-	public function getADPNumberVFS() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_ADP_VFS_NUMBER);
-	}
-	
-	public function setADPNumberVFS($a_adp) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_ADP_VFS_NUMBER, $a_adp);
-	}
-	
-	public function getJobNumber() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_JOB_NUMMER);
-	}
-	
-	public function setJobNumber($a_number) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_JOB_NUMMER, $a_number);
-	}
-	
-	public function getBirthplace() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_BIRTHPLACE);
-	}
-	
-	public function setBirthplace($a_place) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_BIRTHPLACE, $a_place);
-	}
-	
-	public function getBirthname() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_BIRTHNAME);
-	}
-	
-	public function setBirthname($a_name) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_BIRTHNAME, $a_name);
-	}
-	
-	public function getIHKNumber() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_IHK_NUMBER);
-	}
-	
-	public function setIHKNumber($a_number) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_IHK_NUMBER, $a_number);
-	}
-	
-	public function getADTitle() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_AD_TITLE);
-	}
-	
-	public function setADTitle($a_title) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_AD_TITLE, $a_title);
-	}
-	
-	public function getAgentKey() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_AGENT_KEY);
-	}
-	
-	public function setAgentKey($a_key) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_AGENT_KEY, $a_key);
-	}
-
-	public function getAgentKeyVFS() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_AGENT_KEY_VFS);
-	}
-	
-	public function setAgentKeyVFS($a_key) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_AGENT_KEY_VFS, $a_key);
-	}
-
-	public function getAgentPositionVFS() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_AGENT_POSITION_VFS);
-	}
-	
-	public function setAgentPositionVFS($a_key) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_AGENT_POSITION_VFS, $a_key);
-	}
-
-	
-	/*
-	public function getCompanyTitle() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_COMPANY_TITLE);
-	}
-	
-	public function setCompanyTitle($a_title) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_COMPANY_TITLE, $a_title);
-	}
-	*/
-	
-	public function setCompanyName($a_name) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_COMPANY_NAME, $a_name);
-	}
-	
-	public function getPrivateEmail() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_PRIV_EMAIL);
-	}
-	
-	public function setPrivateEmail($a_email) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_PRIV_EMAIL, $a_email);
-	}
-	
-	public function getPrivateStreet() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_PRIV_STREET);
-	}
-	
-	public function setPrivateStreet($a_street) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_PRIV_STREET, $a_street);
-	}
-	
-	public function getPrivateCity() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_PRIV_CITY);
-	}
-	
-	public function setPrivateCity($a_city) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_PRIV_CITY, $a_city);
-	}
-	
-	public function getPrivateZipcode() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_PRIV_ZIPCODE);
-	}
-	
-	public function setPrivateZipcode($a_zipcode) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_PRIV_ZIPCODE, $a_zipcode);
-	}
-	
-
 	public function getMobilePhone() {
 		return $this->getUser()->getPhoneMobile();
 	}
 	public function setMobilePhone($a_phone) {
 		return $this->getUser()->setPhoneMobile(a_phone);
 	}
-
-	/*
-	public function getPrivatePhone() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_PRIV_PHONE);
-	}
-	public function setPrivatePhone($a_phone) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_PRIV_PHONE, $a_phone);
-	}
 	
-	public function getPrivateState() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_PRIV_STATE);
-	}
-	
-	public function setPrivateState($a_state) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_PRIV_STATE, $a_state);
-	}
-	
-	
-	public function getPrivateFax() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_PRIV_FAX);
-	}
-	
-	public function setPrivateFax($a_fax) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_PRIV_FAX, $a_fax);
-	}
-	*/
-	
-	public function getEntryDate() {
-		$val = $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE);
-		if (!trim($val)) {
-			return null;
-		}
-		try {
-			return new ilDate($val, IL_CAL_DATE);
-		}
-		catch (Exception $e) {
-			return null;
-		}
-	}
-	
-	public function setEntryDate(ilDate $a_date) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE, $a_date->get(IL_CAL_DATE));
-	}
-	
-	public function getExitDate() {
-		$val = $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_EXIT_DATE);
-		if (!trim($val)) {
-			return null;
-		}
-		try {
-			return new ilDate($val, IL_CAL_DATE);
-		}
-		catch (Exception $e) {
-			return null;
-		}
-	}
-	
-	public function setExitDate(ilDate $a_date) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_EXIT_DATE, $a_date->get(IL_CAL_DATE));
-	}
-	
-	public function getStatus() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_STATUS);
-	}
-	
-	public function setStatus($a_status) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_STATUS, $a_status);
-	}
-	
-	public function getHPE() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_HPE);
-	}
-	
-	public function setHPE($a_hpe) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_HPE, $a_hpe);
-	}
-
-
 	public function getFormattedContactInfo() {
 		$name = $this->getFullName();
 		$phone = $this->getUser()->getPhoneOffice();
@@ -1177,7 +963,6 @@ class gevUserUtils {
 		}
 		return $name." ($email)";
 	}
-
 	
 	// role assignment
 	
@@ -1691,7 +1476,7 @@ class gevUserUtils {
 	
 	
 	static $hist_position_keys = null;
-
+	
 	static function getPositionKeysFromHisto() {
 		if (self::$hist_position_keys !== null) {
 			return self::$hist_position_keys;
@@ -1705,22 +1490,6 @@ class gevUserUtils {
 			self::$hist_position_keys[] = $rec["position_key"];
 		}
 		return self::$hist_position_keys;
-	}
-
-
-
-	public function getPaisyNr() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_PAISY_NUMBER);
-	}
-	public function setPaisyNr($a_nr) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_PAISY_NUMBER, $a_nr);
-	}
-	
-	public function getFinancialAccountVFS() {
-		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_FINANCIAL_ACCOUNT);
-	}
-	public function setFinancialAccountVFS($a_nr) {
-		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_FINANCIAL_ACCOUNT, $a_nr);
 	}
 	
 	static public function userIsInactive($a_user_id) {

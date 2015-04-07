@@ -14,7 +14,6 @@
 * @ilCtrl_Calls gevDesktopGUI: gevBookingGUI
 * @ilCtrl_Calls gevDesktopGUI: gevStaticpagesGUI
 * @ilCtrl_Calls gevDesktopGUI: gevEduBiographyGUI
-* @ilCtrl_Calls gevDesktopGUI: gevUserProfileGUI
 * @ilCtrl_Calls gevDesktopGUI: gevWBDTPServiceRegistrationGUI
 * @ilCtrl_Calls gevDesktopGUI: gevWBDTPBasicRegistrationGUI
 * @ilCtrl_Calls gevDesktopGUI: gevAttendanceByEmployeeGUI
@@ -43,12 +42,7 @@ class gevDesktopGUI {
 	public function executeCommand() {
 		$next_class = $this->ctrl->getNextClass();
 		$cmd = $this->ctrl->getCmd();
-		$this->checkProfileComplete($cmd, $next_class);
-		
-		if ($next_class != "gevuserprofilegui" && $cmd != "toMyProfile") {
-			$this->checkNeedsWBDRegistration($cmd, $next_class);
-		}
-		
+				
 		if($cmd == "") {
 			$cmd = "toMyCourses";
 		}
@@ -89,12 +83,6 @@ class gevDesktopGUI {
 				$ilMainMenu->setActive("gev_me_menu");
 				require_once("Services/GEV/Reports/classes/class.gevEduBiographyGUI.php");
 				$gui = new gevEduBiographyGUI();
-				$ret = $this->ctrl->forwardCommand($gui);
-				break;
-			case "gevuserprofilegui":
-				$ilMainMenu->setActive("gev_me_menu");
-				require_once("Services/GEV/Desktop/classes/class.gevUserProfileGUI.php");
-				$gui = new gevUserProfileGUI();
 				$ret = $this->ctrl->forwardCommand($gui);
 				break;
 			case "gevmytrainingsapgui":
@@ -209,10 +197,6 @@ class gevDesktopGUI {
 	protected function toStaticPages() {
 		$this->ctrl->redirectByClass("gevStaticPagesGUI", $_REQUEST['ctpl_file']);
 	}
-	
-	protected function toMyProfile() {
-		$this->ctrl->redirectByClass("gevUserProfileGUI");
-	}
 
 	protected function toMyTrainingsAp() {
 		$this->ctrl->redirectByClass("gevMyTrainingsApGUI");
@@ -254,58 +238,6 @@ class gevDesktopGUI {
 		$this->ctrl->setParameterByClass("gevBookingGUI", "crs_id", $crs_id);
 		$this->ctrl->redirectByClass("gevBookingGUI", "book");
 	}
-
-	
-	protected function checkProfileComplete($cmd, $next_class) {
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		global $ilUser;
-		$utils = gevUserUtils::getInstanceByObj($ilUser);
-		if (!$utils->isProfileComplete() && !($cmd == "toMyProfile" || $next_class == "gevuserprofilegui")) {
-			ilUtil::sendFailure($this->lng->txt("gev_profile_incomplete"), true);
-			$this->ctrl->redirect($this, "toMyProfile");
-		}
-	}
-	
-	protected function checkNeedsWBDRegistration($cmd, $next_class) {
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		global $ilUser;
-		$utils = gevUserUtils::getInstanceByObj($ilUser);
-		if ($utils->hasWBDRelevantRole() && !$utils->hasDoneWBDRegistration()) {
-
-			//two ways: GEV is TP or  TPBasic
-			if ($utils->canBeRegisteredAsTPService()) {
-				if ($next_class != "gevwbdtpserviceregistrationgui") {
-					$this->ctrl->redirectByClass("gevWBDTPServiceRegistrationGUI");
-				}
-			} else {
-				if ($next_class != "gevwbdtpbasicregistrationgui") {
-					$this->ctrl->redirectByClass("gevWBDTPBasicRegistrationGUI");
-				}
-			}
-		}
-	}
-
-	protected function createHAUnit() {
-		require_once("Services/GEV/Utils/classes/class.gevHAUtils.php");
-		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
-		$ha_utils = gevHAUtils::getInstance();
-		
-		global $ilUser;
-		
-		if ($ha_utils->hasHAUnit($ilUser->getId())) {
-			throw new Exception("User ".$ilUser->getId()." already has an HA-Unit.");
-		}
-		
-		$org_id = $ha_utils->createHAUnit($ilUser->getId());
-		
-		ilUtil::sendSuccess($this->lng->txt("gev_ha_org_unit_created"), true);
-		
-		$ref_id = gevObjectUtils::getRefId($org_id);
-		$this->ctrl->setParameterByClass("ilLocalUserGUI", "ref_id", $ref_id);
-		$this->ctrl->redirectByClass(array("ilAdministrationGUI","ilObjOrgUnitGUI","ilLocalUserGUI"), "index");
-	}
-
-
 }
 
 ?>
