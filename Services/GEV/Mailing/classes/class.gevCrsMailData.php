@@ -64,6 +64,7 @@ class gevCrsMailData extends ilMailData {
 		}
 		
 		$val = null;
+		global $lng;
 		
 		switch ($a_placeholder_code) {
 			case "MOBIL":
@@ -71,77 +72,25 @@ class gevCrsMailData extends ilMailData {
 					$val = $this->usr_utils->getMobilePhone();
 				}
 				break;
-			case "OD":
-				if ($this->usr_utils !== null) {
-					$val = $this->usr_utils->getOD();
-					$val = $val["title"];
-				}
-				break;
-			case "VERMITTLERNUMMER":
-				if ($this->usr_utils !== null) {
-					$val = $this->usr_utils->getJobNumber();
-				}
-				break;
-			case "ADP GEV":
-				if ($this->usr_utils !== null) {
-					$val = $this->usr_utils->getADPNumberGEV();
-				}
-				break;
-			case "ADP VFS":
-				if ($this->usr_utils !== null) {
-					$val = $this->usr_utils->getADPNumberVFS();
-				}
-				break;
-			case "TRAININGSTITEL":
+			case "TITLE":
 				$val = $this->crs_utils->getTitle();
 				break;
-			case "TRAININGSUNTERTITEL":
+			case "SUBTITLE":
 				$val = $this->crs_utils->getSubtitle();
 				break;
-			case "LERNART":
-			case "TRAININGSTYP":
+			case "TYPE":
 				$val = $this->crs_utils->getType();
 				break;
-			case "TRAININGSTHEMEN":
+			case "CATEGORIES":
 				$val = implode(", ", $this->crs_utils->getTopics());
 				break;
-			case "WP":
-				$val = $this->crs_utils->getCreditPoints();
-				break;
-			case "METHODEN":
-				$methods = $this->crs_utils->getMethods();
-				if ($methods !== null) {
-					$val = implode(", ", $methods);
-				}
-				else {
-					$val = "";
-				}
-				break;
-			case "MEDIEN":
-				$media = $this->crs_utils->getMedia();
-				if ($media !== null) {
-					$val = implode(", ", $media);
-				}
-				else {
-					$val = "";
-				}
-				break;
-			case "ZIELGRUPPEN":
-				$target_group =  $this->crs_utils->getTargetGroup();
-				if ($target_group !== null) {
-					$val = implode(", ", $target_group);
-				}
-				else {
-					$val = "";
-				}
-				break;
-			case "INHALT":
+			case "TOPICS":
 				$val = $this->crs_utils->getContents();
 				if (!$a_markup) {
 					$val = strip_tags($val);
 				}
 				break;
-			case "ZIELE UND NUTZEN":
+			case "OBJECTIVES":
 				$val = $this->crs_utils->getGoals();
 				if (!$a_markup) {
 					$val = strip_tags($val);
@@ -150,52 +99,52 @@ class gevCrsMailData extends ilMailData {
 			case "ID":
 				$val = $this->crs_utils->getCustomId();
 				break;
-			case "STARTDATUM":
+			case "STARTDATE":
 				$val = $this->crs_utils->getFormattedStartDate();
 				break;
-			case "STARTZEIT":
+			case "STARTTIME":
 				$val = $this->crs_utils->getFormattedStartTime();
 				break;
-			case "ENDDATUM":
+			case "ENDDATE":
 				$val = $this->crs_utils->getFormattedEndDate();
 				break;
-			case "ENDZEIT":
+			case "ENDTIME":
 				$val = $this->crs_utils->getFormattedEndTime();
 				break;
-			case "ZEITPLAN":
+			case "SCHEDULE":
 				$val = $this->crs_utils->getFormattedSchedule();
 				break;
-			case "TV-NAME":
+			case "OFFICER-NAME":
 				$val = $this->crs_utils->getTrainingOfficerName();
 				break;
-			case "TV-TELEFON":
+			case "OFFICER-PHONE":
 				$val = $this->crs_utils->getTrainingOfficerPhone();
 				break;
-			case "TV-EMAIL":
+			case "OFFICER-EMAIL":
 				$val = $this->crs_utils->getTrainingOfficerEmail();
 				break;
-			case "TRAININGSBETREUER-VORNAME":
+			case "ADMIN-FIRSTNAME":
 				$val = $this->crs_utils->getMainAdminFirstname();
 				break;
-			case "TRAININGSBETREUER-NACHNAME":
+			case "ADMIN-FIRSTNAME":
 				$val = $this->crs_utils->getMainAdminLastname();
 				break;
-			case "TRAININGSBETREUER-TELEFON":
+			case "ADMIN-LASTNAME":
 				$val = $this->crs_utils->getMainAdminPhone();
 				break;
-			case "TRAININGSBETREUER-EMAIL":
+			case "ADMIN-EMAIL":
 				$val = $this->crs_utils->getMainAdminEmail();
 				break;
 			case "TRAINER-NAME":
 				$val = $this->crs_utils->getMainTrainerName();
 				break;
-			case "TRAINER-TELEFON":
+			case "TRAINER-PHONE":
 				$val = $this->crs_utils->getMainTrainerPhone();
 				break;
 			case "TRAINER-EMAIL":
 				$val = $this->crs_utils->getMainTrainerEmail();
 				break;
-			case "ALLE TRAINER":
+			case "ALL TRAINERS":
 				$trainers = $this->crs_utils->getTrainers();
 				$val = array();
 				foreach ($trainers as $trainer) {
@@ -204,68 +153,65 @@ class gevCrsMailData extends ilMailData {
 				}
 				$val = implode("<br />", $val);
 				break;
-			case "VO-NAME":
+			case "VENUE-NAME":
 				$val = $this->crs_utils->getVenueTitle();
 				break;
-			case "VO-STRAßE":
+			case "VENUE-STREET":
 				$val = $this->crs_utils->getVenueStreet();
 				break;
-			case "VO-HAUSNUMMER":
+			case "VENUE-HOUSENUMBER":
 				$val = $this->crs_utils->getVenueHouseNumber();
 				break;
-			case "VO-PLZ":
+			case "VENUE-ZIPCODE":
 				$val = $this->crs_utils->getVenueZipcode();
 				break;
-			case "VO-ORT":
+			case "VENUE-CITY":
 				$val = $this->crs_utils->getVenueCity();
 				break;
-			case "VO-TELEFON":
+			case "VENUE-PHONE":
 				$val = $this->crs_utils->getVenuePhone();
 				break;
-			case "VO-INTERNET":
+			case "VENUE-INTERNET":
 				$val = $this->crs_utils->getVenueHomepage();
 				break;
 			case "WEBINAR-LINK":
 				$val = $this->crs_utils->getWebinarLink();
 				break;
-			case "WEBINAR-PASSWORT":
+			case "WEBINAR-PASSWORD":
 				$val = $this->crs_utils->getWebinarPassword();
 				break;
-			/*case "CSN-LINK":
-				$val = $this->crs_utils->getCSNLink();
-				break;*/
-			case "HOTEL-NAME":
+			case "ACCOMODATION-NAME":
 				$val = $this->crs_utils->getAccomodationTitle();
 				break;
-			case "HOTEL-STRAßE":
+			case "ACCOMODATION-STREET":
 				$val = $this->crs_utils->getAccomodationStreet();
 				break;
-			case "HOTEL-HAUSNUMMER":
+			case "ACCOMODATION-HOUSENUMBER":
 				$val = $this->crs_utils->getAccomodationHouseNumber();
 				break;
-			case "HOTEL-PLZ":
+			case "ACCOMODATION-ZIPCODE":
 				$val = $this->crs_utils->getAccomodationZipcode();
 				break;
-			case "HOTEL-ORT":
+			case "ACCOMODATION-CITY":
 				$val = $this->crs_utils->getAccomodationCity();
 				break;
-			case "HOTEL-TELEFON":
+			case "ACCOMODATION-PHONE":
 				$val = $this->crs_utils->getAccomodationPhone();
 				break;
-			case "HOTEL-EMAIL":
+			case "ACCOMODATION-EMAIL":
 				$val = $this->crs_utils->getAccomodationEmail();
 				break;
-			case "BUCHENDER_VORNAME":
+			case "BOOKED BY FIRSTNAME":
 				if ($this->usr_utils !== null) {
 					$val = $this->usr_utils->getFirstnameOfUserWhoBookedAtCourse($this->crs_utils->getId());
 				}
 				break;
-			case "BUCHENDER_NACHNAME":
+			case "BOOKED BY LASTNAME":
 				if ($this->usr_utils !== null) {
 					$val = $this->usr_utils->getLastnameOfUserWhoBookedAtCourse($this->crs_utils->getId());
 				}
 				break;
-			case "EINSATZTAGE":
+			case "OPERATIONDAYS":
 				$start = $this->crs_utils->getStartDate();
 				$end = $this->crs_utils->getEndDate();
 				
@@ -283,7 +229,7 @@ class gevCrsMailData extends ilMailData {
 					$val = "Nicht verfügbar.";
 				}
 				break;
-			case "UEBERNACHTUNGEN":
+			case "OVERNIGHTS":
 				if ($this->usr_utils !== null) {
 					$tmp = $this->usr_utils->getOvernightDetailsForCourse($this->crs_utils->getCourse());
 					$dates = array();
@@ -296,34 +242,34 @@ class gevCrsMailData extends ilMailData {
 					$val = implode("<br />", $dates);
 				}
 				break;
-			case "VORABENDANREISE":
+			case "PREARRIVAL":
 				if ($this->usr_utils !== null) {
 					$tmp = $this->usr_utils->getOvernightDetailsForCourse($this->crs_utils->getCourse());
 					if (   count($tmp) > 0 
 						&& $tmp[0]->get(IL_CAL_DATE) < $this->crs_utils->getStartDate()->get(IL_CAL_DATE)) {
-						$val = gevSettings::YES;
+						$val = $lng->txt("yes");
 					}
 					else {
-						$val = gevSettings::NO;
+						$val = $lng->txt("no");
 					}
 				}
 				break;
-			case "NACHTAGABREISE":
+			case "POSTDEPARTURE":
 				if ($this->usr_utils !== null) {
 					$tmp = $this->usr_utils->getOvernightDetailsForCourse($this->crs_utils->getCourse());
 					if (   count($tmp) > 0 
 						&& $tmp[count($tmp)-1]->get(IL_CAL_DATE) == $this->crs_utils->getEndDate()->get(IL_CAL_DATE)) {
-						$val = gevSettings::YES;
+						$val = $lng->txt("yes");
 					}
 					else {
-						$val = gevSettings::NO;
+						$val = $lng->txt("no");
 					}
 				}
 				break;
-			case "ORGANISATORISCHES":
+			case "ORGANIZTIONAL":
 				$val = $this->crs_utils->getOrgaInfo();
 				break;
-			case "LISTE":
+			case "LIST":
 				$l = $this->crs_utils->getParticipants();
 				$names = array();
 				foreach ($l as $user_id) {
