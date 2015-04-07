@@ -40,12 +40,13 @@ class ilMailTemplatesGUI extends ilObjectGUI
 		 * @var           $ilDB   ilDB
 		 * @var           $tpl    ilTemplate
 		 */
-		global $lng, $tpl, $ilDB, $ilCtrl, $ilSetting;
+		global $lng, $tpl, $ilDB, $ilCtrl, $ilSetting, $ilToolbar;
 
 		$this->lng       = $lng;
 		$this->tpl       = $tpl;
 		$this->ilDB      = $ilDB;
 		$this->ilCtrl    = $ilCtrl;
+		$this->ilToolbar = $ilToolbar;
 
 		$this->type = 'mail';
 		parent::__construct($a_data,$a_id,$a_call_by_reference, false);
@@ -121,8 +122,15 @@ class ilMailTemplatesGUI extends ilObjectGUI
 					 * @var $ilSetting ilSetting
 					 */
 					global $ilSetting;
-					$install_default_language = $ilSetting->get('language', 'en');
-					$this->showTemplateVariantByLanguage((int)$_GET['template_id'], $install_default_language);
+					// spx-patch start
+					if (array_key_exists("language", $_POST)) {
+						$show_lang =$_POST["language"];
+					}
+					else {
+						$show_lang = $ilSetting->get('language', 'en');
+					}
+					$this->showTemplateVariantByLanguage((int)$_GET['template_id'], $show_lang);
+					// spx-patch end 
 					break;
 				
 				case 'edit_template_variant':
@@ -276,6 +284,24 @@ class ilMailTemplatesGUI extends ilObjectGUI
 	 */
 	protected function showTemplateVariantByLanguage($a_template_id, $a_language)
 	{
+		// spx-patch start
+		$this->lng->loadLanguageModule("meta");
+		$this->ilCtrl->saveParameter($this, array("template_id"));
+		$this->ilToolbar->setFormAction($this->ilCtrl->getFormAction($this));
+		$this->ilToolbar->addText($this->lng->txt("language"));
+		require_once("Services/Form/classes/class.ilSelectInputGUI.php");
+		$lng_select = new ilSelectInputGUI($this->lng->txt("language"), "language");
+		$installed = $this->lng->getInstalledLanguages();
+		$options = array();
+		foreach ($installed as $key) {
+			$options[$key] = $this->lng->txt("meta_l_$key");
+		}
+		$lng_select->setValue($a_language);
+		$lng_select->setOptions($options);
+		$this->ilToolbar->addInputItem($lng_select);
+		$this->ilToolbar->addFormButton($this->lng->txt("ok"), "show_template_variants");
+		// spx-patch end
+
 		require_once 'Services/MailTemplates/classes/class.ilMailTemplateVariantEntity.php';
 		$variant_entity = new ilMailTemplateVariantEntity();
 		$variant_entity->setIlDB($this->ilDB);
