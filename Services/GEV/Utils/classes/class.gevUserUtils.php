@@ -982,49 +982,6 @@ class gevUserUtils {
 		return !$this->hasRoleIn(gevSettings::$NO_PREARRIVAL_PAYMENT_ROLES);
 	}
 
-	public function isVFS() {
-		return $this->hasRoleIn(array('VFS'));
-	}
-	
-	public function getIDHGBAADStatus() {
-		$roles = $this->getGlobalRoles();
-		foreach ($roles as $role) {
-			$title = ilObject::_lookupTitle($role);
-			$status = gevSettings::$IDHGBAAD_STATUS_MAPPING[$title];
-			if ($status !== null) {
-				return $status;
-			}
-		}
-		return "";
-	}
-
-	public function getOD() {
-		if ($this->od !== false) {
-			return $this->od;
-		}
-		
-		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php");
-		$tree = ilObjOrgUnitTree::_getInstance();
-		
-g		$ous = $tree->getOrgUnitOfUser($this->user_id);
-		foreach($ous as $ou_ref) {
-			while ($ou_ref !== null) {
-				$ou_id = ilObject::_lookupObjectId($ou_ref);
-				$title = ilObject::_lookupTitle($ou_id);
-				if (preg_match("/Organisationsdirektion.*/", $title)) {
-					$this->od = array( "obj_id" => $ou_id
-									 , "title" => $title
-									 );
-					return $this->od;
-				}
-				$ou_ref = $tree->getParent($ou_ref);
-			}
-		}
-		
-		$this->od = null;
-		return $this->od;
-	}
-
 	// Soll für den Benutzer  bei der Selbstbuchung der Hinweis "Vorabendanreise 
 	// mit Führungskraft klären" angezeigt werden?
 	public function showPrearrivalNoteInBooking() {
@@ -1151,27 +1108,6 @@ g		$ous = $tree->getOrgUnitOfUser($this->user_id);
 		}
 	
 		return true;
-	}
-	
-	// For IV-Import Process
-	
-	public function iv_isActivated() {
-		global $ilDB;
-		$res = $this->db->query("SELECT * FROM gev_user_reg_tokens ".
-								" WHERE username = ".$ilDB->quote($this->getLogin(), "text").
-								"   AND password_changed IS NULL");
-
-		if ($this->db->fetchAssoc($res)) {
-			return false;
-		}
-		return true;
-	}
-	
-	public function iv_setActivated() {
-		$this->db->manipulate("UPDATE gev_user_reg_tokens ".
-							  "   SET password_changed = NOW() ".
-							  " WHERE username = ".$this->db->quote($this->getLogin(), "text")
-							  );
 	}
 	
 	// superiors/employees
