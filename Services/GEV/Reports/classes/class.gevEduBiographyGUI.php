@@ -148,8 +148,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		$tpl = new ilTemplate("tpl.gev_edu_bio_overview.html", true, true, "Services/GEV/Reports");
 
 		$this->renderAcademyPoints($tpl);
-		
-		$tpl->setVariable("WBDPOINTSVISIBIBLE", "invisible");
+
 		return $tpl->get();
 	}
 	
