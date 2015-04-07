@@ -110,8 +110,8 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$show_cancel_link = 
 			(  $a_set["start_date"] === null 
 			|| (   ilDateTime::_before($now, $a_set["start_date"]   )
-				&& (   $a_set["absolute_cancel_date"] === null
-					|| !ilDateTime::_before($a_set["absolute_cancel_date"], $now)
+				&& (   $a_set["cancel_date"] === null
+					|| !ilDateTime::_before($a_set["cancel_date"], $now)
 				   )
 			   )
 			)
@@ -134,15 +134,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 			$show_cancel_date = ilDateTime::_before($now, $a_set["cancel_date"]);;
 		}
 		
-		$show_absolute_cancel_date = true;
-		if ($a_set["absolute_cancel_date"] == null) {
-			$absolute_cancel_date = $this->lng->txt("gev_unlimited");
-		}
-		else {
-			$absolute_cancel_date = ilDatePresentation::formatDate($a_set["absolute_cancel_date"]);
-			$show_absolute_cancel_date = ilDateTime::_before($now, $a_set["absolute_cancel_date"]);;
-		}
-
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("STATUS", $status);
 		$this->tpl->setVariable("TYPE", $a_set["type"]);
@@ -194,13 +185,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 			$this->tpl->setVariable("CANCEL_DATE_CAPTION", $this->lng->txt("gev_free_cancellation_till"));
 			$this->tpl->parseCurrentBlock();
 		}
-		if ($show_cancel_link && $show_absolute_cancel_date) {
-			$this->tpl->setCurrentBlock("absolute_cancel_date");
-			$this->tpl->setVariable("ABSOLUTE_CANCEL_DATE", $absolute_cancel_date);
-			$this->tpl->setVariable("ABSOLUTE_CANCEL_DATE_CAPTION", $this->lng->txt("gev_cancellation_till"));
-			$this->tpl->parseCurrentBlock();
-		}
-
 	}
 	
 	// overwritten from ilTable2GUI to get sorting of fee right.

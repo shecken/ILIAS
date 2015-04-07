@@ -139,13 +139,6 @@ array( "Period"
 	 	   					 , array("min" => 0)
 	 	   					 , $tinteger
 	 	   					 )
-				, "fixed Deadline for Cancellation" =>
-						array( gevSettings::CRS_AMD_ABSOLUTE_CANCEL_DEADLINE
-							 , null
-							 , false
-							 , array("min" => 0)
-							 , $tinteger
-							 )
 	 	   		, "Buchungsfrist" =>
 	 	   				array( gevSettings::CRS_AMD_BOOKING_DEADLINE
 	 	   					 , null
