@@ -1661,7 +1661,12 @@ class gevCourseUtils {
 		foreach($participants as $participant) {
 			$this->getBookings()->cancelWithoutCosts($participant);
 		}
-		$mails->send("admin_cancel_booked_to_cancelled_without_costs", $participants);
+		$mails->send("participant_training_cancelled", $participants);
+		
+		// Set training offline
+		$crs = $this->getCourse();
+		$crs->setOfflineStatus(true);
+		$crs->update();
 		
 		// Remove Trainers
 		$trainers = $this->getTrainers();
@@ -1669,15 +1674,7 @@ class gevCourseUtils {
 		foreach($trainers as $trainer) {
 			$membership->delete($trainer);
 		}
-		// mails will be send by GEVMailingPlugin
-
-		// Send mail C08 to hotel
-		$mails->send("training_cancelled");
-		
-		// Set training offline
-		$crs = $this->getCourse();
-		$crs->setOfflineStatus(true);
-		$crs->update();
+		$mails->send("trainer_training_cancelled", $trainers);
 	}
 	
 	// Participation
