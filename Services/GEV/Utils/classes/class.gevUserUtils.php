@@ -576,7 +576,7 @@ class gevUserUtils {
 				 "              )".
 				 "            AND start_date.value > ".$this->db->quote(date("Y-m-d"), "text").
 				 "		     )".
-				 "		  OR (".$this->db->in("ltype.value", array(gevSettings::LIVE_TRAINING), false, "text").
+				 "		  OR (".$this->db->in("ltype.value", array(gevSettings::WBT), false, "text").
 				 "			 )".
 				 "		 )".
 				 $additional_where.
