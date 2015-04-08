@@ -52,13 +52,15 @@
 				$roleId=$a_role->getRoleIdByName($res["roleName"]);
 				if(!$roleId) {
 					$a_role->createGlobalRole($res["roleName"],"");
+					$roleId = $a_role->getRoleIdByName($res["roleName"]);
+					$sql = "UPDATE SEEPEXroles SET roleid = ".$ilDB->quote($roleId,"text")
+						  ." WHERE roleName = ".$ilDB->quote($res["roleName"],"text");
 				} else {
 					echo "Role ".$res["roleName"]." allready exists! Do not create...\r\n";
+					$sql = "UPDATE SEEPEXroles SET roleid = ".$ilDB->quote($roleId,"text")
+						  ." WHERE roleName = ".$ilDB->quote($res["roleName"],"text");
 				}
-				
 
-				$sql="UPDATE SEEPEXroles SET roleid = ".$ilDB->quote($roleId,"text")
-					." WHERE roleName = ".$ilDB->quote($res["roleName"],"text");
 				self::queryspxdb($sql);
 			}	
 		}
