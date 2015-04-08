@@ -35,7 +35,7 @@ class gevMinParticipantsNotReached extends gevCrsAutoMail {
 
 	
 	public function getTemplateCategory() {
-		return "R01";
+		return "R02";
 	}
 	
 	public function getRecipientUserIDs() {

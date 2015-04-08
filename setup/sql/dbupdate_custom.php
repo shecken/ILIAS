@@ -2751,3 +2751,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 
 ?>
 
+<#87>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
