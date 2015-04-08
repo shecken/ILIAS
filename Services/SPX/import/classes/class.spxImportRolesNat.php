@@ -35,8 +35,8 @@
 		}
 
 		private function getusrToNATRoleHandler () {
-			$sql="SELECT login, roleCtry, roleid FROM `iliasImport`, SEEPEXroles where roleCtry=roleName";
-			 self::$usrToNATRoleHandler =self::queryspxdb($sql);
+			$sql = "SELECT login, roleid FROM iliasImport, SEEPEXroles where roleCtry = roleName";
+			 self::$usrToNATRoleHandler = self::queryspxdb($sql);
 		}
 
 		public static function ImportRolesNat() {
@@ -45,11 +45,13 @@
 
 			$RBAC = new ilRbacAdmin(); 
 			
-			while($usr=mysql_fetch_assoc(self::$usrToNATRoleHandler)) {
+			while($usr = mysql_fetch_assoc(self::$usrToNATRoleHandler)) {
 				
-				$usrid=ilObjUser::_lookUpId($usr["login"]);	
+				$usr["usr_id"] = ilObjUser::_lookUpId($usr["login"]);	
 
-				$RBAC->assignUser($usr["roleid"],$usrid);
+				if(!$rbacreview->isAssigned($usr["usr_id"],$usr["roleid"])) {		
+					$RBAC->assignUser($usr["roleid"],$usr["usr_id"]);
+				}
 			}
 			self::closespxdb();
 		}

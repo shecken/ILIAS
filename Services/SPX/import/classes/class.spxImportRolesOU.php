@@ -46,18 +46,13 @@
 			while($usr=mysql_fetch_assoc(self::$usrToOURoleHandler)) {
 
 				$usr2=array(ilObjUser::_lookUpId($usr["login"]));
-				//$OUid=gevObjectUtils::getObjId($usr["refid"]);
-
+				
 				$OU=new ilObjOrgUnit($usr["refid"]);
-				//$foo=$OU->getTitle();
-				//echo " $foo  ";
-				//die("Here");
-				//$OU->initDefaultRoles();
-				//die("Here");
-				if($usr["usrtype"]=="User") {
-					$OU->assignUsersToEmployeeRole($usr2);
-				} else {
+	
+				if($usr["usrtype"]=="Manager") {
 					$OU->assignUsersToSuperiorRole($usr2);
+				} else {
+					$OU->assignUsersToEmployeeRole($usr2);
 				}
 				$OU->update();
 			}

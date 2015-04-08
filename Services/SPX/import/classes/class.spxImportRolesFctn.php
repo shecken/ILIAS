@@ -31,7 +31,7 @@
 		}
 
 		private function getusrToFctnRoleHandler () {
-			$sql="SELECT login,roleid FROM iliasImport,`SEEPEXroles` WHERE roleName=roleFctn";
+			$sql = "SELECT login, roleid FROM iliasImport,SEEPEXroles WHERE roleName = roleFctn";
 			 self::$usrToFctnRoleHandler =self::queryspxdb($sql);
 		}
 
@@ -41,10 +41,12 @@
 
 			$RBAC = new ilRbacAdmin(); 
 
-			while($usr=mysql_fetch_assoc(self::$usrToFctnRoleHandler)) {
+			while($usr = mysql_fetch_assoc(self::$usrToFctnRoleHandler)) {
 
-				$usr["usr_id"]=ilObjUser::_lookUpId($usr["login"]);
-				$RBAC->assignUser($usr["roleid"],$usr["usr_id"]);
+				$usr["usr_id"] = ilObjUser::_lookUpId($usr["login"]);
+				if(!$rbacreview->isAssigned($usr["usr_id"],$usr["roleid"])) {		
+					$RBAC->assignUser($usr["roleid"],$usr["usr_id"]);
+				}
 			}
 			self::closespxdb();
 		}

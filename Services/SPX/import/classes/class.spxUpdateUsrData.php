@@ -72,13 +72,13 @@
 		}
 
 		private function getUsrHandler() {
-			$sql="SELECT * FROM `iliasImport`";
+			$sql = "SELECT * FROM iliasImport, SEEPEXorg WHERE OU = OUshort";
 			 self::$usrHandler = self::queryspxdb($sql);
 		}
 
 		public static function updateUsrData() {
 			
-			$file=fopen('users_mising_data.dat','w');
+			$file = fopen('users_mising_data.dat','w');
 			fputcsv($file,array("usrlogin","gender","email"),";");
 
 			self::connectspxdb();
@@ -87,60 +87,36 @@
 
 			global $ilDB;
 			global $ilClientIniFile;
-			while($res=mysql_fetch_assoc(self::$usrHandler)) {
+			while($res = mysql_fetch_assoc(self::$usrHandler)) {
 
 
-				$usrexists=ilObjUser::_lookUpId($res["login"]);
+				$usrexists = ilObjUser::_lookUpId($res["login"]);
 		
-				$ugm=array($res["login"],1,1);
-				$flag=0;
+				$ugm = array($res["login"],1,1);
+				$flag = 0;
 
 
-				if ($usrexists && $res["transfer"]=="nein") {
-					$usr=new ilObjUser($usrexists);
-					$usr->delete();
-				}
-				else if ($usrexists && $res["transfer"]=="ja") {
+				else if ($usrexists) {
 
-					$usr=new ilObjUser($usrexists);
-					$a=$usr->getFirstname();
+					$usr = new ilObjUser($usrexists);
+					$a = $usr->getFirstname();
 
-					$usrgender=$usr->getGender();
 
-					if (!$usrgender&&!$res["gender"]) {
-						$foo = $ilClientIniFile->readVariable('generic_usr_data','gender');
-						$usr->setGender($foo);
-						$ugm[1]=0;
-						$flag++;
-					}
-					else if ($res["gender"]&&$res["gender"]!=$usrgender) {
-						$usr->setGender($res["gender"]);
-					}
+					$usremail = $usr->getEmail();
 
-					$usremail=$usr->getEmail();
-
-					if (!$usremail&&!$res["email"]) {
-						$foo=$ilClientIniFile->readVariable('generic_usr_data','email');
-						$usr->setEmail($foo);
-						$ugm[2]=0;
-						$flag++;
-					} else if ($res["email"]&&$res["email"]!=$usremail) {
+					if ($res["email"]&&$res["email"] != $usremail) {
 						$usr->setEmail($res["email"]);
 					}
 						
-
-
-
-
-					$usr->setInstitution($res["institution"]);
-					$usr->setDepartment($res["department"]);
+					$usr->setInstitution($res["OUshort"]);
+					$usr->setDepartment($res["OUilias"]);
 
 					$usr->update();
 
-					if (strtolower($res["roleCtry"]) == "de") {
+					if (strtolower($res["lng"]) == "deutsch") {
 						$lng = "de";
 					} 
-					else if (strtolower($res["roleCtry"]) == "cn") {
+					else if (strtolower($res["lng"]) == "chinesisch") {
 						$lng = "zh";
 					} 
 					else {
@@ -150,10 +126,10 @@
 					$usr->setLanguage($lng);
 					$usr->writePrefs();
 				}
-				else if (!$usrexists &&  $res["transfer"]=="ja") {
+				else if (!$usrexists) {
 
 
-					$usr=new ilObjUser();
+					$usr = new ilObjUser();
 					$res["passwd_type"] = IL_PASSWD_PLAIN;
 					//$res["passwd"] = self::generateRandomString();
 					$res["passwd"] = $ilClientIniFile->readVariable('generic_usr_data', 'passwd');
@@ -162,12 +138,12 @@
 
 
 					if(!$res["gender"]) {
-						$res["gender"]=$ilClientIniFile->readVariable('generic_usr_data', 'gender');
-						$ugm[1]=0;
+						$res["gender"] = $ilClientIniFile->readVariable('generic_usr_data', 'gender');
+						$ugm[1] = 0;
 					}
 					if(!$res["email"]) {
-						$res["email"]=$ilClientIniFile->readVariable('generic_usr_data', 'email');
-						$ugm[2]=0;
+						$res["email"] = $ilClientIniFile->readVariable('generic_usr_data', 'email');
+						$ugm[2] = 0;
 					}
 
 
@@ -205,9 +181,9 @@
 			$ilDB->query($sql);
 
 			foreach (self::$kill_in_udf as $tokill) {
-				$sql="UPDATE udf_text, udf_definition"
-				." SET value = NULL WHERE `udf_text`.`field_id` = `udf_definition`.`field_id`"
-				." AND field_name LIKE ".$ilDB->quote($tokill);
+				$sql = "UPDATE udf_text, udf_definition"
+					  ." SET value = NULL WHERE udf_text.field_id = udf_definition.field_id"
+					  ." AND field_name LIKE ".$ilDB->quote($tokill);
 				$ilDB->query($sql);
 			}
 		}
