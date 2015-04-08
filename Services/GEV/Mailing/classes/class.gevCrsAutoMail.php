@@ -426,11 +426,11 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		}*/
 
 		// Do not send mails for courses that are offline.
-		// except for billing mails. This is a hack and really
-		// no good design.
+		// except for trainer mail when training is cancelled.
+		// This is a hack and really no good design.
 		global $ilLog;
 
-		if ($this->getCourse()->getOfflineStatus()) {
+		if ($this->getCourse()->getOfflineStatus() && $this->getId() != "trainer_training_cancelled") {
 			$ilLog->write("gevCrsAutoMail::send: course is offline, won't send mail. crs_id=".$this->getCourse()->getId().", mail_id=".$this->getId());
 			return;
 		}
