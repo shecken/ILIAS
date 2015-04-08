@@ -24,7 +24,7 @@ class gevSuperiorCancelWaitingToCancelledWithoutCosts extends gevCrsAutoMail {
 	}
 	
 	public function getCC($a_recipient) {
-		return array();
+		return $this->maybeSuperiorsCC($a_recipient);
 	}
 	
 	public function getMail($a_recipient) {
