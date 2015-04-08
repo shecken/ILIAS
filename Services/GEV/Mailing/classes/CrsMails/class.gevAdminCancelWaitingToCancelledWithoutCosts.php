@@ -16,7 +16,7 @@ class gevAdminCancelWaitingToCancelledWithoutCosts extends gevCrsAutoMail {
 	}
 	
 	public function getTemplateCategory() {
-		return "C05";
+		return "C06";
 	}
 	
 	public function getRecipientUserIDs() {

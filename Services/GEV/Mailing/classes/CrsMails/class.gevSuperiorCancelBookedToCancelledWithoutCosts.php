@@ -16,7 +16,7 @@ class gevSuperiorCancelBookedToCancelledWithoutCosts extends gevCrsAutoMail {
 	}
 	
 	public function getTemplateCategory() {
-		return "C12";
+		return "C03";
 	}
 	
 	public function getRecipientUserIDs() {

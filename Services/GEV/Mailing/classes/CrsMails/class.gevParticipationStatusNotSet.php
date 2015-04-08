@@ -31,7 +31,7 @@ class gevParticipationStatusNotSet extends gevCrsAutoMail {
 	}
 	
 	public function getTemplateCategory() {
-		return "R06";
+		return "R01";
 	}
 	
 	public function getRecipientUserIDs() {

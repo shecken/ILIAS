@@ -16,7 +16,7 @@ class gevSuperiorCancelWaitingToCancelledWithoutCosts extends gevCrsAutoMail {
 	}
 	
 	public function getTemplateCategory() {
-		return "C13";
+		return "C04";
 	}
 	
 	public function getRecipientUserIDs() {
