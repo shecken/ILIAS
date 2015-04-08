@@ -12,7 +12,7 @@ class gevDeferredMailingJob extends ilCronJob {
 	}
 	
 	public function getTitle() {
-		return "aufgeschobene Mails für Trainings";
+		return "Sends deferred Mails for Trainings.";
 	}
 
 	public function hasAutoActivation() {

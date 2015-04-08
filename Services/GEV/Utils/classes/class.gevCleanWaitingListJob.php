@@ -12,7 +12,7 @@ class gevCleanWaitingListJob extends ilCronJob {
 	}
 	
 	public function getTitle() {
-		return "Warteliste bei Trainings absagen";
+		return "Cleans Waitinglists of Trainings";
 	}
 
 	public function hasAutoActivation() {

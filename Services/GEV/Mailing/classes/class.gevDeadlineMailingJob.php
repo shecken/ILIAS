@@ -12,7 +12,7 @@ class gevDeadlineMailingJob extends ilCronJob {
 	}
 	
 	public function getTitle() {
-		return "Mailing für Trainings";
+		return "Mailing for Trainings.";
 	}
 
 	public function hasAutoActivation() {
