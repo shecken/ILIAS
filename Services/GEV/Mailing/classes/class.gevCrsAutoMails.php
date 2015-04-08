@@ -26,8 +26,6 @@ class gevCrsAutoMails extends ilAutoMails {
 		, "admin_cancel_booked_to_cancelled_without_costs" 		=> "gevAdminCancelBookedToCancelledWithoutCosts"
 		, "admin_cancel_waiting_to_cancelled_without_costs" 	=> "gevAdminCancelWaitingToCancelledWithoutCosts"
 		, "participant_waiting_to_booked" 						=> "gevParticipantWaitingToBooked"		
-		
-		, "participant_left_corporation" 						=> "gevParticipantLeftCorporation"
 
 		, "participant_successfull" 							=> "gevParticipantSuccessfull"
 		, "participant_absent_excused" 							=> "gevParticipantAbsentExcused"
