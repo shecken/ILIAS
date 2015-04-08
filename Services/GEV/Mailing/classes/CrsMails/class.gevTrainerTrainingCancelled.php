@@ -2,9 +2,9 @@
 
 require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
-class gevParticipantTrainingCancelled extends gevCrsAutoMail {
+class gevTrainerTrainingCancelled extends gevCrsAutoMail {
 	public function getTitle() {
-		return "Info Participant";
+		return "Info Trainer";
 	}
 	
 	public function _getDescription() {
