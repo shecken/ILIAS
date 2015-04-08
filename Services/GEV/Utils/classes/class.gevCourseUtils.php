@@ -1663,11 +1663,6 @@ class gevCourseUtils {
 		}
 		$mails->send("participant_training_cancelled", $participants);
 		
-		// Set training offline
-		$crs = $this->getCourse();
-		$crs->setOfflineStatus(true);
-		$crs->update();
-		
 		// Remove Trainers
 		$trainers = $this->getTrainers();
 		$membership = $this->getCourse()->getMembersObject();
@@ -1675,6 +1670,11 @@ class gevCourseUtils {
 			$membership->delete($trainer);
 		}
 		$mails->send("trainer_training_cancelled", $trainers);
+		
+		// Set training offline
+		$crs = $this->getCourse();
+		$crs->setOfflineStatus(true);
+		$crs->update();
 	}
 	
 	// Participation

@@ -62,14 +62,6 @@ class gevDeferredMails {
 										  , array($a_recipient)
 										  );
 				break;
-			case "trainer_added":
-			case "trainer_removed":
-				$this->removeDeferredMails( array($a_crs_id)
-										  , array( "trainer_added"
-										  		 , "trainer_removed"
-										  		 )
-										  , array($a_recipient)
-										  );
 			case "admin_cancel_booked_to_cancelled_without_costs":
 			case "admin_cancel_waiting_to_cancelled_without_costs":
 				$this->removeDeferredMails( array( $a_crs_id)
@@ -86,14 +78,6 @@ class gevDeferredMails {
 	// needs not to be send if user was not invited.
 	protected function deferredMailNeedsToBeSend($a_crs_id, $a_mail_id, $a_recipient) {
 		switch ($a_mail_id) {
-			case "trainer_added":
-			case "trainer_removed":
-				return count($this->getDeferredMails( array( $a_crs_id)
-													, array( "trainer_added"
-														   , "trainer_removed"
-														   )
-													, array($a_recipient)
-													)) == 0;
 			case "admin_cancel_booked_to_cancelled_without_costs":
 			case "admin_cancel_waiting_to_cancelled_without_costs":
 				return count($this->getDeferredMails( array( $a_crs_id)

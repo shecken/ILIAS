@@ -19,8 +19,6 @@ class ilGEVMailingPlugin extends ilEventHookPlugin
 				return $this->bookingEvent($a_event, $a_parameter);
 			case "Services/ParticipationStatus":
 				return $this->participationStatusEvent($a_event, $a_parameter);
-			case "Modules/Course":
-				return $this->courseEvent($a_event, $a_parameter);
 			default:
 				break;
 		}
@@ -102,36 +100,6 @@ class ilGEVMailingPlugin extends ilEventHookPlugin
 		}
 		else if ($status == ilParticipationStatus::STATUS_ABSENT_NOT_EXCUSED) {
 			$mails->sendDeferred("participant_absent_not_excused", array($usr_id));
-		}
-	}
-	
-	protected function courseEvent($a_event, $a_parameter) {
-		if (  $a_event != "addParticipant"
-		   && $a_event != "deleteParticipant") {
-			return;
-		}
-		
-		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
-		require_once("Services/ParticipationStatus/classes/class.ilParticipationStatus.php");
-		require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
-		
-		$usr_id = intval($a_parameter["usr_id"]);
-		$crs_id = intval($a_parameter["obj_id"]);
-		$role_id = $a_parameter["role_id"];		
-		$crs_utils = gevCourseUtils::getInstance($crs_id);
-		
-		if ($role_id != $crs_utils->getCourse()->getDefaultTutorRole()
-		&&  $role_id != IL_CRS_TUTOR) {
-			return;
-		}
-		
-		$mails = new gevCrsAutoMails($crs_id);
-		
-		if ($a_event == "addParticipant") {
-			$mails->sendDeferred("trainer_added", array($usr_id));
-		}
-		else if ($a_event == "deleteParticipant") {
-			$mails->send("trainer_removed", array($usr_id));
 		}
 	}
 }
