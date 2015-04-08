@@ -37,7 +37,6 @@ class gevDeadlineMailingJob extends ilCronJob {
 		$this->deadline_jobs = array(
 		  "min_participants_not_reached"
 		, "reminder_participants"
-		, "reminder_trainer"
 		, "participation_status_not_set"
 		, "invitation"
 		);
