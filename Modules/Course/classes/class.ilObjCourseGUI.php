@@ -3548,6 +3548,8 @@ class ilObjCourseGUI extends ilContainerGUI
 			// this is not nice. tabs should be displayed in ilcoursegui
 			// not via ilrepositorygui, then next_class == ilinfoscreengui
 			// could be checked
+			// spx-patch start
+			/*
 			$force_active = (strtolower($_GET["cmdClass"]) == "ilinfoscreengui"
 				|| strtolower($_GET["cmdClass"]) == "ilnotegui")
 				? true
@@ -3556,7 +3558,8 @@ class ilObjCourseGUI extends ilContainerGUI
 								 $this->ctrl->getLinkTargetByClass(
 								 array("ilobjcoursegui", "ilinfoscreengui"), "showSummary"),
 								 "infoScreen",
-								 "", "", $force_active);
+								 "", "", $force_active);*/
+			// spx-patch end
 		}
 		
 		if($ilAccess->checkAccess('read','',$this->ref_id))
@@ -4933,7 +4936,9 @@ class ilObjCourseGUI extends ilContainerGUI
 
                 if(!$cmd)
                 {
-                    $cmd = 'infoScreen';
+                	// spx-patch start
+                    $cmd = 'view';
+                	// spx-patch end
                 }
                 $cmd .= 'Object';
                 $this->$cmd();
