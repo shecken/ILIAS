@@ -14,6 +14,7 @@ require_once("Services/MainMenu/classes/class.ilMainMenuGUI.php");
 require_once("Services/UIComponent/GroupedList/classes/class.ilGroupedListGUI.php");
 require_once("Services/UIComponent/Overlay/classes/class.ilOverlayGUI.php");
 require_once("Modules/OrgUnit/classes/class.ilObjOrgUnitAccess.php");
+require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 
 require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 
@@ -54,7 +55,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 		// known ref_ids
 		$repository = 1;
 		$user_mgmt = 7;
-		$org_mgmt = 56;
+		$org_mgmt = ilObjOrgUnit::getRootOrgRefId();
 		$mail_mgmt = 12;
 		$competence_mgmt = 41;
 		$general_settings = 9;
