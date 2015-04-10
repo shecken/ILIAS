@@ -2796,8 +2796,7 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	ilCustomInstaller::maybeInitUserToRoot();
 	
 	require_once "Services/GEV/Utils/classes/class.gevOrgUnitUtils.php";
-	require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
-	$ref_id = ilObjOrgUnit::getRootOrgRefId();
+	$ref_id = 3412;
 	
 	gevOrgUnitUtils::grantPermissionsRecursivelyFor($ref_id, "superior",
 			array( 'view_employee_bookings'
