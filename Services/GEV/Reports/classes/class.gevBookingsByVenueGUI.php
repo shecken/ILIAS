@@ -34,7 +34,7 @@ class gevBookingsByVenueGUI extends catBasicReportGUI{
 		$user_utils = gevUserUtils::getInstance($ilUser->getId());
 		
 		$venue_names = gevOrgUnitUtils::getVenueNames();
-		if (!$user_utils->isAdmin()) {
+		if (!$user_utils->isAdmin() && !$user_utils->hasRoleIn(array("CAMPUS-Manager"))) {
 			$venues = $user_utils->getVenuesWhereUserIsMember();
 			foreach($venue_names as $id => $name) {
 				if (!in_array($id, $venues)) {
