@@ -2782,3 +2782,29 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 				 , "create_orgu"
 				 ));
 ?>
+
+<#89>
+<?php
+	require_once "Customizing/class.ilCustomInstaller.php";
+	ilCustomInstaller::maybeInitClientIni();
+	ilCustomInstaller::maybeInitPluginAdmin();
+	ilCustomInstaller::maybeInitObjDefinition();
+	ilCustomInstaller::maybeInitAppEventHandler();
+	ilCustomInstaller::maybeInitTree();
+	ilCustomInstaller::maybeInitRBAC();
+	ilCustomInstaller::maybeInitObjDataCache();
+	ilCustomInstaller::maybeInitUserToRoot();
+	
+	require_once "Services/GEV/Utils/classes/class.gevOrgUnitUtils.php";
+	require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
+	$ref_id = ilObjOrgUnit::getRootOrgRefId();
+	
+	gevOrgUnitUtils::grantPermissionsRecursivelyFor($ref_id, "superior",
+			array( 'view_employee_bookings'
+				 , 'view_employee_bookings_rcrsv'
+				 , 'book_employees'
+				 , 'book_employees_rcrsv'
+				 , 'cancel_employee_bookings'
+				 , 'cancel_employee_bookings_rcrsv'
+				 ));
+?>
