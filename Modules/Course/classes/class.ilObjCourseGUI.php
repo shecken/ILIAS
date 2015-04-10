@@ -984,7 +984,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		*/
 		$period = $form->getItemByPostVar("access_period");	
 		// gev-patch start									
-		$sub_period = $form->getItemByPostVar("subscription_period");		
+		//$sub_period = $form->getItemByPostVar("subscription_period");		
 		// gev-patch end
 		
 		if((int)$_POST['activation_type'])
@@ -1001,7 +1001,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		$this->object->setActivationVisibility((int)$_POST['activation_visibility']);
 		
 		// gev-patch start
-		///*
+		/*
 		$sub_type = (int)$_POST['subscription_type'];
 		if($sub_type != IL_CRS_SUBSCRIPTION_DEACTIVATED)
 		{		
@@ -1035,7 +1035,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		
 		$this->object->enableWaitingList((int) $_POST['waiting_list']);
 		#$this->object->setSubscriptionNotify((int) $_POST['subscription_notification']);
-		//*/
+		*/
 		// gev-patch end
 		
 		$this->object->setViewMode((int) $_POST['view_mode']);
@@ -1246,7 +1246,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		
 		
 		// gev-patch start
-		///*
+		/*
 		$section = new ilFormSectionHeaderGUI();
 		$section->setTitle($this->lng->txt('crs_reg'));
 		$form->addItem($section);
@@ -1352,7 +1352,7 @@ class ilObjCourseGUI extends ilContainerGUI
 			$lim->addSubItem($wait);
 		
 		$form->addItem($lim);
-		//*/
+		*/
 		// gev-patch end
 
 		$pres = new ilFormSectionHeaderGUI();
