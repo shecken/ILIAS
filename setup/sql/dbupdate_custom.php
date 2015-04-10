@@ -2755,3 +2755,30 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 <?php
 	$ilCtrlStructureReader->getStructure();
 ?>
+
+<#88>
+<?php
+	require_once "Customizing/class.ilCustomInstaller.php";
+	ilCustomInstaller::maybeInitClientIni();
+	ilCustomInstaller::maybeInitPluginAdmin();
+	ilCustomInstaller::maybeInitObjDefinition();
+	ilCustomInstaller::maybeInitAppEventHandler();
+	ilCustomInstaller::maybeInitTree();
+	ilCustomInstaller::maybeInitRBAC();
+	ilCustomInstaller::maybeInitObjDataCache();
+	ilCustomInstaller::maybeInitUserToRoot();
+	
+	require_once "Services/GEV/Utils/classes/class.gevOrgUnitUtils.php";
+	require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
+	$ref_id = ilObjOrgUnit::getRootOrgRefId();
+	
+	gevOrgUnitUtils::grantPermissionsRecursivelyFor($ref_id, "Campus-Manager",
+			array( "visible"
+				 , "read"
+				 , "copy"
+				 , "write"
+				 , "delete"
+				 , "edit_permission"
+				 , "create_orgu"
+				 ));
+?>
