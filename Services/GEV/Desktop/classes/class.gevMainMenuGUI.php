@@ -87,7 +87,8 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 												|| $this->userUtils->hasRoleIn(array("CAMPUS-Manager"));
 		$report_permission_bookingsbyvenue =  $this->userUtils->isAdmin() || $this->userUtils->hasRoleIn(array("Veranstalter", "CAMPUS-Manager"));
 		$report_permission_employee_edu_bio = $this->userUtils->isAdmin() 
-												|| $this->userUtils->hasRoleIn(array("CAMPUS-Manager"));// || $this->userUtils->isSuperior();
+												|| $this->userUtils->hasRoleIn(array("CAMPUS-Manager"))
+												|| $this->userUtils->isSuperior();
 		$report_permission_wbd = $this->userUtils->isAdmin() && false;
 		$has_reporting_menu =  $report_permission_attendancebyuser 
 							|| $report_permission_bookingsbyvenue 
