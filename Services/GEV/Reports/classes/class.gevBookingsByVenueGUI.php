@@ -117,7 +117,7 @@ class gevBookingsByVenueGUI extends catBasicReportGUI{
 	}
 
 	protected function userIsPermitted () {
-		return $this->user_utils->isAdmin() || $this->user_utils->hasRoleIn(array("Veranstalter"));
+		return $this->user_utils->isAdmin() || $this->user_utils->hasRoleIn(array("Veranstalter", "CAMPUS-Manager"));
 	}
 
 	
