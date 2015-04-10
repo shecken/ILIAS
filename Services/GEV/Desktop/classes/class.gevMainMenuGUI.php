@@ -62,7 +62,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 		
 		//permissions
 		$manage_courses = $this->access->checkAccess("write", "", $repository);
-		$search_courses = $manage_courses || $this->userUtils->hasRoleIn(array("Admin-Ansicht"));
+		$search_courses = $manage_courses || $this->userUtils->hasRoleIn(array("CAMPUS-View"));
 		$manage_users = $this->access->checkAccess("visible", "", $user_mgmt);
 		$manage_org_units = $this->access->checkAccess("visible", "", $org_mgmt);
 		$manage_mails = $this->access->checkAccess("visible", "", $mail_mgmt);
@@ -84,10 +84,10 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 		$report_permissions = gevReportingPermissions::getInstance($this->user->getId());
 		
 		$report_permission_attendancebyuser =  $this->userUtils->isAdmin() || $this->userUtils->isSuperior() 
-												|| $this->userUtils->hasRoleIn(array("Campus-Manager"));
-		$report_permission_bookingsbyvenue =  $this->userUtils->isAdmin() || $this->userUtils->hasRoleIn(array("Veranstalter", "Campus-Manager"));
+												|| $this->userUtils->hasRoleIn(array("CAMPUS-Manager"));
+		$report_permission_bookingsbyvenue =  $this->userUtils->isAdmin() || $this->userUtils->hasRoleIn(array("Veranstalter", "CAMPUS-Manager"));
 		$report_permission_employee_edu_bio = $this->userUtils->isAdmin() 
-												|| $this->userUtils->hasRoleIn(array("Campus-Manager"));// || $this->userUtils->isSuperior();
+												|| $this->userUtils->hasRoleIn(array("CAMPUS-Manager"));// || $this->userUtils->isSuperior();
 		$report_permission_wbd = $this->userUtils->isAdmin() && false;
 		$has_reporting_menu =  $report_permission_attendancebyuser 
 							|| $report_permission_bookingsbyvenue 
