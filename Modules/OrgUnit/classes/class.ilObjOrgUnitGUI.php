@@ -722,7 +722,7 @@ class ilObjOrgUnitGUI extends ilContainerGUI {
 
 		global $ilUser;
 		$userUtils = gevUserUtils::getInstance($ilUser->getId());
-		if($userUtils->isAdmin()){
+		if($userUtils->isAdmin() || $userUtils->hasRoleIn(array("CAMPUS-Manager"))) {
 			$this->getTabs($tabs_gui);
 		}
 
