@@ -44,7 +44,7 @@
 	
 		private function createRoles($rolehandler) {
 			
-			require_once("/Services/AccessControl/classes/class.ilRbacAdmin.php");
+			require_once("./Services/AccessControl/classes/class.ilRbacAdmin.php");
 
 			global $ilDB;
 			$a_role = gevRoleUtils::getInstance();
@@ -64,7 +64,7 @@
 
 					echo " Role ".$res["roleName"]." allready exists! \r\n";
 
-					if($res["roleName"] != "Administrator"||$res["roleName"] != "Guest") {
+					if($res["roleName"] != "Administrator" && $res["roleName"] != "Guest") {
 						$RBACadmin->deassignUsers($roleId);
 					} else {
 						echo "Keeping users in role ".$res["roleName"]."    ";

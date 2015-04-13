@@ -1,4 +1,4 @@
-‚<?php
+<?php
 	require_once("Services/User/classes/class.ilObjUser.php");
 
 /**
