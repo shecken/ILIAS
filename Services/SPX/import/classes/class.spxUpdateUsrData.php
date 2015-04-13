@@ -96,11 +96,10 @@
 				$flag = 0;
 
 
-				else if ($usrexists) {
+				if ($usrexists) {
 
 					$usr = new ilObjUser($usrexists);
-					$a = $usr->getFirstname();
-
+				
 
 					$usremail = $usr->getEmail();
 
@@ -128,6 +127,8 @@
 				}
 				else if (!$usrexists) {
 
+					$res["company"]=$res["OUshort"];
+					$res["department"]=$res["OUilias"];
 
 					$usr = new ilObjUser();
 					$res["passwd_type"] = IL_PASSWD_PLAIN;
@@ -169,6 +170,7 @@
 				}
 				if ($flag) {
 					fputcsv($file,$ugm,";");
+					$flag=0;
 				}
 
 			}
