@@ -44,9 +44,8 @@
 			while($usr = mysql_fetch_assoc(self::$usrToFctnRoleHandler)) {
 
 				$usr["usr_id"] = ilObjUser::_lookUpId($usr["login"]);
-				if(!$rbacreview->isAssigned($usr["usr_id"],$usr["roleid"])) {		
-					$RBAC->assignUser($usr["roleid"],$usr["usr_id"]);
-				}
+	
+				$RBAC->assignUser($usr["roleid"],$usr["usr_id"]);
 			}
 			self::closespxdb();
 		}

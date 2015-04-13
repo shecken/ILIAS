@@ -48,10 +48,8 @@
 			while($usr = mysql_fetch_assoc(self::$usrToNATRoleHandler)) {
 				
 				$usr["usr_id"] = ilObjUser::_lookUpId($usr["login"]);	
+				$RBAC->assignUser($usr["roleid"],$usr["usr_id"]);
 
-				if(!$rbacreview->isAssigned($usr["usr_id"],$usr["roleid"])) {		
-					$RBAC->assignUser($usr["roleid"],$usr["usr_id"]);
-				}
 			}
 			self::closespxdb();
 		}

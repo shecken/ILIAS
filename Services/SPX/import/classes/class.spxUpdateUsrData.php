@@ -78,12 +78,15 @@
 
 		public static function updateUsrData() {
 			
-			$file = fopen('users_mising_data.dat','w');
-			fputcsv($file,array("usrlogin","gender","email"),";");
+			$users_missing_data = fopen('users_mising_data.dat','w');
+			$deleted_user = fopen('deleted_users.dat','w');
+			fputcsv($users_missing_data, array("usrlogin","gender","email"),";");
 
 			self::connectspxdb();
 			self::getUsrHandler();
 
+			$RBACAdmin = new ilRbacAdmin(); 
+			$RBACReview = new ilRbacReview(); 
 
 			global $ilDB;
 			global $ilClientIniFile;
@@ -98,34 +101,41 @@
 
 				if ($usrexists) {
 
+
 					$usr = new ilObjUser($usrexists);
 				
+					if($res["transfer"]=='ja') {
 
-					$usremail = $usr->getEmail();
+						$usremail = $usr->getEmail();
 
-					if ($res["email"]&&$res["email"] != $usremail) {
-						$usr->setEmail($res["email"]);
-					}
+						if ($res["email"]&&$res["email"] != $usremail) {
+							$usr->setEmail($res["email"]);
+						}
 						
-					$usr->setInstitution($res["OUshort"]);
-					$usr->setDepartment($res["OUilias"]);
+						$usr->setInstitution($res["OUshort"]);
+						$usr->setDepartment($res["OUilias"]);
 
-					$usr->update();
+						if($res["OUshort"] == "Exit") {
+							$usr->setApproveDate(null);
+						}					
 
-					if (strtolower($res["lng"]) == "deutsch") {
-						$lng = "de";
-					} 
-					else if (strtolower($res["lng"]) == "chinesisch") {
-						$lng = "zh";
-					} 
-					else {
-						$lng = "en";
+						$usr->update();
+
+
+					} else {
+						$usr->Delete();
+						fwrite($deleted_users,$res["login"]."\n");
 					}
 
-					$usr->setLanguage($lng);
-					$usr->writePrefs();
+					
+					$usrRoles = $RBACReview->assignedGlobalRoles($usrexists);
+
+					foreach($usrRoles as $role) {
+						
+						$RBACAdmin->deassignUser($role,$usrexists);
+					}
 				}
-				else if (!$usrexists) {
+				else if (!$usrexists&&$res["transfer"]=='ja') {
 
 					$res["company"]=$res["OUshort"];
 					$res["department"]=$res["OUilias"];
@@ -169,13 +179,15 @@
 
 				}
 				if ($flag) {
-					fputcsv($file,$ugm,";");
+					fputcsv($users_mising_data,$ugm,";");
+					$flag=0;
 					$flag=0;
 				}
 
 			}
 			self::closespxdb();
-			fclose($file);
+			fclose($deleted_users);
+			fclose($users_mising_data);
 
 
 
