@@ -85,18 +85,19 @@
 			self::connectspxdb();
 			self::getUsrHandler();
 
-			$RBACAdmin = new ilRbacAdmin(); 
-			$RBACReview = new ilRbacReview(); 
 
 			global $ilDB;
 			global $ilClientIniFile;
+
+			$flag=0;
+
 			while($res = mysql_fetch_assoc(self::$usrHandler)) {
 
 
 				$usrexists = ilObjUser::_lookUpId($res["login"]);
 		
 				$ugm = array($res["login"],1,1);
-				$flag = 0;
+
 
 
 				if ($usrexists) {
@@ -108,7 +109,7 @@
 
 						$usremail = $usr->getEmail();
 
-						if ($res["email"]&&$res["email"] != $usremail) {
+						if (!$usremail&&$res["email"]) {
 							$usr->setEmail($res["email"]);
 						}
 						
@@ -127,13 +128,6 @@
 						fwrite($deleted_users,$res["login"]."\n");
 					}
 
-					
-					$usrRoles = $RBACReview->assignedGlobalRoles($usrexists);
-
-					foreach($usrRoles as $role) {
-						
-						$RBACAdmin->deassignUser($role,$usrexists);
-					}
 				}
 				else if (!$usrexists&&$res["transfer"]=='ja') {
 
@@ -151,10 +145,12 @@
 					if(!$res["gender"]) {
 						$res["gender"] = $ilClientIniFile->readVariable('generic_usr_data', 'gender');
 						$ugm[1] = 0;
+						$flag=1;
 					}
 					if(!$res["email"]) {
 						$res["email"] = $ilClientIniFile->readVariable('generic_usr_data', 'email');
 						$ugm[2] = 0;
+						$flag=1;
 					}
 
 
@@ -180,7 +176,6 @@
 				}
 				if ($flag) {
 					fputcsv($users_mising_data,$ugm,";");
-					$flag=0;
 					$flag=0;
 				}
 

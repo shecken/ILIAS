@@ -38,29 +38,44 @@
 
 		private function getRolesHandler() {
 			global $ilDB;
-			$sql="SELECT * FROM SEEPEXroles WHERE scope = ".$ilDB->quote("global","text");
+			$sql = "SELECT * FROM SEEPEXroles WHERE scope = ".$ilDB->quote("global","text");
 			return self::queryspxdb($sql);
 		}
 	
 		private function createRoles($rolehandler) {
+			
+			require_once("/Services/AccessControl/classes/class.ilRbacAdmin.php");
 
 			global $ilDB;
-			$a_role=gevRoleUtils::getInstance();
+			$a_role = gevRoleUtils::getInstance();
+			$RBACadmin = new ilRbacAdmin();
 
-			while($res=mysql_fetch_assoc($rolehandler)) {
+			while($res = mysql_fetch_assoc($rolehandler)) {
 
-				$roleId=$a_role->getRoleIdByName($res["roleName"]);
+				$roleId = $a_role->getRoleIdByName($res["roleName"]);
 				if(!$roleId) {
+
 					$a_role->createGlobalRole($res["roleName"],"");
 					
-					$roleId=$a_role->getRoleIdByName($res["roleName"]);
-					$sql="UPDATE SEEPEXroles SET roleid = ".$ilDB->quote($roleId,"text")
-						." WHERE roleName = ".$ilDB->quote($res["roleName"],"text");
+					$roleId = $a_role->getRoleIdByName($res["roleName"]);
+
+
 				} else {
-					echo "Role ".$res["roleName"]." allready exists! Do not create...\r\n";
-					$sql="UPDATE SEEPEXroles SET roleid = ".$ilDB->quote($roleId,"text")
-						." WHERE roleName = ".$ilDB->quote($res["roleName"],"text");
+
+					echo " Role ".$res["roleName"]." allready exists! \r\n";
+
+					if($res["roleName"] != "Administrator"||$res["roleName"] != "Guest") {
+						$RBACadmin->deassignUsers($roleId);
+					} else {
+						echo "Keeping users in role ".$res["roleName"]."    ";
+					}
+
+
 				}
+
+
+				$sql="UPDATE SEEPEXroles SET roleid = ".$ilDB->quote($roleId,"text")
+					." WHERE roleName = ".$ilDB->quote($res["roleName"],"text");
 
 				self::queryspxdb($sql);
 			}	

@@ -12,19 +12,20 @@
 	ilInitialisation::initILIAS();
 	//spxUsrImport::UsrImport();
 
-	//spxUpdateUsrData::updateUsrData();
+
 
 	//spxImportOS::runOSimport();
     
-    //spxImportRoles::ImportRoles();
-
+    spxImportRoles::ImportRoles();
+    
+	spxUpdateUsrData::updateUsrData();
 
 
 	spxImportRolesOU::ImportRolesOU();
 
-	//spxImportRolesNAT::ImportRolesNat();
+	spxImportRolesNAT::ImportRolesNat();
 
-	//spxImportRolesFctn::ImportRolesFctn();
+	spxImportRolesFctn::ImportRolesFctn();
 	
 
 
