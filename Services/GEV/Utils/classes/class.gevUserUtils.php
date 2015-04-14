@@ -651,7 +651,8 @@ class gevUserUtils {
 		$city_amd_id = $this->gev_set->getAMDFieldId(gevSettings::ORG_AMD_CITY);
 			
 		$info = gevAMDUtils::getInstance()->getTable($crss, $crs_amd, 
-								array("CONCAT(od_city.title, ', ', city.value) as location"), 
+								array("CONCAT(od_city.title, IF(city.value IS NOT NULL,', ',''), ".
+									         "IF(city.value IS NOT NULL,city.value,'')) as location"), 
 								array(" LEFT JOIN object_data od_city ".
 									  "   ON od_city.obj_id = amd4.value "
 									 ," LEFT JOIN adv_md_values_text city ".
