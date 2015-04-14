@@ -230,7 +230,7 @@ class gevBookingGUI {
 							  );
 	}
 	
-	protected function book($a_alert_agb) {
+	protected function book() {
 		require_once("Services/CaTUIComponents/classes/class.catPropertyFormGUI.php");
 		require_once("Services/Form/classes/class.ilNonEditableValueGUI.php");
 		require_once("Services/Accomodations/classes/class.ilSetAccomodationsGUI.php");
@@ -339,15 +339,6 @@ class gevBookingGUI {
 			}
 		}
 		
-		if (!(($this->isSelfLearningCourse() || $this->isWebinar()))) {
-			$agb = new ilCheckboxInputGUI("", "agb");
-			$agb->setOptionTitle($this->lng->txt("gev_accept_book_cond"));
-			if ($a_alert_agb) {
-				$agb->setAlert($this->lng->txt("gev_book_no_cond_accept"));
-			}
-			$form->addItem($agb);
-		}
-		
 		return $form->getHTML();
 	}
 	
@@ -363,12 +354,6 @@ class gevBookingGUI {
 		require_once("Services/Accomodations/classes/class.ilSetAccomodationsGUI.php");
 		require_once("Services/Accomodations/classes/class.ilAccomodations.php");
 		
-		if (!$_POST["agb"]) {
-			$this->cmd = "book";
-			ilUtil::sendFailure($this->lng->txt("gev_need_agb_accept"));
-			return $this->book(true);
-		}
-
 		if ($this->crs_utils->isWithAccomodations()) {
 			$_form = $this->getAccomodationsForm();
 			if (!$_form->checkInput()) {
