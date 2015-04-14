@@ -339,7 +339,7 @@ class gevBookingGUI {
 			}
 		}
 		
-		if (!(($this->isSelfLearningCourse() || $this->isWebinar()) && !$this->isWithPayment())) {
+		if (!(($this->isSelfLearningCourse() || $this->isWebinar()))) {
 			$agb = new ilCheckboxInputGUI("", "agb");
 			$agb->setOptionTitle($this->lng->txt("gev_accept_book_cond"));
 			if ($a_alert_agb) {
