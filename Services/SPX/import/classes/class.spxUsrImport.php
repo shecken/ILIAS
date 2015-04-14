@@ -39,7 +39,7 @@
 			self::connectspxdb();
 			self::getUsrDataHandler();
 			$usr = new ilObjUser();
-
+			global $ilClientIniFile;
 			while ($res = mysql_fetch_assoc(self::$UsrDataHandler)) {
 				
 				$res["passwd_type"] = IL_PASSWD_PLAIN;
@@ -50,7 +50,7 @@
 				$usr->create();
 				//$usr->createReference();
 				$usr->assignData($res);
-				/*$ctry = $res["roleCtry"];
+				$ctry = $res["roleCtry"];
 
 				if (strtolower($ctry) == 'de') {
 					$lng = 'de';
@@ -62,7 +62,7 @@
 					$lng = 'en';
 				}
 
-				$usr->setLanguage($lng);*/
+				$usr->setLanguage($lng);
 
 				$usr->saveAsNew();
 				$usr->writePrefs();

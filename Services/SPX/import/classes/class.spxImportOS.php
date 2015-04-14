@@ -2,8 +2,8 @@
 
 	require_once("Services/Init/classes/class.ilInitialisation.php");
 	require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
-
-
+	require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+	require_once("Services/Object/classes/class.ilObject.php");
 /**
 * Creates a tree of orgunits from seepexdb.SEEPEXorg. child-ids stored in OUshort, parent-ids in OUshortParent.
 * @author: Denis Klöpfer
@@ -46,22 +46,33 @@
 		//includes child OU under parent OU and extends child by its ref-id
 
 		private function IncludeOUInTree(&$child, $parent) {
+		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 
-			$orgu = new ilObjOrgUnit();
-			$orgu->setTitle($child["OUilias"]);
-			$orgu->create();
-			$orgu->createReference();
-			$orgu->setImportId($child["OUshort"]);
-			$orgu->update();
+			if(!$objid = ilObject::_lookupObjIdByImportId($child["OUshort"])) {
 
+				$orgu = new ilObjOrgUnit();
+				$orgu->setTitle($child["OUilias"]);
+				$orgu->create();
+				$orgu->createReference();
+				$orgu->setImportId($child["OUshort"]);
+				$orgu->initDefaultRoles();
+				$orgu->update();
 
-			$refid = $orgu->getRefId();
+				$refid = $orgu->getRefId();
 
-	
-			
-			$orgu->putInTree($parent["refid"]);
-			$orgu->initDefaultRoles();
+				$orgu->putInTree($parent["refid"]);
 
+				echo $child["OUilias"]." does not exist yet, creating...   ";
+			} else {
+
+				$orgu = new ilObjOrgUnit($objid, false);
+				//$orgu->initDefaultRoles();
+				//$orgu->update();
+				$refid = gevObjectUtils::getRefId($objid);
+				echo $child["OUshort"]." allready exists, do not create	  ";
+			} 
+
+			echo " refid:".$refid.", ";
 			self::putRefidInDB($child["OUshort"],$refid);
 			$child["refid"]=$refid;
 
@@ -110,6 +121,7 @@
 			self::buildOS(self::$root);
 
 			self::closespxdb();
+			die();
 		}
 
 	

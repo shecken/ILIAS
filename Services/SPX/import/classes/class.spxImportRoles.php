@@ -48,8 +48,14 @@
 
 			global $ilDB;
 			$a_role = gevRoleUtils::getInstance();
-			$RBACadmin = new ilRbacAdmin();
+			$present_global_roles = $a_role->getGlobalRoles();
 
+			$global_roles_to_keep = array();
+
+			echo ROLE_FOLDER_ID;
+
+			$RBACadmin = new ilRbacAdmin();
+			
 			while($res = mysql_fetch_assoc($rolehandler)) {
 
 				$roleId = $a_role->getRoleIdByName($res["roleName"]);
@@ -59,15 +65,17 @@
 					
 					$roleId = $a_role->getRoleIdByName($res["roleName"]);
 
+					echo "Creating role ".$res["roleName"]." roleid ".$roleId;
 
 				} else {
 
-					echo " Role ".$res["roleName"]." allready exists! \r\n";
+					echo " Role ".$res["roleName"]." allready exists! roleid: ".$roleId;
 
-					if($res["roleName"] != "Administrator" && $res["roleName"] != "Guest") {
+					if($res["roleName"] != "Administrator" &&  $res["roleName"] != "Guest"
+						&& $res["roleName"] != "User" && $res["roleName"] != "Anonymous") {
 						$RBACadmin->deassignUsers($roleId);
 					} else {
-						echo "Keeping users in role ".$res["roleName"]."    ";
+						echo "Keeping users in role ".$res["roleName"]." role id ".$roleId."!!	";
 					}
 
 
@@ -78,7 +86,18 @@
 					." WHERE roleName = ".$ilDB->quote($res["roleName"],"text");
 
 				self::queryspxdb($sql);
-			}	
+
+				$global_roles_to_keep[$roleId] = $res["roleName"];
+
+			}
+
+			foreach($present_global_roles as $p_role_id => $p_role_name) {
+				if( !isset($global_roles_to_keep[$p_role_id])) {
+					$RBACadmin->deleteRole($p_role_id,ROLE_FOLDER_ID);
+					echo "Deleting role ".$p_role_name." role id ".$p_role_id."!!	";
+				}
+			}
+
 		}
 
 		public static function ImportRoles() {

@@ -78,9 +78,9 @@
 
 		public static function updateUsrData() {
 			
-			$users_missing_data = fopen('users_mising_data.dat','w');
-			$deleted_user = fopen('deleted_users.dat','w');
-			fputcsv($users_missing_data, array("usrlogin","gender","email"),";");
+			//$users_missing_data = fopen('users_mising_data.dat','w');
+			//$deleted_user = fopen('deleted_users.dat','w');
+			//fputcsv($users_missing_data, array("usrlogin","gender","email"),";");
 
 			self::connectspxdb();
 			self::getUsrHandler();
@@ -96,7 +96,7 @@
 
 				$usrexists = ilObjUser::_lookUpId($res["login"]);
 		
-				$ugm = array($res["login"],1,1);
+				//$ugm = array($res["login"],1,1);
 
 
 
@@ -125,7 +125,7 @@
 
 					} else {
 						$usr->Delete();
-						fwrite($deleted_users,$res["login"]."\n");
+						//fwrite($deleted_users,$res["login"]."\n");
 					}
 
 				}
@@ -174,15 +174,15 @@
 					$usr->writePrefs();
 
 				}
-				if ($flag) {
-					fputcsv($users_mising_data,$ugm,";");
-					$flag=0;
-				}
+				//if ($flag) {
+				//	fputcsv($users_mising_data,$ugm,";");
+				//	$flag=0;
+				//}
 
 			}
 			self::closespxdb();
-			fclose($deleted_users);
-			fclose($users_mising_data);
+			//fclose($deleted_users);
+			//fclose($users_mising_data);
 
 
 

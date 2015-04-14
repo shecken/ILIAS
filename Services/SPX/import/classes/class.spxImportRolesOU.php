@@ -13,6 +13,7 @@
 	class spxImportRolesOU {
 		private static $spxdb;
 		private static $usrToOURoleHandler;
+
 		
 		private function connectspxdb() {
 			global $ilClientIniFile;
@@ -39,23 +40,32 @@
 			 self::$usrToOURoleHandler =self::queryspxdb($sql);
 		}
 
+
+
+
 		public static function ImportRolesOU() {
 			self::connectspxdb();
 			self::getusrToOURoleHandler();
 
 			while($usr=mysql_fetch_assoc(self::$usrToOURoleHandler)) {
+				$usr2=ilObjUser::_lookUpId($usr["login"]);
 
-				$usr2=array(ilObjUser::_lookUpId($usr["login"]));
-				
+
+				$usr2=array($usr2);
+
 				$OU=new ilObjOrgUnit($usr["refid"]);
-	
+
 				if($usr["usrtype"]=="Manager") {
+
 					$OU->assignUsersToSuperiorRole($usr2);
+
 				} else {
 					$OU->assignUsersToEmployeeRole($usr2);
+
 				}
 				$OU->update();
 			}
+
 			self::closespxdb();
 		}
 	}
