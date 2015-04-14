@@ -155,9 +155,12 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("ACTIONS", $actions);
 		//inner content
 		//$this->tpl->setVariable("TARGET_GROUP", $a_set["target_group"]);
+		$this->tpl->setVariable("TARGET_GROUP_TITLE", $this->lng->txt("gev_target_group"));
 		$this->tpl->setVariable("TARGET_GROUP", $target_groups_str);
 		$this->tpl->setVariable("TARGET_GROUP_DESC", $a_set["target_group_desc"]);
+		$this->tpl->setVariable("GOALS_TITLE", $this->lng->txt("gev_targets_and_benefit"));
 		$this->tpl->setVariable("GOALS", $a_set["goals"]);
+		$this->tpl->setVariable("CONTENTS_TITLE", $this->lng->txt("gev_contents"));
 		$this->tpl->setVariable("CONTENTS", $a_set["content"]);
 		$this->tpl->setVariable("MBMRLST_LINK", $memberlist_link);
 		$this->tpl->setVariable("MBMRLST_LINK_TXT", $this->lng->txt('gev_mytrainingsap_btn_memberlist'));

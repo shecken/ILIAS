@@ -161,6 +161,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("DATE", $date);
 		$this->tpl->setVariable("LANG", $a_set["lang"]);
 		$this->tpl->setVariable("ACTIONS", $action);
+		$this->tpl->setVariable("TARGET_GROUP_TITLE", $a_set["target_group"]);
 		$this->tpl->setVariable("TARGET_GROUP", $a_set["target_group"]);
 		$this->tpl->setVariable("GOALS", $a_set["goals"]);
 		$this->tpl->setVariable("CONTENTS", $a_set["content"]);
