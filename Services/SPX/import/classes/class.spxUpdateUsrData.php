@@ -130,7 +130,10 @@
 
 				}
 				else if (!$usrexists&&$res["transfer"]=='ja') {
-
+					echo '<h2>did not find a user: </h2>';  
+					print_r($res);
+					
+/*
 					$res["company"]=$res["OUshort"];
 					$res["department"]=$res["OUilias"];
 
@@ -172,7 +175,7 @@
 
 					$usr->setLanguage($lng);
 					$usr->writePrefs();
-
+*/
 				}
 				//if ($flag) {
 				//	fputcsv($users_mising_data,$ugm,";");

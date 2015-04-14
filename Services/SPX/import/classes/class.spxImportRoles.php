@@ -55,7 +55,7 @@
 			echo ROLE_FOLDER_ID;
 
 			$RBACadmin = new ilRbacAdmin();
-			
+
 			while($res = mysql_fetch_assoc($rolehandler)) {
 
 				$roleId = $a_role->getRoleIdByName($res["roleName"]);
@@ -69,6 +69,7 @@
 
 				} else {
 
+					;
 					echo " Role ".$res["roleName"]." allready exists! roleid: ".$roleId;
 
 					if($res["roleName"] != "Administrator" &&  $res["roleName"] != "Guest"

@@ -46,31 +46,32 @@
 		//includes child OU under parent OU and extends child by its ref-id
 
 		private function IncludeOUInTree(&$child, $parent) {
-		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
+			require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 
 			if(!$objid = ilObject::_lookupObjIdByImportId($child["OUshort"])) {
+
+				echo '<hr>' . $child["OUilias"]." does not exist yet, creating...   <br>";
 
 				$orgu = new ilObjOrgUnit();
 				$orgu->setTitle($child["OUilias"]);
 				$orgu->create();
 				$orgu->createReference();
 				$orgu->setImportId($child["OUshort"]);
-				$orgu->initDefaultRoles();
 				$orgu->update();
 
 				$refid = $orgu->getRefId();
 
 				$orgu->putInTree($parent["refid"]);
+				$orgu->initDefaultRoles();
+	
+				
 
-				echo $child["OUilias"]." does not exist yet, creating...   ";
 			} else {
-
 				$orgu = new ilObjOrgUnit($objid, false);
-				//$orgu->initDefaultRoles();
-				//$orgu->update();
 				$refid = gevObjectUtils::getRefId($objid);
 				echo $child["OUshort"]." allready exists, do not create	  ";
 			} 
+
 
 			echo " refid:".$refid.", ";
 			self::putRefidInDB($child["OUshort"],$refid);
@@ -99,7 +100,11 @@
 
 
 		private function buildOS($parent) {
+			
+			
+
 			$rec = self::findChildren($parent);
+			
 
 			while($child=mysql_fetch_assoc($rec)) {
 
@@ -117,7 +122,6 @@
 			self::connectspxdb();
 			self::$root=array("OUshort"=>"root","refid"=>ilObjOrgUnit::getRootOrgRefId());
 
-
 			self::buildOS(self::$root);
 
 			self::closespxdb();
@@ -126,9 +130,6 @@
 
 	
 	}
-
-
-
 
 
 

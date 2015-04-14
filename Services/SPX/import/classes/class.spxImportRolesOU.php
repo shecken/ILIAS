@@ -50,6 +50,12 @@
 			while($usr=mysql_fetch_assoc(self::$usrToOURoleHandler)) {
 				$usr2=ilObjUser::_lookUpId($usr["login"]);
 
+				if(! $usr2) {
+					continue;	
+				}
+				print '<br>assigning ' .$usr['login'];
+				ob_flush();
+        		flush();
 
 				$usr2=array($usr2);
 

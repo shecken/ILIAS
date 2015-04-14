@@ -48,6 +48,15 @@
 			while($usr = mysql_fetch_assoc(self::$usrToNATRoleHandler)) {
 				
 				$usr["usr_id"] = ilObjUser::_lookUpId($usr["login"]);	
+
+				if(! $usr["usr_id"]) {
+					continue;	
+				}
+				print '<br>assigning ' .$usr['login'];
+				ob_flush();
+        		flush();
+
+
 				$RBAC->assignUser($usr["roleid"],$usr["usr_id"]);
 
 			}
