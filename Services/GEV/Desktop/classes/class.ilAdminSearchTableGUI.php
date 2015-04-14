@@ -45,8 +45,7 @@ class ilAdminSearchTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->lng->txt("gev_location"), "location");
 		$this->addColumn($this->lng->txt("date"), "date");
 		$this->addColumn($this->lng->txt("tutor"));
-		$this->addColumn($this->lng->txt("gev_points"), "points");
-		$this->addColumn("&euro;", "fee");
+		$this->addColumn($this->lng->txt("language"), "language");
 		$this->addColumn($this->lng->txt("mbrcount"));
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', null, "20px", false);
 	
@@ -95,8 +94,7 @@ class ilAdminSearchTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("LOCATION", $a_set["location"]?$a_set["location"]:"-");
 		$this->tpl->setVariable("DATE", $date);
 		$this->tpl->setVariable("TRAINER", $a_set['trainer']);
-		$this->tpl->setVariable("POINTS", $a_set["points"]);
-		$this->tpl->setVariable("FEE", gevCourseUtils::formatFee($a_set["fee"]));
+		$this->tpl->setVariable("LANGUAGE", $a_set["language"]);
 		$this->tpl->setVariable("MEMBERS", $a_set["members"]);
 		$this->tpl->setVariable("ACTIONS", $a_set["action"]);
 	}
