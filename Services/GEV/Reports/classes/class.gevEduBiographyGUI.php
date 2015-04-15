@@ -34,7 +34,6 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		}
 		
 		$this->get_cert_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-get_cert.png").'" />';
-		$this->get_bill_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-get_bill.png").'" />';
 		$this->success_img  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		$this->in_progress_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
 		$this->failed_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-red.png").'" />';
@@ -42,7 +41,6 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		
 		$this->title->legend(catLegendGUI::create()
 						->item($this->get_cert_img, "gev_get_certificate")
-						->item($this->get_bill_img, "gev_get_bill")
 						->item($this->success_img, "gev_passed")
 						->item($this->in_progress_img, "gev_in_progress")
 						->item($this->failed_img, "gev_failed")
