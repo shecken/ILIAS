@@ -850,6 +850,10 @@ class ilTemplate extends ilTemplateX
 			$link_items[ilUtil::appendUrlParameterString($_SERVER["REQUEST_URI"], "do_dev_validate=xhtml")] = array("Validate", true);
 			$link_items[ilUtil::appendUrlParameterString($_SERVER["REQUEST_URI"], "do_dev_validate=accessibility")] = array("Accessibility", true);
 		}
+		
+		// spx-patch start
+		$link_items[""] = array($lng->txt("usr_agreement"), false);
+		// spx-patch end
 
 		$cnt = 0;
 		foreach($link_items as $url => $caption)
