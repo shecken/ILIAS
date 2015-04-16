@@ -12,6 +12,7 @@
 	require_once("Services/SPX/import/classes/class.spxImportRoles.php");
 	//require_once("Services/SPX/import/classes/class.spxUsrImport.php");
 	require_once("Services/SPX/import/classes/class.spxUpdateUsrData.php");
+	require_once("Services/SPX/import/classes/class.spxBuildHisto.php");
 
 	ilInitialisation::initILIAS();
 	
@@ -25,9 +26,9 @@
 	spxImportRolesOU::ImportRolesOU();
 	spxImportRolesNAT::ImportRolesNat();
 	spxImportRolesFctn::ImportRolesFctn();
+	spxBuildHisto::run();
 	
 die('<hr><hr>done.');
-
 
 ?>
 
