@@ -418,6 +418,7 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 															   , "de");
 	}
 
+
 	public function send($a_recipients = null, $a_occasion = null) {
 		//TODO: this maybe needs to be adjusted
 		// Do not send mails for online-trainings.

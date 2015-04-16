@@ -319,7 +319,12 @@ class ilPasswordAssistanceGUI
 			. $delimiter . 'key=' . $pwassist_session['pwassist_id'];
 
 		$contact_address = $this->settings->get('admin_email');
+		require_once("Services/GEV/Mailing/classes/AccountAssistance/class.gevPWAssistMail.php");
 
+		$LIASSMAIL = new gevPWAssistMail($userObj, $pwassist_url);
+		$LIASSMAIL->send();
+		
+/*
 		$mm = new ilMimeMail();
 		$mm->Subject($this->lng->txt('pwassist_mail_subject'));
 		$mm->From($contact_address);
@@ -342,7 +347,7 @@ class ilPasswordAssistanceGUI
 				)
 			)
 		);
-		$mm->Send();
+		$mm->Send();*/
 	}
 
 	/**
@@ -679,6 +684,8 @@ class ilPasswordAssistanceGUI
 		require_once 'Services/Mail/classes/class.ilMailbox.php';
 		require_once 'Services/Mail/classes/class.ilMimeMail.php';
 		require_once 'include/inc.pwassist_session_handler.php';
+		require_once 'Services/GEV/Mailing/classes/AccountAssistance/class.gevUserLoginAssistMail.php';
+		require_once 'Services/User/classes/class.ilObjUser.php';
 
 		$protocol = $this->https->isDetected() ? 'https://' : 'http://';
 
@@ -686,6 +693,11 @@ class ilPasswordAssistanceGUI
 		$login_url       = $server_url . 'pwassist.php' . '?client_id=' . $this->ilias->getClientId() . '&lang=' . $this->lng->getLangKey();
 		$contact_address = $this->settings->get('admin_email');
 
+		$LIASSMAIL = new gevUserLoginAssistMail($logins,$server_url);
+
+		$LIASSMAIL->send();
+
+/*
 		$mm = new ilMimeMail();
 		$mm->Subject($this->lng->txt('pwassist_mail_subject'));
 		$mm->From($contact_address);
@@ -708,7 +720,7 @@ class ilPasswordAssistanceGUI
 				)
 			)
 		);
-		$mm->Send();
+		$mm->Send();*/
 	}
 
 	/**
