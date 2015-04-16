@@ -108,17 +108,12 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 						->compile();
 	}
 	
-	public function executeCommand() {
-		$this->checkPermission();
-		$cmd = $this->ctrl->getCmd();
-		
+	public function executeCustomCommand($cmd) {
 		switch ($cmd) {
 			case "getCertificate":
 				return $this->getCertificate();
 			case "getBill":
 				return $this->getBill();
-			default:
-				return $this->render();
 		}
 	}
 	
