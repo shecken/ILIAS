@@ -11,7 +11,7 @@
 
 	//connect to db
 
-		private function connectspxdb () {
+		private function connectspxdb() {
 			global $ilClientIniFile;
 			$host = $ilClientIniFile->readVariable('seepexdb', 'host');
 			$user = $ilClientIniFile->readVariable('seepexdb', 'user');
@@ -25,7 +25,7 @@
 
 	//performs db queries
 
-		private function queryspxdb ($query) {
+		private function queryspxdb($query) {
 			return mysql_query($query, self::$spxdb);
 		}
 
@@ -55,7 +55,7 @@
 			echo ROLE_FOLDER_ID;
 
 			$RBACadmin = new ilRbacAdmin();
-
+			
 			while($res = mysql_fetch_assoc($rolehandler)) {
 
 				$roleId = $a_role->getRoleIdByName($res["roleName"]);
@@ -69,11 +69,10 @@
 
 				} else {
 
-					;
+					
 					echo " Role ".$res["roleName"]." allready exists! roleid: ".$roleId;
 
-					if($res["roleName"] != "Administrator" &&  $res["roleName"] != "Guest"
-						&& $res["roleName"] != "User" && $res["roleName"] != "Anonymous") {
+					if($res["roleName"] != "Administrator" && $res["roleName"] != "Anonymous") {
 						$RBACadmin->deassignUsers($roleId);
 					} else {
 						echo "Keeping users in role ".$res["roleName"]." role id ".$roleId."!!	";

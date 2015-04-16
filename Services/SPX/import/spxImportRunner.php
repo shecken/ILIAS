@@ -18,12 +18,13 @@
 	
 	//spxUsrImport::UsrImport();
 
+	//spxImportOS::runOSimport();
 
 
 	spxImportOS::runOSimport();
 	spxImportRoles::ImportRoles();
-	spxUpdateUsrData::updateUsrData();
-	spxImportRolesOU::ImportRolesOU();
+	//spxUpdateUsrData::updateUsrData();
+	//spxImportRolesOU::ImportRolesOU();
 	spxImportRolesNAT::ImportRolesNat();
 	spxImportRolesFctn::ImportRolesFctn();
 	spxBuildHisto::run();

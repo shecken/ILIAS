@@ -72,8 +72,33 @@
 		}
 
 		private function getUsrHandler() {
-			$sql = "SELECT * FROM iliasImport, SEEPEXorg WHERE OU = OUshort";
+			$sql = "SELECT * FROM iliasImport";
 			 self::$usrHandler = self::queryspxdb($sql);
+		}
+
+		private function deleteUsers() {
+			$sql = "SELECT * FROM iliasImport WHERE transfer ='nein'";
+			$rec = self::queryspxdb($sql);
+			while($res = mysql_fetch_assoc($rec)) {
+				$usrId = ilObjUser::_lookUpId($res["login"]);
+				if($usrId) {
+					$usr = new ilObjUser($usrId);
+					$usr->delete();
+				}
+			}
+		}
+
+		private function setUsersInactive() {
+			$sql = "SELECT * FROM iliasImport WHERE OU ='Exit'";
+			$rec = self::queryspxdb($sql);
+			while($res = mysql_fetch_assoc($rec)) {
+				$usrId = ilObjUser::_lookUpId($res["login"]);
+				if($usrId) {
+					$usr = new ilObjUser($usrId);
+					$usr->setApproveDate(null);	
+					$usr->update();
+				}
+			}
 		}
 
 		public static function updateUsrData() {
@@ -89,7 +114,6 @@
 			global $ilDB;
 			global $ilClientIniFile;
 
-			$flag=0;
 
 			while($res = mysql_fetch_assoc(self::$usrHandler)) {
 
@@ -105,28 +129,22 @@
 
 					$usr = new ilObjUser($usrexists);
 				
-					if($res["transfer"]=='ja') {
+					$usremail = $usr->getEmail();
 
-						$usremail = $usr->getEmail();
-
-						if (!$usremail&&$res["email"]) {
-							$usr->setEmail($res["email"]);
-						}
-						
-						$usr->setInstitution($res["OUshort"]);
-						$usr->setDepartment($res["OUilias"]);
-
-						if($res["OUshort"] == "Exit") {
-							$usr->setApproveDate(null);
-						}					
-
-						$usr->update();
-
-
-					} else {
-						$usr->Delete();
-						//fwrite($deleted_users,$res["login"]."\n");
+					if (!$usremail&&$res["email"]) {
+						$usr->setEmail($res["email"]);
 					}
+					
+					if(!$usr->getCountry()) {
+						$usr->setCountry($res["country"]);
+					}
+					if(!$usr->getCity()) {
+						$usr->setCity($res["city"]);
+					}
+
+					$usr->setInstitution($res["OUshort"]);
+					$usr->setDepartment($res["OUilias"]);
+
 
 				}
 				else if (!$usrexists&&$res["transfer"]=='ja') {
@@ -183,6 +201,8 @@
 				//}
 
 			}
+			self::deleteUsers();
+			self::setUsersInactive();
 			self::closespxdb();
 			//fclose($deleted_users);
 			//fclose($users_mising_data);
