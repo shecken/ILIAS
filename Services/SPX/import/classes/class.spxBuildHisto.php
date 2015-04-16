@@ -32,13 +32,13 @@ class spxBuildHisto {
 			$admins = $crs_utils->getAdmins();
 			foreach ($admins as $admin) {
 				$crs_members_object->delete($admin);
-				$crs_members_object->add($admin, IL_COURSE_ADMIN);
+				$crs_members_object->add($admin, IL_CRS_ADMIN);
 			}
 			
 			$trainers = $crs_utils->getTrainers();
 			foreach ($trainers as $trainer) {
 				$crs_members_object->delete($trainer);
-				$crs_members_object->add($trainer, IL_COURSE_TRAINER);
+				$crs_members_object->add($trainer, IL_CRS_TUTOR);
 			}
 			
 			$participants = $crs_utils->getParticipants();
