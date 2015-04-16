@@ -54,7 +54,6 @@ class spxBuildHisto {
 				
 				$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
 			}
-			return;
 		}
 	}
 }
