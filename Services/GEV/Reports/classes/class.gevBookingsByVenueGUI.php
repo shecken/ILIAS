@@ -125,7 +125,7 @@ class gevBookingsByVenueGUI extends catBasicReportGUI{
 		$lnk = $this->ctrl->getLinkTarget($this, "deliverMemberList");
 		$lnk .= '&crs_id=' .$rec["crs_id"];
 		$rec['action'] = '<a href="' . $lnk 
-			.'"><img src="./Customizing/global/skin/genv/images/GEV_img/ico-table-eye.png"></a>';
+			.'"><img src="'.ilUtil::getImagePath("GEV_img/ico-table-eye.png").'"></a>';
 
 		$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
 		$end = new ilDate($rec["end_date"], IL_CAL_DATE);
