@@ -50,7 +50,7 @@ class spxBuildHisto {
 				$params = array
 					( "obj_id" => $obj_id
 					, "usr_id" => $participant
-					, "status" => ilLPStatus::_lookupStatus($obj_id, $participants)
+					, "status" => ilLPStatus::_lookupStatus($crs_id, $participants)
 					);
 				
 				$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
