@@ -21,7 +21,6 @@ class spxBuildHisto {
 								  ."    ON od.obj_id = oref.obj_id"
 								  ." WHERE od.type = 'crs'"
 								  ."   AND oref.deleted IS NULL"
-								  ."   AND oref.ref_id = 630" // for testing purpose
 								  );
 		
 		while ($crs_rec = $ilDB->fetchAssoc($course_res)) {
