@@ -8,7 +8,7 @@ class gevPWAssistMail extends gevAccAssistanceMail {
 
 	public function __construct(ilObjUser $usr, $pwassist_link) {
 		$this->usr = $usr;
-		parent::__construct( $this->getRecipientUserIDs()
+		parent::__construct( $this->getRecipientUserID()
 						   , array("PWASSIST_LINK" => $pwassist_link));
 	}
 
@@ -28,7 +28,7 @@ class gevPWAssistMail extends gevAccAssistanceMail {
 		return "A02";
 	}
 	
-	public function getRecipientUserIDs() {
+	public function getRecipientUserID() {
 		return $this->usr->getId();
 	}
 	

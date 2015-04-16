@@ -6,9 +6,12 @@ require_once('Services/User/classes/class.ilObjUser.php');
 
 class gevUserLoginAssistMail extends gevAccAssistanceMail {
 
+	protected $logins;
 
 	public function __construct($logins) {
-		parent::__construct( $this->getRecipientUserIDs()
+		$this->logins = $logins;
+
+		parent::__construct( $this->getRecipientUserID()
 						   , array("LOGIN" => $logins));
 	}
 
@@ -28,7 +31,7 @@ class gevUserLoginAssistMail extends gevAccAssistanceMail {
 		return "A01";
 	}
 	
-	public function getRecipientUserIDs() {
+	public function getRecipientUserID() {
 		return ilObjUser::_lookUpId($this->logins[0]);
 	}
 	
