@@ -208,7 +208,7 @@ class ilUserCourseStatusHistorizingHelper
 	 *
 	 * @return null
 	 */
-	public function setIndividualStartAndEnd($user_id, $course_is, &$payload) {
+	public function setIndividualStartAndEnd($user_id, $course_id, &$payload) {
 		require_once("Services/UserCourseStatusHistorizing/classes/class.ilUserCourseStatusHistorizing.php");
 		require_once("Services/Calendar/classes/class.ilDateTime.php");
 		
