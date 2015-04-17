@@ -167,6 +167,8 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("GOALS", $a_set["goals"]);
 		$this->tpl->setVariable("CONTENTS_TITLE", $this->lng->txt("gev_contents"));
 		$this->tpl->setVariable("CONTENTS", $a_set["content"]);
+		$this->tpl->setVariable("CUSTOM_ID_CAPTION", $this->lng->txt("gev_custom_id"));
+		$this->tpl->setVariable("CUSTOM_ID", $a_set["custom_id"]);
 		if ($bookable && !$booking_deadline_expired) {
 			$this->tpl->setCurrentBlock("booking_deadline");
 			$this->tpl->setVariable("BOOKING_LINK", gevCourseUtils::getBookingLinkTo($a_set["obj_id"], $this->user_id));

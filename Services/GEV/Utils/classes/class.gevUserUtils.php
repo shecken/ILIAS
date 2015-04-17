@@ -646,6 +646,7 @@ class gevUserUtils {
 				 , gevSettings::CRS_AMD_CANCEL_DEADLINE		=> "cancel_date"
 				 , gevSettings::CRS_AMD_SCHEDULE			=> "schedule"
 				 , gevSettings::CRS_AMD_LANG				=> "lang"
+				 , gevSettings::CRS_AMD_CUSTOM_ID			=> "custom_id"
 			);
 			
 		$city_amd_id = $this->gev_set->getAMDFieldId(gevSettings::ORG_AMD_CITY);
