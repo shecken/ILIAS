@@ -64,6 +64,10 @@ class catBasicReportGUI {
 		return null;
 	}
 	
+	protected function shouldExportExcel() {
+		return true;
+	}
+	
 	protected function checkPermission() {
 		if( $this->userIsPermitted() ) { 
 			return;
@@ -115,7 +119,7 @@ class catBasicReportGUI {
 		}
 		
 		//export-button
-		if (count($data) > 0) {
+		if (count($data) > 0 && $this->shouldExportExcel()) {
 			$export_btn = '<a class="submit exportXlsBtn"'
 						. 'href="'
 						.$this->ctrl->getLinkTarget($this, "exportxls")

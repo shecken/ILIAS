@@ -80,6 +80,10 @@ class gevEmployeeEduBiosGUI extends catBasicReportGUI{
 						;
 	}
 	
+	protected function shouldExportExcel() {
+		return false;
+	}
+	
 	protected function transformResultRow($rec) {
 		// credit_points
 /*		if ($rec["credit_points"] == -1) {
