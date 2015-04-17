@@ -537,9 +537,9 @@ class gevUserUtils {
 				;
 			$additional_where .=
 				" AND ( ( NOT start_date.value > ".$this->db->quote(date("Y-m-d", $a_search_options["period"]["end"]))." ) ".
-				"       OR ".$this->db->in("ltype.value", array(gevSettings::WBT), false, "text").") ".
+				"       OR ".$this->db->in("ltype.value", array(gevSettings::ONLINE_TRAINING), false, "text").") ".
 				" AND ( ( NOT end_date.value < ".$this->db->quote(date("Y-m-d", $a_search_options["period"]["start"]))." ) ".
-				"       OR ".$this->db->in("ltype.value", array(gevSettings::WBT), false, "text").") ".
+				"       OR ".$this->db->in("ltype.value", array(gevSettings::ONLINE_TRAINING), false, "text").") ".
 				"       OR (end_date.value IS NULL AND NOT start_date.value < ".$this->db->quote(date("Y-m-d", $a_search_options["period"]["start"])).")"
 				;
 		}
@@ -576,7 +576,7 @@ class gevUserUtils {
 				 "              )".
 				 "            AND start_date.value > ".$this->db->quote(date("Y-m-d"), "text").
 				 "		     )".
-				 "		  OR (".$this->db->in("ltype.value", array(gevSettings::WBT), false, "text").
+				 "		  OR (".$this->db->in("ltype.value", array(gevSettings::ONLINE_TRAINING), false, "text").
 				 "			 )".
 				 "		 )".
 				 $additional_where.

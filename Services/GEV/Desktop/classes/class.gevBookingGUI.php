@@ -184,7 +184,7 @@ class gevBookingGUI {
 	
 	protected function isSelfLearningCourse() {
 		if ($this->is_self_learning === null) {
-			$this->is_self_learning = $this->crs_utils->getType() == gevSettings::WBT;
+			$this->is_self_learning = $this->crs_utils->getType() == gevSettings::ONLINE_TRAINING;
 		}
 		return $this->is_self_learning;
 	}

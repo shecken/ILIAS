@@ -119,7 +119,7 @@ class ilParticipationStatusHelper
 		switch ($type) {
 			case gevSettings::LIVE_TRAINING:
 				return ilParticipationStatus::MODE_NON_REVIEWED;
-			case gevSettings::WBT:
+			case gevSettings::ONLINE_TRAINING:
 				return ilParticipationStatus::MODE_CONTINUOUS;
 			case gevSettings::WEBINAR:
 				return ilParticipationStatus::MODE_NON_REVIEWED;

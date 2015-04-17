@@ -23,7 +23,7 @@ class gevSettings {
 	# For queries
 	const LIVE_TRAINING = "Live Training";
 	const WEBINAR = "Webinar";
-	const WBT = "Online Training";
+	const ONLINE_TRAINING = "Online Training";
 	
 	const YES = "Yes";
 	const NO = "No";

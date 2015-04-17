@@ -142,7 +142,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 		$this->ctrl->setParameter($this, "crs_id", $rec["crs_id"]);
 		$now = @date("Y-m-d");
 		if ($rec["cancel_deadline_date"] === null
-		|| ($rec["type"] != gevSettings::WBT && $rec["cancel_deadline_date"] > $now)) {
+		|| ($rec["type"] != gevSettings::ONLINE_TRAINING && $rec["cancel_deadline_date"] > $now)) {
 			// Code starts here!
 			$rec["action"] = "<a href='".$this->ctrl->getLinkTarget($this, "confirmCancelBooking")."'>"
 							. $this->cancel_img."</a>";

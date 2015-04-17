@@ -198,7 +198,7 @@ class ilUserCourseStatusHistorizingHelper
 	 * @return bool
 	 */
 	public function courseHasIndividualStartAndEnd($course) {
-		return gevCourseUtils::getInstanceByObjOrId($course)->getType() == gevSettings::WBT;
+		return gevCourseUtils::getInstanceByObjOrId($course)->getType() == gevSettings::ONLINE_TRAINING;
 	}
 	
 	/**
