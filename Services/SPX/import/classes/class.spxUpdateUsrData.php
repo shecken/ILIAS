@@ -84,6 +84,7 @@
 				if($usrId) {
 					$usr = new ilObjUser($usrId);
 					$usr->delete();
+					echo "<br> user deleted ".$res["login"];
 				}
 			}
 		}
@@ -97,6 +98,7 @@
 					$usr = new ilObjUser($usrId);
 					$usr->setApproveDate(null);	
 					$usr->update();
+					echo "<br> user set inactive ".$res["login"];
 				}
 			}
 		}

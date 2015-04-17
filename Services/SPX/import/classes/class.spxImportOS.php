@@ -50,7 +50,7 @@
 
 			if(!$objid = ilObject::_lookupObjIdByImportId($child["OUshort"])) {
 
-				echo '<hr>' . $child["OUilias"]." does not exist yet, creating...   <br>";
+				echo '<br>' . $child["OUilias"]." does not exist yet, creating under".$parent["OUshort"];
 
 				$orgu = new ilObjOrgUnit();
 				$orgu->setTitle($child["OUilias"]);
@@ -67,9 +67,10 @@
 				
 
 			} else {
-				$orgu = new ilObjOrgUnit($objid, false);
+				$orgu = new ilObjOrgUnit($objid);
 				$refid = gevObjectUtils::getRefId($objid);
-				echo $child["OUshort"]." allready exists, do not create	  ";
+
+				echo "<br>".$child["OUshort"]." allready exists, do not create	  ";
 			} 
 
 
@@ -125,7 +126,6 @@
 			self::buildOS(self::$root);
 
 			self::closespxdb();
-			die();
 		}
 
 	

@@ -19,15 +19,20 @@
 	//spxUsrImport::UsrImport();
 
 	//spxImportOS::runOSimport();
-
-
-	spxImportOS::runOSimport();
+	
 	spxImportRoles::ImportRoles();
-	//spxUpdateUsrData::updateUsrData();
-	//spxImportRolesOU::ImportRolesOU();
-	spxImportRolesNAT::ImportRolesNat();
+	
+	spxUpdateUsrData::updateUsrData();
+
 	spxImportRolesFctn::ImportRolesFctn();
-	spxBuildHisto::run();
+	
+	spxImportRolesOU::ImportRolesOU();
+	
+	spxImportRolesNAT::ImportRolesNat();
+	
+
+	
+	//spxBuildHisto::run();
 	
 die('<hr><hr>done.');
 
