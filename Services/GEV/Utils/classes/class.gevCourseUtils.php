@@ -1320,7 +1320,6 @@ class gevCourseUtils {
 			$worksheet->setColumn(5, 5, 10);
 			$worksheet->setColumn(6, 6, 14);
 			$worksheet->setColumn(7, 7, 12);
-			$worksheet->setColumn(8, 8, 10);
 		}
 
 		$row = $this->buildListMeta( $workbook
@@ -1387,11 +1386,10 @@ class gevCourseUtils {
 				else
 				{
 					//$worksheet->write($row, 4, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
-					$worksheet->write($row, 4, $user_utils->getIDHGBAADStatus(), $format_wrap);
-					$worksheet->write($row, 5, $user_utils->getFormattedBirthday(), $format_wrap);
-					$worksheet->write($row, 6, " ".$user_utils->getMobilePhone());
-					$worksheet->write($row, 7, $user_utils->hasFullfilledPreconditionOf($this->crs_id) ? gevSettings::YES : gevSettings::NO);
-					$worksheet->write($row, 8, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
+					$worksheet->write($row, 4, $user_utils->getFormattedBirthday(), $format_wrap);
+					$worksheet->write($row, 5, " ".$user_utils->getMobilePhone());
+					$worksheet->write($row, 6, $user_utils->hasFullfilledPreconditionOf($this->crs_id) ? gevSettings::YES : gevSettings::NO);
+					$worksheet->write($row, 7, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
 					
 					//$txt[] = $lng->txt("vofue_udf_join_date").": ".$user_data["jdate"];
 					//$txt[] = $lng->txt("birthday").": ".$user_data["bdate"];
@@ -1507,7 +1505,6 @@ class gevCourseUtils {
 								 ? ilDatePresentation::formatPeriod($this->getStartDate(), $this->getEndDate())
 								 : ""
 					, "Veranstaltungsort" => $this->getVenueTitle()
-					, "Bildungspunkte" => $this->getCreditPoints()
 					, "Trainer" =>   ($this->getMainTrainer() !== null)
 								   ? $this->getMainTrainerName()." (".$this->getMainTrainerEMail().")"
 								   : ""
