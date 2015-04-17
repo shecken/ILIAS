@@ -121,6 +121,7 @@ if( $delta <= 0 ){
 			padding:0px;
 			text-align:center;
 			background-color: #eaeef9; 
+			background-color: #000; 
 			
 		}
 		#stage{
@@ -136,20 +137,28 @@ if( $delta <= 0 ){
 		}
 
 		#text {
-			padding-top: 290px;
-			padding-left: 80px;
-			padding-right: 80px;
-			font-size: 20px;
-			color: #8591a0;
+		  background-color: #afafaf;
+		  color: black;
+		  font-size: 20px;
+		  height: 191px;
+		  margin: 0 9px;
+		  padding-left: 80px;
+		  padding-right: 80px;
+		  
+		  position: absolute;
+		  top: 370px;
+		  width: 500px;
 		}
+
 		#text span{
 			display: inline-block;
 			padding-left: 58px;
+			padding-top: 20px;
 		}
 		
 
 		#numbers, #labels{
-			color: #eaeef9;
+			color: #e02b22;
 			width: 600px;
 			font-weight:bold;
 		}
@@ -173,6 +182,7 @@ if( $delta <= 0 ){
 		}
 
 
+
 	</style>
 
 
@@ -183,6 +193,7 @@ if( $delta <= 0 ){
 		<div id="stage">
 
 			<div id="text">
+
 				<span>
 					Because of upgrades and data migration the <br>
 					SEEPEX CAMPUS is down for maintenance.
@@ -206,10 +217,6 @@ if( $delta <= 0 ){
 				</div>
 
 						
-			</div>
-			
-			<div id="textbelow">
-				
 			</div>
 
 		</div>
