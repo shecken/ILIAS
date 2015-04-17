@@ -42,6 +42,10 @@ class gevReminderTrainer extends gevCrsAutoMail {
 			return null;
 		}
 		
+		if ($this->isForOnlineTraining()) {
+			return null;
+		}
+		
 		return parent::getMail($a_recipient);
 	}
 }

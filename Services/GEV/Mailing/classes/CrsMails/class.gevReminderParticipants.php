@@ -32,7 +32,10 @@ class gevReminderParticipants extends gevInvitation {
 		if ($this->getCourseUtils()->isTemplate()) {
 			return null;
 		}
-
+		
+		if ($this->isForOnlineTraining()) {
+			return null;
+		}
 		
 		$function = $this->getUserFunction($a_recipient);
 

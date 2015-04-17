@@ -90,7 +90,10 @@ class gevInvitation extends gevCrsAutoMail {
 		if ($this->getCourseUtils()->isTemplate()) {
 			return null;
 		}
-
+		
+		if ($this->isForOnlineTraining()) {
+			return null;
+		}
 		
 		// this really is no good style.
 		if (   !gevDeadlineMailingJob::isMailSend($this->getCourse()->getId(), $this->getId()) 

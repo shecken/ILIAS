@@ -207,6 +207,14 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return $utils->getWaitingMembers();
 	}
 	
+	// COURSE PROPERTIES
+	
+	protected function isForOnlineTraining() {
+		$utils = gevCourseUtils::getInstance($this->crs_id);
+		return $utils->getType() == gevSettings::ONLINE_TRAINING;
+	}
+	
+	// COURSE ADDRESSES
 	
 	protected function getCourseAccomodationAddress() {
 		$accom = $this->getCourseUtils()->getVenue();
@@ -258,6 +266,8 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 
 		return $addresses;
 	}
+
+	// ATTACHMENTS
 
 	protected function getAttachments() {
 		if ($this->attachments === null) {
@@ -481,6 +491,10 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 			throw new Exception("This mail will only work for ILIAS-Users.");
 		}
 		if ($this->getCourseUtils()->isTemplate()) {
+			return null;
+		}
+		
+		if ($this->isForOnlineTraining()) {
 			return null;
 		}
 
