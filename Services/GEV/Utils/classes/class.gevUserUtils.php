@@ -851,6 +851,40 @@ class gevUserUtils {
 		return $this->getUser()->getEmail();
 	}
 	
+	public function getEntryDate() {
+		$val = $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE);
+		if (!trim($val)) {
+			return null;
+		}
+		try {
+			return new ilDate($val, IL_CAL_DATE);
+		}
+		catch (Exception $e) {
+			return null;
+		}
+	}
+	
+	public function setEntryDate(ilDate $a_date) {
+		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE, $a_date->get(IL_CAL_DATE));
+	}
+	
+	public function getExitDate() {
+		$val = $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_EXIT_DATE);
+		if (!trim($val)) {
+			return null;
+		}
+		try {
+			return new ilDate($val, IL_CAL_DATE);
+		}
+		catch (Exception $e) {
+			return null;
+		}
+	}
+	
+	public function setExitDate(ilDate $a_date) {
+		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_EXIT_DATE, $a_date->get(IL_CAL_DATE));
+	}
+	
 	public function getOrgUnitId() {
 		if ($this->orgu_id === null) {
 			$query = "SELECT oref.obj_id FROM object_data od "
