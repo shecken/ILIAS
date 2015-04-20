@@ -480,6 +480,15 @@ class gevOrgUnitUtils {
 		return $ret;
 	}
 	
+	// Get all people in the org-unit that count as employees, that is the employees
+	// in the org-unit and all people in the org-units below.
+	static public function getAllEmployees($a_ref_id) {
+		$empls = self::getEmployeesIn(array($a_ref_id));
+		$sub_units = array_map(function($arr) {return $arr["ref_id"];}, self::getAllChildren(array($a_ref_id)));
+		$all = self::getAllPeopleIn($sub_units);
+		return array_unique(array_merge($empls, $all));
+	}
+	
 	// Get everyone in the given org-units.
 	static public function getAllPeopleIn($a_ref_ids) {
 		global $ilDB;

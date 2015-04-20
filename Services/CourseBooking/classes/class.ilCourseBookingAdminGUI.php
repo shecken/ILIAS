@@ -550,9 +550,18 @@ class ilCourseBookingAdminGUI
 			$ilCtrl->setParameter($this, "subs", $org_subs);
 			$ilCtrl->setParameter($this, "fsrch", true);
 			
-			require_once "Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php";
-			$ou_tree = ilObjOrgUnitTree::_getInstance();	
-			$user_ids = $ou_tree->getEmployees($org_ref_id, $org_subs);			
+			// spx-patch start
+			//require_once "Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php";
+			//$ou_tree = ilObjOrgUnitTree::_getInstance();
+			//$user_ids = $ou_tree->getEmployees($org_ref_id, $org_subs);
+			require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+			if ($org_subs) {
+				$user_ids = gevOrgUnitUtils::getAllEmployees($org_ref_id);
+			}
+			else {
+				$user_ids = gevOrgUnitUtils::getEmployeesIn(array($org_ref_id));
+			}
+			// spx-patch end
 			if(sizeof($user_ids))
 			{								
 				$this->setTabs("listBookings");
