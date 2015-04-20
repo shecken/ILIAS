@@ -126,10 +126,10 @@ class gevCrsMailData extends ilMailData {
 			case "ADMIN-FIRSTNAME":
 				$val = $this->crs_utils->getMainAdminFirstname();
 				break;
-			case "ADMIN-FIRSTNAME":
+			case "ADMIN-LASTNAME":
 				$val = $this->crs_utils->getMainAdminLastname();
 				break;
-			case "ADMIN-LASTNAME":
+			case "ADMIN-PHONE":
 				$val = $this->crs_utils->getMainAdminPhone();
 				break;
 			case "ADMIN-EMAIL":
