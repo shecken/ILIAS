@@ -195,7 +195,30 @@ class gevSettings {
 	static $TUTOR_ROLES = array(
 		  "il_crs_tutor_%"
 		);
-
+	
+	// Names of the functional roles that could be assigned to a user in
+	// the user administration
+	static $FUNCTIONAL_ROLES = array
+		( "Distributor"
+		, "Customer"
+		);
+	
+	// Names of the country roles
+	static $COUNTRY_ROLES = array
+		( "DE"
+		, "US"
+		, "FR"
+		, "UK"
+		, "MY"
+		, "CN"
+		, "Nordic"
+		, "JP"
+		, "AUS"
+		, "RU"
+		, "IN"
+		, "IT"
+		);
+	
 	// Will store the ref id of the orgu where the exited users should be put.
 	const ORG_UNIT_EXITED = "org_unit_exited";
 	

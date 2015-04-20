@@ -472,6 +472,11 @@ class ilObjUserGUI extends ilObjectGUI
 
 			//set role entries
 			$rbacadmin->assignUser($_POST["default_role"],$userObj->getId(),true);
+			// spx-patch start
+			if (array_key_exists("default_role2", $_POST)) {
+				$rbacadmin->assignUser($_POST["default_role2"], $userObj->getId(), true);
+			}
+			// spx-patch end
 
 			$msg = $this->lng->txt("user_added");			
 
@@ -1697,12 +1702,34 @@ class ilObjUserGUI extends ilObjectGUI
 		// role
 		if ($a_mode == "create")
 		{
-			$role = new ilSelectInputGUI($lng->txt("default_role"),
-				'default_role');
-			$role->setRequired(true);
-			$role->setValue($this->default_role);
-			$role->setOptions($this->selectable_roles);
-			$this->form_gui->addItem($role);
+			// spx-patch start
+			if ($this->object->getRefId() == USER_FOLDER_ID) {
+				// global user administration
+				$role = new ilSelectInputGUI($lng->txt("default_role"),
+					'default_role');
+				$role->setRequired(true);
+				$role->setValue($this->default_role);
+				$role->setOptions($this->selectable_roles);
+				$this->form_gui->addItem($role);
+			}
+			else {
+				// local user administration
+				require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
+				$role_utils = gevRoleUtils::getInstance();
+				
+				$role = new ilSelectInputGUI($lng->txt("gev_functional_role"),
+					'default_role');
+				$role->setRequired(true);
+				$role->setOptions($role_utils->getFunctionalRolesForLocalUserAdministration());
+				$this->form_gui->addItem($role);
+				
+				$role = new ilSelectInputGUI($lng->txt("gev_country_role"),
+					'default_role2');
+				$role->setRequired(true);
+				$role->setOptions($role_utils->getCountryRolesForLocalUserAdministration());
+				$this->form_gui->addItem($role);
+			}
+			//spx-patch end
 		}
 
 		// language

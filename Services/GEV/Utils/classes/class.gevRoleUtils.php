@@ -66,6 +66,22 @@ class gevRoleUtils {
 		return $this->global_roles;
 	}
 	
+	// all "functional roles" (from spx-concept) that could be assigned to a
+	// user in the user administration.
+	public function getFunctionalRolesForLocalUserAdministration() {
+		return array_filter($this->getGlobalRoles(), function ($title) {
+			return in_array($title, gevSettings::$FUNCTIONAL_ROLES);
+		});
+	}
+	
+	// all "country roles" (from spx-concept) that could be assigned to a
+	// user in the user administration.
+	public function getCountryRolesForLocalUserAdministration() {
+		return array_filter($this->getGlobalRoles(), function ($title) {
+			return in_array($title, gevSettings::$COUNTRY_ROLES);
+		});
+	}
+	
 	public function getFlippedGlobalRoles() {
 		if ($this->flipped_global_roles === null) {
 			$this->flipped_global_roles = array_flip($this->getGlobalRoles());

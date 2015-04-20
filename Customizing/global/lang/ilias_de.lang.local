@@ -1099,3 +1099,5 @@ gev#:#gev_accomodation#:#Übernachtungsort
 gev#:#gev_mailing_dates#:#Versanddaten
 gev#:#gev_invitation_mail#:#Einladungsmail
 gev#:#gev_mail_transport#:#Mailversand
+gev#:#gev_functional_role#:#Funktionale Rolle
+gev#:#gev_country_role#:#Landesrolle
