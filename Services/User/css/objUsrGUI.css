@@ -23,8 +23,8 @@
 	/*display:none*/;
 }
 
-#il_prop_cont_country,
-#il_prop_cont_country + .ilFormValue {
+#il_prop_cont_sel_country,
+#il_prop_cont_sel_country + .ilFormValue {
 	display:none;
 }
 
