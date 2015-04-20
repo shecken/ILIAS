@@ -90,7 +90,6 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 												, IL_CAL_DATETIME)
 											: "");
 		//$vars["COURSE_TOPICS"] = ilUtil::prepareFormOutput(implode(", ", $crs->getTopics()));
-		$vars["COURSE_CREDIT_POINTS"] = ilUtil::prepareFormOutput($crs->getCreditPoints());
 		// gev-patch end
 		
 		$insert_tags = array();
@@ -144,7 +143,6 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 												, IL_CAL_DATETIME)
 											: "");
 		//$vars["COURSE_TOPICS"] = ilUtil::prepareFormOutput(implode(", ", $crs->getTopics()));
-		$vars["COURSE_CREDIT_POINTS"] = ilUtil::prepareFormOutput($crs->getCreditPointsOf($user_id));
 		// gev-patch end
 		
 		$insert_tags = array();
@@ -174,7 +172,6 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		$vars["COURSE_START_DATE"] = $lng->txt("gev_cert_course_start_date");
 		$vars["COURSE_END_DATE"] = $lng->txt("gev_cert_course_end_date");
 		//$vars["COURSE_TOPICS"] = $lng->txt("gev_cert_course_topics");
-		$vars["COURSE_CREDIT_POINTS"] = $lng->txt("gev_cert_points");
 		// gev-patch end
 				
 		$template = new ilTemplate("tpl.il_as_tst_certificate_edit.html", TRUE, TRUE, "Modules/Test");	
