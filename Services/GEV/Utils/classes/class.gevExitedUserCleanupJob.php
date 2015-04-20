@@ -10,7 +10,7 @@ class gevExitedUserCleanupJob extends ilCronJob {
 	}
 	
 	public function getTitle() {
-		return "Ausgetretene Benutzer bereinigen";
+		return "Cleanup exited user.";
 	}
 
 	public function hasAutoActivation() {
