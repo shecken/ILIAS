@@ -175,7 +175,13 @@ class gevSettings {
 	const VENUE_BERNRIED			= "venue_bernried";
 	const PROVIDER_GENERALI			= "provider_generali";
 	
+	const USR_UDF_COMPANY_NAME 		= "usr_udf_company_name";
+	const USR_UDF_SALES_REGION 		= "usr_udf_sales_region";
+	const USR_UDF_ENTRY_DATE 		= "usr_udf_entry_date";
+	const USR_UDF_EXIT_DATE 		= "usr_udf_exit_date";
+	
 	static $UDF_FIELD_ORDER = array(
+		
 	);
 
 	// Names of roles that count as admins
