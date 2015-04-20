@@ -120,7 +120,6 @@ if( $delta <= 0 ){
 			margin:0px 0px; 
 			padding:0px;
 			text-align:center;
-			background-color: #eaeef9; 
 			background-color: #000; 
 			
 		}
@@ -134,31 +133,31 @@ if( $delta <= 0 ){
 			margin: 100px auto auto;
 			color: black;
 			font-family: Arial;
+		  	background-color: #fff; 
 		}
 
 		#text {
-		  background-color: #afafaf;
 		  color: black;
-		  font-size: 20px;
-		  height: 191px;
-		  margin: 0 9px;
+		  font-size: 14px;
+		  margin: 0 12px;
 		  padding-left: 80px;
 		  padding-right: 80px;
-		  
 		  position: absolute;
-		  top: 370px;
+		  top: 335px;
 		  width: 500px;
 		}
 
-		#text span{
-			display: inline-block;
-			padding-left: 58px;
-			padding-top: 20px;
+
+		#counter {
+			height: 200px;
+			margin: auto;
+			width: 545px;
+			padding-top: 330px;
 		}
-		
+
 
 		#numbers, #labels{
-			color: #e02b22;
+			
 			width: 600px;
 			font-weight:bold;
 		}
@@ -180,6 +179,12 @@ if( $delta <= 0 ){
 			margin-right: 15px;
 			margin-top: 12px;
 		}
+		.red {
+			color: #e52e1e;
+		}
+		.upper {
+			text-transform: uppercase;
+		}
 
 
 
@@ -193,30 +198,30 @@ if( $delta <= 0 ){
 		<div id="stage">
 
 			<div id="text">
-
 				<span>
-					Because of upgrades and data migration the <br>
-					SEEPEX CAMPUS is down for maintenance.
+					Because of upgrades and data migration the SEEPEX CAMPUS is down for
+					maintenance.
 					<br>
-					We'll flow again in:
+					<br>
 				</span>
-				
+				<span class="red upper" >We'll flow again in:</span>
+			</div>
 
-				<div id="numbers">
+			<div id="counter">
+
+				<div id="numbers" class="red">
 					<div id="days" class="number">dd</div>
 					<div id="hours" class="number">hh</div>
 					<div id="minutes" class="number">mm</div>
 					<div id="seconds" class="number">ss</div>
 				</div>
 
-				<div id="labels">
+				<div id="labels" class="red">
 					<div id="l_days" class="label">days</div>
 					<div id="l_hours" class="label">hours</div>
 					<div id="l_minutes" class="label">minutes</div>
 					<div id="l_seconds" class="label">seconds</div>
 				</div>
-
-						
 			</div>
 
 		</div>
