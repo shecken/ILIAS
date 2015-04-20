@@ -183,6 +183,9 @@ class gevDesktopGUI {
 	}
 	
 	protected function toCourseSearch() {
+		if (array_key_exists("target_user_id", $_GET)) {
+			$this->ctrl->setParameterByClass("gevCourseSearchGUI", "target_user_id", $_GET["target_user_id"]);
+		}
 		$this->ctrl->redirectByClass("gevCourseSearchGUI");
 	}
 	

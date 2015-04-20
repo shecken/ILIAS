@@ -86,7 +86,7 @@ class gevBookingGUI {
 	}
 	
 	protected function toCourseSearch() {
-		ilUtil::redirect("ilias.php?baseClass=gevDesktopGUI&cmd=toCourseSearch");
+		ilUtil::redirect("ilias.php?baseClass=gevDesktopGUI&cmd=toCourseSearch&target_user_id=".$this->user_id);
 		exit();
 	}
 	
