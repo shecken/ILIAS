@@ -117,9 +117,10 @@ class ilLocalUserGUI {
 		global $ilUser, $rbacreview, $rbacsystem;
 		$this->tpl->addBlockfile('ADM_CONTENT', 'adm_content', 'tpl.cat_admin_users.html',
 			"Modules/Category");
-		if (count($rbacreview->getGlobalAssignableRoles())
+		// spx-patch start
+		/*if (count($rbacreview->getGlobalAssignableRoles())
 			or in_array(SYSTEM_ROLE_ID, $rbacreview->assignedRoles($ilUser->getId()))
-		) {
+		) {*/
 			$this->toolbar->addButton(
 				$this->lng->txt('add_user'),
 				$this->ctrl->getLinkTargetByClass('ilobjusergui', 'create')
@@ -128,9 +129,10 @@ class ilLocalUserGUI {
 				$this->lng->txt('import_users'),
 				$this->ctrl->getLinkTargetByClass('ilobjuserfoldergui', 'importUserForm')
 			);
-		} else {
+		/*} else {
 			ilUtil::sendInfo($this->lng->txt('no_roles_user_can_be_assigned_to'));
-		}
+		}*/
+		// spx-patch end
 		if ($show_delete) {
 			$this->tpl->setCurrentBlock("confirm_delete");
 			$this->tpl->setVariable("CONFIRM_FORMACTION", $this->ctrl->getFormAction($this));
