@@ -143,6 +143,7 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		}
 
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
+		$this->tpl->setVariable("CRS_LINK", gevCourseUtils::getLinkTo($a_set["obj_id"]));
 		$this->tpl->setVariable("CUSTOM_ID", $a_set["custom_id"]);
 		$this->tpl->setVariable("TYPE", $a_set["type"]);
 		//$this->tpl->setVariable("CATEGORY", $a_set["category"]);
