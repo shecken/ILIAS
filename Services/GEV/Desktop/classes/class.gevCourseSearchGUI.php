@@ -66,10 +66,12 @@ class gevCourseSearchGUI {
 									   )
 								, $this->user_utils->getEmployeesForCourseSearch()
 								);
+			$this->ctrl->setParameter($this, "target_user_id");
 			$user_selector->setUsers($users)
 						  ->setCaption("gev_crs_srch_usr_slctr_caption")
 						  ->setAction($this->ctrl->getLinkTargetByClass("gevCourseSearchGUI"));
 			$usrsel = $user_selector->render() . $spacer->render();
+			$this->ctrl->setParameter($this, "target_user_id", $this->target_user_id);
 		}
 		else {
 			$usrsel = "";
