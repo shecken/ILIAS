@@ -840,7 +840,9 @@ class ilTemplate extends ilTemplateX
 		if($_REQUEST["baseClass"] != "ilImprintGUI" && ilImprint::isActive())
 		{
 			include_once "Services/Link/classes/class.ilLink.php";
-			$link_items[ilLink::_getStaticLink(0, "impr")] = array($lng->txt("imprint"), true);
+			// spx-patch start
+			$link_items["http://www.seepex.com/en/imprint/"] = array($lng->txt("imprint"), true);
+			// spx-patch end
 		}
 
 		$link_items["mailto:".$ilSetting->get("feedback_recipient")] = array($lng->txt("contact_sysadmin"), false);
