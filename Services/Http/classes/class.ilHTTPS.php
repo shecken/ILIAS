@@ -95,6 +95,8 @@ class ilHTTPS
 	function checkPort()
 	{
 		// if https is enabled for scripts or classes, check for redirection
+	    // spx-patch start
+	    /*
 	    if ($this->enabled)
 		{
     		if($this->shouldSwitchProtocol(self::PROTOCOL_HTTPS))
@@ -107,7 +109,7 @@ class ilHTTPS
     			header("location: http://".$_SERVER["SERVER_NAME"].$_SERVER["REQUEST_URI"]);
     			exit;
     		}
-		}
+		}*/
 		return true;
 	}
 
