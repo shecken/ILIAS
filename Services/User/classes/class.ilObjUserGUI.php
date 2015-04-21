@@ -313,10 +313,12 @@ class ilObjUserGUI extends ilObjectGUI
 		}
 
 		// raise error if there is no global role user can be assigned to
-		if(!count($rol))
+		// spx-patch start
+		/*if(!count($rol))
 		{
 			$this->ilias->raiseError($this->lng->txt("msg_no_roles_users_can_be_assigned_to"),$this->ilias->error_obj->MESSAGE);
-		}
+		}*/
+		// spx-patch end
 
 		$keys = array_keys($rol);
 
