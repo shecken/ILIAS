@@ -61,7 +61,9 @@ class ilTermsOfServiceFileSystemDocument implements ilTermsOfServiceSignableDocu
 				$this->content = '';
 				foreach($lines as $line)
 				{
-					$this->content .= trim(nl2br($line));
+					// spx-patch start
+					$this->content .= trim($line);
+					// spx-patch end
 				}
 				$this->source             = $file;
 				$this->has_content        = (bool)strlen($this->content);
