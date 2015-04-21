@@ -395,7 +395,7 @@ class gevCourseUtils {
 		$schedule = $this->getSchedule();
 		$counter = 1;
 		foreach ($schedule as $key => $value) {
-			$schedule[$key] = "Tag ".$counter.": ".$value;
+			$schedule[$key] = $this->lng->txt("time_d")." ".$counter.": ".$value;
 			$counter += 1;
 		}
 		return implode($a_line_break, $schedule);
