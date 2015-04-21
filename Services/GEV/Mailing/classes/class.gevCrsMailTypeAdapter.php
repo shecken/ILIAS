@@ -42,7 +42,6 @@ class gevCrsMailTypeAdapter extends ilMailTypeAdapter {
 				, array("Officer-Email"				, "Email of the Officer of the Training")
 				, array("Admin-Firstname"			, "Firstname of the Admin of the Training")
 				, array("Admin-Lastname"			, "Lastname of the Admin of the Training")
-				, array("Admin-Phone"				, "Phonenumber of the Admin of the Training")
 				, array("Admin-Email"				, "Email of the Admin of the Training")
 				, array("Trainer-Name"				, "Name of the Trainer of the Training")
 				, array("Trainer-Phone"				, "Phonenumber of the Trainer of the Training")
