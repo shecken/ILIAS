@@ -252,7 +252,11 @@ class gevCourseUtils {
 		return $this->crs_participations;
 	}
 	
-	public function getLocalRoles() {
+	const LABEL_MEMBER = "crs_member";
+	const LABEL_TUTOR  = "crs_tutor";
+	const LABEL_ADMIN  = "crs_admin";
+	
+	protected function getLocalRoles() {
 		if ($this->local_roles === null) {
 			require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
 			$this->local_roles = gevRoleUtils::getInstance()->getLocalRoleIdsAndTitles($this->crs_id);
@@ -261,13 +265,13 @@ class gevCourseUtils {
 			foreach ($this->local_roles as $id => $title) {
 				$pref = substr($title, 0, 8);
 				if ($pref == "il_crs_m") {
-					$this->local_roles[$id] = $this->lng->txt("crs_member");
+					$this->local_roles[$id] = self::LABEL_MEMBER; //$this->lng->txt("crs_member");
 				}
 				else if ($pref == "il_crs_t") {
-					$this->local_roles[$id] = $this->lng->txt("crs_tutor");
+					$this->local_roles[$id] = self::LABEL_TUTOR; //$this->lng->txt("crs_tutor");
 				}
 				else if ($pref == "il_crs_a") {
-					$this->local_roles[$id] = $this->lng->txt("crs_admin");
+					$this->local_roles[$id] = self::LABEL_ADMIN; //$this->lng->txt("crs_admin");
 				}
 			}
 		}
@@ -1591,17 +1595,22 @@ class gevCourseUtils {
 		return ilCourseBooking::getUserStatus($this->crs_id, $a_user_id);
 	}
 	
+	const LABEL_BOOKED = "status_booked";
+	const LABEL_WAITING = "status_waiting";
+	const LABEL_CANCELLED_WITH_COSTS = "status_cancelled_with_costs";
+	const LABEL_CANCELLED_WITHOUT_COSTS = "status_cancelled_without_costs";
+	
 	public function getBookingStatusLabelOf($a_user_id) {
 		$status = $this->getBookingStatusOf($a_user_id);
 		switch ($status) {
 			case ilCourseBooking::STATUS_BOOKED:
-				return "gebucht";
+				return LABEL_BOOKED; //"gebucht";
 			case ilCourseBooking::STATUS_WAITING:
-				return "auf Warteliste";
+				return LABEL_WAITING; //"auf Warteliste";
 			case ilCourseBooking::STATUS_CANCELLED_WITH_COSTS:
-				return "kostenpflichtig storniert";
+				return LABEL_CANCELLED_WITH_COSTS; //"kostenpflichtig storniert";
 			case ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS:
-				return "kostenfrei storniert";
+				return LABEL_CANCELLED_WITHOUT_COSTS; //"kostenfrei storniert";
 			default:
 				return "";
 		}
@@ -1701,17 +1710,22 @@ class gevCourseUtils {
 		return $status;
 	}
 	
+	const LABEL_NOT_SET = "status_not_set";
+	const LABEL_SUCCESSFUL = "status_successful";
+	const LABEL_ABSENT_EXCUSED = "status_absent_excused";
+	const LABEL_ABSENT_NOT_EXCUSED = "status_absent_not_excused";
+	
 	public function getParticipationStatusLabelOf($a_user_id) {
 		$status = $this->getParticipationStatusOf($a_user_id);
 		switch ($status) {
 			case ilParticipationStatus::STATUS_NOT_SET:
-				return "nicht gesetzt";
+				return LABEL_NOT_SET; //"nicht gesetzt";
 			case ilParticipationStatus::STATUS_SUCCESSFUL:
-				return "teilgenommen";
+				return LABEL_SUCCESSFUL; //"teilgenommen";
 			case ilParticipationStatus::STATUS_ABSENT_EXCUSED:
-				return "fehlt entschuldigt";
+				return LABEL_ABSENT_EXCUSED; //"fehlt entschuldigt";
 			case ilParticipationStatus::STATUS_ABSENT_NOT_EXCUSED:
-				return "fehlt ohne Absage";
+				return LABEL_ABSENT_NOT_EXCUSED; //"fehlt ohne Absage";
 			default:
 				return "";
 		}

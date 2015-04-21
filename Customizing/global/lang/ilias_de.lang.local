@@ -1101,3 +1101,11 @@ gev#:#gev_invitation_mail#:#Einladungsmail
 gev#:#gev_mail_transport#:#Mailversand
 gev#:#gev_functional_role#:#Funktionale Rolle
 gev#:#gev_country_role#:#Landesrolle
+gev#:#status_booked#:#gebucht
+gev#:#status_waiting#:#auf Warteliste
+gev#:#status_cancelled_with_costs#:#kostenpflichtig storniert
+gev#:#status_cancelled_without_costs#:#kostenfrei storniert
+gev#:#status_not_set#:#nicht gesetzt
+gev#:#status_successful#:#teilgenommen
+gev#:#status_absent_excused#:#fehlt entschuldigt
+gev#:#status_absent_not_excused#:#fehlt ohne Absage

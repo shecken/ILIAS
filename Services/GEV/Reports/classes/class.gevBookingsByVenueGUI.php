@@ -179,12 +179,12 @@ class gevBookingsByVenueGUI extends catBasicReportGUI{
 							hist_historic = 0
 						AND (
 								(	
-								function = 'Mitglied' 
+								function = 'crs_member' 
 								AND 
-								booking_status = 'gebucht'
+								booking_status = 'status_booked'
 								)
 							OR
-								function = 'Trainer'
+								function = 'crs_tutor'
 						)
 				
 					";

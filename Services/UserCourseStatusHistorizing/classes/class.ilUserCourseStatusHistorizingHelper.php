@@ -221,13 +221,13 @@ class ilUserCourseStatusHistorizingHelper
 			return;
 		}
 		
-		if ($payload["participation_status"] !== "teilgenommen") {
+		if ($payload["participation_status"] !== "status_successful") {
 			return;
 		}
 		
 		$cur = ilUserCourseStatusHistorizing::getCurrentRecordByCase();
 		
-		if ($cur["participation_status"] !== "teilgenommen") {
+		if ($cur["participation_status"] !== "status_successful") {
 			$payload["end_date"] = date("Y-m-d");
 		}
 	}
@@ -236,7 +236,7 @@ class ilUserCourseStatusHistorizingHelper
 	{
 		require_once './Modules/Course/classes/class.ilCourseCertificateAdapter.php';
 		return ilCourseCertificateAdapter::_hasUserCertificate($user, $course)
-		    && gevCourseUtils::getInstance($course)->getParticipationStatusLabelOf($user) == "teilgenommen";
+		    && gevCourseUtils::getInstance($course)->getParticipationStatusLabelOf($user) == "status_successful";
 	}
 
 	public static function getCertificateOf($user, $course)

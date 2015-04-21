@@ -86,7 +86,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 		$this->filter = catFilter::create()
 						->static_condition($this->db->in("usr.user_id", $allowed_user_ids, false, "integer"))
 						->static_condition("usrcrs.hist_historic = 0")
-						->static_condition("usrcrs.booking_status IN ('gebucht', 'auf Warteliste')")
+						->static_condition("usrcrs.booking_status IN ('status_booked', 'status_waiting')")
 						->static_condition("crs.begin_date > CURDATE()")
 						->action($this->ctrl->getLinkTarget($this, "view"))
 						->compile()
@@ -137,6 +137,8 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 		else {
 			$rec["od_bd"] = $rec["org_unit_above1"]."/".$rec["org_unit_above2"];
 		}
+		
+		$rec["booking_status"] = $this->lng->txt($rec["booking_status"]);
 		
 		$this->ctrl->setParameter($this, "usr_id", $rec["user_id"]);
 		$this->ctrl->setParameter($this, "crs_id", $rec["crs_id"]);

@@ -51,8 +51,8 @@ class gevEmployeeEduBiosGUI extends catBasicReportGUI{
 							->on("     usr.user_id = usrcrs.usr_id"
 								." AND usrcrs.hist_historic = 0 "
 								." AND usrcrs.credit_points > 0"
-								." AND usrcrs.participation_status = 'teilgenommen'"
-								." AND usrcrs.booking_status = 'gebucht'"
+								." AND usrcrs.participation_status = 'status_successful'"
+								." AND usrcrs.booking_status = 'status_booked'"
 								." AND usrcrs.okz <> '-empty-'"
 								)
 						->group_by("user_id")

@@ -2842,3 +2842,54 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "User", "udfc", "GEVUserData"
 <?php
 	$ilCtrlStructureReader->getStructure();
 ?>
+
+<#93>
+<?php
+
+require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
+
+// Make label for booking and participation status internationalizable
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET booking_status = '".gevCourseUtils::LABEL_BOOKED."'"
+				 ." WHERE booking_status = 'gebucht'");
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET booking_status = '".gevCourseUtils::LABEL_WAITING."'"
+				 ." WHERE booking_status = 'auf Warteliste'");
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET booking_status = '".gevCourseUtils::LABEL_CANCELLED_WITH_COSTS."'"
+				 ." WHERE booking_status = 'kostenpflichtig storniert'");
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET booking_status = '".gevCourseUtils::LABEL_CANCELLED_WITHOUT_COSTS."'"
+				 ." WHERE booking_status = 'kostenfrei storniert'");
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET participation_status = '".gevCourseUtils::LABEL_NOT_SET."'"
+				 ." WHERE participation_status = 'nicht gesetzt'");
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET participation_status = '".gevCourseUtils::LABEL_SUCCESSFUL."'"
+				 ." WHERE participation_status = 'teilgenommen'");
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET participation_status = '".gevCourseUtils::LABEL_ABSENT_EXCUSED."'"
+				 ." WHERE participation_status = 'fehlt entschuldigt'");
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET participation_status = '".gevCourseUtils::LABEL_ABSENT_NOT_EXCUSED."'"
+				 ." WHERE participation_status = 'fehlt ohne Absage'");
+
+?>
+
+<#94>
+<?php
+
+require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
+
+// Make labels for function at course internationalizable
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET function = '".gevCourseUtils::LABEL_MEMBER."'"
+				 ." WHERE function IN ('Member', 'Mitglied', '??')");
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET function = '".gevCourseUtils::LABEL_TUTOR."'"
+				 ." WHERE function IN ('Tutor', 'Trainer')");
+$ilDB->manipulate("UPDATE hist_usercoursestatus "
+				 ."   SET function = '".gevCourseUtils::LABEL_ADMIN."'"
+				 ." WHERE function IN ('Trainingsbetreuer', 'Administrator', 'Training administrator')");
+
+?>

@@ -98,8 +98,8 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 						->static_condition("usr.user_id = ".$this->db->quote($this->target_user_id, "integer"))
 						->static_condition("usrcrs.hist_historic = 0")
 						->static_condition($this->db->in( "usrcrs.booking_status"
-														, array( "gebucht"
-															   , "kostenpflichtig storniert"
+														, array( "status_booked"
+															   , "status_cancelled_with_costs"
 															   )
 														, false, "text")
 										  )
@@ -176,7 +176,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		return   "SELECT SUM(usrcrs.credit_points) sum "
 				.$this->query->sqlFrom()
 				.$this->queryWhere($start, $end)
-				." AND usrcrs.participation_status = 'teilgenommen'"
+				." AND usrcrs.participation_status = 'status_successful'"
 				." AND crs.crs_id > 0" // only academy points
 				." AND usrcrs.credit_points > 0"
 				;
@@ -189,11 +189,11 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 					? $rec["fee"] = gevCourseUtils::formatFee($rec["fee"])." &euro;"
 					: $rec["fee"] == "-empty-";
 					
-		if ($rec["participation_status"] == "teilgenommen") {
+		if ($rec["participation_status"] == "status_successful") {
 			$rec["status"] = $this->success_img;
 		}
-		else if (in_array($rec["participation_status"], array("fehlt entschuldigt", "fehlt ohne Absage"))
-			 ||  in_array($rec["booking_status"], array("kostenpflichtig storniert", "kostenfrei storniert"))
+		else if (in_array($rec["participation_status"], array("status_successful", "status_successful"))
+			 ||  in_array($rec["booking_status"], array("status_cancelled_with_costs", "status_cancelled_without_costs"))
 			) {
 			$rec["status"] = $this->failed_img;
 		}
@@ -250,7 +250,6 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 				continue;
 			}
 		}
-		
 		return $rec;
 	}
 
@@ -323,7 +322,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 					."   AND ( usrcrs.end_date >= ".$this->db->quote($start->get(IL_CAL_DATE), "date")
 					."        OR usrcrs.end_date = '0000-00-00')"
 					."   AND usrcrs.begin_date <= ".$this->db->quote($end->get(IL_CAL_DATE), "date")
-					."   AND ".$this->db->in("usrcrs.booking_status", array("gebucht", "kostenpflichtig storniert", "kostenfrei storniert"), false, "text")
+					."   AND ".$this->db->in("usrcrs.booking_status", array("status_booked", "status_cancelled_with_costs", "status_cancelled_without_costs"), false, "text")
 					;
 	}
 }

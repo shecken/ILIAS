@@ -143,9 +143,9 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 										  ." OR usrcrs.hist_historic IS NULL )")
 						->static_condition("(   usrcrs.participation_status != '-empty-'"
 										  ." OR usrcrs.hist_historic IS NULL )")
-						->static_condition("(   usrcrs.booking_status != 'kostenfrei storniert'"
+						->static_condition("(   usrcrs.booking_status != 'status_cancelled_without_costs'"
 										  ." OR usrcrs.hist_historic IS NULL )")
-						->static_condition("(   usrcrs.function NOT IN ('Trainingsbetreuer', 'Trainingsersteller', 'Trainer')"
+						->static_condition("(   usrcrs.function NOT IN ('crs_admin', 'crs_tutor')"
 										  ." OR usrcrs.hist_historic IS NULL )" )
 						->action($this->ctrl->getLinkTarget($this, "view"))
 						->compile()
@@ -166,6 +166,8 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 			$date = '-';
 		}
 		$rec['date'] = $date;
+		$rec["booking_status"] = $this->lng->txt($rec["booking_status"]);
+		$rec["participation_status"] = $this->lng->txt($rec["participation_status"]);
 		
 		return $this->replaceEmpty($rec);
 	}
