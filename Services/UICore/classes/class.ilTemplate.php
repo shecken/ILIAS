@@ -852,7 +852,7 @@ class ilTemplate extends ilTemplateX
 		}
 		
 		// spx-patch start
-		$link_items[""] = array($lng->txt("usr_agreement"), false);
+		$link_items[$ilCtrl->getLinkTargetByClass("ilStartUpGUI", "showTermsOfService")] = array($lng->txt("usr_agreement"), false);
 		// spx-patch end
 
 		$cnt = 0;
