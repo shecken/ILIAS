@@ -208,7 +208,7 @@ abstract class gevAccAssistanceMail extends ilAutoMail {
 	protected function getMessageFromTemplate($a_templ_id, $a_user_id, $a_email, $a_name) {
 		
 		require_once("Services/User/classes/class.ilObjUser.php");
-		$this->initTemplateObjects($a_templ_id, ilObjUser::_lookupLanguage($a_user_id));
+		$this->initTemplateObjects($a_templ_id, $this->a_usr->getLanguage());
 
 		require_once "./Services/GEV/Mailing/classes/class.gevAccAssistanceMailData.php";
 
