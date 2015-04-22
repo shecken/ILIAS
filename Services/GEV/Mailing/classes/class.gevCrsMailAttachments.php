@@ -26,7 +26,7 @@ class gevCrsMailAttachments extends ilMailAttachments {
 		$this->generated_files = array( self::LIST_FOR_TRAINER_NAME
 									  , self::LIST_FOR_HOTEL_NAME
 									  , self::LIST_FOR_PARTICIPANT_NAME
-									  , self::MATERIAL_LIST
+									  //, self::MATERIAL_LIST
 									  );
 	}
 	

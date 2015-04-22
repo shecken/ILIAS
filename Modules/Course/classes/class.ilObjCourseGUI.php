@@ -1713,7 +1713,7 @@ class ilObjCourseGUI extends ilContainerGUI
 						$this->ctrl->getLinkTargetByClass("ilcertificategui", "certificateeditor"),
 						"", "ilcertificategui");					
 				}
-				
+				/*
 				// gev-patch start
 				require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 				if (gevCourseUtils::getInstanceByObj($this->object)->isLiveTraining()) {
@@ -1724,7 +1724,7 @@ class ilObjCourseGUI extends ilContainerGUI
 					$this->ctrl->setParameterByClass('ilmateriallistgui', 'ref_id', '');				
 				}
 				// gev-patch end
-
+				*/
 				break;
 			
 			case 'members':
