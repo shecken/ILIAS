@@ -72,8 +72,8 @@
 		}
 
 		private function getUsrHandler() {
-			$sql = "SELECT * FROM iliasImport";
-			 self::$usrHandler = self::queryspxdb($sql);
+			$sql = "SELECT * FROM iliasImport, SEEPEXorg WHERE OUshort=OU";
+			self::$usrHandler = self::queryspxdb($sql);
 		}
 
 		private function deleteUsers() {
@@ -146,6 +146,7 @@
 
 					$usr->setInstitution($res["OUshort"]);
 					$usr->setDepartment($res["OUilias"]);
+					$usr->update();
 
 
 				}
