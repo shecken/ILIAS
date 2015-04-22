@@ -10,7 +10,7 @@ class gevPWAssistMail extends gevAccAssistanceMail {
 	public function __construct(ilObjUser $usr, $pwassist_link) {
 		$this->usr = $usr;
 		parent::__construct( $this->getRecipientUserID()
-						   , array("PWASSIST_LINK" => $pwassist_link,"LOGIN" => array($this->usr->getLogin()));
+						   , array("PWASSIST_LINK" => $pwassist_link,"LOGIN" => array($this->usr->getLogin())));
 	}
 
 	public function getTitle() {
