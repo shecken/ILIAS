@@ -69,8 +69,11 @@ class gevGeneralUtils {
 			$ov_cons[$key] = ilDatePresentation::formatPeriod($ovs[0], $ovs[1]);
 		}
 		
-		
-		return implode($delim, $ov_cons);
+		if($ov_cons) {
+			return implode($delim, $ov_cons);
+		} else {
+			return "";
+		}
 	}
 
 	/**

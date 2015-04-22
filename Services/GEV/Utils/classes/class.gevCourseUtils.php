@@ -1257,9 +1257,10 @@ class gevCourseUtils {
 
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
-		
+		require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+
 		global $lng;
-		
+			
 		$lng->loadLanguageModule("common");
 		$lng->loadLanguageModule("gev");
 
@@ -1284,46 +1285,28 @@ class gevCourseUtils {
 		// what is this good for
 		//$txt = array();
 
-		$columns = array( $lng->txt("gender")
-						, $lng->txt("firstname")
+		$columns = array( $lng->txt("firstname")
 						, $lng->txt("lastname")
+						, $lng->txt("email")
 						, $lng->txt("gev_org_unit_short")
+						, $lng->txt("gev_functional_role")
 						);
 
 		$format_wrap = $workbook->addFormat();
 		$format_wrap->setTextWrap();
 		
-		$worksheet->setColumn(0, 0, 10);		// gender
-		$worksheet->setColumn(1, 1, 12); 	// firstname
-		$worksheet->setColumn(2, 2, 12);	// lastname
-		$worksheet->setColumn(3, 3, 20);	// org-unit
+		$worksheet->setColumn(0, 0, 10);    // firstname
+		$worksheet->setColumn(1, 1, 12); 	// lastname
+		$worksheet->setColumn(2, 2, 12);	// email
+		$worksheet->setColumn(3, 3, 20);	// orgu
+		$worksheet->setColumn(4, 4, 20);	// function
 		
 		if($a_type == self::MEMBERLIST_HOTEL)
 		{
 			$columns[] = $lng->txt("gev_crs_book_overnight_details"); // #3764
-			$columns[] = "Selbstzahler Vorabendanreise";
+			//$columns[] = "Selbstzahler Vorabendanreise";
 
-			$worksheet->setColumn(4, 4, 25); // #4481
 			$worksheet->setColumn(5, 5, 10);
-		}
-		else if ($a_type == self::MEMBERLIST_PARTICIPANT) {
-			$columns[] = "Funktion";
-			
-			$worksheet->setColumn(4, 4, 12);
-		}
-		else
-		{
-			$columns[] = $lng->txt("status");
-			$columns[] = $lng->txt("birthday");
-			$columns[] = $lng->txt("gev_mobile");
-			$columns[] = "Vorbedingung erfüllt";
-			$columns[] = "Funktion";
-			//$columns[] = $lng->txt("gev_signature");
-			
-			$worksheet->setColumn(4, 4, 8);
-			$worksheet->setColumn(5, 5, 10);
-			$worksheet->setColumn(6, 6, 14);
-			$worksheet->setColumn(7, 7, 12);
 		}
 
 		$row = $this->buildListMeta( $workbook
@@ -1351,7 +1334,6 @@ class gevCourseUtils {
 				//$txt[] = "";
 				$user_utils = gevUserUtils::getInstance($user_id);
 
-
 				//$txt[] = $lng->txt("name").": ".$user_data["name"];
 				//$txt[] = $lng->txt("phone_office").": ".$user_data["fon"];
 				//$txt[] = $lng->txt("vofue_org_unit_short").": ". $user_data["ounit"];
@@ -1371,35 +1353,20 @@ class gevCourseUtils {
 					$ou_title = "";
 				}
 
-				$worksheet->write($row, 0, $user_utils->getGender(), $format_wrap);
-				$worksheet->writeString($row, 1, $user_utils->getFirstname(), $format_wrap);
-				$worksheet->write($row, 2, $user_utils->getLastname(), $format_wrap);
+
+				$worksheet->writeString($row, 0, $user_utils->getFirstname(), $format_wrap);
+				$worksheet->write($row, 1, $user_utils->getLastname(), $format_wrap);
+				$worksheet->write($row, 2, $user_utils->getEmail(), $format_wrap);
 				$worksheet->write($row, 3, $ou_title, $format_wrap);
-				
+				$worksheet->write($row, 4, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
+
 				if($a_type == self::MEMBERLIST_HOTEL)
 				{
 					// vfstep3.1
-					$worksheet->write($row, 4, $user_utils->getFormattedOvernightDetailsForCourse($this->getCourse()), $format_wrap);
-					$worksheet->write($row, 5, $user_utils->paysPrearrival() ? gevSettings::YES : gevSettings::NO, $format_wrap);
+					$worksheet->write($row, 5, $user_utils->getFormattedOvernightDetailsForCourse($this->getCourse()), $format_wrap);
+					//$worksheet->write($row, 5, $user_utils->paysPrearrival() ? gevSettings::YES : gevSettings::NO, $format_wrap);
 
 					//$txt[] = $lng->txt("vofue_crs_book_overnight_details").": ".$user_data["ov"];
-				}
-				else if ($a_type == self::MEMBERLIST_PARTICIPANT) {
-					$worksheet->write($row, 4, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
-				}
-				else
-				{
-					//$worksheet->write($row, 4, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
-					$worksheet->write($row, 4, $user_utils->getFormattedBirthday(), $format_wrap);
-					$worksheet->write($row, 5, " ".$user_utils->getMobilePhone());
-					$worksheet->write($row, 6, $user_utils->hasFullfilledPreconditionOf($this->crs_id) ? gevSettings::YES : gevSettings::NO);
-					$worksheet->write($row, 7, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
-					
-					//$txt[] = $lng->txt("vofue_udf_join_date").": ".$user_data["jdate"];
-					//$txt[] = $lng->txt("birthday").": ".$user_data["bdate"];
-					//$txt[] = $lng->txt("vofue_crs_function").": ".$user_data["func"];
-					//$txt[] = $lng->txt("vofue_udf_adp_number").": ". $user_data["adp"];
-					//$txt[] = $lng->txt("vofue_crs_book_goals").": ".$user_data["goals"];
 				}
 			}
 		}
