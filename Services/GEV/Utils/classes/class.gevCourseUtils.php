@@ -1604,13 +1604,13 @@ class gevCourseUtils {
 		$status = $this->getBookingStatusOf($a_user_id);
 		switch ($status) {
 			case ilCourseBooking::STATUS_BOOKED:
-				return LABEL_BOOKED; //"gebucht";
+				return self::LABEL_BOOKED; //"gebucht";
 			case ilCourseBooking::STATUS_WAITING:
-				return LABEL_WAITING; //"auf Warteliste";
+				return self::LABEL_WAITING; //"auf Warteliste";
 			case ilCourseBooking::STATUS_CANCELLED_WITH_COSTS:
-				return LABEL_CANCELLED_WITH_COSTS; //"kostenpflichtig storniert";
+				return self::LABEL_CANCELLED_WITH_COSTS; //"kostenpflichtig storniert";
 			case ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS:
-				return LABEL_CANCELLED_WITHOUT_COSTS; //"kostenfrei storniert";
+				return self::LABEL_CANCELLED_WITHOUT_COSTS; //"kostenfrei storniert";
 			default:
 				return "";
 		}
@@ -1719,13 +1719,13 @@ class gevCourseUtils {
 		$status = $this->getParticipationStatusOf($a_user_id);
 		switch ($status) {
 			case ilParticipationStatus::STATUS_NOT_SET:
-				return LABEL_NOT_SET; //"nicht gesetzt";
+				return self::LABEL_NOT_SET; //"nicht gesetzt";
 			case ilParticipationStatus::STATUS_SUCCESSFUL:
-				return LABEL_SUCCESSFUL; //"teilgenommen";
+				return self::LABEL_SUCCESSFUL; //"teilgenommen";
 			case ilParticipationStatus::STATUS_ABSENT_EXCUSED:
-				return LABEL_ABSENT_EXCUSED; //"fehlt entschuldigt";
+				return self::LABEL_ABSENT_EXCUSED; //"fehlt entschuldigt";
 			case ilParticipationStatus::STATUS_ABSENT_NOT_EXCUSED:
-				return LABEL_ABSENT_NOT_EXCUSED; //"fehlt ohne Absage";
+				return self::LABEL_ABSENT_NOT_EXCUSED; //"fehlt ohne Absage";
 			default:
 				return "";
 		}
