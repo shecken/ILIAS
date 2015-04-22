@@ -4,7 +4,8 @@ require_once("Services/GEV/Mailing/classes/class.gevAccAssistanceMail.php");
 require_once('Services/User/classes/class.ilObjUser.php');
 
 class gevPWAssistMail extends gevAccAssistanceMail {
-	private $usr;
+	
+	protected $usr;
 
 	public function __construct(ilObjUser $usr, $pwassist_link) {
 		$this->usr = $usr;

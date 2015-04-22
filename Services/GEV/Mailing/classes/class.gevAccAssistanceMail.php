@@ -19,6 +19,7 @@ abstract class gevAccAssistanceMail extends ilAutoMail {
 	protected $mail_log;
 	protected $global_bcc;
 	protected $a_id;
+	protected $a_usr;
 	protected $ilias_url;
 	protected $other;
 	protected $def;
@@ -34,6 +35,8 @@ abstract class gevAccAssistanceMail extends ilAutoMail {
 
 		$this->a_id = $a_id;
 		$this->other = $other;
+		$this->a_usr = new ilObjUser($a_id);
+
 
 		$this->db = &$ilDB;
 		$this->lng = &$lng;
@@ -85,7 +88,7 @@ abstract class gevAccAssistanceMail extends ilAutoMail {
 
 	public function getRecipientAddresses() {
 		$ret = array(); 
-		$ret[] = ilObjUser::_lookupEmail($this->a_id);
+		$ret[] = $this->a_usr->getEmail();
 		return $ret;
 	}
 
@@ -203,6 +206,7 @@ abstract class gevAccAssistanceMail extends ilAutoMail {
 	// Turn template to mail content. Returns
 	// a dict containing fields "subject", "plain" and "html"
 	protected function getMessageFromTemplate($a_templ_id, $a_user_id, $a_email, $a_name) {
+		
 		require_once("Services/User/classes/class.ilObjUser.php");
 		$this->initTemplateObjects($a_templ_id, ilObjUser::_lookupLanguage($a_user_id));
 
@@ -216,12 +220,12 @@ abstract class gevAccAssistanceMail extends ilAutoMail {
 		}
 
 		$adapter = $this->template_settings->getAdapterClassInstance();
-
+		
 		$placeholders = $adapter->getPlaceholdersLocalized();
 		return $this->template_api->getPopulatedVariantMessages($this->template_variant
 															   , $placeholders
 															   , $mail_data
-															   , "de");
+															   , $this->a_usr->getLanguage());
 	}
 
 	public function send($a_recipients = null, $a_occasion = null) {
