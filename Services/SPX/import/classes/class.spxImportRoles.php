@@ -11,7 +11,7 @@
 
 	//connect to db
 
-		private function connectspxdb() {
+		private static function connectspxdb() {
 			global $ilClientIniFile;
 			$host = $ilClientIniFile->readVariable('seepexdb', 'host');
 			$user = $ilClientIniFile->readVariable('seepexdb', 'user');
@@ -25,24 +25,24 @@
 
 	//performs db queries
 
-		private function queryspxdb($query) {
+		private static function queryspxdb($query) {
 			return mysql_query($query, self::$spxdb);
 		}
 
 	//terminates db connection
 
-		private function closespxdb() {
+		private static function closespxdb() {
 			mysql_close(self::$spxdb);
 		}
 
 
-		private function getRolesHandler() {
+		private static function getRolesHandler() {
 			global $ilDB;
 			$sql = "SELECT * FROM SEEPEXroles WHERE scope = ".$ilDB->quote("global","text");
 			return self::queryspxdb($sql);
 		}
 	
-		private function createRoles($rolehandler) {
+		private static function createRoles($rolehandler) {
 			
 			require_once("./Services/AccessControl/classes/class.ilRbacAdmin.php");
 

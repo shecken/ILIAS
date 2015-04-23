@@ -10,7 +10,7 @@
 		private static $spxdb;
 		private static $UsrDataHandler;
 
-		private function connectspxdb() {
+		private static function connectspxdb() {
 			global $ilClientIniFile;
 			$host = $ilClientIniFile->readVariable('seepexdb', 'host');
 			$user = $ilClientIniFile->readVariable('seepexdb', 'user');
@@ -22,15 +22,15 @@
 			mysql_set_charset('utf8', self::$spxdb);
 		}
 
-		private function queryspxdb($query) {
+		private static function queryspxdb($query) {
 			return mysql_query($query, self::$spxdb);
 		}
 
-		private function closespxdb() {
+		private static function closespxdb() {
 			mysql_close(self::$spxdb);
 		}
 
-		private function getUsrDataHandler() {
+		private static function getUsrDataHandler() {
 			$sql = "SELECT * FROM iliasImport";
 			self::$UsrDataHandler = self::queryspxdb($sql);
 		}

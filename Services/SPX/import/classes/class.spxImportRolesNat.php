@@ -14,7 +14,7 @@
 		private static $spxdb;
 		private static $usrToNATRoleHandler;
 		
-		private function connectspxdb() {
+		private static function connectspxdb() {
 			global $ilClientIniFile;
 			$host = $ilClientIniFile->readVariable('seepexdb', 'host');
 			$user = $ilClientIniFile->readVariable('seepexdb', 'user');
@@ -26,15 +26,15 @@
 			mysql_set_charset('utf8', self::$spxdb);
 		}
 
-		private function queryspxdb($query) {
+		private static function queryspxdb($query) {
 			return mysql_query($query, self::$spxdb);
 		}
 
-		private function closespxdb() {
+		private static function closespxdb() {
 			mysql_close(self::$spxdb);
 		}
 
-		private function getusrToNATRoleHandler () {
+		private static function getusrToNATRoleHandler () {
 			$sql = "SELECT login, roleid FROM iliasImport, SEEPEXroles where roleCtry = roleName";
 			 self::$usrToNATRoleHandler = self::queryspxdb($sql);
 		}

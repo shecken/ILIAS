@@ -27,15 +27,15 @@
 			mysql_set_charset('utf8', self::$spxdb);
 		}
 
-		private function queryspxdb($query) {
+		private static function queryspxdb($query) {
 			return mysql_query($query, self::$spxdb);
 		}
 
-		private function closespxdb() {
+		private static function closespxdb() {
 			mysql_close(self::$spxdb);
 		}
 
-		private function getusrToOURoleHandler() {
+		private static function getusrToOURoleHandler() {
 			$sql="SELECT refid, login , OU, usrtype FROM `SEEPEXorg`, `iliasImport` WHERE OUshort=OU";
 			 self::$usrToOURoleHandler =self::queryspxdb($sql);
 		}
@@ -47,8 +47,8 @@
 			self::connectspxdb();
 			self::getusrToOURoleHandler();
 
-			while($usr=mysql_fetch_assoc(self::$usrToOURoleHandler)) {
-				$usr2=ilObjUser::_lookUpId($usr["login"]);
+			while($usr = mysql_fetch_assoc(self::$usrToOURoleHandler)) {
+				$usr2 = ilObjUser::_lookUpId($usr["login"]);
 
 				if(! $usr2) {
 					continue;	
@@ -57,9 +57,9 @@
 				ob_flush();
         		flush();
 
-				$usr2=array($usr2);
+				$usr2 = array($usr2);
 
-				$OU=new ilObjOrgUnit($usr["refid"]);
+				$OU = new ilObjOrgUnit($usr["refid"]);
 
 				if($usr["usrtype"]=="Manager") {
 

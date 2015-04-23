@@ -1,6 +1,7 @@
 <?php
 	require_once("Services/User/classes/class.ilObjUser.php");
-
+	require_once("Services/GEV/Utils/classes/class.gevUDFUtils.php");
+	require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 /**
 *Using the provided data the language options of users are adjusted.
 * Language is set to german for the members of DE role, to chinese for the members of CN role
@@ -32,15 +33,8 @@
 									,"im_jabber"
 									,"im_voip"
 									,"sel_country");
-
-		private static $kill_in_udf = 	array(
-								'%Eintrittsdatum%'
-								,'%Vertriebsregion%'
-								,'%Standart-Skin%'
-								,'%Aktive Benutzer%'
-								,'%Persönnliches%');
 		
-		private	function generateRandomString($length = 10) {
+		private	static function generateRandomString($length = 10) {
     		$characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
    			$charactersLength = strlen($characters);
     		$randomString = '';
@@ -51,7 +45,7 @@
 		}
 
 
-		private function connectspxdb() {
+		private static function connectspxdb() {
 			global $ilClientIniFile;
 			$host = $ilClientIniFile->readVariable('seepexdb', 'host');
 			$user = $ilClientIniFile->readVariable('seepexdb', 'user');
@@ -63,20 +57,20 @@
 			mysql_set_charset('utf8', self::$spxdb);
 		}
 
-		private function queryspxdb($query) {
+		private static function queryspxdb($query) {
 			return mysql_query($query, self::$spxdb);
 		}
 
-		private function closespxdb() {
+		private static function closespxdb() {
 			mysql_close(self::$spxdb);
 		}
 
-		private function getUsrHandler() {
+		private static function getUsrHandler() {
 			$sql = "SELECT * FROM iliasImport, SEEPEXorg WHERE OUshort=OU";
 			self::$usrHandler = self::queryspxdb($sql);
 		}
 
-		private function deleteUsers() {
+		private static function deleteUsers() {
 			$sql = "SELECT * FROM iliasImport WHERE transfer ='nein'";
 			$rec = self::queryspxdb($sql);
 			while($res = mysql_fetch_assoc($rec)) {
@@ -89,7 +83,7 @@
 			}
 		}
 
-		private function setUsersInactive() {
+		private static function setUsersInactive() {
 			$sql = "SELECT * FROM iliasImport WHERE OU ='Exit'";
 			$rec = self::queryspxdb($sql);
 			while($res = mysql_fetch_assoc($rec)) {
@@ -116,6 +110,7 @@
 			global $ilDB;
 			global $ilClientIniFile;
 
+			$UDFutils = gevUDFUtils::getInstance();
 
 			while($res = mysql_fetch_assoc(self::$usrHandler)) {
 
@@ -144,83 +139,34 @@
 						$usr->setCity($res["city"]);
 					}
 
+					if($ctry = $usr->getSelectedCountry()) {
+						$usr->setCountry($ctry);
+					} elseif($res["country"]) {
+						$usr->setCountry($res["country"]);
+					}
+
 					$usr->setInstitution($res["OUshort"]);
 					$usr->setDepartment($res["OUilias"]);
 					$usr->update();
 
 
-				}
-				else if (!$usrexists&&$res["transfer"]=='ja') {
+
+					$UDFutils->setField($usrexists, USR_UDF_SALES_REGION, $res["salesregion"]);
+					$UDFutils->setField($usrexists, USR_UDF_COMPANY_NAME, $res["comp"]);
+					$UDFutils->setField($usrexists, USR_UDF_ENTRY_DATE, $res["empdate"]);
+				} else if (!$usrexists&&$res["transfer"]=='ja') {
 					echo '<h2>did not find a user: </h2>';  
 					print_r($res);
 					
-/*
-					$res["company"]=$res["OUshort"];
-					$res["department"]=$res["OUilias"];
-
-					$usr = new ilObjUser();
-					$res["passwd_type"] = IL_PASSWD_PLAIN;
-					//$res["passwd"] = self::generateRandomString();
-					$res["passwd"] = $ilClientIniFile->readVariable('generic_usr_data', 'passwd');
-					$res["time_limit_unlimited"] = 1;
-					$res["agree_date"] = ilUtil::now();
-
-
-					if(!$res["gender"]) {
-						$res["gender"] = $ilClientIniFile->readVariable('generic_usr_data', 'gender');
-						$ugm[1] = 0;
-						$flag=1;
-					}
-					if(!$res["email"]) {
-						$res["email"] = $ilClientIniFile->readVariable('generic_usr_data', 'email');
-						$ugm[2] = 0;
-						$flag=1;
-					}
-
-
-					$usr->create();
-
-					$usr->assignData($res);
-
-					$usr->saveAsNew();
-
-					if (strtolower($res["roleCtry"]) == "de") {
-						$lng = "de";
-					} 
-					else if (strtolower($res["roleCtry"]) == "cn") {
-						$lng = "zh";
-					} 
-					else {
-						$lng = "en";
-					}
-
-					$usr->setLanguage($lng);
-					$usr->writePrefs();
-*/
 				}
-				//if ($flag) {
-				//	fputcsv($users_mising_data,$ugm,";");
-				//	$flag=0;
-				//}
 
 			}
 			self::deleteUsers();
 			self::setUsersInactive();
 			self::closespxdb();
-			//fclose($deleted_users);
-			//fclose($users_mising_data);
-
-
 
 			$sql="UPDATE usr_data SET ".implode(" = NULL , ",self::$kill_in_usr_data)." = NULL ";
 			$ilDB->query($sql);
-
-			foreach (self::$kill_in_udf as $tokill) {
-				$sql = "UPDATE udf_text, udf_definition"
-					  ." SET value = NULL WHERE udf_text.field_id = udf_definition.field_id"
-					  ." AND field_name LIKE ".$ilDB->quote($tokill);
-				$ilDB->query($sql);
-			}
 		}
 	}
 ?>

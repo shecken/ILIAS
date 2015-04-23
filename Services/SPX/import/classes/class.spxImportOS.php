@@ -17,7 +17,7 @@
 		const PERMISSION_NAMES = array("view_learning_progress_rec");
 		//conects to db
 
-		private function connectspxdb () {
+		private static function connectspxdb () {
 			global $ilClientIniFile;
 			$host = $ilClientIniFile->readVariable('seepexdb', 'host');
 			$user = $ilClientIniFile->readVariable('seepexdb', 'user');
@@ -31,7 +31,7 @@
 
 		//performs db queries
 
-		private function queryspxdb ($query) {
+		private static function queryspxdb ($query) {
 			$foo=mysql_query($query, self::$spxdb);
 
 			return $foo;
@@ -39,13 +39,13 @@
 
 		//terminates db connection
 
-		private function closespxdb() {
+		private static function closespxdb() {
 			mysql_close(self::$spxdb);
 		}
 
 		//includes child OU under parent OU and extends child by its ref-id
 
-		private function IncludeOUInTree(&$child, $parent) {
+		private static function IncludeOUInTree(&$child, $parent) {
 			require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 
 			if(!$objid = ilObject::_lookupObjIdByImportId($child["OUshort"])) {
@@ -82,7 +82,7 @@
 
 		//searches db for children to some parent
 
-		private function findChildren($parent) {
+		private static function findChildren($parent) {
 			global $ilDB;
 			$sql="SELECT * FROM SEEPEXorg WHERE OUshortParent = ".$ilDB->quote($parent["OUshort"],"text"); 
 			return self::queryspxdb($sql);
@@ -90,7 +90,7 @@
 
 		//writes the ref-id assigned to a created OU into db
 
-		private function putRefidInDB($id,$refid) {
+		private static function putRefidInDB($id,$refid) {
 			global $ilDB;
 			$sql= "UPDATE SEEPEXorg SET refid = ".$ilDB->quote($refid,"text")
 				." WHERE OUshort = ".$ilDB->quote($id,"text");
@@ -99,7 +99,7 @@
 
 
 
-		private function buildOS($parent) {
+		private static function buildOS($parent) {
 			
 			
 
@@ -115,7 +115,7 @@
 
 		}
 
-		private function modifyOperations() {
+		private static function modifyOperations() {
 			global $ilDB;
 			require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 
