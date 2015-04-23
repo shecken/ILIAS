@@ -200,7 +200,10 @@ class gevUserUtils {
 			
 			$crs_booking->getFreePlaces();
 			
-			if (!$crs_utils->canBookCourseForOther($ilUser->getId(), $this->user_id)) {
+			if (!$crs_utils->canBookCourseForOther($ilUser->getId(), $this->user_id)
+				|| in_array($crs_utils->getBookingStatusOf($this->user_id)
+						   , array(ilCourseBooking::STATUS_BOOKED, ilCourseBooking::STATUS_WAITING)
+							)) {
 				continue;
 			}
 			
