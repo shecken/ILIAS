@@ -192,7 +192,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		if ($rec["participation_status"] == "status_successful") {
 			$rec["status"] = $this->success_img;
 		}
-		else if (in_array($rec["participation_status"], array("status_successful", "status_successful"))
+		else if (in_array($rec["participation_status"], array("status_absent_excused", "status_absent_not_excused"))
 			 ||  in_array($rec["booking_status"], array("status_cancelled_with_costs", "status_cancelled_without_costs"))
 			) {
 			$rec["status"] = $this->failed_img;
