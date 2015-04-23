@@ -164,12 +164,17 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 			$this->tpl->parseCurrentBlock();	
 		}
 
-		if($a_set["type"] == "Webinar") {
+		if($a_set["type"] == "Webinar" || $a_set["webinar_link"]) {
 			$this->tpl->setCurrentBlock("webinar");
 			$this->tpl->setVariable("WEBINAR_CAPTION", $this->lng->txt("gev_webinar_details"));
 			$this->tpl->setVariable("WEBINAR_LINK", $a_set["webinar_link"]);
 			$this->tpl->setVariable("WEBINAR_LINK_TITLE", $a_set["title"]);
-			$this->tpl->setVariable("WEBINAR_PASSWORD", $this->lng->txt("password").": ".$a_set["webinar_password"]);			
+			if ($a_set["webinar_password"]) {
+				$this->tpl->setVariable("WEBINAR_PASSWORD", $this->lng->txt("password").": ".$a_set["webinar_password"]);			
+			}
+			else {
+				$this->tpl->setVariable("WEBINAR_PASSWORD", "");			
+			}
 			$this->tpl->parseCurrentBlock();		
 		}
 
