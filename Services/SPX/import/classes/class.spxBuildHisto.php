@@ -42,6 +42,9 @@ class spxBuildHisto {
 			
 			$participants = $crs_utils->getParticipants();
 			foreach ($participants as $participant) {
+				if ($crs_utils->getBookingStatusOf($participant) !== null) {
+					continue;
+				}
 				$crs_members_object->delete($participant);
 				$crs_utils->bookUser($participant);
 				
