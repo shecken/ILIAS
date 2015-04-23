@@ -72,9 +72,14 @@ class gevAccAssistanceMailData extends ilMailData {
 				$val = $this->rec_email;
 				break;
 			case "USR_LOGINS":
-				if($val = $this->other["LOGIN"]) {
-					$val = implode("\n",$val);
+				if(!$a_markup) {
+					$glue = "\n";
+				} else {
+					$glue = "<br>";
 				}
+				if($val = $this->other["LOGIN"]) {
+					$val = implode($glue,$val);
+				} 
 				break;
 			case "PWASSIST_LINK":
 				$val = $this->other["PWASSIST_LINK"];
@@ -87,9 +92,9 @@ class gevAccAssistanceMailData extends ilMailData {
 		}
 		
 		$val = $this->maybeFormatEmptyField($val);
-		if (!$a_markup) 
-			$val = str_replace("<br />", "\n", $val);
-		
+		if (!$a_markup) {
+			$val = strip_tags($val);
+		}
 		return $val;
 	}
 

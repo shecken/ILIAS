@@ -317,14 +317,14 @@ class ilPasswordAssistanceGUI
 			. '?client_id=' . $this->ilias->getClientId()
 			. $delimiter . 'lang=' . $this->lng->getLangKey()
 			. $delimiter . 'key=' . $pwassist_session['pwassist_id'];
-
+		$pwassist_url = "<a href=".$pwassist_url.">".$pwassist_url."</a>";
 		$contact_address = $this->settings->get('admin_email');
 		require_once("Services/GEV/Mailing/classes/AccountAssistance/class.gevPWAssistMail.php");
 
 		$LIASSMAIL = new gevPWAssistMail($userObj, $pwassist_url);
+
 		$LIASSMAIL->send();
-		
-/*
+/*		
 		$mm = new ilMimeMail();
 		$mm->Subject($this->lng->txt('pwassist_mail_subject'));
 		$mm->From($contact_address);
