@@ -146,12 +146,10 @@ class gevMyTrainingsApGUI {
 		{
 			$may_finalize = $may_write;
 		}
+		
+		$ilCtrl->setParameterByClass("gevMyTrainingsApGUI", "crsrefid", $a_crs_ref_id);
 		$ptstatusgui = new ilParticipationStatusTableGUI($a_parent_gui, 'listParticipationStatus', $crs_obj, $may_write, $may_finalize);
 		
-		$form_action = $ptstatusgui->getFormAction();
-		$form_action .= '&crsrefid=' .$a_crs_ref_id;
-		$ptstatusgui->setFormAction($form_action);
-
 		return (
 				$title->render()
 			   .$spacer->render()

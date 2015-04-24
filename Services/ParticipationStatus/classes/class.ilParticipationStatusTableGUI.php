@@ -37,6 +37,10 @@ class ilParticipationStatusTableGUI extends ilTable2GUI
 		
 		parent::__construct($a_parent_obj, $a_parent_cmd);			
 		
+		if ($_GET["crsrefid"]) {
+			$ilCtrl->setParameter($this, "crsrefid", $_GET["crsrefid"]);
+		}
+		
 		$this->status = ilParticipationStatus::getInstance($a_course);		
 		$this->helper = ilParticipationStatusHelper::getInstance($a_course);
 		$this->may_write = (bool)$a_may_write;
