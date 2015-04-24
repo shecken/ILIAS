@@ -19,18 +19,25 @@
 	//spxUsrImport::UsrImport();
 
 	spxImportOS::runOSimport();
+	echo "DONE: runOSImport\n";
 	
 	spxImportRoles::ImportRoles();
+	echo "DONE: ImportRoles\n";
 	
 	spxUpdateUsrData::updateUsrData();
+	echo "DONE: updateUsrData\n";
 
 	spxImportRolesFctn::ImportRolesFctn();
+	echo "DONE: ImportRolesFctn\n";
 	
 	spxImportRolesOU::ImportRolesOU();
+	echo "DONE: ImportRolesOU\n";
 	
 	spxImportRolesNAT::ImportRolesNat();
+	echo "DONE: ImportRolesNat\n";
 	
 	spxBuildHisto::run();
+	echo "DONE: spxBuildHisto\n";
 	
 die('<hr><hr>done.');
 
