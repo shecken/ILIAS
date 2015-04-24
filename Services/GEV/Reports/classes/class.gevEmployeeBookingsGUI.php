@@ -112,18 +112,6 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 
 
 	protected function transformResultRow($rec) {
-		//date
-		if( $rec["begin_date"] && $rec["end_date"] 
-			&& ($rec["begin_date"] != '0000-00-00' && $rec["end_date"] != '0000-00-00' )
-			){
-			$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
-			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
-			$date = '<nobr>' .ilDatePresentation::formatPeriod($start,$end) .'</nobr>';
-			//$date = ilDatePresentation::formatPeriod($start,$end);
-		} else {
-			$date = '-';
-		}
-		$rec["date"] = $date;
 		
 		// od_bd
 		if ( $rec["org_unit_above2"] == "-empty-") {
@@ -139,6 +127,25 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 		}
 		
 		$rec["booking_status"] = $this->lng->txt($rec["booking_status"]);
+	
+
+		return $rec;
+	}
+	
+	protected function transformResultHTML($rec) {
+		//date
+		if( $rec["begin_date"] && $rec["end_date"] 
+			&& ($rec["begin_date"] != '0000-00-00' && $rec["end_date"] != '0000-00-00' )
+			){
+			$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
+			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
+			$date = '<nobr>' .ilDatePresentation::formatPeriod($start,$end) .'</nobr>';
+			//$date = ilDatePresentation::formatPeriod($start,$end);
+		} else {
+			$date = '-';
+		}
+		$rec["date"] = $date;
+		
 		
 		$this->ctrl->setParameter($this, "usr_id", $rec["user_id"]);
 		$this->ctrl->setParameter($this, "crs_id", $rec["crs_id"]);
@@ -157,7 +164,26 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 
 		return $this->replaceEmpty($rec);
 	}
-	
+
+	protected function transformResultXLS($rec) {
+		//date
+		if( $rec["begin_date"] && $rec["end_date"] 
+			&& ($rec["begin_date"] != '0000-00-00' && $rec["end_date"] != '0000-00-00' )
+			){
+			$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
+			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
+			$date = '<nobr>' .ilDatePresentation::formatPeriod($start,$end) .'</nobr>';
+			//$date = ilDatePresentation::formatPeriod($start,$end);
+		} else {
+			$date = '-';
+		}
+		$rec["date"] = $date;
+		
+		$rec["action"] = "";
+
+		return $this->replaceEmpty($rec);
+	}
+
 	protected function confirmCancelBooking() {
 		$this->loadCourseAndTargetUserId();
 		$this->checkIfUserIsAllowedToCancelCourseForOtherUser();
@@ -234,11 +260,6 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 		}
 	}
 	
-	protected function _process_xls_date($val) {
-		$val = str_replace('<nobr>', '', $val);
-		$val = str_replace('</nobr>', '', $val);
-		return $val;
-	}
 }
 
 ?>

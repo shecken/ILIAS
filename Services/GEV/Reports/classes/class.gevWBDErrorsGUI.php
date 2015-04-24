@@ -114,7 +114,22 @@ class gevWBDErrorsGUI extends catBasicReportGUI{
 	}
 
 
+	
 	protected function transformResultRow($rec) {
+
+		return $rec;
+	}
+
+
+	protected function transformResultXLS($rec) {
+
+		$resolve = 'resolve';
+		$rec['resolve'] = $resolve;
+
+		return $rec;
+	}
+
+	protected function transformResultHTML($rec) {
 
 		$link_usr = '<a href="#">'
 			.$rec['usr_id']
@@ -136,7 +151,6 @@ class gevWBDErrorsGUI extends catBasicReportGUI{
 
 		return $rec;
 	}
-	
 	
 }
 

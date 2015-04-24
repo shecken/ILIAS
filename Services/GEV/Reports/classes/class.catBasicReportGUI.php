@@ -226,7 +226,7 @@ class catBasicReportGUI {
 		require_once "Services/Excel/classes/class.ilExcelUtils.php";
 		require_once "Services/Excel/classes/class.ilExcelWriterAdapter.php";
 		
-		$data = $this->getData();
+		$data = $this->getData(true);
 
 		$adapter = new ilExcelWriterAdapter("Report.xls", true); 
 		$workbook = $adapter->getWorkbook();
@@ -265,10 +265,6 @@ class catBasicReportGUI {
 				$k = $col[0];
 				$v = $entry[$k];
 
-				$method_name = '_process_xls_' .$k;
-				if (method_exists($this, $method_name)) {
-					$v = $this->$method_name($v);
-				}
 
 				$worksheet->write($rowcount, $colcount, $v, $format_wrap);
 				$colcount++;
@@ -307,14 +303,17 @@ class catBasicReportGUI {
 		return $this->order->getSQL();
 	}
 	
-	protected function getData(){ 
+	protected function getData($xls = false){
+		/*
+			ATTENTION: will cause problemms if XLS AND HTML is simultaniously created!
+		*/
 		if ($this->data == false){
-			$this->data = $this->fetchData();
+			$this->data = $this->fetchData($xls);
 		}
 		return $this->data;
 	}
 
-	protected function fetchData() {
+	protected function fetchData($xls = false) {
 		if ($this->query === null) {
 			throw new Exception("catBasicReportGUI::fetchData: query not defined.");
 		}
@@ -330,21 +329,36 @@ class catBasicReportGUI {
 		$data = array();
 		
 		while($rec = $this->db->fetchAssoc($res)) {
-			$data[] = $this->transformResultRow($rec);
+			$rec = $this->transformResultRow($rec);
+			if($xls) {
+				$rec = $this->transformResultXLS($rec);
+			}
+			else {
+				$rec = $this->transformResultHTML($rec);
+			}
+			$data[] = $this->replaceEmpty($rec);
 		}
-		
 		return $data;
 	}
 	
 	protected function transformResultRow($a_row) {
 		return $a_row;
 	}
+
+	protected function transformResultHTML($a_row) {
+		return $a_row;
+	}
+
+	protected function transformResultXLS($a_row) {
+		return $a_row;
+	}
 	
+
 	// Helper to replace "-empty-"-entries from historizing tables
 	// by gev_no_entry.
 	protected function replaceEmpty($a_rec) {
 		foreach ($a_rec as $key => $value) {
-			if ($a_rec[$key] == "-empty-" || $a_rec[$key] == "0000-00-00" || $a_rec[$key] === null) {
+			if ($value == "-empty-" || $value == "0000-00-00" || $value === null) {
 				$a_rec[$key] = $this->lng->txt("gev_table_no_entry");
 			}
 		}

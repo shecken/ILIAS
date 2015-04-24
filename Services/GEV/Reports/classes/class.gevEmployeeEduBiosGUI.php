@@ -84,37 +84,16 @@ class gevEmployeeEduBiosGUI extends catBasicReportGUI{
 		return false;
 	}
 	
-	protected function transformResultRow($rec) {
-		// credit_points
-/*		if ($rec["credit_points"] == -1) {
-			$rec["credit_points"] = $this->lng->txt("gev_table_no_entry");
-		}
-*/		
-		//date
-		if( $rec["begin_date"] && $rec["end_date"] 
-			&& ($rec["begin_date"] != '0000-00-00' && $rec["end_date"] != '0000-00-00' )
-			){
-			$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
-			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
-			$date = '<nobr>' .ilDatePresentation::formatPeriod($start,$end) .'</nobr>';
-			//$date = ilDatePresentation::formatPeriod($start,$end);
-		} else {
-			$date = '-';
-		}
-		if ($rec['cert_period'] != "-") {
-			$rec['cert_period'] = ilDatePresentation::formatDate(new ilDate($rec['cert_period'], IL_CAL_DATE));
-		}
-		
+	protected function transformResultHTML($rec) {
 		$rec["edu_bio_link"] = gevUserUtils::getEduBioLinkFor($rec["user_id"]);
-		
-		return $this->replaceEmpty($rec);
+		return $rec;
+	}
+
+	protected function transformResultXLS($rec) {
+		$rec["edu_bio_link"] = "";
+		return $rec;
 	}
 	
-	protected function _process_xls_date($val) {
-		$val = str_replace('<nobr>', '', $val);
-		$val = str_replace('</nobr>', '', $val);
-		return $val;
-	}
 }
 
 ?>

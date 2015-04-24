@@ -153,29 +153,29 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 
 	}
 
+	
 	protected function transformResultRow($rec) {
 		//date
-		if( $rec["begin_date"] && $rec["end_date"] 
+		if ( $rec["begin_date"] && $rec["end_date"] 
 			&& ($rec["begin_date"] != '0000-00-00' && $rec["end_date"] != '0000-00-00' )
 			){
 			$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
 			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
-			$date = '<nobr>' .ilDatePresentation::formatPeriod($start,$end) .'</nobr>';
+			$date = ilDatePresentation::formatPeriod($start,$end);
 			//$date = ilDatePresentation::formatPeriod($start,$end);
-		} else {
+		} 
+		else {
 			$date = '-';
 		}
-		$rec['date'] = $date;
+		
 		$rec["booking_status"] = $this->lng->txt($rec["booking_status"]);
 		$rec["participation_status"] = $this->lng->txt($rec["participation_status"]);
-		
-		return $this->replaceEmpty($rec);
+		return $rec;
 	}
 	
-	protected function _process_xls_date($val) {
-		$val = str_replace('<nobr>', '', $val);
-		$val = str_replace('</nobr>', '', $val);
-		return $val;
+	protected function transformResultHTML($rec) {
+		$rec['date'] = "<nobr>".$rec["date"]."</nobr>";
+		return $rec;
 	}
 }
 

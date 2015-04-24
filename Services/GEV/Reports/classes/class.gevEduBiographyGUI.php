@@ -182,13 +182,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 				;
 	}
 	
-	protected function transformResultRow($rec) {
-		$no_entry = $this->lng->txt("gev_table_no_entry");
-		
-		$rec["fee"] = (($rec["bill_id"] != -1 || $this->target_user_utils->paysFees())&& $rec["fee"] != -1)
-					? $rec["fee"] = gevCourseUtils::formatFee($rec["fee"])." &euro;"
-					: $rec["fee"] == "-empty-";
-					
+	protected function transformResultHTML($rec) {
 		if ($rec["participation_status"] == "status_successful") {
 			$rec["status"] = $this->success_img;
 		}
@@ -235,6 +229,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 			$this->ctrl->setParameter($this, "cert_id", null);
 			$this->ctrl->setParameter($this, "target_user_id", null);
 		}
+		
 		if ($rec["ref_id"] !== null) {
 			$rec["link_open"] = "<a href='goto.php?target=crs_".$rec["ref_id"]."'>";
 			$rec["link_close"] = "</a>";
@@ -244,12 +239,50 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 			$rec["link_close"] = "";
 		}
 		
-		foreach ($rec as $key => $value) {
-			if ($value == '-empty-' || $value == -1) {
-				$rec[$key] = $no_entry;
-				continue;
+		return $rec;
+	}
+
+	protected function replaceEmtpy($a_rec) {
+		foreach ($a_rec as $key => $value) {
+			if ($value == "-empty-" || $value == "0000-00-00" || $value === null || $value == -1) {
+				$a_rec[$key] = $this->lng->txt("gev_table_no_entry");
 			}
 		}
+		return $a_rec;
+	}
+
+	protected function transformResultXLS($rec) {
+		if ($rec["participation_status"] == "status_successful") {
+			$rec["status"] = $this->lng->txt("status_successful");
+		}
+		else if (in_array($rec["participation_status"], array("status_successful", "status_successful"))
+			 ||  in_array($rec["booking_status"], array("status_cancelled_with_costs", "status_cancelled_without_costs"))
+			) {
+			$rec["status"] =  $this->lng->txt("gev_failed");
+		}
+		else {
+			$rec["status"] = $this->lng->txt("gev_in_progress");
+		}
+
+		if ($rec["begin_date"] == "0000-00-00" && $rec["end_date"] == "0000-00-00") {
+			$rec["date"] = $no_entry;
+		}
+		else if ($rec["end_date"] == "0000-00-00") {
+			$dt = new ilDate($rec["begin_date"], IL_CAL_DATE);
+			$rec["date"] = $this->lng->txt("gev_from")." ".ilDatePresentation::formatDate($dt);
+		}
+		else if ($rec["begin_date"] == "0000-00-00") {
+			$dt = new ilDate($rec["end_date"], IL_CAL_DATE);
+			$rec["date"] = $this->lng->txt("gev_until")." ".ilDatePresentation::formatDate($dt);
+		}
+		else {
+			$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
+			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
+			$rec["date"] = ilDatePresentation::formatDate($start)." - ".ilDatePresentation::formatDate($end);
+		}
+		
+		$rec["action"] = "";
+		
 		return $rec;
 	}
 

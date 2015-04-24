@@ -119,9 +119,39 @@ class gevBookingsByVenueGUI extends catBasicReportGUI{
 	protected function userIsPermitted () {
 		return $this->user_utils->isAdmin() || $this->user_utils->hasRoleIn(array("Veranstalter", "CAMPUS-Manager"));
 	}
+		
 
-	
+
 	protected function transformResultRow($rec) {
+
+		$query_temp = "SELECT
+					 		COUNT(DISTINCT usr_id) no_members
+					 	FROM
+					 		hist_usercoursestatus
+					 	WHERE 
+						 	crs_id =" .$rec['crs_id']
+					."	AND
+							hist_historic = 0
+						AND (
+								(	
+								function = 'crs_member' 
+								AND 
+								booking_status = 'status_booked'
+								)
+							OR
+								function = 'crs_tutor'
+						)
+				
+					";
+
+		$res_temp = $this->db->query($query_temp);
+		$rec_temp = $this->db->fetchAssoc($res_temp);
+		$rec['no_members'] = $rec_temp['no_members'];
+		
+		return $rec;
+	}
+
+	protected function transformResultHTML($rec) {
 		$lnk = $this->ctrl->getLinkTarget($this, "deliverMemberList");
 		$lnk .= '&crs_id=' .$rec["crs_id"];
 		$rec['action'] = '<a href="' . $lnk 
@@ -165,33 +195,49 @@ class gevBookingsByVenueGUI extends catBasicReportGUI{
 				.'</nobr><br>';
 		}
 
-		//this is how the xls-list is generated:
-		//$user_ids = $this->getCourse()->getMembersObject()->getMembers();
-		//$tutor_ids = $this->getCourse()->getMembersObject()->getTutors();
+		return $rec = $this->replaceEmpty($rec);
+	}
 
+	protected function transformResultXLS($rec) {
+
+		$rec['action'] = "";
+
+		$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
+		$end = new ilDate($rec["end_date"], IL_CAL_DATE);
+		$date = ilDatePresentation::formatPeriod($start,$end);
+		$rec['date'] = $date;
+
+		// get this from hist_usercoursestatus.overnights instead?
+		// here, trainers are involved.
 		$query_temp = "SELECT
-					 		COUNT(DISTINCT usr_id) no_members
+					 		night,
+					 		COUNT(night) no_accomodations
+
 					 	FROM
-					 		hist_usercoursestatus
+					 		crs_acco
 					 	WHERE 
 						 	crs_id =" .$rec['crs_id']
-					."	AND
-							hist_historic = 0
-						AND (
-								(	
-								function = 'crs_member' 
-								AND 
-								booking_status = 'status_booked'
-								)
-							OR
-								function = 'crs_tutor'
-						)
-				
-					";
+						 	
+						." GROUP BY 
+						 	night
+						   ORDER BY
+						   	night
+
+						 ";
+
 
 		$res_temp = $this->db->query($query_temp);
-		$rec_temp = $this->db->fetchAssoc($res_temp);
-		$rec['no_members'] = $rec_temp['no_members'];
+
+		$rec['no_accomodations'] = '';
+		while($rec_temp = $this->db->fetchAssoc($res_temp)) {
+			$night = new ilDate($rec_temp['night'], IL_CAL_DATE);
+			$night = ilDatePresentation::formatDate($night);
+			$rec['no_accomodations'] .= 
+				$night
+				.' ' 
+				.$rec_temp['no_accomodations']
+				.' ';
+		}
 		
 		return $rec = $this->replaceEmpty($rec);
 	}
@@ -202,25 +248,6 @@ class gevBookingsByVenueGUI extends catBasicReportGUI{
 		$cutils = gevCourseUtils::getInstance($crs_id);
 		$cutils->deliverMemberList(gevCourseUtils::MEMBERLIST_HOTEL);
 		return;
-	}
-
-	protected function _process_xls_date($val) {
-		$val = str_replace('<nobr>', '', $val);
-		$val = str_replace('</nobr>', '', $val);
-		return $val;
-	}
-	
-	protected function _process_xls_no_accomodations($val) {
-		$val = str_replace('<nobr>', '', $val);
-		$val = str_replace('</nobr>', '', $val);
-		$val = str_replace('<b>', '', $val);
-		$val = str_replace('</b>', '', $val);
-		$val = str_replace('<br>', "\n", $val);
-		$val = str_replace(' &nbsp; ', " - ", $val);
-		return $val;
-	}
-	protected function _process_xls_action($val) {
-		return '';
 	}
 
 }

@@ -219,14 +219,7 @@ class gevBillingReportGUI extends catBasicReportGUI {
 		ilUtil::deliverFile($filename, $billnumber.".pdf", "application/pdf");
 	}
 
-	//_process_ will modify record entries
-	// xls means: only for Excel-Export
-	// date is the key in data-array 
-	protected function _process_xls_date($val) {
-		$val = str_replace('<nobr>', '', $val);
-		$val = str_replace('</nobr>', '', $val);
-		return $val;
-	}
+
 }
 
 ?>
