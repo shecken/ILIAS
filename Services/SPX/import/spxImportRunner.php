@@ -30,9 +30,7 @@
 	
 	spxImportRolesNAT::ImportRolesNat();
 	
-
-	
-	//spxBuildHisto::run();
+	spxBuildHisto::run();
 	
 die('<hr><hr>done.');
 
