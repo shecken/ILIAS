@@ -1263,6 +1263,7 @@ class gevCourseUtils {
 			
 		$lng->loadLanguageModule("common");
 		$lng->loadLanguageModule("gev");
+		$lng->loadLanguageModule("matlist");
 
 		if ($a_filename === null) {
 			if(!$a_send)
@@ -1274,6 +1275,8 @@ class gevCourseUtils {
 				$a_filename = "list.xls";
 			}
 		}
+
+
 
 		include_once "./Services/Excel/classes/class.ilExcelUtils.php";
 		include_once "./Services/Excel/classes/class.ilExcelWriterAdapter.php";
@@ -1289,7 +1292,7 @@ class gevCourseUtils {
 						, $lng->txt("lastname")
 						, $lng->txt("email")
 						, $lng->txt("gev_org_unit_short")
-						, $lng->txt("gev_functional_role")
+						, $lng->txt("gev_function")
 						);
 
 		$format_wrap = $workbook->addFormat();
@@ -1358,7 +1361,7 @@ class gevCourseUtils {
 				$worksheet->write($row, 1, $user_utils->getLastname(), $format_wrap);
 				$worksheet->write($row, 2, $user_utils->getEmail(), $format_wrap);
 				$worksheet->write($row, 3, $ou_title, $format_wrap);
-				$worksheet->write($row, 4, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
+				$worksheet->write($row, 4, $lng->txt("il_".$user_utils->getFunctionAtCourse($this->crs_id)), $format_wrap);
 
 				if($a_type == self::MEMBERLIST_HOTEL)
 				{
@@ -1467,29 +1470,27 @@ class gevCourseUtils {
 	}
 	
 	protected function getListMetaData($a_type) {
+		global $lng;
 		$start_date = $this->getStartDate();
 		$end_date = $this->getEndDate();
-		$arr = array("Titel" => $this->getTitle()
-					, "Untertitel" => $this->getSubtitle()
-					, "Nummer der Maßnahme" => $this->getCustomId()
-					, "Datum" => ($start_date !== null && $end_date !== null)
+		$arr = array( $lng->txt("xls_title") => $this->getTitle()
+					, $lng->txt("xls_subtitle") => $this->getSubtitle()
+					, $lng->txt("gev_course_id") => $this->getCustomId()
+					, $lng->txt("gev_training_date")  => ($start_date !== null && $end_date !== null)
 								 ? ilDatePresentation::formatPeriod($this->getStartDate(), $this->getEndDate())
 								 : ""
-					, "Veranstaltungsort" => $this->getVenueTitle()
-					, "Trainer" =>   ($this->getMainTrainer() !== null)
+					, $lng->txt("gev_venue") => $this->getVenueTitle()
+					, $lng->txt("il_crs_tutor")  =>   ($this->getMainTrainer() !== null)
 								   ? $this->getMainTrainerName()." (".$this->getMainTrainerEMail().")"
 								   : ""
-					, "Trainingsbetreuer" => $this->getMainAdminName(). " (".$this->getMainAdminContactInfo().")"
-					, "Fachlich verantwortlich" => $this->getTrainingOfficerContactInfo()
+					, $lng->txt("il_crs_admin") => $this->getMainAdminName(). " (".$this->getMainAdminContactInfo().")"
+					//, "Fachlich verantwortlich" => $this->getTrainingOfficerContactInfo()
 					);
 		
 		if ($a_type === self::MEMBERLIST_HOTEL) {
 			unset($arr["Bildungspunkte"]);
 		}
-		
-		if ($this->isLiveTraining()) {
-			$arr["Bei Rückfragen"] = "Ad-Schulung.de@generali.com";
-		}
+
 		return $arr;
 	}
 	
