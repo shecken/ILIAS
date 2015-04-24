@@ -151,9 +151,9 @@
 
 
 
-					$UDFutils->setField($usrexists, USR_UDF_SALES_REGION, $res["salesregion"]);
-					$UDFutils->setField($usrexists, USR_UDF_COMPANY_NAME, $res["comp"]);
-					$UDFutils->setField($usrexists, USR_UDF_ENTRY_DATE, $res["empdate"]);
+					$UDFutils->setField($usrexists, gevSettings::USR_UDF_SALES_REGION, $res["salesregion"]);
+					$UDFutils->setField($usrexists, gevSettings::USR_UDF_COMPANY_NAME, $res["comp"]);
+					$UDFutils->setField($usrexists, gevSettings::USR_UDF_ENTRY_DATE, $res["empdate"]);
 				} else if (!$usrexists&&$res["transfer"]=='ja') {
 					echo '<h2>did not find a user: </h2>';  
 					print_r($res);
