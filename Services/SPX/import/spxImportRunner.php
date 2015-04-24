@@ -18,7 +18,7 @@
 	
 	//spxUsrImport::UsrImport();
 
-	//spxImportOS::runOSimport();
+	spxImportOS::runOSimport();
 	
 	spxImportRoles::ImportRoles();
 	
