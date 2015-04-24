@@ -1285,14 +1285,12 @@ class gevCourseUtils {
 		$worksheet = $workbook->addWorksheet();
 		$worksheet->setLandscape();
 
-		// what is this good for
-		//$txt = array();
 
 		$columns = array( $lng->txt("firstname")
 						, $lng->txt("lastname")
 						, $lng->txt("email")
 						, $lng->txt("gev_org_unit_short")
-						, $lng->txt("gev_function")
+						, $lng->txt("gev_crs_function")
 						);
 
 		$format_wrap = $workbook->addFormat();
@@ -1307,7 +1305,7 @@ class gevCourseUtils {
 		if($a_type == self::MEMBERLIST_HOTEL)
 		{
 			$columns[] = $lng->txt("gev_crs_book_overnight_details"); // #3764
-			//$columns[] = "Selbstzahler Vorabendanreise";
+
 
 			$worksheet->setColumn(5, 5, 10);
 		}
@@ -1334,12 +1332,8 @@ class gevCourseUtils {
 			foreach($user_ids as $user_id)
 			{
 				$row++;
-				//$txt[] = "";
-				$user_utils = gevUserUtils::getInstance($user_id);
 
-				//$txt[] = $lng->txt("name").": ".$user_data["name"];
-				//$txt[] = $lng->txt("phone_office").": ".$user_data["fon"];
-				//$txt[] = $lng->txt("vofue_org_unit_short").": ". $user_data["ounit"];
+				$user_utils = gevUserUtils::getInstance($user_id);
 
 				$ou_id = $user_utils->getOrgUnitId();
 				if ($ou_id) {
@@ -1365,11 +1359,9 @@ class gevCourseUtils {
 
 				if($a_type == self::MEMBERLIST_HOTEL)
 				{
-					// vfstep3.1
-					$worksheet->write($row, 5, $user_utils->getFormattedOvernightDetailsForCourse($this->getCourse()), $format_wrap);
-					//$worksheet->write($row, 5, $user_utils->paysPrearrival() ? gevSettings::YES : gevSettings::NO, $format_wrap);
 
-					//$txt[] = $lng->txt("vofue_crs_book_overnight_details").": ".$user_data["ov"];
+					$worksheet->write($row, 5, $user_utils->getFormattedOvernightDetailsForCourse($this->getCourse()), $format_wrap);
+
 				}
 			}
 		}
