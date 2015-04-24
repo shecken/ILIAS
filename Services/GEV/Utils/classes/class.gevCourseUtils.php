@@ -2099,7 +2099,7 @@ class gevCourseUtils {
 			$crs_utils = gevCourseUtils::getInstance($value["obj_id"]);
 			$crs_ref = gevObjectUtils::getRefId($crs_utils->getCourse()->getId());
 			
-			$edit_lnk = "ilias.php?cmdClass=ilobjcoursegui&cmd=editInfo&baseClass=ilRepositoryGUI&ref_id=" .$crs_ref;
+			$edit_lnk = "ilias.php?cmdClass=ilobjcoursegui&cmd=view&baseClass=ilRepositoryGUI&ref_id=" .$crs_ref;
 
 			$info[$key]["title"] = '<a href="'
 									.$edit_lnk
