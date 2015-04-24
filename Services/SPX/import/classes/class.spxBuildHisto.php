@@ -27,6 +27,7 @@ class spxBuildHisto {
 			$crs_id = $crs_rec["obj_id"];
 			$crs_utils = gevCourseUtils::getInstance($crs_id);
 			$crs_members_object = $crs_utils->getCourse()->getMembersObject();
+			echo "Building historizing entries for course $crs_id...\n";
 			
 			$admins = $crs_utils->getAdmins();
 			foreach ($admins as $admin) {
