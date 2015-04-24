@@ -41,7 +41,11 @@ class gevDeadlineMailingJob extends ilCronJob {
 		, "invitation"
 		);
 		
-		$this->max_after_course_end = gevParticipationStatusNotSet::DAYS_AFTER_COURSE_END;
+
+		// get all courses where the end date plus the maximum after course end date + 2 days 
+		// (1 day for not knowing when the cron did run, 1 day in case there is some problem)
+		// did not expire.
+		$this->max_after_course_end = 20;
 	}
 	
 	static public function isMailSend($a_crs_id, $a_mail_id) {
@@ -68,11 +72,6 @@ class gevDeadlineMailingJob extends ilCronJob {
 		
 		$cron_result = new ilCronJobResult();
 
-		// get all courses where the end date plus the maximum after course end date + 2 days 
-		// (1 day for not knowing when the cron did run, 1 day in case there is some problem)
-		// did not expire.
-		$safety_margin = 2; // days
-		
 		$query = "SELECT DISTINCT cs.obj_id ".
 				 "  FROM crs_settings cs ".
 				 " LEFT JOIN object_reference oref".
@@ -83,11 +82,13 @@ class gevDeadlineMailingJob extends ilCronJob {
 				 "  JOIN adv_md_values_date end_date ".
 				 "    ON cs.obj_id = end_date.obj_id ".
 				 "   AND end_date.field_id = ".$ilDB->quote($end_date_field_id, "integer").
-				 " WHERE ADDDATE(end_date.value, -1 * ".$this->max_after_course_end." + ".$safety_margin.")".
-				 "       >= ".$ilDB->quote(date("Y-m-d"), "date").
-				 "   AND is_template.value <> 'Ja'".
+				 " WHERE ADDDATE(end_date.value, -1 * ".$this->max_after_course_end.")".
+				 "       <= ".$ilDB->quote(date("Y-m-d"), "date").
+				 "   AND is_template.value <> '".gevSettings::YES."'".
 				 "   AND oref.deleted IS NULL".
 				 "";
+		
+		$ilLog->write($query);
 		
 		$res = $ilDB->query($query);
 		$now = new ilDateTime(time(), IL_CAL_UNIX);
@@ -131,19 +132,21 @@ class gevDeadlineMailingJob extends ilCronJob {
 						$mail->send();
 					}
 					catch (Exception $e) {
-						$ilLog->write("ilDeadlineMailingJob::run: error when sending mail ".$key.".");
+						$ilLog->write("ilDeadlineMailingJob::run: error when sending mail ".$key.": ".$e);
 					}
 				}
 				else {
 					$ilLog->write("ilDeadlineMailingJob:run: No need to send Mail.");
 				}
 				
-				$ilDB->manipulate("INSERT INTO gev_crs_dl_mail_cron (crs_id, title, send_at) VALUES ".
-								  "    ( ".$ilDB->quote($crs_id, "integer").
-								  "    , ".$ilDB->quote($key, "text").
-								  "    , NOW()".
-								  "    )"
-								 );
+				if ($key != "participation_status_not_set" || !$mail->shouldBeSend()) {
+					$ilDB->manipulate("INSERT INTO gev_crs_dl_mail_cron (crs_id, title, send_at) VALUES ".
+									  "    ( ".$ilDB->quote($crs_id, "integer").
+									  "    , ".$ilDB->quote($key, "text").
+									  "    , NOW()".
+									  "    )"
+									 );
+				}
 			}
 			
 			// test to avoid php idiosyncracies
