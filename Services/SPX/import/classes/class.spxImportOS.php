@@ -14,7 +14,7 @@
 		//$spxdb is the database-handler
 		private static $root;
 		private static $spxdb;
-		const PERMISSION_NAMES = array("view_learning_progress_rec");
+		static $PERMISSION_NAMES = array("view_learning_progress_rec");
 		//conects to db
 
 		private static function connectspxdb () {
@@ -122,7 +122,7 @@
 			$sql = "SELECT refid FROM SEEPEXorg WHERE OUshortParent =".$ilDB->quote("SEEPEX","text");
 			$rec = self::queryspxdb($sql);
 			while($res = mysql_fetch_assoc($rec)) {
-				gevOrgUnitUtils::grantPermissionsRecursivelyFor($res["refid"], "superior", self::PERMISSION_NAMES);
+				gevOrgUnitUtils::grantPermissionsRecursivelyFor($res["refid"], "superior", self::$PERMISSION_NAMES);
 				echo "<br> adding permissions recursively at ".$res["refid"];
 			}
 		}
