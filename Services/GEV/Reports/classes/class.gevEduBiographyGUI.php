@@ -76,13 +76,14 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 						->select("usrcrs.certificate")
 						->select("usrcrs.booking_status")
 						->select("oref.ref_id")
+						->select("crs.is_online")
 						->from("hist_usercoursestatus usrcrs")
 						->join("hist_user usr")
 							->on("usr.user_id = usrcrs.usr_id AND usr.hist_historic = 0")
 						->join("hist_course crs")
 							->on("crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0")
 						->left_join("object_reference oref")
-							->on("crs.crs_id = oref.obj_id")
+							->on("crs.crs_id = oref.obj_id AND oref.deleted IS NULL")
 						->compile();
 		
 		$this->ctrl->setParameter($this, "target_user_id", $this->target_user_id);
@@ -103,7 +104,6 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 															   )
 														, false, "text")
 										  )
-						->static_condition("(crs.crs_id < 0 OR oref.deleted IS NULL)")
 						->action($this->ctrl->getLinkTarget($this, "view"))
 						->compile();
 	}
@@ -230,7 +230,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 			$this->ctrl->setParameter($this, "target_user_id", null);
 		}
 		
-		if ($rec["ref_id"] !== null) {
+		if ($rec["ref_id"] != null && $rec["is_online"] == 1) {
 			$rec["link_open"] = "<a href='goto.php?target=crs_".$rec["ref_id"]."'>";
 			$rec["link_close"] = "</a>";
 		}
