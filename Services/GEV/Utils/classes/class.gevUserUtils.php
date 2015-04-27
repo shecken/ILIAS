@@ -218,7 +218,7 @@ class gevUserUtils {
 
 
 
-	public function filter_for_online_courses($ar){
+	protected function remove_complete_or_offline_courses($ar){
 		/*
 		check, if course exists and is online;
 		*/
@@ -228,9 +228,11 @@ class gevUserUtils {
 		foreach ($ar as $crsid) {
 			if(gevObjectUtils::checkObjExistence($crsid)){
 				$crs_utils = gevCourseUtils::getInstance($crsid);
-				if ($crs_utils->getCourse()->isActivated()){
+				if (   $crs_utils->getCourse()->isActivated()
+					&& $crs_utils->getParticipationStatusOf($this->user_id) == ilParticipationStatus::STATUS_NOT_SET)
+				{
 					$ret[] = $crsid;
-				} 
+				}
 			}
 		}
 		return $ret;
@@ -260,7 +262,7 @@ class gevUserUtils {
 		
 		
 		$booked = $this->getBookedCourses();
-		$booked = $this->filter_for_online_courses($booked);
+		$booked = $this->remove_complete_or_offline_courses($booked);
 
 		$booked_amd = gevAMDUtils::getInstance()->getTable($booked, $crs_amd);
 		foreach ($booked_amd as $key => $value) {
@@ -283,7 +285,7 @@ class gevUserUtils {
 
 
 		$waiting = $this->getWaitingCourses();
-		$waiting = $this->filter_for_online_courses($waiting);
+		$waiting = $this->remove_complete_or_offline_courses($waiting);
 
 		$waiting_amd = gevAMDUtils::getInstance()->getTable($waiting, $crs_amd);
 		foreach ($waiting_amd as $key => $value) {
