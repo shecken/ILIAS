@@ -168,6 +168,7 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 			$date = '-';
 		}
 		
+		$rec["date"] = $date;
 		$rec["booking_status"] = $this->lng->txt($rec["booking_status"]);
 		$rec["participation_status"] = $this->lng->txt($rec["participation_status"]);
 		return $rec;
