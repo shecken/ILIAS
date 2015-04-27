@@ -234,9 +234,9 @@ class ilUserCourseStatusHistorizingHelper
 
 	public static function hasCertificate($user, $course)
 	{
-		require_once './Modules/Course/classes/class.ilCourseCertificateAdapter.php';
-		return ilCourseCertificateAdapter::_hasUserCertificate($user, $course)
-		    && gevCourseUtils::getInstance($course)->getParticipationStatusLabelOf($user) == "status_successful";
+		require_once("Services/Certificate/classes/class.ilCertificate.php");
+		return ilCertificate::isActive() && ilCertificate::areObjectsActive(array($course))
+		    && (gevCourseUtils::getInstance($course)->getParticipationStatusLabelOf($user) == "status_successful");
 	}
 
 	public static function getCertificateOf($user, $course)
