@@ -52,7 +52,7 @@ class spxBuildHisto {
 				$params = array
 					( "obj_id" => $crs_id
 					, "usr_id" => $participant
-					, "status" => ilLPStatus::_lookupStatus($crs_id, $participant)
+					, "status" => ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM
 					, "evil_hack" => true
 					);
 				
