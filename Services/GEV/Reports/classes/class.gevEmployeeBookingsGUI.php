@@ -34,7 +34,6 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 		$this->table = catReportTable::create()
 						->column("lastname", "lastname")
 						->column("firstname", "firstname")
-						->column("od_bd", "gev_od_bd")
 						->column("org_unit", "gev_org_unit_short")
 						->column("custom_id", "gev_training_id")
 						->column("title", "title")
@@ -45,7 +44,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 						->column("booking_status", "gev_booking_status")
 						->column("action", $this->action_img, true, "", true)
 						->template("tpl.gev_employee_bookings_row.html", "Services/GEV/Reports")
-						->group_by(array("lastname", "firstname", "od_bd", "org_unit")
+						->group_by(array("lastname", "firstname", "org_unit")
 								  , "tpl.gev_employee_bookings_group_header.html"
 								  , "Services/GEV/Reports"
 								  )
@@ -63,8 +62,6 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 						->select("crs.end_date")
 						->select("crs.venue")
 						->select("crs.provider")
-						->select("usr.org_unit_above1")
-						->select("usr.org_unit_above2")
 						->select("usr.org_unit")
 						->select("usrcrs.booking_status")
 						->select_raw("(crs.begin_date - INTERVAL amd.value DAY) "
@@ -112,22 +109,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 
 
 	protected function transformResultRow($rec) {
-		
-		// od_bd
-		if ( $rec["org_unit_above2"] == "-empty-") {
-			if ($rec["org_unit_above1"] == "-empty-") {
-				$rec["od_bd"] = $this->lng->txt("gev_table_no_entry");
-			}
-			else {
-				$rec["od_bd"] = $rec["org_unit_above1"];
-			}
-		}
-		else {
-			$rec["od_bd"] = $rec["org_unit_above1"]."/".$rec["org_unit_above2"];
-		}
-		
 		$rec["booking_status"] = $this->lng->txt($rec["booking_status"]);
-	
 
 		return $rec;
 	}
@@ -172,7 +154,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI{
 			){
 			$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
 			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
-			$date = '<nobr>' .ilDatePresentation::formatPeriod($start,$end) .'</nobr>';
+			$date = ilDatePresentation::formatPeriod($start,$end);
 			//$date = ilDatePresentation::formatPeriod($start,$end);
 		} else {
 			$date = '-';
