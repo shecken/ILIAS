@@ -55,6 +55,7 @@ class spxBuildHisto {
 					, "status" => ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM
 					, "evil_hack" => true
 					);
+				$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
 				
 				// Fake Tracking event to create participation status
 				$params = array
@@ -63,7 +64,6 @@ class spxBuildHisto {
 					, "status" => ilLPStatus::_lookupStatus($crs_id, $participant)
 					, "evil_hack" => true
 					);
-				
 				$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
 			}
 		}
