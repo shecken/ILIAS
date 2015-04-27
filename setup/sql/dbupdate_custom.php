@@ -2974,3 +2974,420 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow(3880, $role, $permissions);
 gevCourseUtils::grantPermissionsForAllCoursesBelow(3986, $role, $permissions);
 
 ?>
+
+<#96>
+<?php
+
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::maybeInitClientIni();
+ilCustomInstaller::maybeInitPluginAdmin();
+ilCustomInstaller::maybeInitObjDefinition();
+ilCustomInstaller::maybeInitAppEventHandler();
+ilCustomInstaller::maybeInitTree();
+ilCustomInstaller::maybeInitRBAC();
+ilCustomInstaller::maybeInitObjDataCache();
+ilCustomInstaller::maybeInitUserToRoot();
+ilCustomInstaller::maybeInitSettings();
+
+require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
+$role_utils = gevRoleUtils::getInstance();
+
+$role = "CAMPUS-Manager";
+
+$obj_type = "file";
+$perms =   array( "visible"
+				, "read"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "qpl";
+$perms =   array( "read"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "spl";
+$perms =   array( "visible"
+				, "read"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "grp";
+$perms =   array( "visible"
+				, "join"
+				, "leave"
+				, "read"
+				, "edit_learning_progress"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				, "create_catr"
+				, "create_crsr"
+				, "create_fold"
+				, "create_itgr"
+				, "create_grp"
+				, "create_file"
+				, "create_webr"
+				, "create_sahs"
+				, "create_exc"
+				, "create_tst"
+				, "create_svy"
+				, "create_qpl"
+				, "create_spl"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+$obj_type = "catr";
+$perms =   array( "visible"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+$obj_type = "cat";
+$perms =   array( "visible"
+				, "read"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				, "create_cat"
+				, "create_catr"
+				, "create_crs"
+				, "create_crsr"
+				, "create_itgr"
+				, "create_grp"
+				, "create_file"
+				, "create_webr"
+				, "create_sahs"
+				, "create_exc"
+				, "create_tst"
+				, "create_svy"
+				, "create_qpl"
+				, "create_spl"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+$obj_type = "itgr";
+$perms =   array( "visible"
+				, "read"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "fold";
+$perms =   array( "visible"
+				, "read"
+				, "edit_learning_progress"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				, "create_fold"
+				, "create_itgr"
+				, "create_grp"
+				, "create_file"
+				, "create_webr"
+				, "create_sahs"
+				, "create_exc"
+				, "create_tst"
+				, "create_svy"
+				, "create_qpl"
+				, "create_spl"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "sahs";
+$perms =   array( "visible"
+				, "read"
+				, "edit_learning_progress"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "tst";
+$perms =   array( "visible"
+				, "read"
+				, "edit_learning_progress"
+				, "copy"
+				, "write"
+				, "tst_statistics"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "crsr";
+$perms =   array( "visible"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "svy";
+$perms =   array( "visible"
+				, "read"
+				, "invite"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "webr";
+$perms =   array( "visible"
+				, "read"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "exc";
+$perms =   array( "visible"
+				, "read"
+				, "edit_learning_progress"
+				, "copy"
+				, "write"
+				, "delete"
+				, "edit_permission"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+
+
+
+
+$role = "CAMPUS-View";
+
+$obj_type = "crs";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+$obj_type = "file";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "grp";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "catr";
+$perms =   array( "visible"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "cat";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "itgr";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "fold";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "sahs";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "tst";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "crsr";
+$perms =   array( "visible"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "svy";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "webr";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+$obj_type = "exc";
+$perms =   array( "visible"
+				, "read"
+				);
+
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3763, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3759, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3880, $role, $perms);
+$role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
+
+
+?>
