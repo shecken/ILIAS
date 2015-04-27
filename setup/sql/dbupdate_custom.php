@@ -2893,3 +2893,84 @@ $ilDB->manipulate("UPDATE hist_usercoursestatus "
 				 ." WHERE function IN ('Trainingsbetreuer', 'Administrator', 'Training administrator')");
 
 ?>
+
+<#95>
+<?php
+
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::maybeInitClientIni();
+ilCustomInstaller::maybeInitPluginAdmin();
+ilCustomInstaller::maybeInitObjDefinition();
+ilCustomInstaller::maybeInitAppEventHandler();
+ilCustomInstaller::maybeInitTree();
+ilCustomInstaller::maybeInitRBAC();
+ilCustomInstaller::maybeInitObjDataCache();
+ilCustomInstaller::maybeInitUserToRoot();
+ilCustomInstaller::maybeInitSettings();
+
+require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
+
+$role = "CAMPUS-Manager";
+$permissions = array( "visible"
+					, "read"
+					, "view_bookings"
+					, "book_users"
+					, "cancel_bookings"
+					, "view_participation_status"
+					, "set_participation_status"
+					, "review_participation_status"
+					, "view_own_accomodations"
+					, "set_own_accomodations"
+					, "view_others_accomodations"
+					, "set_others_accomodations"
+					, "edit_learning_progress"
+					, "copy"
+					, "write"
+					, "delete"
+					, "edit_permission"
+					, "create_bibl"
+					, "create_blog"
+					, "create_book"
+					, "create_cat"
+					, "create_catr"
+					, "create_chtr"
+					, "create_cld"
+					, "create_crs"
+					, "create_crsr"
+					, "create_dbk"
+					, "create_dcl"
+					, "create_exc"
+					, "create_feed"
+					, "create_file"
+					, "create_fold"
+					, "create_frm"
+					, "create_glo"
+					, "create_grp"
+					, "create_htlm"
+					, "create_icla"
+					, "create_icrs"
+					, "create_itgr"
+					, "create_lm"
+					, "create_mcst"
+					, "create_mep"
+					, "create_poll"
+					, "create_prtt"
+					, "create_qpl"
+					, "create_rcrs"
+					, "create_role"
+					, "create_rolt"
+					, "create_sahs"
+					, "create_sess"
+					, "create_spl"
+					, "create_svy"
+					, "create_tst"
+					, "create_webr"
+					, "create_wiki"
+					);
+
+gevCourseUtils::grantPermissionsForAllCoursesBelow(3763, $role, $permissions);
+gevCourseUtils::grantPermissionsForAllCoursesBelow(3759, $role, $permissions);
+gevCourseUtils::grantPermissionsForAllCoursesBelow(3880, $role, $permissions);
+gevCourseUtils::grantPermissionsForAllCoursesBelow(3986, $role, $permissions);
+
+?>
