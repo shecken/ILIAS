@@ -215,19 +215,15 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		$rec["action"] = "";
 		if ($rec["bill_id"] != -1 && $rec["bill_id"] != "-empty-") {
 			$this->ctrl->setParameter($this, "bill_id", $rec["bill_id"]);
-			$this->ctrl->setParameter($this, "target_user_id", $this->target_user_id);
 			$rec["action"] = "<a href='".$this->ctrl->getLinkTarget($this, "getBill")."'>"
 						   . $this->get_bill_img."</a>";
 			$this->ctrl->setParameter($this,  "bill_id", null);
-			$this->ctrl->setParameter($this,  "target_user_id", null);
 		}
 		if ($rec["certificate"] != -1 && $rec["certificate"] != 0) {
 			$this->ctrl->setParameter($this, "cert_id", $rec["certificate"]);
-			$this->ctrl->setParameter($this, "target_user_id", $this->target_user_id);
 			$rec["action"] .= "<a href='".$this->ctrl->getLinkTarget($this, "getCertificate")."'>"
 						   . $this->get_cert_img."</a>";
 			$this->ctrl->setParameter($this, "cert_id", null);
-			$this->ctrl->setParameter($this, "target_user_id", null);
 		}
 		
 		if ($rec["ref_id"] != null && $rec["is_online"] == 1) {
