@@ -28,7 +28,7 @@ class spxBuildHisto {
 			$crs_utils = gevCourseUtils::getInstance($crs_id);
 			$crs_members_object = $crs_utils->getCourse()->getMembersObject();
 			echo "Building historizing entries for course $crs_id...\n";
-			
+			/*
 			$admins = $crs_utils->getAdmins();
 			foreach ($admins as $admin) {
 				$crs_members_object->delete($admin);
@@ -39,21 +39,29 @@ class spxBuildHisto {
 			foreach ($trainers as $trainer) {
 				$crs_members_object->delete($trainer);
 				$crs_members_object->add($trainer, IL_CRS_TUTOR);
-			}
+			}*/
 			
 			$participants = $crs_utils->getParticipants();
 			foreach ($participants as $participant) {
-				if ($crs_utils->getBookingStatusOf($participant) !== null) {
-					continue;
+				if ($crs_utils->getBookingStatusOf($participant) === null) {
+					$crs_members_object->delete($participant);
+					$crs_utils->bookUser($participant);
 				}
-				$crs_members_object->delete($participant);
-				$crs_utils->bookUser($participant);
+
+				// Fake Tracking event to create participation status
+				$params = array
+					( "obj_id" => $crs_id
+					, "usr_id" => $participant
+					, "status" => ilLPStatus::_lookupStatus($crs_id, $participant)
+					, "evil_hack" => true
+					);
 				
 				// Fake Tracking event to create participation status
 				$params = array
-					( "obj_id" => $obj_id
+					( "obj_id" => $crs_id
 					, "usr_id" => $participant
-					, "status" => ilLPStatus::_lookupStatus($crs_id, $participants)
+					, "status" => ilLPStatus::_lookupStatus($crs_id, $participant)
+					, "evil_hack" => true
 					);
 				
 				$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);

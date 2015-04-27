@@ -25,6 +25,13 @@ class ilCourseAppEventListener
 
 		if($a_component == "Services/Tracking" && $a_event == "updateStatus")
 		{
+			// spx-patch begin
+			// super evil hack
+			if (array_key_exists("evil_hack", $a_parameter)) {
+				return;
+			}
+			// spx-patch end
+
 			// #13905
 			include_once("Services/Tracking/classes/class.ilObjUserTracking.php");
 			if(!ilObjUserTracking::_enabledLearningProgress())

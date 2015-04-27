@@ -18,7 +18,7 @@
 	
 	//spxUsrImport::UsrImport();
 
-	spxImportOS::runOSimport();
+	/*spxImportOS::runOSimport();
 	echo "DONE: runOSImport\n";
 	
 	spxImportRoles::ImportRoles();
@@ -34,7 +34,7 @@
 	echo "DONE: ImportRolesOU\n";
 	
 	spxImportRolesNAT::ImportRolesNat();
-	echo "DONE: ImportRolesNat\n";
+	echo "DONE: ImportRolesNat\n";*/
 	
 	spxBuildHisto::run();
 	echo "DONE: spxBuildHisto\n";
