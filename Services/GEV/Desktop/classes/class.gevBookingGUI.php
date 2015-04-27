@@ -371,7 +371,7 @@ class gevBookingGUI {
 			$this->failAtFinalize("Someone managed to get here but not being able to book the course.");
 		}
 		if ($accomodations) {
-			$acco = ilSetAccomodationsGUI::formInputToAccomodationsArray($a_accomodations);	
+			$acco = ilSetAccomodationsGUI::formInputToAccomodationsArray($accomodations);	
 			$acco_inst = ilAccomodations::getInstance($this->crs_utils->getCourse());
 			$acco_inst->setAccomodationsOfUser($this->user_id, $acco);
 		}
