@@ -201,6 +201,57 @@ class gevRoleUtils {
 		}
 		return false;
 	}
+
+	public function grantPermissionsForAllObjectsBelow($a_object_type ,$a_ref_id, $a_role_name, $a_permissions) {
+		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
+
+		$this->getRbacReview();
+		$this->getRbacAdmin();
+
+		$children = $this->getAllObjectsBelow($a_object_type, array($a_ref_id));
+		foreach($children as $child) {
+			$this->grantPermissionsFor($child["ref_id"], $a_role_name, $a_permissions);
+		}
+	}
+
+	public function getAllObjectsBelow($a_object_type, $a_ref_ids) {
+		global $ilDB;
+		
+		$res = $ilDB->query(
+			 "SELECT DISTINCT od.obj_id obj_id, c.child ref_id "
+			." FROM tree p"
+			." RIGHT JOIN tree c ON c.lft > p.lft AND c.rgt < p.rgt AND c.tree = p.tree"
+			." LEFT JOIN object_reference oref ON oref.ref_id = c.child"
+			." LEFT JOIN object_data od ON od.obj_id = oref.obj_id"
+			." WHERE ".$ilDB->in("p.child", $a_ref_ids, false, "integer")
+			."   AND od.type = ".$ilDB->quote($a_object_type,"text")
+			);
+			
+		$ret = array();
+		while($rec = $ilDB->fetchAssoc($res)) {
+			$ret[] = $rec;
+		}
+		return $ret;
+	}
+
+	public function grantPermissionsFor($a_ref_id, $a_role_name, $a_permissions) {
+		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
+
+
+		$role = $this->getRoleIdByName($a_role_name);
+		if (!$role) {
+			throw new Exception("gevOrgUnitUtils::grantPermissionFor: unknown role name '".$a_role_name);
+		}
+
+
+		$cur_ops = $this->rbac_review->getRoleOperationsOnObject($role, $a_ref_id);
+		$grant_ops = ilRbacReview::_getOperationIdsByName($a_permissions);
+
+		$new_ops = array_unique(array_merge($grant_ops,$cur_ops));
+		$this->rbac_admin->revokePermission($a_ref_id, $role);
+		$this->rbac_admin->grantPermission($role, $new_ops, $a_ref_id);
+	}
+
 }
 
 ?>
