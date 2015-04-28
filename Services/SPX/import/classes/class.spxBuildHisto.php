@@ -72,6 +72,20 @@ class spxBuildHisto {
 				$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
 			}
 		}
+		
+		// reinsert certificates...
+		$cert_res = $ilDB->query("SELECT DISTINCT usr_id, crs_id, certificate"
+								."  FROM hist_usercoursestatus"
+								." WHERE certificate != -1 AND certificate != 0"
+								);
+		while($rec = $ilDB->fetchAssoc($cert_res)) {
+			$ilDB->manipulate("UPDATE hist_usercoursestatus"
+							 ."   SET certificate = ".$ilDB->quote($rec["certificate"], "integer")
+							 ." WHERE hist_historic = 0 "
+							 ."   AND usr_id = ".$ilDB->quote($rec["usr_id"], "integer")
+							 ."   AND crs_id = ".$ilDB->quote($rec["crs_id"], "integer")
+							 );
+		}
 	}
 }
 
