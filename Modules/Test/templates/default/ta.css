@@ -93,7 +93,8 @@
 }
 
 .ilTstWorkingFormInfo_ProcessTimeLeft {
-	font-size: 200%;
+	color: #ea281e;
+	font-size: 140%;
 	font-weight: bold;
 }
 
