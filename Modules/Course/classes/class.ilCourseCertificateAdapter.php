@@ -118,7 +118,13 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		$user_data = ilObjUser::_lookupFields($user_id);
 		
 		include_once './Modules/Course/classes/class.ilCourseParticipants.php';
-		$completion_date = ilCourseParticipants::getDateTimeOfPassed($this->object->getId(), $user_id);		
+		$completion_date = ilCourseParticipants::getDateTimeOfPassed($this->object->getId(), $user_id);
+		
+		// spx-patch start
+		if (!$completion_date) {
+			$completion_date = date("Y-m-d H:i:s", time());
+		}
+		// spx-patch end
 		
 		$vars = $this->getBaseVariablesForPresentation($user_data, null, $completion_date);		
 		$vars["COURSE_TITLE"] = ilUtil::prepareFormOutput($this->object->getTitle());
