@@ -52,6 +52,15 @@ class spxBuildHisto {
 					$crs_members_object->delete($participant);
 					$crs_utils->bookUser($participant);
 				}
+
+				// Fake Tracking event to create participation status
+				$params = array
+					( "obj_id" => $crs_id
+					, "usr_id" => $participant
+					, "status" => ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM
+					, "evil_hack" => true
+					);
+				$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
 				
 				// Fake Tracking event to create participation status
 				$params = array
