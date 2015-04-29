@@ -57,7 +57,7 @@ class spxBuildHisto {
 									);
 			
 			while ($hist_rec = $ilDB->fetchAssoc($hist_res)) {
-				if (!$crs_util->getBookings()->bookCourse($hist_rec["usr_id"])) {
+				if (!$crs_utils->getBookings()->bookCourse($hist_rec["usr_id"])) {
 					echo "    Could not book user ".$hist_rec["usr_id"]."\n";
 				}
 				else {
@@ -71,6 +71,8 @@ class spxBuildHisto {
 
 			$participants = $crs_utils->getParticipants();
 			foreach ($participants as $participant) {
+				echo "    Fake tracking events for $participant";
+				
 				// Fake Tracking event to create participation status
 				$params = array
 					( "obj_id" => $crs_id
