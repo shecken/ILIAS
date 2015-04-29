@@ -15,9 +15,7 @@ class spxBuildHisto {
 		global $ilDB;
 		global $ilAppEventHandler;
 		
-		// purge existing entries
-		$ilDB->manipulate("DELETE FROM hist_usercoursestatus");
-		$ilDB->manipulate("DELETE FROM crs_pstatus_usr");
+		echo "<pre>";
 		
 		$course_res = $ilDB->query("SELECT od.obj_id "
 								  ."  FROM object_data od"
@@ -33,26 +31,46 @@ class spxBuildHisto {
 			$crs_members_object = $crs_utils->getCourse()->getMembersObject();
 			echo "Building historizing entries for course $crs_id...\n";
 			
-			/*
-			$admins = $crs_utils->getAdmins();
-			foreach ($admins as $admin) {
-				$crs_members_object->delete($admin);
-				$crs_members_object->add($admin, IL_CRS_ADMIN);
-			}
-			
-			$trainers = $crs_utils->getTrainers();
-			foreach ($trainers as $trainer) {
-				$crs_members_object->delete($trainer);
-				$crs_members_object->add($trainer, IL_CRS_TUTOR);
-			}*/
-			
 			$participants = $crs_utils->getParticipants();
 			foreach ($participants as $participant) {
 				if ($crs_utils->getBookingStatusOf($participant) === null) {
 					$crs_members_object->delete($participant);
-					$crs_utils->bookUser($participant);
+					if (!$crs_utils->getBookings()->bookCourse($participant)) {
+						echo "    Could not book user $participant\n";
+					}
+					else {
+						echo "    Booked user $participant\n";
+					}
 				}
+				else {
+					echo "   $participant already booked.\n";
+				}
+			}
 
+			// Book users where membership was lost somehow...
+			$hist_res = $ilDB->query("SELECT DISTINCT usr_id"
+									."  FROM hist_usercoursestatus"
+									." WHERE hist_historic = 0"
+									."   AND crs_id = ".$ilDB->quote($crs_id, "integer")
+									."   AND booking_status = '-empty-'"
+									."   AND function NOT IN ('crs_admin', 'crs_tutor')"
+									);
+			
+			while ($hist_rec = $ilDB->fetchAssoc($hist_res)) {
+				if (!$crs_util->getBookings()->bookCourse($hist_rec["usr_id"])) {
+					echo "    Could not book user ".$hist_rec["usr_id"]."\n";
+				}
+				else {
+					echo "    Booked user ".$hist_rec["usr_id"]."\n";
+				}
+			}
+
+			// purge existing history and participation status information
+			$ilDB->manipulate("DELETE FROM hist_usercoursestatus WHERE crs_id = ".$ilDB->quote($crs_id, "integer"));
+			$ilDB->manipulate("DELETE FROM crs_pstatus_usr WHERE crs_id = ".$ilDB->quote($crs_id, "integer"));
+
+			$participants = $crs_utils->getParticipants();
+			foreach ($participants as $participant) {
 				// Fake Tracking event to create participation status
 				$params = array
 					( "obj_id" => $crs_id
@@ -86,6 +104,8 @@ class spxBuildHisto {
 							 ."   AND crs_id = ".$ilDB->quote($rec["crs_id"], "integer")
 							 );
 		}
+		
+		echo "</pre>";
 	}
 }
 
