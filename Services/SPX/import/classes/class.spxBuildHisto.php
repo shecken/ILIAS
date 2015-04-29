@@ -71,7 +71,7 @@ class spxBuildHisto {
 			$ilDB->manipulate("DELETE FROM crs_pstatus_usr WHERE crs_id = ".$ilDB->quote($crs_id, "integer"));
 
 			$participants = $crs_utils->getParticipants();
-			$ps_status = $crs->utils->getParticipations();
+			$ps_status = $crs_utils->getParticipations();
 			$ps_helper = ilParticipationStatusHelper::getInstance($crs_utils->getCourse());
 			$is_continuous = $ps_status->getMode() == ilParticipationStatus::MODE_CONTINUOUS;
 			echo $is_continuous ? "   Course is in continuous mode.\n" : "    Course is in non continuous mode.\n";
