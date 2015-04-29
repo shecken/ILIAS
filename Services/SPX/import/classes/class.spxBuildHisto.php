@@ -5,6 +5,7 @@
  */
 require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 require_once("Services/Tracking/classes/class.ilLPStatus.php");
+require_once("Services/ParticipationStatus/classes/class.ilParticipationStatusHelper.php");
 
 class spxBuildHisto {
 	static public function run() {
@@ -70,26 +71,48 @@ class spxBuildHisto {
 			$ilDB->manipulate("DELETE FROM crs_pstatus_usr WHERE crs_id = ".$ilDB->quote($crs_id, "integer"));
 
 			$participants = $crs_utils->getParticipants();
+			$ps_status = $crs->utils->getParticipations();
+			$ps_helper = ilParticipationStatusHelper::getInstance($crs_utils->getCourse());
+			$is_continuous = $ps_status->getMode() == ilParticipationStatus::MODE_CONTINUOUS;
+			echo $is_continuous ? "   Course is in continuous mode.\n" : "    Course is in non continuous mode.\n";
+			$set_status = $ps_helper->isStartForParticipationStatusSettingReached() && ($ps_status->getProcessState() == STATE_SET);
+			echo (!$is_continuous && $set_status) ? "    Need to set ps status.\n" : "    No need to set ps status.\n";
 			foreach ($participants as $participant) {
-				echo "    Fake tracking events for $participant\n";
+				$status = ilLPStatus::_lookupStatus($crs_id, $participant);
 				
-				// Fake Tracking event to create participation status
-				$params = array
-					( "obj_id" => $crs_id
-					, "usr_id" => $participant
-					, "status" => ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM
-					, "evil_hack" => true
-					);
-				$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
-				
-				// Fake Tracking event to create participation status
-				$params = array
-					( "obj_id" => $crs_id
-					, "usr_id" => $participant
-					, "status" => ilLPStatus::_lookupStatus($crs_id, $participant)
-					, "evil_hack" => true
-					);
-				$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
+				if ($is_continuous) {
+					echo "    Fake tracking events for $participant\n";
+					
+					// Fake Tracking event to create participation status
+					$params = array
+						( "obj_id" => $crs_id
+						, "usr_id" => $participant
+						, "status" => ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM
+						, "evil_hack" => true
+						);
+					$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
+					
+					// Fake Tracking event to create participation status
+					$params = array
+						( "obj_id" => $crs_id
+						, "usr_id" => $participant
+						, "status" => $status
+						, "evil_hack" => true
+						);
+					$ilAppEventHandler->raise("Services/Tracking", "updateStatus", $params);
+				}
+				else if ($set_status) {
+					$ps_status->setCreditPoints($participant, 0);
+					if ($status == ilLPStatus::LP_STATUS_COMPLETED_NUM) {
+						$ps_status->setStatus($participant, ilParticipationStatus::STATUS_SUCCESSFUL);
+					}
+					else {
+						$ps_status->setStatus($participant, ilParticipationStatus::STATUS_NOT_SET);
+					}
+				}
+			}
+			if (!$is_continuous && $set_status) {
+				$ps_status->finalizeProcessState();
 			}
 		}
 		
