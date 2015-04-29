@@ -126,7 +126,7 @@ class ilParticipationStatusHelper
 			default:
 				$this->log->write( "ilParticipationStatusHelper::getParticipationStatusMode: "
 								 . "Unknown type '".$type."'");
-				return ilParticipationStatus::MODE_REVIEWED;
+				return ilParticipationStatus::MODE_CONTINUOUS;
 		}
 	}
 	
