@@ -71,7 +71,7 @@ class spxBuildHisto {
 
 			$participants = $crs_utils->getParticipants();
 			foreach ($participants as $participant) {
-				echo "    Fake tracking events for $participant";
+				echo "    Fake tracking events for $participant\n";
 				
 				// Fake Tracking event to create participation status
 				$params = array
