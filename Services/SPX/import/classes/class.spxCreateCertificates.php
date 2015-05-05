@@ -69,10 +69,10 @@ class spxCreateCertificates {
 					echo "    Try to create new certificate.\n";
 					$ilLog->write("    Try to create new certificate.");
 					$course_class = ilObjectFactory::getClassByType('crs');
-					$course_obj = new $course_class($course, false);
+					$course_obj = new $course_class($crs_id, false);
 					$certificate_adapter = new ilCourseCertificateAdapter($course_obj);
 					$certificate = new ilCertificate($certificate_adapter);
-					$data = $certificate->outCertificate(array("user_id" => $user), false);
+					$data = $certificate->outCertificate(array("user_id" => $cert_rec["usr_id"]), false);
 					if (!$data) {
 						echo "!   Could not create certificate. ilServer is busy?\n";
 						$ilLog->write("!   Could not create certificate. ilServer is busy?");
