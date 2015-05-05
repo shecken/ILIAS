@@ -41,9 +41,9 @@ class spxCreateBookingStatus {
 					$ilDB->manipulate("INSERT INTO crs_book (crs_id, user_id, status, status_changed_by, status_changed_on) "
 									 ."VALUES ( ".$ilDB->quote($crs_id, "integer")
 									 ."       , ".$ilDB->quote($participant, "integer")
-									 ."       , status = 1"
-									 ."       , status_changed_by = 6"
-									 ."       , status_changed_on = UNIX_TIMESTAMP()"
+									 ."       , 1"
+									 ."       , 6"
+									 ."       , UNIX_TIMESTAMP()"
 									 ."       )"
 									 );
 					echo "    Added booking record for $participant\n";
@@ -53,7 +53,7 @@ class spxCreateBookingStatus {
 								   , "user_id" => $participant
 								   );
 
-					$ilAppEventHandler->raise("Services/CourseBooking"," setStatus", $params);
+					$ilAppEventHandler->raise("Services/CourseBooking", "setStatus", $params);
 
 					echo "    Faked booking event for $participant\n";
 					$ilLog->write("    Faked booking event for $participant");
