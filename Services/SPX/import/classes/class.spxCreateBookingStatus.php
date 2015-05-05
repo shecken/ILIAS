@@ -31,6 +31,9 @@ class spxCreateBookingStatus {
 			$crs_id = $crs_rec["obj_id"];
 			$crs_utils = gevCourseUtils::getInstance($crs_id);
 			$crs_members_object = $crs_utils->getCourse()->getMembersObject();
+			
+			echo "Working on course $crs_id\n";
+			$ilLog->write("Working on course $crs_id");
 
 			$participants = $crs_utils->getParticipants();
 			foreach ($participants as $participant) {
