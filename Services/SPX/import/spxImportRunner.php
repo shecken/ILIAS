@@ -16,6 +16,7 @@
 	//require_once("Services/SPX/import/classes/class.spxCreateBookingStatus.php");
 	//require_once("Services/SPX/import/classes/class.spxCheckBookingStatus.php");
 	require_once("Services/SPX/import/classes/class.spxCheckCertificates.php");
+	require_once("Services/SPX/import/classes/class.spxCreateCertificates.php");
 
 	ilInitialisation::initILIAS();
 	
@@ -48,6 +49,9 @@
 	/*spxCheckBookingStatus::run();
 	echo "DONE: spxCheckBookingStatus\n";*/
 	
+	spxCreateCertificates::run();
+	echo "DONE: spxCreateCertificates\n";
+
 	spxCheckCertificates::run();
 	echo "DONE: spxCheckCertificates\n";
 	
