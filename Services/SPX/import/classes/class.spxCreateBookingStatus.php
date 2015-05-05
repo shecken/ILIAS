@@ -49,8 +49,8 @@ class spxCreateBookingStatus {
 					echo "    Added booking record for $participant\n";
 					$ilLog->write("    Added booking record for $participant");
 							
-					$params = array( "crs_obj_id" => $a_crs_id
-								   , "user_id" => $a_user_id
+					$params = array( "crs_obj_id" => $crs_id
+								   , "user_id" => $participant
 								   );
 
 					$ilAppEventHandler->raise("Services/CourseBooking"," setStatus", $params);
