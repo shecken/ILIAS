@@ -28,6 +28,8 @@ class spxCheckCertificates {
 								  ."   AND oref.deleted IS NULL"
 								  );
 		
+		$total = 0;
+		
 		while ($crs_rec = $ilDB->fetchAssoc($course_res)) {
 			$crs_id = $crs_rec["obj_id"];
 			$crs_utils = gevCourseUtils::getInstance($crs_id);
@@ -40,13 +42,16 @@ class spxCheckCertificates {
 									." WHERE crs_id = ".$ilDB->quote($crs_id, "integer")
 									."   AND hist_historic = 0"
 									."   AND certificate IN (-1, 0)"
-									."   AND participation_status = 'status_successfull'"
+									."   AND participation_status = 'status_successful'"
 									);
 			
 			while ($cert_rec = $ilDB->fetchAssoc($cert_res)) {
 				echo "    No certificate for user ".$cert_rec["usr_id"]."\n";
+				$total++;
 			}
 		}
+		
+		echo "\n\nTOTAL: $total\n";
 		
 		echo "</pre>";
 	}
