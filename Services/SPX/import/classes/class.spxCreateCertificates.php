@@ -37,6 +37,7 @@ class spxCreateCertificates {
 			$crs_members_object = $crs_utils->getCourse()->getMembersObject();
 			
 			echo "Working on course $crs_id\n";
+			$ilLog->write("Working on course $crs_id");
 
 			$cert_res = $ilDB->query("SELECT row_id, usr_id"
 									."  FROM hist_usercoursestatus"
@@ -48,6 +49,7 @@ class spxCreateCertificates {
 			
 			while ($cert_rec = $ilDB->fetchAssoc($cert_res)) {
 				echo "    No certificate for ".$cert_rec["usr_id"]."\n";
+				$ilLog->write("    No certificate for ".$cert_rec["usr_id"]);
 
 				$ex_res = $ilDB->query("SELECT row_id, certificate"
 									  ."  FROM hist_usercoursestatus"
@@ -57,20 +59,23 @@ class spxCreateCertificates {
 									  );
 				if ($ex_rec = $ilDB->fetchAssoc($ex_res)) {
 					echo "    Using existing certificate ".$ex_rec["certificate"]." from row ".$ex_rec["row_id"]."\n";
+					$ilLog->write("    Using existing certificate ".$ex_rec["certificate"]." from row ".$ex_rec["row_id"]);
 					$ilDB->manipulate("UPDATE hist_usercoursestatus"
 									 ."   SET certificate = ".$ilDB->quote($ex_rec["certificate"], "integer")
 									 ." WHERE row_id = ".$ilDB->quote($cert_rec["row_id"], "integer")
 									 );
 				}
 				else {
-					echo "    Try to create new certificate.";
+					echo "    Try to create new certificate.\n";
+					$ilLog->write("    Try to create new certificate.");
 					$course_class = ilObjectFactory::getClassByType('crs');
 					$course_obj = new $course_class($course, false);
 					$certificate_adapter = new ilCourseCertificateAdapter($course_obj);
 					$certificate = new ilCertificate($certificate_adapter);
 					$data = $certificate->outCertificate(array("user_id" => $user), false);
 					if (!$data) {
-						echo "!   Could not create certificate. ilServer is busy?";
+						echo "!   Could not create certificate. ilServer is busy?\n";
+						$ilLog->write("!   Could not create certificate. ilServer is busy?");
 						continue;
 					}
 					$certfile_id = $ilDB->nextId('hist_certfile');
@@ -83,6 +88,9 @@ class spxCreateCertificates {
 									 ."   SET certificate = ".$ilDB->quote($certfile_id, "integer")
 									 ." WHERE row_id = ".$ilDB->quote($cert_rec["row_id"], "integer")
 									 );
+					echo "    Successfully created certificate.\n";
+					$ilLog->write("    Successfully created certificate.");
+					
 				}
 			}
 		}
