@@ -13,7 +13,7 @@
 	//require_once("Services/SPX/import/classes/class.spxUsrImport.php");
 	//require_once("Services/SPX/import/classes/class.spxUpdateUsrData.php");
 	//require_once("Services/SPX/import/classes/class.spxBuildHisto.php");
-	require_once("Services/SPX/import/classes/class.spxBuildHisto.php");
+	require_once("Services/SPX/import/classes/class.spxCreateBookingStatus.php");
 
 	ilInitialisation::initILIAS();
 	
