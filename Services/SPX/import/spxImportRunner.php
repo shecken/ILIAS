@@ -13,7 +13,8 @@
 	//require_once("Services/SPX/import/classes/class.spxUsrImport.php");
 	//require_once("Services/SPX/import/classes/class.spxUpdateUsrData.php");
 	//require_once("Services/SPX/import/classes/class.spxBuildHisto.php");
-	require_once("Services/SPX/import/classes/class.spxCreateBookingStatus.php");
+	//require_once("Services/SPX/import/classes/class.spxCreateBookingStatus.php");
+	require_once("Services/SPX/import/classes/class.spxCheckBookingStatus.php");
 
 	ilInitialisation::initILIAS();
 	
@@ -40,8 +41,11 @@
 	/*spxBuildHisto::run();
 	echo "DONE: spxBuildHisto\n";*/
 
-	spxCreateBookingStatus::run();
-	echo "DONE: spxCreateBookingStatus\n";
+	/*spxCreateBookingStatus::run();
+	echo "DONE: spxCreateBookingStatus\n";*/
+	
+	spxCheckBookingStatus::run();
+	echo "DONE: spxCheckBookingStatus\n";
 	
 die('<hr><hr>done.');
 
