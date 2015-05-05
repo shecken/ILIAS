@@ -35,7 +35,7 @@ class spxCreateBookingStatus {
 			$participants = $crs_utils->getParticipants();
 			foreach ($participants as $participant) {
 				if ($crs_utils->getBookingStatusOf($participant) === null) {
-					$ilDB->manipulate("INSERT INTO crs_book (crs_id, usr_id, status, status_changed_by, status_changed_on) "
+					$ilDB->manipulate("INSERT INTO crs_book (crs_id, user_id, status, status_changed_by, status_changed_on) "
 									 ."VALUES ( ".$ilDB->quote($crs_id, "integer")
 									 ."       , ".$ilDB->quote($participant, "integer")
 									 ."       , status = 1"
