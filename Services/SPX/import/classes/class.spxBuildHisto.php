@@ -14,6 +14,7 @@ class spxBuildHisto {
 		set_time_limit(0);
 
 		global $ilDB;
+		global $ilLog;
 		global $ilAppEventHandler;
 		
 		echo "<pre>";
@@ -31,6 +32,7 @@ class spxBuildHisto {
 			$crs_utils = gevCourseUtils::getInstance($crs_id);
 			$crs_members_object = $crs_utils->getCourse()->getMembersObject();
 			echo "Building historizing entries for course $crs_id...\n";
+			$ilLog->write("Building historizing entries for course $crs_id...");
 			
 			$participants = $crs_utils->getParticipants();
 			foreach ($participants as $participant) {
@@ -38,13 +40,16 @@ class spxBuildHisto {
 					$crs_members_object->delete($participant);
 					if (!$crs_utils->getBookings()->bookCourse($participant)) {
 						echo "    Could not book user $participant\n";
+						$ilLog->write("    Could not book user $participant");
 					}
 					else {
 						echo "    Booked user $participant\n";
+						$ilLog->write("    Booked user $participant");
 					}
 				}
 				else {
 					echo "   $participant already booked.\n";
+					$ilLog->write("   $participant already booked.");
 				}
 			}
 
@@ -60,9 +65,11 @@ class spxBuildHisto {
 			while ($hist_rec = $ilDB->fetchAssoc($hist_res)) {
 				if (!$crs_utils->getBookings()->bookCourse($hist_rec["usr_id"])) {
 					echo "    Could not book user ".$hist_rec["usr_id"]."\n";
+					$ilLog->write("    Could not book user ".$hist_rec["usr_id"]);
 				}
 				else {
 					echo "    Booked user ".$hist_rec["usr_id"]."\n";
+					$ilLog->write("    Booked user ".$hist_rec["usr_id"]);
 				}
 			}
 
@@ -75,13 +82,16 @@ class spxBuildHisto {
 			$ps_helper = ilParticipationStatusHelper::getInstance($crs_utils->getCourse());
 			$is_continuous = $ps_status->getMode() == ilParticipationStatus::MODE_CONTINUOUS;
 			echo $is_continuous ? "   Course is in continuous mode.\n" : "    Course is in non continuous mode.\n";
+			$ilLog->write($is_continuous ? "   Course is in continuous mode.\n" : "    Course is in non continuous mode.");
 			$set_status = $ps_helper->isStartForParticipationStatusSettingReached() && ($ps_status->getProcessState() == STATE_SET);
 			echo (!$is_continuous && $set_status) ? "    Need to set ps status.\n" : "    No need to set ps status.\n";
+			$ilLog->write((!$is_continuous && $set_status) ? "    Need to set ps status.\n" : "    No need to set ps status.");
 			foreach ($participants as $participant) {
 				$status = ilLPStatus::_lookupStatus($crs_id, $participant);
 				
 				if ($is_continuous) {
 					echo "    Fake tracking events for $participant\n";
+					$ilLog->write("    Fake tracking events for $participant");
 					
 					// Fake Tracking event to create participation status
 					$params = array
