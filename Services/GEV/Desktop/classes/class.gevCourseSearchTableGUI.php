@@ -39,6 +39,9 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		$cnt = count($user_util->getPotentiallyBookableCourseIds($a_search_options));
 		$this->setMaxCount($cnt);
 		$this->determineOffsetAndOrder();
+		if(!$this->getOrderField()) {
+			$this->setOrderField("title");
+		}
 		$this->setFormAction($ilCtrl->getFormAction($a_parent_obj, "view"));
 
 		$this->setRowTemplate("tpl.gev_course_search_row.html", "Services/GEV/Desktop");
