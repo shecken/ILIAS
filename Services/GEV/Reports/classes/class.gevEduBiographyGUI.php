@@ -106,6 +106,10 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 										  )
 						->action($this->ctrl->getLinkTarget($this, "view"))
 						->compile();
+			$this->order = catReportOrder::create($this->table)
+								->defaultOrder("title","asc");
+
+
 	}
 	
 	public function executeCustomCommand($cmd) {
@@ -181,6 +185,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 				." AND usrcrs.credit_points > 0"
 				;
 	}
+
 	
 	protected function transformResultHTML($rec) {
 		if ($rec["participation_status"] == "status_successful") {
@@ -281,6 +286,8 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		
 		return $rec;
 	}
+
+
 
 	protected function getBill() {
 		// check weather this bill really belongs to an edu bio record of the current user.
