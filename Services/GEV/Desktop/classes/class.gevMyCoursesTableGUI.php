@@ -54,6 +54,11 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->lng->txt("date"), "start_date");
 		$this->addColumn($this->lng->txt("gev_custom_id"), "custom_id");
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "actions", "20px", false);
+		$this->determineOffsetAndOrder();
+		if(!$this->getOrderField()) {
+			$this->setOrderField("title");
+		}
+	
 
 		$this->cancel_img = '<img src="'.ilUtil::getImagePath("gev_cancel_action.png").'" />';
 		$this->booked_img = '<img src="'.ilUtil::getImagePath("gev_booked_icon.png").'" />';
