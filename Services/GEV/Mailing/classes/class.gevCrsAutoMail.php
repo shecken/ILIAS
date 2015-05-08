@@ -557,6 +557,9 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return gevUserUtils::getInstance($a_recipient)->getDirectSuperiors();
 	}
 
+	protected function getDefaultOccasion() {
+		return $this->getDescription();
+	}
 }
 
 ?>

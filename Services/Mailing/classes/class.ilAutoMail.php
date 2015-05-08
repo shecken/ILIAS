@@ -104,6 +104,8 @@ abstract class ilAutoMail {
 	 */
 	abstract public function getAttachmentPath($a_name);
 
+	abstract protected function getDefaultOccasion();
+
 	protected $id;
 	protected $logger;
 
@@ -165,16 +167,13 @@ abstract class ilAutoMail {
 
 		global $ilUser, $ilLog;
 
-
-
 		if ($a_recipients === null) {
 			$a_recipients = $this->getUsersOnly()
 							? $this->getRecipientUserIDs()
 							: $this->getRecipientAddresses();
 		}
-
 		if ($a_occasion === null) {
-			$a_occasion = $this->getTitle();
+			$a_occasion = $this->getDefaultOccasion();
 		}
 
 		$no_mails = false;

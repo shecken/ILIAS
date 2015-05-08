@@ -240,7 +240,6 @@ abstract class gevAccAssistanceMail extends ilAutoMail {
 		if (!$this->checkUserID($a_recipient)) {
 			throw new Exception("This mail will only work for ILIAS-Users.");
 		}
-
 		return $this->getMessage($this->getTemplateId(), $a_recipient);
 	}
 
@@ -257,6 +256,10 @@ abstract class gevAccAssistanceMail extends ilAutoMail {
 	protected $additional_mail_settings = null;
 
 	protected function maybeSuperiorsCC($a_recipient) {
+		return null;
+	}
+
+	protected function getDefaultOccasion() {
 		return null;
 	}
 }
