@@ -201,7 +201,9 @@ class ilUserCourseStatusHistorizing extends ilHistorizingStorage
 				$current = array();
 			}
 
-			if ($current['certificate'] == -1 && strlen($a_data['certificate']))
+			if (   $current['participation_status'] != "state_successful"
+				&& $a_data["participation_status"] == "state_successful"
+				&& strlen($a_data['certificate']))
 			{
 				global $ilDB;
 				$certfile_id = $ilDB->nextId('hist_certfile');
