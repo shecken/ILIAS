@@ -258,9 +258,5 @@ abstract class gevAccAssistanceMail extends ilAutoMail {
 	protected function maybeSuperiorsCC($a_recipient) {
 		return null;
 	}
-
-	protected function getDefaultOccasion() {
-		return null;
-	}
 }
 ?>

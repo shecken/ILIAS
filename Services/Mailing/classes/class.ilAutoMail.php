@@ -104,7 +104,9 @@ abstract class ilAutoMail {
 	 */
 	abstract public function getAttachmentPath($a_name);
 
-	abstract protected function getDefaultOccasion();
+	protected function getDefaultOccasion() {
+		return $this->getTitle();
+	}
 
 	protected $id;
 	protected $logger;
