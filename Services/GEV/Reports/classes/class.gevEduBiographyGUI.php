@@ -107,7 +107,9 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 						->action($this->ctrl->getLinkTarget($this, "view"))
 						->compile();
 			$this->order = catReportOrder::create($this->table)
-								->defaultOrder("title","asc");
+								->defaultOrder("title","asc")
+								->mapping("date", "begin_date")
+								;
 
 
 	}
