@@ -398,14 +398,12 @@ class gevBookingGUI {
 		$automails = new gevCrsAutoMails($this->crs_id);
 		
 		if ($this->isSelfBooking()) {
-			if (!$this->isSelfLearningCourse()) {
-				if ($booked) {
-					$automails->send("self_booking_to_booked", array($this->user_id));
-					$automails->send("invitation", array($this->user_id));
-				}
-				else {
-					$automails->send("self_booking_to_waiting", array($this->user_id));
-				}
+			if ($booked) {
+				$automails->send("self_booking_to_booked", array($this->user_id));
+				$automails->send("invitation", array($this->user_id));
+			}
+			else {
+				$automails->send("self_booking_to_waiting", array($this->user_id));
 			}
 			
 			ilUtil::sendSuccess( sprintf( $booked ? $this->lng->txt("gev_was_booked_self")
@@ -418,14 +416,12 @@ class gevBookingGUI {
 			ilUtil::redirect("ilias.php?baseClass=gevDesktopGUI&cmdClass=toMyCourses");
 		}
 		else {
-			if (!$this->isSelfLearningCourse()) {
-				if ($booked) {
-					$automails->send("superior_booking_to_booked", array($this->user_id));
-					$automails->send("invitation", array($this->user_id));
-				}
-				else {
-					$automails->send("superior_booking_to_waiting", array($this->user_id));
-				}
+			if ($booked) {
+				$automails->send("superior_booking_to_booked", array($this->user_id));
+				$automails->send("invitation", array($this->user_id));
+			}
+			else {
+				$automails->send("superior_booking_to_waiting", array($this->user_id));
 			}
 			
 			ilUtil::sendSuccess( sprintf ($booked ? $this->lng->txt("gev_was_booked_employee")
