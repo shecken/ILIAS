@@ -493,10 +493,6 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		if ($this->getCourseUtils()->isTemplate()) {
 			return null;
 		}
-		
-		if ($this->isForOnlineTraining()) {
-			return null;
-		}
 
 		return $this->getMessage($this->getTemplateId(), $a_recipient);
 	}
