@@ -158,7 +158,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("ACCOMODATION_NOTE", $this->lng->txt("gev_accomodation_note"));
 		$this->tpl->setVariable("CUSTOMID", $a_set["custom_id"]);
 
-		if (!empty($a_set["schedule"])) {
+		if (!empty($a_set["schedule"]) && $a_set["start_date"] !== null ) {
 			$this->tpl->setCurrentBlock("schedule");
 			$this->tpl->setVariable("SCHEDULE_CAPTION", $this->lng->txt("gev_schedule"));
 			foreach($a_set["schedule"] as $key => $val) {
@@ -166,7 +166,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 				$schedule = $schedule.$this->lng->txt("day")." $numday: $val<br>";
 			}
 			$this->tpl->setVariable("SCHEDULE", $schedule);
-			$this->tpl->parseCurrentBlock();	
+			$this->tpl->parseCurrentBlock();
 		}
 
 		if($a_set["type"] == "Webinar" && $a_set["webinar_link"]) {

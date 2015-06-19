@@ -208,6 +208,16 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 			$this->tpl->parseCurrentBlock();
 		}
 
+		if(!empty($a_set["schedule"]) && $a_set["start_date"] !== null) {
+			$this->tpl->setCurrentBlock("schedule");
+			$this->tpl->setVariable("SCHEDULE_CAPTION", $this->lng->txt("gev_schedule"));
+			foreach($a_set["schedule"] as $key => $val) {
+				$numday = $key+1;
+				$schedule = $schedule.$this->lng->txt("day")." $numday: $val<br>";
+			}
+			$this->tpl->setVariable("SCHEDULE", $schedule);
+			$this->tpl->parseCurrentBlock();
+		}
 
 
 	}

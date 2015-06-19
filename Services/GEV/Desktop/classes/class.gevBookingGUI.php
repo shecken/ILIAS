@@ -277,7 +277,11 @@ class gevBookingGUI {
 				   )
 			, array( $this->lng->txt("appointment")
 				   , $appointment
-				   , $appointment."<br/><br />".$this->crs_utils->getFormattedSchedule()
+				   , $appointment
+				   )
+			,array( $this->lng->txt("gev_schedule")
+					,$appointment
+					,$this->crs_utils->getFormattedSchedule()
 				   )
 			, array( $this->lng->txt("gev_provider")
 				   , $prv?true:false
