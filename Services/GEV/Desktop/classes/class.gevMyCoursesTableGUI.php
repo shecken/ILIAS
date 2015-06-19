@@ -1,4 +1,4 @@
-<?php
+e<?php
 
 /* Copyright (c) 1998-2014 ILIAS open source, Extended GPL, see docs/LICENSE */#
 
@@ -158,7 +158,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("ACCOMODATION_NOTE", $this->lng->txt("gev_accomodation_note"));
 		$this->tpl->setVariable("CUSTOMID", $a_set["custom_id"]);
 
-		if (count($a_set["schedule"]) > 1) {
+		if (!empty($a_set["schedule"])) {
 			$this->tpl->setCurrentBlock("schedule");
 			$this->tpl->setVariable("SCHEDULE_CAPTION", $this->lng->txt("gev_schedule"));
 			foreach($a_set["schedule"] as $key => $val) {
