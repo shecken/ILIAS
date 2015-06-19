@@ -347,20 +347,21 @@ class ilCourseBooking
 		else
 		{
 			$status = array(self::STATUS_CANCELLED_WITHOUT_COSTS, self::STATUS_CANCELLED_WITH_COSTS);
-		}		
+		}
 		
-		$sql = 	"SELECT ud.firstname AS firstname,ud.lastname AS lastname,ud.login AS login, su.login AS stcblogin,".
-					" crsb.status, crsb.status_changed_on,crsb.crs_id,crsb.user_id,crsb.status_changed_by,".
-					" GROUP_CONCAT(orgu.obj_id SEPARATOR '#|#') AS oguid, GROUP_CONCAT(orgu.title SEPARATOR '#|#') AS ogutitle".
-		       		" FROM object_data orgu".
-    		   		" INNER JOIN object_reference refr ON refr.obj_id = orgu.obj_id".
-					" INNER JOIN object_data roles ON roles.title LIKE CONCAT('il_orgu_superior_',refr.ref_id) OR roles.title LIKE CONCAT('il_orgu_employee_',refr.ref_id)".
-					" INNER JOIN rbac_ua rbac ON roles.obj_id = rbac.rol_id".
-    				" INNER JOIN usr_data ud ON rbac.usr_id = ud.usr_id".
-    				" INNER JOIN crs_book crsb ON ud.usr_id = crsb.user_id AND crsb.crs_id = ".$ilDB->quote($a_course_obj_id, "integer")." AND ".$ilDB->in("crsb.status", $status, "", "integer")."".
-    				" INNER JOIN usr_data su ON su.usr_id = crsb.status_changed_by".
-					" WHERE orgu.type = 'orgu' AND refr.deleted IS NULL".
-					" GROUP BY ud.firstname, ud.lastname,ud.login,su.login, crsb.status, crsb.status_changed_on,crsb.crs_id,crsb.user_id,crsb.status_changed_by";
+		$sql = "SELECT  usr.firstname AS firstname, usr.lastname AS lastname, usr.login AS login, change_usr.login AS stcblogin,"
+					." crb.status, crb.status_changed_on,crb.crs_id,crb.user_id,crb.status_changed_by,"
+					." GROUP_CONCAT(ou_title.obj_id SEPARATOR '#|#') AS oguid, GROUP_CONCAT(ou_title.title SEPARATOR '#|#') AS ogutitle"
+					." FROM crs_book crb"
+					." JOIN usr_data usr ON usr.usr_id = crb.user_id"
+					." JOIN usr_data change_usr ON change_usr.usr_id = crb.status_changed_by"
+					." JOIN rbac_ua ua ON ua.usr_id = crb.user_id"
+					." LEFT JOIN object_data role_data ON role_data.obj_id = ua.rol_id AND ( role_data.title LIKE 'il_orgu_superior_%' OR role_data.title LIKE 'il_orgu_employee_%')"
+					." LEFT JOIN object_reference ou_ref ON ou_ref.ref_id = SUBSTRING(role_data.title, 18)"
+					." LEFT JOIN object_data ou_title ON ou_title.obj_id = ou_ref.obj_id"
+					." WHERE crb.crs_id = ".$ilDB->quote($a_course_obj_id, "integer")." AND ".$ilDB->in("crb.status", $status, "", "integer").""
+        			." GROUP BY usr.firstname, usr.lastname, usr.login, change_usr.login,"
+				 		." crb.status, crb.status_changed_on,crb.crs_id,crb.user_id,crb.status_changed_by";
 
 		$res = array();
 		$arrIndex = 0;
@@ -391,4 +392,4 @@ class ilCourseBooking
 		
 		return $res;
 	}	
-}
+}	
