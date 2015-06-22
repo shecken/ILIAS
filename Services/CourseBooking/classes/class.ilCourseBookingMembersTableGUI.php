@@ -30,8 +30,12 @@ class ilCourseBookingMembersTableGUI extends ilTable2GUI
 	public function  __construct($a_parent_obj, $a_parent_cmd, ilObjCourse $a_course, ilCourseBookingPermissions $a_perm = null)
 	{
 		global $ilCtrl, $ilUser;
+
+		//gev-patch start
+		$this->setId("crs_booking");
+		//gev-patch end
 		
-		parent::__construct($a_parent_obj, $a_parent_cmd);			
+		parent::__construct($a_parent_obj, $a_parent_cmd);
 		
 		// gev-patch start
 		$this->course = $a_course;
@@ -39,6 +43,9 @@ class ilCourseBookingMembersTableGUI extends ilTable2GUI
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		$this->user = &$ilUser;
 		$this->userUtils = gevUserUtils::getInstance($this->user->getId());
+
+		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
+		$this->crs_utils = gevCourseUtils::getInstance($this->course->getId());
 		// gev-patch end
 
 		$bookings = ilCourseBookings::getInstance($a_course);
@@ -64,18 +71,24 @@ class ilCourseBookingMembersTableGUI extends ilTable2GUI
 		$this->addColumn($this->lng->txt("crsbook_admin_status_change"), "status_change");
 		
 		if($this->perm_cancel_others || $this->perm_book_others)
-		{			
+		{
 			$this->addColumn("", "");
 			
 			require_once "Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php";
 		}
 		
 		$this->setDefaultOrderField("name");
-						
-		$this->setRowTemplate("tpl.members_row.html", "Services/CourseBooking");
-		$this->setFormAction($ilCtrl->getFormAction($this->getParentObject(), $this->getParentCmd()));	
 		
+		$this->setRowTemplate("tpl.members_row.html", "Services/CourseBooking");
+		$this->setFormAction($ilCtrl->getFormAction($this->getParentObject(), $this->getParentCmd()));
+
+		//gev-patch start		
+		$this->setExternalSegmentation(true);
+		$this->setMaxCount(count($this->crs_utils->getBookedUser()));
+		$this->determineOffsetAndOrder();
+		$this->setShowRowsSelector(true);
 		$this->getItems($a_course, !($a_perm instanceof ilCourseBookingPermissions));
+		//gev-patch end
 	}
 
 	/**
@@ -97,7 +110,7 @@ class ilCourseBookingMembersTableGUI extends ilTable2GUI
 		
 		ilDatePresentation::setUseRelativeDates(false);
 		
-		foreach(ilCourseBooking::getCourseTableData($a_course->getId(), $a_show_cancellations) as $item)
+		foreach(ilCourseBooking::getCourseTableData($a_course->getId(),$this->getOffset(),$this->getLimit(), $a_show_cancellations) as $item)
 		{			
 			$data[] = array(
 				"id" => $item["user_id"]
@@ -114,7 +127,6 @@ class ilCourseBookingMembersTableGUI extends ilTable2GUI
 					" ".$item["status_changed_by_txt"]
 			);
 		}
-	
 		$this->setData($data);
 	}
 	

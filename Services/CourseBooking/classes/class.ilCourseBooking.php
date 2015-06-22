@@ -330,9 +330,11 @@ class ilCourseBooking
 	 * 
 	 * @param int $a_course_obj_id
 	 * @param bool $a_show_cancellations
+	 * @param int $a_offset
+	 * @param int $a_limit
 	 * @return array
 	 */
-	public static function getCourseTableData($a_course_obj_id, $a_show_cancellations = false)
+	public static function getCourseTableData($a_course_obj_id, $a_offset, $a_limit, $a_show_cancellations = false)
 	{
 		global $ilDB;
 		
@@ -362,6 +364,16 @@ class ilCourseBooking
 					." WHERE crb.crs_id = ".$ilDB->quote($a_course_obj_id, "integer")." AND ".$ilDB->in("crb.status", $status, "", "integer").""
         			." GROUP BY usr.firstname, usr.lastname, usr.login, change_usr.login,"
 				 		." crb.status, crb.status_changed_on,crb.crs_id,crb.user_id,crb.status_changed_by";
+		
+		if($a_limit != 0) {
+			if($a_offset === null) {
+				$a_offset = 0;
+			}
+
+			$sql .= " LIMIT ".$a_offset.", ".$a_limit."";
+		}
+
+		//die($sql);
 
 		$res = array();
 		$arrIndex = 0;
