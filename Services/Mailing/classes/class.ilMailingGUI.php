@@ -1178,6 +1178,7 @@ abstract class ilMailingGUI {
 		$command_buttons = array( array("showMailToMembersMailInput", $this->lng->txt("continue"))
 								);
 		
+		$this->ctrl->setParameter($this, "cmd", "selectMailToMembersRecipients");
 		$table_gui = $this->getRecipientUserSelectionTable(
 							  $this->getUserData($user_ids)
 							, $this->lng->txt("select_mail_recipients")
