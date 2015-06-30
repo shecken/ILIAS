@@ -1886,7 +1886,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		global $rbacadmin, $ilUser;
 		
 		$a_new_object->getMemberObject()->add($ilUser->getId(),IL_CRS_ADMIN);
-		$a_new_object->getMemberObject()->updateNotification($ilUser->getId(),1);
+		$a_new_object->getMemberObject()->updateNotification($ilUser->getId(),false);
 		$a_new_object->update();
 		
 		// BEGIN ChangeEvent: Record write event.
