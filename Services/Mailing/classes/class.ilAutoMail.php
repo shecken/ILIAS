@@ -228,7 +228,7 @@ abstract class ilAutoMail {
 			$msg_plain = $mail_data["message_plain"];
 			
 			if ($mail_data["frame_html"]) {
-				$msg_html = "<div style='font-size: 10px; font-family:Arial,sans-serif;'>".str_ireplace("[content]", $msg_html, $mail_data["frame_html"])."</div>";
+				$msg_html = "<div style='font-size: 10pt; font-family:Arial,sans-serif;'>".str_ireplace("[content]", $msg_html, $mail_data["frame_html"])."</div>";
 			}
 			if ($mail_data["frame_plain"]) {
 				$msg_plain = str_ireplace("[content]", $msg_plain, $mail_data["frame_plain"]);
