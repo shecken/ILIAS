@@ -858,6 +858,13 @@ class ilParticipants
 		ilWaitingList::deleteUserEntry($a_usr_id,$this->obj_id);
 
 		if($this->type == 'crs') {
+			// spx-patch start
+			// #1341
+			if ($a_role == IL_CRS_ADMIN) {
+				$this->updateNotification($a_usr_id, false);
+			}
+			// spx-patch end
+			
 		 	// Add event: used for ecs accounts
 			$ilLog->write(__METHOD__.': Raise new event: Modules/Course addParticipant');
 			$ilAppEventHandler->raise(
