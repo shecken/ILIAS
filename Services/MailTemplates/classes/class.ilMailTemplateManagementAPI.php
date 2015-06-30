@@ -293,7 +293,7 @@ class ilMailTemplateManagementAPI
 		$frame_entity = new ilMailTemplateFrameSettingsEntity($ilDB, new ilSetting('mail_tpl'));
 		if(strlen($messages['html']) != 0)
 		{
-			$mail->Body = str_ireplace('[content]', $plain_html . $messages['html'], $frame_entity->getHtmlFrame());
+			$mail->Body = "<div style='font-size: 10px; font-family:Arial,sans-serif;'>".str_ireplace('[content]', $plain_html . $messages['html'], $frame_entity->getHtmlFrame())."</div>";
 			if($frame_entity->doesImageExist())
 			{
 				$mail->Body = str_ireplace('[image]', '<img src="cid:frame_image_path" ' . ($frame_entity->getImageStyles() ? 'style="' . $frame_entity->getImageStyles() . '" ' : '') . '/>', $mail->Body);
@@ -350,7 +350,7 @@ class ilMailTemplateManagementAPI
 		$messages['plain']   = $variant->getMessagePlain();
 		$messages['html']    = $variant->getMessageHtml();
 		$messages['subject'] = $variant->getMessageSubject();
-
+		
 		// gev-patch start
 		if ($a_mail_data->deliversStandardPlaceholders()) {
 			$salutation = $a_mail_data->getPlaceholderLocalized("SALUTATION");
