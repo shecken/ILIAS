@@ -29,6 +29,7 @@ class ilMailTemplateHtmlPurifier extends ilHtmlPurifierAbstractLibWrapper
 		if(in_array('u', $tags) && !in_array('span', $tags)) $tags[] = 'span';
 		$config->set('HTML.AllowedElements', $this->removeUnsupportedElements($tags));
 		$config->set('HTML.ForbiddenAttributes', 'div@style');
+		$config->set('CSS.AllowedFonts', array("Arial", "sans-serif"));
 
 		if ($def = $config->maybeGetRawHTMLDefinition()) {
 			$def->addAttribute('a', 'target', 'Enum#_blank,_self,_target,_top');
