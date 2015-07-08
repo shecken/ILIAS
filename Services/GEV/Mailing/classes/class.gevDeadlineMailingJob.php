@@ -83,7 +83,7 @@ class gevDeadlineMailingJob extends ilCronJob {
 				 "    ON cs.obj_id = end_date.obj_id ".
 				 "   AND end_date.field_id = ".$ilDB->quote($end_date_field_id, "integer").
 				 " WHERE ADDDATE(end_date.value, -1 * ".$this->max_after_course_end.")".
-				 "       <= ".$ilDB->quote(date("Y-m-d"), "date").
+				 "       >= ".$ilDB->quote(date("Y-m-d"), "date").
 				 "   AND is_template.value <> '".gevSettings::YES."'".
 				 "   AND oref.deleted IS NULL".
 				 "";
