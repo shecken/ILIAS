@@ -86,10 +86,10 @@ class gevDeadlineMailingJob extends ilCronJob {
 				 "  JOIN adv_md_values_date start_date ".
 				 "    ON cs.obj_id = start_date.obj_id ".
 				 "   AND start_date.field_id = ".$ilDB->quote($start_date_field_id, "integer").
-				 " WHERE (  ( ADDDATE(end_date.value, -1 * ".$this->max_after_course_end.")".
+				 " WHERE (  ( ADDDATE(end_date.value, ".$this->max_after_course_end.")".
 				 "            >= ".$ilDB->quote(date("Y-m-d"), "date").")".
 				 "       OR ( end_date.value IS NULL AND ".
-				 "            ADDDATE(start_date.value, -1 * ".$this->max_after_course_end.")".
+				 "            ADDDATE(start_date.value, ".$this->max_after_course_end.")".
 				 "            >= ".$ilDB->quote(date("Y-m-d"), "date").")".
 				 "       )".
 				 "   AND is_template.value <> '".gevSettings::YES."'".
