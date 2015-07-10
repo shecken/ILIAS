@@ -67,6 +67,7 @@ class gevDeadlineMailingJob extends ilCronJob {
 		
 		$this->initCronMailData();
 		$end_date_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_END_DATE);
+		$start_date_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_START_DATE);
 		$is_template_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_IS_TEMPLATE);
 		$num_jobs = count($this->deadline_jobs);
 		
@@ -79,11 +80,18 @@ class gevDeadlineMailingJob extends ilCronJob {
 				 "  JOIN adv_md_values_text is_template ".
 				 "    ON cs.obj_id = is_template.obj_id ".
 				 "   AND is_template.field_id = ".$ilDB->quote($is_template_field_id, "integer").
-				 "  JOIN adv_md_values_date end_date ".
+				 "  LEFT JOIN adv_md_values_date end_date ".
 				 "    ON cs.obj_id = end_date.obj_id ".
 				 "   AND end_date.field_id = ".$ilDB->quote($end_date_field_id, "integer").
-				 " WHERE ADDDATE(end_date.value, -1 * ".$this->max_after_course_end.")".
-				 "       >= ".$ilDB->quote(date("Y-m-d"), "date").
+				 "  JOIN adv_md_values_date start_date ".
+				 "    ON cs.obj_id = end_date.obj_id ".
+				 "   AND start_date.field_id = ".$ilDB->quote($end_date_field_id, "integer").
+				 " WHERE (  ( ADDDATE(end_date.value, -1 * ".$this->max_after_course_end.")".
+				 "            >= ".$ilDB->quote(date("Y-m-d"), "date").")".
+				 "       OR ( end_date.value IS NULL AND ".
+				 "            ADDDATE(start_date.value, -1 * ".$this->max_after_course_end.")".
+				 "            >= ".$ilDB->quote(date("Y-m-d"), "date").")".
+				 "       )".
 				 "   AND is_template.value <> '".gevSettings::YES."'".
 				 "   AND oref.deleted IS NULL".
 				 "";
