@@ -469,6 +469,10 @@ class gevCrsMailingGUI extends ilMailingGUI {
 				$this->getAdditionalMailSettings()->setInvitationMailingDate(intval($form->getInput("inv_mailing_date")));
 				$this->getAdditionalMailSettings()->setSuppressMails((bool) ($form->getInput("suppress_mails") == 1));
 			}
+			else {
+				$form->getItemByPostVar("suppress_mails")->setChecked(true);
+				$form->getItemByPostVar("inv_mailing_date")->setValue($this->getAdditionalMailSettings()->getInvitationMailingDate());
+			}
 			$this->getAdditionalMailSettings()->save();
 			
 			$form->getItemByPostVar("suppress_mails")->setDisabled($this->getAdditionalMailSettings()->getSuppressMails());
