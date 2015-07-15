@@ -844,11 +844,11 @@ class ilObjCourseGUI extends ilContainerGUI
 		
 		$section = new ilFormSectionHeaderGUI();
 		$section->setTitle($this->lng->txt('crs_info_download'));
-		$form->addItem($section);
+		/*$form->addItem($section);*/
 		
 		$file = new ilFileInputGUI($this->lng->txt('crs_file'),'file');
 		$file->enableFileNameSelection('file_name');
-		$form->addItem($file);
+		/*$form->addItem($file);*/
 		
 		$section = new ilFormSectionHeaderGUI();
 		$section->setTitle($this->lng->txt('crs_contact'));
@@ -904,7 +904,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		$this->checkPermission('write');
 		
 		include_once 'Modules/Course/classes/class.ilCourseFile.php';
-		$file_obj = new ilCourseFile();
+		/*$file_obj = new ilCourseFile();
 		$file_obj->setCourseId($this->object->getId());
 		$file_obj->setFileName(strlen($_POST['file_name']) ?
 							   ilUtil::stripSlashes($_POST['file_name']) :
@@ -912,7 +912,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		$file_obj->setFileSize($_FILES['file']['size']);
 		$file_obj->setFileType($_FILES['file']['type']);
 		$file_obj->setTemporaryName($_FILES['file']['tmp_name']);
-		$file_obj->setErrorCode($_FILES['file']['error']);
+		$file_obj->setErrorCode($_FILES['file']['error']);*/
 
 		$this->object->setImportantInformation(ilUtil::stripSlashes($_POST['important']));
 		$this->object->setSyllabus(ilUtil::stripSlashes($_POST['syllabus']));
@@ -928,7 +928,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		$error = false;		
 		$ilErr->setMessage('');
 		
-		$file_obj->validate();
+		//$file_obj->validate();
 		$this->object->validateInfoSettings();
 		if(strlen($ilErr->getMessage()))
 		{
@@ -954,7 +954,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		}
 		
 		// gev-patch start
-		$file_obj->create();
+		//$file_obj->create();
 		$this->record_gui->writeEditForm();
 		$this->object->update();
 		// gev-patch end
