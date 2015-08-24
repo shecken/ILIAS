@@ -9398,6 +9398,7 @@ license#:#used_licenses_explanation#:#每一个第一次访问的用户消耗一
 license#:#zero_licenses_explanation#:#输入一个“0”去停用许可证。
 mail#:#activate_serial_letter_placeholders#:#激活系列符号
 mail#:#mail_template_frame#:#Frame
+mail#:#new_template_type#:#New Template Type
 mail#:#mail_templates#:#Mail Templates
 mail#:#mail_template_type#:#New Template Type
 mail#:#mail_template_type_create#:#New Template Type
