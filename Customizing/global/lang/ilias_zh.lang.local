@@ -9415,7 +9415,7 @@ mail#:#mail_template_type_id#:#ID
 mail#:#mail_template_type#:#Type
 mail#:#mail_template_category_name#:#Name
 mail#:#mail_template_variant_id#:#Variants ID
-#mail#:#mail_types_language#:#Language
+mail#:#mail_types_language#:#Language
 mail#:#mail_message_subject#:#Subject
 mail#:#mail_message_html#:#HTML
 mail#:#mail_message_plain#:#Plain Text
