@@ -9689,6 +9689,7 @@ mail#:#search_bc_recipient#:#Search BCC Recipient
 mail#:#search_cc_recipient#:#Search CC Recipient
 mail#:#search_content#:#Search Result
 mail#:#search_recipients#:#Search Recipients
+mail#:#mail_template_type_create#:#New Template Type
 mail#:#send_mail_to#:#Mail to
 mail#:#system_notification_installation_changed_by#:#Changed By
 mail#:#system_notification_installation_signature#:#This email has been sent automatically by the ILIAS installation
