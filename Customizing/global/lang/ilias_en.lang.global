@@ -9659,8 +9659,8 @@ mail#:#mail_system_sender_name_info#:#Please enter a name. This name will be use
 mail#:#mail_s_unread#:#Unread Mail(s)
 mail#:#mail_templates#:#Mail Templates
 mail#:#mail_templates_use_placeholder#:#These placeholders may be used:
-mail#:#mail_template_placeholder_content#:#Platzhalter for content
-mail#:#mail_template_placeholder_image#:#Platzhalter for image
+mail#:#mail_template_placeholder_content#:#Placeholder for content
+mail#:#mail_template_placeholder_image#:#Placeholder for image
 mail#:#mail_template_category#:#Template name
 mail#:#mail_template_category_name#:#Name
 mail#:#mail_template_footer_image#:#Image
@@ -9672,11 +9672,12 @@ mail#:#mail_template_frame_plain#:#Plain Text
 mail#:#mail_template_frame_settings#:#Frame Settings
 mail#:#mail_template_settings#:#SettingsType
 mail#:#mail_template_type_edit#:#Edit Template Type
+mail#:#mail_template_type#:#Type
 mail#:#mail_template_type_id#:#ID
 mail#:#mail_template_variants#:#Edit
 mail#:#mail_template_variant_id#:#Variants ID
 mail#:#mail_to#:#To
-mail#:#mail_types_fi#:#Templates Type ID
+mail#:#mail_types_fi#:#Template Type ID
 mail#:#mail_types_language#:#Language
 mail#:#mail_user_addr_n_valid#:#Following users have no valid e-mail address
 mail#:#new_template_type#:#New Template Type
