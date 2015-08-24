@@ -9400,6 +9400,7 @@ mail#:#activate_serial_letter_placeholders#:#激活系列符号
 mail#:#mail_template_frame#:#Frame
 mail#:#mail_templates#:#Mail Templates
 mail#:#mail_template_type#:#New Template Type
+mail#:#mail_template_type_create#:#New Template Type
 mail#:#mail_template_settings#:#Settings
 mail#:#mail_template_variants#:#Edit
 mail#:#mail_types_fi#:#Template Type ID
