@@ -557,10 +557,12 @@ class ilCourseBookingAdminGUI
 			require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 			if ($org_subs) {
 				$user_ids = gevOrgUnitUtils::getAllEmployees($org_ref_id);
+				$user_ids = array_merge($user_ids, gevOrgUnitUtils::getAllPeopleIn(array($org_ref_id)));
 			}
 			else {
-				$user_ids = gevOrgUnitUtils::getEmployeesIn(array($org_ref_id));
+				$user_ids = gevOrgUnitUtils::getAllPeopleIn(array($org_ref_id));
 			}
+			array_unique($user_ids);
 			// spx-patch end
 			if(sizeof($user_ids))
 			{								
