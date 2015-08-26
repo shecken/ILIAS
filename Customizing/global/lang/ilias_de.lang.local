@@ -740,6 +740,8 @@ grp#:#grp_view_inherit#:#Durch Training bestimmt
 grp#:#grp_view_inherit_info#:#Wird die Ansicht des übergeordneten Trainings geändert, ändert sich auch die Gruppenansicht.
 license#:#course_licenses_rare#:#Warnung: für ein Trainingsobjekt sind nur noch %s Lizenzen vorhanden! Wechseln Sie zur Registerkarte "Lizenzen", um zu sehen, welche Lizenzen erhöht werden müssen.
 license#:#license_warning_info#:#Bis zu dieser Anzahl verfügbarer Lizenzen für Lerninhalte in einem Training wird bei der Aufnahme von Trainingsteilnehmern eine Warnmeldung ausgegeben.
+mail#:#auto_send_participant_list_accomodation#:#Mails mit Teilnehmerlisten an Übernachtungsort automatisch versenden
+mail#:#auto_send_participant_list_venue#:#Mails mit Teilnehmerlisten an Veranstaltungsort automatisch versenden
 mail#:#cancel_delete_template_type#:#Abbrechen
 mail#:#cancel_template_type_settings#:#Abbrechen
 mail#:#cancel_template_variant#:#Abbrechen

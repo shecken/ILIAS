@@ -9474,6 +9474,8 @@ license#:#remaining_licenses_explanation#:#The available licenses are calculated
 license#:#used_licenses#:#Consumed licenses
 license#:#used_licenses_explanation#:#Every first access of a user consumes a license.
 license#:#zero_licenses_explanation#:#Enter a 0 to deactivate the licensing.
+mail#:#auto_send_participant_list_accomodation#:#Send mails with participant list automatically to place of accomodation
+mail#:#auto_send_participant_list_venue#:#Send mails with participant list automatically to venue
 mail#:#activate_serial_letter_placeholders#:#Activate Serial-Letter Placeholders
 mail#:#advice_mail_body_secured#:#Because of security reasons ILIAS removed some elements of your message. Please check the secured message and send the mail again.
 mail#:#also_as_email#:#Also as E-Mail

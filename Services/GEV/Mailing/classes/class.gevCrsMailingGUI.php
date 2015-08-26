@@ -503,14 +503,14 @@ class gevCrsMailingGUI extends ilMailingGUI {
 		$send_list_to_accom = new ilCheckboxInputGUI();
 		$send_list_to_accom->setTitle($this->lng->txt("gev_accomodation"));
 		$send_list_to_accom->setPostvar("send_list_to_accom");
-		$send_list_to_accom->setOptionTitle("Mails mit Teilnehmerlisten an Übernachtungsort automatisch versenden");
+		$send_list_to_accom->setOptionTitle($this->lng->txt("auto_send_participant_list_accomodation"));
 		$send_list_to_accom->setChecked($this->getAdditionalMailSettings()->getSendListToAccomodation());
 		$form->addItem($send_list_to_accom);
 		
 		$send_list_to_venue = new ilCheckboxInputGUI();
 		$send_list_to_venue->setTitle($this->lng->txt("gev_venue"));
 		$send_list_to_venue->setPostvar("send_list_to_venue");
-		$send_list_to_venue->setOptionTitle("Mails mit Teilnehmerlisten an Veranstaltungsort automatisch versenden");
+		$send_list_to_venue->setOptionTitle($this->lng->txt("auto_send_participant_list_venue"));
 		$send_list_to_venue->setChecked($this->getAdditionalMailSettings()->getSendListToVenue());
 		$form->addItem($send_list_to_venue);
 		

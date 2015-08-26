@@ -9395,7 +9395,9 @@ license#:#remaining_licenses#:#可用的许可证
 license#:#remaining_licenses_explanation#:#可用的许可证以购买的最小消耗量计算。
 license#:#used_licenses#:#消耗的许可证
 license#:#used_licenses_explanation#:#每一个第一次访问的用户消耗一个许可证。
-license#:#zero_licenses_explanation#:#输入一个“0”去停用许可证。
+license#:#zero_licenses_explanation#:#输入一个“0”去停用许可证
+mail#:#auto_send_participant_list_accomodation#:#Send mails with participant list automatically to place of accomodation
+mail#:#auto_send_participant_list_venue#:#Send mails with participant list automatically to venue
 mail#:#activate_serial_letter_placeholders#:#激活系列符号
 mail#:#mail_template_frame#:#Frame
 mail#:#new_template_type#:#New Template Type
