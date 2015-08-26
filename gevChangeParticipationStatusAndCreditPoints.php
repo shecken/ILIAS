@@ -44,12 +44,6 @@ class gevChangeParticipationStatusAndCreditPoints {
 			echo "####################################<br/>";
 			$this->crs_utils =  gevCourseUtils::getInstance($value["crs_id"]);
 
-			if($value["cpoints"] === null) {
-				echo '<span style="background-color:#8B0000; color:#FFF">Weiterbildungspunkte sind NULL. Reihe im Textdokument: '.$key.'</span><br/><br/>';
-				$this->gIlLog->write("gevChangeParticipationStatusAndCreditPoints::run: cpoints was NULL at row ".$key);
-				continue;
-			}
-
 			if($value["state"] === null) {
 				echo '<span style="background-color:#8B0000; color:#FFF">Teilnehmerstatus ist NULL. Reihe im Textdokument: '.$key.'</span><br/><br/>';
 				$this->gIlLog->write("gevChangeParticipationStatusAndCreditPoints::run: state was NULL at row ".$key);
@@ -62,21 +56,6 @@ class gevChangeParticipationStatusAndCreditPoints {
 				$this->gIlLog->write("gevChangeParticipationStatusAndCreditPoints::run: unknown state at row ".$key);
 				continue;
 			}
-
-			if($state != gevSettings::CRS_URS_STATE_SUCCESS_VAL && $value["cpoints"] != 0) {
-				echo '<span style="background-color:#8B0000; color:#FFF">Kurs nicht erfolgreich abgeschlossen und trotzdem sollen Punkte gesetzt werden: '.$key.'</span><br/><br/>';
-				$this->gIlLog->write("gevChangeParticipationStatusAndCreditPoints::run: points with no success ".$key);
-				continue;
-			}
-
-			$max_credit_points = $this->crs_utils->getCreditPoints();
-			if($value["cpoints"] > $max_credit_points) {
-				echo '<span style="background-color:#8B0000; color:#FFF">Punkte gr&ouml;&szlig;er als maximal M&ouml;glich: '.$key.'</span><br/><br/>';
-				$this->gIlLog->write("gevChangeParticipationStatusAndCreditPoints::run: points greater then max ".$key);
-				continue;
-			}
-
-			
 
 			if($value["user_ids"] === null) {
 				echo "Laden aller Teilnhemer, da keine vorgeben wurden.<br/>";
@@ -96,7 +75,7 @@ class gevChangeParticipationStatusAndCreditPoints {
 		}
 	}
 
-	private function changeStatusAndPoints($usr_ids, $state, $cpoints) {
+	private function changeStatus($usr_ids, $state) {
 		foreach ($usr_ids as $key => $usr_id) {
 			echo "Daten f&uuml;r Benutzer $usr_id werden aktualisiert.<br/>";
 
@@ -105,14 +84,14 @@ class gevChangeParticipationStatusAndCreditPoints {
 				continue;
 			}
 
-			$this->updateDataTable($usr_id, $state, $cpoints);
+			$this->updateDataTable($usr_id, $state);
 			$this->raiseEvent($usr_id);
 			echo "Aktualisierung erfolgreich<br/><br/>";
 		}
 	}
 
-	private function updateDataTable($usr_id, $state, $cpoints) {
-		$this->crs_utils->setParticipationStatusAndPoints($usr_id, $state, $cpoints);
+	private function updateDataTable($usr_id, $state) {
+		$this->crs_utils->setParticipationStatus($usr_id, $state);
 	}
 
 	private function raiseEvent($usr_id) {
@@ -145,10 +124,10 @@ class gevChangeParticipationStatusAndCreditPoints {
 	/**
 	*FORMAT DER TEXTDATEI
 	*
-	* CRS_REF_ID#CPOINTS#STATE#USER_ID|USER_ID|USER_ID
+	* CRS_REF_ID#STATE#USER_ID|USER_ID|USER_ID
 	*/
 	private function readTxt() {
-		$row_regex = "/^([0-9])+#([0-9])+#(erfolgreich|entschuldigt|unentschuldigt)+#([0-9])*(\|([0-9])+)*$/";
+		$row_regex = "/^([0-9])+#(erfolgreich|entschuldigt|unentschuldigt)+#([0-9])*(\|([0-9])+)*$/";
 
 		if(!file_exists($this->txtPath)) {
 			throw new Exception("gevChangeParticipationStatusAndCreditPoints::run::readText: file not found.");
@@ -168,14 +147,9 @@ class gevChangeParticipationStatusAndCreditPoints {
 			
 			$crs_id = ($data[0] == "") ? null : gevObjectUtils::getObjId($data[0]);
 
-			$cpoints = ($data[1] == "") ? null : $data[1];
-			if($cpoints !== null && !is_numeric($cpoints)) {
-				$cpoints = null;
-			}
+			$state = ($data[1] == "") ? null : $data[1];
 
-			$state = ($data[2] == "") ? null : $data[2];
-
-			$user_ids_string = str_replace("\n", "", $data[3]);
+			$user_ids_string = str_replace("\n", "", $data[2]);
 			$user_ids = null;
 
 			if($user_ids_string != "") {
@@ -183,7 +157,6 @@ class gevChangeParticipationStatusAndCreditPoints {
 			}
 
 			$crs = array("crs_id" => $crs_id
-						 ,"cpoints" => $cpoints
 						 ,"state" => $state
 						 ,"user_ids" => $user_ids
 						);

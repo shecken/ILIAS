@@ -251,6 +251,19 @@ class gevCourseUtils {
 		
 		return $this->crs_participations;
 	}
+
+	public function setParticipationStatus($user_id, $state) {
+		if(!is_numeric($state)) {
+			throw new Exception("gevCourseUtils::setParticipationStatusAndPoints:state is not an integer");
+		}
+
+		$sql = "UPDATE crs_pstatus_usr"
+				." SET status = ".$this->db->quote($state,"integer")
+				." WHERE user_id = ".$this->db->quote($user_id,"integer")
+					." AND crs_id = ".$this->db->quote($this->getId(),"integer");
+		
+		$this->db->manipulate($sql);
+	}
 	
 	const LABEL_MEMBER = "crs_member";
 	const LABEL_TUTOR  = "crs_tutor";
