@@ -9616,6 +9616,10 @@ mail#:#search_recipients#:#搜索收件人
 mail#:#send_mail_to#:#发送邮件到
 mail#:#system_notification_installation_changed_by#:#Changed By
 mail#:#system_notification_installation_signature#:#This email has been sent automatically by the ILIAS installation
+mailing#:#attachment_list_for_trainer_name#:#Participant_List_Trainer.xls
+mailing#:#attachment_list_for_hotel_name#:#Participant_List_Accomodation.xls
+mailing#:#attachment_list_for_participant_name#:#Participant_List_Course.xls
+mailing#:#attachment_material_list#:#Material_List.xls
 mailing#:#auto_mails#:#自动电子邮件
 mailing#:#auto_mail_title#:#题目
 mailing#:#last_modified#:#修改日期

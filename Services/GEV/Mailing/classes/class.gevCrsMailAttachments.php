@@ -12,21 +12,31 @@ require_once("Services/Mailing/classes/class.ilMailAttachments.php");
 class gevCrsMailAttachments extends ilMailAttachments {
 	protected $crs;
 	protected $generated_files;
+	protected $lng;
 	
-	const LIST_FOR_TRAINER_NAME = "Teilnehmerliste_Trainer.xls";
-	const LIST_FOR_HOTEL_NAME = "Teilnehmerliste_Hotel.xls";
-	const LIST_FOR_PARTICIPANT_NAME = "Teilnehmerliste_Teilnehmer.xls";
-	const MATERIAL_LIST = "Materialliste.xls";
+	protected $list_for_trainer_name;
+	protected $list_for_hotel_name;
+	protected $list_for_participant_name;
+	protected $material_list;
 	
 	public function __construct($a_obj_id) {
 		parent::__construct($a_obj_id);
+		global $lng;
+		$this->lng = &$lng;
+
+		$this->list_for_trainer_name = $this->lng->txt("attachment_list_for_trainer_name");
+		$this->list_for_hotel_name = $this->lng->txt("attachment_list_for_hotel_name");
+		$this->list_for_participant_name = $this->lng->txt("attachment_list_for_participant_name");
+		$this->material_list = $this->lng->txt("attachment_material_list");
+
+
 		$this->crs = null;
 		$this->crs_utils = null;
 		
-		$this->generated_files = array( self::LIST_FOR_TRAINER_NAME
-									  , self::LIST_FOR_HOTEL_NAME
-									  , self::LIST_FOR_PARTICIPANT_NAME
-									  //, self::MATERIAL_LIST
+		$this->generated_files = array( $this->list_for_trainer_name
+									  , $this->list_for_hotel_name
+									  , $this->list_for_participant_name
+									  //, $this->material_list
 									  );
 	}
 	
@@ -130,16 +140,16 @@ class gevCrsMailAttachments extends ilMailAttachments {
 		$this->create();
 		
 		switch($a_filename) {
-			case self::LIST_FOR_TRAINER_NAME:
+			case $this->list_for_trainer_name:
 				$this->getCourseUtils()->buildMemberList(false, $path, gevCourseUtils::MEMBERLIST_TRAINER);
 				return;
-			case self::LIST_FOR_HOTEL_NAME:
+			case $this->list_for_hotel_name:
 				$this->getCourseUtils()->buildMemberList(false, $path, gevCourseUtils::MEMBERLIST_HOTEL);
 				return;
-			case self::LIST_FOR_PARTICIPANT_NAME:
+			case $this->list_for_participant_name:
 				$this->getCourseUtils()->buildMemberList(false, $path, gevCourseUtils::MEMBERLIST_PARTICIPANT);
 				return;
-			case self::MATERIAL_LIST:
+			case $this->material_list:
 				$this->getCourseUtils()->getMaterialList()->buildXLS($path, false);
 				return;
 		}

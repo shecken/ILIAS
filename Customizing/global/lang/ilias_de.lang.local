@@ -798,6 +798,10 @@ mail#:#save_template_variant#:#Speichern
 mail#:#template_type_deleted_p#:#Vorlagentypen gelöscht.
 mail#:#template_type_deleted_s#:#Vorlagentyp gelöscht.
 mail#:#templates#:#Vorlagen
+mailing#:#attachment_list_for_trainer_name#:#Teilnehmerliste_Trainer.xls
+mailing#:#attachment_list_for_hotel_name#:#Teilnehmerliste_Hotel.xls
+mailing#:#attachment_list_for_participant_name#:#Teilnehmerliste_Teilnehmer.xls
+mailing#:#attachment_material_list#:#Materialliste.xls
 mailing#:#attachment_remove_failure#:#Der Mailanhang '%s' kann nicht gelöscht werden, da er in einer Mail verwendet wird.
 mailing#:#auto_mail_confirmation_already_send#:#Die automatische Mail '%s' ist bereits am %s versandt worden. Möchten Sie die Mail trotzdem erneut versenden?
 mailing#:#auto_mail_confirmation_not_send_maybe_later#:#Die automatische Mail '%s' wird ereignissgesteuert automatisch versendet. Möchten Sie diese Mail trotzdem bereits jetzt versenden?
