@@ -3,17 +3,17 @@
 require_once("Services/GEV/Mailing/classes/CrsMails/class.gevInvitation.php");
 
 class gevReminderParticipants extends gevInvitation {
-	const DAYS_BEFORE_COURSE_START = 4;
+	const DAYS_BEFORE_COURSE_START = 5;
 
 	public function getTitle() {
-		return "Reminder Particant (Invitationmail)";
+		return "Reminder Participant (Invitationmail)";
 	}
 
 	public function getDescription() {
 		// Mail is send after the fourth day before training is over.
 		// Thus we need to subtract, since after the fourth day is on the
 		// third day.
-		return (self::DAYS_BEFORE_COURSE_START - 1)." Days before Begin of Training";
+		return (self::DAYS_BEFORE_COURSE_START -1)." Days before Begin of Training";
 	}
 
 	public function getScheduledFor() {
