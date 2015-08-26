@@ -71,7 +71,7 @@ class gevChangeParticipationStatusAndCreditPoints {
 				$usr_ids = $value["user_ids"];
 			}
 
-			$this->changeStatusAndPoints($usr_ids, $state, $value["cpoints"]);
+			$this->changeStatus($usr_ids, $state, $value["cpoints"]);
 		}
 	}
 
