@@ -92,6 +92,19 @@ class gevUserUtils {
 			return self::getInstanceByObj($a_user);
 		}
 	}
+
+	static public function userIdExists($a_user_id) {
+		global $ilDB;
+
+		$sql = "SELECT usr_id FROM usr_data WHERE usr_id = ".$ilDB->quote($a_user_id, "integer");
+		$res = $ilDB->query($sql);
+
+		if($ilDB->numRows($res) == 0) {
+			return false;
+		}
+
+		return true;
+	}
 	
 	public function getNextCourseId() {
 		$now = date("Y-m-d");
