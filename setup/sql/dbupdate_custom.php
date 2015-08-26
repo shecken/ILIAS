@@ -2769,13 +2769,9 @@ $ilDB->manipulate("UPDATE tep_type SET title = 'FD-Gespräch' WHERE title = 'FD 
 	ilCustomInstaller::maybeInitUserToRoot();
 
 	require_once "Services/GEV/Utils/classes/class.gevOrgUnitUtils.php";
-	require_once "Services/GEV/Utils/classes/class.gevRoleUtils.php";
 	require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 
-	$role_utils = gevRoleUtils::getInstance();
 	$ref_id = ilObjOrgUnit::getRootOrgRefId();
-
-	$role_utils->createGlobalRole("Campus-Manager");
 
 	gevOrgUnitUtils::grantPermissionsRecursivelyFor($ref_id, "Campus-Manager",
 			array( "visible"
