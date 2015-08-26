@@ -106,6 +106,7 @@ common#:#institution#:#Company, AD
 common#:#department#:#Company, Text
 common#:#require_department#:#Pflichteingabe Company, AD
 common#:#require_institution#:#Pflichteingabe Company, Text
+common#:#spx_crs_template#:#Vorlage
 certificate#:#certificate_ph_department#:#Company, Text, des Teilnehmers oder der Teilnehmerin
 certificate#:#certificate_ph_institution#:#Company, AD, des Teilnehmers oder der Teilnehmerin
 content#:#seq_abandonall#:#Die Trainingsitzung wurde abgebrochen.

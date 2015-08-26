@@ -5692,6 +5692,7 @@ common#:#zipcode#:#邮政编码
 common#:#zip_structure_error#:#归档文件包含相同的文件名。已放弃上传。
 common#:#zip_test_failed#:#zip压缩测试失败。请联系您的ILIAS管理员。
 common:#:#status#:#状态
+common#:#spx_crs_template#:#Template
 content#:#add_menu_entry#:#添加菜单项 >>
 content#:#all#:#全部
 content#:#all_pages#:#全部学习模块

@@ -5697,6 +5697,7 @@ common#:#zipcode#:#Zip Code
 common#:#zip_structure_error#:#Archive contains same filenames. Upload aborted.
 common#:#zip_test_failed#:#Zip-Test failed. Please contact you ILIAS administrator.
 common:#:#status#:#Status
+common#:#spx_crs_template#:#Template
 content#:#add_menu_entry#:#Add Menu Entry
 content#:#all#:#All
 content#:#all_pages#:#Entire Learning Module
