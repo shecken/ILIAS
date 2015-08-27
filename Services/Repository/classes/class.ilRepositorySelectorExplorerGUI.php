@@ -92,7 +92,12 @@ class ilRepositorySelectorExplorerGUI extends ilTreeExplorerGUI
 				$title = $lng->txt("repository");
 			}
 		}
-
+		require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
+		//cat-patch start
+		if($a_node['type'] == 'crs' && gevCourseUtils::getInstance($a_node['obj_id'])->isTemplate()) {
+			$title = $lng->txt('spx_crs_template').': '.$a_node['title'];
+		}
+		//cat-patch end
 		return $title;
 	}
 	
