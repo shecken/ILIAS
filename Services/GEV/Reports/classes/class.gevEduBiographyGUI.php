@@ -70,13 +70,18 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 						->select("crs.tutor")
 						->select("usrcrs.credit_points")
 						->select("crs.fee")
-						->select("usrcrs.participation_status")
 						->select("usrcrs.okz")
 						->select("usrcrs.bill_id")
 						->select("usrcrs.certificate")
-						->select("usrcrs.booking_status")
 						->select("oref.ref_id")
 						->select("crs.is_online")
+						->select_raw("IF(usrcrs.participation_status = ".$this->db->quote("status_successful","text").","
+										.$this->db->quote("success","text").","
+										."IF(".$this->db->in("usrcrs.participation_status", array("status_absent_excused", "status_absent_not_excused"),false,"text")." OR "
+											.$this->db->in("usrcrs.booking_status",  array("status_cancelled_with_costs", "status_cancelled_without_costs"),false,"text")
+											.",".$this->db->quote("failed","text").",".$this->db->quote("in_progress","text")
+										.")"
+									.") AS status ")
 						->from("hist_usercoursestatus usrcrs")
 						->join("hist_user usr")
 							->on("usr.user_id = usrcrs.usr_id AND usr.hist_historic = 0")
@@ -190,15 +195,11 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 
 	
 	protected function transformResultHTML($rec) {
-		if ($rec["participation_status"] == "status_successful") {
+		if ($rec["status"] == "success") {
 			$rec["status"] = $this->success_img;
-		}
-		else if (in_array($rec["participation_status"], array("status_absent_excused", "status_absent_not_excused"))
-			 ||  in_array($rec["booking_status"], array("status_cancelled_with_costs", "status_cancelled_without_costs"))
-			) {
+		} else if ($rec["status"] == "failed") {
 			$rec["status"] = $this->failed_img;
-		}
-		else {
+		} else {
 			$rec["status"] = $this->in_progress_img;
 		}
 
