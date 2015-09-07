@@ -637,7 +637,7 @@ class gevUserUtils {
 		}
 		
 		if (!in_array($a_order, array("title", "start_date", "end_date", "booking_date", "location"
-									 , "points", "fee", "target_group", "goals", "content", "type"))) 
+									 , "points", "fee", "target_group", "goals", "content", "type", "lang"))) 
 		{
 			throw new Exception("gevUserUtils::getPotentiallyBookableCourseInformation: unknown order '".$a_order."'");
 		}
