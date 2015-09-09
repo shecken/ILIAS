@@ -849,13 +849,34 @@ class ilCourseBookingAdminGUI
 					require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
 					$automails = new gevCrsAutoMails($this->getCourse()->getId());
 					$automails->sendDeferred("admin_booking_to_booked", array($user_id));
-					$automails->sendDeferred("invitation", array($user_id));
+
+					//#1542
+					require_once("Services/GEV/Mailing/classes/class.gevCrsAdditionalMailSettings.php");
+					$addMailSettings = new gevCrsAdditionalMailSettings($this->getCourse()->getId());
+					require_once "Services/GEV/Utils/classes/class.gevCourseUtils.php";
+					$crs_ultils = gevCourseUtils::getInstance($this->getCourse()->getId());
+
+					$days_before_course_start = $addMailSettings->getInvitationMailingDate();
+					$date = $crs_ultils->getStartDate();
+					$now = new ilDate(date("Y-m-d"), IL_CAL_DATE);
+					if ($date) {
+						$date->increment(IL_CAL_DAY, -1 * $days_before_course_start);
+						$date_unix = $date->get(IL_CAL_UNIX);
+						$now_unix = $now->get(IL_CAL_UNIX);
+						/*var_dump($date_unix);
+						var_dump($now_unix);
+						die();*/
+						if($now_unix > $date_unix) {
+							$automails->sendDeferred("invitation", array($user_id));
+						}
+					}
+					//#1542 ende
 					
 					$this->setDefaultAccomodations($user_id);
 					// gev-patch end
 					
 					// :TODO: needed?
-					$members_obj->sendNotification($members_obj->NOTIFY_ACCEPT_USER, $user_id);			
+					$members_obj->sendNotification($members_obj->NOTIFY_ACCEPT_USER, $user_id);
 					ilForumNotification::checkForumsExistsInsert($this->getCourse()->getRefId(), $user_id);
 					$this->getCourse()->checkLPStatusSync($user_id);
 				}		
