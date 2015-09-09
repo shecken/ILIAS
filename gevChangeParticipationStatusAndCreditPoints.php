@@ -71,11 +71,12 @@ class gevChangeParticipationStatusAndCreditPoints {
 				$usr_ids = $value["user_ids"];
 			}
 
-			$this->changeStatus($usr_ids, $state, $value["cpoints"]);
+			$this->changeStatus($usr_ids, $state, $value["crs_id"]);
+			
 		}
 	}
 
-	private function changeStatus($usr_ids, $state) {
+	private function changeStatus($usr_ids, $state,$crs_id) {
 		foreach ($usr_ids as $key => $usr_id) {
 			echo "Daten f&uuml;r Benutzer $usr_id werden aktualisiert.<br/>";
 
@@ -85,6 +86,7 @@ class gevChangeParticipationStatusAndCreditPoints {
 			}
 
 			$this->updateDataTable($usr_id, $state);
+			$this->updateLPStatus($usr_id,$state,$crs_id);
 			$this->raiseEvent($usr_id);
 			echo "Aktualisierung erfolgreich<br/><br/>";
 		}
@@ -92,6 +94,24 @@ class gevChangeParticipationStatusAndCreditPoints {
 
 	private function updateDataTable($usr_id, $state) {
 		$this->crs_utils->setParticipationStatus($usr_id, $state);
+	}
+
+	private function updateLPStatus($usr_id, $state, $crs_id) {
+		$lpState = $this->getLPStateCode($state);
+		$uComment = $this->getUComment($state);
+		$completed = $this->getCompleted($state);
+		var_dump($crs_id);
+
+		$sql = "UPDATE ut_lp_marks\n"
+			  ."SET status = ".$this->gIlDB->quote($lpState,"integer")."\n"
+			  .",completed = ".$this->gIlDB->quote($completed,"integer")."\n"
+			  .",u_comment = ".$this->gIlDB->quote($uComment,"text")."\n"
+			  ."WHERE obj_id = ".$this->gIlDB->quote($crs_id,"integer")."\n"
+			  ."AND usr_id = ".$this->gIlDB->quote($usr_id,"integer")."\n";
+
+			  echo $sql;
+
+		$this->gIlDB->manipulate($sql);
 	}
 
 	private function raiseEvent($usr_id) {
@@ -118,6 +138,36 @@ class gevChangeParticipationStatusAndCreditPoints {
 					return gevSettings::CRS_URS_STATE_NOT_EXCUSED_VAL;
 			default: 
 					return null;
+		}
+	}
+
+	private function getLPStateCode($state) {
+		switch($state) {
+			case gevSettings::CRS_URS_STATE_SUCCESS_VAL:
+					return gevSettings::CRS_LP_STATE_SUCCESS;
+			case gevSettings::CRS_URS_STATE_EXCUSED_VAL:
+			case gevSettings::CRS_URS_STATE_NOT_EXCUSED_VAL:
+					return gevSettings::CRS_LP_STATE_NOT_STARTED;
+		}
+	}
+
+	private function getUComment($state) {
+		switch($state) {
+			case gevSettings::CRS_URS_STATE_SUCCESS_VAL:
+					return gevSettings::CRS_LP_U_COMMENT_SUCCESS;
+			case gevSettings::CRS_URS_STATE_EXCUSED_VAL:
+			case gevSettings::CRS_URS_STATE_NOT_EXCUSED_VAL:
+					return gevSettings::CRS_LP_U_COMMENZT_NOT_STARTED;
+		}
+	}
+
+	private function getCompleted($state) {
+		switch($state) {
+			case gevSettings::CRS_URS_STATE_SUCCESS_VAL:
+					return gevSettings::CRS_LP_COMPLETED_SUCCESS;
+			case gevSettings::CRS_URS_STATE_EXCUSED_VAL:
+			case gevSettings::CRS_URS_STATE_NOT_EXCUSED_VAL:
+					return gevSettings::CRS_LP_COMPLETED_NOT_STARTED;
 		}
 	}
 

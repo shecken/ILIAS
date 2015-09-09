@@ -122,6 +122,14 @@ class gevSettings {
 	const CRS_URS_STATE_EXCUSED_VAL		= "3";
 	const CRS_URS_STATE_NOT_EXCUSED		= "unentschuldigt";
 	const CRS_URS_STATE_NOT_EXCUSED_VAL	= "4";
+
+	//Crs User LPState
+	const CRS_LP_STATE_SUCCESS 			= "2";
+	const CRS_LP_STATE_NOT_STARTED		= "0";
+	const CRS_LP_U_COMMENT_SUCCESS		= "lp_status_2";
+	const CRS_LP_U_COMMENZT_NOT_STARTED	= "lp_status_0";
+	const CRS_LP_COMPLETED_SUCCESS		= "1";
+	const CRS_LP_COMPLETED_NOT_STARTED	= "0";
 	
 	
 	// Typen von Organisationseinheiten
