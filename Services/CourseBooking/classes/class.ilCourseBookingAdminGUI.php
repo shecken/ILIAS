@@ -854,19 +854,19 @@ class ilCourseBookingAdminGUI
 					require_once("Services/GEV/Mailing/classes/class.gevCrsAdditionalMailSettings.php");
 					$addMailSettings = new gevCrsAdditionalMailSettings($this->getCourse()->getId());
 					require_once "Services/GEV/Utils/classes/class.gevCourseUtils.php";
-					$crs_ultils = gevCourseUtils::getInstance($this->getCourse()->getId());
+					$crs_ultis = gevCourseUtils::getInstance($this->getCourse()->getId());
+					require_once "Services/GEV/Mailing/classes/class.gevDeadlineMailingJob.php";
+					$deadline_job_runned = gevDeadlineMailingJob::isMailSend($this->getCourse()->getId(), "invitation");
 
 					$days_before_course_start = $addMailSettings->getInvitationMailingDate();
-					$date = $crs_ultils->getStartDate();
+					$date = $crs_ultis->getStartDate();
 					$now = new ilDate(date("Y-m-d"), IL_CAL_DATE);
 					if ($date) {
 						$date->increment(IL_CAL_DAY, -1 * $days_before_course_start);
 						$date_unix = $date->get(IL_CAL_UNIX);
 						$now_unix = $now->get(IL_CAL_UNIX);
-						/*var_dump($date_unix);
-						var_dump($now_unix);
-						die();*/
-						if($now_unix > $date_unix) {
+						
+						if($now_unix > $date_unix && $deadline_job_runned) {
 							$automails->sendDeferred("invitation", array($user_id));
 						}
 					}
