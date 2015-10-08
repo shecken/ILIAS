@@ -23,10 +23,11 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 	public function __construct($a_search_options, $a_user_id, $a_parent_obj, $a_parent_cmd="", $a_template_context="") {
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $ilCtrl, $lng;
+		global $ilCtrl, $lng, $ilSetting;
 
-		$this->lng = &$lng;
-		$this->ctrl = &$ilCtrl;
+		$this->gLng = &$lng;
+		$this->gCtrl = &$ilCtrl;
+		$this->gSetting = $ilSetting;
 
 		$user_util = gevUserUtils::getInstance($a_user_id);
 		$this->user_id = $a_user_id;
@@ -48,12 +49,12 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 
 		//$this->addColumn("", "expand", "20px");
 		$this->addColumn("", "expand", "0px", false, "catTableExpandButton");
-		$this->addColumn($this->lng->txt("title"), "title");
-		$this->addColumn($this->lng->txt("status"));
-		$this->addColumn($this->lng->txt("gev_learning_type"), "type");
-		$this->addColumn($this->lng->txt("gev_location"), "location");
-		$this->addColumn($this->lng->txt("date"), "date");
-		$this->addColumn($this->lng->txt("language"), "lang");
+		$this->addColumn($this->gLng->txt("title"), "title");
+		$this->addColumn($this->gLng->txt("status"));
+		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
+		$this->addColumn($this->gLng->txt("gev_location"), "location");
+		$this->addColumn($this->gLng->txt("date"), "date");
+		$this->addColumn($this->gLng->txt("language"), "lang");
 		//$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "", "20px");
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', null, "20px", false);
 		
@@ -103,7 +104,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		}
 
 		if ($a_set["start_date"] == null) {
-			$date = $this->lng->txt("gev_table_no_entry");
+			$date = $this->gLng->txt("gev_table_no_entry");
 		}
 		else {
 			$date = ilDatePresentation::formatPeriod($a_set["start_date"], $a_set["end_date"]);
@@ -118,8 +119,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		
 		$booking_action = '<a href="'.gevCourseUtils::getBookingLinkTo($a_set["obj_id"], $this->user_id).'">'.
 						  $this->book_img."</a>";
-		$contact_onside_action = '<a href="mailto:'.$this->lng->txt("gev_book_contact_onside").'">'.$this->email_img.'</a>';
-		$contact_webinar_action = '<a href="mailto:'.$this->lng->txt("gev_book_contact_webinar").'">'.$this->email_img.'</a>';
+		$contact_action = '<a href="mailto:'.$this->gSetting->get("admin_email").'">'.$this->email_img.'</a>';
 		
 		if (!$booking_deadline_expired && ($a_set["free_places"] > 0 || $unlimited)) {
 			$status = $this->bookable_img;
@@ -131,21 +131,11 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		}
 		else if ($a_set["free_places"] == 0 && !$a_set["waiting_list_active"]) {
 			$status = $this->not_bookable_img;
-			if ($a_set["type"] == gevSettings::WEBINAR) {
-				$action = $contact_webinar_action;
-			}
-			else if($a_set["type"] == gevSettings::LIVE_TRAINING) {
-				$action = $contact_onside_action;
-			}
+			$action = $contact_action;
 		}
 		else {
 			$status = $this->almost_not_bookable_img;
-			if ($a_set["type"] == gevSettings::WEBINAR) {
-				$action = $contact_webinar_action;
-			}
-			else if($a_set["type"] == gevSettings::LIVE_TRAINING) {
-				$action = $contact_onside_action;	
-			}
+			$action = $contact_action;
 		}
 
 		//storno?
@@ -164,40 +154,40 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("DATE", $date);
 		$this->tpl->setVariable("LANG", $a_set["lang"]);
 		$this->tpl->setVariable("ACTIONS", $action);
-		$this->tpl->setVariable("TARGET_GROUP_TITLE", $this->lng->txt("gev_target_group"));
+		$this->tpl->setVariable("TARGET_GROUP_TITLE", $this->gLng->txt("gev_target_group"));
 		$this->tpl->setVariable("TARGET_GROUP", $a_set["target_group"]);
-		$this->tpl->setVariable("GOALS_TITLE", $this->lng->txt("gev_targets_and_benefit"));
+		$this->tpl->setVariable("GOALS_TITLE", $this->gLng->txt("gev_targets_and_benefit"));
 		$this->tpl->setVariable("GOALS", $a_set["goals"]);
-		$this->tpl->setVariable("CONTENTS_TITLE", $this->lng->txt("gev_contents"));
+		$this->tpl->setVariable("CONTENTS_TITLE", $this->gLng->txt("gev_contents"));
 		$this->tpl->setVariable("CONTENTS", $a_set["content"]);
-		$this->tpl->setVariable("CUSTOM_ID_CAPTION", $this->lng->txt("gev_custom_id"));
+		$this->tpl->setVariable("CUSTOM_ID_CAPTION", $this->gLng->txt("gev_custom_id"));
 		$this->tpl->setVariable("CUSTOM_ID", $a_set["custom_id"]);
 		if ($bookable && !$booking_deadline_expired) {
 			$this->tpl->setCurrentBlock("booking_deadline");
 			$this->tpl->setVariable("BOOKING_LINK", gevCourseUtils::getBookingLinkTo($a_set["obj_id"], $this->user_id));
-			$this->tpl->setVariable("BOOKING_LINK_CAPTION", $this->lng->txt("gev_to_booking"));
+			$this->tpl->setVariable("BOOKING_LINK_CAPTION", $this->gLng->txt("gev_to_booking"));
 			$this->tpl->parseCurrentBlock();
 		}
 		else if ($status == $this->almost_not_bookable_img) {
 			$this->tpl->setCurrentBlock("pe_note");
-			$this->tpl->setVariable("PE_NOTE", $this->lng->txt("gev_booking_request_pe_note"));
+			$this->tpl->setVariable("PE_NOTE", $this->gLng->txt("gev_booking_request_pe_note"));
 			$this->tpl->parseCurrentBlock();
 		}
 		$this->tpl->setVariable("FREE_PLACES", $unlimited
-											 ? $this->lng->txt("gev_unlimited")
+											 ? $this->gLng->txt("gev_unlimited")
 											 : $a_set["free_places"]
 											 );
-		$this->tpl->setVariable("FREE_PLACES_CAPTION", $this->lng->txt("gev_free_places2"));
+		$this->tpl->setVariable("FREE_PLACES_CAPTION", $this->gLng->txt("gev_free_places2"));
 		if ($a_set["booking_date"] !== null) {
 			$this->tpl->setCurrentBlock("booking_deadline");
 			$this->tpl->setVariable("BOOKING_DEADLINE", ilDatePresentation::formatDate($a_set["booking_date"]));
-			$this->tpl->setVariable("BOOKING_DEADLINE_CAPTION", $this->lng->txt("gev_bookable_till"));
+			$this->tpl->setVariable("BOOKING_DEADLINE_CAPTION", $this->gLng->txt("gev_bookable_till"));
 			$this->tpl->parseCurrentBlock();
 		}		
 		if ($a_set["cancel_date"] !== null && $show_cancel_date) {
 			$this->tpl->setCurrentBlock("cancel_deadline");
 			$this->tpl->setVariable("CANCEL_DEADLINE", ilDatePresentation::formatDate($a_set["cancel_date"]));
-			$this->tpl->setVariable("CANCEL_DEADLINE_CAPTION", $this->lng->txt("gev_free_cancellation_till"));
+			$this->tpl->setVariable("CANCEL_DEADLINE_CAPTION", $this->gLng->txt("gev_free_cancellation_till"));
 			//$this->tpl->setVariable("CANCEL_DEADLINE", $a_set["cancel_date"]);
 			$this->tpl->parseCurrentBlock();
 		}
@@ -210,10 +200,10 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 
 		if(!empty($a_set["schedule"]) && $a_set["start_date"] !== null) {
 			$this->tpl->setCurrentBlock("schedule");
-			$this->tpl->setVariable("SCHEDULE_CAPTION", $this->lng->txt("gev_schedule"));
+			$this->tpl->setVariable("SCHEDULE_CAPTION", $this->gLng->txt("gev_schedule"));
 			foreach($a_set["schedule"] as $key => $val) {
 				$numday = $key+1;
-				$schedule = $schedule.$this->lng->txt("day")." $numday: $val<br>";
+				$schedule = $schedule.$this->gLng->txt("day")." $numday: $val<br>";
 			}
 			$this->tpl->setVariable("SCHEDULE", $schedule);
 			$this->tpl->parseCurrentBlock();
