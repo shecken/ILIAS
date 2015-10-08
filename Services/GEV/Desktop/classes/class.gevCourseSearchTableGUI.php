@@ -23,10 +23,11 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 	public function __construct($a_search_options, $a_user_id, $a_parent_obj, $a_parent_cmd="", $a_template_context="") {
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $ilCtrl, $lng;
+		global $ilCtrl, $lng, $ilSetting;
 
 		$this->lng = &$lng;
 		$this->ctrl = &$ilCtrl;
+		$this->gSetting = $ilSetting;
 
 		$user_util = gevUserUtils::getInstance($a_user_id);
 		$this->user_id = $a_user_id;
@@ -118,8 +119,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		
 		$booking_action = '<a href="'.gevCourseUtils::getBookingLinkTo($a_set["obj_id"], $this->user_id).'">'.
 						  $this->book_img."</a>";
-		$contact_onside_action = '<a href="mailto:'.$this->lng->txt("gev_book_contact_onside").'">'.$this->email_img.'</a>';
-		$contact_webinar_action = '<a href="mailto:'.$this->lng->txt("gev_book_contact_webinar").'">'.$this->email_img.'</a>';
+		$contact_action = '<a href="mailto:'.$this->gSetting->get("admin_email").'">'.$this->email_img.'</a>';
 		
 		if (!$booking_deadline_expired && ($a_set["free_places"] > 0 || $unlimited)) {
 			$status = $this->bookable_img;
@@ -131,21 +131,11 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		}
 		else if ($a_set["free_places"] == 0 && !$a_set["waiting_list_active"]) {
 			$status = $this->not_bookable_img;
-			if ($a_set["type"] == gevSettings::WEBINAR) {
-				$action = $contact_webinar_action;
-			}
-			else if($a_set["type"] == gevSettings::LIVE_TRAINING) {
-				$action = $contact_onside_action;
-			}
+			$action = $contact_action;
 		}
 		else {
 			$status = $this->almost_not_bookable_img;
-			if ($a_set["type"] == gevSettings::WEBINAR) {
-				$action = $contact_webinar_action;
-			}
-			else if($a_set["type"] == gevSettings::LIVE_TRAINING) {
-				$action = $contact_onside_action;	
-			}
+			$action = $contact_action;
 		}
 
 		//storno?
