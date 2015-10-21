@@ -3246,3 +3246,12 @@ $role_utils->grantPermissionsForAllObjectsBelow($obj_type, 3986, $role, $perms);
 
 
 ?>
+
+<#97>
+<?php
+
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::initPluginEnv();
+ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
+
+?>

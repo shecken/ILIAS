@@ -8894,6 +8894,7 @@ gev#:#gev_course_categorie#:#培训类别
 gev#:#gev_course_id#:#培训课程编号
 gev#:#gev_course_mgmt#:#培训管理
 gev#:#gev_course_search_adm#:#所有培训的列表
+gev#:#tutor#:#Trainer
 gev#:#gev_course_search_desc#:#在这里您可以缩小搜索范围
 gev#:#gev_course_type#:#授课方式
 gev#:#gev_crs_function#:#使用者身份

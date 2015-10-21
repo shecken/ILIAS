@@ -265,7 +265,7 @@ class gevCrsMailData extends ilMailData {
 					}
 				}
 				break;
-			case "ORGANIZTIONAL":
+			case "ORGANIZATIONAL":
 				$val = $this->crs_utils->getOrgaInfo();
 				break;
 			case "LIST":

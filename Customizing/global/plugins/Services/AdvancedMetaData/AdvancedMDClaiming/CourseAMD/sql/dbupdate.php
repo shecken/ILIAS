@@ -348,3 +348,20 @@ array( "Period"
 
 gevAMDUtils::createAMDRecords($records, array("crs"));
 ?>
+
+<#2>
+<?php
+
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+
+$options = array
+	( "High Potentials (SPX-HP)"
+	, "Onboarding (SPX-OB)"
+	, "Azubi-Ausbildung (SPX-AA)"
+	);
+
+$amdutils = gevAMDUtils::getInstance();
+$amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_EDU_PROGRAM, $options);
+
+?>

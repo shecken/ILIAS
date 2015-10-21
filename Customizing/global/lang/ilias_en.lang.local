@@ -8940,6 +8940,7 @@ gev#:#gev_course_id#:#Training ID
 gev#:#gev_course_mgmt#:#Training administration
 gev#:#gev_course_search#:#Specify your search
 gev#:#gev_course_search_adm#:#Search training
+gev#:#tutor#:#Trainer
 gev#:#gev_course_search_desc#:#Here you can filter the training courses.
 gev#:#gev_course_type#:#Training type
 gev#:#gev_crs_function#:#Role
