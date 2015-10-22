@@ -1190,10 +1190,8 @@ class gevUserUtils {
 	
 	public function getDirectSuperiors() {
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php");
-		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		$tree = ilObjOrgUnitTree::_getInstance();
 		$sups = array();
-		//$sups = gevOrgUnitUtils::getSuperiorsOfUser($this->user_id);
 		$look_above_orgus = array();
 		$orgus = $tree->getOrgUnitOfUser($this->user_id);
 		foreach( $orgus as $ref_id ) {
@@ -1207,10 +1205,10 @@ class gevUserUtils {
 			if(in_array($this->user_id,$employees)) {
 				$sups = array_merge($sups,$superiors);
 			} else {
-					$look_above_orgus[] = $ref_id;		
+					$look_above_orgus[] = $ref_id;
 			}
 			if(in_array($this->user_id,$superiors)) {
-					$look_above_orgus[] = $ref_id;			
+					$look_above_orgus[] = $ref_id;
 			}
 		}
 
