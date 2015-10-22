@@ -21,7 +21,9 @@ class gevParticipantTrainingCancelled extends gevCrsAutoMail {
 	}
 	
 	public function getRecipientUserIDs() {
-		return $this->getCourseParticipants();
+		return array_merge( $this->getCourseCancelledWithoutCostsMembers()
+						  , $this->getCourseCancelledWithCostsMembers()
+						  );
 	}
 	
 	public function getCC($a_recipient) {
