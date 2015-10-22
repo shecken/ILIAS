@@ -74,7 +74,7 @@ class gevCrsAutoMails extends ilAutoMails {
 	}
 	
 	public function sendDeferred($a_mail_id, $a_recipients = null, $a_occasion = null) {
-		return $this->getAutoMail($a_mail_id)->sendDeferred($a_recipients, $a_occasion);
+		return $this->getAutoMail($a_mail_id)->sendDeferred($a_recipients, $a_occasion, $this->check_offline_status);
 	}
 
 	public function getUserOccasion() {
