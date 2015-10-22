@@ -121,7 +121,7 @@ class gevDeferredMails {
 		foreach ($mails as $mail) {
 			if ($cur_crs_id != $mail["crs_id"]) {
 				$cur_crs_id = $mail["crs_id"];
-				$automails = new gevCrsAutoMails($cur_crs_id);
+				$automails = new gevCrsAutoMails($cur_crs_id, false);
 			}
 
 			try {
