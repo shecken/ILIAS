@@ -11,7 +11,7 @@ require_once("Services/Mailing/classes/class.ilMailLog.php");
 */
 
 class gevCrsAutoMails extends ilAutoMails {
-	public function __construct($a_obj_id) {
+	public function __construct($a_obj_id, $a_check_offline_status = true) {
 		$this->mail_data = array(
 		  "self_booking_to_booked" 								=> "gevSelfBookingToBooked"
 		, "self_booking_to_waiting" 							=> "gevSelfBookingToWaiting"
@@ -43,6 +43,8 @@ class gevCrsAutoMails extends ilAutoMails {
 		);
 
 		parent::__construct($a_obj_id);
+
+		$this->check_offline_status = $a_check_offline_status;
 
 		global $lng;
 		$this->lng = &$lng;

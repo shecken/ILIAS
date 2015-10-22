@@ -24,7 +24,7 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 	
 	private static $template_type = "CrsMail";
 
-	public function __construct($a_crs_id, $a_id) {
+	public function __construct($a_crs_id, $a_id, $a_check_offline_status = true) {
 		global $ilDB, $lng, $ilCtrl, $ilias, $ilSetting, $ilUser;
 
 		$this->db = &$ilDB;
@@ -47,6 +47,8 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		$this->mail_log = null;
 		$this->gev_crs_mail_template_type = self::$template_type;
 		$this->global_bcc = null;
+
+		$this->check_offline_status = $a_check_offline_status;
 
 		parent::__construct($a_id);
 	}
@@ -430,18 +432,14 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 
 
 	public function send($a_recipients = null, $a_occasion = null) {
-		//TODO: this maybe needs to be adjusted
-		// Do not send mails for online-trainings.
-/*		if ($this->getCourse()->getVfSettings()->isTypeOnline()) {
-			return;
-		}*/
-
 		// Do not send mails for courses that are offline.
 		// except for trainer mail when training is cancelled.
 		// This is a hack and really no good design.
 		global $ilLog;
 
-		if ($this->getCourse()->getOfflineStatus() && $this->getId() != "trainer_training_cancelled") {
+		if ($this->check_offline_status
+		&&  $this->getCourse()->getOfflineStatus()
+		&& $this->getId() != "trainer_training_cancelled") {
 			$ilLog->write("gevCrsAutoMail::send: course is offline, won't send mail. crs_id=".$this->getCourse()->getId().", mail_id=".$this->getId());
 			return;
 		}
@@ -460,7 +458,10 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 	public function sendDeferred($a_recipients = null, $a_occasion = null) {
 		global $ilLog;
 		$ilLog->write("gevCrsAutoMail::sendDeferred");
-		if ($this->getCourse()->getOfflineStatus() && $this->getId() != "bill_mail") {
+
+		if ($this->check_offline_status
+		&&  $this->getCourse()->getOfflineStatus()
+		&& $this->getId() != "bill_mail") {
 			$ilLog->write("....courseOffline and not a bill");
 			return;
 		}
