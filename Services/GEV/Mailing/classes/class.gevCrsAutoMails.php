@@ -51,7 +51,7 @@ class gevCrsAutoMails extends ilAutoMails {
 	}
 
 	public function getTitle() {
-		return "Automatische Mails";
+		return $this->lng->txt("auto_mails");
 	}
 
 	public function getSubtitle() {
