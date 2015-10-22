@@ -24,7 +24,7 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 	
 	private static $template_type = "CrsMail";
 
-	public function __construct($a_crs_id, $a_id, $a_check_offline_status = true) {
+	public function __construct($a_crs_id, $a_check_offline_status = true) {
 		global $ilDB, $lng, $ilCtrl, $ilias, $ilSetting, $ilUser;
 
 		$this->db = &$ilDB;
@@ -50,7 +50,7 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 
 		$this->check_offline_status = $a_check_offline_status;
 
-		parent::__construct($a_id);
+		parent::__construct($a_crs_id);
 	}
 
 	// TODO: Move this to ilAutoMail
