@@ -168,6 +168,11 @@ class ilObjRepositorySettingsGUI extends ilObjectGUI
 		*/
 	
 		// trash
+        // cat-patch start
+        // We disable this as the trash and the org units wreak havoc together.
+        // As the org units never get deleted when trash is activated but also do not show
+        // up in the trash, there are outdated superior-employee-relations in the database,
+        // which leads to users seeing to much. (#1738)
 		/*$cb = new ilCheckboxInputGUI($this->lng->txt("enable_trash"), "enable_trash");
 		$cb->setInfo($this->lng->txt("enable_trash_info"));
 		if ($ilSetting->get("enable_trash"))
@@ -175,6 +180,7 @@ class ilObjRepositorySettingsGUI extends ilObjectGUI
 			$cb->setChecked(true);
 		}
 		$form->addItem($cb);*/
+        // cat-patch end
 	
 		// change event
 		require_once 'Services/Tracking/classes/class.ilChangeEvent.php';
@@ -253,7 +259,10 @@ class ilObjRepositorySettingsGUI extends ilObjectGUI
 			// $ilSetting->set('rep_cache',(int) $_POST['rep_cache']);
 			// $ilSetting->set("rep_tree_synchronize", $_POST["rep_tree_synchronize"]);	
 			
+            // cat-patch start
+            // #1738
 			//$ilSetting->set("enable_trash", $_POST["enable_trash"]);	
+            // cat-patch end
 			 
 			$ilSetting->set("rep_shorten_description", $form->getInput('rep_shorten_description'));
 			$ilSetting->set("rep_shorten_description_length", (int)$form->getInput('rep_shorten_description_length'));										
