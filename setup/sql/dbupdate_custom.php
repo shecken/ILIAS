@@ -3255,3 +3255,10 @@ ilCustomInstaller::initPluginEnv();
 ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
 
 ?>
+
+<#98>
+<?php
+	require_once("Services/Administration/classes/class.ilSetting.php");
+	$set = new ilSetting();
+	$set->set("enable_trash",0);
+?>
