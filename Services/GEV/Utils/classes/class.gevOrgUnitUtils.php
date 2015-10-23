@@ -752,6 +752,7 @@ class gevOrgUnitUtils {
 		$sups = array();
 		$look_above_orgus = array();
 		$orgus = $tree->getOrgUnitOfUser($user_id);
+
 		foreach( $orgus as $ref_id ) {
 			$employees = $tree->getEmployees($ref_id);
 			$superiors = $tree->getSuperiors($ref_id);
@@ -763,7 +764,7 @@ class gevOrgUnitUtils {
 
 		foreach($orgus as $org) {
 			$org_aux = $tree->getParent($org);
-			while ($org_aux) {
+			while ((int)$org_aux > 0) {
 				$sups = array_merge($sups,$tree->getSuperiors($org_aux));
 				$org_aux = $tree->getParent($org_aux);
 			}
