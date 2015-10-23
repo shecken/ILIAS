@@ -755,7 +755,6 @@ class gevOrgUnitUtils {
 		foreach( $orgus as $ref_id ) {
 			$employees = $tree->getEmployees($ref_id);
 			$superiors = $tree->getSuperiors($ref_id);
-			$any_superiors = count($superiors);
 
 			if(in_array($user_id,$employees)) {
 				$sups = array_merge($sups,$superiors);
