@@ -1189,40 +1189,60 @@ class gevUserUtils {
 	public function getDirectSuperiors() {
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php");
 		$tree = ilObjOrgUnitTree::_getInstance();
-		$sups = array();
-		$look_above_orgus = array();
-		$orgus = $tree->getOrgUnitOfUser($this->user_id);
-		foreach( $orgus as $ref_id ) {
-			$employees = $tree->getEmployees($ref_id);
-			$superiors = $tree->getSuperiors($ref_id);
-			$any_superiors = count($superiors);
-			if(!$any_superiors) {
-				$look_above_orgus[] = $ref_id; 
+
+		// This starts with all the org units the user is member in.
+		// During the loop we might fill this array with more org units
+		// if we could not find any superiors for the user in them.
+		$orgus = array_values($tree->getOrgUnitOfUser($this->user_id));
+
+		if (count($orgus) == 0) {
+			return array();
+		}
+
+		$the_superiors = array();
+
+		$i = -1;
+		$initial_amount = count($orgus);
+		// We need to check this on every loop as the amount of orgus might change
+		// during looping.
+		while ($i < count($orgus)) {
+			$i++;
+			$ref_id = $orgus[$i];
+
+			// Reached the top of the tree.
+			if (!$ref_id || $ref_id == ROOT_FOLDER_ID) {
 				continue;
 			}
-			if(in_array($this->user_id,$employees)) {
-				$sups = array_merge($sups,$superiors);
-			} else {
-					$look_above_orgus[] = $ref_id;
+
+			$superiors = $tree->getSuperiors($ref_id);
+			$user_is_superior = in_array($this->user_id, $superiors);
+			$in_initial_orgus = $i < $initial_amount;
+
+			// I always need to go one org unit up if we are in the original
+			// orgu and the user is superior there.
+			if ( $in_initial_orgus && $user_is_superior) {
+				$orgus[] = $tree->getParent($ref_id);
 			}
-			if(in_array($this->user_id,$superiors)) {
-					$look_above_orgus[] = $ref_id;
+
+			// Skip the orgu if there are no superiors there.
+			if ( count($superiors) == 0
+			|| (   $in_initial_orgus
+				// This is only about the org units the user actually is a member of
+				&& $user_is_superior
+				// If a user is an employee and a superior in one orgunit, he
+				// actually seem to be his own superior.
+				&& !in_array($this->user_id, $tree->getEmployees($ref_id)))
+			) {
+				$orgus[] = $tree->getParent($ref_id);
+				continue;
 			}
+
+			$the_superiors[] = $superiors;
 		}
 
-		$look_above_orgus = array_unique($look_above_orgus);
+		$the_superiors = call_user_func_array("array_merge", $the_superiors);
 
-		foreach($look_above_orgus as $org) {
-			$sups_aux = array();
-			$org_aux = $tree->getParent($org);
-			while (count($sups_aux) == 0 && $org_aux != ROOT_FOLDER_ID) {
-				$org_aux = $tree->getParent($org_aux);
-				$sups_aux = $tree->getSuperiors($org_aux);
-			}
-			$sups = array_merge($sups,$sups_aux);
-		}
-		$sups = array_unique($sups);
-		return gevUserUtils::removeInactiveUsers($sups);
+		return gevUserUtils::removeInactiveUsers(array_unique($the_superiors));
 	}
 	
 	public function isEmployeeOf($a_user_id) {	
