@@ -1202,6 +1202,9 @@ class gevUserUtils {
 		$the_superiors = array();
 
 		$i = -1;
+		$initial_amount = count($orgus);
+		// We need to check this on every loop as the amount of orgus might change
+		// during looping.
 		while ($i < count($orgus)) {
 			$i++;
 			$ref_id = $orgus[$i];
@@ -1216,7 +1219,7 @@ class gevUserUtils {
 			// Skip this org unit if the user is superior there or the
 			// org unit has no superiors. We need to look in the unit
 			// above then.
-			if ( in_array($this->user_id, $superiors)
+			if ( ($i < $initial_amount && in_array($this->user_id, $superiors))
 			||   count($superiors) == 0) {
 				$orgus[] = $tree->getParent($ref_id);
 				continue;
