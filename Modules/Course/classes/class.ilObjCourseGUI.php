@@ -2135,8 +2135,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		else
 		{
 			$types = array(
-				ilCourseConstants::CRS_MEMBER => $lng->txt("crs_member"),
-				ilCourseConstants::CRS_TUTOR => $lng->txt("crs_tutor")
+				ilCourseConstants::CRS_TUTOR => $lng->txt("crs_tutor"),
 			);
 		}
 		
