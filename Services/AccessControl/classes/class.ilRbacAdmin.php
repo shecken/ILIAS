@@ -78,7 +78,12 @@ class ilRbacAdmin
 
 		$query = "DELETE FROM rbac_ua WHERE usr_id = ".$ilDB->quote($a_usr_id,'integer');
 		$res = $ilDB->manipulate($query);
-		
+		//gev-patch start
+		global $ilAppEventHandler;
+		$ilAppEventHandler->raise(
+			'Services/AccessControl', 'removeUser', array("usr_id" => $a_usr_id)
+		);
+		//gev-patch-end
 		return true;
 	}
 
