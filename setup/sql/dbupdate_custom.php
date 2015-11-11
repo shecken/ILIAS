@@ -3262,3 +3262,71 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "
 	$set = new ilSetting();
 	$set->set("enable_trash",0);
 ?>
+
+<#99>
+<?php
+	if(!$ilDB->tableExists('hist_userorgu')) {
+		$fields = array(
+			'row_id' => array(
+				'type' => 'integer',
+				'length' => 4,
+				'notnull' => true),
+			'hist_version' => array(
+				'type' => 'integer',
+				'length' => 4,
+				'notnull' => true,
+				'default' => 1),
+			'hist_historic' => array(
+				'type' => 'integer',
+				'length' => 4,
+				'notnull' => true,
+				'default' => 0),
+			'creator_user_id' => array(
+				'type' => 'integer',
+				'length' => 4,
+				'notnull' => true),
+			'created_ts' => array(
+				'type' => 'integer',
+				'length' => 4,
+				'notnull' => true,
+				'default' => 0),
+			'usr_id' => array(
+				'type' => 'integer',
+				'length' => 4,
+				'notnull' => true),
+			'orgu_id' => array(
+				'type' => 'integer',
+				'length' => 4,
+				'notnull' => true),
+			'rol_id' => array(
+				'type' => 'integer' ,
+				'length' => 4 ,
+				'notnull' => true),
+			'orgu_title' => array(
+				'type' => 'text',
+				'length' => 40 ,
+				'notnull' => false),
+			'org_unit_above1' => array(
+				'type' => 'text',
+				'length' => 40 ,
+				'notnull' => false),
+			'org_unit_above2' => array(
+				'type' => 'text',
+				'length' => 40 ,
+				'notnull' => false),
+			'rol_title' => array(
+				'type' => 'text',
+				'length' => 40 ,
+				'notnull' => false),
+			'action' => array(
+				'type' => 'integer',
+				'length' => 1 ,
+				'notnull' => true)			
+		);
+		$ilDB->createTable('hist_userorgu', $fields);
+		$ilDB->addPrimaryKey('hist_userorgu', array('row_id'));
+		$ilDB->createSequence('hist_userorgu');
+
+		$ilCtrlStructureReader->getStructure();
+	}
+?>

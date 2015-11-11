@@ -379,7 +379,7 @@ abstract class ilHistorizingStorage
 		if ( count($cases) == 0 && $mass_modification_allowed == false)
 		{
 			self::validateRecordData($a_data);
-			return self::createRecord($a_case_id, $a_data, '1', $a_record_creator, $a_creation_timestamp);
+			return static::createRecord($a_case_id, $a_data, '1', $a_record_creator, $a_creation_timestamp);
 		}
 
 		foreach ($cases as $case)
