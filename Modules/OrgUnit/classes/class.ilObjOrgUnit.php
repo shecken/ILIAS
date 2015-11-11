@@ -101,7 +101,14 @@ class ilObjOrgUnit extends ilContainer {
         }
         
         // gev-patch start
-        parent::update();
+		parent::update();
+
+		$this->ilAppEventHandler->raise('Modules/OrgUnit'
+			,'update' 
+			,array('object' => $this
+				,'obj_id' => $this->getId()
+				,'ref_id' =>  $this->getRefId()
+				,'orgu_title' => $this->getTitle()));
         // gev-patch end
         
     }
