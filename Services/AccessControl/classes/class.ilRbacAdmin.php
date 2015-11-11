@@ -252,6 +252,21 @@ class ilRbacAdmin
 				include_once './Services/User/classes/class.ilObjUser.php';
 				ilObjUser::_addDesktopItem($a_usr_id, $item_data['item_id'], $item_data['item_type']);
 			}
+			//gev patch start
+			global $ilAppEventHandler;
+			$parameter['rol_id'] = $a_rol_id;
+			$parameter['rol'] = $obj_fac->getInstanceByObjId($a_rol_id);
+			$parameter['usr_id'] = $a_usr_id;
+			if($is_global) { 
+				$ilAppEventHandler->raise(
+					'Services/AccessControl', 'assignUserGlobalRole', $parameter
+				);
+			} elseif ($obj->getType() == 'orgu') {
+				$ilAppEventHandler->raise(
+					'Services/AccessControl', 'assignUserOrguRole', $parameter
+				);
+			}
+			//gev patch end
 			
 		}
 		
