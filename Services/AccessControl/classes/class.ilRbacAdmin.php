@@ -299,6 +299,21 @@ class ilRbacAdmin
 			 "AND rol_id = ".$ilDB->quote($a_rol_id,'integer')." ";
 		$res = $ilDB->manipulate($query);
 		
+		//gev patch start
+		global $ilAppEventHandler;
+		$parameter['rol_id'] = $a_rol_id;
+		$parameter['usr_id'] = $a_usr_id;
+		if($is_global) {
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deassignUserGlobalRole', $parameter
+			);
+		} elseif($obj->getType() == 'orgu') { 
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deassignUserOrguRole', $parameter
+			);
+		}
+		//gev patch end
+		
 		include_once('Services/LDAP/classes/class.ilLDAPRoleGroupMapping.php');
 		$mapping = ilLDAPRoleGroupMapping::_getInstance();
 		$mapping->deassign($a_rol_id,$a_usr_id); 
