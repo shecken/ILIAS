@@ -717,5 +717,3 @@ class catReportOrder {
 		return $a_direction;
 	}
 }
-
-?>
