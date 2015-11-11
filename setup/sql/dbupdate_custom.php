@@ -3330,3 +3330,22 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "
 		$ilCtrlStructureReader->getStructure();
 	}
 ?>
+
+<#100>
+<?php
+	$queries =  array(
+		 "ALTER TABLE hist_userorgu ADD INDEX hist_historic (hist_historic);"
+		,"ALTER TABLE hist_userorgu ADD INDEX orgu_id (orgu_id);"
+		,"ALTER TABLE hist_userorgu ADD INDEX usr_id (usr_id);"
+
+	);
+	foreach ($queries as $query) {
+		try{
+			$ilDB->manipulate($query);
+		} catch(Exception $e){
+			//pass
+		}
+	}
+
+
+?>
