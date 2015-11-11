@@ -75,7 +75,6 @@ class ilRbacAdmin
 			$message = get_class($this)."::removeUser(): No usr_id given!";
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
-
 		$query = "DELETE FROM rbac_ua WHERE usr_id = ".$ilDB->quote($a_usr_id,'integer');
 		$res = $ilDB->manipulate($query);
 		//gev-patch start
@@ -103,6 +102,23 @@ class ilRbacAdmin
 			$message = get_class($this)."::deleteRole(): Missing parameter! role_id: ".$a_rol_id." ref_id of role folder: ".$a_ref_id;
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
+
+		//gev pach start
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_fac = new ilObjectFactory;
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+
+			if($obj_id) {
+
+				$obj = $obj_fac->getInstanceByObjId($obj_id);
+				$parameter['rol_obj'] = $obj;
+				$parameter['rol_obj_id'] = $obj_id;
+			}
+		}
+		//gev pach end
 
 		// exclude system role from rbac
 		if ($a_rol_id == SYSTEM_ROLE_ID)
@@ -234,7 +250,19 @@ class ilRbacAdmin
 			$message = get_class($this)."::assignUser(): Missing parameter! role_id: ".$a_rol_id." usr_id: ".$a_usr_id;
 			#$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
-		
+
+		//gev pach start
+		$obj_fac = new ilObjectFactory;
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+			$obj = $obj_fac->getInstanceByObjId($obj_id);
+			$parameter['rol_obj'] = $obj;
+			$parameter['rol_obj_id'] = $obj_id;
+		}
+		//gev pach end
 		// check if already assigned user id and role_id
 		$alreadyAssigned = $rbacreview->isAssigned($a_usr_id,$a_rol_id);	
 		
@@ -294,6 +322,20 @@ class ilRbacAdmin
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
 
+		//gev pach start
+		global $rbacreview;
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_fac = new ilObjectFactory;
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+			$obj = $obj_fac->getInstanceByObjId($obj_id);
+			$parameter['rol_obj'] = $obj;
+			$parameter['rol_obj_id'] = $obj_id;
+		}
+		//gev pach end
+
 		$query = "DELETE FROM rbac_ua ".
 			 "WHERE usr_id = ".$ilDB->quote($a_usr_id,'integer')." ".
 			 "AND rol_id = ".$ilDB->quote($a_rol_id,'integer')." ";
@@ -338,6 +380,18 @@ class ilRbacAdmin
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
 
+
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_fac = new ilObjectFactory;
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+			$obj = $obj_fac->getInstanceByObjId($obj_id);
+			$parameter['rol_obj'] = $obj;
+			$parameter['rol_obj_id'] = $obj_id;
+		}
+
 		$query = "DELETE FROM rbac_ua ".
 			 "WHERE rol_id = ".$ilDB->quote($a_rol_id,'integer')." ";
 		$res = $ilDB->manipulate($query);
@@ -353,7 +407,7 @@ class ilRbacAdmin
 				'Services/AccessControl', 'deassignUsersOrguRole', $parameter
 			);
 		}
-		
+
 
 		// we don't use ldap for generali
 		//include_once('Services/LDAP/classes/class.ilLDAPRoleGroupMapping.php');
@@ -946,6 +1000,23 @@ class ilRbacAdmin
 			$message = get_class($this)."::deleteRolePermission(): Missing parameter! role_id: ".$a_rol_id." ref_id: ".$a_ref_id;
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
+
+		//gev pach start
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_fac = new ilObjectFactory;
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+
+			if($obj_id) {
+
+				$obj = $obj_fac->getInstanceByObjId($obj_id);
+				$parameter['rol_obj'] = $obj;
+				$parameter['rol_obj_id'] = $obj_id;
+			}
+		}
+		//gev pach end
 
 		// exclude system role from rbac
 		if ($a_rol_id == SYSTEM_ROLE_ID)
