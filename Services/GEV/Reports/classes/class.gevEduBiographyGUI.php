@@ -364,6 +364,81 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 					."   AND ".$this->db->in("usrcrs.booking_status", array("status_booked", "status_cancelled_with_costs", "status_cancelled_without_costs"), false, "text")
 					;
 	}
-}
 
-?>
+	protected function exportXLS() {
+		require_once "Services/Excel/classes/class.ilExcelUtils.php";
+		require_once "Services/Excel/classes/class.ilExcelWriterAdapter.php";
+		require_once "Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php";
+		
+		$data = $this->getData(true);
+
+		$adapter = new ilExcelWriterAdapter("Report.xls", true); 
+		$workbook = $adapter->getWorkbook();
+		$worksheet = $workbook->addWorksheet();
+		$worksheet->setLandscape();
+
+		//available formats within the sheet
+		$format_bold = $workbook->addFormat(array("bold" => 1));
+		$format_wrap = $workbook->addFormat();
+		$format_wrap->setTextWrap();
+		$this->lng->loadLanguageModule("matlist");
+		$tree = ilObjOrgUnitTree::_getInstance();
+
+		$worksheet->writeString(0, 0, $this->lng->txt("fullname"), $format_bold);
+		$worksheet->writeString(0, 1, $this->target_user_utils->getFullname(), $format_wrap);
+
+		$orgus = $tree->getOrgUnitOfUser($this->target_user_id);
+		$orgus = $tree->getTitles($orgus);
+		$orgus = implode(", ", $orgus);
+		$worksheet->writeString(1, 0, $this->lng->txt("objs_orgu"), $format_bold);
+		$worksheet->writeString(1, 1, $orgus, $format_wrap);
+		$worksheet->writeString(2, 0, $this->lng->txt("login"), $format_bold);
+		$worksheet->writeString(2, 1, $this->target_user_utils->getLogin(), $format_wrap);
+
+		$filter_period = $this->filter->get('period');
+		$filter_period = ilDatePresentation::formatDate($filter_period['start'])." - ".ilDatePresentation::formatDate( $filter_period['end']);
+
+
+		$worksheet->writeString(3, 0, $this->lng->txt("gev_period"), $format_bold);
+		$worksheet->writeString(3, 1, $filter_period, $format_wrap);
+
+		$worksheet->writeString(4, 0, $this->lng->txt("xls_creation_date"), $format_bold);
+		$worksheet->writeString(4, 1, date("d.m.Y"), $format_wrap);
+		//init cols and write titles
+		$colcount = 0;
+		foreach ($this->table->all_columns as $col) {
+			if ($col[4]) {
+				continue;
+			}
+			$worksheet->setColumn($colcount, $colcount, 30); //width
+			if (method_exists($this, "_process_xls_header") && $col[2]) {
+				$worksheet->writeString(6, $colcount, $this->_process_xls_header($col[1]), $format_bold);
+			}
+			else {
+				$worksheet->writeString(6, $colcount, $col[2] ? $col[1] : $this->lng->txt($col[1]), $format_bold);
+			}
+			$colcount++;
+		}
+
+		//write data-rows
+		$rowcount = 7;
+		foreach ($data as $entry) {
+			$colcount = 0;
+			foreach ($this->table->all_columns as $col) {
+				if ($col[4]) {
+					continue;
+				}
+				$k = $col[0];
+				$v = $entry[$k];
+
+
+				$worksheet->write($rowcount, $colcount, $v, $format_wrap);
+				$colcount++;
+			}
+
+			$rowcount++;
+		}
+
+		$workbook->close();		
+	}
+}
