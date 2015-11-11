@@ -402,7 +402,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		$worksheet->writeString(3, 0, $this->lng->txt("gev_period"), $format_bold);
 		$worksheet->writeString(3, 1, $filter_period, $format_wrap);
 
-		$worksheet->writeString(4, 0, $this->lng->txt("xls_creation_date"), $format_bold);
+		$worksheet->writeString(4, 0, $this->lng->txt("matlist_xls_creation_date"), $format_bold);
 		$worksheet->writeString(4, 1, date("d.m.Y"), $format_wrap);
 		//init cols and write titles
 		$colcount = 0;
