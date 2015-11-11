@@ -63,9 +63,7 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 						->select("usr.email")
 						->select("usr.adp_number")
 						->select("usr.job_number")
-						->select("usr.org_unit_above1")
-						->select("usr.org_unit_above2")
-						->select("usr.org_unit")
+						->select_raw("GROUP_CONCAT(DISTINCT huo.orgu_title SEPARATOR ', ' ) as org_unit")
 						->select("usr.position_key")
 						->select("crs.custom_id")
 						->select("crs.title")
@@ -79,11 +77,17 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 						->select("crs.begin_date")
 						->select("crs.end_date")
 						->select("crs.edu_program")
+						->left_join("hist_userorgu huo")
+							->on(" 	huo.usr_id = usr.user_id "
+								."	AND huo.hist_historic = 0"
+								."	AND huo.action >= 0")
 						->from("hist_user usr")
 						->left_join("hist_usercoursestatus usrcrs")
 							->on("usr.user_id = usrcrs.usr_id AND usrcrs.hist_historic = 0")
 						->left_join("hist_course crs")
 							->on("crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0")
+						->group_by("usr.user_id")
+						->group_by("crs.crs_id")
 						->compile()
 						;
 
