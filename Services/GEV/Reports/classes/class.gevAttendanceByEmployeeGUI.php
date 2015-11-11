@@ -56,27 +56,19 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 						;
 		
 		$this->query = catReportQuery::create()
-						->distinct()
 						->select("usr.user_id")
 						->select("usr.lastname")
 						->select("usr.firstname")
 						->select("usr.email")
-						->select("usr.adp_number")
-						->select("usr.job_number")
 						->select_raw("GROUP_CONCAT(DISTINCT huo.orgu_title SEPARATOR ', ' ) as org_unit")
-						->select("usr.position_key")
 						->select("crs.custom_id")
 						->select("crs.title")
 						->select("crs.venue")
 						->select("crs.type")
-						->select("usrcrs.credit_points")
 						->select("usrcrs.booking_status")
 						->select("usrcrs.participation_status")
-						->select("usrcrs.usr_id")
-						->select("usrcrs.crs_id")
 						->select("crs.begin_date")
 						->select("crs.end_date")
-						->select("crs.edu_program")
 						->left_join("hist_userorgu huo")
 							->on(" 	huo.usr_id = usr.user_id "
 								."	AND huo.hist_historic = 0"
@@ -183,5 +175,3 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 		return $rec;
 	}
 }
-
-?>
