@@ -95,7 +95,7 @@ class ilRbacAdmin
 	*/
 	function deleteRole($a_rol_id,$a_ref_id)
 	{
-		global $lng,$ilDB;
+		global $lng,$ilDB,$rbacreview;
 
 		if (!isset($a_rol_id) or !isset($a_ref_id))
 		{
@@ -372,7 +372,7 @@ class ilRbacAdmin
 	*/
 	function deassignUsers($a_rol_id)
 	{
-		global $ilDB;
+		global $ilDB, $rbacreview;
 		
 		if (!isset($a_rol_id))
 		{
@@ -993,7 +993,7 @@ class ilRbacAdmin
 	*/
 	function deleteRolePermission($a_rol_id,$a_ref_id,$a_type = false)
 	{
-		global $ilDB;
+		global $ilDB,$rbacreview;
 		
 		if (!isset($a_rol_id) or !isset($a_ref_id))
 		{
