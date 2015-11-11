@@ -127,7 +127,21 @@ class ilRbacAdmin
 		$query = "DELETE FROM rbac_pa ".
 			 "WHERE rol_id = ".$ilDB->quote($a_rol_id,'integer')." ";
 		$res = $ilDB->manipulate($query);
-		
+		//gev patch start
+		global $ilAppEventHandler;
+		$parameter['rol_id'] = $a_rol_id;
+		if($is_global) { 
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deleteGlobalRole', $parameter
+			);
+		} elseif($obj_id) {
+			if($obj->getType() == 'orgu') {
+				$ilAppEventHandler->raise(
+					'Services/AccessControl', 'deleteOrguRole', $parameter
+				);
+			}
+		}
+		//gev patch end
 		//delete rbac_templates and rbac_fa
 		$this->deleteLocalRole($a_rol_id);
 		
