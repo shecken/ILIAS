@@ -313,7 +313,7 @@ class ilRbacAdmin
 			);
 		}
 		//gev patch end
-		
+
 		include_once('Services/LDAP/classes/class.ilLDAPRoleGroupMapping.php');
 		$mapping = ilLDAPRoleGroupMapping::_getInstance();
 		$mapping->deassign($a_rol_id,$a_usr_id); 
@@ -342,6 +342,19 @@ class ilRbacAdmin
 			 "WHERE rol_id = ".$ilDB->quote($a_rol_id,'integer')." ";
 		$res = $ilDB->manipulate($query);
 		
+		global $ilAppEventHandler;
+		$parameter['rol_id'] = $a_rol_id;
+		if($is_global) { 
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deassignUsersGlobalRole', $parameter
+			);
+		} elseif($obj->getType() == 'orgu') { 
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deassignUsersOrguRole', $parameter
+			);
+		}
+		
+
 		// we don't use ldap for generali
 		//include_once('Services/LDAP/classes/class.ilLDAPRoleGroupMapping.php');
 		//$mapping = ilLDAPRoleGroupMapping::_getInstance();
