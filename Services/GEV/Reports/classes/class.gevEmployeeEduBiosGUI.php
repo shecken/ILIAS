@@ -43,18 +43,26 @@ class gevEmployeeEduBiosGUI extends catBasicReportGUI{
 						->select("usr.lastname")
 						->select("usr.firstname")
 						->select("usrd.login")
-						->select("usr.org_unit")
+						->select_raw("GROUP_CONCAT(DISTINCT huo.orgu_title SEPARATOR ', ' ) as org_unit")
 						->from("hist_user usr")
 						->join("usr_data usrd")
 							->on(" usr.user_id = usrd.usr_id")
 						->left_join("hist_usercoursestatus usrcrs")
-							->on("     usr.user_id = usrcrs.usr_id"
-								." AND usrcrs.hist_historic = 0 "
-								." AND usrcrs.credit_points > 0"
-								." AND usrcrs.participation_status = 'status_successful'"
-								." AND usrcrs.booking_status = 'status_booked'"
-								." AND usrcrs.okz <> '-empty-'"
+							->on("	usr.user_id = usrcrs.usr_id"
+								." 	AND usrcrs.hist_historic = 0 "
+								." 	AND usrcrs.credit_points > 0"
+								." 	AND usrcrs.participation_status = 'status_successful'"
+								." 	AND usrcrs.booking_status = 'status_booked'"
+								." 	AND usrcrs.okz <> '-empty-'"
 								)
+						->left_join("hist_userorgu huo")
+							->on(" 	huo.usr_id = usr.user_id "
+								."	AND huo.hist_historic = 0"
+								."	AND huo.action >= 0")
+						->left_join("hist_userorgu huo2")
+							->on(" 	huo2.usr_id = usr.user_id "
+								."	AND huo2.hist_historic = 0"
+								."	AND huo2.action >= 0")
 						->group_by("user_id")
 						->compile()
 						;
@@ -69,7 +77,7 @@ class gevEmployeeEduBiosGUI extends catBasicReportGUI{
 								   )
 						->multiselect("org_unit"
 									 , $this->lng->txt("gev_org_unit")
-									 , array("usr.org_unit", "usr.org_unit_above1", "usr.org_unit_above2")
+									 , array("huo2.orgu_title", "huo2.org_unit_above1", "huo2.org_unit_above2")
 									 , $ous
 									 , array()
 									 )

@@ -75,10 +75,14 @@ class ilRbacAdmin
 			$message = get_class($this)."::removeUser(): No usr_id given!";
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
-
 		$query = "DELETE FROM rbac_ua WHERE usr_id = ".$ilDB->quote($a_usr_id,'integer');
 		$res = $ilDB->manipulate($query);
-		
+		//gev-patch start
+		global $ilAppEventHandler;
+		$ilAppEventHandler->raise(
+			'Services/AccessControl', 'removeUser', array("usr_id" => $a_usr_id)
+		);
+		//gev-patch-end
 		return true;
 	}
 
@@ -91,13 +95,30 @@ class ilRbacAdmin
 	*/
 	function deleteRole($a_rol_id,$a_ref_id)
 	{
-		global $lng,$ilDB;
+		global $lng,$ilDB,$rbacreview;
 
 		if (!isset($a_rol_id) or !isset($a_ref_id))
 		{
 			$message = get_class($this)."::deleteRole(): Missing parameter! role_id: ".$a_rol_id." ref_id of role folder: ".$a_ref_id;
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
+
+		//gev pach start
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_fac = new ilObjectFactory;
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+
+			if($obj_id) {
+
+				$obj = $obj_fac->getInstanceByObjId($obj_id);
+				$parameter['rol_obj'] = $obj;
+				$parameter['rol_obj_id'] = $obj_id;
+			}
+		}
+		//gev pach end
 
 		// exclude system role from rbac
 		if ($a_rol_id == SYSTEM_ROLE_ID)
@@ -122,7 +143,21 @@ class ilRbacAdmin
 		$query = "DELETE FROM rbac_pa ".
 			 "WHERE rol_id = ".$ilDB->quote($a_rol_id,'integer')." ";
 		$res = $ilDB->manipulate($query);
-		
+		//gev patch start
+		global $ilAppEventHandler;
+		$parameter['rol_id'] = $a_rol_id;
+		if($is_global) { 
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deleteGlobalRole', $parameter
+			);
+		} elseif($obj_id) {
+			if($obj->getType() == 'orgu') {
+				$ilAppEventHandler->raise(
+					'Services/AccessControl', 'deleteOrguRole', $parameter
+				);
+			}
+		}
+		//gev patch end
 		//delete rbac_templates and rbac_fa
 		$this->deleteLocalRole($a_rol_id);
 		
@@ -215,7 +250,19 @@ class ilRbacAdmin
 			$message = get_class($this)."::assignUser(): Missing parameter! role_id: ".$a_rol_id." usr_id: ".$a_usr_id;
 			#$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
-		
+
+		//gev pach start
+		$obj_fac = new ilObjectFactory;
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+			$obj = $obj_fac->getInstanceByObjId($obj_id);
+			$parameter['rol_obj'] = $obj;
+			$parameter['rol_obj_id'] = $obj_id;
+		}
+		//gev pach end
 		// check if already assigned user id and role_id
 		$alreadyAssigned = $rbacreview->isAssigned($a_usr_id,$a_rol_id);	
 		
@@ -233,6 +280,21 @@ class ilRbacAdmin
 				include_once './Services/User/classes/class.ilObjUser.php';
 				ilObjUser::_addDesktopItem($a_usr_id, $item_data['item_id'], $item_data['item_type']);
 			}
+			//gev patch start
+			global $ilAppEventHandler;
+			$parameter['rol_id'] = $a_rol_id;
+			$parameter['rol'] = $obj_fac->getInstanceByObjId($a_rol_id);
+			$parameter['usr_id'] = $a_usr_id;
+			if($is_global) { 
+				$ilAppEventHandler->raise(
+					'Services/AccessControl', 'assignUserGlobalRole', $parameter
+				);
+			} elseif ($obj->getType() == 'orgu') {
+				$ilAppEventHandler->raise(
+					'Services/AccessControl', 'assignUserOrguRole', $parameter
+				);
+			}
+			//gev patch end
 			
 		}
 		
@@ -260,11 +322,40 @@ class ilRbacAdmin
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
 
+		//gev pach start
+		global $rbacreview;
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_fac = new ilObjectFactory;
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+			$obj = $obj_fac->getInstanceByObjId($obj_id);
+			$parameter['rol_obj'] = $obj;
+			$parameter['rol_obj_id'] = $obj_id;
+		}
+		//gev pach end
+
 		$query = "DELETE FROM rbac_ua ".
 			 "WHERE usr_id = ".$ilDB->quote($a_usr_id,'integer')." ".
 			 "AND rol_id = ".$ilDB->quote($a_rol_id,'integer')." ";
 		$res = $ilDB->manipulate($query);
 		
+		//gev patch start
+		global $ilAppEventHandler;
+		$parameter['rol_id'] = $a_rol_id;
+		$parameter['usr_id'] = $a_usr_id;
+		if($is_global) {
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deassignUserGlobalRole', $parameter
+			);
+		} elseif($obj->getType() == 'orgu') { 
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deassignUserOrguRole', $parameter
+			);
+		}
+		//gev patch end
+
 		include_once('Services/LDAP/classes/class.ilLDAPRoleGroupMapping.php');
 		$mapping = ilLDAPRoleGroupMapping::_getInstance();
 		$mapping->deassign($a_rol_id,$a_usr_id); 
@@ -281,7 +372,7 @@ class ilRbacAdmin
 	*/
 	function deassignUsers($a_rol_id)
 	{
-		global $ilDB;
+		global $ilDB, $rbacreview;
 		
 		if (!isset($a_rol_id))
 		{
@@ -289,10 +380,35 @@ class ilRbacAdmin
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
 
+
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_fac = new ilObjectFactory;
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+			$obj = $obj_fac->getInstanceByObjId($obj_id);
+			$parameter['rol_obj'] = $obj;
+			$parameter['rol_obj_id'] = $obj_id;
+		}
+
 		$query = "DELETE FROM rbac_ua ".
 			 "WHERE rol_id = ".$ilDB->quote($a_rol_id,'integer')." ";
 		$res = $ilDB->manipulate($query);
 		
+		global $ilAppEventHandler;
+		$parameter['rol_id'] = $a_rol_id;
+		if($is_global) { 
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deassignUsersGlobalRole', $parameter
+			);
+		} elseif($obj->getType() == 'orgu') { 
+			$ilAppEventHandler->raise(
+				'Services/AccessControl', 'deassignUsersOrguRole', $parameter
+			);
+		}
+
+
 		// we don't use ldap for generali
 		//include_once('Services/LDAP/classes/class.ilLDAPRoleGroupMapping.php');
 		//$mapping = ilLDAPRoleGroupMapping::_getInstance();
@@ -877,13 +993,30 @@ class ilRbacAdmin
 	*/
 	function deleteRolePermission($a_rol_id,$a_ref_id,$a_type = false)
 	{
-		global $ilDB;
+		global $ilDB,$rbacreview;
 		
 		if (!isset($a_rol_id) or !isset($a_ref_id))
 		{
 			$message = get_class($this)."::deleteRolePermission(): Missing parameter! role_id: ".$a_rol_id." ref_id: ".$a_ref_id;
 			$this->ilErr->raiseError($message,$this->ilErr->WARNING);
 		}
+
+		//gev pach start
+		$is_global = $rbacreview->isGlobalRole($a_rol_id);
+		$parameter = array();
+		if(!$is_global) {
+			require_once "Services/Object/classes/class.ilObjectFactory.php";
+			$obj_fac = new ilObjectFactory;
+			$obj_id = $rbacreview->getObjectOfRole($a_rol_id);
+
+			if($obj_id) {
+
+				$obj = $obj_fac->getInstanceByObjId($obj_id);
+				$parameter['rol_obj'] = $obj;
+				$parameter['rol_obj_id'] = $obj_id;
+			}
+		}
+		//gev pach end
 
 		// exclude system role from rbac
 		if ($a_rol_id == SYSTEM_ROLE_ID)
