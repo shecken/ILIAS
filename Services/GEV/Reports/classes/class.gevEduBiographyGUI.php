@@ -384,7 +384,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		$this->lng->loadLanguageModule("matlist");
 		$tree = ilObjOrgUnitTree::_getInstance();
 
-		$worksheet->writeString(0, 0, $this->lng->txt("fullname"), $format_bold);
+		$worksheet->writeString(0, 0, $this->lng->txt("name"), $format_bold);
 		$worksheet->writeString(0, 1, $this->target_user_utils->getFullname(), $format_wrap);
 
 		$orgus = $tree->getOrgUnitOfUser($this->target_user_id);
@@ -397,9 +397,9 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 
 		$filter_period = $this->filter->get('period');
 		$filter_period = ilDatePresentation::formatDate($filter_period['start'])." - ".ilDatePresentation::formatDate( $filter_period['end']);
+		$this->lng->loadLanguageModule("chatroom");
 
-
-		$worksheet->writeString(3, 0, $this->lng->txt("gev_period"), $format_bold);
+		$worksheet->writeString(3, 0, $this->lng->txt("period"), $format_bold);
 		$worksheet->writeString(3, 1, $filter_period, $format_wrap);
 
 		$worksheet->writeString(4, 0, $this->lng->txt("matlist_xls_creation_date"), $format_bold);
