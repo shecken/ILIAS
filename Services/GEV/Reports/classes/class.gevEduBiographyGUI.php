@@ -381,7 +381,6 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		$format_bold = $workbook->addFormat(array("bold" => 1));
 		$format_wrap = $workbook->addFormat();
 		$format_wrap->setTextWrap();
-		$this->lng->loadLanguageModule("matlist");
 		$tree = ilObjOrgUnitTree::_getInstance();
 
 		$worksheet->writeString(0, 0, $this->lng->txt("name"), $format_bold);
@@ -402,7 +401,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		$worksheet->writeString(3, 0, $this->lng->txt("period"), $format_bold);
 		$worksheet->writeString(3, 1, $filter_period, $format_wrap);
 
-		$worksheet->writeString(4, 0, $this->lng->txt("matlist_xls_creation_date"), $format_bold);
+		$worksheet->writeString(4, 0, $this->lng->txt("gev_creation_date"), $format_bold);
 		$worksheet->writeString(4, 1, date("d.m.Y"), $format_wrap);
 		//init cols and write titles
 		$colcount = 0;
