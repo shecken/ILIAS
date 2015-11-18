@@ -14675,3 +14675,5 @@ wsp#:#wsp_type_tstv#:#验证:测试
 wsp#:#wsp_type_webr#:#web链接
 wsp#:#wsp_type_wfld#:#文件夹
 gev#:#gev_creation_date#:#Date of Creation
+gev#:#gev_others_edu_bio#:#Training history for %s
+gev#:#gev_others_edu_bio_desc#:#These are the trainings attended by %s.
