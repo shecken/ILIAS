@@ -221,13 +221,13 @@ class ilUserCourseStatusHistorizingHelper
 			return;
 		}
 		
-		if ($payload["participation_status"] !== "teilgenommen") {
+		if ($payload["participation_status"] !== "status_successful") {
 			return;
 		}
 		
 		$cur = ilUserCourseStatusHistorizing::getCurrentRecordByCase($case_id);
 		
-		if ($cur["participation_status"] !== "teilgenommen") {
+		if ($cur["participation_status"] !== "status_successful") {
 			$payload["end_date"] = date("Y-m-d");
 		}
 	}
