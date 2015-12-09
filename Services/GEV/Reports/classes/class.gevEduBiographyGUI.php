@@ -256,15 +256,12 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 	}
 
 	protected function transformResultXLS($rec) {
-		if ($rec["participation_status"] == "status_successful") {
+		//status checks equals transformResultHTML
+		if ($rec["status"] == "success") {
 			$rec["status"] = $this->lng->txt("status_successful");
-		}
-		else if (in_array($rec["participation_status"], array("status_successful", "status_successful"))
-			 ||  in_array($rec["booking_status"], array("status_cancelled_with_costs", "status_cancelled_without_costs"))
-			) {
+		} else if ($rec["status"] == "failed") {
 			$rec["status"] =  $this->lng->txt("gev_failed");
-		}
-		else {
+		} else {
 			$rec["status"] = $this->lng->txt("gev_in_progress");
 		}
 
