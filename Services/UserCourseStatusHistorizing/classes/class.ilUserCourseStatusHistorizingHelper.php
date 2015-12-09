@@ -212,8 +212,8 @@ class ilUserCourseStatusHistorizingHelper
 		require_once("Services/UserCourseStatusHistorizing/classes/class.ilUserCourseStatusHistorizing.php");
 		require_once("Services/Calendar/classes/class.ilDateTime.php");
 		
-		$case_id = array( 'usr_id'	 =>	$user_id
-						, 'crs_id'	 =>	$course_id
+		$case_id = array( 'usr_id'	 =>	(int)$user_id
+						, 'crs_id'	 =>	(int)$course_id
 						);
 		
 		if (!ilUserCourseStatusHistorizing::caseExists($case_id)) {
@@ -225,7 +225,7 @@ class ilUserCourseStatusHistorizingHelper
 			return;
 		}
 		
-		$cur = ilUserCourseStatusHistorizing::getCurrentRecordByCase();
+		$cur = ilUserCourseStatusHistorizing::getCurrentRecordByCase($case_id);
 		
 		if ($cur["participation_status"] !== "status_successful") {
 			$payload["end_date"] = date("Y-m-d");
