@@ -256,15 +256,12 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 	}
 
 	protected function transformResultXLS($rec) {
-		if ($rec["participation_status"] == "status_successful") {
+		//status checks equals transformResultHTML
+		if ($rec["status"] == "success") {
 			$rec["status"] = $this->lng->txt("status_successful");
-		}
-		else if (in_array($rec["participation_status"], array("status_successful", "status_successful"))
-			 ||  in_array($rec["booking_status"], array("status_cancelled_with_costs", "status_cancelled_without_costs"))
-			) {
+		} else if ($rec["status"] == "failed") {
 			$rec["status"] =  $this->lng->txt("gev_failed");
-		}
-		else {
+		} else {
 			$rec["status"] = $this->lng->txt("gev_in_progress");
 		}
 
@@ -381,10 +378,9 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		$format_bold = $workbook->addFormat(array("bold" => 1));
 		$format_wrap = $workbook->addFormat();
 		$format_wrap->setTextWrap();
-		$this->lng->loadLanguageModule("matlist");
 		$tree = ilObjOrgUnitTree::_getInstance();
 
-		$worksheet->writeString(0, 0, $this->lng->txt("fullname"), $format_bold);
+		$worksheet->writeString(0, 0, $this->lng->txt("name"), $format_bold);
 		$worksheet->writeString(0, 1, $this->target_user_utils->getFullname(), $format_wrap);
 
 		$orgus = $tree->getOrgUnitOfUser($this->target_user_id);
@@ -397,12 +393,12 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 
 		$filter_period = $this->filter->get('period');
 		$filter_period = ilDatePresentation::formatDate($filter_period['start'])." - ".ilDatePresentation::formatDate( $filter_period['end']);
+		$this->lng->loadLanguageModule("chatroom");
 
-
-		$worksheet->writeString(3, 0, $this->lng->txt("gev_period"), $format_bold);
+		$worksheet->writeString(3, 0, $this->lng->txt("period"), $format_bold);
 		$worksheet->writeString(3, 1, $filter_period, $format_wrap);
 
-		$worksheet->writeString(4, 0, $this->lng->txt("matlist_xls_creation_date"), $format_bold);
+		$worksheet->writeString(4, 0, $this->lng->txt("gev_creation_date"), $format_bold);
 		$worksheet->writeString(4, 1, date("d.m.Y"), $format_wrap);
 		//init cols and write titles
 		$colcount = 0;

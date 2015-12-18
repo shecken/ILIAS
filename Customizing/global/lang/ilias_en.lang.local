@@ -5,11 +5,11 @@
 * @module			language file English
 * @modulegroup		language
 * @author			Matthias Kunkel <mkunkel@me.com>
-* @version			$Id: ilias_en.lang 58683 2015-04-07 11:11:21Z rklees $
-* @il_server		http://seepex.test.cat06.de
+* @version			$Id$
+* @il_server		http://campus.seepex.com
 * @il_version		4.4.8 2015-03-18
-* @created			2015-04-23 09:34:56
-* @created_by		Max Mayer (DE) <max.mayer@concepts-and-training.de>
+* @created			2015-11-18 12:33:21
+* @created_by		Richard Klees <richard.klees@concepts-and-training.de>
 */
 // The language file starts beyond the HTML-comment below. DO NOT modify this line!
 // To edit your language file with a spreadsheet (i.e. Excel or StarCalc) remove all lines
@@ -3448,6 +3448,7 @@ common#:#ext_link#:#Link
 common#:#failure_message#:#Failure Message
 common#:#faq_exercise#:#FAQ Exercise
 common#:#fax#:#Fax
+common#:#federal_state#:#Country
 common#:#feed#:#Web Feed
 common#:#feedback#:#Feedback
 common#:#feedback_recipient#:#Feedback Recipient
@@ -5281,6 +5282,7 @@ common#:#spl_add#:#Add Question Pool Survey
 common#:#spl_import#:#Import Question Pool Survey
 common#:#spl_new#:#New Question Pool Survey
 common#:#spl_upload_file#:#Upload file
+common#:#spx_crs_template#:#Template
 common#:#ssl#:#SSL (HTTPS)
 common#:#standard_fields#:#Standard Fields
 common#:#standard_icon#:#Medium Size
@@ -5697,7 +5699,6 @@ common#:#zipcode#:#Zip Code
 common#:#zip_structure_error#:#Archive contains same filenames. Upload aborted.
 common#:#zip_test_failed#:#Zip-Test failed. Please contact you ILIAS administrator.
 common:#:#status#:#Status
-common#:#spx_crs_template#:#Template
 content#:#add_menu_entry#:#Add Menu Entry
 content#:#all#:#All
 content#:#all_pages#:#Entire Learning Module
@@ -8940,7 +8941,6 @@ gev#:#gev_course_id#:#Training ID
 gev#:#gev_course_mgmt#:#Training administration
 gev#:#gev_course_search#:#Specify your search
 gev#:#gev_course_search_adm#:#Search training
-gev#:#tutor#:#Trainer
 gev#:#gev_course_search_desc#:#Here you can filter the training courses.
 gev#:#gev_course_type#:#Training type
 gev#:#gev_crs_function#:#Role
@@ -8958,6 +8958,7 @@ gev#:#gev_desk_displays#:#Desk displays
 gev#:#gev_duration#:#Duration
 gev#:#gev_edit_overnights#:#Your accommodation for training "%s":
 gev#:#gev_edit_overnights_desc#:#Here you can manage your accomodations.
+gev#:#gev_edu_program#:#Educational Program
 gev#:#gev_employee_booking#:#My employees registrations
 gev#:#gev_employee_booking_desc#:#Here is the current registrations of your employees.
 gev#:#gev_employy_booking#:#My employees registrations
@@ -9013,13 +9014,14 @@ gev#:#gev_my_courses_desc#:#Here is a quick overview of your registered training
 gev#:#gev_my_edu_bio#:#Training history
 gev#:#gev_my_edu_bio_desc#:#Here is all of your registered and completed training courses.
 gev#:#gev_my_highlights_desc#:#Here you will find new and interesting offers tailored to your individual requirements.
-gev#:#gev_my_local_user_admin#:#User administration
+gev#:#gev_my_local_user_admin#:#User administration:  %s
 gev#:#gev_my_settings#:#My settings
 gev#:#gev_my_trainer_ap#:#My training sessions
 gev#:#gev_need_agb_accept#:#You have to accept the booking and cancellation policy in order to continue
 gev#:#gev_next_course#:#Next live training / webinar
 gev#:#gev_not_bookable#:#Fully booked
 gev#:#gev_no_employee_bookings#:#There are no registrations for your employees.
+gev#:#gev_no_next_course#:#There is no next training.
 gev#:#gev_obligatory_booking#:#Register
 gev#:#gev_org_mgmt#:#Organisational Units
 gev#:#gev_org_unit#:#Department
@@ -9068,9 +9070,10 @@ gev#:#gev_to_course_view#:#Access training
 gev#:#gev_trainer_operation_days#:#Trainer operation days
 gev#:#gev_training_cancelled#:#The training has succefully been cancelled. Please remember to inform and remove all remaining participants which couldn't  automatically be removed.
 gev#:#gev_training_contact#:#Contact person
+gev#:#gev_training_date#:#Date
 gev#:#gev_training_id#:#Training ID
 gev#:#gev_unlimited#:#unlimited
-gev#:#gev_until#:#until
+gev#:#gev_until#:#on
 gev#:#gev_user_mgmt#:#User admistration
 gev#:#gev_user_not_allowed_to_book_crs#:#The user has no permission to register for this training.
 gev#:#gev_venue#:#Location
@@ -9093,8 +9096,11 @@ gev#:#status_cancelled_with_costs#:#cancelled with costs
 gev#:#status_not_set#:#not yet set
 gev#:#status_successful#:#participated
 gev#:#status_waiting#:#on waiting list
+gev#:#tutor#:#Trainer
 gev#:#udf_type_venueselect#:#Venue
 gev#:#use_standard_mail#:#Use standard mail
+gev#:#xls_subtitle#:#Subtitle
+gev#:#xls_title#:#Title
 glo#:#glo_term#:#Glossary Term
 grp#:#crs_add_grouping#:#Add Membership Limitation
 grp#:#crs_grouping_deleted#:#Deleted membership limitation.
@@ -9476,11 +9482,11 @@ license#:#remaining_licenses_explanation#:#The available licenses are calculated
 license#:#used_licenses#:#Consumed licenses
 license#:#used_licenses_explanation#:#Every first access of a user consumes a license.
 license#:#zero_licenses_explanation#:#Enter a 0 to deactivate the licensing.
-mail#:#auto_send_participant_list_accomodation#:#Send mails with participant list automatically to place of accomodation
-mail#:#auto_send_participant_list_venue#:#Send mails with participant list automatically to venue
 mail#:#activate_serial_letter_placeholders#:#Activate Serial-Letter Placeholders
 mail#:#advice_mail_body_secured#:#Because of security reasons ILIAS removed some elements of your message. Please check the secured message and send the mail again.
 mail#:#also_as_email#:#Also as E-Mail
+mail#:#auto_send_participant_list_accomodation#:#Send mails with participant list automatically to place of accomodation
+mail#:#auto_send_participant_list_venue#:#Send mails with participant list automatically to venue
 mail#:#auto_update#:#Update
 mail#:#back_to_folder#:#Back to Folder
 mail#:#bc#:#BCC
@@ -9663,8 +9669,6 @@ mail#:#mail_system_sender_name_info#:#Please enter a name. This name will be use
 mail#:#mail_s_unread#:#Unread Mail(s)
 mail#:#mail_templates#:#Mail Templates
 mail#:#mail_templates_use_placeholder#:#These placeholders may be used:
-mail#:#mail_template_placeholder_content#:#Placeholder for content
-mail#:#mail_template_placeholder_image#:#Placeholder for image
 mail#:#mail_template_category#:#Template name
 mail#:#mail_template_category_name#:#Name
 mail#:#mail_template_footer_image#:#Image
@@ -9674,9 +9678,12 @@ mail#:#mail_template_frame#:#Frame
 mail#:#mail_template_frame_html#:#HTML
 mail#:#mail_template_frame_plain#:#Plain Text
 mail#:#mail_template_frame_settings#:#Frame Settings
+mail#:#mail_template_placeholder_content#:#Placeholder for content
+mail#:#mail_template_placeholder_image#:#Placeholder for image
 mail#:#mail_template_settings#:#SettingsType
-mail#:#mail_template_type_edit#:#Edit Template Type
 mail#:#mail_template_type#:#Type
+mail#:#mail_template_type_create#:#New Template Type
+mail#:#mail_template_type_edit#:#Edit Template Type
 mail#:#mail_template_type_id#:#ID
 mail#:#mail_template_variants#:#Edit
 mail#:#mail_template_variant_id#:#Variants ID
@@ -9693,14 +9700,13 @@ mail#:#search_bc_recipient#:#Search BCC Recipient
 mail#:#search_cc_recipient#:#Search CC Recipient
 mail#:#search_content#:#Search Result
 mail#:#search_recipients#:#Search Recipients
-mail#:#mail_template_type_create#:#New Template Type
 mail#:#send_mail_to#:#Mail to
 mail#:#system_notification_installation_changed_by#:#Changed By
 mail#:#system_notification_installation_signature#:#This email has been sent automatically by the ILIAS installation
 mail#:#templates#:#Templates
-mailing#:#attachment_list_for_trainer_name#:#Participant_List_Trainer.xls
 mailing#:#attachment_list_for_hotel_name#:#Participant_List_Accomodation.xls
 mailing#:#attachment_list_for_participant_name#:#Participant_List_Course.xls
+mailing#:#attachment_list_for_trainer_name#:#Participant_List_Trainer.xls
 mailing#:#attachment_material_list#:#Material_List.xls
 mailing#:#auto_mails#:#Automatic emails
 mailing#:#auto_mail_title#:#Title
@@ -10646,10 +10652,6 @@ objref#:#objref_edit_title#:#Title Settings
 objref#:#objref_reuse_title#:#Reuse Title of Reference
 objref#:#objref_title_settings#:#Edit Reference Title
 orgu#:#Actions#:#Actions
-orgu#:#orgu_type#:#Type
-orgu#:#orgu_settings#:#Settings
-orgu#:#orgu_type_add#:#Add Type
-orgu#:#orgu_types#:#Types
 orgu#:#backto_staff#:#Back to Staff
 orgu#:#change_to_employee#:#Change to employee
 orgu#:#change_to_superior#:#Change to superior
@@ -10680,8 +10682,12 @@ orgu#:#orgu_copy#:#Copy Organisational Unit
 orgu#:#orgu_edit#:#Edit
 orgu#:#orgu_import#:#Import Organisational Unit
 orgu#:#orgu_new#:#New Organisational Unit
+orgu#:#orgu_settings#:#Settings
 orgu#:#orgu_staff#:#Staff
 orgu#:#orgu_staff_deassign#:#Are you sure you want to deassign these users from this role?
+orgu#:#orgu_type#:#Type
+orgu#:#orgu_types#:#Types
+orgu#:#orgu_type_add#:#Add Type
 orgu#:#orgu_view_learning_progress_rec#:#View Learning Progress of Unit incl. Subunits
 orgu#:#org_unit_not_found#:#Organisational Unit not found.
 orgu#:#ou_external_id_exists#:#A unit with the External ID already exists on this system or in trash bin.
@@ -12433,6 +12439,10 @@ scormdebug#:#adl.nav.request#:#Navigation request to be processed immediately fo
 scormdebug#:#adl.nav.request_valid.choice#:#Used by a SCO to determine if a Choice navigation request for a particular activity will succeed.
 scormdebug#:#adl.nav.request_valid.continue#:#Used by a SCO to determine if a Continue navigation request will succeed.
 scormdebug#:#adl.nav.request_valid.previous#:#Used by a SCO to determine if a Previous navigation request will succeed.
+scormdebug#:#adl_nav_request#:#Navigation request to be processed immediately following Terminate()
+scormdebug#:#adl_nav_request_valid_choice#:#Used by a SCO to determine if a Choice navigation request for a particular activity will succeed.
+scormdebug#:#adl_nav_request_valid_continue#:#Used by a SCO to determine if a Continue navigation request will succeed.
+scormdebug#:#adl_nav_request_valid_previous#:#Used by a SCO to determine if a Previous navigation request will succeed.
 scormdebug#:#all_API-calls_shown#:#All API-calls are currently shown.
 scormdebug#:#API-call#:#API-call
 scormdebug#:#cmi.comments_from_learner.n.comment#:#Textual input
@@ -12500,6 +12510,31 @@ scormdebug#:#cmi.suspend_data#:#Provides space to store and retrieve data betwee
 scormdebug#:#cmi.time_limit_action#:#Indicates what the SCO should do when cmi.max_time_allowed is exceeded
 scormdebug#:#cmi.total_time#:#Sum of all of the learner's session times accumulated in the current learner attempt
 scormdebug#:#cmi._version#:#Represents the version of the data model
+scormdebug#:#cmi_comments_from_lms_n_comment#:#Comments or annotations associated with a SCO
+scormdebug#:#cmi_completion_threshold#:#Used to determine whether the SCO should be considered complete
+scormdebug#:#cmi_interactions_n_correct_responses_n_pattern#:#One correct response pattern for the interaction
+scormdebug#:#cmi_interactions_n_correct_responses__count#:#Current number of correct responses being stored by the LMS for this interaction
+scormdebug#:#cmi_interactions_n_description#:#Brief informative description of the interaction
+scormdebug#:#cmi_interactions_n_id#:#Unique label for the interaction
+scormdebug#:#cmi_interactions_n_latency#:#Time elapsed between the time the interaction was made available to the learner for response and the time of the first response
+scormdebug#:#cmi_interactions_n_learner_response#:#Data generated when a learner responds to an interaction
+scormdebug#:#cmi_interactions_n_objectives_n_id#:#Label for objectives associated with the interaction
+scormdebug#:#cmi_interactions_n_objectives__count#:#Current number of objectives (i.e., objective identifiers) being stored by the LMS for this interaction
+scormdebug#:#cmi_interactions_n_result#:#Judgment of the correctness of the learner response
+scormdebug#:#cmi_interactions_n_timestamp#:#Point in time at which the interaction was first made available to the learner for learner interaction and response
+scormdebug#:#cmi_interactions_n_type#:#Which type of interaction is recorded
+scormdebug#:#cmi_interactions_n_weighting#:#Weight given to the interaction relative to other interactions
+scormdebug#:#cmi_interactions__count#:#Current number of interactions being stored by the LMS
+scormdebug#:#cmi_learner_id#:#Identifies the learner on behalf of whom the SCO was launched
+scormdebug#:#cmi_learner_preference_audio_captioning#:#Specifies whether captioning text corresponding to audio is displayed
+scormdebug#:#cmi_learner_preference_delivery_speed#:#The learner's preferred relative speed of content delivery
+scormdebug#:#cmi_location#:#The learner's current location in the SCO
+scormdebug#:#cmi_mode#:#Identifies one of three possible modes in which the SCO may be presented to the learner
+scormdebug#:#cmi_objectives_n_description#:#Provides a brief informative description of the objective
+scormdebug#:#cmi_session_time#:#Amount of time that the learner has spent in the current learner session for this SCO
+scormdebug#:#cmi_suspend_data#:#Provides space to store and retrieve data between learner sessions
+scormdebug#:#cmi_total_time#:#Sum of all of the learner's session times accumulated in the current learner attempt
+scormdebug#:#cmi__version#:#Represents the version of the data model
 scormdebug#:#comment#:#Comment
 scormdebug#:#Commit#:#store data
 scormdebug#:#completion_status_by_progress_measure#:#Because there is a value for cmi.completion_threshold, the value for cmi.completion_status is evaluated by the LMS! This is done by comparing the value for cmi.completion_threshold with the value for cmi.progress_measure. The value for cmi.completion_status is currently:
@@ -14759,7 +14794,4 @@ wsp#:#wsp_type_scov#:#Certificate: SCORM
 wsp#:#wsp_type_tstv#:#Certificate: Test
 wsp#:#wsp_type_webr#:#Weblink
 wsp#:#wsp_type_wfld#:#Folder
-gev#:#xls_title#:#Title
-gev#:#xls_subtitle#:#Subtitle
-gev#:#gev_training_date#:#Date
-common#:#federal_state#:#Country
+gev#:#gev_creation_date#:#Date of Creation
