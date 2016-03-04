@@ -3349,3 +3349,8 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "
 
 
 ?>
+
+<#101>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
