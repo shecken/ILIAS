@@ -3,7 +3,7 @@
 require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
 class gevMinParticipantsNotReached extends gevCrsAutoMail {
-	const DAYS_BEFORE_COURSE_START = 31;
+	const DAYS_BEFORE_COURSE_START = 11;
 	
 	public function getTitle() {
 		return "Info Admin";
