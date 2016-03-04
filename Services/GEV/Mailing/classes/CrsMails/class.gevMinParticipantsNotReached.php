@@ -10,10 +10,10 @@ class gevMinParticipantsNotReached extends gevCrsAutoMail {
 	}
 	
 	public function _getDescription() {
-		// Mail is send after the 31th day before training is over.
-		// Thus we need to subtract, since after the 31th day is on the
-		// 30th day.
-		return (self::DAYS_BEFORE_COURSE_START - 1)." Days before Begin of Traning if Minimum Number of Participants is not reached";
+		// Mail is send after the 11th day before training is over.
+		// Thus we need to subtract, since after the 11th day is on the
+		// 10th day.
+		return (self::DAYS_BEFORE_COURSE_START - 1)." Days before Begin of Training if Minimum Number of Participants is not reached";
 	}
 	
 	public function getScheduledFor() {
