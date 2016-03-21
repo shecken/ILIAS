@@ -15129,5 +15129,6 @@ wsp#:#wsp_type_tstv#:#Zertifikat: Test
 wsp#:#wsp_type_webr#:#Weblink
 wsp#:#wsp_type_wfld#:#Ordner
 gev#:#gev_creation_date#:#Datum der Erstellung
+gev#:#ts#:#Zeitpunkt
 gev#:#gev_warning_to_book_crs_self_because_period#:#Sie haben bereits ein oder mehrere andere Trainings im gleichen Zeitraum gebucht!
 gev#:#gev_warning_to_book_crs_for_others_because_period#:#Der Teilnehmer hat bereits ein oder mehrere andere Trainings im gleichen Zeitraum gebucht!
