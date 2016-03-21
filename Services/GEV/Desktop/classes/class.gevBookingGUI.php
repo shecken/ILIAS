@@ -181,19 +181,6 @@ class gevBookingGUI {
 		$msg = $tpl->get();
 
 		ilUtil::sendInfo($msg, false);
-		
-		/*require_once("Services/Calendar/classes/class.ilDatePresentation.php");
-		
-		if ($this->isSelfBooking()) {
-			$msg = $this->gLng->txt("gev_booking_other_courses_in_period_self")."<br />";
-		}
-		else {
-			$msg = $this->gLng->txt("gev_booking_other_courses_in_period_others")."<br />";
-		}
-		foreach($others as $crs) {
-			$msg .= $crs["title"]." (".ilDatePresentation::formatPeriod($crs["start"], $crs["end"]).")</br>";
-		}
-		ilUtil::sendInfo($msg);*/
 	}
 
 	protected function setRequestParameters() {
