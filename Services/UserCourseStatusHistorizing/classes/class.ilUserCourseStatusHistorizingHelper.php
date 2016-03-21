@@ -220,6 +220,14 @@ class ilUserCourseStatusHistorizingHelper
 			$payload["begin_date"] = date("Y-m-d");
 			return;
 		}
+
+		if (ilUserCourseStatusHistorizing::caseExists($case_id)
+			&& $payload["booking_status"] == "status_cancelled_without_costs"
+			&& $payload["event"] == "addParticipant")
+		{
+			$payload["begin_date"] = date("Y-m-d");
+			return;
+		}
 		
 		if ($payload["participation_status"] !== "status_successful") {
 			return;
