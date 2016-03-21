@@ -14795,3 +14795,9 @@ wsp#:#wsp_type_tstv#:#Certificate: Test
 wsp#:#wsp_type_webr#:#Weblink
 wsp#:#wsp_type_wfld#:#Folder
 gev#:#gev_creation_date#:#Date of Creation
+gev#:#ts#:#Period
+gev#:#gev_warning_to_book_crs_self_because_period#:#You have already posted one or more other training in the same period!
+gev#:#gev_warning_to_book_crs_for_others_because_period#:#The participant has already posted one or more other training in the same period!
+gev#:#begin_date#:#Startdate
+gev#:#end_date#:#Enddate
+gev#:#gev_crs#:#Course
