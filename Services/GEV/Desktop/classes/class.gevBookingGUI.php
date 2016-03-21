@@ -164,7 +164,7 @@ class gevBookingGUI {
 		$tpl->parseCurrentBlock();	
 		
 		$tpl->setCurrentBlock("crs_header");			
-		$tpl->setVariable("CRS_TITLE",$this->lng->txt("crs"));
+		$tpl->setVariable("CRS_TITLE",$this->lng->txt("gev_crs"));
 		$tpl->setVariable("START_TITLE",$this->lng->txt("begin_date"));
 		$tpl->setVariable("END_TITLE",$this->lng->txt("end_date"));
 		$tpl->setVariable("SCHEDULE_TITLE",$this->lng->txt("ts"));
