@@ -153,34 +153,34 @@ class gevBookingGUI {
 		
 		$tpl = new ilTemplate("tpl.gev_booking_warning.html", true, true, "Services/GEV/Desktop");
 		
-		$tpl->setCurrentBlock("main_message");	
-		if ($this->current_user->getId() == $this->user_id) {			
-			$tpl->setVariable("MESSAGE",$this->lng->txt("gev_warning_to_book_crs_self_because_period"));			
+		$tpl->setCurrentBlock("main_message");
+		if ($this->current_user->getId() == $this->user_id) {
+			$tpl->setVariable("MESSAGE",$this->lng->txt("gev_warning_to_book_crs_self_because_period"));
 		}
-		else {			
-			$tpl->setVariable("MESSAGE",$this->lng->txt("gev_warning_to_book_crs_for_others_because_period"));						
+		else {
+			$tpl->setVariable("MESSAGE",$this->lng->txt("gev_warning_to_book_crs_for_others_because_period"));
 		}
-					
-		$tpl->parseCurrentBlock();	
+
+		$tpl->parseCurrentBlock();
 		
-		$tpl->setCurrentBlock("crs_header");			
+		$tpl->setCurrentBlock("crs_header");
 		$tpl->setVariable("CRS_TITLE",$this->lng->txt("gev_crs"));
 		$tpl->setVariable("START_TITLE",$this->lng->txt("begin_date"));
 		$tpl->setVariable("END_TITLE",$this->lng->txt("end_date"));
 		$tpl->setVariable("SCHEDULE_TITLE",$this->lng->txt("ts"));
-		$tpl->parseCurrentBlock();	
+		$tpl->parseCurrentBlock();
 
 		foreach($others as $val){
-			$tpl->setCurrentBlock("crs_entries");			
-			$tpl->setVariable("CRS",$val["title"]);		
-			$tpl->setVariable("START",$val["start"]->get(IL_CAL_FKT_DATE,"d.m.Y"));			
-			$tpl->setVariable("END",$val["end"]->get(IL_CAL_FKT_DATE,"d.m.Y"));		
+			$tpl->setCurrentBlock("crs_entries");
+			$tpl->setVariable("CRS",$val["title"]);
+			$tpl->setVariable("START",$val["start"]->get(IL_CAL_FKT_DATE,"d.m.Y"));
+			$tpl->setVariable("END",$val["end"]->get(IL_CAL_FKT_DATE,"d.m.Y"));
 			$tpl->setVariable("SCHEDULE",$val["schedule"][0]);
-			$tpl->parseCurrentBlock();				
+			$tpl->parseCurrentBlock();
 		}
 		$msg = $tpl->get();
 
-		ilUtil::sendInfo($msg, false);	
+		ilUtil::sendInfo($msg, false);
 		
 		/*require_once("Services/Calendar/classes/class.ilDatePresentation.php");
 		
@@ -398,7 +398,7 @@ class gevBookingGUI {
 			$this->failAtFinalize("Someone managed to get here but not being able to book the course.");
 		}
 		if ($accomodations) {
-			$acco = ilSetAccomodationsGUI::formInputToAccomodationsArray($accomodations);	
+			$acco = ilSetAccomodationsGUI::formInputToAccomodationsArray($accomodations);
 			$acco_inst = ilAccomodations::getInstance($this->crs_utils->getCourse());
 			$acco_inst->setAccomodationsOfUser($this->user_id, $acco);
 		}
