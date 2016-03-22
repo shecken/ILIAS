@@ -221,8 +221,9 @@ class ilUserCourseStatusHistorizingHelper
 			return;
 		}
 
+		$states_checks = array(gevCourseUtils::LABEL_CANCELLED_WITH_COSTS, gevCourseUtils::LABEL_CANCELLED_WITHOUT_COSTS);
 		if (ilUserCourseStatusHistorizing::caseExists($case_id)
-			&& $payload["booking_status"] == "status_cancelled_without_costs"
+			&& in_array($payload["booking_status"], $states_checks)
 			&& $payload["event"] == "addParticipant")
 		{
 			$payload["begin_date"] = date("Y-m-d");
