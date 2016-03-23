@@ -201,7 +201,8 @@ class ilUserCourseStatusHistorizingAppEventListener
 			'participation_status'	=> self::$ilUserCourseStatusHistorizingHelper->getParticipationStatusOf($user_id, $course_id),
 			'okz'					=> self::$ilUserHistorizingHelper->getOKZOf($user_id),
 			'overnights'			=> self::$ilUserCourseStatusHistorizingHelper->getOvernightsOf($user_id, $course_id),
-			'function'				=> self::$ilUserCourseStatusHistorizingHelper->getFunctionOf($user_id, $course_id)
+			'function'				=> self::$ilUserCourseStatusHistorizingHelper->getFunctionOf($user_id, $course_id),
+			'event'					=> $event
 		);
 		$individual_start_and_end = self::$ilUserCourseStatusHistorizingHelper->courseHasIndividualStartAndEnd($course_id);
 		

@@ -220,6 +220,15 @@ class ilUserCourseStatusHistorizingHelper
 			$payload["begin_date"] = date("Y-m-d");
 			return;
 		}
+
+		$states_checks = array(gevCourseUtils::LABEL_CANCELLED_WITH_COSTS, gevCourseUtils::LABEL_CANCELLED_WITHOUT_COSTS);
+		if (ilUserCourseStatusHistorizing::caseExists($case_id)
+			&& in_array($payload["booking_status"], $states_checks)
+			&& $payload["event"] == "addParticipant")
+		{
+			$payload["begin_date"] = date("Y-m-d");
+			return;
+		}
 		
 		if ($payload["participation_status"] !== "status_successful") {
 			return;
