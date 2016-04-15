@@ -197,7 +197,7 @@ class gevUserUtils {
 				 "            )".
 				 "       OR   (   ltype.value = ".$this->db->quote(gevSettings::WEBINAR, "text").
 				 "            AND ADDDATE(start_date.value, -1 * bk_deadl.value) < ".	
-				 				 $this->db->quote(date("Y-m-d", time() + 7 * 24 * 60 * 60), "date").
+				 				 $this->db->quote(date("Y-m-d", time() + 14 * 24 * 60 * 60), "date").
 				 "            )".
 				 "       )".
 				 "   AND ADDDATE(start_date.value, -1 * bk_deadl.value) >= ".$this->db->quote(date("Y-m-d"), "text").
