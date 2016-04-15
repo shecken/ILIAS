@@ -194,45 +194,35 @@ class ilUserCourseStatusHistorizingAppEventListener
 		$user_id = $parameter["usr_id"];
 		$course_id = $parameter["crs_id"];
 		
+		$data_payload = array(
+			'credit_points'			=> self::$ilUserCourseStatusHistorizingHelper->getCreditPointsOf($user_id, $course_id),
+			'bill_id'				=> self::$ilUserCourseStatusHistorizingHelper->getBillIdOf($user_id, $course_id),
+			'booking_status'		=> self::$ilUserCourseStatusHistorizingHelper->getBookingStatusOf($user_id, $course_id),
+			'participation_status'	=> self::$ilUserCourseStatusHistorizingHelper->getParticipationStatusOf($user_id, $course_id),
+			'okz'					=> self::$ilUserHistorizingHelper->getOKZOf($user_id),
+			'overnights'			=> self::$ilUserCourseStatusHistorizingHelper->getOvernightsOf($user_id, $course_id),
+			'function'				=> self::$ilUserCourseStatusHistorizingHelper->getFunctionOf($user_id, $course_id),
+			'event'					=> $event
+		);
 		$individual_start_and_end = self::$ilUserCourseStatusHistorizingHelper->courseHasIndividualStartAndEnd($course_id);
 		
 		if (!$individual_start_and_end) {
 			$begin_date = self::$ilCourseHistorizingHelper->getBeginOf($course_id);
 			if ($begin_date) {
-				$begin_date = $begin_date->get(IL_CAL_DATE);
+				$data_payload['begin_date'] = $begin_date->get(IL_CAL_DATE);
 			}
 			$end_date = self::$ilCourseHistorizingHelper->getEndOf($course_id);
 			if ($end_date) {
-				$end_date = $end_date->get(IL_CAL_DATE);
+				$data_payload['end_date'] = $end_date->get(IL_CAL_DATE);
 			}
-		}
-		else {
-			$begin_date = null;
-			$end_date = null;
+		} else {
+			self::$ilUserCourseStatusHistorizingHelper->setIndividualStartAndEnd($user_id, $course_id, $data_payload);			
 		}
 		
-		$data_payload = array(
-			'credit_points'						=> self::$ilUserCourseStatusHistorizingHelper->getCreditPointsOf($user_id, $course_id),
-			'bill_id'							=> self::$ilUserCourseStatusHistorizingHelper->getBillIdOf($user_id, $course_id),
-			'booking_status'					=> self::$ilUserCourseStatusHistorizingHelper->getBookingStatusOf($user_id, $course_id),
-			'participation_status'				=> self::$ilUserCourseStatusHistorizingHelper->getParticipationStatusOf($user_id, $course_id),
-			'okz'								=> self::$ilUserHistorizingHelper->getOKZOf($user_id),
-			'org_unit'							=> self::$ilUserHistorizingHelper->getOrgUnitOf($user_id),
-			'begin_date'						=> $begin_date,
-			'end_date'							=> $end_date,
-			'overnights'						=> self::$ilUserCourseStatusHistorizingHelper->getOvernightsOf($user_id, $course_id),
-			'function'							=> self::$ilUserCourseStatusHistorizingHelper->getFunctionOf($user_id, $course_id)
-		);
-
-		if ($individual_start_and_end) {
-			self::$ilUserCourseStatusHistorizingHelper->setIndividualStartAndEnd($user_id, $course_id, $data_payload);
-		}
-
 		if ($event == "setStatusAndPoints" && self::$ilUserCourseStatusHistorizingHelper->hasCertificate($user_id, $course_id))
 		{
 			$data_payload['certificate'] = self::$ilUserCourseStatusHistorizingHelper->getCertificateOf($user_id, $course_id);
 		}
-
 		return $data_payload;
 	}
 

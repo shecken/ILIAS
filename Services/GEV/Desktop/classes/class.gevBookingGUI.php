@@ -16,11 +16,11 @@ class gevBookingGUI {
 	public function __construct() {
 		global $lng, $ilCtrl, $tpl, $ilUser, $ilLog;
 
-		$this->lng = &$lng;
-		$this->ctrl = &$ilCtrl;
-		$this->tpl = &$tpl;
-		$this->log = &$ilLog;
-		$this->current_user = &$ilUser;
+		$this->gLng = $lng;
+		$this->gCtrl = $ilCtrl;
+		$this->gTpl = $tpl;
+		$this->gLog = $ilLog;
+		$this->gUser = $ilUser;
 		$this->user_id = null;
 		$this->user_utils = null;
 		$this->crs_id = null;
@@ -28,7 +28,7 @@ class gevBookingGUI {
 		$this->is_self_learning = null;
 		$this->is_webinar = null;
 
-		$this->tpl->getStandardTemplate();
+		$this->gTpl->getStandardTemplate();
 	}
 
 	public function executeCommand() {
@@ -42,7 +42,7 @@ class gevBookingGUI {
 		$this->checkIfUserIsAllowedToBookCourse();
 		$this->checkOtherBookingsInPeriod();
 		
-		$this->cmd = $this->ctrl->getCmd();
+		$this->cmd = $this->gCtrl->getCmd();
 		
 		switch($this->cmd) {
 			case "backToSearch":
@@ -55,7 +55,7 @@ class gevBookingGUI {
 				$cont = $this->$cmd();
 				break;
 			default:
-				$this->log->write("gevBookingGUI: Unknown command '".$this->cmd."'");
+				$this->gLog->write("gevBookingGUI: Unknown command '".$this->cmd."'");
 				throw new ilException("Unknown command: ".$this->cmd);
 		}
 		
@@ -67,7 +67,7 @@ class gevBookingGUI {
 	
 	protected function initUser() {
 		if ($_GET["user_id"] === null) {
-			$this->log->write("gevBookingGUI::initUser: No user id in GET.");
+			$this->gLog->write("gevBookingGUI::initUser: No user id in GET.");
 			ilUtil::redirect("index.php");
 		}
 		
@@ -77,7 +77,7 @@ class gevBookingGUI {
 	
 	protected function initCourse() {
 		if ($_GET["crs_id"] === null) {
-			$this->log->write("gevBookingGUI::initCourse: No course id in GET.");
+			$this->gLog->write("gevBookingGUI::initCourse: No course id in GET.");
 			ilUtil::redirect("index.php");
 		}
 		
@@ -93,7 +93,7 @@ class gevBookingGUI {
 	protected function checkIfCourseIsOnlineAndBookable() {
 		if (   $this->crs_utils->getCourse()->getOfflineStatus()
 			|| $this->crs_utils->isBookingDeadlineExpired()) {
-			ilUtil::sendFailure( $this->lng->txt("gev_course_expired")
+			ilUtil::sendFailure( $this->gLng->txt("gev_course_expired")
 							   , true);
 			$this->toCourseSearch();
 		}
@@ -101,8 +101,8 @@ class gevBookingGUI {
 	
 	protected function checkIfUserAlreadyBookedASimilarCourse() {
 		if (!$this->user_utils->canBookCourseDerivedFromTemplate($this->crs_utils->getTemplateRefId())) {
-			ilUtil::sendFailure( $this->isSelfBooking() ? $this->lng->txt("gev_booked_similar_course_self")
-														: $this->lng->txt("gev_booked_similar_course_employee")
+			ilUtil::sendFailure( $this->isSelfBooking() ? $this->gLng->txt("gev_booked_similar_course_self")
+														: $this->gLng->txt("gev_booked_similar_course_employee")
 							   , true);
 			$this->toCourseSearch();
 		}
@@ -112,18 +112,18 @@ class gevBookingGUI {
 		$free_places = $this->crs_utils->getFreePlaces();
 		if ( $free_places && $free_places <= 0 
 		  && !$this->crs_utils->isWaitingListActivated()) {
-			ilUtil::sendFailure($this->lng->txt("gev_course_is_full"), true);
+			ilUtil::sendFailure($this->gLng->txt("gev_course_is_full"), true);
 			$this->toCourseSearch();
 		}
 	}
 	
 	protected function checkIfUserIsAllowedToBookCourseForOtherUser() {
-		if ( !$this->crs_utils->canBookCourseForOther($this->current_user->getId(), $this->user_id)) {
-			if ($this->current_user->getId() == $this->user_id) {
-				ilUtil::sendFailure($this->lng->txt("gev_not_allowed_to_book_crs_for_self"), true);
+		if ( !$this->crs_utils->canBookCourseForOther($this->gUser->getId(), $this->user_id)) {
+			if ($this->gUser->getId() == $this->user_id) {
+				ilUtil::sendFailure($this->gLng->txt("gev_not_allowed_to_book_crs_for_self"), true);
 			}
 			else {
-				ilUtil::sendFailure($this->lng->txt("gev_not_allowed_to_book_crs_for_other"), true);
+				ilUtil::sendFailure($this->gLng->txt("gev_not_allowed_to_book_crs_for_other"), true);
 			}
 			$this->toCourseSearch();
 		}
@@ -131,7 +131,7 @@ class gevBookingGUI {
 	
 	public function checkIfUserIsAllowedToBookCourse() {
 		if ( !$this->crs_utils->isBookableFor($this->user_id)) {
-			ilUtil::sendFailure($this->lng->txt("gev_user_not_allowed_to_book_crs"), true);
+			ilUtil::sendFailure($this->gLng->txt("gev_user_not_allowed_to_book_crs"), true);
 			$this->toCourseSearch();
 		}
 	}
@@ -151,35 +151,45 @@ class gevBookingGUI {
 			return;
 		}
 		
-		if ($this->current_user->getId() == $this->user_id) {
-			ilUtil::sendFailure($this->lng->txt("gev_not_allowed_to_book_crs_self_because_period"), true);
+		$tpl = new ilTemplate("tpl.gev_booking_warning.html", true, true, "Services/GEV/Desktop");
+		
+		$tpl->setCurrentBlock("main_message");
+		if ($this->gUser->getId() == $this->user_id) {
+			$tpl->setVariable("MESSAGE",$this->gLng->txt("gev_warning_to_book_crs_self_because_period"));
 		}
 		else {
-			ilUtil::sendFailure($this->lng->txt("gev_not_allowed_to_book_crs_for_other_because_period"), true);
+			$tpl->setVariable("MESSAGE",$this->gLng->txt("gev_warning_to_book_crs_for_others_because_period"));
 		}
-		$this->toCourseSearch();
+
+		$tpl->parseCurrentBlock();
 		
-		/*require_once("Services/Calendar/classes/class.ilDatePresentation.php");
-		
-		if ($this->isSelfBooking()) {
-			$msg = $this->lng->txt("gev_booking_other_courses_in_period_self")."<br />";
+		$tpl->setCurrentBlock("crs_header");
+		$tpl->setVariable("CRS_TITLE",$this->gLng->txt("gev_crs"));
+		$tpl->setVariable("START_TITLE",$this->gLng->txt("begin_date"));
+		$tpl->setVariable("END_TITLE",$this->gLng->txt("end_date"));
+		$tpl->setVariable("SCHEDULE_TITLE",$this->gLng->txt("ts"));
+		$tpl->parseCurrentBlock();
+
+		foreach($others as $val){
+			$tpl->setCurrentBlock("crs_entries");
+			$tpl->setVariable("CRS",$val["title"]);
+			$tpl->setVariable("START",$val["start"]->get(IL_CAL_FKT_DATE,"d.m.Y"));
+			$tpl->setVariable("END",$val["end"]->get(IL_CAL_FKT_DATE,"d.m.Y"));
+			$tpl->setVariable("SCHEDULE",$val["schedule"][0]);
+			$tpl->parseCurrentBlock();
 		}
-		else {
-			$msg = $this->lng->txt("gev_booking_other_courses_in_period_others")."<br />";
-		}
-		foreach($others as $crs) {
-			$msg .= $crs["title"]." (".ilDatePresentation::formatPeriod($crs["start"], $crs["end"]).")</br>";
-		}
-		ilUtil::sendInfo($msg);*/
+		$msg = $tpl->get();
+
+		ilUtil::sendInfo($msg, false);
 	}
-	
+
 	protected function setRequestParameters() {
-		$this->ctrl->setParameter($this, "crs_id", $this->crs_id);
-		$this->ctrl->setParameter($this, "user_id", $this->user_id);
+		$this->gCtrl->setParameter($this, "crs_id", $this->crs_id);
+		$this->gCtrl->setParameter($this, "user_id", $this->user_id);
 	}
 	
 	protected function isSelfBooking() {
-		return $this->user_id == $this->current_user->getId();
+		return $this->user_id == $this->gUser->getId();
 	}
 	
 	protected function isSelfLearningCourse() {
@@ -214,7 +224,7 @@ class gevBookingGUI {
 			
 			$form = new catPropertyFormGUI();
 			$form->setTemplate("tpl.gev_booking_form.html", "Services/GEV/Desktop");
-			$field = new ilNonEditableValueGUI($this->lng->txt("gev_booking_for"), "", true);
+			$field = new ilNonEditableValueGUI($this->gLng->txt("gev_booking_for"), "", true);
 			$field->setValue($this->user_utils->getFullName());
 			$form->addItem($field);
 			
@@ -224,7 +234,7 @@ class gevBookingGUI {
 					  ;
 		}
 		
-		$this->tpl->setContent( $title->render()
+		$this->gTpl->setContent( $title->render()
 							  . $employee
 							  . $a_cont
 							  );
@@ -238,10 +248,10 @@ class gevBookingGUI {
 		$form = new catPropertyFormGUI();
 		$form->setTemplate("tpl.gev_booking_form.html", "Services/GEV/Desktop");
 		$form->setTitle($this->crs_utils->getTitle());
-		$form->addCommandButton("backToSearch", $this->lng->txt("gev_to_course_search"));
+		$form->addCommandButton("backToSearch", $this->gLng->txt("gev_to_course_search"));
 		
-		$form->addCommandButton("finalizeBooking", $this->lng->txt("gev_obligatory_booking"));
-		$form->setFormAction($this->ctrl->getFormAction($this));
+		$form->addCommandButton("finalizeBooking", $this->gLng->txt("gev_obligatory_booking"));
+		$form->setFormAction($this->gCtrl->getFormAction($this));
 
 		$prv = $this->crs_utils->getProvider();
 		$ven = $this->crs_utils->getVenue();
@@ -251,72 +261,72 @@ class gevBookingGUI {
 		$appointment = $this->crs_utils->getFormattedAppointment();
 		
 		$vals = array(
-			  array($this->lng->txt("description")
+			  array($this->gLng->txt("description")
 				   , $desc
 				   , $desc
 				   )
-			, array( $this->lng->txt("gev_course_id")
+			, array( $this->gLng->txt("gev_course_id")
 				   , true
 				   , $this->crs_utils->getCustomId()
 				   )
-			, array( $this->lng->txt("gev_target_group")
+			, array( $this->gLng->txt("gev_target_group")
 				   , true
 				   , $this->crs_utils->getTargetGroupDesc()
 				   )
-			, array( $this->lng->txt("gev_targets_and_benefit")
+			, array( $this->gLng->txt("gev_targets_and_benefit")
 				   , true
 				   , $this->crs_utils->getGoals()
 				   )
-			, array( $this->lng->txt("gev_contents")
+			, array( $this->gLng->txt("gev_contents")
 				   , true
 				   , $this->crs_utils->getContents()
 				   )
-			, array( $this->lng->txt("gev_course_type")
+			, array( $this->gLng->txt("gev_course_type")
 				   , true
 				   , implode(", ", $this->crs_utils->getType())
 				   )
-			, array( $this->lng->txt("appointment")
+			, array( $this->gLng->txt("appointment")
 				   , $appointment
 				   , $appointment
 				   )
-			,array( $this->lng->txt("gev_schedule")
+			,array( $this->gLng->txt("gev_schedule")
 					,$appointment
 					,$this->crs_utils->getFormattedSchedule()
 				   )
-			, array( $this->lng->txt("gev_provider")
+			, array( $this->gLng->txt("gev_provider")
 				   , $prv?true:false
 				   , $prv?$prv->getTitle():""
 				   )
-			, array( $this->lng->txt("gev_venue")
+			, array( $this->gLng->txt("gev_venue")
 				   , $ven?true:false
 				   , !$ven?"":( $ven->getTitle()."<br />".
 				   				$ven->getStreet()." ".$ven->getHouseNumber()."<br />".
 				   				$ven->getZipcode()." ".$ven->getCity()."<br />"
 				   			  )
 				   )
-			, array( $this->lng->txt("gev_instructor")
+			, array( $this->gLng->txt("gev_instructor")
 				   , true
 				   , $this->crs_utils->getMainTrainerName()
 				   )
-			, array( $this->lng->txt("gev_subscription_end")
+			, array( $this->gLng->txt("gev_subscription_end")
 				   , $booking_dl != "" && !$this->isSelfLearningCourse()
-				   , $this->lng->txt("until") . " ". $this->crs_utils->getFormattedBookingDeadlineDate()
+				   , $this->gLng->txt("until") . " ". $this->crs_utils->getFormattedBookingDeadlineDate()
 				   )
 
-			, array( $this->lng->txt("gev_free_cancellation_until")
+			, array( $this->gLng->txt("gev_free_cancellation_until")
 				   , $booking_dl != "" && !$this->isSelfLearningCourse()
-				   , $this->lng->txt("until") . " ". $this->crs_utils->getFormattedCancelDeadlineDate()
+				   , $this->gLng->txt("until") . " ". $this->crs_utils->getFormattedCancelDeadlineDate()
 				   )
 
-			, array( $this->lng->txt("gev_free_places")
+			, array( $this->gLng->txt("gev_free_places")
 				   , !$this->isSelfLearningCourse()
 				   , $this->crs_utils->getFreePlaces()
 				   )
-			, array( $this->lng->txt("gev_training_contact")
+			, array( $this->gLng->txt("gev_training_contact")
 				   , !$this->isSelfLearningCourse() && $officer_contact
 				   , $officer_contact
 				   )
-			//, array( $this->lng->txt("precondition")
+			//, array( $this->gLng->txt("precondition")
 			//	   , true
 			//	   , $this->crs_utils->getFormattedPreconditions()
 			//	   )
@@ -333,7 +343,7 @@ class gevBookingGUI {
 		}
 		
 		if ($this->crs_utils->isWithAccomodations()) {
-			$this->lng->loadLanguageModule("acco");
+			$this->gLng->loadLanguageModule("acco");
 			ilSetAccomodationsGUI::addAccomodationsToForm($form, $this->crs_id, $this->user_id, "acco", true);
 			if ($_POST["acco"]) {
 				$form->getItemByPostVar("acco")->setValue($_POST["acco"]);
@@ -361,7 +371,7 @@ class gevBookingGUI {
 		if ($this->crs_utils->isWithAccomodations()) {
 			$_form = $this->getAccomodationsForm();
 			if (!$_form->checkInput()) {
-				$this->log->write("gevBookingGUI::finalizeBooking: This should not happen, the form input did not check correctly.");
+				$this->gLog->write("gevBookingGUI::finalizeBooking: This should not happen, the form input did not check correctly.");
 				$this->toCourseSearch();
 				return;
 			}
@@ -375,7 +385,7 @@ class gevBookingGUI {
 			$this->failAtFinalize("Someone managed to get here but not being able to book the course.");
 		}
 		if ($accomodations) {
-			$acco = ilSetAccomodationsGUI::formInputToAccomodationsArray($accomodations);	
+			$acco = ilSetAccomodationsGUI::formInputToAccomodationsArray($accomodations);
 			$acco_inst = ilAccomodations::getInstance($this->crs_utils->getCourse());
 			$acco_inst->setAccomodationsOfUser($this->user_id, $acco);
 		}
@@ -390,8 +400,8 @@ class gevBookingGUI {
 	}
 	
 	protected function failAtFinalize($msg) {
-		$this->log->write("gevBookingGUI::finalizeBooking: ".$msg);
-		ilUtil::sendFailure($this->lng->txt("gev_finalize_booking_error"), true);
+		$this->gLog->write("gevBookingGUI::finalizeBooking: ".$msg);
+		ilUtil::sendFailure($this->gLng->txt("gev_finalize_booking_error"), true);
 		$this->toCourseSearch();
 		exit();
 	}
@@ -410,8 +420,8 @@ class gevBookingGUI {
 				$automails->send("self_booking_to_waiting", array($this->user_id));
 			}
 			
-			ilUtil::sendSuccess( sprintf( $booked ? $this->lng->txt("gev_was_booked_self")
-												  : $this->lng->txt("gev_was_booked_waiting_self")
+			ilUtil::sendSuccess( sprintf( $booked ? $this->gLng->txt("gev_was_booked_self")
+												  : $this->gLng->txt("gev_was_booked_waiting_self")
 										, $this->crs_utils->getTitle()
 										)
 								, true
@@ -428,8 +438,8 @@ class gevBookingGUI {
 				$automails->send("superior_booking_to_waiting", array($this->user_id));
 			}
 			
-			ilUtil::sendSuccess( sprintf ($booked ? $this->lng->txt("gev_was_booked_employee")
-										 		  : $this->lng->txt("gev_was_booked_waiting_employee")
+			ilUtil::sendSuccess( sprintf ($booked ? $this->gLng->txt("gev_was_booked_employee")
+										 		  : $this->gLng->txt("gev_was_booked_waiting_employee")
 										 , $this->user_utils->getFirstname()." ".$this->user_utils->getLastname()
 										 , $this->crs_utils->getTitle()
 										 )
@@ -439,5 +449,3 @@ class gevBookingGUI {
 		}
 	}
 }
-
-?>

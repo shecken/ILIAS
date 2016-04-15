@@ -352,6 +352,9 @@ class ilTEPCourseEntries
 				$entry->delete();
 			}
 		}
+		global $ilAppEventHandler;
+		$obj = new ilTEPEntry($this->getCourseEntryId());
+		$ilAppEventHandler->raise('Services/TEP','update',array('entry'=>$obj));
 	}
 	
 	/**

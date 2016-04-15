@@ -212,11 +212,20 @@ class ilUserCourseStatusHistorizingHelper
 		require_once("Services/UserCourseStatusHistorizing/classes/class.ilUserCourseStatusHistorizing.php");
 		require_once("Services/Calendar/classes/class.ilDateTime.php");
 		
-		$case_id = array( 'usr_id'	 =>	$user_id
-						, 'crs_id'	 =>	$course_id
+		$case_id = array( 'usr_id'	 =>	(int)$user_id
+						, 'crs_id'	 =>	(int)$course_id
 						);
 		
 		if (!ilUserCourseStatusHistorizing::caseExists($case_id)) {
+			$payload["begin_date"] = date("Y-m-d");
+			return;
+		}
+
+		$states_checks = array(gevCourseUtils::LABEL_CANCELLED_WITH_COSTS, gevCourseUtils::LABEL_CANCELLED_WITHOUT_COSTS);
+		if (ilUserCourseStatusHistorizing::caseExists($case_id)
+			&& in_array($payload["booking_status"], $states_checks)
+			&& $payload["event"] == "addParticipant")
+		{
 			$payload["begin_date"] = date("Y-m-d");
 			return;
 		}
@@ -225,7 +234,7 @@ class ilUserCourseStatusHistorizingHelper
 			return;
 		}
 		
-		$cur = ilUserCourseStatusHistorizing::getCurrentRecordByCase();
+		$cur = ilUserCourseStatusHistorizing::getCurrentRecordByCase($case_id);
 		
 		if ($cur["participation_status"] !== "status_successful") {
 			$payload["end_date"] = date("Y-m-d");
