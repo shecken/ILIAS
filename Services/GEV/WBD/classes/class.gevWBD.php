@@ -75,6 +75,14 @@ class gevWBD {
 
 	const WBD_IMPORT_CREATOR_ID = -666;
 
+	public static $actions = array("newUser"=>"newUser"
+		, "updateUser"=>"updateUser"
+		, "releaseUser"=>"releaseUser"
+		, "affiliateUser"=>"affiliateUser"
+		, "cpReport"=>"cpReport"
+		, "cpStorno"=>"cpStorno"
+		, "cpRequest"=>"cpRequest");
+
 	//Statics
 	static protected $instances = array(); 
 
@@ -510,7 +518,7 @@ class gevWBD {
 					, new WBDPreliminaryHandleUser(array(6,13))
 					, new WBDPreliminaryEntryDatePassed()
 					, new WBDPreliminaryBWVIdIsEmpty()
-					, new WBDPreliminaryHasNotWBDType(self::WBD_NO_SERVICE)
+					, new WBDPreliminaryHasWBDType(self::WBD_NO_SERVICE)
 					, new WBDPreliminaryHasNoOpenWBDError($wbd_errors)
 					);
 	}
@@ -550,7 +558,7 @@ class gevWBD {
 					, new WBDPreliminaryIsActiveUser()
 					, new WBDPreliminaryHandleUser(array(6,13))
 					, new WBDPreliminaryBWVIdIsEmpty()
-					, new WBDPreliminaryHasNotWBDType(self::WBD_NO_SERVICE)
+					, new WBDPreliminaryHasWBDType(self::WBD_NO_SERVICE)
 					, new WBDPreliminaryHasNoOpenWBDError($wbd_errors)
 					);
 	}
