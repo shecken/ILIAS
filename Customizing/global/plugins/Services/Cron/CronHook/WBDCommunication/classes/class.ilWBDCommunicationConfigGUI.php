@@ -52,15 +52,15 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 	protected function save() {
 		$form = $this->initConfigurationForm();
 
-		if(in_array("cpStorno", $_POST["actions"]) && !isset($_POST["storno_rows"])) {
+		if(in_array(gevWBD::CP_STORNO, $_POST["actions"]) && !isset($_POST["storno_rows"])) {
 			$show_advice = true;
-		} else if(!in_array("cpStorno", $_POST["actions"]) && isset($_POST["storno_rows"])) {
+		} else if(!in_array(gevWBD::CP_STORNO, $_POST["actions"]) && isset($_POST["storno_rows"])) {
 			$ele = $form->getItemByPostVar("storno_rows");
 			$ele->setRequired(false);
 			unset($_POST["storno_rows"]);
 		}
 
-		if(!in_array("cpRequest", $_POST["actions"]) && isset($_POST["request_ids"])) {
+		if(!in_array(gevWBD::CP_REQUEST, $_POST["actions"]) && isset($_POST["request_ids"])) {
 			unset($_POST["request_ids"]);
 		}
 
@@ -70,7 +70,7 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 			return;
 		}
 
-		if(in_array("cpStorno", $_POST["actions"]) && $_POST["storno_rows"] != "") {
+		if(in_array(gevWBD::CP_STORNO, $_POST["actions"]) && $_POST["storno_rows"] != "") {
 
 			if(!$this->checkString($_POST["storno_rows"])) {
 				$form->setValuesByPost();
@@ -84,7 +84,7 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 			$_POST["storno_rows"] = null;
 		}
 
-		if(in_array("cpRequest", $_POST["actions"]) && $_POST["request_ids"] != "") {
+		if(in_array(gevWBD::CP_REQUEST, $_POST["actions"]) && $_POST["request_ids"] != "") {
 			if(!$this->checkString($_POST["request_ids"])) {
 				$form->setValuesByPost();
 				$this->gTpl->setContent($form->getHtml());
@@ -174,7 +174,7 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 		$actions->setOptions(gevWBD::$actions);
 		$form->addItem($actions);
 
-		if($this->config_data->loaded() && in_array("cpStorno", $this->config_data->actions())) {
+		if($this->config_data->loaded() && in_array(gevWBD::CP_STORNO, $this->config_data->actions())) {
 			$storno_rows = new ilTextAreaInputGUI($this->getPluginObject()->txt("storno_rows"), "storno_rows");
 			$storno_rows->setInfo($this->getPluginObject()->txt("storno_rows_desc"));
 			$storno_rows->setRows(10);
@@ -184,7 +184,7 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 			$form->addItem($storno_rows);
 		}
 
-		if($this->config_data->loaded() && in_array("cpRequest", $this->config_data->actions())) {
+		if($this->config_data->loaded() && in_array(gevWBD::CP_REQUEST, $this->config_data->actions())) {
 			$request_ids = new ilTextAreaInputGUI($this->getPluginObject()->txt("request_ids"), "request_ids");
 			$request_ids->setInfo($this->getPluginObject()->txt("request_ids_desc"));
 			$request_ids->setRows(10);

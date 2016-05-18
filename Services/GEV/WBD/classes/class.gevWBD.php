@@ -75,6 +75,14 @@ class gevWBD {
 
 	const WBD_IMPORT_CREATOR_ID = -666;
 
+	const NEW_USER 			= "newUser";
+	const UPDATE_USER 		= "updateUser";
+	const RELEASE_USER 		= "releaseUser";
+	const AFFILIATE_USER 	= "affiliateUser";
+	const CP_REPORT 		= "cpReport";
+	const CP_STORNO 		= "cpStorno";
+	const CP_REQUEST 		= "cpRequest";
+
 	public static $actions = array("newUser"=>"newUser"
 		, "updateUser"=>"updateUser"
 		, "releaseUser"=>"releaseUser"
