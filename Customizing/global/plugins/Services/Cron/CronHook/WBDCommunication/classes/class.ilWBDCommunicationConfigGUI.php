@@ -28,13 +28,6 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 	}
 
 	/**
-	 * @return array
-	 */
-	public function getFields() {
-		
-	}
-
-	/**
 	 * Handles all commmands, default is 'configure'
 	 */
 	function performCommand($cmd) {
@@ -204,7 +197,7 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 	}
 
 	protected function cancel() {
-
+		ilUtil::redirect($this->gCtrl->getLinkTargetByClass("ilobjcomponentsettingsgui","listPlugins","",false,false));
 	}
 
 	protected function checkString($string) {
