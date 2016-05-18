@@ -1,0 +1,15 @@
+job_title#:#WBD Zeugs
+storno_in_use#:#Sie wollen Einträge stornieren. Bitte tragen Sie die benötigten ID's ein.<br />Ihre Änderungen wurden erfolgreich gespeichert.
+save_success#:#Ihre Änderungen wurden erfolgreich gespeichert.
+save#:#Speichern
+cancel#:#Abbrechen
+siggy#:# URL zu Siggy
+wbd#:#WBD Webinterface
+config_path#:#Konfigurationsdatei
+run_script#:#Shell Script
+actions#:#Aktionen
+storno_rows#:#Storno
+storno_rows_desc#:#Bitte trennen Sie die ID's mit einer Pipe (id|id|...|id).
+request_ids#:#Abfrage
+request_ids_desc#:#Wenn Sie alle Benutzer abfagen wollen, dann lassen Sie dieses Feld bitte leer. Ansonsten trennen Sie die ID's mit einer Pipe (id|id|...|id).
+string_is_wrong#:#Das Format für Storno oder Abfrage wurde nicht eingehalten. Bitte korrigieren Sie dieses.

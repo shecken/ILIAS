@@ -11,14 +11,12 @@ class ilWBDCommunicationPlugin extends ilCronHookPlugin {
 
 	function getCronJobInstances() {
 		require_once $this->getDirectory()."/classes/class.WBDCommunicationJob.php";
-		$job = new WBDCommunicationJob();
+		$job = new WBDCommunicationJob($this);
 		return array($job);
 	}
 
 	function getCronJobInstance($a_job_id) {
 		require_once $this->getDirectory()."/classes/class.WBDCommunicationJob.php";
-		return new WBDCommunicationJob();
+		return new WBDCommunicationJob($this);
 	}
-
-
 }

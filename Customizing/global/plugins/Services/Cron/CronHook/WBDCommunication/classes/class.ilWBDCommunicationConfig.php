@@ -10,8 +10,10 @@ class ilWBDCommunicationConfig {
 	protected $actions;
 	protected $storno_rows;
 	protected $request_ids;
-	protected $loaded;
+	protected $config_path;
+	protected $run_script;
 
+	protected $loaded;
 	private $gUser;
 	private $gDB;
 
@@ -37,7 +39,7 @@ class ilWBDCommunicationConfig {
 		});
 
 		if (empty($props)) {
-			throw new \BadMethodCallException
+			throw new BadMethodCallException
 						("Could not call unknown getter for field '$name'");
 		}
 		return $this->$name;
@@ -55,13 +57,15 @@ class ilWBDCommunicationConfig {
 		$request_ids = ($this->request_ids === null) ? null : serialize($this->request_ids);
 
 		$query = "INSERT INTO ".self::TABLE."\n"
-				." (id, siggy, wbd, actions, storno_rows, request_ids, changed_by, changed_date)\n"
+				." (id, siggy, wbd, actions, storno_rows, request_ids, config_path, run_script, changed_by, changed_date)\n"
 				." VALUES(".$next_id
 					.", ".$this->gDB->quote($this->siggy, "text")
 					.", ".$this->gDB->quote($this->wbd, "text")
 					.", ".$this->gDB->quote(serialize($this->actions), "text")
 					.", ".$this->gDB->quote($storno_rows, "text")
 					.", ".$this->gDB->quote($request_ids, "text")
+					.", ".$this->gDB->quote($this->config_path, "text")
+					.", ".$this->gDB->quote($this->run_script, "text")
 					.", ".$this->gDB->quote($this->gUser->getId(), "integer")
 					.", NOW())";
 
@@ -70,7 +74,7 @@ class ilWBDCommunicationConfig {
 	}
 
 	public function load() {
-		$query = "SELECT siggy, wbd, actions, storno_rows, request_ids\n"
+		$query = "SELECT siggy, wbd, actions, storno_rows, request_ids, config_path, run_script\n"
 				." FROM ".self::TABLE
 				." ORDER BY id DESC"
 				." LIMIT 1";
@@ -128,6 +132,14 @@ class ilWBDCommunicationConfig {
 			'request_ids' => array(
 				'type' => 'clob',
 				'notnull' => false
+			),
+			'config_path' => array(
+				'type' => 'clob',
+				'notnull' => true
+			),
+			'run_script' => array(
+				'type' => 'clob',
+				'notnull' => true
 			),
 			'changed_by' => array(
 				'type' => 'text',
