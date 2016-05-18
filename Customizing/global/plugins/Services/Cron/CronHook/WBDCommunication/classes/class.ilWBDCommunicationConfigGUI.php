@@ -31,7 +31,7 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 	 * Handles all commmands, default is 'configure'
 	 */
 	function performCommand($cmd) {
-		$this->load();
+		$this->createConfigData();
 		switch ($cmd) {
 			case "configure":
 			case "save":
@@ -45,10 +45,16 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 		}
 	}
 
+	/**
+	 * show config GUI
+	 */
 	protected function configure() {
 		$this->gTpl->setContent($this->initConfigurationForm()->getHTML());
 	}
 
+	/**
+	 * save config values
+	 */
 	protected function save() {
 		$form = $this->initConfigurationForm();
 
@@ -106,24 +112,17 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 		$this->configure();
 	}
 
-	protected function addPostValuesToForm($form, $post) {
-		foreach ($post as $key => $value) {
-			$hidden = new ilHiddenInputGUI($key);
-			if(is_array($value)) {
-				$value = serialize($value);
-			}
-
-			$hidden->setValue($value);
-			$form->addItem($hidden);
-		}
-	}
-
-	protected function load() {
+	/**
+	 * 
+	 */
+	protected function createConfigData() {
 		$this->config_data = new ilWBDCommunicationConfig();
 		$this->config_data->load();
 	}
 
 	/**
+	 * creates settings form gui
+	 *
 	 * @return ilPropertyFormGUI
 	 */
 	public function initConfigurationForm() {
@@ -192,10 +191,20 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 		return $form;
 	}
 
+	/**
+	 * redirect to plugin main page
+	 */
 	protected function cancel() {
 		ilUtil::redirect($this->gCtrl->getLinkTargetByClass("ilobjcomponentsettingsgui","listPlugins","",false,false));
 	}
 
+	/**
+	 * valid or not valid
+	 *
+	 * @param string $string
+	 *
+	 * @return bool
+	 */
 	protected function checkString($string) {
 		return preg_match(self::REGEX_IDS, $string);
 	}

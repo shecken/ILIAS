@@ -3,6 +3,15 @@
  * WBDCommunication Configuration Data
  *
  * @author Stefan Hecken <stefan.hecken@concepts-and-training.de>
+ *
+ * @method string siggy()
+ * @method string wbd()
+ * @method array actions()
+ * @method array|NULL stornoRows()
+ * @method array|NULL requestIds()
+ * @method string configPath()
+ * @method string runScript()
+ * @method bool loaded()
  */
 class ilWBDCommunicationConfig {
 	protected $siggy;
@@ -12,8 +21,8 @@ class ilWBDCommunicationConfig {
 	protected $request_ids;
 	protected $config_path;
 	protected $run_script;
-
 	protected $loaded;
+
 	private $gUser;
 	private $gDB;
 
@@ -30,6 +39,16 @@ class ilWBDCommunicationConfig {
 		$this->loaded = false;
 	}
 
+	/**
+	 * get value of protected property
+	 *
+	 * @throws BadMethodCallException
+	 * 
+	 * @param string $name name of called function
+	 * @param array $params
+	 * 
+	 * @return mixed $this->$name value of protected property
+	 */
 	final public function __call($name, $params) {
 		assert('count($params) === 0');
 		$name = $this->from_camel_case($name);
@@ -51,6 +70,9 @@ class ilWBDCommunicationConfig {
 		}, $name);
 	}
 
+	/**
+	 * values to DB
+	 */
 	public function save() {
 		$next_id = $this->gDB->nextId(self::TABLE);
 		$storno_rows  = ($this->storno_rows === null) ? null : serialize($this->storno_rows);
@@ -73,6 +95,9 @@ class ilWBDCommunicationConfig {
 		$this->loaded = true;
 	}
 
+	/**
+	 * values from DB
+	 */
 	public function load() {
 		$query = "SELECT siggy, wbd, actions, storno_rows, request_ids, config_path, run_script\n"
 				." FROM ".self::TABLE
@@ -90,10 +115,14 @@ class ilWBDCommunicationConfig {
 		$this->loaded = true;
 	}
 
-	public function setValueByArray(array $post) {
+	/**
+	 * fill properties
+	 * @param array $values
+	 */
+	public function setValueByArray(array $values) {
 		foreach ($this->protectedProperties() as $value) {
-			if(isset($post[$value->name])) {
-				$val = $post[$value->name];
+			if(isset($values[$value->name])) {
+				$val = $values[$value->name];
 				if(is_string($val) && $val_un = unserialize($val)) {
 					$this->{$value->name} = $val_un;
 					continue;
@@ -104,6 +133,9 @@ class ilWBDCommunicationConfig {
 		}
 	}
 
+	/**
+	 * create db table
+	 */
 	public static function setUpDB($ilDB) {
 		$fields = array(
 			'id' => array(
@@ -156,6 +188,11 @@ class ilWBDCommunicationConfig {
 		$ilDB->createSequence(self::TABLE);
 	}
 
+	/**
+	 * get all protected properties
+	 *
+	 * @return array
+	 */
 	protected function protectedProperties() {
 		$reflect = new ReflectionClass($this);
 		return $reflect->getProperties(ReflectionProperty::IS_PROTECTED);

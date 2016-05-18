@@ -17,14 +17,10 @@ require_once "Services/Cron/classes/class.ilCronJobResult.php";
 require_once("Customizing/global/plugins/Services/Cron/CronHook/WBDCommunication/classes/class.ilWBDCommunicationConfig.php");
 
 class WBDCommunicationJob extends ilCronJob {
-
 	private $gDB;
 	private $gLog;
 	private $gLng;
 	private $gRbacadmin;
-
-	const CONFIG_PATH = "";
-	const RUN = "";
 
 	public function __construct($plugin) {
 		global $ilDB, $ilLog, $lng, $rbacadmin;
@@ -36,56 +32,49 @@ class WBDCommunicationJob extends ilCronJob {
 	}
 
 	/**
-	 * Implementation of abstract function from ilCronJob
-	 * @return	string
+	 * @inheritdoc
 	 */
 	public function getId() {
 		return "wbd_communication";
 	}
 	
 	/**
-	 * Implementation of abstract function from ilCronJob
-	 * @return	string
+	 * @inheritdoc
 	 */
 	public function getTitle() {
 		return $this->plugin->txt("job_title");
 	}
 
 	/**
-	 * Implementation of abstract function from ilCronJob
-	 * @return	bool
+	 * @inheritdoc
 	 */
 	public function hasAutoActivation() {
 		return true;
 	}
 	
 	/**
-	 * Implementation of abstract function from ilCronJob
-	 * @return	bool
+	 * @inheritdoc
 	 */
 	public function hasFlexibleSchedule() {
 		return false;
 	}
 	
 	/**
-	 * Implementation of abstract function from ilCronJob
-	 * @return	int
+	 * @inheritdoc
 	 */
 	public function getDefaultScheduleType() {
 		return ilCronJob::SCHEDULE_TYPE_DAILY;
 	}
 	
 	/**
-	 * Implementation of abstract function from ilCronJob
-	 * @return	int
+	 * @inheritdoc
 	 */
 	public function getDefaultScheduleValue() {
 		return 1;
 	}
 
 	/**
-	 * Implementation of abstract function from ilCronJob
-	 * @return	ilCronJobResult
+	 * @inheritdoc
 	 */
 	public function run() {
 		$cron_result = new ilCronJobResult();
@@ -126,6 +115,9 @@ class WBDCommunicationJob extends ilCronJob {
 		return $cron_result;
 	}
 
+	/**
+	 * create inifile
+	 */
 	protected function writeIniFile($assoc_arr, $path) {
 		$content = "";
 		foreach ($assoc_arr as $key => $elem) {
@@ -151,8 +143,6 @@ class WBDCommunicationJob extends ilCronJob {
 		}
 
 		$success = fwrite($handle, $content);
-		fclose($handle); 
-
-		return $success; 
+		fclose($handle);
 	}
 }
