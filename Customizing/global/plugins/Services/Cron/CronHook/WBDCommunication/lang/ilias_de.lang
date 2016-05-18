@@ -1,5 +1,5 @@
 job_title#:#WBD Zeugs
-storno_in_use#:#Sie wollen Einträge stornieren. Bitte tragen Sie die benötigten ID's ein.<br />Ihre Änderungen wurden erfolgreich gespeichert.
+more_input_needed#:#Sie möchten eine Aktion ausführen, die noch weitere Daten benötigt. Bitte tragen Sie diese nach und Speichern erneut. Ihre bisherigen Einstellungen wurden gespeichert.
 save_success#:#Ihre Änderungen wurden erfolgreich gespeichert.
 save#:#Speichern
 cancel#:#Abbrechen

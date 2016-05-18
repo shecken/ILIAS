@@ -52,16 +52,9 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 	protected function save() {
 		$form = $this->initConfigurationForm();
 
-		if(in_array(gevWBD::CP_STORNO, $_POST["actions"]) && !isset($_POST["storno_rows"])) {
-			$show_advice = true;
-		} else if(!in_array(gevWBD::CP_STORNO, $_POST["actions"]) && isset($_POST["storno_rows"])) {
+		if(!in_array(gevWBD::CP_STORNO, $_POST["actions"]) && isset($_POST["storno_rows"])) {
 			$ele = $form->getItemByPostVar("storno_rows");
 			$ele->setRequired(false);
-			unset($_POST["storno_rows"]);
-		}
-
-		if(!in_array(gevWBD::CP_REQUEST, $_POST["actions"]) && isset($_POST["request_ids"])) {
-			unset($_POST["request_ids"]);
 		}
 
 		if(!$form->checkInput()) {
@@ -71,7 +64,6 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 		}
 
 		if(in_array(gevWBD::CP_STORNO, $_POST["actions"]) && $_POST["storno_rows"] != "") {
-
 			if(!$this->checkString($_POST["storno_rows"])) {
 				$form->setValuesByPost();
 				$this->gTpl->setContent($form->getHtml());
@@ -80,6 +72,8 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 			} else {
 				$_POST["storno_rows"] = explode("|", $_POST["storno_rows"]);
 			}
+		} else if(in_array(gevWBD::CP_STORNO, $_POST["actions"]) && !isset($_POST["storno_rows"])) {
+			$show_advice = true;
 		} else {
 			$_POST["storno_rows"] = null;
 		}
@@ -93,6 +87,8 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 			} else {
 				$_POST["request_ids"] = explode("|", $_POST["request_ids"]);
 			}
+		} else if(in_array(gevWBD::CP_STORNO, $_POST["actions"]) && !isset($_POST["request_ids"])) {
+			$show_advice = true;
 		} else {
 			$_POST["request_ids"] = null;
 		}
@@ -102,7 +98,7 @@ class ilWBDCommunicationConfigGUI extends ilPluginConfigGUI {
 		$this->config_data->save();
 
 		if($show_advice) {
-			ilUtil::sendInfo($this->getPluginObject()->txt("storno_in_use"));
+			ilUtil::sendInfo($this->getPluginObject()->txt("more_input_needed"));
 		} else {
 			ilUtil::sendInfo($this->getPluginObject()->txt("save_success"));
 		}
