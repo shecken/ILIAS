@@ -3,9 +3,9 @@
 [![Latest Stable Version](https://poser.pugx.org/box/spout/v/stable)](https://packagist.org/packages/box/spout)
 [![Project Status](http://opensource.box.com/badges/active.svg)](http://opensource.box.com/badges)
 [![Build Status](https://travis-ci.org/box/spout.svg?branch=master)](https://travis-ci.org/box/spout)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/box/spout/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/box/spout/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/box/spout/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/box/spout/?branch=master)
 [![Total Downloads](https://poser.pugx.org/box/spout/downloads)](https://packagist.org/packages/box/spout)
-[![License](https://poser.pugx.org/box/spout/license)](https://packagist.org/packages/box/spout)
 
 Spout is a PHP library to read and write spreadsheet files (CSV, XLSX and ODS), in a fast and scalable way.
 Contrary to other file readers or writers, it is capable of processing very large files while keeping the memory usage really low (less than 3MB).
@@ -133,7 +133,7 @@ $writer->setShouldAddBOM(false);
 
 #### Row styling
 
-It is possible to apply some formatting options to a row. Spout supports fonts, borders as well as alignment styles.
+It is possible to apply some formatting options to a row. Spout supports fonts, background, borders as well as alignment styles.
 
 ```php
 use Box\Spout\Common\Type;
@@ -146,6 +146,7 @@ $style = (new StyleBuilder())
            ->setFontSize(15)
            ->setFontColor(Color::BLUE)
            ->setShouldWrapText()
+           ->setBackgroundColor(Color::YELLOW)
            ->build();
 
 $writer = WriterFactory::create(Type::XLSX);
@@ -179,23 +180,36 @@ $style = (new StyleBuilder())
 $writer = WriterFactory::create(Type::XLSX);
 $writer->openToFile($filePath);
 
-$writer->addRowWithStyle(['Border Bottom Green Thin Dashed'], $style)
+$writer->addRowWithStyle(['Border Bottom Green Thin Dashed'], $style);
 
 $writer->close();
 ```
 
+Spout will use a default style for all created rows. This style can be overridden this way:
+
+```php
+$defaultStyle = (new StyleBuilder())
+                ->setFontName('Arial')
+                ->setFontSize(11)
+                ->build();
+
+$writer = WriterFactory::create(Type::XLSX);
+$writer->setDefaultRowStyle($defaultStyle)
+       ->openToFile($filePath);
+```
+
 Unfortunately, Spout does not support all the possible formatting options yet. But you can find the most important ones:
 
-Category  | Property      | API
-----------|---------------|---------------------------------------
-Font      | Bold          | `StyleBuilder::setFontBold()`
-          | Italic        | `StyleBuilder::setFontItalic()`
-          | Underline     | `StyleBuilder::setFontUnderline()`
-          | Strikethrough | `StyleBuilder::setFontStrikethrough()`
-          | Font name     | `StyleBuilder::setFontName('Arial')`
-          | Font size     | `StyleBuilder::setFontSize(14)`
-          | Font color    | `StyleBuilder::setFontColor(Color::BLUE)`<br>`StyleBuilder::setFontColor(Color::rgb(0, 128, 255))`
-Alignment | Wrap text     | `StyleBuilder::setShouldWrapText()`
+| Category  | Property      | API
+|-----------|---------------|---------------------------------------
+| Font      | Bold          | `StyleBuilder::setFontBold()`
+|           | Italic        | `StyleBuilder::setFontItalic()`
+|           | Underline     | `StyleBuilder::setFontUnderline()`
+|           | Strikethrough | `StyleBuilder::setFontStrikethrough()`
+|           | Font name     | `StyleBuilder::setFontName('Arial')`
+|           | Font size     | `StyleBuilder::setFontSize(14)`
+|           | Font color    | `StyleBuilder::setFontColor(Color::BLUE)`<br>`StyleBuilder::setFontColor(Color::rgb(0, 128, 255))`
+| Alignment | Wrap text     | `StyleBuilder::setShouldWrapText(true|false)`
 
 #### New sheet creation
 
@@ -245,7 +259,7 @@ $writer->setShouldUseInlineStrings(false); // will use shared strings
 
 When reading a spreadsheet containing dates or times, Spout returns the values by default as DateTime objects.
 It is possible to change this behavior and have a formatted date returned instead (e.g. "2016-11-29 1:22 AM"). The format of the date corresponds to what is specified in the spreadsheet.
- 
+
 ```php
 use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Common\Type;
@@ -288,7 +302,7 @@ $sheetName = $sheet->getName();
 // Customizing the sheet name when writing
 $sheet = $writer->getCurrentSheet();
 $sheet->setName('My custom name');
-``` 
+```
 
 > Please note that Excel has some restrictions on the sheet's name:
 > * it must not be blank

@@ -629,6 +629,9 @@ class ilInitialisation
 				if (class_exists("Collator"))
 				{
 					$GLOBALS["ilCollator"] = new Collator($first);
+					$GLOBALS["DIC"]["ilCollator"] = function($c) {
+						return $GLOBALS["ilCollator"];
+					};
 				}
 			}
 		}
@@ -876,6 +879,8 @@ class ilInitialisation
 	 */
 	protected static function initGlobal($a_name, $a_class, $a_source_file = null)
 	{
+		global $DIC;
+
 		if($a_source_file)
 		{
 			include_once $a_source_file;
@@ -885,6 +890,10 @@ class ilInitialisation
 		{
 			$GLOBALS[$a_name] = $a_class;
 		}
+
+		$DIC[$a_name] = function ($c) use ($a_name) {
+			return $GLOBALS[$a_name];
+		};
 	}
 			
 	/**
@@ -924,12 +933,48 @@ class ilInitialisation
 
 		include_once "include/inc.debug.php";
 	}
-	
+
+	protected static $already_initialized;
+
+	public static function reinitILIAS() {
+		self::$already_initialized = false;
+		self::initILIAS();
+	}
+
 	/**
 	 * ilias initialisation
 	 */
 	public static function initILIAS()
 	{
+		if (self::$already_initialized) 
+		{
+			// workaround for bug #17990
+			// big mess. we prevent double initialisations with ILIAS 5.1, which is good, but...
+			// the style service uses $_GET["ref_id"] to determine
+			// the context styles. $_GET["ref_id"] is "corrected" by the "goto" procedure and which calls
+			// initILIAS again.
+			// we need a mechanism that detemines our repository context and stores that in an information object
+			// usable by the style component afterwars. This needs new concepts and a refactoring.
+			if(ilContext::initClient())
+			{
+				global $tpl;
+				if (is_object($tpl))
+				{
+					// load style sheet depending on user's settings
+					$location_stylesheet = ilUtil::getStyleSheetLocation();
+					$tpl->setVariable("LOCATION_STYLESHEET", $location_stylesheet);
+				}
+			}
+
+			return;
+		}
+
+		$GLOBALS["DIC"] = new \ILIAS\DI\Container();
+		$GLOBALS["DIC"]["ilLoggerFactory"] = function($c) {
+			return ilLoggerFactory::getInstance();
+		};
+
+		self::$already_initialized = true;
 		global $tree;
 		
 		self::initCore();

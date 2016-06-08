@@ -40,7 +40,7 @@ class Worksheet implements WorksheetInterface
 
     /**
      * @param \Box\Spout\Writer\Common\Sheet $externalSheet The associated "external" sheet
-     * @param string $worksheetFilesFolder Temporary folder where the files to create the XLSX will be stored
+     * @param string $worksheetFilesFolder Temporary folder where the files to create the ODS will be stored
      * @throws \Box\Spout\Common\Exception\IOException If the sheet data file cannot be opened for writing
      */
     public function __construct($externalSheet, $worksheetFilesFolder)
@@ -155,7 +155,7 @@ class Worksheet implements WorksheetInterface
                 $currentCellValue !== $dataRowWithNumericIndexes[$nextCellIndex]) {
 
                 $numTimesValueRepeated = ($nextCellIndex - $currentCellIndex);
-                $data .= $this->getCellContent($currentCellValue, $styleIndex, $numTimesValueRepeated);
+                $data .= $this->getCellXML($currentCellValue, $styleIndex, $numTimesValueRepeated);
 
                 $currentCellIndex = $nextCellIndex;
             }
@@ -183,7 +183,7 @@ class Worksheet implements WorksheetInterface
      * @return string The cell XML content
      * @throws \Box\Spout\Common\Exception\InvalidArgumentException If a cell value's type is not supported
      */
-    protected function getCellContent($cellValue, $styleIndex, $numTimesValueRepeated)
+    protected function getCellXML($cellValue, $styleIndex, $numTimesValueRepeated)
     {
         $data = '<table:table-cell table:style-name="ce' . $styleIndex . '"';
 

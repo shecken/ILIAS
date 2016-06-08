@@ -7,10 +7,13 @@
 		"filp/whoops": "^2.1.2",
 		"eluceo/ical": "^0.9.0",
 		"box/spout": "^2.4",
-		"phpmailer/phpmailer": "^5.2.22"
+		"phpmailer/phpmailer": "^5.2.22",
+		"pimple/pimple" : "^3.0",
+		"geshi/geshi": "dev-master"
 	},
 	"autoload" : {
 		"psr-4" : {
+			"ILIAS\\" : "../../src",
 			"CaT\\" : "../../CaT/src",
 			"CaT\\Plugins\\CareerGoal\\" : "../../Customizing/global/plugins/Services/Repository/RepositoryObject/CareerGoal/classes",
 			"CaT\\Plugins\\TalentAssessment\\" : "../../Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes"
@@ -48,6 +51,23 @@
 			"added_by" : "Denis Klöpfer <denis.kloepfer@concepts-and-training.de>",
 			"last_update" : "2017-01-17",
 			"last_update_by" : "Denis Klöpfer <denis.kloepfer@concepts-and-training.de>"
+		},
+		"pimple/pimple" : {
+			"source" : "https://github.com/silexphp/Pimple.git",
+			"used_version" : "v3.0.2",
+			"added_by" : "Richard Klees <richard.klees@concepts-and-training.de>",
+			"used_by" : "ILIAS\\DI\\Container",
+			"wrapped_by" : "ILIAS\\DI\\Container",
+			"last_update" : "2016-02-29",
+			"last_update_by" : "Richard Klees <richard.klees@concepts-and-training.de>"
+		},
+		"geshi/geshi" : {
+			"source" : "https://github.com/GeSHi/geshi-1.0",
+			"used_version" : "v1.0.8.12",
+			"wrapped_by" : "Services/COPage",
+			"added_by" : "Alexander Killing <killing@leifos.de>",
+			"last_update" : "2016-05-25",
+			"last_update_by" : "Alexander Killing <killing@leifos.de>"
 		}
 	}
 }

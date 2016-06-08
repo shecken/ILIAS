@@ -40,8 +40,6 @@ class SimpleXMLElement
         }
 
         $this->resetXMLInternalErrorsSetting();
-
-        return $this->simpleXMLElement;
     }
 
     /**
@@ -149,22 +147,6 @@ class SimpleXMLElement
         $realElement = $this->simpleXMLElement->{$tagName};
 
         return $doesElementExist ? $this->wrapSimpleXMLElement($realElement) : null;
-    }
-
-    /**
-     * Returns the immediate children.
-     *
-     * @return array The children
-     */
-    public function children()
-    {
-        $children = [];
-
-        foreach ($this->simpleXMLElement->children() as $child) {
-            $children[] = $this->wrapSimpleXMLElement($child);
-        }
-
-        return $children;
     }
 
     /**
