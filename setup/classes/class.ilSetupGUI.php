@@ -3358,6 +3358,9 @@ else
 		{
 			include_once './Services/Tree/classes/class.ilTree.php';
 			$GLOBALS['ilSetting'] = $set;
+			$GLOBALS["DIC"]["ilSetting"] = function($c) {
+				return $GLOBALS["ilSetting"];
+			};
 			$tree = new ilTree(1);
 			$tree->renumber(1);
 			
@@ -3422,6 +3425,9 @@ else
 
 		// referencing does not work in dbupdate-script
 		$GLOBALS["ilDB"] = $this->setup->getClient()->getDB();
+		$GLOBALS["DIC"]["ilDB"] = function($c) {
+			return $GLOBALS["ilDB"];
+		};
 // BEGIN WebDAV
 		// read module and service information into db
 		require_once "./setup/classes/class.ilModuleReader.php";

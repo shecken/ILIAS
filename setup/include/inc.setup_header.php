@@ -41,6 +41,8 @@ else
 
 require_once __DIR__."/../../libs/composer/vendor/autoload.php";
 
+$DIC = new \ILIAS\DI\Container();
+
 define("DEBUG",false);
 set_include_path("./Services/PEAR/lib".PATH_SEPARATOR.ini_get('include_path'));
 require_once "./include/inc.check_pear.php";
@@ -83,6 +85,8 @@ require_once "./Services/Init/classes/class.ilErrorHandling.php";
 $ilErr = new ilErrorHandling();
 $ilErr->setErrorHandling(PEAR_ERROR_CALLBACK,array($ilErr,'errorHandler'));
 
+$DIC["ilErr"] = function($c) { return $GLOBALS["ilErr"]; };
+
 // set ilias pathes
 if($_SERVER['HTTPS'] == 'on')
 {
@@ -115,6 +119,7 @@ define ("TPLPATH","./templates/blueshadow");
 
 // init session
 $sess = new Session();
+$DIC["sess"] = function($c) { return $GLOBALS["sess"]; };
 
 $lang = (isset($_GET["lang"])) ? $_GET["lang"] : $_SESSION["lang"];
 
@@ -122,24 +127,30 @@ $_SESSION["lang"] = $lang;
 
 // init languages
 $lng = new ilLanguage($lang);
+$DIC["lng"] = function($c) { return $GLOBALS["lng"]; };
 
 // init log
 $log = new ilLog(ILIAS_ABSOLUTE_PATH,"ilias.log","SETUP",false);
 $ilLog =& $log;
+$DIC["ilLog"] = function($c) { return $GLOBALS["ilLog"]; };
+
 
 // init template - in the main program please use ILIAS Template class
 // instantiate main template
 //$tpl = new ilTemplate("./setup/templates");
 //$tpl->loadTemplatefile("tpl.main.html", true, true);
 $tpl = new ilTemplate("tpl.main.html", true, true, "setup");
+$DIC["tpl"] = function($c) { return $GLOBALS["tpl"]; };
 
 // make instance of structure reader
 $ilCtrlStructureReader = new ilCtrlStructureReader();
 $ilCtrlStructureReader->setErrorObject($ilErr);
+$DIC["ilCtrlStructureReader"] = function($c) { return $GLOBALS["ilCtrlStructureReader"]; };
 
 require_once "./Services/Utilities/classes/class.ilBenchmark.php";
 $ilBench = new ilBenchmark();
 $GLOBALS['ilBench'] = $ilBench;
+$DIC["ilBench"] = function($c) { return $GLOBALS["ilBench"]; };
 
 include_once("./Services/Database/classes/class.ilDBAnalyzer.php");
 include_once("./Services/Database/classes/class.ilMySQLAbstraction.php");
