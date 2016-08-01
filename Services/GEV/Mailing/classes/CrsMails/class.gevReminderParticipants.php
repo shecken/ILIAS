@@ -24,6 +24,16 @@ class gevReminderParticipants extends gevInvitation {
 		return $date;
 	}
 
+	public function shouldBeSend() {
+		$date = $this->getCourseUtils()->getStartDate();
+
+		if(date("Y-m-d") > $this->getScheduledFor()->get(IL_CAL_DAY)) {
+			return false;
+		}
+
+		return parent::shouldBeSend();
+	}
+
 	public function getMail($a_recipient) {
 		if (!$this->checkUserID($a_recipient)) {
 			throw new Exception("GEV-Invitation-Mails will only work for ILIAS-Users.");
