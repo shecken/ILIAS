@@ -75,7 +75,7 @@ interface Actions {
 	 * 
 	 * @param 	int 	$user_id
 	 */
-	public function getUserNAsOf($user_id);
+	public function getNAsOf($user_id);
 
 	/**
 	 * 

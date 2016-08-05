@@ -53,7 +53,7 @@ class ilActions implements Actions {
 	 * @inheritdoc
 	 */
 	public function getBookedCoursesFor($user_id) {
-		$usr_utils = \gevUserUtils::getInstance($usr_id);
+		$usr_utils = \gevUserUtils::getInstance($user_id);
 		return $usr_utils->getBookedAndWaitingCourses();
 	}
 
@@ -61,7 +61,7 @@ class ilActions implements Actions {
 	 * @inheritdoc
 	 */
 	public function setUserToWBDRelease($user_id) {
-		$wbd_utils = \gevWBD::getInstance($usr_id);
+		$wbd_utils = \gevWBD::getInstance($user_id);
 
 		if($wbd_utils->getWBDTPType() == \gevWBD::WBD_TP_SERVICE) {
 			$wbd_utils->setNextWBDAction(\gevWBD::USR_WBD_NEXT_ACTION_RELEASE);
@@ -105,14 +105,14 @@ class ilActions implements Actions {
 	 * @inheritdoc
 	 */
 	public function assignUserToExitOrgu($user_id) {
-		$exit_orgu_utils = $this->actions->getOrgUnitUtilsForRefId($this->actions->getOrgUnitForExitUser());
+		$exit_orgu_utils = $this->getOrUnitUtilsForObjId($this->getOrgUnitForExitUser());
 		$exit_orgu_utils->assignUser($user_id, "Mitarbeiter");
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getUserNAsOf($user_id) {
+	public function getNAsOf($user_id) {
 		return $this->getNAUtils()->getNAsOf($user_id);
 	}
 
@@ -120,7 +120,7 @@ class ilActions implements Actions {
 	 * @inheritdoc
 	 */
 	public function moveNAToNoAdviserOrgUnit($na) {
-		$na_no_adviser_orgu_utils = $this->actions->getOrUnitUtilsForObjId($this->actions->getNAPOUNoAdviserUnitId());
+		$na_no_adviser_orgu_utils = $this->getOrUnitUtilsForObjId($this->getNAPOUNoAdviserUnitId());
 		$na_no_adviser_orgu_utils->assignUser($na, "Mitarbeiter");
 	}
 
