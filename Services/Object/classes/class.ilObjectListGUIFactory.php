@@ -19,9 +19,10 @@ class ilObjectListGUIFactory
 		$class = $objDefinition->getClassName($a_type);
 		$location = $objDefinition->getLocation($a_type);
 		$full_class = "ilObj".$class."ListGUI";
-		if(@include_once($location."/class.".$full_class.".php"))
+		if(file_exists($location."/class.".$full_class.".php"))
 		{
-			return new $full_class();
+			include_once($location."/class.".$full_class.".php");
+			return new $full_class($a_context);
 		}
 
 		include_once './Services/Object/classes/class.ilObjectListGUI.php';

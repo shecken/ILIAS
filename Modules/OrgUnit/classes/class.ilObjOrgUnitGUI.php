@@ -25,6 +25,8 @@ require_once(dirname(__FILE__) . '/Types/class.ilOrgUnitTypeGUI.php');
 require_once(dirname(__FILE__) . '/Settings/class.ilObjOrgUnitSettingsFormGUI.php');
 require_once('./Services/AdvancedMetaData/classes/class.ilAdvancedMDRecordGUI.php');
 require_once('./Modules/OrgUnit/classes/LocalUser/class.gevLocalUserGUI.php');
+require_once('./Services/Container/classes/class.ilContainerByTypeContentGUI.php');
+require_once("./Modules/OrgUnit/classes/Extension/class.ilOrgUnitObjectPlugin.php");
 
 /**
  * Class ilObjOrgUnit GUI class
@@ -386,11 +388,19 @@ class ilObjOrgUnitGUI extends ilContainerGUI {
 
 	public function showTree() {
 		$tree = new ilOrgUnitExplorerGUI("orgu_explorer", "ilObjOrgUnitGUI", "showTree", new ilTree(1));
-		$tree->setTypeWhiteList(array( "orgu" ));
-		if (! $tree->handleCommand()) {
+		$tree->setTypeWhiteList(
+			$this->getTreeWhiteList()
+		);
+		if (!$tree->handleCommand()) {
 			$this->tpl->setLeftNavContent($tree->getHTML());
 		}
 		$this->ctrl->setParameterByClass("ilObjOrgUnitGUI", "ref_id", $_GET["ref_id"]);
+	}
+
+	protected function getTreeWhiteList() {
+		$whiteList = array("orgu");
+		$pls = ilOrgUnitObjectPluginGUI::getActivePluginIdsForTree();
+		return array_merge($whiteList, $pls);
 	}
 
 
@@ -399,7 +409,6 @@ class ilObjOrgUnitGUI extends ilContainerGUI {
 	 */
 	public function setTitleAndDescription() {
 		# all possible create permissions
-		//$possible_ops_ids = $rbacreview->getOperationsByTypeAndClass('orgu', 'create');
 		parent::setTitleAndDescription();
 		if ($this->object->getTitle() == "__OrgUnitAdministration") {
 			$this->tpl->setTitle($this->lng->txt("objs_orgu"));
@@ -640,13 +649,13 @@ class ilObjOrgUnitGUI extends ilContainerGUI {
 		}
 	}
 
-	public function _goto($ref_id) {
+	public static function _goto($ref_id) {
         global $ilCtrl;
-        $ilCtrl->initBaseClass("ilAdministrationGUI");
-        $ilCtrl->setTargetScript("ilias.php");
-        $ilCtrl->setParameterByClass("ilObjOrgUnitGUI", "ref_id", $ref_id);
-        $ilCtrl->setParameterByClass("ilObjOrgUnitGUI", "admin_mode", "settings");
-        $ilCtrl->redirectByClass(array( "ilAdministrationGUI", "ilObjOrgUnitGUI" ), "view");
+		$ilCtrl->initBaseClass("ilAdministrationGUI");
+		$ilCtrl->setTargetScript("ilias.php");
+		$ilCtrl->setParameterByClass("ilObjOrgUnitGUI", "ref_id", $ref_id);
+		$ilCtrl->setParameterByClass("ilObjOrgUnitGUI", "admin_mode", "settings");
+		$ilCtrl->redirectByClass(array( "ilAdministrationGUI", "ilObjOrgUnitGUI" ), "view");
 	}
 
 	public function showPasteTreeObject() {

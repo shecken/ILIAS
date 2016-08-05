@@ -67,21 +67,21 @@ class ilOrgUnitExplorerGUI extends ilTreeExplorerGUI
             }*/
             // gev-patch end
 			$ilCtrl->setParameterByClass("ilObjOrgUnitGUI", "ref_id", $node["child"]);
-			return $this->getLinkTarget();
+			return ($node['type']=="orgu")?$this->getLinkTarget():$this->getPluginLinkTarget();
 		}
+
+	protected function getPluginLinkTarget() {
+		global $ilCtrl;
+		return $ilCtrl->getLinkTargetByClass("ilObjPluginDispatchGUI", "forward");
+	}
 
 		protected function getLinkTarget(){
 			global $ilCtrl;
-
-			if($ilCtrl->getCmdClass() == "ilobjorgunitgui" && in_array($ilCtrl->getCmd(), $this->stay_with_command))
-            {
-               return $ilCtrl->getLinkTargetByClass($ilCtrl->getCmdClass(), $ilCtrl->getCmd());
-            }
-			else
-            {
-                return $ilCtrl->getLinkTargetByClass("ilobjorgunitgui", $ilCtrl->getCmd());
-            }
-
+			if ($ilCtrl->getCmdClass() == "ilobjorgunitgui" AND in_array($ilCtrl->getCmd(), $this->stay_with_command)) {
+				return $ilCtrl->getLinkTargetByClass(array("ilAdministrationGUI", $ilCtrl->getCmdClass()), $ilCtrl->getCmd());
+			} else {
+				return $ilCtrl->getLinkTargetByClass(array("ilAdministrationGUI", "ilobjorgunitgui"), "view");
+			}
 		}
 
 		/**
