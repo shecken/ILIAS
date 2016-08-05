@@ -143,6 +143,9 @@ class ilActions implements Actions {
 		$na_base_utils->purgeEmptyChildren(2, array($no_adviser_ref_id, $template_ref_id));
 	}
 
+	/**
+	 * @return gevSettings
+	 */
 	protected function getGEVSettings() {
 		if($this->gev_settings === null) {
 			$this->gev_settings = \gevSettings::getInstance();
@@ -151,6 +154,9 @@ class ilActions implements Actions {
 		return $this->gev_settings;
 	}
 
+	/**
+	 * @return ilObjOrgUnitTree
+	 */
 	protected function getOrguTree() {
 		if($this->orgu_tree === null) {
 			$this->orgu_tree = \ilObjOrgUnitTree::_getInstance();
@@ -159,6 +165,9 @@ class ilActions implements Actions {
 		return $this->orgu_tree;
 	}
 
+	/**
+	 * @return gevNAUtils
+	 */
 	protected function getNAUtils() {
 		if($this->na_utils === null) {
 			$this->na_utils = \gevNAUtils::getInstance();
@@ -167,34 +176,62 @@ class ilActions implements Actions {
 		return $this->na_utils;
 	}
 
+	/**
+	 * @return gevCourseUtils
+	 */
 	protected function getCourseUtils($crs_id) {
 		return \gevCourseUtils::getInstance($crs_id);
 	}
 
+	/**
+	 * @return int
+	 */
 	protected function getFieldIdExitDate() {
 		return $this->getUDFFieldId(\gevSettings::USR_UDF_EXIT_DATE);
 	}
 
+	/**
+	 * @return int
+	 */
 	protected function getUDFFieldId($field_name) {
 		return $this->getGEVSettings()->getUDFFieldId($field_name);
 	}
 
+	/**
+	 * get the obj_id of org unit for exit user
+	 *
+	 * @return int
+	 */
 	protected function getOrgUnitForExitUser() {
 		return $this->getGEVSettings()->getOrgUnitExited();
 	}
 
+	/**
+	 * get the obj_id of org unit for na without supervisor
+	 *
+	 * @return int
+	 */
 	protected function getNAPOUNoAdviserUnitId() {
 		return $this->getGEVSettings()->getNAPOUNoAdviserUnitId();
 	}
 
+	/**
+	 * @return int
+	 */
 	protected function getObjectIdFor($ref_id) {
 		return \gevObjectUtils::getObjId($ref_id);
 	}
 
+	/**
+	 * @return gevOrgUnitUtils
+	 */
 	protected function getOrUnitUtilsForObjId($obj_id) {
 		return \gevOrgUnitUtils::getInstance($obj_id);
 	}
 
+	/**
+	 * @return gevOrgUnitUtils
+	 */
 	protected function getOrgUnitUtilsForRefId($ref_id) {
 		return $this->getOrUnitUtilsForObjId($this->getObjectIdFor($ref_id));
 	}
