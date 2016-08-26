@@ -220,6 +220,8 @@ class ilCourseBookingHelper
 		
 		// see ilCourseBookingPermissions::bookCourseForSelf()
 		
+		/*
+		 * deactivated with ticket 2414
 		// gev-patch start
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
@@ -228,8 +230,9 @@ class ilCourseBookingHelper
 			return false;
 		}
 		// gev-patch end
-		
-		return true;				
+		*/
+
+		return true;
 	}	
 	
 	

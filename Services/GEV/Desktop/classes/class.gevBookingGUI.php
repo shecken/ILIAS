@@ -36,7 +36,12 @@ class gevBookingGUI {
 		$this->initCourse();
 
 		$this->checkIfCourseIsOnlineAndBookable();
+		
+		/*
+		 * deactivated with ticket 2414
 		$this->checkIfUserAlreadyBookedASimilarCourse();
+		*/
+
 		$this->checkIfCourseIsFull();
 		$this->checkIfUserIsAllowedToBookCourseForOtherUser();
 		$this->checkIfUserIsAllowedToBookCourse();
