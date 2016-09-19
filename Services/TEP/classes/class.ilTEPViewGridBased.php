@@ -863,10 +863,14 @@ abstract class ilTEPViewGridBased extends ilTEPView
 				
 				// html dimensions
 				$height = (((($end-$start)/(60*60*24))+1)*$a_row_height)-5 + ($end-$start)/(60*60*24) + 1;
-				if($entry["counter"] > 1)
+				if($entry["counter"] <= 12)
 				{
 					$width = floor($a_col_width/$entry["counter"]);
 					$width -= 5; // padding, border
+				}
+				else if($entry["counter"] > 12)
+				{
+					$width = 1;
 				}
 				else
 				{
