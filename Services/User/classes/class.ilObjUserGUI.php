@@ -1655,14 +1655,22 @@ class ilObjUserGUI extends ilObjectGUI
 		ksort($ordered_defs);
 		$all_defs = $ordered_defs + $unaccounted_defs;
 
+		$entry_date_field_id = gevSettings::getInstance()->getUDFFieldId(gevSettings::USR_UDF_ENTRY_DATE);
 
 		//foreach($all_defs as $field_id => $definition)
 		foreach($all_defs as $field_index => $definition)
 		{
 			$field_id = $definition['field_id'];
-
+			if($field_id === $entry_date_field_id) {
+				require_once 'Services/GEV/Utils/classes/class.gevRoleUtils.php';
+				require_once 'Services/GEV/WBD/classes/class.gevWBD.php';
+				$rol_utils = gevRoleUtils::getInstance();
+				$global_roles = $rol_utils->getGlobalRolesTitles($rol_utils->getGlobalRolesOf($this->object->getId()));
+				if(count(array_intersect($global_roles,gevWBD::$wbd_tp_service_roles)) > 0) {
+					$definition['required'] = true;
+				}
+			}
 	//gev-patch end
-
 
 			if($definition['field_type'] == UDF_TYPE_TEXT)	// text input
 			{
