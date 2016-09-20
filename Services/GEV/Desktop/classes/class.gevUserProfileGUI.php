@@ -84,7 +84,10 @@ class gevUserProfileGUI {
 				$birthday = $form->getInput("birthday");
 				$bday = new ilDateTime($birthday["date"], IL_CAL_DATE);
 				$form->getItemByPostVar("birthday")->setDate($bday);
-				$this->user->setPasswd($form->getInput('passwd'),IL_PASSWD_PLAIN);
+				$passwd = $form->getInput('passwd');
+				if ($passwd) {
+					$this->user->setPasswd($passwd);
+				}
 				$this->user->updateLogin($form->getInput("username"));
 				$this->user->setGender($form->getInput("gender"));
 				$this->user->setBirthday($birthday["date"]);
