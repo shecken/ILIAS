@@ -1145,15 +1145,7 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 		}
 		else
 		{
-			//gev-patch start #2394
-                        if (((array_key_exists("pass", $_GET)) && (strlen($_GET["pass"]) > 0)) || (!is_null($pass))) {
-                            $pass = $_GET["pass"];
-                        } else {
-                            $pass = $this->object->_getResultPass($active_id);
-                        }
-                        //gev-patch end
-
-                        $template->setCurrentBlock("pass_overview");
+		        $template->setCurrentBlock("pass_overview");
 			$overview = $this->getPassOverview($active_id, "iltestevaluationgui", "outUserResultsOverview", FALSE, $hide_details);
 			$template->setVariable("PASS_OVERVIEW", $overview);
 			$template->setVariable("TEXT_RESULTS", $this->lng->txt("tst_results_overview"));
@@ -1162,9 +1154,13 @@ class ilTestEvaluationGUI extends ilTestServiceGUI
 
 		if (((array_key_exists("pass", $_GET)) && (strlen($_GET["pass"]) > 0)) || (!is_null($pass)))
 		{
-			if (is_null($pass))	$pass = $_GET["pass"];
+		    if (is_null($pass))	$pass = $_GET["pass"];
 		}
-
+                // gev-patch start # 2394
+                else {
+                    if (is_null($pass))	$pass = $this->object->_getResultPass($active_id);
+                }
+                // gev-patch end
 
 			$this->ctrl->setParameter($this, "pass", $pass);
 			$this->ctrl->setParameter($this, "pdf", "1");
