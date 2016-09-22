@@ -125,7 +125,7 @@ class ilDB implements DB {
 	 * @inheritdoc
 	 */
 	public function selectRequirementsFor($career_goal_id) {
-		$select = "SELECT obj_id, title, description\n"
+		$select = "SELECT obj_id, title, description, position\n"
 				." FROM ".self::TABLE_NAME."\n"
 				." WHERE career_goal_id = ".$this->getDB()->quote($career_goal_id)."\n"
 				." ORDER BY title";
@@ -139,6 +139,7 @@ class ilDB implements DB {
 								 , (int)$career_goal_id
 								 , $row["title"]
 								 , $row["description"]
+								 , (int)$row["position"]
 							);
 
 			$ret[] = $requirement;
