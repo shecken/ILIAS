@@ -29,7 +29,7 @@ class Requirement {
 	protected $position;
 
 	public function __construct($obj_id, $career_goal_id, $title, $description, $position) {
-        assert('is_int($obj_id)');
+               assert('is_int($obj_id)');
 		$this->obj_id = $obj_id;
 		assert('is_int($career_goal_id)');
 		$this->career_goal_id = $career_goal_id;
