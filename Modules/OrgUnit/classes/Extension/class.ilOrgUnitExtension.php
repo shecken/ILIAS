@@ -16,6 +16,11 @@ abstract class ilOrgUnitExtension extends ilObjectPlugin {
 	protected $parentRefId;
 
 	/**
+	 * @var ilTree
+	 */
+	protected $tree;
+
+	/**
 	 * ilOrgUnitExtension constructor.
 	 * @param int $a_ref_id
 	 */
@@ -23,8 +28,9 @@ abstract class ilOrgUnitExtension extends ilObjectPlugin {
 		global $tree;
 
 		parent::__construct($a_ref_id);
-		$this->orguTree= ilObjOrgUnitTree::_getInstance();
-		$this->parentRefId = $tree->getParentId($a_ref_id?$a_ref_id:$_GET['ref_id']);
+		$this->orguTree = ilObjOrgUnitTree::_getInstance();
+		$this->parent_ref_id = $tree->getParentId($a_ref_id?$a_ref_id:$_GET['ref_id']);
+		$this->tree = $tree;
 	}
 
 	/**
@@ -86,6 +92,46 @@ abstract class ilOrgUnitExtension extends ilObjectPlugin {
 		return new ilObjOrgUnit($this->parentRefId);
 	}
 
+	/**
+	 * @return int[] RefIds from the root OrgUnit to the underlying OrgUnit
+	 */
+	public function getOrgUnitPathRefIds() {
+		$path = array();
+		foreach ($this->getOrgUnitPath() as $node) {
+			$path[] = $node['child'];
+		}
+		return $path;
+	}
 
+	/**
+	 *
+	 * @return array Returns the path to the underlying OrgUnit starting with the root OrgUnit. The array are nodes of the global $tree.
+	 */
+	public function getOrgUnitPath() {
+		return $this->tree->getPathFull($this->parent_ref_id, ilObjOrgUnit::getRootOrgRefId());
+	}
 
+	/**
+	 * @return string[] Returns the titles to the underlying OrgUnit starting with the root OrgUnit.
+	 */
+	public function getOrgUnitPathTitles() {
+		$titles = array();
+		foreach ($this->getOrgUnitPath() as $node) {
+			if ($node["title"] == "__OrgUnitAdministration") {
+				$node["title"] = $this->lng->txt("objs_orgu");
+			}
+			$titles[] = $node['title'];
+		}
+		return $titles;
+	}
+
+	/**
+	 * @param bool $with_data if this is set to true, only the ids are delivered
+	 * @param string $type what type are you looking for?
+	 * @return array
+	 */
+	public function getOrgUnitSubtree($with_data = true, $type = "") {
+		$node = $this->tree->getNodeData($this->parent_ref_id);
+		return $this->tree->getSubTree($node, $with_data, $type);
+	}
 }

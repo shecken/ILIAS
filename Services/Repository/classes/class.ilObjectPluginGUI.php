@@ -55,7 +55,8 @@ abstract class ilObjectPluginGUI extends ilObject2GUI
 			}
 			
 			// add entry to navigation history
-			if ($ilAccess->checkAccess("read", "", $_GET["ref_id"]))
+			if (($ilAccess->checkAccess("read", "", $_GET["ref_id"]))
+			&& !($this->plugin instanceof ilOrgUnitExtensionPlugin))
 			{
 				$ilNavigationHistory->addItem($_GET["ref_id"],
 					$ilCtrl->getLinkTarget($this, $this->getStandardCmd()), $this->getType());

@@ -951,12 +951,16 @@ abstract class ilPlugin
 	 * @return array
 	 */
 	public static function getActivePluginIdsForSlot($a_ctype, $a_cname, $a_slot_id) {
-		global $ilPluginAdmin;
+		global $ilPluginAdmin, $ilDB;
 
 		$plugins = array();
-		$cached_component = ilCachedComponentData::getInstance();
-		$lookupActivePluginsBySlotId = $cached_component->lookupActivePluginsBySlotId($a_slot_id);
-		foreach($lookupActivePluginsBySlotId as $rec)
+		$q = "SELECT * FROM il_plugin WHERE component_type = ".$ilDB->quote($a_ctype, "text").
+			" AND component_name = ".$ilDB->quote($a_cname, "text").
+			" AND slot_id = ".$ilDB->quote($a_slot_id, "text").
+			" AND active = ".$ilDB->quote(1, "integer");
+		$set = $ilDB->query($q);
+
+		while($rec = $ilDB->fetchAssoc($set))
 		{
 			if ($ilPluginAdmin->isActive($a_ctype, $a_cname, $a_slot_id, $rec["name"]))
 			{
@@ -979,7 +983,6 @@ abstract class ilPlugin
 			" AND component_name = ".$ilDB->quote($a_cname, "text").
 			" AND slot_id = ".$ilDB->quote($a_slot_id, "text").
 			" AND plugin_id = ".$ilDB->quote($a_plugin_id, "text");
-
 		$set = $ilDB->query($q);
 		if ($rec = $ilDB->fetchAssoc($set))
 		{
