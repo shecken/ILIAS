@@ -118,7 +118,7 @@ class ilDB implements DB {
 	 * @inheritdoc
 	 */
 	public function getObjId() {
-		return $this->getDB()->nextId(self::TABLE_NAME);
+		return (int)$this->getDB()->nextId(self::TABLE_NAME);
 	}
 
 	/**
