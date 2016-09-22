@@ -100,15 +100,11 @@ class ilObservationsCumulativeGUI {
 		$counter = 0;
 
 		foreach ($req_res as $key => $req) {
-			foreach($req as $elements) {
-				foreach($elements as $element) {
-					if((int)$element["obs_id"] == $obs_id) {
-						foreach ($element["observator"] as $key => $value) {
-							$sum += $value;
-						}
-						$counter++;
-					}
+			if(array_key_exists($obs_id, $req)) {
+				foreach ($req[$obs_id]["observator"] as $value) {
+					$sum += $value;
 				}
+			$counter++;
 			}
 		}
 
