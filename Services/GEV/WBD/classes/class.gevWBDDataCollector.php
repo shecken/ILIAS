@@ -547,7 +547,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 					." AND hist_usercoursestatus.participation_status = 'teilgenommen'\n"
 					." AND hist_usercoursestatus.last_wbd_report = ".$this->gDB->quote(self::EMPTY_COLUMN_VALUE, 'text')."\n"
 					." AND hist_usercoursestatus.wbd_booking_id = ".$this->gDB->quote(self::EMPTY_COLUMN_VALUE, 'text')."\n"
-					." AND hist_usercoursestatus.wbd_canceld = -1\n"
+					." AND hist_usercoursestatus.wbd_cancelled = -1\n"
 					." AND hist_usercoursestatus.credit_points > 0\n"
 					." AND (hist_usercoursestatus.end_date > '2013-12-31'\n"
 						." OR (hist_course.type = 'Selbstlernkurs' \n"
