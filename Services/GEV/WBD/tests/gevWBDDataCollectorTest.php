@@ -51,6 +51,10 @@ class _gevWBDDataCollector extends gevWBDDataCollector {
 	public function setDB($db) {
 		$this->gDB = $db;
 	}
+
+	public function getWBDInstance($user_id) {
+		return gevWBD::getInstanceByObjOrId(6);
+	}
 }
 
 class mock_db {
@@ -79,21 +83,27 @@ class mock_db {
 	public function execute($sql, $data) {
 		$this->called_executed++;
 	}
+
+	public function numRows($res) {
+		return count($res);
+	}
 }
 
 class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {
+		error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 		PHPUnit_Framework_Error_Deprecated::$enabled = FALSE;
 
 		include_once("./Services/PHPUnit/classes/class.ilUnitUtil.php");
 		ilUnitUtil::performInitialisation();
-		$this->data_collector = new _gevWBDDataCollector("/Library/WebServer/Documents/44generali2/");
+
+		$this->data_collector = new _gevWBDDataCollector("/Library/WebServer/Documents/cat_ilias_kunden/44generali/");
 	}
 
 	public function test_isWBDDataCollector() {
-		$this->assertInstanceOf("gevWBDDataCollector",$this->data_collector);
+		$this->assertInstanceOf("gevWBDDataCollector", $this->data_collector);
 	}
 
 	public function test_createNewUserList() {
