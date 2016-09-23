@@ -53,7 +53,7 @@ class ilObservationsCumulativeGUI {
 			if ($i % 2 == 0) {
 			  $pts_tpl->setVariable("CSS_ROW", "row_grey");
 			}
-
+			$i++;
 			foreach($obs as $obs_key => $title) {
 			    foreach ($observator as $usr) {
 					$pts = $this->getPointsFor($req_res, $req_title, $obs_key, $usr["usr_id"]);
@@ -65,9 +65,7 @@ class ilObservationsCumulativeGUI {
 
 				$pts_tpl->setVariable("REQ_TITLE", $req_title);
 				$pts_tpl->setVariable("POINTS_MIDDLE", round($req["middle"],1));
-				$i++;
 			}
-
 			$html .= $pts_tpl->get();
 
 			$tpl->setCurrentBlock("tr_requirement");
