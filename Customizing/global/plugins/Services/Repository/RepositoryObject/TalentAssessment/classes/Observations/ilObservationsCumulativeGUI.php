@@ -11,6 +11,7 @@ class ilObservationsCumulativeGUI {
 
 		$this->gTpl = $tpl;
 		$this->parent_obj = $parent_obj;
+		$this->gTpl->addCSS("Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/templates/css/talent_assessment_observation_cummulative_table.css");
 	}
 
 	public function render() {
@@ -41,6 +42,7 @@ class ilObservationsCumulativeGUI {
 
 		$html = "";
 		$printed = array();
+		$i = 0;
 		foreach($req_res as $req_title => $req) {
 			if($printed[$req_title]) {
 				continue;
@@ -48,6 +50,13 @@ class ilObservationsCumulativeGUI {
 			$pts_tpl = new \ilTemplate("tpl.talent_assessment_observations_cumulative_pts.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment");
 
 			foreach($obs as $obs_key => $title) {
+				$pts_tpl->setCurrentBlock("tr");
+				$pts_tpl->setVariable("CSS_ROW", "row_norm");
+
+				if ($i % 2 == 0) {
+				  $pts_tpl->setVariable("CSS_ROW", "row_grey");
+				}
+
 				foreach ($observator as $usr) {
 					$pts = $this->getPointsFor($req_res, $req_title, $obs_key, $usr["usr_id"]);
 
@@ -58,6 +67,7 @@ class ilObservationsCumulativeGUI {
 
 				$pts_tpl->setVariable("REQ_TITLE", $req_title);
 				$pts_tpl->setVariable("POINTS_MIDDLE", round($req["middle"],1));
+				$i++;
 			}
 
 			$html .= $pts_tpl->get();
