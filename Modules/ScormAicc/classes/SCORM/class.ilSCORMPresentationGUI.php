@@ -162,8 +162,16 @@ class ilSCORMPresentationGUI
 				}
 				else
 				{
-					$this->tpl = new ilTemplate("tpl.sahs_pres_frameset_js_one_page.html", false, false, "Modules/ScormAicc");
+					// gev-patch start
+					//$this->tpl = new ilTemplate("tpl.sahs_pres_frameset_js_one_page.html", false, false, "Modules/ScormAicc");
+					$this->tpl = new ilTemplate("tpl.sahs_pres_frameset_js_one_page.html", false, true, "Modules/ScormAicc");
+					// This is required to make the "outer block" (i.e. the whole tpl)
+					// render at all.
+					$this->tpl->setVariable("BOGUS_SPACE_INSERT_POINT", "    ");
+					$this->tpl->touchBlock("to_viwis_sco");
+					// gev-patch end
 				}
+
 
 				$this->ctrl->setParameter($this, "autolaunch", $items[0]);
 			}
