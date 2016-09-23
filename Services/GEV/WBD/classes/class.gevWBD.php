@@ -834,22 +834,21 @@ class gevWBD {
 	}
 
 	/**
-	 * Get the crs id according to user id and wbd booking id
+	 * Get the crs id according to row id
 	 *
-	 * @param string $wbd_booking_id
+	 * @param string $row_id
 	 *
 	 * @return int
 	 */
-	public function getCrsIdByBookingId($wbd_booking_id) {
+	public function getCrsIdByRowId($row_id) {
 		$select = "SELECT DISTINCT crs_id\n"
 				 ." FROM hist_usercoursestatus\n"
-				 ." WHERE usr_id = ".$this->gDB->quote($this->user_id, "integer")."\n"
-				 ."     AND wbd_booking_id = ".$this->gDB->quote($wbd_booking_id, "text")."\n";
+				 ." WHERE row_id = ".$this->gDB->quote($this->row_id, "integer")."\n";
 
 		$res = $this->gDB->query($select);
 
 		if($this->gDB->numRows($res) == 0) {
-			throw new Exception("no crs id found for user: ".$this->usr_id." AND wbd_booking_id: ".$wbd_booking_id);
+			throw new Exception("no crs id found for user: ".$this->usr_id." AND row id: ".$row_id);
 		}
 
 		$row = $this->gDB->fetchAssoc($res);

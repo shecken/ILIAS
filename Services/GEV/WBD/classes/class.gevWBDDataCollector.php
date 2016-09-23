@@ -737,10 +737,10 @@ class gevWBDDataCollector implements WBDDataCollector {
 	* @param gevWBDSuccessWPStorno $success_data 
 	*/
 	public function successStornoRecord(gevWBDSuccessWPStorno $success_data) {
-		$wbd_booking_id = $success_data->wbdBookingId();
+		$row_id = $success_data->rowId();
 		$user_id = $success_data->internalAgentId();
-		$wbd = gevWBD::getInstance($user_id);
-		$crs_id = $wbd->getCrsIdByBookingId($wbd_booking_id);
+		$wbd = $this->getWBDInstance($user_id);
+		$crs_id = $wbd->getCrsIdByRowId($wbd_booking_id);
 
 		$case_id = array('usr_id' => $user_id
 					   , 'crs_id' => $crs_id
@@ -750,7 +750,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 					, "last_wbd_report" => $this->getCurrentDate()
 				);
 
-		ilUserCourseStatusHistorizing::updateHistorizedData($case_id, $data);
+		$this->createHistUserCourseRow($case_id, $data);
 	}
 
 	/** 
@@ -1103,4 +1103,12 @@ class gevWBDDataCollector implements WBDDataCollector {
 					}
 					);
 	}
-}	
+
+	protected function createHistUserCourseRow($case_id, $data) {
+		ilUserCourseStatusHistorizing::updateHistorizedData($case_id, $data);
+	}
+
+	protected function getWBDInstance($user_id) {
+		return gevWBD::getInstance($user_id);
+	}
+}
