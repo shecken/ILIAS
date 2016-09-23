@@ -23,7 +23,7 @@ class GevWBDSuccessWPStornoTest extends SuccessTestBase {
 		$this->assertInstanceOf("gevWBDSuccessWPStorno",$this->success);
 	}
 
-	public function test_values() {
+	public function test_extractedValuesFromXML() {
 		$this->assertEquals("2015-145-1654", $this->success->wbdBookingId());
 		$this->assertEquals("20150728-100390-74", $this->success->agentId());
 		$this->assertEquals("21352", $this->success->internalAgentId());
