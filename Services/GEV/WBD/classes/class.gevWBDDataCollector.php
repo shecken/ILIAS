@@ -17,7 +17,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 	protected $storno_rows;
 	protected $abfrage_usr_ids;
 
-	const EMPTY_BWV_ID_TEXT = "-empty-";
+	const EMPTY_COLUMN_VALUE = "-empty-";
 	const EMPTY_DATE_TEXT = "0000-00-00";
 
 	const WBD_NO_SERVICE 		= "0 - kein Service";
@@ -545,8 +545,9 @@ class gevWBDDataCollector implements WBDDataCollector {
 					." AND hist_usercoursestatus.function IN ('Mitglied', 'Teilnehmer')\n"
 					." AND hist_usercoursestatus.okz IN ('OKZ1', 'OKZ2','OKZ3')\n"
 					." AND hist_usercoursestatus.participation_status = 'teilgenommen'\n"
-					." AND hist_usercoursestatus.last_wbd_report IS NULL\n"
-					." AND hist_usercoursestatus.wbd_booking_id IS NULL\n"
+					." AND hist_usercoursestatus.last_wbd_report = ".$this->gDB->quote(self::EMPTY_COLUMN_VALUE, 'text')."\n"
+					." AND hist_usercoursestatus.wbd_booking_id = ".$this->gDB->quote(self::EMPTY_COLUMN_VALUE, 'text')."\n"
+					." AND hist_usercoursestatus.wbd_canceld = -1\n"
 					." AND hist_usercoursestatus.credit_points > 0\n"
 					." AND (hist_usercoursestatus.end_date > '2013-12-31'\n"
 						." OR (hist_course.type = 'Selbstlernkurs' \n"
@@ -736,7 +737,20 @@ class gevWBDDataCollector implements WBDDataCollector {
 	* @param gevWBDSuccessWPStorno $success_data 
 	*/
 	public function successStornoRecord(gevWBDSuccessWPStorno $success_data) {
-		//NOTHING HAPPENS!
+		$wbd_booking_id = $success_data->wbdBookingId();
+		$user_id = $success_data->internalAgentId();
+		$wbd = gevWBD::getInstance($user_id);
+		$crs_id = $wbd->getCrsIdByBookingId($wbd_booking_id);
+
+		$case_id = array('usr_id' => $user_id
+					   , 'crs_id' => $crs_id
+					);
+
+		$data = array("wbd_canceld" => true
+					, "last_wbd_report" => $this->getCurrentDate()
+				);
+
+		ilUserCourseStatusHistorizing::updateHistorizedData($case_id, $data);
 	}
 
 	/** 

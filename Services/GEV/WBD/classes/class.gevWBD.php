@@ -832,4 +832,27 @@ class gevWBD {
 	public function userTPStatusOK() {
 		return !($this->getWBDTPType() === gevWBD::WBD_NO_SERVICE && $this->hasWBDRelevantRole());
 	}
+
+	/**
+	 * Get the crs id according to user id and wbd booking id
+	 *
+	 * @param string $wbd_booking_id
+	 *
+	 * @return int
+	 */
+	public function getCrsIdByBookingId($wbd_booking_id) {
+		$select = "SELECT DISTINCT crs_id\n"
+				 ." FROM hist_usercoursestatus\n"
+				 ." WHERE usr_id = ".$this->gDB->quote($this->user_id, "integer")."\n"
+				 ."     AND wbd_booking_id = ".$this->gDB->quote($wbd_booking_id, "text")."\n";
+
+		$res = $this->gDB->query($select);
+
+		if($this->gDB->numRows($res) == 0) {
+			throw new Exception("no crs id found for user: ".$this->usr_id." AND wbd_booking_id: ".$wbd_booking_id);
+		}
+
+		$row = $this->gDB->fetchAssoc($res);
+		return $row["crs_id"];
+	}
 }
