@@ -748,7 +748,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 					   , 'crs_id' => $crs_id
 					);
 
-		$data = array("wbd_canceld" => true
+		$data = array("wbd_cancelled" => true
 					, "last_wbd_report" => $this->getCurrentDate()
 				);
 
