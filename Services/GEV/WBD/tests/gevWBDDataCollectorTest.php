@@ -68,6 +68,8 @@ class _gevWBDDataCollector extends gevWBDDataCollector {
 }
 
 class mock_gevWBD extends gevWBD {
+	const CRS_ID = 10;
+
 	protected function __construct($a_user_id) {
 		$this->usr_id = $a_user_id;
 	}
@@ -77,7 +79,7 @@ class mock_gevWBD extends gevWBD {
 	}
 
 	public function getCrsIdByRowId($row_id) {
-		return 10;
+		return self::CRS_ID;
 	}
 }
 
