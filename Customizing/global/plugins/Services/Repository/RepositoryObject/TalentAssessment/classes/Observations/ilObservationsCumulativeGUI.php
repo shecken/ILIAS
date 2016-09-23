@@ -48,16 +48,14 @@ class ilObservationsCumulativeGUI {
 				continue;
 			}
 			$pts_tpl = new \ilTemplate("tpl.talent_assessment_observations_cumulative_pts.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment");
+			$pts_tpl->setCurrentBlock("tr");
+			$pts_tpl->setVariable("CSS_ROW", "row_norm");
+			if ($i % 2 == 0) {
+			  $pts_tpl->setVariable("CSS_ROW", "row_grey");
+			}
 
 			foreach($obs as $obs_key => $title) {
-				$pts_tpl->setCurrentBlock("tr");
-				$pts_tpl->setVariable("CSS_ROW", "row_norm");
-
-				if ($i % 2 == 0) {
-				  $pts_tpl->setVariable("CSS_ROW", "row_grey");
-				}
-
-				foreach ($observator as $usr) {
+			    foreach ($observator as $usr) {
 					$pts = $this->getPointsFor($req_res, $req_title, $obs_key, $usr["usr_id"]);
 
 					$pts_tpl->setCurrentBlock("pts");
