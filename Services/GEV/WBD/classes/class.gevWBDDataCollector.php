@@ -83,7 +83,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$res = $db->query($this->newUserListQuery());
 		
 		while ($rec = $db->fetchAssoc($res)) {
-			$wbd = gevWBD::getInstance($rec['user_id']);
+			$wbd = $this->getWBDInstance($rec['user_id']);
 
 			$checks_to_release = array();
 			switch($rec["next_wbd_action"]) {
@@ -187,8 +187,8 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$res = $db->query($this->releaseUserListQuery());
 
 		while ($rec = $db->fetchAssoc($res)) {
-			$wbd = gevWBD::getInstanceByObjOrId($rec['user_id']);
-			
+			$wbd = $this->getWBDInstance($rec['user_id']);
+
 			$checks_to_release = $wbd->shouldBeReleasedChecks();
 			$failed_checks = $this->performPreliminaryChecks($checks_to_release, $wbd);
 
@@ -233,7 +233,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$res = $db->query($this->affiliateUserListQuery());
 
 		while ($rec = $db->fetchAssoc($res)) {
-			$wbd = gevWBD::getInstanceByObjOrId($rec['user_id']);
+			$wbd = $this->getWBDInstance($rec['user_id']);
 			$checks_to_release = $wbd->shouldBeAffiliateAsTPServiceChecks();
 			$failed_checks = $this->performPreliminaryChecks($checks_to_release, $wbd);
 
@@ -648,7 +648,8 @@ class gevWBDDataCollector implements WBDDataCollector {
 	public function successNewUser(gevWBDSuccessVvErstanlage $success_data) {
 		$usr_id = $success_data->internalAgentId();
 		$usr_utils = gevUserUtils::getInstance($usr_id);
-		$wbd = gevWBD::getInstance($usr_id);
+
+		$wbd = $this->getWBDInstance($usr_id);
 
 		$wbd->setWBDBWVId($success_data->agentId());
 		$wbd->setWBDFirstCertificationPeriodBegin($success_data->beginOfCertificationPeriod());
@@ -682,7 +683,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$usr_id = $success_data->usrId();
 
 		$usr_utils = gevUserUtils::getInstance($usr_id);
-		$wbd = gevWBD::getInstance($usr_id);
+		$wbd = $this->getWBDInstance($usr_id);
 		$wbd->setWbdExitUserData($this->getCurrentDate());
 
 		$this->setNextWBDActionToNothing($usr_id);
@@ -702,7 +703,8 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$row_id = $success_data->rowId();
 
 		$usr_utils = gevUserUtils::getInstance($usr_id);
-		$wbd = gevWBD::getInstance($usr_id);
+		$wbd = $this->getWBDInstance($usr_id);
+
 		$wbd->setWBDTPType(gevWBD::WBD_TP_SERVICE);
 		
 		$this->setNextWBDActionToNothing($usr_id);
@@ -724,7 +726,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		if($success_data->doUpdateBeginOfCertification()) {
 			$usr_id = $success_data->usrId();
 			$usr_utils = gevUserUtils::getInstance($usr_id);
-			$wbd = gevWBD::getInstance($usr_id);
+			$wbd = $this->getWBDInstance($usr_id);
 			$wbd->setWBDFirstCertificationPeriodBegin($success_data->beginOfCertificationPeriod());
 			$this->raiseEventUserChanged($usr_utils->getUser());
 			$this->setLastWBDReportForAutoHistRows($usr_id);
@@ -1002,7 +1004,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 	**/
 	protected function assignUserToSeminar(gevImportCourseData $values, $crs_id, $user_id) {
 		$usr_id = $user_id;
-		$wbd = gevWBD::getInstanceByObjOrId($usr_id);
+		$wbd = $this->getWBDInstance($usr_id);
 
 		$okz 			= $wbd->getWBDOKZ();
 		$booking_id		= $values->wbdBookingId();
@@ -1072,7 +1074,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 	* @param string $user_id 
 	*/
 	public function setNextWBDActionToNothing($user_id) {
-		$wbd = gevWBD::getInstance($user_id);
+		$wbd = $this->getWBDInstance($user_id);
 		$wbd->setNextWBDAction(gevWBD::USR_WBD_NEXT_ACTION_NOTHING);
 	}
 
@@ -1109,6 +1111,6 @@ class gevWBDDataCollector implements WBDDataCollector {
 	}
 
 	protected function getWBDInstance($user_id) {
-		return gevWBD::getInstance($user_id);
+		return gevWBD::getInstanceByObjOrId($user_id);
 	}
 }
