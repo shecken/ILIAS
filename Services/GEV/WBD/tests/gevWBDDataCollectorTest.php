@@ -59,17 +59,16 @@ class _gevWBDDataCollector extends gevWBDDataCollector {
 	}
 
 	protected function getWBDInstance($user_id) {
-		return mock_gevWBD::getInstanceByObjOrId($user_id);
+		$this->curr_wbd = mock_gevWBD::getInstanceByObjOrId($user_id);
+		return $this->curr_wbd;
 	}
 
-	public function getCurrentDate() {
-		return date("Y-m-d");
+	public function getCurrWBD() {
+		return $this->curr_wbd;
 	}
 }
 
 class mock_gevWBD extends gevWBD {
-	const CRS_ID = 10;
-
 	protected function __construct($a_user_id) {
 		$this->usr_id = $a_user_id;
 	}
@@ -79,7 +78,11 @@ class mock_gevWBD extends gevWBD {
 	}
 
 	public function getCrsIdByRowId($row_id) {
-		return self::CRS_ID;
+		return $this->crs_id;
+	}
+
+	public function setReturnCrsId($crs_id) {
+		$this->crs_id = $crs_id;
 	}
 }
 
@@ -254,14 +257,16 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_stornoSuccess() {
-		$this->row_id = 25;
+		$row_id = 25;
+		$user_id = 21352;
+		$crs_id = 10;
 		$success = new gevWBDSuccessWPStorno(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 												.'<soap:Body>'
 													.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 														.'<WPStornoRueckgabewert>'
 															.'<WeiterbildungsPunkteBuchungsId>2015-145-1654</WeiterbildungsPunkteBuchungsId>'
 															.'<VermittlerId>20150728-100390-74</VermittlerId>'
-															.'<InterneVermittlerId>21352</InterneVermittlerId>'
+															.'<InterneVermittlerId>'.$user_id.'</InterneVermittlerId>'
 															.'<BeginnErstePeriode>2015-07-28T00:00:00+02:00</BeginnErstePeriode>'
 														.'</WPStornoRueckgabewert>'
 													.'</ns1:putResponse>'
@@ -269,10 +274,11 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 											.'</soap:Envelope>'
 									),$this->row_id);
 
+		$this->data_collector->getCurrWBD()->setReturnCrsId($crs_id);
 		$this->data_collector->successStornoRecord($success);
 
-		$needed_case_id = array('usr_id' => 21352
-							  , 'crs_id' => 10);
+		$needed_case_id = array('usr_id' => $user_id
+							  , 'crs_id' => $crs_id);
 
 		$needed_data = array("wbd_cancelled" => true
 					, "last_wbd_report" => $this->data_collector->getCurrentDate()
