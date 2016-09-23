@@ -37,7 +37,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 		require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		require_once("Services/HistorizingStorage/classes/class.ilUserCourseStatusHistorizing.php");
+		require_once("Services/UserCourseStatusHistorizing/classes/class.ilUserCourseStatusHistorizing.php");
 
 
 		require_once "./Services/Context/classes/class.ilContext.php";
