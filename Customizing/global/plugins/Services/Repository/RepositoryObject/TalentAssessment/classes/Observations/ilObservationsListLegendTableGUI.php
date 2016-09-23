@@ -18,7 +18,7 @@ class ilObservationsListLegendTableGUI extends \ilTable2GUI {
 		$this->values = $values;
 		$this->possible_cmd = $a_parent_obj->getPossibleCMD();
 
-		$this->setId("talent_assessment_observations_list_legend_table");
+		$this->setId("ta_ass_observ_list_legend_tbl");
 
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
