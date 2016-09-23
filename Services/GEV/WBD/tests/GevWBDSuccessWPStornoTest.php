@@ -50,7 +50,10 @@ class GevWBDSuccessWPStornoTest extends SuccessTestBase {
 		$this->assertNotInstanceOf("gevWBDSuccessWPStorno",$success);
 	}
 
-	public function test_agentId() {
-		$this->assertInternalType("string", $this->success->agentId());
+	public function test_values() {
+		$this->assertEquals("2015-145-1654", $this->success->wbdBookingId());
+		$this->assertEquals("20150728-100390-74", $this->success->agentId());
+		$this->assertEquals("21352", $this->success->internalAgentId());
+		$this->assertInstanceOf(ilDate::class, $this->success->beginOfCertificationPeriod());
 	}
 }
