@@ -33,3 +33,7 @@
   border-bottom: 1px solid #bbb;
   font-weight: lighter;
 }
+
+.small {
+  font-weight: lighter;
+}
