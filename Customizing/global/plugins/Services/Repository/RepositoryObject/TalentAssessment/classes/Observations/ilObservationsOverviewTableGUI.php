@@ -37,7 +37,6 @@ class ilObservationsOverviewTableGUI extends \ilTable2GUI {
 
 	public function fillRow($row) {
 		$this->tpl->setVariable("TITLE", $row["title"]);
-
 		foreach ($this->observator as $value) {
 			$this->tpl->setCurrentBlock("points");
 

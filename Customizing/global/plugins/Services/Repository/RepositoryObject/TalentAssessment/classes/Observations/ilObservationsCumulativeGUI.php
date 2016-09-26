@@ -11,6 +11,7 @@ class ilObservationsCumulativeGUI {
 
 		$this->gTpl = $tpl;
 		$this->parent_obj = $parent_obj;
+		$this->gTpl->addCSS("Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/templates/css/talent_assessment_observation_cummulative_table.css");
 	}
 
 	public function render() {
@@ -30,25 +31,48 @@ class ilObservationsCumulativeGUI {
 			$tpl->setVariable("OBS_TITLE", $title);
 			$tpl->parseCurrentBlock();
 		}
-
+		
 		for($i = 0; $i < count($obs); $i++) {
+			$max = array();
+			
 			foreach ($observator as $key => $value) {
+				array_push($max, strlen($value["lastname"]));
+				array_push($max, strlen($value["firstname"]));
+
 				$tpl->setCurrentBlock("observator");
-				$tpl->setVariable("OBSERVATOR_NAME", $value["lastname"].", ".$value["firstname"]);
-				$tpl->parseCurrentBlock();
+				if(strlen($value["lastname"].$value["firstname"]) > 25) {
+				  $tpl->setVariable("OBSERVATOR_LASTNAME", "<pre>".$value["lastname"].", </pre><pre>". $value["firstname"]."</pre>");
+				  $tpl->setVariable("pad", 80 / count($obs) / count($observator) / 4 - 0.6);
+				} else {
+				  $tpl->setVariable("OBSERVATOR_LASTNAME", $value["lastname"] . ", ");
+				  $tpl->setVariable("OBSERVATOR_FIRSTNAME", $value["firstname"]);
+				  $tpl->setVariable("pad", 80 / count($obs) / count($observator) / 4 + 1.1);
+				  $tpl->parseCurrentBlock();
+				}
 			}
+			
+			$max_height = max($max);
+			$tpl->setCurrentBlock("height");
+			$tpl->setVariable("height", $max_height);
+			$tpl->parseCurrentblock();
 		}
 
 		$html = "";
 		$printed = array();
+		$i = 0;
 		foreach($req_res as $req_title => $req) {
 			if($printed[$req_title]) {
 				continue;
 			}
 			$pts_tpl = new \ilTemplate("tpl.talent_assessment_observations_cumulative_pts.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment");
-
+			$pts_tpl->setCurrentBlock("tr");
+			$pts_tpl->setVariable("CSS_ROW", "row_norm");
+			if ($i % 2 == 0) {
+			  $pts_tpl->setVariable("CSS_ROW", "row_grey");
+			}
+			$i++;
 			foreach($obs as $obs_key => $title) {
-				foreach ($observator as $usr) {
+			    foreach ($observator as $usr) {
 					$pts = $this->getPointsFor($req_res, $req_title, $obs_key, $usr["usr_id"]);
 
 					$pts_tpl->setCurrentBlock("pts");
@@ -59,7 +83,6 @@ class ilObservationsCumulativeGUI {
 				$pts_tpl->setVariable("REQ_TITLE", $req_title);
 				$pts_tpl->setVariable("POINTS_MIDDLE", round($req["middle"],1));
 			}
-
 			$html .= $pts_tpl->get();
 
 			$tpl->setCurrentBlock("tr_requirement");
