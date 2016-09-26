@@ -46,16 +46,7 @@
   -ms-writing-mode: tb-rl;
   writing-mode: vertical-rl;
   padding: 12px 0px 12px 0px;
-  
-  /*line-height: 20px;*/
-/*
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  -o-transform: rotate(90deg);
-  -webkit-transform: rotate(90deg);
-
-  transform: rotate(90deg);
-}*/
+}
 
 .left_col_width{
   width: 14%;
@@ -64,7 +55,3 @@
 .right_col_width{
   width: 6%;
 }
-
-/*.pos{
-  padding-left: 22px;
-}*/
