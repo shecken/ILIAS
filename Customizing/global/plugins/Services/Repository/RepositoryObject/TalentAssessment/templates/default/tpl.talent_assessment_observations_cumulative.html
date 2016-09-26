@@ -2,19 +2,19 @@
 <table class="tbl">
 	<!-- BEGIN tr_header -->
 	<tr class="header_row">
-		<td class="center_txt">Anforderung</td>
+		<td class="center_txt left_col_width">Anforderung</td>
 		<!-- BEGIN observations -->
 		<td class="center_txt brd_lr" colspan="{COL_SPAN_HEAD}">{OBS_TITLE}</td>
 		<!-- END observations -->
-		<td class="center_txt">Mittelwert</td>
+		<td class="center_txt right_col_width">Mittelwert</td>
 	</tr>
 	<!-- END tr_header -->
 	<!-- BEGIN height -->
 	<!-- BEGIN tr_observator -->
-	<tr style="height:{height}px">
+	<tr>
 	  <td class="right_border">&nbsp;</td>
 		<!-- BEGIN observator -->
-		<td class="brd_lr center_txt rotate">{OBSERVATOR_NAME}</td>
+		<td class="brd_lr rotate" style="padding-left:{pad}%; white-space: normal;">{OBSERVATOR_LASTNAME}{OBSERVATOR_FIRSTNAME}</td>
 		<!-- END observator -->
 		<td class="left_border">&nbsp;</td>
 	</tr>

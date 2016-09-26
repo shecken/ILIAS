@@ -36,15 +36,22 @@ class ilObservationsCumulativeGUI {
 			$max = array();
 			
 			foreach ($observator as $key => $value) {
+				array_push($max, strlen($value["lastname"]));
+				array_push($max, strlen($value["firstname"]));
+
 				$tpl->setCurrentBlock("observator");
-				$tpl->setVariable("OBSERVATOR_NAME", $value["lastname"].", ".$value["firstname"]);
-				array_push($max, strlen($value["lastname"].", ".$value["firstname"]) * 8);
-				$tpl->parseCurrentBlock();
+				if(strlen($value["lastname"].$value["firstname"]) > 25) {
+				  $tpl->setVariable("OBSERVATOR_LASTNAME", "<pre>".$value["lastname"].", </pre><pre>". $value["firstname"]."</pre>");
+				  $tpl->setVariable("pad", 80 / count($obs) / count($observator) / 4 - 0.6);
+				} else {
+				  $tpl->setVariable("OBSERVATOR_LASTNAME", $value["lastname"] . ", ");
+				  $tpl->setVariable("OBSERVATOR_FIRSTNAME", $value["firstname"]);
+				  $tpl->setVariable("pad", 80 / count($obs) / count($observator) / 4 + 1.1);
+				  $tpl->parseCurrentBlock();
+				}
 			}
 			
 			$max_height = max($max);
-			if($max_height > 280) $max_height = 280;
-			
 			$tpl->setCurrentBlock("height");
 			$tpl->setVariable("height", $max_height);
 			$tpl->parseCurrentblock();
