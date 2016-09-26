@@ -31,13 +31,23 @@ class ilObservationsCumulativeGUI {
 			$tpl->setVariable("OBS_TITLE", $title);
 			$tpl->parseCurrentBlock();
 		}
-
+		
 		for($i = 0; $i < count($obs); $i++) {
+			$max = array();
+			
 			foreach ($observator as $key => $value) {
 				$tpl->setCurrentBlock("observator");
 				$tpl->setVariable("OBSERVATOR_NAME", $value["lastname"].", ".$value["firstname"]);
+				array_push($max, strlen($value["lastname"].", ".$value["firstname"]) * 8);
 				$tpl->parseCurrentBlock();
 			}
+			
+			$max_height = max($max);
+			if($max_height > 280) $max_height = 280;
+			
+			$tpl->setCurrentBlock("height");
+			$tpl->setVariable("height", $max_height);
+			$tpl->parseCurrentblock();
 		}
 
 		$html = "";
