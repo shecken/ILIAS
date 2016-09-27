@@ -22,20 +22,21 @@ class WBTLocator {
 		$type = $daty['type'];
 		switch($type) {
 			case self::WBT_TYPE_SINGLESCO:
-				$ids = $this->getJumpTosByRefIdSinglesco($ref_id);
+				$ids = $this->getJumpTosByRefIdSinglesco($this->getManifestSinglesco($ref_id));
 			case self::WBT_TYPE_MULTISCO:
-				$ids = $this->getJumpTosByRefIdMultisco($ref_id);
+				$ids = $this->getJumpTosByRefIdMultisco($this->getManifestMultisco($ref_id));
 			default:
 				throw new WBTLocatorException('unknown type '.$type);
 		}
-		return $this->getLinksByIds($ids,$this->getManifestForRefId($ref_id,$type));
+		return $this->getLinksByIds($ids, $wbt_id);
 	}
 
 	/**
 	 * Get an assiciative array of question ids (like 1.2.3.4.5)
-	 * to 
+	 * to the corresponding link to open the corresponding wbt at the
+	 * right spot.
 	 */
-	protected function getLinksByIds(array $ids,$xml) {
+	protected function getLinksByIds(array $ids, $wbt_id) {
 
 	}
 }
