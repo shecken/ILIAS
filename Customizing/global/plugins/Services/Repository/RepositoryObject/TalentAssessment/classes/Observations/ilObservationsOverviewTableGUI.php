@@ -15,7 +15,7 @@ class ilObservationsOverviewTableGUI extends \ilTable2GUI {
 		$this->values = $values;
 		$this->observator = $observator;
 
-		$this->setId("talent_assessment_observations_overview_table");
+		$this->setId("tlnt_assmnt_obsrvtns_ovrvw_tbl");
 
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
