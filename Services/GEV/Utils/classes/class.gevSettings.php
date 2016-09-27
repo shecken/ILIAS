@@ -691,7 +691,7 @@ class gevSettings {
 		$this->settings = new ilSetting(self::MODULE_NAME);
 	}
 	
-	public function getInstance() {
+	public static function getInstance() {
 		if (self::$instance === null) {
 			self::$instance = new gevSettings();
 		}

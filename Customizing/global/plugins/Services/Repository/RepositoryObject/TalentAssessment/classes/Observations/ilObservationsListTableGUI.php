@@ -17,7 +17,7 @@ class ilObservationsListTableGUI extends \ilTable2GUI {
 		$this->possible_cmd = $a_parent_obj->getPossibleCMD();
 		$this->settings = $a_parent_obj->getSettings();
 
-		$this->setId("talent_assessment_observations_list_table");
+		$this->setId("ta_observations_list_table");
 
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 

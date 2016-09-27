@@ -137,8 +137,8 @@ class ilDB implements DB {
 				, "state" => array("integer", $talent_assessment->getState())
 				, "career_goal_id" => array("integer", $talent_assessment->getCareerGoalId())
 				, "username" => array("text", $talent_assessment->getUsername())
-				, "start_date" => array("text", $talent_assessment->getStartDate())
-				, "end_date" => array("text", $talent_assessment->getEndDate())
+				, "start_date" => array("text", $talent_assessment->getStartDate()->get(IL_CAL_DATETIME))
+				, "end_date" => array("text", $talent_assessment->getEndDate()->get(IL_CAL_DATETIME))
 				, "venue" => array("text", $talent_assessment->getVenue())
 				, "org_unit" => array("text", $talent_assessment->getOrgUnit())
 				, "started" => array("integer", $talent_assessment->getStarted())
@@ -167,8 +167,8 @@ class ilDB implements DB {
 				( "state" => array("integer", $talent_assessment->getState())
 				, "career_goal_id" => array("integer", $talent_assessment->getCareerGoalId())
 				, "username" => array("text", $talent_assessment->getUsername())
-				, "start_date" => array("text", $talent_assessment->getStartDate())
-				, "end_date" => array("text", $talent_assessment->getEndDate())
+				, "start_date" => array("text", $talent_assessment->getStartDate()->get(IL_CAL_DATETIME))
+				, "end_date" => array("text", $talent_assessment->getEndDate()->get(IL_CAL_DATETIME))
 				, "venue" => array("text", $talent_assessment->getVenue())
 				, "org_unit" => array("text", $talent_assessment->getOrgUnit())
 				, "started" => array("integer", $talent_assessment->getStarted())
@@ -227,9 +227,9 @@ class ilDB implements DB {
 								 , (int)$row["state"]
 								 , (int)$row["career_goal_id"]
 								 , $row["username"]
-								 , $row["firstname"]
-								 , $row["lastname"]
-								 , $row["email"]
+								 , $row["firstname"] ? $row["firstname"] : ""
+								 , $row["lastname"] ? $row["lastname"] : ""
+								 , $row["email"] ? $row["email"] : ""
 								 , $start_date
 								 , $end_date
 								 , (int)$row["venue"]
@@ -238,10 +238,10 @@ class ilDB implements DB {
 								 , (float)$row["lowmark"]
 								 , (float)$row["should_specification"]
 								 , (float)$row["potential"]
-								 , $row["result_comment"]
-								 , $row["default_text_failed"]
-								 , $row["default_text_partial"]
-								 , $row["default_text_success"]
+								 , $row["result_comment"] ? $row["result_comment"] : ""
+								 , $row["default_text_failed"] ? $row["default_text_failed"] : ""
+								 , $row["default_text_partial"] ? $row["default_text_partial"] : ""
+								 , $row["default_text_success"] ? $row["default_text_success"] : ""
 							);
 
 		return $talent_assessment;

@@ -320,9 +320,9 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 			if ($col[4]) {
 				continue;
 			}
-			$header[] = $col[2] ? $col[1] : $this->lng->txt($col[1]);
+			$in_header = $col[2] ? $col[1] : $this->lng->txt($col[1]);
+			$header[] = str_replace('&shy;', '', strip_tags(htmlspecialchars_decode($in_header)));
 		}
-
 		$workbook
 			->writeRow($header)
 			->setRowFormatWrap();
