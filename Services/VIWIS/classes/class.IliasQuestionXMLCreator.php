@@ -1,8 +1,8 @@
 <?php
 require_once 'Services/VIWIS/interfaces/interface.QuestionXMLCreator.php';
-require_once 'Services/VIWIS/classes/class.QuestionException.php';
+require_once 'Services/VIWIS/exception/class.QuestionException.php';
 require_once 'Services/VIWIS/classes/class.QuestionTypes.php';
-
+require_once 'Services/VIWIS/classes/class.genericFeedback.php';
 require_once 'Modules/TestQuestionPool/classes/class.assSingleChoice.php';
 require_once 'Modules/TestQuestionPool/classes/class.assMultipleChoice.php';
 require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssSingleChoiceFeedback.php';
@@ -19,6 +19,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 	private $type;
 	private $answers = array();
 	private $correct_answers = array();
+	private $generic_feedback;
 
 	/**
 	 *	@inheritdoc
@@ -38,7 +39,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 												'root user',
 												-1,
 												$this->question);
-				$obj->feedbackOBJ = new ilAssSingleChoiceFeedback($obj,$ilCtrl,$ilDB,$lng);
+				
 				$points_per_ans = array();
 				foreach ($this->correct_answers as $correct_answers_id) {
 					$points_per_ans[$correct_answers_id] = 1;
@@ -50,7 +51,6 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 												'root user',
 												-1,
 												$this->question);
-				$obj->feedbackOBJ = new ilAssMultipleChoiceFeedback($obj,$ilCtrl,$ilDB,$lng);
 				$cnt_correct_answers = count($this->correct_answers);
 				$step = 0;
 				/**
@@ -77,8 +77,9 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			default:
 				throw new QuestionException("unknown question type ".$this->type);
 		}
+		$obj->feedbackOBJ = new genericFeedback();
+		$obj->feedbackOBJ->setGenericFeedback($this->generic_feedback);
 		$obj->setId($this->id);
-
 
 		foreach ($this->answers as $answer_id => $answer) {
 			$points = in_array($answer_id, $this->correct_answers) ? $points_per_ans[$answer_id] : -1;
@@ -117,7 +118,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			$this->question = $question;
 			return $this;
 		}
-		throw new QuestionException("invalid id");
+		throw new QuestionException("empty question");
 	}
 
 	/**
@@ -144,4 +145,16 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 		}
 		throw new questionException("Unknown question type");
 	}
+
+	/**
+	 *	@inheritdoc
+	 */
+	public function setGenericFeedback($generic_feedback) {
+		if($generic_feedback) {
+			$this->generic_feedback = $generic_feedback;
+			return $this;
+		}
+		throw new questionException("no generic feedback given");
+	} 
+
 }
