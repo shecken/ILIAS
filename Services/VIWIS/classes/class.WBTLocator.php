@@ -42,9 +42,15 @@ class WBTLocator {
 
 	protected function getManifestSinglesco($ref_id) {
 		$slm_id = ilObject::_lookupObjId($ref_id);
-		$xml = new SimpleXMLElement(
-			file_get_contents(
+		return file_get_contents(
 				ilUtil::getDataDir().DIRECTORY_SEPARATOR.'lm_data'.DIRECTORY_SEPARATOR.'lm_'.$slm_id.DIRECTORY_SEPARATOR.'imsmanifest.xml'
-				));
+				);
+	}
+
+	protected function getManifestMultisco($ref_id) {
+		$slm_id = ilObject::_lookupObjId($ref_id);
+		return file_get_contents(
+				ilUtil::getDataDir().DIRECTORY_SEPARATOR.'lm_data'.DIRECTORY_SEPARATOR.'lm_'.$slm_id.DIRECTORY_SEPARATOR.'imsmanifest_org.xml'
+				);
 	}
 }
