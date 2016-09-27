@@ -11,6 +11,11 @@ class WBTLocator {
 
 	public static $wbt_locations;
 
+	/**
+	 * Get an assiciative array of question ids (like 1.2.3.4.5)
+	 * to the corresponding link to open the corresponding wbt at the
+	 * right spot.
+	 */
 	public function getRedirectLinksById($wbt_id) {
 		$data = self::$wbt_locations[$wbt_id];
 
@@ -31,12 +36,15 @@ class WBTLocator {
 		return $this->getLinksByIds($ids, $wbt_id);
 	}
 
-	/**
-	 * Get an assiciative array of question ids (like 1.2.3.4.5)
-	 * to the corresponding link to open the corresponding wbt at the
-	 * right spot.
-	 */
 	protected function getLinksByIds(array $ids, $wbt_id) {
 
+	}
+
+	protected function getManifestSinglesco($ref_id) {
+		$slm_id = ilObject::_lookupObjId($ref_id);
+		$xml = new SimpleXMLElement(
+			file_get_contents(
+				ilUtil::getDataDir().DIRECTORY_SEPARATOR.'lm_data'.DIRECTORY_SEPARATOR.'lm_'.$slm_id.DIRECTORY_SEPARATOR.'imsmanifest.xml'
+				));
 	}
 }
