@@ -53,4 +53,8 @@ class WBTLocator {
 				ilUtil::getDataDir().DIRECTORY_SEPARATOR.'lm_data'.DIRECTORY_SEPARATOR.'lm_'.$slm_id.DIRECTORY_SEPARATOR.'imsmanifest_org.xml'
 				);
 	}
+
+	protected function extractRelevantDataFromManifiest($xml) {
+		
+	}
 }
