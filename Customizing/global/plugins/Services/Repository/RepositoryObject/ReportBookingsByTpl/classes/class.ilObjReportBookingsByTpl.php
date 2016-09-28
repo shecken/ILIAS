@@ -168,7 +168,7 @@ class ilObjReportBookingsByTpl extends ilObjReportBase {
 						->static_condition(" crs.hist_historic = 0")
 						->static_condition(" usrcrs.hist_historic = 0")
 						->static_condition(" crs.template_obj_id > ".$this->gIldb->quote(0,'integer') )
-						->static_condition(" crs.template_obj_id IS NO NULL")
+						->static_condition(" crs.template_obj_id IS NOT NULL")
 						->static_condition(" usrcrs.booking_status != ".$this->gIldb->quote('-empty-','text'))
 						->action($this->filter_action)
 						->compile()
