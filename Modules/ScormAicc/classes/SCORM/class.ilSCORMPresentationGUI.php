@@ -173,12 +173,12 @@ class ilSCORMPresentationGUI
 				$this->ctrl->setParameter($this, "autolaunch", $items[0]);
 			}
 			//gev-patch start
-			if(isset($_GET['jump_to'])) {
+			if(isset($_GET['redirect_viwis'])) {
 				// This is required to make the "outer block" (i.e. the whole tpl)
 				// render at all.
 				$this->tpl->setVariable("BOGUS_SPACE_INSERT_POINT", "    ");
 				$this->tpl->setCurrentBlock('to_viwis_sco');
-				$this->tpl->setVariable('TARGET_ID',$_GET['jump_to']);
+				$this->tpl->setVariable('TARGET_ID',$_GET['redirect_viwis']);
 				$this->tpl->parseCurrentBlock();
 			}
 			// gev-patch end
