@@ -127,7 +127,10 @@ class ilUserCourseStatusHistorizing extends ilHistorizingStorage
 			'begin_date'			=> 'date',
 			'end_date'				=> 'date',
 			'overnights'			=> 'integer',
-			'function'				=> 'text'
+			'function'				=> 'text',
+			'wbd_booking_id'		=> 'text',
+			'last_wbd_report'		=> 'date',
+			'wbd_cancelled'			=> 'integer'
 		);
 
 		return $definition;

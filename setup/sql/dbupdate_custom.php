@@ -5168,3 +5168,16 @@ $ilDB->addIndex('hist_topicset2topic',array('topic_set_id'),'t2s');
 $ilDB->addIndex('hist_topicset2topic',array('topic_id'),'t2t');
 $ilDB->addIndex('hist_userorgu',array('hist_historic','action'),'oha');
 ?>
+
+<#220>
+<?php
+	if(!$ilDB->tableColumnExists("hist_usercoursestatus", "wbd_cancelled")) {
+		$ilDB->addTableColumn('hist_usercoursestatus', 'wbd_cancelled',
+			array(
+				'type' => 'integer',
+				'length' => 1,
+				'notnull' => true,
+				'default' => '-1'
+		));
+	}
+?>
