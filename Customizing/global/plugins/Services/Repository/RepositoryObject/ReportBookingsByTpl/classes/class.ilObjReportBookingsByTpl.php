@@ -118,7 +118,10 @@ class ilObjReportBookingsByTpl extends ilObjReportBase {
 									 , array()
 									 , ""
 									 , 300
-									 , 160	
+									 , 160
+									 , "integer"
+									 , "asc"
+									 , true
 									 )
 						->multiselect("participation_status"
 									 , $this->plugin->txt("participation_status")
@@ -164,7 +167,8 @@ class ilObjReportBookingsByTpl extends ilObjReportBase {
 									 )
 						->static_condition(" crs.hist_historic = 0")
 						->static_condition(" usrcrs.hist_historic = 0")
-						->static_condition(" crs.template_obj_id != ".$this->gIldb->quote(-1,'integer') )
+						->static_condition(" crs.template_obj_id > ".$this->gIldb->quote(0,'integer') )
+						->static_condition(" crs.template_obj_id IS NO NULL")
 						->static_condition(" usrcrs.booking_status != ".$this->gIldb->quote('-empty-','text'))
 						->action($this->filter_action)
 						->compile()
