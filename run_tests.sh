@@ -1,3 +1,3 @@
 #!/bin/sh
 
-phpunit --bootstrap libs/composer/vendor/autoload.php $@ CaT/test
+phpunit Customizing/global/plugins/Services/Repository/RepositoryObject/Jill/tests_ilias
