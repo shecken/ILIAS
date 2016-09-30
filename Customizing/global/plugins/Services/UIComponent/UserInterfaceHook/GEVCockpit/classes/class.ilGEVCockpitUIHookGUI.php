@@ -28,6 +28,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		}
 
 		$this->active = $this->getActiveItem();
+		echo ($this->active);
 		$this->items = $this->getItems();
 
 		$current_skin = ilStyleDefinition::getCurrentSkin();
@@ -124,6 +125,12 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 
 		$items = array();
 
+		$items["bookin"]
+			= array($this->gLng->txt("gev_bookings"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
+
+		$items["booking"]
+			= array($this->gLng->txt("gev_bookings"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
+
 		$items["bookings"]
 			= array($this->gLng->txt("gev_bookings"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
 
@@ -185,7 +192,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 
 	protected function getSubMenuHTML($current_skin) {
 		assert('is_string($current_skin)');
-		$tpl = $this->getTemplate($current_skin, true, true); 
+		$tpl = $this->getTemplate($current_skin, true, true);
 		$count = 1;
 		foreach ($this->items as $id => $data) {
 			list($label, $link) = $data;
@@ -199,7 +206,28 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			$tpl->parseCurrentBlock();
 			$count++;
 		}
+
+		$tpl->addCss("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.css");
+		$js_tpl = new ilTemplate("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/tpl.submenu_slider.js.html", false, false);
+		$tpl->setCurrentBlock("js");
+
+		if($this->getActiveItem() == "trainer_ops" || $this->getActiveItem() == "training_admin") {
+		  $tpl->setVariable("MOVED", "<script>var moved = true;</script>");
+		}
+		$tpl->setVariable("JS", $js_tpl->get());
+		$tpl->parseCurrentBlock();
+		$this->addJS();
 		return $tpl->get();
+	}
+
+	protected function addJS() {
+		require_once("./Services/jQuery/classes/class.iljQueryUtil.php");
+		iljQueryUtil::initjQuery();
+		global $tpl;
+
+		$tpl->addJavaScript("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/plugins/jquery.easing.1.3.js");
+		$tpl->addJavaScript("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/plugins/jquery.fitvids.js");
+		$tpl->addJavaScript("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.js");
 	}
 
 	protected function addCss($current_skin) {
