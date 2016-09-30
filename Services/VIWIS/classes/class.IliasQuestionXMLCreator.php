@@ -77,7 +77,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			default:
 				throw new QuestionException("Unknown Question Type ".$this->type);
 		}
-		$obj->feedbackOBJ = new genericFeedback();
+		$obj->feedbackOBJ = new GenericFeedback();
 		$obj->feedbackOBJ->setGenericFeedback($this->generic_feedback);
 		$obj->setId($this->id);
 
@@ -143,7 +143,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			$this->type = $question_type;
 			return $this;
 		}
-		throw new questionException("Unknown Question Type");
+		throw new QuestionException("Unknown Question Type");
 	}
 
 	/**
@@ -154,7 +154,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			$this->generic_feedback = $generic_feedback;
 			return $this;
 		}
-		throw new questionException("No Generic Feedback Given");
+		throw new QuestionException("No Generic Feedback Given");
 	} 
 
 }
