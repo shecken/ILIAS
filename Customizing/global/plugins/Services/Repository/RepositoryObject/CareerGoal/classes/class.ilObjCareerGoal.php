@@ -79,13 +79,19 @@ class ilObjCareerGoal extends ilObjectPlugin implements CareerGoal\ObjCareerGoal
 	 */
 	function doDelete() {
 		$this->getSettingsDB()->delete((int)$this->getId());
+		$this->getObservationsDB()->deleteByCareerGoal((int)$this->getId());
+		$this->getRequirementsDB()->deleteByCareerGoal((int)$this->getId());
 	}
 
 	/**
 	 * Do Cloning
 	 */
-	function doCloneObject($a_target_id, $a_copy_id, $new_obj) {
-		$new_obj->setSettings($this->settings);
+	function doCloneObject($new_obj, $a_target_id, $a_copy_id) {
+		$new_settings = $this->getSettingsDB()->cloneSettings($new_obj->getId(), $this->settings);
+		$ids = $this->getRequirementsDB()->cloneRequirements($this->getId(), $new_obj->getId());
+		$this->getObservationsDB()->cloneObservations($this->getId(), $new_obj->getId(), $ids);
+		$new_obj->setSettings($new_settings);
+		$new_obj->update();
 	}
 
 	// Custom stuff

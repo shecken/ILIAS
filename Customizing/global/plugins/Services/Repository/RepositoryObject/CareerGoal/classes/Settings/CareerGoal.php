@@ -52,6 +52,15 @@ class CareerGoal {
 		$this->default_text_success = $default_text_success;
 	}
 
+	public function withObjectId($obj_id) {
+		assert('is_int($obj_id)');
+
+		$clone = clone $this;
+		$clone->obj_id = $obj_id;
+
+		return $clone;
+	}
+
 	public function withLowmark($lowmark) {
 		assert('is_int($lowmark) || is_float($lowmark)');
 
