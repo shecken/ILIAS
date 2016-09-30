@@ -1,6 +1,9 @@
 <?php
 require_once 'Services/VIWIS/exceptions/class.WBTLocatorException.php';
-
+/**
+ * Takes care of storing feedback parameters for question related feedback ids
+ * (a-la 1.3.4.5.6).
+ */
 class WBTLocator {
 	const WBT_TYPE_SINGLESCO = 'singlesco';
 	const WBT_TYPE_MULTISCO = 'multisco';
