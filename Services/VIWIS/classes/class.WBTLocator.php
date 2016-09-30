@@ -1,5 +1,6 @@
 <?php
 require_once 'Services/VIWIS/exceptions/class.WBTLocatorException.php';
+
 class WBTLocator {
 	const WBT_TYPE_SINGLESCO = 'singlesco';
 	const WBT_TYPE_MULTISCO = 'multisco';
@@ -22,6 +23,20 @@ class WBTLocator {
 			default:
 				throw new WBTLocatorException('unknown type '.$type);
 		}
+	}
+
+	public function extractManifestInfosByRefIdToDb($ref_id, $type) {
+		$link_pars = $this->getRedirectLinkParametersById($this->getSlmIdByRefId($ref_id),$type);
+		foreach ($link_pars as $question_ref => $wbt_item) {
+			$this->storeLinkParametersToDb($ref_id,$wbt_item,$question_ref);
+		}
+	}
+
+	protected function getSlmIdByRefId($ref_id) {
+		if($slm_id = ilObject::_lookupObjectId($ref_id)) {
+			return $slm_id;
+		}
+		throw new WBTLocatorException('unknown reference '.$ref_id);
 	}
 
 	protected function extractJumpTosSinglesco($slm_id, $a_xml) {
@@ -61,7 +76,7 @@ class WBTLocator {
 			$res = $this->db->query($q);
 			$id_sco = $this->db->fetchAssoc($res)['obj_id'];
 			foreach ($item->metadata->lom->general->catalogentry as $cat) {
-				$q_id = current($cat->entry->langstring);
+				$q_id = implode('.',array_map(function($el) {return ltrim($el,'0');},explode('.', current($cat->entry->langstring))));
 				if(!isset($return[$q_id])) {
 					$return[$q_id] = $id_sco;
 				}
@@ -86,14 +101,14 @@ class WBTLocator {
 	}
 
 	protected function storeLinkParametersToDb($ref_id, $wbt_item, $question_ref) {
-		$ilDB->insert(	'viwis_refs', array(
+		$this->db->insert(	'viwis_refs', array(
 						'ref_id' =>	array( 'integer', $ref_id),
 						'wbt_item' =>	array('text', $wbt_item),
 						'question_ref' =>	array('text', $question_ref)));
 	}
 
 	public function getRedirectParameterForQuestionRef($question_ref) {
-		$q = 'SELECT ref_id, wbt_item FROM viwis_refs WHERE '.$this->db->quote($question_ref ,'text');
+		$q = 'SELECT ref_id, wbt_item FROM viwis_refs WHERE question_ref = '.$this->db->quote($question_ref ,'text');
 		return $this->db->fetchAssoc($this->db->query($q));
 	}
 }
