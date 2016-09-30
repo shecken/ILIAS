@@ -5,7 +5,7 @@
  * feedback-container.
  */
 
-interface generalDBIndependentFeedback {
+interface GeneralDBIndependentFeedback {
 	/**
 	 * For now we will only need one generic feedback,
 	 * that should be shown independent on wether the question
