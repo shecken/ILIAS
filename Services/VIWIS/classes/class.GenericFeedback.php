@@ -1,6 +1,6 @@
 <?php
 require_once 'Services/VIWIS/interfaces/interface.GeneralDBIndependentFeedback.php';
-class genericFeedback implements GeneralDBIndependentFeedback {
+class GenericFeedback implements GeneralDBIndependentFeedback {
 	protected $generic_feedback = null;
 	/**
 	 * @inheritdoc
