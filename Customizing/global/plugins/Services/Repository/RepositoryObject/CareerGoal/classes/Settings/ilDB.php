@@ -96,6 +96,25 @@ class ilDB implements DB {
 		return $settings;
 	}
 
+	public function cloneSettings($target_id, CareerGoal $settings) {
+		$target_settings = $settings->withObjectId((int)$target_id);
+
+		$values = array
+				( "obj_id" => array("integer", $target_settings->getObjId())
+				, "lowmark" => array("float", $target_settings->getLowmark())
+				, "should_specifiaction" => array("float", $target_settings->getShouldSpecification())
+				, "default_text_failed" => array("text", $target_settings->getDefaultTextFailed())
+				, "default_text_partial" => array("text", $target_settings->getDefaultTextPartial())
+				, "default_text_success" => array("text", $target_settings->getDefaultTextSuccess())
+				, "last_change" => array("text", date("Y-m-d H:i:s"))
+				, "last_change_user" => array("integer", $this->user->getId())
+				);
+
+		$this->getDB()->insert(self::PLUGIN_TABLE, $values);
+
+		return $target_settings;
+	}
+
 	protected function pluginTable() {
 		if(!$this->getDB()->tableExists(self::PLUGIN_TABLE)) {
 			$fields = 
