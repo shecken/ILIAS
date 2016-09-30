@@ -26,10 +26,10 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 	 */
 	public function XML() {
 		if(count($this->answers) === 0) {
-			throw new QuestionException("no answers defined");
+			throw new QuestionException("No Answers Defined");
 		}
 		if(count($this->correct_answers) === 0) {
-			throw new QuestionException("no correct answers defined");
+			throw new QuestionException("No Correct Answers Defined");
 		}
 		global $ilCtrl,$ilDB,$lng;
 		switch($this->type) {
@@ -75,7 +75,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 				}
 				break;
 			default:
-				throw new QuestionException("unknown question type ".$this->type);
+				throw new QuestionException("Unknown Question Type ".$this->type);
 		}
 		$obj->feedbackOBJ = new genericFeedback();
 		$obj->feedbackOBJ->setGenericFeedback($this->generic_feedback);
@@ -96,7 +96,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			$this->title = $title;
 			return $this;
 		}
-		throw new QuestionException("invalid title");
+		throw new QuestionException("Invalid Title");
 	}
 
 	/**
@@ -107,7 +107,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			$this->id = $id;
 			return $this;
 		}
-		throw new QuestionException("invalid id");
+		throw new QuestionException("Invalid Id");
 	}
 
 	/**
@@ -118,7 +118,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			$this->question = $question;
 			return $this;
 		}
-		throw new QuestionException("empty question");
+		throw new QuestionException("Empty Question");
 	}
 
 	/**
@@ -132,7 +132,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			}
 			return $this;
 		}
-		throw new QuestionException("invalid answer");
+		throw new QuestionException("Invalid Answer");
 	}
 
 	/**
@@ -143,7 +143,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			$this->type = $question_type;
 			return $this;
 		}
-		throw new questionException("Unknown question type");
+		throw new questionException("Unknown Question Type");
 	}
 
 	/**
@@ -154,7 +154,7 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 			$this->generic_feedback = $generic_feedback;
 			return $this;
 		}
-		throw new questionException("no generic feedback given");
+		throw new questionException("No Generic Feedback Given");
 	} 
 
 }
