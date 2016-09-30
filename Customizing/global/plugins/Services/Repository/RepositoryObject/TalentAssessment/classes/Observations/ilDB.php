@@ -6,7 +6,6 @@ use CaT\Plugins\CareerGoal\Observations as BaseObservations;
 class ilDB implements DB {
 	const TABLE_OBSERVATIONS = "rep_obj_xtas_obs";
 	const TABLE_OBSERVATIONS_NOTICE = "rep_obj_xtas_obs_not";
-	const TABLE_OBS_REQ = "rep_obj_xtas_obs_req";
 	const TABLE_REQUIREMENTS = "rep_obj_xtas_req";
 	const TABLE_REQUIREMENTS_POINTS = "rep_obj_xtas_req_pts";
 
@@ -474,5 +473,26 @@ class ilDB implements DB {
 				." AND observator_id = ".$this->getDB()->quote($user_id, "integer")."\n";
 
 		$this->getDB()->manipulate($delete);
+	}
+
+	public function deleteByTAId($ta_id) {
+		$select = "SELECT obj_id FROM ".self::TABLE_OBSERVATIONS." WHERE ta_id = ".$this->getDB()->quote($ta_id, "integer")."\n";
+
+		$res = $this->getDB()->query($select);
+		while($row = $this->getDB()->fetchAssoc($res)) {
+			$sel = "SELECT obj_id FROM ".self::TABLE_REQUIREMENTS." WHERE obs_id = ".$this->getDB()->quote($row["obj_id"], "integer")."\n";
+			$res2 = $this->getDB()->query($sel);
+
+			while($row2 = $this->getDB()->fetchAssoc($res2)){
+				$del = "DELETE FROM ".self::TABLE_REQUIREMENTS_POINTS." WHERE req_id = ".$this->getDB()->quote($row2["obj_id"], "integer")."\n";
+				$this->getDB()->manipulate($del);
+			}
+
+			$del = "DELETE FROM ".self::TABLE_REQUIREMENTS." WHERE obs_id = ".$this->getDB()->quote($row["obj_id"], "integer")."\n";
+			$this->getDB()->manipulate($del);
+		}
+
+		$del = "DELETE FROM ".self::TABLE_OBSERVATIONS." WHERE ta_id = ".$this->getDB()->quote($ta_id, "integer")."\n";
+		$this->getDB()->manipulate($del);
 	}
 }

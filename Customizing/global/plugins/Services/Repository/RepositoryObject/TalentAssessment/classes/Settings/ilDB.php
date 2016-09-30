@@ -247,6 +247,37 @@ class ilDB implements DB {
 		return $talent_assessment;
 	}
 
+	public function cloneTalentAssessment($target_id, TalentAssessment $talent_assessment) {
+		$new_talent_assessment = $talent_assessment->withObjectId((int)$target_id)
+								 ->withState(TalentAssessment::IN_PROGRESS)
+								 ->withPotential(0.0)
+								 ->withStarted(false);
+
+		$values = array
+				( "obj_id" => array("integer", $new_talent_assessment->getObjId())
+				, "state" => array("integer", $new_talent_assessment->getState())
+				, "career_goal_id" => array("integer", $new_talent_assessment->getCareerGoalId())
+				, "username" => array("text", $new_talent_assessment->getUsername())
+				, "start_date" => array("text", $new_talent_assessment->getStartDate()->get(IL_CAL_DATETIME))
+				, "end_date" => array("text", $new_talent_assessment->getEndDate()->get(IL_CAL_DATETIME))
+				, "venue" => array("text", $new_talent_assessment->getVenue())
+				, "org_unit" => array("text", $new_talent_assessment->getOrgUnit())
+				, "started" => array("integer", $new_talent_assessment->getStarted())
+				, "lowmark" => array("float", $new_talent_assessment->getLowmark())
+				, "should_specification" => array("float", $new_talent_assessment->getShouldspecification())
+				, "potential" => array("float", $new_talent_assessment->getPotential())
+				, "result_comment" => array("text", $new_talent_assessment->getResultComment())
+				, "last_change" => array("text", date("Y-m-d H:i:s"))
+				, "last_change_user" => array("integer", $this->user->getId())
+				, "default_text_failed" => array("text", $new_talent_assessment->getDefaultTextFailed())
+				, "default_text_partial" => array("text", $new_talent_assessment->getDefaultTextPartial())
+				, "default_text_success" => array("text", $new_talent_assessment->getDefaultTextSuccess())
+				);
+		$this->getDB()->insert(self::PLUGIN_TABLE, $values);
+
+		return $new_talent_assessment;
+	}
+
 	public function isStarted($obj_id) {
 		$select = "SELECT started\n"
 				." FROM ".self::PLUGIN_TABLE."\n"

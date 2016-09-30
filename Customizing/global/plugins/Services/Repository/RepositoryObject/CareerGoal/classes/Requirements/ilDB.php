@@ -194,7 +194,7 @@ class ilDB implements DB {
 			$requirement = new Requirement((int)$row["obj_id"]
 								 , (int)$career_goal_id
 								 , $row["title"]
-								 , $row["description"]
+								 , $row["description"] ? $row["description"] : ""
 								 , (int)$row["position"]
 							);
 

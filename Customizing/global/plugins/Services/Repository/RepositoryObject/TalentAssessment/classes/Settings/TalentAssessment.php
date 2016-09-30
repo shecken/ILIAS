@@ -142,6 +142,15 @@ class TalentAssessment {
 		$this->state = $state;
 	}
 
+	public function withObjectId($obj_id) {
+		assert('is_int($obj_id)');
+
+		$clone = clone $this;
+		$clone->obj_id = $obj_id;
+
+		return $clone;
+	}
+
 	public function withState($state) {
 		$clone = clone $this;
 		$clone->state = $state;
