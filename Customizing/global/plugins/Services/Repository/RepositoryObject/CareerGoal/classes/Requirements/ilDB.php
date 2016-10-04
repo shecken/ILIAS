@@ -72,7 +72,7 @@ class ilDB implements DB {
 		$row = $this->getDB()->fetchAssoc($res);
 
 		if(empty($row)) {
-			return array();
+			throw new \InvalidArgumentException("Invalid id '$obj_id' for CareerGoal-object");
 		}
 
 		$requirement = new Requirement((int)$obj_id
