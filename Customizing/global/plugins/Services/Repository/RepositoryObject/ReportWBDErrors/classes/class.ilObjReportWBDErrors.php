@@ -86,29 +86,57 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		return $query;
 	}
 
+	// TODO: Those are not really used, as we use the new filter logic
+	// in this report. Remove em!
 	protected function buildFilter($filter) {
-		$filter ->static_condition("err.resolved = 0")
-				->multiselect("reason"
-							 , $this->plugin->txt("wbd_errors_reason")
-							 , "reason"
-							 , catFilter::getDistinctValues('reason', 'wbd_errors')
-							 , array()
-							 )
-				->multiselect("action"
-							 , $this->plugin->txt("wbd_errors_action")
-							 , "action"
-							 , catFilter::getDistinctValues('action', 'wbd_errors')
-							 , array()
-							 )
-				->multiselect("internal"
-							 , $this->plugin->txt("wbd_errors_internal")
-							 , "internal"
-							 , catFilter::getDistinctValues('internal', 'wbd_errors')
-							 , array()
-							 )
-				->action($this->filter_action)
-				->compile();
-		return $filter;
+		return null;
+	}
+
+	public function deliverFilter() {
+		return null;
+	}
+	//
+	// As is don't use a regular filter, i also don't need its params...
+	protected function addFilterToRelevantParameters() {
+	}
+
+	public function filter() {
+		$pf = new \CaT\Filter\PredicateFactory();
+		$tf = new \CaT\Filter\TypeFactory();
+		$f = new \CaT\Filter\FilterFactory($pf, $tf);
+		$txt = function($id) { return $this->plugin->txt($id); };
+
+		return $f->sequence(
+					$f->sequence(
+						$f->multiselect
+							( $txt("reason")
+							, ""
+							, array(1=>"Intern", 0=>"WBD Fehler")
+						)->map(function($error_type) {
+									return $error_type;
+								}
+								,$tf->int()
+								)
+					,
+					$f->multiselect
+						( $txt("action")
+						, ""
+						, array(1=>"Intern", 0=>"WBD Fehler")
+					)->map(function($error_type) {
+								return $error_type;}
+						,$tf->int()
+						)
+					,
+					$f->multiselect
+						( $txt("internal_error")
+						, ""
+						, array(1=>"Intern", 0=>"WBD Fehler")
+					)->map(function($error_type) {
+								return $error_type;}
+						,$tf->int()
+						)
+					)
+				);
 	}
 
 	public function fetchData(callable $callback) {
