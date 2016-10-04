@@ -475,7 +475,7 @@ class ilDB implements DB {
 		$this->getDB()->manipulate($delete);
 	}
 
-	public function deleteByTAId($ta_id) {
+	public function deleteByTalentAssessmentId($ta_id) {
 		$select = "SELECT obj_id FROM ".self::TABLE_OBSERVATIONS." WHERE ta_id = ".$this->getDB()->quote($ta_id, "integer")."\n";
 
 		$res = $this->getDB()->query($select);

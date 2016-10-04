@@ -19,13 +19,13 @@ class ilDB implements DB {
 	/**
 	 * @inheritdoc
 	 */
-	public function create($obj_id, $lowmark, $should_specifiaction, $default_text_failed, $default_text_partial, $default_text_success) {
-		$settings = new CareerGoal($obj_id, $lowmark, $should_specifiaction, $default_text_failed, $default_text_partial, $default_text_success);
+	public function create($obj_id, $lowmark, $should_specification, $default_text_failed, $default_text_partial, $default_text_success) {
+		$settings = new CareerGoal($obj_id, $lowmark, $should_specification, $default_text_failed, $default_text_partial, $default_text_success);
 
 		$values = array
 				( "obj_id" => array("integer", $settings->getObjId())
 				, "lowmark" => array("float", $settings->getLowmark())
-				, "should_specifiaction" => array("float", $settings->getShouldSpecification())
+				, "should_specification" => array("float", $settings->getShouldSpecification())
 				, "default_text_failed" => array("text", $settings->getDefaultTextFailed())
 				, "default_text_partial" => array("text", $settings->getDefaultTextPartial())
 				, "default_text_success" => array("text", $settings->getDefaultTextSuccess())
@@ -43,7 +43,7 @@ class ilDB implements DB {
 	public function update(CareerGoal $settings) {
 		$values = array
 				( "lowmark" => array("float", $settings->getLowmark())
-				, "should_specifiaction" => array("float", $settings->getShouldSpecification())
+				, "should_specification" => array("float", $settings->getShouldSpecification())
 				, "default_text_failed" => array("text", $settings->getDefaultTextFailed())
 				, "default_text_partial" => array("text", $settings->getDefaultTextPartial())
 				, "default_text_success" => array("text", $settings->getDefaultTextSuccess())
@@ -74,7 +74,7 @@ class ilDB implements DB {
 	public function select($obj_id) {
 		assert('is_int($obj_id)');
 
-		$select = "SELECT lowmark, should_specifiaction, default_text_failed, default_text_partial, default_text_success\n"
+		$select = "SELECT lowmark, should_specification, default_text_failed, default_text_partial, default_text_success\n"
 				." FROM ".self::PLUGIN_TABLE."\n"
 				." WHERE obj_id = ".$this->getDB()->quote($obj_id, "integer");
 
@@ -87,7 +87,7 @@ class ilDB implements DB {
 
 		$settings = new CareerGoal((int)$obj_id
 								 , (float)$row["lowmark"]
-								 , (float)$row["should_specifiaction"]
+								 , (float)$row["should_specification"]
 								 , $row["default_text_failed"]
 								 , $row["default_text_partial"]
 								 , $row["default_text_success"]
@@ -102,7 +102,7 @@ class ilDB implements DB {
 		$values = array
 				( "obj_id" => array("integer", $target_settings->getObjId())
 				, "lowmark" => array("float", $target_settings->getLowmark())
-				, "should_specifiaction" => array("float", $target_settings->getShouldSpecification())
+				, "should_specification" => array("float", $target_settings->getShouldSpecification())
 				, "default_text_failed" => array("text", $target_settings->getDefaultTextFailed())
 				, "default_text_partial" => array("text", $target_settings->getDefaultTextPartial())
 				, "default_text_success" => array("text", $target_settings->getDefaultTextSuccess())
@@ -127,7 +127,7 @@ class ilDB implements DB {
 						'type' 		=> 'float',
 						'notnull' 	=> true
 					),
-					'should_specifiaction' => array(
+					'should_specification' => array(
 						'type' 		=> 'float',
 						'notnull' 	=> true
 					),
@@ -156,6 +156,12 @@ class ilDB implements DB {
 
 			$this->getDB()->createTable(self::PLUGIN_TABLE, $fields);
 			$this->getDB()->addPrimaryKey(self::PLUGIN_TABLE, array("obj_id"));
+		}
+	}
+
+	public function renameColumns() {
+		if($this->getDB()->tableColumnExists(self::PLUGIN_TABLE, "should_specifiaction")) {
+			$this->getDB()->renameTableColumn(self::PLUGIN_TABLE, "should_specifiaction", "should_specification");
 		}
 	}
 

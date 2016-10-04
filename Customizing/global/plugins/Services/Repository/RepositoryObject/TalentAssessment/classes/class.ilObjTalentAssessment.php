@@ -79,7 +79,7 @@ class ilObjTalentAssessment extends ilObjectPlugin implements TalentAssessment\O
 	 */
 	function doDelete() {
 		$this->getSettingsDB()->delete((int)$this->getId());
-		$this->getObservationsDB()->deleteByTAId($this->getId());
+		$this->getObservationsDB()->deleteByTalentAssessmentId($this->getId());
 	}
 
 	/**
