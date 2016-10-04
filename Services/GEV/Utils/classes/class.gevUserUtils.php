@@ -609,15 +609,8 @@ class gevUserUtils {
 		$city = $this->getUser()->getCity();
 		$zipcode = $this->getUser()->getZipcode();
 
-		$tps_role = count(array_intersect(gevWBD::$wbd_tp_service_roles,
-				array_map(array('ilObject','_lookupTitle'),$this->getGlobalRoles()))) > 0;
-
-		$entry_date =
-			($tps_role && ($this->getEntryDate()
-					&& self::checkISODateStringIsValid($this->getEntryDate()->get(IL_CAL_DATE))))
-			|| !$tps_role;
 		return $email && $mobile && preg_match(gevUserProfileGUI::$telno_regexp, $mobile)
-				&& $mobile && $bday && $city && $zipcode && $entry_date;
+				&& $mobile && $bday && $city && $zipcode;
 	}
 	
 	/**

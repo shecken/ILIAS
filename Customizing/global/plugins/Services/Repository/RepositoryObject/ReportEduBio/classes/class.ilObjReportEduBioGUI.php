@@ -178,8 +178,8 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 		$no_entry = $lng->txt("gev_table_no_entry");
 
 		$rec["fee"] = (($rec["bill_id"] != -1 || gevUserUtils::getInstance(self::$target_user_id)->paysFees()) && $rec["fee"] != -1)
-					? $rec["fee"] = gevCourseUtils::formatFee($rec["fee"])." &euro;"
-					: $rec["fee"] == "-empty-";
+					? gevCourseUtils::formatFee($rec["fee"])." &euro;"
+					: "-empty-";
 
 		if ($rec["participation_status"] == "teilgenommen") {
 			$rec["status"] = self::$success_img;
@@ -237,19 +237,11 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 		global $lng;
 		$no_entry = $lng->txt("gev_table_no_entry");
 
-		$rec["fee"] = (($rec["bill_id"] != -1 || gevUserUtils::getInstance(self::$target_user_id)->paysFees())&& $rec["fee"] != -1)
-					? $rec["fee"] = gevCourseUtils::formatFee($rec["fee"])
-					: $rec["fee"] == "-empty-";
+		$rec["fee"] = (($rec["bill_id"] != -1 || gevUserUtils::getInstance(self::$target_user_id)->paysFees()) && $rec["fee"] != -1)
+					? gevCourseUtils::formatFee($rec["fee"])
+					: "-empty-";
 
-		if ($rec["participation_status"] == "teilgenommen") {
-			$rec["status"] = self::$success_img;
-		} elseif (in_array($rec["participation_status"], array("fehlt entschuldigt", "fehlt ohne Absage"))
-			 ||  in_array($rec["booking_status"], array("kostenpflichtig storniert", "kostenfrei storniert"))
-			) {
-			$rec["status"] = self::$failed_img;
-		} else {
-			$rec["status"] = self::$in_progress_img;
-		}
+		$rec['status'] = $rec['participation_status'];
 
 		if ($rec["begin_date"] == "0000-00-00" && $rec["end_date"] == "0000-00-00") {
 			$rec["date"] = $no_entry;
@@ -265,7 +257,12 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 			$rec["date"] = ilDatePresentation::formatDate($start)." - <br/>".ilDatePresentation::formatDate($end);
 		}
 
-		$rec['credit_points'] = $rec['credit_points'] >= 0 ? $rec['credit_points'] : 0;
+		if(in_array($rec["okz"], array("OKZ1", "OKZ2", "OKZ3"))) {
+			$rec['credit_points'] = $rec['credit_points'] >= 0 ? $rec['credit_points'] : 0;
+		} else {
+			$rec['credit_points'] = "-";
+		}
+
 		$rec["wbd"] = in_array($rec["okz"], array("OKZ1", "OKZ2", "OKZ3"))
 					? $lng->txt("yes")
 					: $lng->txt("no");

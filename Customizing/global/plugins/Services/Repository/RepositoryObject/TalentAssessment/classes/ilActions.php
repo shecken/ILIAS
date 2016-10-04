@@ -77,12 +77,12 @@ class ilActions {
 
 		$this->object->updateSettings(function($s) use (&$values) {
 			return $s
-				->withCareerGoalID($values[self::F_CAREER_GOAL])
+				->withCareerGoalID((int)$values[self::F_CAREER_GOAL])
 				->withUsername($values[self::F_USERNAME])
 				->withStartDate($values[self::START_DATE])
 				->withEndDate($values[self::END_DATE])
-				->withVenue($values[self::F_VENUE])
-				->withOrgUnit($values[self::F_ORG_UNIT])
+				->withVenue((int)$values[self::F_VENUE])
+				->withOrgUnit((int)$values[self::F_ORG_UNIT])
 				;
 		});
 		$this->object->update();
