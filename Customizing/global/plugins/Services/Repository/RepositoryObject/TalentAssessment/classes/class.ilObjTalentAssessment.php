@@ -79,13 +79,16 @@ class ilObjTalentAssessment extends ilObjectPlugin implements TalentAssessment\O
 	 */
 	function doDelete() {
 		$this->getSettingsDB()->delete((int)$this->getId());
+		$this->getObservationsDB()->deleteByTalentAssessmentId($this->getId());
 	}
 
 	/**
 	 * Do Cloning
 	 */
-	function doCloneObject($a_target_id, $a_copy_id, $new_obj) {
-		$new_obj->setSettings($this->settings);
+	function doCloneObject($new_obj, $a_target_id, $a_copy_id) {
+		$talent_assessment = $this->getSettingsDB()->cloneTalentAssessment($new_obj->getId(), $this->getSettings());
+		$new_obj->setSettings($talent_assessment);
+		$new_obj->getActions()->createLocalRole($new_obj);
 	}
 
 	// Custom stuff

@@ -136,11 +136,11 @@ class ilMyObservationsGUI {
 	protected function myAssessments() {
 		$this->filter_settings = $this->loadFilterSettings();
 
-		$gui = new \ilMyObservationsTableGUI($this, $this->plugin);
+		$gui = new \ilMyObservationsTableGUI($this, $this->plugin, $this->mode);
 
 		$fs = $this->myAssessmentsFilter();
 		$df = new \CaT\Filter\DisplayFilter(new \CaT\Filter\FilterGUIFactory(), new \CaT\Filter\TypeFactory());
-		$ff = new catFilterFlatViewGUI($this, $fs, $df, $this->mode, "performMyAssFilter");
+		$ff = new catFilterFlatViewGUI($this, $fs, $df, "performMyAssFilter");
 
 		$gui->setFilter($ff);
 		$gui->setFilterVals($this->filter_settings);
