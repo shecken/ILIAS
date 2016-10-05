@@ -16,6 +16,10 @@ class WBTLocator {
 	 * Get an assiciative array of question ids (like 1.2.3.4.5)
 	 * to the corresponding link to open the corresponding wbt at the
 	 * right spot.
+	 *
+	 * @param	int	$slm_id
+	 * @param	string	$type
+	 * @return	string|int[][string]
 	 */
 	public function getRedirectLinkParametersById($slm_id, $type) {
 		switch($type) {
@@ -28,6 +32,13 @@ class WBTLocator {
 		}
 	}
 
+	/**
+	 * Get all parameters necessary to redirect to a certain treenode of slm
+	 * associated with $ref_id and having type $type and store to db.
+	 *
+	 * @param	int	$slm_id
+	 * @param	string	$type
+	 */
 	public function extractManifestInfosByRefIdToDb($ref_id, $type) {
 		$link_pars = $this->getRedirectLinkParametersById($this->getSlmIdByRefId($ref_id),$type);
 		foreach ($link_pars as $question_ref => $wbt_item) {
@@ -110,6 +121,12 @@ class WBTLocator {
 						'question_ref' =>	array('text', $question_ref)));
 	}
 
+	/**
+	 * Find out link params beonging to $question_ref
+	 *
+	 * @param	string	$question_ref
+	 * @return	string[string]
+	 */
 	public function getRedirectParameterForQuestionRef($question_ref) {
 		$q = 'SELECT ref_id, wbt_item FROM viwis_refs WHERE question_ref = '.$this->db->quote($question_ref ,'text');
 		return $this->db->fetchAssoc($this->db->query($q));
