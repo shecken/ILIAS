@@ -15,7 +15,7 @@ class WBTLocator {
 	/**
 	 * Get an assiciative array of question ids (like 1.2.3.4.5)
 	 * to the corresponding link to open the corresponding wbt at the
-	 * right spot.
+	 * right spot. Slm = scorm learning module, if im not mistaking.
 	 *
 	 * @param	int	$slm_id
 	 * @param	string	$type
@@ -36,7 +36,7 @@ class WBTLocator {
 	 * Get all parameters necessary to redirect to a certain treenode of slm
 	 * associated with $ref_id and having type $type and store to db.
 	 *
-	 * @param	int	$slm_id
+	 * @param	int	$ref_id
 	 * @param	string	$type
 	 */
 	public function extractManifestInfosByRefIdToDb($ref_id, $type) {
