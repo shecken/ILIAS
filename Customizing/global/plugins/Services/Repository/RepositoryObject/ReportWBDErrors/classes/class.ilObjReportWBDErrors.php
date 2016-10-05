@@ -9,12 +9,14 @@ set_time_limit(0);
 class ilObjReportWBDErrors extends ilObjReportBase {
 	protected $relevant_parameters = array();
 	protected $gCtrl;
+	public $filter_settings;
 
 	public function __construct($ref_id = 0) {
 		parent::__construct($ref_id);
 		global $ilCtrl,$lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gLng = $lng;
+		$this->filter_settings = null;
 	}
 
 	public function initType() {
@@ -35,9 +37,9 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 	}
 
 	protected function buildOrder($order) {
-		$order 	->mapping("course_id", "err.crs_id")
-				->mapping("resolve", "err.ts")
-				->defaultOrder("ts", "DESC");
+		// $order 	->mapping("course_id", "err.crs_id")
+		// 		->mapping("resolve", "err.ts")
+		// 		->defaultOrder("ts", "DESC");
 		return $order;
 	}
 
@@ -59,30 +61,6 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 	}
 
 	protected function buildQuery($query) {
-		$query	->distinct()
-				->select("err.id")
-				->select("err.usr_id")
-				->select("err.crs_id")
-				->select("err.internal")
-				->select("err.reason")
-				->select("err.reason_full")
-				->select("err.ts")
-				->select("err.action")
-				->select("ud.firstname")
-				->select("ud.lastname")
-				->select("crs.title")
-				->select("usrcrs.begin_date")
-				->select("usrcrs.end_date")
-				->from("wbd_errors err")
-				->left_join("hist_user usr")
-					->on("err.usr_id = usr.user_id AND usr.hist_historic = 0")
-				->left_join("hist_course crs")
-					->on("err.crs_id = crs.crs_id AND crs.hist_historic = 0")
-				->left_join("hist_usercoursestatus usrcrs")
-					->on("err.usr_id = usrcrs.usr_id AND err.crs_id = usrcrs.crs_id AND usrcrs.hist_historic = 0")
-				->left_join("usr_data ud")
-					->on("err.usr_id = ud.usr_id")
-				->compile();
 		return $query;
 	}
 
@@ -111,31 +89,31 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 						$f->multiselect
 							( $txt("reason")
 							, ""
-							, array(1=>"Intern", 0=>"WBD Fehler")
-						)->map(function($error_type) {
-									return $error_type;
-								}
-								,$tf->int()
-								)
+							, $this->getFilterValues('reason', 'wbd_errors')
+						)->map(function($id_s) {return array_values($id_s);}
+						,$tf->lst($tf->string()))
 					,
 					$f->multiselect
 						( $txt("action")
 						, ""
-						, array(1=>"Intern", 0=>"WBD Fehler")
-					)->map(function($error_type) {
-								return $error_type;}
-						,$tf->int()
-						)
+						, $this->getFilterValues('action', 'wbd_errors')
+					)->map(function($id_s) {return $id_s;}
+						,$tf->lst($tf->string()))
 					,
 					$f->multiselect
-						( $txt("internal_error")
+						( $txt("error_type")
 						, ""
 						, array(1=>"Intern", 0=>"WBD Fehler")
-					)->map(function($error_type) {
-								return $error_type;}
-						,$tf->int()
-						)
-					)
+					)->map(function($id_s) {return $id_s;}
+						,$tf->lst($tf->int()))
+					)->map(function($reason,$action,$error_type) {
+						return array( "reason" => $reason
+							, "action" => $action
+							, "error_type" => $error_type
+							);}
+						, $tf->dict(array("reason" => $tf->lst($tf->string())
+							,"action" => $tf->lst($tf->string())
+							,"error_type" => $tf->lst($tf->int()))))
 				);
 	}
 
@@ -144,9 +122,41 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		 *	The following is not nice. I'll have to think of a better way to postprocess data from database, than the static transformResultRow.
 		 *	It probably would suffice simply to make is nonstatic...
 		 */
-		$data = parent::fetchData($callback);
-		$this->gCtrl->setParameterByClass("ilObjReportWBDErrorsGUI",$this->filter->getGETName(),$this->filter->encodeSearchParamsForGET());
-		foreach ($data as &$rec) {
+		$db = $this->gIldb;
+		$query = "SELECT DISTINCT err.id, err.usr_id, err.crs_id, err.internal, err.reason, err.reason_full, err.ts, err.action, usr.firstname, usr.lastname\n"
+				.", crs.title, usrcrs.begin_date, usrcrs.end_date\n"
+				." FROM wbd_errors err\n"
+				." LEFT JOIN hist_user usr ON err.usr_id = usr.user_id\n"
+				."     AND usr.hist_historic = 0\n"
+				." LEFT JOIN hist_course crs ON err.crs_id = crs.crs_id\n"
+				."    AND crs.hist_historic = 0\n"
+				." LEFT JOIN hist_usercoursestatus usrcrs ON err.usr_id = usrcrs.usr_id\n"
+				."    AND err.crs_id = usrcrs.crs_id\n"
+				."    AND usrcrs.hist_historic = 0\n"
+				." LEFT JOIN usr_data ud ON err.usr_id = ud.usr_id\n"
+				." WHERE err.resolved = 0";
+
+		$filter = $this->filter();
+
+		if($this->filter_settings) {
+			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+
+			if(!empty($settings[0]["reason"])) {
+				$query .= "    AND ".$db->in("err.reason", $settings[0]["reason"], false, "text");
+			}
+
+			if(!empty($settings[0]["action"])) {
+				$query .= "    AND ".$db->in("err.action", $settings[0]["action"], false, "text");
+			}
+
+			if(!empty($settings[0]["error_type"])) {
+				$query .= "    AND ".$db->in("err.internal", $settings[0]["error_type"], false, "text");
+			}
+		}
+
+		$res = $db->query($query);
+		$data = array();
+		while($rec = $db->fetchAssoc($res)) {
 			$link_change_usr = $this->gCtrl->getLinkTargetByClass(
 				array("iladministrationgui", "ilobjusergui"), "edit")
 				.'&obj_id='.$rec['usr_id']
@@ -181,8 +191,27 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 				$rec["reason_full"] = $this->gLng->txt($rec["reason_full"]);
 			}
 
+			if($rec["internal"] === "1") {
+				$rec["internal"] = "Intern";
+			} else if ($rec["internal"] === "0") {
+				$rec["internal"] = "WBD Fehler";
+			}
+
+			$data[] = $rec;
 		}
-		$this->gCtrl->setParameterByClass("ilObjReportWBDErrorsGUI",$this->filter->getGETName(),null);
+
 		return $data;
+	}
+
+	protected function getFilterValues($column, $table) {
+		$ret = array();
+		$query = "SELECT DISTINCT ".$column." FROM ".$table."";
+
+		$res = $this->gIldb->query($query);
+		while($row = $this->gIldb->fetchAssoc($res)) {
+			$ret[$row[$column]] = $row[$column];
+		}
+
+		return $ret;
 	}
 }

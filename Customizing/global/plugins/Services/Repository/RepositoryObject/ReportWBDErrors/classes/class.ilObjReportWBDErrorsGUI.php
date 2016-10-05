@@ -9,6 +9,8 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * @ilCtrl_Calls ilObjReportWBDErrorsGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportWBDErrorsGUI extends ilObjReportBaseGUI {
+	const FILTER_SESSION_VAR = "wbd_error_report";
+
 	public function getType() {
 		return 'xwbe';
 	}
@@ -19,10 +21,15 @@ class ilObjReportWBDErrorsGUI extends ilObjReportBaseGUI {
 		return $a_title;
 	}
 
+	public function afterConstructor() {
+		parent::afterConstructor();
+		$this->filter_settings = false;
+	}
+
 	public function performCustomCommand($cmd) {
 		switch ($cmd) {
 			case "saveFilter":
-				return $this->saveFilter();
+				$this->saveFilter();
 				break;
 			case 'resolve':
 				$err_id = $_GET['err_id'];
@@ -40,45 +47,69 @@ class ilObjReportWBDErrorsGUI extends ilObjReportBaseGUI {
 	}
 
 	protected function render() {
-		//$fs = $this->loadFilterSettings();
-		//$this->gTpl->setTitle(null);
-
-		//$res = ($this->title !== null ? $this->title->render() : "");
-
-		//if ($fs === null) {
-			$res .= $this->renderFilter();
+		$res = $this->renderFilter()."<br />";
+		$res .= parent::renderTable();
 
 		return $res;
 	}
 
 	protected function renderFilter() {
+		$this->loadFilterSettings();
 		$filter = $this->object->filter();
 		$display = new \CaT\Filter\DisplayFilter
 						( new \CaT\Filter\FilterGUIFactory
-						, new \Cat\Filter\TypeFactory
+						, new \CaT\Filter\TypeFactory
 						);
+
+		if($this->filter_settings) {
+			$this->object->filter_settings = $display->buildFilterValues($filter, $this->filter_settings);
+		}
 
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
 		$filter_flat_view = new catFilterFlatViewGUI($this, $filter, $display, "saveFilter");
 
-		return $filter_flat_view->render();
+		return $filter_flat_view->render($this->filter_settings);
 	}
 
 	protected function saveFilter() {
-		var_dump($_POST);
-		// $settings = $display->buildFilterValues($filter, $post["filter"]);
-		// $this->saveFilterSettings($settings);
-		// $this->gCtrl->redirect($this, "showContent");
+		$this->flushFilterSettings();
+		if(isset($_POST["filter"])) {
+			$filter = $this->object->filter();
+			$display = new \CaT\Filter\DisplayFilter
+						( new \CaT\Filter\FilterGUIFactory
+						, new \CaT\Filter\TypeFactory
+						);
+						var_dump($_POST["filter"]);
+			$this->saveFilterSettings($_POST["filter"]);
+		}
 
-		return $this->render();
+		$this->gCtrl->redirect($this, "showContent");
 	}
 
 	protected function loadFilterSettings() {
+		if ($this->filter_settings !== false) {
+			return $this->filter_settings;
+		}
 
+		$tmp = ilSession::get(self::FILTER_SESSION_VAR);
+		if ($tmp !== null) {
+			$this->filter_settings =  unserialize($tmp);
+		}
+		else {
+			$this->filter_settings = null;
+		}
+
+		return $this->filter_settings;
 	}
 
-	protected function saveFilterSettings() {
+	protected function saveFilterSettings($settings) {
+		ilSession::set(self::FILTER_SESSION_VAR, serialize($settings));
+		$this->filter_settings = $settings;
+	}
 
+	public function flushFilterSettings() {
+		ilSession::clear(self::FILTER_SESSION_VAR);
+		$this->filter_settings = null;
 	}
 
 	protected function getPOST() {
