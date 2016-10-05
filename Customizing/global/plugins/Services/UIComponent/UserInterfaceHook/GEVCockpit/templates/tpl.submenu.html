@@ -1,11 +1,15 @@
 <div class="catSubMenuOuter">
-	<div class="catSubMenuSection">
-		<a class="catScrollLeft bx-prev">Prev</a>
-		<ul class="catSubMenu">
-			<!-- BEGIN item -->
-			 <li id="catSubMenuItem_{ID}" class="catSubMenuItem <!-- BEGIN active -->catSubMenuActive<!-- END active -->"><a href="{LINK}">{LABEL}</a></li>
-			<!-- END item -->
-		</ul>
-		<div class="catScrollRight ilClearFloat bx-next">Next</div>
-	</div>
+  <div class="catSubMenuSection">
+	<div class="bx-prev"></div>
+	<div class="bx-next"></div>
+	<ul class="catSubMenu bxslider">
+	  <!-- BEGIN item -->
+	  <a href="{LINK}" class="bx-a"><li id="catSubMenuItem_{ID}" class="catSubMenuItem <!-- BEGIN active -->catSubMenuActive<!-- END active -->">{LABEL}</li></a>
+	  <!-- END item -->
+	</ul>
+  </div>
 </div>
+<!-- BEGIN js -->
+{ACTIVE_SLIDE}
+{JS}
+<!-- END js -->

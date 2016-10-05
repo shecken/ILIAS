@@ -28,7 +28,6 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		}
 
 		$this->active = $this->getActiveItem();
-		echo ($this->active);
 		$this->items = $this->getItems();
 
 		$current_skin = ilStyleDefinition::getCurrentSkin();
@@ -125,12 +124,6 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 
 		$items = array();
 
-		$items["bookin"]
-			= array($this->gLng->txt("gev_bookings"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
-
-		$items["booking"]
-			= array($this->gLng->txt("gev_bookings"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
-
 		$items["bookings"]
 			= array($this->gLng->txt("gev_bookings"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
 
@@ -168,7 +161,6 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		// 			= array($this->gLng->txt("gev_all_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toAllAssessments");
 		// 	}
 		// }
-
 		return $items;
 	}
 
@@ -210,10 +202,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		$tpl->addCss("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.css");
 		$js_tpl = new ilTemplate("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/tpl.submenu_slider.js.html", false, false);
 		$tpl->setCurrentBlock("js");
-
-		if($this->getActiveItem() == "trainer_ops" || $this->getActiveItem() == "training_admin") {
-		  $tpl->setVariable("MOVED", "<script>var moved = true;</script>");
-		}
+		$tpl->setVariable("ACTIVE_SLIDE", "<script>var active_slide = " . $this->getCurrentSlide() . ";</script>");
 		$tpl->setVariable("JS", $js_tpl->get());
 		$tpl->parseCurrentBlock();
 		$this->addJS();
@@ -266,5 +255,17 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 	protected function getSkinFolder($current_skin) {
 		assert('is_string($current_skin)');
 		return "./Customizing/global/skin/$current_skin";
+	}
+
+	protected function getCurrentSlide() {
+	  $items = $this->getItems();
+	  $i = 1;
+	  foreach ($items as $key => $value) {
+		if($key == $this->getActiveItem()) {
+		  return $i;
+		}
+		$i++;
+	  }
+	  return null;
 	}
 }
