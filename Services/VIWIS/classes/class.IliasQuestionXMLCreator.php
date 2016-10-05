@@ -2,7 +2,7 @@
 require_once 'Services/VIWIS/interfaces/interface.QuestionXMLCreator.php';
 require_once 'Services/VIWIS/exception/class.QuestionException.php';
 require_once 'Services/VIWIS/classes/class.QuestionTypes.php';
-require_once 'Services/VIWIS/classes/class.genericFeedback.php';
+require_once 'Services/VIWIS/classes/class.GenericFeedback.php';
 require_once 'Modules/TestQuestionPool/classes/class.assSingleChoice.php';
 require_once 'Modules/TestQuestionPool/classes/class.assMultipleChoice.php';
 require_once 'Modules/TestQuestionPool/classes/feedback/class.ilAssSingleChoiceFeedback.php';
