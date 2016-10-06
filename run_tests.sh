@@ -1,3 +1,3 @@
 #!/bin/sh
 
---bootstrap libs/composer/vendor/autoload.php $@ CaT/test
+phpunit --bootstrap libs/composer/vendor/autoload.php $@ CaT/test
