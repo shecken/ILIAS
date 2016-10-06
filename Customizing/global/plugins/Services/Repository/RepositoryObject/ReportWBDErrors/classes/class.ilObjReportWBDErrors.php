@@ -40,9 +40,6 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 	}
 
 	protected function buildOrder($order) {
-		// $order 	->mapping("course_id", "err.crs_id")
-		// 		->mapping("resolve", "err.ts")
-		// 		->defaultOrder("ts", "DESC");
 		return $order;
 	}
 
