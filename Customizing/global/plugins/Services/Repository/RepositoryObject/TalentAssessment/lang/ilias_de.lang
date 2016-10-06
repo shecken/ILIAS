@@ -95,3 +95,6 @@ judgement_text_info#:#Siehe sehen den Standardtext passend zum aktuellen Ergebni
 show_pdf#:#Ergebnisbericht
 pdf_to_long#:#Bitte kürzen Sie Ihren Text für den Ergebnisbericht. Die maximale Seitenzahl beträgt 1.
 open#:#Beobachtungen bearbeiten
+no_observator_cant_start#:#Die Beobachtungen konnten nicht gestartet werden, da Sie keinen Beobachter hinzugefügt haben.
+no_observator_no_overview#:#Es sind keine Beobachter hinzugefügt. Deswegen ist keine Übersicht erhältlich.
+no_observator_no_cumulative#:#Es sind keine Beobachter hinzugefügt. Deswegen ist keine Kumulierte Ansicht erhältlich.

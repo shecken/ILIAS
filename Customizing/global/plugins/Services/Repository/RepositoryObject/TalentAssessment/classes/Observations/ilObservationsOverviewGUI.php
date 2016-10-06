@@ -17,16 +17,21 @@ class ilObservationsOverviewGUI {
 		$actions = $this->parent_obj->getActions();
 
 		$observator = $actions->getAssignedUser($obj_id, $actions->getAssignedUser($obj_id));
-		$obs = $actions->getObservationOverviewData($obj_id, $observator);
-		$html = "";
-		$spacer = new \catHSpacerGUI();
 
-		foreach ($obs as $key => $ob) {
-			$gui = new ilObservationsOverviewTableGUI($this->parent_obj, $ob, $observator);
-			$html .= $gui->getHtml();
-			$html .= $spacer->render();
+		if(!empty($observator)) {
+			$obs = $actions->getObservationOverviewData($obj_id, $observator);
+			$html = "";
+			$spacer = new \catHSpacerGUI();
+
+			foreach ($obs as $key => $ob) {
+				$gui = new ilObservationsOverviewTableGUI($this->parent_obj, $ob, $observator);
+				$html .= $gui->getHtml();
+				$html .= $spacer->render();
+			}
+
+			return $html;
+		} else {
+			\ilUtil::sendInfo($this->parent_obj->txt("no_observator_no_overview"));
 		}
-
-		return $html;
 	}
 }

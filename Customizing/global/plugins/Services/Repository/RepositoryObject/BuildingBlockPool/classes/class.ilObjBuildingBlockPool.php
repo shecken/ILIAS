@@ -73,7 +73,7 @@ class ilObjBuildingBlockPool extends ilObjectPlugin {
 	}
 
 	public function setOnline($online) {
-		assert(is_bool($online));
+		//assert(is_bool($online));
 
 		$this->online = $online;
 	}

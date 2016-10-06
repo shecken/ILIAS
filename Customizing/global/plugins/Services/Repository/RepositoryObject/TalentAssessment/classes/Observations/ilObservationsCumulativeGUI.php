@@ -18,12 +18,17 @@ class ilObservationsCumulativeGUI {
 		$obj_id = $this->parent_obj->getObjId();
 		$actions = $this->parent_obj->getActions();
 
-		$observator = $actions->getAssignedUser($obj_id, $actions->getAssignedUser($obj_id));
+		$observator = $actions->getAssignedUser($obj_id);
 		$obs = $actions->getObservationsCumulative($obj_id);
 		$req_res = $actions->getRequestresultCumulative(array_keys($obs));
 		$col_span = count($observator);
 
 		$tpl = new \ilTemplate("tpl.talent_assessment_observations_cumulative.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment");
+
+		if(empty($observator)) {
+			\ilUtil::sendInfo($this->parent_obj->txt("no_observator_no_cumulative", flase));
+			return "";
+		}
 
 		foreach($obs as $key => $title) {
 			$tpl->setCurrentBlock("observations");
