@@ -24,3 +24,12 @@ require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/Ca
 $settings_db = new \CaT\Plugins\CareerGoal\Observations\ilDB($ilDB, $ilUser);
 $settings_db->install();
 ?>
+
+<#4>
+<?php
+global $ilUser;
+
+require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/CareerGoal/classes/Settings/ilDB.php");
+$settings_db = new \CaT\Plugins\CareerGoal\Settings\ilDB($ilDB, $ilUser);
+$settings_db->renameColumns();
+?>

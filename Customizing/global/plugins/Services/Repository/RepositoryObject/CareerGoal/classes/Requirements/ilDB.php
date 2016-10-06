@@ -114,15 +114,13 @@ class ilDB implements DB {
 			$new_obj_id = $this->getObjId();
 			$position = $this->getNextPosition($target_id);
 			$ret[$requirement->getObjId()] = $new_obj_id;
-			$new_requirement = $requirement->withObjectId((int)$new_obj_id)
-										   ->withCareerGoalId((int)$target_id);
 
 			$values = array
-					( "obj_id" => array("integer", $new_requirement->getObjId())
-					, "career_goal_id" => array("integer", $new_requirement->getCareerGoalId())
-					, "title" => array("text", $new_requirement->getTitle())
-					, "description" => array("text", $new_requirement->getDescription())
-					, "position" => array("integer", $new_requirement->getPosition())
+					( "obj_id" => array("integer", (int)$new_obj_id)
+					, "career_goal_id" => array("integer", (int)$target_id)
+					, "title" => array("text", $requirement->getTitle())
+					, "description" => array("text", $requirement->getDescription())
+					, "position" => array("integer", $requirement->getPosition())
 					, "last_change" => array("text", date("Y-m-d H:i:s"))
 					, "last_change_user" => array("integer", $this->user->getId())
 					);
@@ -140,7 +138,7 @@ class ilDB implements DB {
 		$res = $this->getDB()->query($select);
 
 		if($this->getDB()->numRows($res) == 0) {
-			return array();
+			throw new \InvalidArgumentException("Invalid id '$obj_id' for Requirement-object");
 		}
 
 		while($row = $this->getDB()->fetchAssoc($res)) {
@@ -194,7 +192,7 @@ class ilDB implements DB {
 			$requirement = new Requirement((int)$row["obj_id"]
 								 , (int)$career_goal_id
 								 , $row["title"]
-								 , $row["description"]
+								 , $row["description"] ? $row["description"] : ""
 								 , (int)$row["position"]
 							);
 

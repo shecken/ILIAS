@@ -1,6 +1,7 @@
 <?php
 require_once("Services/GEV/WBD/classes/class.gevWBDDataCollector.php");
 require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
+require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 
 class _gevWBDError extends gevWBDError {
 	protected function findReason() {
@@ -51,6 +52,38 @@ class _gevWBDDataCollector extends gevWBDDataCollector {
 	public function setDB($db) {
 		$this->gDB = $db;
 	}
+
+	protected function createHistUserCourseRow($case_id, $data) {
+		$this->case_id = $case_id;
+		$this->data = $data;
+	}
+
+	protected function getWBDInstance($user_id) {
+		$this->curr_wbd = mock_gevWBD::getInstanceByObjOrId($user_id);
+		return $this->curr_wbd;
+	}
+
+	public function getCurrWBD() {
+		return $this->curr_wbd;
+	}
+}
+
+class mock_gevWBD extends gevWBD {
+	protected function __construct($a_user_id) {
+		$this->usr_id = $a_user_id;
+	}
+
+	static public function getInstanceByObjOrId($a_user) {
+		return new self($a_user);
+	}
+
+	public function getCrsIdByRowId($row_id) {
+		return $this->crs_id;
+	}
+
+	public function setReturnCrsId($crs_id) {
+		$this->crs_id = $crs_id;
+	}
 }
 
 class mock_db {
@@ -79,26 +112,32 @@ class mock_db {
 	public function execute($sql, $data) {
 		$this->called_executed++;
 	}
+
+	public function numRows($res) {
+		return count($res);
+	}
 }
 
 class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {
+		error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
 		PHPUnit_Framework_Error_Deprecated::$enabled = FALSE;
 
 		include_once("./Services/PHPUnit/classes/class.ilUnitUtil.php");
 		ilUnitUtil::performInitialisation();
-		$this->data_collector = new _gevWBDDataCollector("/Library/WebServer/Documents/44generali2/");
+
+		$this->data_collector = new _gevWBDDataCollector("/Library/WebServer/Documents/cat_ilias_kunden/44generali/");
 	}
 
 	public function test_isWBDDataCollector() {
-		$this->assertInstanceOf("gevWBDDataCollector",$this->data_collector);
+		$this->assertInstanceOf("gevWBDDataCollector", $this->data_collector);
 	}
 
 	public function test_createNewUserList() {
 		$data = $this->getNewUserData();
-		
+
 		$db = new mock_db($data);
 
 		$this->data_collector->testable_createNewUserList($db);
@@ -110,7 +149,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 
 	public function test_createNewUserListError() {
 		$data = $this->getNewUserDataError();
-		
+
 		$db = new mock_db($data);
 
 		$this->data_collector->testable_createNewUserList($db);
@@ -122,7 +161,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 
 	public function test_createUpdateUserList() {
 		$data = $this->getUpdateUserData();
-		
+
 		$db = new mock_db($data);
 
 		$this->data_collector->testable_createUpdateUserList($db);
@@ -134,7 +173,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 
 	public function test_createUpdateUserListError() {
 		$data = $this->getUpdateUserDataError();
-		
+
 		$db = new mock_db($data);
 
 		$this->data_collector->testable_createUpdateUserList($db);
@@ -147,7 +186,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 	public function test_createReleaseUserList() {
 		$data = $this->getRealeseUserData();
 		$this->data_collector->setPreliminaryErrors();
-		
+
 		$db = new mock_db($data);
 
 		$this->data_collector->testable_createReleaseUserList($db);
@@ -160,7 +199,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 	public function test_createReleaseUserListError() {
 		$data = $this->getRealeseUserDataError();
 		$this->data_collector->setPreliminaryErrors(array(new _gevWBDError("mandatory field missing: gender","user", "NEW_USER", 1, 2, 3)));
-		
+
 		$db = new mock_db($data);
 
 		$this->data_collector->testable_createReleaseUserList($db);
@@ -172,7 +211,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 
 	public function test_createNewEduRecordList() {
 		$data = $this->getNewEduRecordData();
-		
+
 		$db = new mock_db($data);
 
 		$this->data_collector->testable_createNewEduRecordList($db);
@@ -215,6 +254,38 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 		$this->data_collector->testable_error($error);
 
 		$this->assertEquals(1, $db->called_executed);
+	}
+
+	public function test_stornoSuccess() {
+		$row_id = 25;
+		$user_id = 21352;
+		$crs_id = 10;
+		$success = new gevWBDSuccessWPStorno(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
+												.'<soap:Body>'
+													.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
+														.'<WPStornoRueckgabewert>'
+															.'<WeiterbildungsPunkteBuchungsId>2015-145-1654</WeiterbildungsPunkteBuchungsId>'
+															.'<VermittlerId>20150728-100390-74</VermittlerId>'
+															.'<InterneVermittlerId>'.$user_id.'</InterneVermittlerId>'
+															.'<BeginnErstePeriode>2015-07-28T00:00:00+02:00</BeginnErstePeriode>'
+														.'</WPStornoRueckgabewert>'
+													.'</ns1:putResponse>'
+												.'</soap:Body>'
+											.'</soap:Envelope>'
+									),$this->row_id);
+
+		$this->data_collector->getCurrWBD()->setReturnCrsId($crs_id);
+		$this->data_collector->successStornoRecord($success);
+
+		$needed_case_id = array('usr_id' => $user_id
+							  , 'crs_id' => $crs_id);
+
+		$needed_data = array("wbd_cancelled" => true
+					, "last_wbd_report" => $this->data_collector->getCurrentDate()
+				);
+
+		$this->assertEquals($needed_case_id, $this->data_collector->case_id);
+		$this->assertEquals($needed_data, $this->data_collector->data);
 	}
 
 	protected function getNewUserData() {
