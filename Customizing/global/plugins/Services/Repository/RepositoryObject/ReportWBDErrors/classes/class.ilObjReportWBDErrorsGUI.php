@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseGUI.php';
+require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 /**
 * User Interface class for example repository object.
 * ...
@@ -32,18 +33,46 @@ class ilObjReportWBDErrorsGUI extends ilObjReportBaseGUI {
 				$this->saveFilter();
 				break;
 			case 'resolve':
-				$err_id = $_GET['err_id'];
-				require_once("Services/WBDData/classes/class.wbdErrorLog.php");
-				$errlog = new wbdErrorLog();
-				$errlog->resolveWBDErrorById($err_id);
-				$this->object->setFilterAction("showContent");
-				$this->object->prepareReport();
-				$this->enableRelevantParametersCtrl();
+			case 'feedback':
+			case 'unableResolve':
+				$this->$cmd();
 				$this->gCtrl->redirect($this, "showContent");
 				break;
 			default:
 				return parent::performCustomCommand($cmd);
 		}
+	}
+
+	protected function resolve() {
+		$error_ids = $this->decodeErrorIds($_GET['err_ids']);
+
+		foreach($error_ids as $error_id) {
+			gevWBD::resolveWBDErrorById($error_id);
+			gevWBD::setWBDErrorStatusById($error_id, gevWBD::STATUS_RESOLVED);
+		}
+	}
+
+	protected function feedback() {
+		$error_ids = $this->decodeErrorIds($_GET['err_ids']);
+
+		foreach($error_ids as $error_id) {
+			gevWBD::setWBDErrorStatusById($error_id, gevWBD::STATUS_FEEDBACK);
+		}
+	}
+
+	protected function unableResolve() {
+		$error_ids = $this->decodeErrorIds($_GET['err_ids']);
+
+		foreach($error_ids as $error_id) {
+			gevWBD::setWBDErrorStatusById($error_id, gevWBD::STATUS_UNABLE_RESOLVE);
+		}
+	}
+
+	protected function decodeErrorIds($error_ids) {
+		$error_ids = base64_decode($error_ids);
+		$error_ids = explode(",", $error_ids);
+
+		return $error_ids;
 	}
 
 	protected function render() {

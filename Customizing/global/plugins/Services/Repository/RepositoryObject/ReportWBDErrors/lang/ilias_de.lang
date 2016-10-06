@@ -35,3 +35,11 @@ reason#:#Grund
 action#:#Aktion
 error_type#:#Fehlertyp
 error_dateperiod#:#Zeitraum des Fehlers
+actions#:#Aktionen
+resolve#:#gelöst
+feedback#:#Nachfrage
+unable_resolve#:#kann nicht gelöst werden
+status#:#Status
+not_resolved#:#nicht gelöst
+internal#:#Intern
+wbd#:#WBD
