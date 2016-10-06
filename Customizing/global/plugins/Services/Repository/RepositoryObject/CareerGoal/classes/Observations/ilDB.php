@@ -158,25 +158,21 @@ class ilDB implements DB {
 
 		foreach($cur_observations as $key => $observation) {
 			$new_obj_id = $this->getObjId();
-			$position = $this->getNextPosition($target_id);
+
 			$new_requirements = $this->updateRequirementIds($observation->getRequirements(), $ids);
 
-			$new_observation = $observation->withObjectId((int)$new_obj_id)
-										   ->withCareerGoalId((int)$target_id)
-										   ->withRequirements($new_requirements);
-
 			$values = array
-				( "obj_id" => array("integer", $new_observation->getObjId())
-				, "career_goal_id" => array("integer", $new_observation->getCareerGoalId())
-				, "title" => array("text", $new_observation->getTitle())
-				, "description" => array("text", $new_observation->getDescription())
-				, "position" => array("integer", $new_observation->getPosition())
+				( "obj_id" => array("integer", (int)$new_obj_id)
+				, "career_goal_id" => array("integer", (int)$target_id)
+				, "title" => array("text", $observation->getTitle())
+				, "description" => array("text", $observation->getDescription())
+				, "position" => array("integer", $observation->getPosition())
 				, "last_change" => array("text", date("Y-m-d H:i:s"))
 				, "last_change_user" => array("integer", $this->user->getId())
 				);
 			$this->getDB()->insert(self::TABLE_NAME, $values);
 
-			$this->addObservationRequirement((int)$new_obj_id, $new_observation->getRequirements());
+			$this->addObservationRequirement((int)$new_obj_id, $new_requirements);
 		}
 	}
 
@@ -205,6 +201,7 @@ class ilDB implements DB {
 		$requirements = array();
 		$obj_id = null;
 		$ret = array();
+
 		while($row = $this->getDB()->fetchAssoc($res)) {
 			if($obj_id !== null && $obj_id !== (int)$row["obj_id"]) {
 				$ret[] = new Observation((int)$obj_id
@@ -219,6 +216,8 @@ class ilDB implements DB {
 				$requirements = array();
 			}
 
+			/* There are a more then one row for the career_goal_possible.
+			 * This check is to avoid several settings of values whos everytime the same*/
 			if($career_goal_id === null) {
 				$career_goal_id = (int)$row["career_goal_id"];
 				$title = $row["title"];
