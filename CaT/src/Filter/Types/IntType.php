@@ -19,6 +19,5 @@ class IntType extends UnstructuredType {
 	 */
 	public function contains($value) {
 		return is_numeric($value);
-		return is_int($value);
 	}
 }
