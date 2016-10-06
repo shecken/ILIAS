@@ -200,10 +200,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		}
 
 		$tpl->addCss("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.css");
-		$js_tpl = new ilTemplate("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/tpl.submenu_slider.js.html", false, false);
 		$tpl->setCurrentBlock("js");
 		$tpl->setVariable("ACTIVE_SLIDE", "<script>var active_slide = " . $this->getCurrentSlide() . ";</script>");
-		$tpl->setVariable("JS", $js_tpl->get());
 		$tpl->parseCurrentBlock();
 		$this->addJS();
 		return $tpl->get();
@@ -213,9 +211,6 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		require_once("./Services/jQuery/classes/class.iljQueryUtil.php");
 		iljQueryUtil::initjQuery();
 		global $tpl;
-
-		$tpl->addJavaScript("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/plugins/jquery.easing.1.3.js");
-		$tpl->addJavaScript("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/plugins/jquery.fitvids.js");
 		$tpl->addJavaScript("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.js");
 	}
 

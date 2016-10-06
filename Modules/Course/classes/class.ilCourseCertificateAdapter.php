@@ -45,6 +45,7 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		global $lng;
 		$this->object =& $object;
 		$lng->loadLanguageModule('certificate');
+		echo CLIENT_WEB_DIR;exit;
 	}
 
 	/**

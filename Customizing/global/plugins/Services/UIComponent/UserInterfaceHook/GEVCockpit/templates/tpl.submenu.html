@@ -1,10 +1,10 @@
 <div class="catSubMenuOuter">
   <div class="catSubMenuSection">
-	<div class="bx-prev"></div>
-	<div class="bx-next"></div>
+	<div class="catScrollLeft"></div>
+	<div class="catScrollRight"></div>
 	<ul class="catSubMenu bxslider">
 	  <!-- BEGIN item -->
-	  <a href="{LINK}" class="bx-a"><li id="catSubMenuItem_{ID}" class="catSubMenuItem <!-- BEGIN active -->catSubMenuActive<!-- END active -->">{LABEL}</li></a>
+	  <a href="{LINK}" class="catSubMenuLink"><li id="catSubMenuItem_{ID}" class="catSubMenuItem <!-- BEGIN active -->catSubMenuActive<!-- END active -->">{LABEL}</li></a>
 	  <!-- END item -->
 	</ul>
   </div>
@@ -13,3 +13,113 @@
 {ACTIVE_SLIDE}
 {JS}
 <!-- END js -->
+
+<!-- BEGINN jscript -->
+<script>
+$(function(){
+  var slider;
+  slider = $(".bxslider").bxSlider({
+	minSlides: 3,
+	maxSlides: 7,
+	slideWidth: 170,
+	slideMargin: 1,
+	infiniteLoop: false,
+	speed: 500,
+	controls: true,
+	nextText: '',
+	prevText: '',
+	nextSelector: ".catScrollRight",
+	prevSelector: ".catScrollLeft",
+	onSliderLoad: function() {
+	  window.setTimeout(function() {
+		slider.goToSlide(selectSlide());
+		if($("a.bx-next").hasClass("disabled")) {
+		  $("div.catScrollRight").addClass("disabled");
+		}
+		if($("a.bx-prev").hasClass("disabled")) {
+			$("div.catScrollLeft").addClass("disabled");
+		  }
+	  },0);
+	},
+	onSlideNext: function() {
+	  window.setTimeout(function() {
+		if($("a.bx-next").hasClass("disabled")) {
+			$("div.catScrollRight").addClass("disabled");
+		  }
+		if($("a.bx-prev").hasClass("disabled") == false) {
+			$("div.catScrollLeft").removeClass("disabled");
+		  }
+	  },0);
+	},
+	onSlidePrev: function() {
+	  window.setTimeout(function() {
+		if($("a.bx-next").hasClass("disabled") == false) {
+			$("div.catScrollRight").removeClass("disabled");
+		  }
+		  if($("a.bx-prev").hasClass("disabled")) {
+			$("div.catScrollLeft").addClass("disabled");
+		  }
+	  },0);
+	}
+  });
+
+  adjustWrapperWidth();
+  adjustSlideWidth();
+  addArrows();
+  centerArrowsVertical();
+});
+
+function selectSlide() {
+  if(getNumSlides() >= 6) {
+	return Math.floor(active_slide / 6);
+  } else {
+	return 0;
+  }
+}
+
+function adjustWrapperWidth() {
+  var wrapper_width = parseInt($(".catSubMenuSection").css("width"));
+  var btn_width = parseInt($(".catScrollLeft").css("width"));
+
+  $(".bx-wrapper").css("max-width", wrapper_width);
+  if(getNumSlides() <= 6) {
+	$(".bx-wrapper").css("width", wrapper_width);
+  } else {
+	$(".bx-wrapper").css("width", wrapper_width - 2*btn_width);
+  }
+}
+
+function adjustSlideWidth() {
+  $(".catSubMenuLink").css("width", getCompSlideWidth());
+}
+
+function getCompSlideWidth() {
+  var wrap = parseInt($(".catSubMenuSection").css("width"));
+  var nav = parseInt($(".catScrollLeft").css("width"));
+  var numSlides = getNumSlides();
+  if(numSlides <= 6) {
+	return (wrap / numSlides);
+  } else {
+	return (wrap - 2 * nav) / 6;
+  }
+}
+
+function getNumSlides() {
+  var i = 0;
+  $(".catSubMenuLink").each(function() {
+	i++;
+  });
+  return i;
+}
+
+function addArrows() {
+  $("a.bx-prev").html("<img src=./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/images/ChevronLeft.png class=nav>");
+  $("a.bx-next").html("<img src=./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/images/ChevronRight.png class=nav>");
+}
+
+function centerArrowsVertical() {
+  $(".nav").css("margin-top", ((parseInt($(".catSubMenuOuter").height()) / 2) - (parseInt($(".nav").height()) / 2)));
+}
+
+</script>
+<!-- END jscript -->
