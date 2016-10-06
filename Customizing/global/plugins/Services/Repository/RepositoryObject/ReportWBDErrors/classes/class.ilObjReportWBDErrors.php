@@ -11,6 +11,9 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 	protected $gCtrl;
 	public $filter_settings;
 
+	const INTERNAL_ERROR = "Intern";
+	const WBD_ERROR = "WBD";
+
 	public function __construct($ref_id = 0) {
 		parent::__construct($ref_id);
 		global $ilCtrl,$lng;
@@ -44,7 +47,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 	}
 
 	protected function buildTable($table) {
-		$table	->column("ts", $this->plugin->txt("ts"), true)
+		$table	->column("ts", $this->plugin->txt("ts"), true, "70px")
 				->column("action", $this->plugin->txt("wbd_errors_action"), true)
 				->column("internal", $this->plugin->txt( "wbd_errors_internal"), true)
 				->column("user_id", $this->plugin->txt("usr_id"), true)
@@ -83,27 +86,38 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		$tf = new \CaT\Filter\TypeFactory();
 		$f = new \CaT\Filter\FilterFactory($pf, $tf);
 		$txt = function($id) { return $this->plugin->txt($id); };
+		$reason_options = $this->getFilterValues('reason', 'wbd_errors');
+		$action_options = $this->getFilterValues('action', 'wbd_errors');
+		$error_type_otions = $this->getFilterValues('internal', 'wbd_errors');
+
+		foreach($error_type_otions as $key => $value) {
+			if((int)$value === 1) {
+				$error_type_otions[$key] = self::INTERNAL_ERROR;
+			} else if((int)$value === 0) {
+				$error_type_otions[$key] = self::WBD_ERROR;
+			}
+		}
 
 		return $f->sequence(
 					$f->sequence(
 						$f->multiselect
 							( $txt("reason")
 							, ""
-							, $this->getFilterValues('reason', 'wbd_errors')
+							, $reason_options
 						)->map(function($id_s) {return array_values($id_s);}
 						,$tf->lst($tf->string()))
 					,
 					$f->multiselect
 						( $txt("action")
 						, ""
-						, $this->getFilterValues('action', 'wbd_errors')
+						, $action_options
 					)->map(function($id_s) {return $id_s;}
 						,$tf->lst($tf->string()))
 					,
 					$f->multiselect
 						( $txt("error_type")
 						, ""
-						, array(1=>"Intern", 0=>"WBD Fehler")
+						, $error_type_otions
 					)->map(function($id_s) {return $id_s;}
 						,$tf->lst($tf->int()))
 					)->map(function($reason,$action,$error_type) {
@@ -123,7 +137,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		 *	It probably would suffice simply to make is nonstatic...
 		 */
 		$db = $this->gIldb;
-		$query = "SELECT DISTINCT err.id, err.usr_id, err.crs_id, err.internal, err.reason, err.reason_full, err.ts, err.action, usr.firstname, usr.lastname\n"
+		$query = "SELECT err.usr_id, err.crs_id, err.internal, err.reason, GROUP_CONCAT(DISTINCT err.reason_full SEPARATOR ',') as reason_full, DATE(err.ts) as err_date, err.action, usr.firstname, usr.lastname\n"
 				.", crs.title, usrcrs.begin_date, usrcrs.end_date\n"
 				." FROM wbd_errors err\n"
 				." LEFT JOIN hist_user usr ON err.usr_id = usr.user_id\n"
@@ -153,6 +167,8 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 				$query .= "    AND ".$db->in("err.internal", $settings[0]["error_type"], false, "text");
 			}
 		}
+
+		$query .= " GROUP BY usr_id, crs_id, internal, reason, err_date, action, firstname, lastname";
 
 		$res = $db->query($query);
 		$data = array();
@@ -187,15 +203,25 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 				.$this->plugin->txt("wbd_errors_resolve")
 				.'</a>';
 
-			if($this->gLng->exists($rec["reason_full"])) {
-				$rec["reason_full"] = $this->gLng->txt($rec["reason_full"]);
+			$reasons = explode(",", $rec["reason_full"]);
+			$new_reasons = array();
+			foreach ($reasons as $key => $reason) {
+				if($this->gLng->exists($reason)) {
+					$new_reasons[] = $this->gLng->txt($reason);
+				} else {
+					$new_reasons[] = $reason;
+				}
 			}
 
-			if($rec["internal"] === "1") {
-				$rec["internal"] = "Intern";
-			} else if ($rec["internal"] === "0") {
-				$rec["internal"] = "WBD Fehler";
+			$rec["reason_full"] = implode("<br />", $new_reasons);
+
+			if((int)$rec["internal"] === 1) {
+				$rec["internal"] = self::INTERNAL_ERROR;
+			} else if ((int)$rec["internal"] === 0) {
+				$rec["internal"] = self::WBD_ERROR;
 			}
+
+			$rec["ts"] = $rec["err_date"];
 
 			$data[] = $rec;
 		}
