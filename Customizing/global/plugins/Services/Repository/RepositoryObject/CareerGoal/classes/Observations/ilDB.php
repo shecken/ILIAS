@@ -158,7 +158,6 @@ class ilDB implements DB {
 
 		foreach($cur_observations as $key => $observation) {
 			$new_obj_id = $this->getObjId();
-
 			$new_requirements = $this->updateRequirementIds($observation->getRequirements(), $ids);
 
 			$values = array
