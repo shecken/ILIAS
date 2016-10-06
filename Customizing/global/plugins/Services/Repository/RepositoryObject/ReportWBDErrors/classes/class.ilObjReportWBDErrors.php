@@ -97,7 +97,23 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 
 		return $f->sequence(
 					$f->sequence(
-						$f->multiselect
+						$f->dateperiod
+							( $txt("error_dateperiod")
+							, ""
+							)->map(function($start,$end) use ($f) {
+									$pc = $f->dateperiod_overlaps_predicate
+										( "err.ts"
+										, "err.ts"
+										);
+									return array("date_period_predicate" => $pc($start,$end)
+										,"start" => $start
+										,"end" => $end);
+									},$tf->dict(array(
+										"date_period_predicate" => $tf->cls("CaT\Filter\Predicates\Predicate")
+										,"start" => $tf->cls("DateTime")
+										,"end" => $tf->cls("DateTime")
+									)))
+					,$f->multiselect
 							( $txt("reason")
 							, ""
 							, $reason_options
@@ -117,12 +133,18 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 						, $error_type_otions
 					)->map(function($id_s) {return $id_s;}
 						,$tf->lst($tf->int()))
-					)->map(function($reason,$action,$error_type) {
-						return array( "reason" => $reason
+					)->map(function($date_period_predicate, $start, $end, $reason,$action,$error_type) {
+						return array("period_pred" => $date_period_predicate
+							, "start" => $start
+							, "end" => $end
+							, "reason" => $reason
 							, "action" => $action
 							, "error_type" => $error_type
 							);}
-						, $tf->dict(array("reason" => $tf->lst($tf->string())
+						, $tf->dict(array("period_pred" => $tf->cls("CaT\Filter\Predicates\Predicate")
+							,"start" => $tf->cls("DateTime")
+							,"end" => $tf->cls("DateTime")
+							,"reason" => $tf->lst($tf->string())
 							,"action" => $tf->lst($tf->string())
 							,"error_type" => $tf->lst($tf->int()))))
 				);
@@ -151,6 +173,9 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 
 		if($this->filter_settings) {
 			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
+			$dt_query = $to_sql->interpret($settings[0]["period_pred"]);
+			$query .= "    AND ".$dt_query;
 
 			if(!empty($settings[0]["reason"])) {
 				$query .= "    AND ".$db->in("err.reason", $settings[0]["reason"], false, "text");

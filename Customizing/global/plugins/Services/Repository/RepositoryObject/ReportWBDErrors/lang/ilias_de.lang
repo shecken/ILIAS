@@ -34,3 +34,4 @@ wbd_errors_resolve#:#gelöst
 reason#:#Grund
 action#:#Aktion
 error_type#:#Fehlertyp
+error_dateperiod#:#Zeitraum des Fehlers
