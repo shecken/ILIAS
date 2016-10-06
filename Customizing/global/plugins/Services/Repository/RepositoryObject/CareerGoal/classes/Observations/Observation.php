@@ -48,22 +48,6 @@ class Observation {
 		$this->requirements = $requirements;
 	}
 
-	public function withObjectId($obj_id) {
-		assert('is_int($obj_id)');
-		$clone = clone $this;
-		$clone->obj_id = $obj_id;
-
-		return $clone;
-	}
-
-	public function withCareerGoalId($career_goal_id) {
-		assert('is_int($career_goal_id)');
-		$clone = clone $this;
-		$clone->career_goal_id = $career_goal_id;
-
-		return $clone;
-	}
-
 	public function withTitle($title) {
 		assert('is_string($title)');
 		$clone = clone $this;
