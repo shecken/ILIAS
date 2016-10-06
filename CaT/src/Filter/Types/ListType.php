@@ -51,8 +51,6 @@ class ListType extends Type {
 
 		$val = array_shift($value);
 		if (!$this->contains($val)) {
-			echo "Fehler";
-			die();
 			throw new \InvalidArgumentException("Expected $name, found '$val'");
 		}
 		return $val;
