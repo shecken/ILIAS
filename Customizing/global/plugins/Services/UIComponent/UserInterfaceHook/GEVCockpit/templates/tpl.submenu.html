@@ -80,12 +80,13 @@ function selectSlide() {
 function adjustWrapperWidth() {
   var wrapper_width = parseInt($(".catSubMenuSection").css("width"));
   var btn_width = parseInt($(".catScrollLeft").css("width"));
+  var numSlides = getNumSlides();
 
   $(".bx-wrapper").css("max-width", wrapper_width);
-  if(getNumSlides() <= 6) {
-	$(".bx-wrapper").css("width", wrapper_width);
+  if(numSlides <= 6) {
+	$(".bx-wrapper").css("width", wrapper_width - numSlides -1);
   } else {
-	$(".bx-wrapper").css("width", wrapper_width - 2*btn_width);
+	$(".bx-wrapper").css("width", wrapper_width - 2*btn_width - 5);
   }
 }
 
