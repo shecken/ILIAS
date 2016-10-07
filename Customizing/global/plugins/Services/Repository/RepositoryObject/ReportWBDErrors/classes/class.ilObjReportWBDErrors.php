@@ -44,6 +44,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		$table	->column("ts", $this->plugin->txt("ts"), true)
 				->column("action", $this->plugin->txt("wbd_errors_action"), true)
 				->column("internal", $this->plugin->txt( "wbd_errors_internal"), true)
+				->column("status", $this->plugin->txt( "status"), true)
 				->column("user_id", $this->plugin->txt("usr_id"), true)
 				->column("course_id", $this->plugin->txt("crs_id"), true)
 				->column("firstname", $this->plugin->txt("firstname"), true)
@@ -151,7 +152,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		 *	It probably would suffice simply to make is nonstatic...
 		 */
 		$db = $this->gIldb;
-		$query = "SELECT GROUP_CONCAT(DISTINCT err.id SEPARATOR ',') as ids, err.usr_id, err.crs_id, err.internal, err.reason, GROUP_CONCAT(DISTINCT err.reason_full SEPARATOR ',') as reason_full, DATE(err.ts) as err_date, err.action, usr.firstname, usr.lastname\n"
+		$query = "SELECT GROUP_CONCAT(DISTINCT err.id SEPARATOR ',') as ids, err.usr_id, err.crs_id, err.internal, err.reason, err.status, GROUP_CONCAT(DISTINCT err.reason_full SEPARATOR ',') as reason_full, DATE(err.ts) as err_date, err.action, usr.firstname, usr.lastname\n"
 				.", crs.title, usrcrs.begin_date, usrcrs.end_date\n"
 				." FROM wbd_errors err\n"
 				." LEFT JOIN hist_user usr ON err.usr_id = usr.user_id\n"
@@ -190,7 +191,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 			}
 		}
 
-		$query .= " GROUP BY usr_id, crs_id, internal, reason, err_date, action, firstname, lastname";
+		$query .= " GROUP BY usr_id, crs_id, internal, reason, err_date, action, firstname, lastname, status";
 
 		$res = $db->query($query);
 		$data = array();
@@ -238,6 +239,8 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 			}
 
 			$rec["ts"] = $rec["err_date"];
+
+			$rec["status"] = $this->plugin->txt($rec["status"]);
 
 			$data[] = $rec;
 		}
