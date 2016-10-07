@@ -123,7 +123,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		}
 
 		$items = array();
-
+		
 		$items["bookings"]
 			= array($this->gLng->txt("gev_bookings"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
 
