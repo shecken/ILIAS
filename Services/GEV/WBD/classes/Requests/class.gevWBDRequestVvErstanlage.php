@@ -19,9 +19,26 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 	protected $error_group;
 
 	protected function __construct($data) {
-		$this->address_type 		= new WBDData("AdressTyp", $this->getDictionary()->getWBDName($data["address_type"], gevWBDDictionary::SERACH_IN_ADDRESS_TYPE));
+		$this->error_group = gevWBDError::ERROR_GROUP_USER;
+
+		$translate_value = array("AdressTyp" => array("field" => "address_type", "group" => gevWBDDictionary::SERACH_IN_ADDRESS_TYPE)
+							   , "AnredeSchluessel" => array("field" => "gender", "group" => gevWBDDictionary::SERACH_IN_GENDER)
+							   , "VermittlerStatus" => array("field" => "wbd_agent_status", "group" => gevWBDDictionary::SERACH_IN_AGENT_STATUS)
+							   , "TpKennzeichen" => array("field" => "wbd_type", "group" => gevWBDDictionary::SEARCH_IN_WBD_TYPE)
+			);
+
+		$dic_errors = array();
+		foreach($translate_value as $key => $value) {
+			try{
+				$translate_value[$key] = $this->getDictionary()->getWBDName($value[0], $value[1]);
+			} catch(LogicException $e) {
+				$dic_errors[] =  self::createError($e->getMessage(), gevWBDError::ERROR_GROUP_USER,  $data["user_id"], $data["row_id"],0);
+			}
+		}
+
+		$this->address_type 		= new WBDData("AdressTyp", $translate_value["AdressTyp"]);
 		$this->address_info 		= new WBDData("AdressBemerkung", $data["address_info"]);
-		$this->title 				= new WBDData("AnredeSchluessel", $this->getDictionary()->getWBDName($data["gender"], gevWBDDictionary::SERACH_IN_GENDER));
+		$this->title 				= new WBDData("AnredeSchluessel", $translate_value["AnredeSchluessel"]);
 		$this->auth_email 			= new WBDData("AuthentifizierungsEmail", $data["email"]);
 		$this->auth_mobile_phone_nr = new WBDData("AuthentifizierungsTelefonnummer", $data["mobile_phone_nr"]);
 		$this->info_via_mail 		= new WBDData("BenachrichtigungPerEmail", $data["info_via_mail"]);
@@ -44,18 +61,17 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 		$this->phone_nr 			= new WBDData("Telefonnummer", ($data["phone_nr"] != "") ? $data["phone_nr"] : $data["mobile_phone_nr"]);
 		
 		$this->degree 				= new WBDData("Titel", $data["degree"]);
-		$this->wbd_agent_status 	= new WBDData("VermittlerStatus", $this->getDictionary()->getWBDName($data["wbd_agent_status"], gevWBDDictionary::SERACH_IN_AGENT_STATUS));
+		$this->wbd_agent_status 	= new WBDData("VermittlerStatus", $translate_value["AdressTyp"]);
 		$this->okz 					= new WBDData("VermittlungsTaetigkeit",$data["okz"]);
-		$this->firstname 			= new WBDData("VorName", $data["firstname"]);
-		$this->wbd_type 			= new WBDData("TpKennzeichen", $this->getDictionary()->getWBDName($data["wbd_type"], gevWBDDictionary::SEARCH_IN_WBD_TYPE));
+		$this->firstname 			= new WBDData("VorName", $data["VorName"]);
+		$this->wbd_type 			= new WBDData("TpKennzeichen", $translate_value["TpKennzeichen"]);
 
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
 		$this->next_wbd_action = $data["next_wbd_action"];
-		$this->error_group = gevWBDError::ERROR_GROUP_USER;
-		
-		$errors = $this->checkData();
 
+		$check_errors = $this->checkData();
+		$errors = $check_errors + $dic_errors;
 		if(!empty($errors)) {
 			throw new myLogicException("gevWBDRequestVvErstanlage::__construct:checkData failed",0,null, $errors);
 		}
@@ -63,15 +79,11 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 
 	public static function getInstance(array $data) {
 		$data = self::polishInternalData($data);
-		
+
 		try {
 			return new gevWBDRequestVvErstanlage($data);
-		}catch(myLogicException $e) {
+		} catch(myLogicException $e) {
 			return $e->options();
-		} catch(LogicException $e) {
-			$errors = array();
-			$errors[] =  self::createError($e->getMessage(), gevWBDError::ERROR_GROUP_USER,  $data["user_id"], $data["row_id"],0);
-			return $errors;
 		}
 	}
 
