@@ -208,6 +208,8 @@ class ilTestSession
 						$this->getUserId());
 				}
 			}
+			global $ilAppEventHandler;
+			$ilAppEventHandler->raise('Modules/Test','testPassIncreased',array('test_session' => $this));
 		}
 	}
 	
