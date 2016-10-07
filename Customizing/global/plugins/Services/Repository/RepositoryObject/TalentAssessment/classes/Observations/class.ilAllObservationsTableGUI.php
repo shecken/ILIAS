@@ -2,6 +2,7 @@
 
 require_once("Services/CaTUIComponents/classes/class.catTableGUI.php");
 require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
+require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes/class.ilObjTalentAssessmentGUI.php");
 
 class ilAllObservationsTableGUI extends catTableGUI {
 	public function __construct($a_parent_obj, $plugin, $mode, $a_parent_cmd = "", $a_template_context = "") {
@@ -70,6 +71,10 @@ class ilAllObservationsTableGUI extends catTableGUI {
 
 	public function fillRow($row) {
 		$this->tpl->setVariable("CAREER_GOAL", $row["title"]);
+		$this->gCtrl->setParameterByClass("ilObjTalentAssessmentGUI", "ref_id", $row["ref_id"]);
+		$ta_link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI","ilObjTalentAssessmentGUI"), ilObjTalentAssessmentGUI::CMD_SHOWCONTENT);
+		$this->gCtrl->clearParametersByClass("ilObjTalentAssessmentGUI");
+		$this->tpl->setVariable("TA_LINK", $ta_link);
 		$this->tpl->setVariable("NAME", $row["lastname"]." ".$row["firstname"]);
 		$this->tpl->setVariable("ORG_UNIT", $row["org_unit_title"]);
 		$this->tpl->setVariable("ORG_UNIT_SUPERVISOR", $row["supervisor"]);
