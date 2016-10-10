@@ -53,7 +53,7 @@ class TestrunHistorizingDataProvider implements DataProvider {
 	private function calculateData() {
 		global $ilLog;
 		if($this->component === 'Services/Object' && $this->event === 'update') {
-			return array('test_title' => ilObject::_lookupTitle($this->parameter['obj_id']));
+			return array('test_title' => $this->getTestInstanceByObjId($this->parameter['obj_id'])->getTitle());
 		} elseif($this->component === 'Modules/Test' && $this->event === 'testPassIncreased') {
 
 			$test_session = $this->parameter['test_session'];
