@@ -325,7 +325,7 @@ class ilDB implements DB {
 		foreach($org_unit_utils as $key => $value) {
 			$ret[$value["obj_id"]] = \ilObject::_lookupTitle($value["obj_id"]);
 		}
-		asort($ret);
+
 		return $ret;
 	}
 
