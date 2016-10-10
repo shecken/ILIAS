@@ -19,7 +19,7 @@ class TestrunHistorizer extends ilHistorizingStorage {
 
 
 	protected function getCreatorColumnName() {
-		return 'creator_user_id';
+		return 'creator_usr_id';
 	}
 
 	protected function getCreatedColumnName() {
@@ -31,12 +31,12 @@ class TestrunHistorizer extends ilHistorizingStorage {
 		return  array(
 			'test_title'			=> 'text'
 			,'max_points'			=> 'integer'
-			,'points_achived'		=> 'integer'
-			,'points_to_pass'		=> 'integer'
+			,'points_achieved'		=> 'integer'
+			,'percent_to_pass'		=> 'float'
 			,'testrun_finished_at'	=> 'integer'
-			,'testrun_passed'		=> 'integer'
-			,'pass_schema'			=> 'test'
-		);
+			,'passed'				=> 'integer'
+			,'pass_scoring'			=> 'text'
+			);
 	}
 
 	protected function getRecordIdColumn() {
