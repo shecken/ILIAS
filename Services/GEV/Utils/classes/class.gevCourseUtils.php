@@ -37,7 +37,7 @@ class gevCourseUtils {
 		
 		$this->gLng->loadLanguageModule("crs");
 		
-		$this->crs_id = (int)$a_crs_id;
+		$this->crs_id = $a_crs_id;
 		$this->crs_obj = null;
 		$this->crs_booking_permissions = null;
 		$this->crs_participations = null;
@@ -71,7 +71,7 @@ class gevCourseUtils {
 	}
 	
 	static public function getInstanceByObj(ilObjCourse $a_crs) {
-		$inst = gevCourseUtils::getInstance($a_crs->getId());
+		$inst = gevCourseUtils::getInstance((int)$a_crs->getId());
 		$inst->crs_obj = $a_crs;
 		$inst->crs_obj->setRefId(gevObjectUtils::getRefId($inst->crs_id));
 		return $inst;
