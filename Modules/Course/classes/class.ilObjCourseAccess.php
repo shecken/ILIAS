@@ -180,6 +180,9 @@ class ilObjCourseAccess extends ilObjectAccess
 		// regualar users
 		$commands[]	= array('permission' => "leave", "cmd" => "leave", "lang_var" => "crs_unsubscribe");
 		*/
+
+		// enter training infos
+		$commands[]	= array('permission' => "write", "cmd" => "editInfo", "lang_var" => "crs_info_settings");
 		// gev-patch end
 
 		include_once ('Services/WebDAV/classes/class.ilDAVActivationChecker.php');
