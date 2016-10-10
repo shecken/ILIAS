@@ -32,6 +32,7 @@ class ilObservationsOverviewGUI {
 			return $html;
 		} else {
 			\ilUtil::sendInfo($this->parent_obj->txt("no_observator_no_overview"));
+			return "";
 		}
 	}
 }
