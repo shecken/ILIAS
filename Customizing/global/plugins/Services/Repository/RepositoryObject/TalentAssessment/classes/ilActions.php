@@ -66,7 +66,7 @@ class ilActions {
 		else {
 			$this->object->setDescription("");
 		}
-		
+
 		if(array_key_exists(self::F_DATE, $values)) {
 		  $start_date = $values[self::F_DATE]["start"]["date"];
 		  $start_time = $values[self::F_DATE]["start"]["time"];
@@ -75,27 +75,25 @@ class ilActions {
 		  $end_date = $values[self::F_DATE]["end"]["date"];
 		  $end_time = $values[self::F_DATE]["end"]["time"];
 		  $values[self::END_DATE] = new \ilDateTime($end_date." ".$end_time,IL_CAL_DATETIME);
-		  
+
+
 		  $this->object->updateSettings(function($s) use (&$values) {
+			return $s
+				->withStartDate($values[self::START_DATE])
+				->withEndDate($values[self::END_DATE])
+				;
+		  });
+		}
+
+		$this->object->updateSettings(function($s) use (&$values) {
 			return $s
 				->withCareerGoalID((int)$values[self::F_CAREER_GOAL])
 				->withUsername($values[self::F_USERNAME])
-				->withStartDate($values[self::START_DATE])
-				->withEndDate($values[self::END_DATE])
 				->withVenue((int)$values[self::F_VENUE])
 				->withOrgUnit((int)$values[self::F_ORG_UNIT])
 				;
-		  });
-		} else {
-		  $this->object->updateSettings(function($s) use (&$values) {
-			  return $s
-				  ->withCareerGoalID((int)$values[self::F_CAREER_GOAL])
-				  ->withUsername($values[self::F_USERNAME])
-				  ->withVenue((int)$values[self::F_VENUE])
-				  ->withOrgUnit((int)$values[self::F_ORG_UNIT])
-				  ;
-		  });
-		}
+		});
+
 		$this->object->update();
 	}
 
