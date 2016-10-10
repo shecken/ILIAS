@@ -33,7 +33,7 @@ class TestrunHistorizer extends ilHistorizingStorage {
 			,'max_points'			=> 'integer'
 			,'points_achieved'		=> 'integer'
 			,'percent_to_pass'		=> 'float'
-			,'testrun_finished_at'	=> 'integer'
+			,'testrun_finished_ts'	=> 'integer'
 			,'passed'				=> 'integer'
 			,'pass_scoring'			=> 'text'
 			);
