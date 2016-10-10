@@ -8,6 +8,12 @@ class NavigatorTest extends PHPUnit_Framework_TestCase {
 		$this->factory = new \CaT\Filter\FilterFactory(new \CaT\Filter\PredicateFactory(), new \CaT\Filter\TypeFactory());
 	}
 
+	public function test_initial_path() {
+		$f = $this->factory->text("l1", "d1");
+		$navi = (new \CaT\Filter\Navigator($f));
+		$this->assertEquals(null, $navi->path());
+	}
+
 	public function test_nav_sequence() {
 		$f1 = $this->factory->text("l1", "d1");
 		$f2 = $this->factory->text("l2", "d2");
