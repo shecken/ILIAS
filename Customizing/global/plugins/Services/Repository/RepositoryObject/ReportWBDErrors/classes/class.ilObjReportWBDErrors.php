@@ -96,7 +96,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 										,"start" => $start
 										,"end" => $end);
 									},$tf->dict(array(
-										"date_period_predicate" => $tf->cls("CaT\Filter\Predicates\Predicate")
+										"date_period_predicate" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
 										,"start" => $tf->cls("DateTime")
 										,"end" => $tf->cls("DateTime")
 									)))
@@ -136,7 +136,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 							, "error_type" => $error_type
 							, "status" => $status
 							);}
-						, $tf->dict(array("period_pred" => $tf->cls("CaT\Filter\Predicates\Predicate")
+						, $tf->dict(array("period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
 							,"start" => $tf->cls("DateTime")
 							,"end" => $tf->cls("DateTime")
 							,"reason" => $tf->lst($tf->string())
