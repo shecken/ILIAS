@@ -22,7 +22,7 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 		$this->error_group = gevWBDError::ERROR_GROUP_USER;
 
 		$translate_value = array("AdressTyp" => array("field" => "address_type", "group" => gevWBDDictionary::SERACH_IN_ADDRESS_TYPE)
-							   , "AnredeSchluessel" => array("field" => "gender", "group" => gevWBDDictionary::SERACH_IN_GENDER)
+							   , "AnredeSchluessel" => array("field" => "gender", "group" => gevWBDDictionary::SEARCH_IN_GENDER)
 							   , "VermittlerStatus" => array("field" => "wbd_agent_status", "group" => gevWBDDictionary::SERACH_IN_AGENT_STATUS)
 							   , "TpKennzeichen" => array("field" => "wbd_type", "group" => gevWBDDictionary::SEARCH_IN_WBD_TYPE)
 			);

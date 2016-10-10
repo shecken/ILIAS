@@ -23,7 +23,7 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 		$this->begin_date 			= new WBDData("SeminarDatumVon",$data["begin_date"]);
 		$this->end_date 			= new WBDData("SeminarDatumBis",$data["end_date"]);
 		$this->credit_points 		= new WBDData("WeiterbildungsPunkte",$data["credit_points"]);
-		$this->type 				= new WBDData("LernArt",$this->getDictionary()->getWBDName($data["type"],gevWBDDictionary::SERACH_IN_COURSE_TYPE));
+		$this->type 				= new WBDData("LernArt",$this->getDictionary()->getWBDName($data["type"],gevWBDDictionary::SEARCH_IN_COURSE_TYPE));
 		$this->wbd_topic 			= new WBDData("LernInhalt",$this->getDictionary()->getWBDName($data["wbd_topic"],gevWBDDictionary::SEARCH_IN_STUDY_CONTENT));
 		$this->internal_booking_id	= new WBDData("InterneBuchungsId",$data["row_id"]);
 		$this->agent_id 			= new WBDData("VermittlerId",$data["bwv_id"]);

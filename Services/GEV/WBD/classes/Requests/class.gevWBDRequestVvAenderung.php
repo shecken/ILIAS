@@ -21,7 +21,7 @@ class gevWBDRequestVvAenderung extends WBDRequestVvAenderung {
 	protected function __construct($data) {
 		$this->address_type 		= new WBDData("AdressTyp",$this->getDictionary()->getWBDName($data["address_type"],gevWBDDictionary::SERACH_IN_ADDRESS_TYPE));
 		$this->address_info 		= new WBDData("AdressBemerkung",$data["address_info"]);
-		$this->title 				= new WBDData("AnredeSchluessel",$this->getDictionary()->getWBDName($data["gender"],gevWBDDictionary::SERACH_IN_GENDER));
+		$this->title 				= new WBDData("AnredeSchluessel",$this->getDictionary()->getWBDName($data["gender"],gevWBDDictionary::SEARCH_IN_GENDER));
 		$this->auth_email 			= new WBDData("AuthentifizierungsEmail",$data["email"]);
 		$this->auth_mobile_phone_nr = new WBDData("AuthentifizierungsTelefonnummer",$data["mobile_phone_nr"]);
 		$this->info_via_mail 		= new WBDData("BenachrichtigungPerEmail",$data["info_via_mail"]);

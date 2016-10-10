@@ -12,8 +12,8 @@ class gevWBDDictionary implements Dictionary {
 	const WBD_NAME = "toWBDName";
 	const INTERNAL_NAME = "toInternalName";
 
-	const SERACH_IN_GENDER = "gender";
-	const SERACH_IN_COURSE_TYPE = "course_type";
+	const SEARCH_IN_GENDER = "gender";
+	const SEARCH_IN_COURSE_TYPE = "course_type";
 	const SEARCH_IN_STUDY_CONTENT = "study_content";
 	const SEARCH_IN_WBD_TYPE = "wbd_type";
 	const SERACH_IN_AGENT_STATUS = "agent_status";

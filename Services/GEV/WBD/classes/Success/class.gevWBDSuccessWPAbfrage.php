@@ -51,7 +51,7 @@ class gevWBDSuccessWPAbfrage extends WBDSuccessWPAbfrage {
 			$value[gevImportCourseData::BEGIN_DATE] = $this->createDate($value[gevImportCourseData::BEGIN_DATE]);
 			$value[gevImportCourseData::END_DATE] = $this->createDate($value[gevImportCourseData::END_DATE]);
 			$value[gevImportCourseData::COURSE_TYPE] = $this->getDictionary()->getInternalName($value[gevImportCourseData::COURSE_TYPE]
-																	,gevWBDDictionary::SERACH_IN_COURSE_TYPE);
+																	,gevWBDDictionary::SEARCH_IN_COURSE_TYPE);
 			$value[gevImportCourseData::STUDY_CONTENT] = $this->getDictionary()->getInternalName($value[gevImportCourseData::STUDY_CONTENT]
 																	,gevWBDDictionary::SEARCH_IN_STUDY_CONTENT);
 			$value[gevImportCourseData::BOOKING_DATE] = $this->createDate($value[gevImportCourseData::BOOKING_DATE]);
