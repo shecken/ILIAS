@@ -318,12 +318,14 @@ class ilDB implements DB {
 	public function getOrgUnitOptions() {
 		$evg_id = \gevOrgUnitUtils::getEVGOrgUnitRefId();
 		$org_unit_utils = \gevOrgUnitUtils::getAllChildren(array($evg_id));
+		$evg_obj_id = \ilObject::_lookupObjId($evg_id);
+		$evg_title = \ilObject::_lookupTitle($evg_obj_id);
 
-		$ret = array();
+		$ret = array($evg_obj_id => $evg_title);
 		foreach($org_unit_utils as $key => $value) {
 			$ret[$value["obj_id"]] = \ilObject::_lookupTitle($value["obj_id"]);
 		}
-
+		asort($ret);
 		return $ret;
 	}
 
