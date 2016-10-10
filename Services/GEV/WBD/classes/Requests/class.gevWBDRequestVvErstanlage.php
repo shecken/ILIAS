@@ -21,6 +21,11 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 	protected function __construct($data) {
 		$this->error_group = gevWBDError::ERROR_GROUP_USER;
 
+		/**
+		 * Define every ILIAS column that should be translated in WBD specialized values
+		 * e.g.
+		 * WBD_FIELD => array("field" => <ILIAS_FIELD>, "group" => <SEARCH_GROUP_IN_DICTIONARY>)
+		 */
 		$translate_value = array("AdressTyp" => array("field" => "address_type", "group" => gevWBDDictionary::SERACH_IN_ADDRESS_TYPE)
 							   , "AnredeSchluessel" => array("field" => "gender", "group" => gevWBDDictionary::SEARCH_IN_GENDER)
 							   , "VermittlerStatus" => array("field" => "wbd_agent_status", "group" => gevWBDDictionary::SERACH_IN_AGENT_STATUS)
@@ -28,10 +33,18 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 			);
 
 		$dic_errors = array();
+
+		/**
+		 * Translate every value to his WBD value
+		 * 
+		 * If there is an exception catch it and create a new WBD_Error to save in wbd error report
+		 */
 		foreach($translate_value as $key => $value) {
 			try{
-				$translate_value[$key] = $this->getDictionary()->getWBDName($value[0], $value[1]);
+				/* Try to translate. If anything went wrong there will be a LogicException throwed */
+				$translate_value[$key] = $this->getDictionary()->getWBDName($value["field"], $value["group"]);
 			} catch(LogicException $e) {
+				/* Create new WBD_Error so we have every error in the wbd error report */
 				$dic_errors[] =  self::createError($e->getMessage(), gevWBDError::ERROR_GROUP_USER,  $data["user_id"], $data["row_id"],0);
 			}
 		}
