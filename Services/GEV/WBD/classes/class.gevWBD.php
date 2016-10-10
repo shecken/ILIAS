@@ -854,4 +854,29 @@ class gevWBD {
 		$row = $this->gDB->fetchAssoc($res);
 		return $row["crs_id"];
 	}
+
+	const STATUS_RESOLVED = "resolved";
+	const STATUS_NOT_RESOLVED = "not_resolved";
+	const STATUS_UNABLE_RESOLVE = "unable_resolve";
+	const STATUS_FEEDBACK = "feedback";
+
+	public static function resolveWBDErrorById($id) {
+		global $ilDB;
+
+		$sql = "UPDATE wbd_errors\n"
+			 ." SET resolved = 1\n"
+			 ." WHERE id = ".$ilDB->quote($id, 'integer');
+
+		$ilDB->manipulate($sql);
+	}
+
+	public static function setWBDErrorStatusById($id, $status) {
+		global $ilDB;
+
+		$sql = "UPDATE wbd_errors\n"
+			 ." SET status = \n".$ilDB->quote($status, "text")."\n"
+			 ." WHERE id = ".$ilDB->quote($id, 'integer');
+
+		$ilDB->manipulate($sql);
+	}
 }

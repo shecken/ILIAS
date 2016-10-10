@@ -97,7 +97,6 @@ class ilDB implements DB {
 	}
 
 	public function cloneSettings($target_id, CareerGoal $settings) {
-
 		$values = array
 				( "obj_id" => array("integer", (int)$target_id)
 				, "lowmark" => array("float", $settings->getLowmark())

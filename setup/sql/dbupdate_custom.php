@@ -5181,3 +5181,15 @@ $ilDB->addIndex('hist_userorgu',array('hist_historic','action'),'oha');
 		));
 	}
 ?>
+
+<#221>
+<?php
+	if(!$ilDB->tableColumnExists('wbd_errors', 'status')) {
+		$ilDB->addTableColumn('wbd_errors', 'status', array(
+			"type" => "text",
+			"length" => 30,
+			"notnull" => true,
+			"default" => "not_resolved"
+		));
+	}
+?>
