@@ -27,6 +27,7 @@ administration#:#adm_rep_tree_only_cntr_info#:#Es werden nur Kategorien, Trainin
 administration#:#confirm_message_course_export#:#Sie haben für ein oder mehrere Felder den Trainings-Export aktiviert. Wenn Sie diese Änderung bestätigen, werden alle Trainingsnutzungsvereinbarungen zurückgesetzt.
 administration#:#course_export#:#Sichtbar in der Trainingsteilnehmerverwaltung
 assessment#:#log_could_not_enter_test_due_to_simultaneous_users#:#Der Teilnehmer konnte den Test nicht starten, da die maximale Anzahl der gleichzeitiger Teilnehmer für dieses Training bereits erreicht ist.
+assessment#:#mark_tst_passed#:#Herzlichen Glückwunsch! Sie haben den Test <b>bestanden</b>.
 assessment#:#tst_availability_limitless_info#:#Wählen Sie diese Einstellung, um das Training für Benutzer verfügbar zumachen. Die Verfügbarkeit ist abhängig von der unten ausgewählten Einstellung für Teilnehmer.
 assessment#:#tst_availability_until_info#:#Wählen Sie diese Einstellung, um das Training, abhängig von der unten ausgewählten Einstellung für Teilnehmer, nur während eines definierten Zeitraums freizuschalten.
 barometer#:#change_course#:#Trainingswechsel

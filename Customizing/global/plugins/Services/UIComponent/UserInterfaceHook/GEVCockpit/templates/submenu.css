@@ -1,24 +1,51 @@
-.catSubMenu a {
+.catSubMenuItem a {
 	text-decoration: none;
 	color: #424242;
-	font-size: 95%;
+	font-size: 100%;
 }
 .catSubMenu a:hover {
 	color: #C11A21;
 }
+
+li.catSubMenuItem.catSubMenuActive {
+	background-color: #eee;
+	color: #C11A21;
+}
+
 ul {
 	list-style: outside none none;
 }
 
+ul.catSubMenu {
+	padding-left: 0;
+	margin: 0;
+}
+
+ul.catSubMenu a {
+	color: #878787;
+}
+
 .catSubMenuOuter {
-	width: 100%;
-	height: 150px;
-	position: relative;
 	background-color: #dedede;
+	height: 119px;
+	position: relative;
+	width: 100%;
 }
 .catSubMenuSection {
-	width: 960px;
+	width: 1080px;
 	margin: auto;
+}
+
+.catSubMenuItem {
+	min-width: 140px;
+	margin: auto;
+	padding: 93px 15px 10px;
+	text-align: center;
+	background-repeat: no-repeat;
+	background-position: center 23px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 #catSubMenuItem_bookings {
@@ -55,19 +82,28 @@ ul {
 	background-image: url("images/GEV_SubMenueImg5.png");
 }
 
-
-.catSubMenuItem {
-	float: left;
-	min-width: 100px;
-	padding: 100px 20px 30px;
-	text-align: center;
-	background-repeat: no-repeat;
-	background-position: center 30px;
+.catScrollLeft, .catScrollRight {
+  width: 30px;
+  position: relative;
+  height: 120px;
+  display: inline-block;
 }
 
-.catSubMenuItem:hover {
-	background-color: #ccc;
+.catScrollLeft {
+  float: left;
 }
 
 .catScrollRight {
+  float: right;
+}
+
+.disabled {
+  display: none;
+}
+
+.nav {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  z-index: 9999;
 }
