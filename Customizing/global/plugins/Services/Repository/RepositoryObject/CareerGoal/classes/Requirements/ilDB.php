@@ -78,8 +78,8 @@ class ilDB implements DB {
 		$requirement = new Requirement((int)$obj_id
 								 , (int)$row["career_goal_id"]
 								 , $row["title"]
-								 , $row["description"]
-								 , $row["position"]
+								 , ($row["description"]) ? $row["description"] : ""
+								 , (int)$row["position"]
 							);
 
 		return $requirement;
@@ -97,6 +97,60 @@ class ilDB implements DB {
 
 			$this->getDB()->manipulate($delete);
 		}
+	}
+
+	public function deleteByCareerGoal($career_goal_id) {
+		$cur_requirements = $this->getRequirmentsByCareerGoalId($career_goal_id);
+
+		foreach($cur_requirements as $key => $requirement) {
+			$this->delete($requirement->getObjId());
+		}
+	}
+
+	public function cloneRequirements($obj_id, $target_id) {
+		$cur_requirements = $this->getRequirmentsByCareerGoalId($obj_id);
+		$ret = array();
+		foreach ($cur_requirements as $key => $requirement) {
+			$new_obj_id = $this->getObjId();
+			$position = $this->getNextPosition($target_id);
+			$ret[$requirement->getObjId()] = $new_obj_id;
+
+			$values = array
+					( "obj_id" => array("integer", (int)$new_obj_id)
+					, "career_goal_id" => array("integer", (int)$target_id)
+					, "title" => array("text", $requirement->getTitle())
+					, "description" => array("text", $requirement->getDescription())
+					, "position" => array("integer", $requirement->getPosition())
+					, "last_change" => array("text", date("Y-m-d H:i:s"))
+					, "last_change_user" => array("integer", $this->user->getId())
+					);
+			$this->getDB()->insert(self::TABLE_NAME, $values);
+		}
+
+		return $ret;
+	}
+
+	protected function getRequirmentsByCareerGoalId($career_goal_id) {
+		$select = "SELECT obj_id, career_goal_id, title, description, position\n"
+				." FROM ".self::TABLE_NAME."\n"
+				." WHERE career_goal_id = ".$this->getDB()->quote($career_goal_id, "integer");
+
+		$res = $this->getDB()->query($select);
+
+		if($this->getDB()->numRows($res) == 0) {
+			throw new \InvalidArgumentException("Invalid id '$obj_id' for Requirement-object");
+		}
+
+		while($row = $this->getDB()->fetchAssoc($res)) {
+			$requirements[] = new Requirement((int)$row["obj_id"]
+								 , (int)$row["career_goal_id"]
+								 , $row["title"]
+								 , ($row["description"]) ? $row["description"] : ""
+								 , (int)$row["position"]
+							);
+		}
+
+		return $requirements;
 	}
 
 	protected function cheCheckForObservations($obj_id) {
@@ -118,14 +172,14 @@ class ilDB implements DB {
 	 * @inheritdoc
 	 */
 	public function getObjId() {
-		return $this->getDB()->nextId(self::TABLE_NAME);
+		return (int)$this->getDB()->nextId(self::TABLE_NAME);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function selectRequirementsFor($career_goal_id) {
-		$select = "SELECT obj_id, title, description\n"
+		$select = "SELECT obj_id, title, description, position\n"
 				." FROM ".self::TABLE_NAME."\n"
 				." WHERE career_goal_id = ".$this->getDB()->quote($career_goal_id)."\n"
 				." ORDER BY title";
@@ -138,7 +192,8 @@ class ilDB implements DB {
 			$requirement = new Requirement((int)$row["obj_id"]
 								 , (int)$career_goal_id
 								 , $row["title"]
-								 , $row["description"]
+								 , $row["description"] ? $row["description"] : ""
+								 , (int)$row["position"]
 							);
 
 			$ret[] = $requirement;

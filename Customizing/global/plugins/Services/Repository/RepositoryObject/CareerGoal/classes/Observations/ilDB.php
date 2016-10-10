@@ -25,20 +25,20 @@ class ilDB implements DB {
 		$obj_id = $this->getObjId();
 		$position = $this->getNextPosition($career_goal_id);
 
-		$requirement = new Observation($obj_id, $career_goal_id, $title, $description, $position, $requirements);
+		$observation = new Observation($obj_id, $career_goal_id, $title, $description, $position, $requirements);
 
 		$values = array
-				( "obj_id" => array("integer", $requirement->getObjId())
-				, "career_goal_id" => array("integer", $requirement->getCareerGoalId())
-				, "title" => array("text", $requirement->getTitle())
-				, "description" => array("text", $requirement->getDescription())
-				, "position" => array("integer", $requirement->getPosition())
+				( "obj_id" => array("integer", $observation->getObjId())
+				, "career_goal_id" => array("integer", $observation->getCareerGoalId())
+				, "title" => array("text", $observation->getTitle())
+				, "description" => array("text", $observation->getDescription())
+				, "position" => array("integer", $observation->getPosition())
 				, "last_change" => array("text", date("Y-m-d H:i:s"))
 				, "last_change_user" => array("integer", $this->user->getId())
 				);
 		$this->getDB()->insert(self::TABLE_NAME, $values);
 
-		$this->addObservationRequirement($obj_id, $requirements);
+		$this->addObservationRequirement((int)$obj_id, $requirements);
 	}
 
 	protected function addObservationRequirement($obj_id, array $requirements) {
@@ -77,13 +77,12 @@ class ilDB implements DB {
 	}
 
 	protected function updateObservationRequirement($obj_id, array $requirements) {
-		$this->deleteObservationRequirement($obj_id);
-		$this->addObservationRequirement($obj_id, $requirements);
+		$this->deleteObservationRequirement((int)$obj_id);
+		$this->addObservationRequirement((int)$obj_id, $requirements);
 	}
 
 	protected function deleteObservationRequirement($obj_id) {
 		assert('is_int($obj_id)');
-
 		$delete = "DELETE FROM ".self::TABLE_OBS_REQ."\n"
 				 ." WHERE obs_id = ".$this->getDB()->quote($obj_id, "integer");
 
@@ -116,8 +115,8 @@ class ilDB implements DB {
 			if($career_goal_id === null) {
 				$career_goal_id = (int)$row["career_goal_id"];
 				$title = $row["title"];
-				$description = $row["description"];
-				$position = $row["position"];
+				$description = $row["description"] ? $row["description"] : "";
+				$position = (int)$row["position"];
 			}
 
 			$requirements[] = (int)$row["req_id"];
@@ -138,12 +137,106 @@ class ilDB implements DB {
 	 * @inheritdoc
 	 */
 	public function delete($obj_id) {
-		$this->deleteObservationRequirement($obj_id);
+		$this->deleteObservationRequirement((int)$obj_id);
 
 		$delete = "DELETE FROM ".self::TABLE_NAME."\n"
 				." WHERE obj_id = ".$this->getDB()->quote($obj_id, "integer");
 
 		$this->getDB()->manipulate($delete);
+	}
+
+	public function deleteByCareerGoal($career_goal_id) {
+		$cur_observations = $this->getObservationsByCareerGoalId($career_goal_id);
+
+		foreach($cur_observations as $key => $observation) {
+			$this->delete((int)$observation->getObjId());
+		}
+	}
+
+	public function cloneObservations($obj_id, $target_id, $ids) {
+		$cur_observations = $this->getObservationsByCareerGoalId($obj_id);
+
+		foreach($cur_observations as $key => $observation) {
+			$new_obj_id = $this->getObjId();
+			$new_requirements = $this->updateRequirementIds($observation->getRequirements(), $ids);
+
+			$values = array
+				( "obj_id" => array("integer", (int)$new_obj_id)
+				, "career_goal_id" => array("integer", (int)$target_id)
+				, "title" => array("text", $observation->getTitle())
+				, "description" => array("text", $observation->getDescription())
+				, "position" => array("integer", $observation->getPosition())
+				, "last_change" => array("text", date("Y-m-d H:i:s"))
+				, "last_change_user" => array("integer", $this->user->getId())
+				);
+			$this->getDB()->insert(self::TABLE_NAME, $values);
+
+			$this->addObservationRequirement((int)$new_obj_id, $new_requirements);
+		}
+	}
+
+	protected function updateRequirementIds($requirements, $ids) {
+		foreach($requirements as $key => $value) {
+			$requirements[$key] = $ids[$value];
+		}
+
+		return $requirements;
+	}
+
+	protected function getObservationsByCareerGoalId($career_goal_id) {
+		$select = "SELECT A.obj_id, A.career_goal_id, A.title, A.description, A.position, B.req_id\n"
+				." FROM ".self::TABLE_NAME." A\n"
+				." LEFT JOIN ".self::TABLE_OBS_REQ." B\n"
+				."    ON A.obj_id = B.obs_id\n"
+				." WHERE career_goal_id = ".$this->getDB()->quote($career_goal_id, "integer")
+				." ORDER BY A.obj_id";
+
+		$res = $this->getDB()->query($select);
+
+		$career_goal_id = null;
+		$title = null;
+		$description = null;
+		$position = null;
+		$requirements = array();
+		$obj_id = null;
+		$ret = array();
+
+		while($row = $this->getDB()->fetchAssoc($res)) {
+			if($obj_id !== null && $obj_id !== (int)$row["obj_id"]) {
+				$ret[] = new Observation((int)$obj_id
+								 , $career_goal_id
+								 , $title
+								 , $description
+								 , $position
+								 , $requirements
+							);
+
+				$career_goal_id = null;
+				$requirements = array();
+			}
+
+			/* There are a more then one row for the career_goal_possible.
+			 * This check is to avoid several settings of values whos everytime the same*/
+			if($career_goal_id === null) {
+				$career_goal_id = (int)$row["career_goal_id"];
+				$title = $row["title"];
+				$description = $row["description"] ? $row["description"] : "";
+				$position = (int)$row["position"];
+				$obj_id = (int)$row["obj_id"];
+			}
+
+			$requirements[] = (int)$row["req_id"];
+		}
+
+		$ret[] = new Observation((int)$obj_id
+								 , $career_goal_id
+								 , $title
+								 , $description
+								 , $position
+								 , $requirements
+							);
+
+		return $ret;
 	}
 
 	/**
@@ -248,7 +341,7 @@ class ilDB implements DB {
 	 * @inheritdoc
 	 */
 	public function getObjId() {
-		return $this->getDB()->nextId(self::TABLE_NAME);
+		return (int)$this->getDB()->nextId(self::TABLE_NAME);
 	}
 
 	protected function getNextPosition($career_goal_id) {

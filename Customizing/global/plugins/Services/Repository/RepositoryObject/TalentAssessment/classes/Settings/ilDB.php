@@ -137,8 +137,8 @@ class ilDB implements DB {
 				, "state" => array("integer", $talent_assessment->getState())
 				, "career_goal_id" => array("integer", $talent_assessment->getCareerGoalId())
 				, "username" => array("text", $talent_assessment->getUsername())
-				, "start_date" => array("text", $talent_assessment->getStartDate())
-				, "end_date" => array("text", $talent_assessment->getEndDate())
+				, "start_date" => array("text", $talent_assessment->getStartDate()->get(IL_CAL_DATETIME))
+				, "end_date" => array("text", $talent_assessment->getEndDate()->get(IL_CAL_DATETIME))
 				, "venue" => array("text", $talent_assessment->getVenue())
 				, "org_unit" => array("text", $talent_assessment->getOrgUnit())
 				, "started" => array("integer", $talent_assessment->getStarted())
@@ -167,8 +167,8 @@ class ilDB implements DB {
 				( "state" => array("integer", $talent_assessment->getState())
 				, "career_goal_id" => array("integer", $talent_assessment->getCareerGoalId())
 				, "username" => array("text", $talent_assessment->getUsername())
-				, "start_date" => array("text", $talent_assessment->getStartDate())
-				, "end_date" => array("text", $talent_assessment->getEndDate())
+				, "start_date" => array("text", $talent_assessment->getStartDate()->get(IL_CAL_DATETIME))
+				, "end_date" => array("text", $talent_assessment->getEndDate()->get(IL_CAL_DATETIME))
 				, "venue" => array("text", $talent_assessment->getVenue())
 				, "org_unit" => array("text", $talent_assessment->getOrgUnit())
 				, "started" => array("integer", $talent_assessment->getStarted())
@@ -227,9 +227,9 @@ class ilDB implements DB {
 								 , (int)$row["state"]
 								 , (int)$row["career_goal_id"]
 								 , $row["username"]
-								 , $row["firstname"]
-								 , $row["lastname"]
-								 , $row["email"]
+								 , $row["firstname"] ? $row["firstname"] : ""
+								 , $row["lastname"] ? $row["lastname"] : ""
+								 , $row["email"] ? $row["email"] : ""
 								 , $start_date
 								 , $end_date
 								 , (int)$row["venue"]
@@ -238,13 +238,41 @@ class ilDB implements DB {
 								 , (float)$row["lowmark"]
 								 , (float)$row["should_specification"]
 								 , (float)$row["potential"]
-								 , $row["result_comment"]
-								 , $row["default_text_failed"]
-								 , $row["default_text_partial"]
-								 , $row["default_text_success"]
+								 , $row["result_comment"] ? $row["result_comment"] : ""
+								 , $row["default_text_failed"] ? $row["default_text_failed"] : ""
+								 , $row["default_text_partial"] ? $row["default_text_partial"] : ""
+								 , $row["default_text_success"] ? $row["default_text_success"] : ""
 							);
 
 		return $talent_assessment;
+	}
+
+	public function cloneTalentAssessment($target_id, TalentAssessment $talent_assessment) {
+		$values = array
+				( "obj_id" => array("integer", (int)$target_id)
+				, "state" => array("integer", TalentAssessment::IN_PROGRESS)
+				, "career_goal_id" => array("integer", $talent_assessment->getCareerGoalId())
+				, "username" => array("text", $talent_assessment->getUsername())
+				, "start_date" => array("text", $talent_assessment->getStartDate()->get(IL_CAL_DATETIME))
+				, "end_date" => array("text", $talent_assessment->getEndDate()->get(IL_CAL_DATETIME))
+				, "venue" => array("text", $talent_assessment->getVenue())
+				, "org_unit" => array("text", $talent_assessment->getOrgUnit())
+				, "started" => array("integer", false)
+				, "lowmark" => array("float", $talent_assessment->getLowmark())
+				, "should_specification" => array("float", $talent_assessment->getShouldspecification())
+				, "potential" => array("float", 0.0)
+				, "result_comment" => array("text", "")
+				, "last_change" => array("text", date("Y-m-d H:i:s"))
+				, "last_change_user" => array("integer", $this->user->getId())
+				, "default_text_failed" => array("text", $talent_assessment->getDefaultTextFailed())
+				, "default_text_partial" => array("text", $talent_assessment->getDefaultTextPartial())
+				, "default_text_success" => array("text", $talent_assessment->getDefaultTextSuccess())
+				);
+		$this->getDB()->insert(self::PLUGIN_TABLE, $values);
+
+		$new_talent_assessment = $this->select((int)$target_id);
+
+		return $new_talent_assessment;
 	}
 
 	public function isStarted($obj_id) {

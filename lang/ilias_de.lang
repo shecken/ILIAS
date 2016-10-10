@@ -648,7 +648,7 @@ assessment#:#mark_tst_ects#:#Ihre ECTS-Note lautet &quot;[markects]&quot;
 assessment#:#mark_tst_failed#:#Sie haben den Test leider <b>nicht bestanden</b>.<br /><br />Sie haben die Note &quot;[mark]&quot; erzielt.
 assessment#:#mark_tst_failed_obligations_answered#:#Sie haben den Test leider <b>nicht bestanden</b>.<br /><br />Alle obligatorischen Fragen wurden beantwortet.<br />Sie haben die Note &quot;[mark]&quot; erzielt.
 assessment#:#mark_tst_failed_obligations_missing#:#Sie haben den Test leider <b>nicht bestanden</b>.<br /><br />Nicht alle obligatorischen Fragen wurden beantwortet.<br />Sie haben die Note &quot;[mark]&quot; erzielt.
-assessment#:#mark_tst_passed#:#Herzlichen Glückwunsch! Sie haben den Test <b>bestanden</b> und dabei die Note &quot;[mark]&quot; erzielt.
+assessment#:#mark_tst_passed#:#Herzlichen Glückwunsch! Sie haben den Test <b>bestanden</b>.
 assessment#:#mark_tst_passed_obligations_answered#:#Herzlichen Glückwunsch! Sie haben den Test <b>bestanden</b> und dabei die Note &quot;[mark]&quot; erzielt.<br />Alle obligatorischen Fragen wurden beantwortet.
 assessment#:#match_terms_and_definitions#:#Zuordnung von Termen und Definitionen
 assessment#:#match_terms_and_pictures#:#Zuordnung von Termen und Bildern
