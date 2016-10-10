@@ -8,7 +8,7 @@ require_once("Services/UICore/classes/class.ilTemplate.php");
 class ilObservationsListTableGUI extends \ilTable2GUI {
 	use ilFormHelper;
 
-	public function __construct($a_parent_obj, array $values, $a_parent_cmd = "", $a_template_context = "") {
+	public function __construct($a_parent_obj, array $values, $pos, $a_parent_cmd = "", $a_template_context = "") {
 		global $ilCtrl;
 
 		$this->gCtrl = $ilCtrl;
@@ -16,6 +16,7 @@ class ilObservationsListTableGUI extends \ilTable2GUI {
 		$this->values = $values;
 		$this->possible_cmd = $a_parent_obj->getPossibleCMD();
 		$this->settings = $a_parent_obj->getSettings();
+		$this->pos = $pos;
 
 		$this->setId("ta_observations_list_table");
 
@@ -24,6 +25,7 @@ class ilObservationsListTableGUI extends \ilTable2GUI {
 		$this->setEnableHeader(true);
 
 		$this->gCtrl->setParameter($this->parent_obj, "obs_id", $values["obs_id"]);
+		$this->gCtrl->setParameter($this->parent_obj, "pos", $this->pos);
 		$this->setFormAction($ilCtrl->getFormAction($this->parent_obj));
 		$this->gCtrl->clearParameters($this->parent_obj);
 
