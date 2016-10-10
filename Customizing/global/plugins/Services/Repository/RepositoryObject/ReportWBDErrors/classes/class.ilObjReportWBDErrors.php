@@ -9,12 +9,14 @@ set_time_limit(0);
 class ilObjReportWBDErrors extends ilObjReportBase {
 	protected $relevant_parameters = array();
 	protected $gCtrl;
+	public $filter_settings;
 
 	public function __construct($ref_id = 0) {
 		parent::__construct($ref_id);
 		global $ilCtrl,$lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gLng = $lng;
+		$this->filter_settings = null;
 	}
 
 	public function initType() {
@@ -35,9 +37,6 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 	}
 
 	protected function buildOrder($order) {
-		$order 	->mapping("course_id", "err.crs_id")
-				->mapping("resolve", "err.ts")
-				->defaultOrder("ts", "DESC");
 		return $order;
 	}
 
@@ -45,6 +44,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		$table	->column("ts", $this->plugin->txt("ts"), true)
 				->column("action", $this->plugin->txt("wbd_errors_action"), true)
 				->column("internal", $this->plugin->txt( "wbd_errors_internal"), true)
+				->column("status", $this->plugin->txt( "status"), true)
 				->column("user_id", $this->plugin->txt("usr_id"), true)
 				->column("course_id", $this->plugin->txt("crs_id"), true)
 				->column("firstname", $this->plugin->txt("firstname"), true)
@@ -54,61 +54,96 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 				->column("end_date", $this->plugin->txt("end_date"), true)
 				->column("reason",$this->plugin->txt( "wbd_errors_reason"), true)
 				->column("reason_full", $this->plugin->txt("wbd_errors_reason_full"), true)
-				->column("resolve", $this->plugin->txt("wbd_errors_resolve"), 1, 0, 1);
+				->column("resolve", $this->plugin->txt("actions"), 1, 0, 1);
 		return parent::buildTable($table);
 	}
 
 	protected function buildQuery($query) {
-		$query	->distinct()
-				->select("err.id")
-				->select("err.usr_id")
-				->select("err.crs_id")
-				->select("err.internal")
-				->select("err.reason")
-				->select("err.reason_full")
-				->select("err.ts")
-				->select("err.action")
-				->select("ud.firstname")
-				->select("ud.lastname")
-				->select("crs.title")
-				->select("usrcrs.begin_date")
-				->select("usrcrs.end_date")
-				->from("wbd_errors err")
-				->left_join("hist_user usr")
-					->on("err.usr_id = usr.user_id AND usr.hist_historic = 0")
-				->left_join("hist_course crs")
-					->on("err.crs_id = crs.crs_id AND crs.hist_historic = 0")
-				->left_join("hist_usercoursestatus usrcrs")
-					->on("err.usr_id = usrcrs.usr_id AND err.crs_id = usrcrs.crs_id AND usrcrs.hist_historic = 0")
-				->left_join("usr_data ud")
-					->on("err.usr_id = ud.usr_id")
-				->compile();
 		return $query;
 	}
 
+	// TODO: Those are not really used, as we use the new filter logic
+	// in this report. Remove em!
 	protected function buildFilter($filter) {
-		$filter ->static_condition("err.resolved = 0")
-				->multiselect("reason"
-							 , $this->plugin->txt("wbd_errors_reason")
-							 , "reason"
-							 , catFilter::getDistinctValues('reason', 'wbd_errors')
-							 , array()
-							 )
-				->multiselect("action"
-							 , $this->plugin->txt("wbd_errors_action")
-							 , "action"
-							 , catFilter::getDistinctValues('action', 'wbd_errors')
-							 , array()
-							 )
-				->multiselect("internal"
-							 , $this->plugin->txt("wbd_errors_internal")
-							 , "internal"
-							 , catFilter::getDistinctValues('internal', 'wbd_errors')
-							 , array()
-							 )
-				->action($this->filter_action)
-				->compile();
-		return $filter;
+		return null;
+	}
+
+	public function deliverFilter() {
+		return null;
+	}
+	//
+	// As is don't use a regular filter, i also don't need its params...
+	protected function addFilterToRelevantParameters() {
+	}
+
+	public function filter() {
+		$pf = new \CaT\Filter\PredicateFactory();
+		$tf = new \CaT\Filter\TypeFactory();
+		$f = new \CaT\Filter\FilterFactory($pf, $tf);
+		$txt = function($id) { return $this->plugin->txt($id); };
+
+		return $f->sequence(
+					$f->sequence(
+						$f->dateperiod
+							( $txt("error_dateperiod")
+							, ""
+							)->map(function($start,$end) use ($f) {
+									$pc = $f->dateperiod_overlaps_predicate
+										( "err.ts"
+										, "err.ts"
+										);
+									return array("date_period_predicate" => $pc($start,$end)
+										,"start" => $start
+										,"end" => $end);
+									},$tf->dict(array(
+										"date_period_predicate" => $tf->cls("CaT\Filter\Predicates\Predicate")
+										,"start" => $tf->cls("DateTime")
+										,"end" => $tf->cls("DateTime")
+									)))
+						,$f->multiselect
+								( $txt("reason")
+								, ""
+								, $this->getFilterValues('reason', 'wbd_errors')
+							)->map(function($id_s) {return array_values($id_s);}
+							,$tf->lst($tf->string()))
+						,
+						$f->multiselect
+							( $txt("action")
+							, ""
+							, $this->getFilterValues('action', 'wbd_errors')
+						)->map(function($id_s) {return $id_s;}
+							,$tf->lst($tf->string()))
+						,
+						$f->multiselect
+							( $txt("error_type")
+							, ""
+							, $this->getErrorFilterValues()
+						)->map(function($id_s) {return $id_s;}
+							,$tf->lst($tf->int()))
+						,$f->multiselect
+							( $txt("status")
+							, ""
+							, $this->getStatusFilterValues()
+						)->default_choice($this->getStatusFilterDefaults())
+						 ->map(function($id_s) {return array_values($id_s);}
+						,$tf->lst($tf->string()))
+					)->map(function($date_period_predicate, $start, $end, $reason,$action,$error_type,$status) {
+						return array("period_pred" => $date_period_predicate
+							, "start" => $start
+							, "end" => $end
+							, "reason" => $reason
+							, "action" => $action
+							, "error_type" => $error_type
+							, "status" => $status
+							);}
+						, $tf->dict(array("period_pred" => $tf->cls("CaT\Filter\Predicates\Predicate")
+							,"start" => $tf->cls("DateTime")
+							,"end" => $tf->cls("DateTime")
+							,"reason" => $tf->lst($tf->string())
+							,"action" => $tf->lst($tf->string())
+							,"error_type" => $tf->lst($tf->int())
+							,"status" => $tf->lst($tf->string())))
+				));
 	}
 
 	public function fetchData(callable $callback) {
@@ -116,9 +151,51 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		 *	The following is not nice. I'll have to think of a better way to postprocess data from database, than the static transformResultRow.
 		 *	It probably would suffice simply to make is nonstatic...
 		 */
-		$data = parent::fetchData($callback);
-		$this->gCtrl->setParameterByClass("ilObjReportWBDErrorsGUI",$this->filter->getGETName(),$this->filter->encodeSearchParamsForGET());
-		foreach ($data as &$rec) {
+		$db = $this->gIldb;
+		$query = "SELECT GROUP_CONCAT(DISTINCT err.id SEPARATOR ',') as ids, err.usr_id, err.crs_id, err.internal, err.reason, err.status, GROUP_CONCAT(DISTINCT err.reason_full SEPARATOR ',') as reason_full, DATE(err.ts) as err_date, err.action, usr.firstname, usr.lastname\n"
+				.", crs.title, usrcrs.begin_date, usrcrs.end_date\n"
+				." FROM wbd_errors err\n"
+				." LEFT JOIN hist_user usr ON err.usr_id = usr.user_id\n"
+				."     AND usr.hist_historic = 0\n"
+				." LEFT JOIN hist_course crs ON err.crs_id = crs.crs_id\n"
+				."    AND crs.hist_historic = 0\n"
+				." LEFT JOIN hist_usercoursestatus usrcrs ON err.usr_id = usrcrs.usr_id\n"
+				."    AND err.crs_id = usrcrs.crs_id\n"
+				."    AND usrcrs.hist_historic = 0\n"
+				." LEFT JOIN usr_data ud ON err.usr_id = ud.usr_id";
+
+		$filter = $this->filter();
+
+		if($this->filter_settings) {
+
+
+			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
+			$dt_query = $to_sql->interpret($settings[0]["period_pred"]);
+			$query .= " WHERE ".$dt_query;
+
+			if(!empty($settings[0]["reason"])) {
+				$query .= "    AND ".$db->in("err.reason", $settings[0]["reason"], false, "text");
+			}
+
+			if(!empty($settings[0]["action"])) {
+				$query .= "    AND ".$db->in("err.action", $settings[0]["action"], false, "text");
+			}
+
+			if(!empty($settings[0]["error_type"])) {
+				$query .= "    AND ".$db->in("err.internal", $settings[0]["error_type"], false, "text");
+			}
+
+			if(!empty($settings[0]["status"])) {
+				$query .= "    AND ".$db->in("err.status", $settings[0]["status"], false, "text");
+			}
+		}
+
+		$query .= " GROUP BY usr_id, crs_id, internal, reason, err_date, action, firstname, lastname, status";
+
+		$res = $db->query($query);
+		$data = array();
+		while($rec = $db->fetchAssoc($res)) {
 			$link_change_usr = $this->gCtrl->getLinkTargetByClass(
 				array("iladministrationgui", "ilobjusergui"), "edit")
 				.'&obj_id='.$rec['usr_id']
@@ -141,20 +218,102 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 			}
 			$rec['crs_id'] = sprintf($link_change_crs, $rec['crs_id']);
 
-			$rec['resolve'] = '<a href="' 
-				.$this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI","ilObjReportWBDErrorsGUI"), "resolve")
-				.'&err_id='
-				.$rec['id']
-				.'">'
-				.$this->plugin->txt("wbd_errors_resolve")
-				.'</a>';
+			$rec['resolve'] = $this->getActionMenu(base64_encode($rec['ids']));
 
-			if($this->gLng->exists($rec["reason_full"])) {
-				$rec["reason_full"] = $this->gLng->txt($rec["reason_full"]);
+			$reasons = explode(",", $rec["reason_full"]);
+			$new_reasons = array();
+			foreach ($reasons as $key => $reason) {
+				if($this->gLng->exists($reason)) {
+					$new_reasons[] = $this->gLng->txt($reason);
+				} else {
+					$new_reasons[] = $reason;
+				}
 			}
 
+			$rec["reason_full"] = implode("<br />", $new_reasons);
+
+			if((int)$rec["internal"] === 1) {
+				$rec["internal"] = $this->plugin->txt("internal");
+			} else if ((int)$rec["internal"] === 0) {
+				$rec["internal"] = $this->plugin->txt("WBD");
+			}
+
+			$rec["ts"] = $rec["err_date"];
+
+			$rec["status"] = $this->plugin->txt($rec["status"]);
+
+			$data[] = $rec;
 		}
-		$this->gCtrl->setParameterByClass("ilObjReportWBDErrorsGUI",$this->filter->getGETName(),null);
+
 		return $data;
+	}
+
+	protected function getFilterValues($column, $table) {
+		$ret = array();
+		$query = "SELECT DISTINCT ".$column." FROM ".$table."";
+
+		$res = $this->gIldb->query($query);
+		while($row = $this->gIldb->fetchAssoc($res)) {
+			$ret[$row[$column]] = $row[$column];
+		}
+
+		return $ret;
+	}
+
+	protected function getStatusFilterValues() {
+		return array("not_resolved" => $this->plugin->txt("not_resolved")
+				   , "resolved" => $this->plugin->txt("resolve")
+				   , "feedback" => $this->plugin->txt("feedback")
+				   , "unable_resolve" => $this->plugin->txt("unable_resolve")
+			);
+	}
+
+	protected function getStatusFilterDefaults() {
+		return array("not_resolved" => $this->plugin->txt("not_resolved")
+				   , "resolved" => $this->plugin->txt("resolve")
+				   , "feedback" => $this->plugin->txt("feedback")
+			);
+	}
+
+	protected function getErrorFilterValues() {
+		return array(1 => $this->plugin->txt("internal")
+				   , 2 => $this->plugin->txt("wbd")
+				);
+	}
+
+	protected function getActionMenu($err_ids) {
+		include_once("Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php");
+		$current_selection_list = new \ilAdvancedSelectionListGUI();
+		$current_selection_list->setAsynch(false);
+		$current_selection_list->setAsynchUrl(true);
+		$current_selection_list->setListTitle($this->txt("actions"));
+		$current_selection_list->setId($err_ids);
+		$current_selection_list->setSelectionHeaderClass("small");
+		$current_selection_list->setItemLinkClass("xsmall");
+		$current_selection_list->setLinksMode("il_ContainerItemCommand2");
+		$current_selection_list->setHeaderIcon(\ilAdvancedSelectionListGUI::DOWN_ARROW_DARK);
+		$current_selection_list->setUseImages(false);
+		$current_selection_list->setAdditionalToggleElement("err_ids".$err_ids, "ilContainerListItemOuterHighlight");
+
+		foreach ($this->getActionMenuItems($err_ids) as $key => $value) {
+			$current_selection_list->addItem($value["title"],"",$value["link"],$value["image"],"",$value["frame"]);
+		}
+
+		return $current_selection_list->getHTML();
+	}
+
+	protected function getActionMenuItems($err_ids) {
+		$this->gCtrl->setParameterByClass("ilObjReportWBDErrorsGUI", "err_ids", $err_ids);
+		$link_resolve = $this->memberlist_link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI","ilObjReportWBDErrorsGUI"), "resolve");
+		$link_feedback = $this->memberlist_link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI","ilObjReportWBDErrorsGUI"), "feedback");
+		$link_unable_resolve = $this->memberlist_link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI","ilObjReportWBDErrorsGUI"), "unableResolve");
+		$this->gCtrl->clearParametersByClass("ilObjReportWBDErrorsGUI");
+
+		$items = array();
+		$items[] = array("title" => $this->plugin->txt("resolve"), "link" => $link_resolve, "image" => "", "frame"=>"");
+		$items[] = array("title" => $this->plugin->txt("feedback"), "link" => $link_feedback, "image" => "", "frame"=>"");
+		$items[] = array("title" => $this->plugin->txt("unable_resolve"), "link" => $link_unable_resolve, "image" => "", "frame"=>"");
+
+		return $items;
 	}
 }
