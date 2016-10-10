@@ -26,14 +26,14 @@ class TestrunHistorizingDataProvider implements DataProvider {
 
 	public function caseId() {
 		if($this->case === null) {
-			$this->case = $this->calculateCase($this->component, $this->event, $this->parameter);
+			$this->case = $this->calculateCase();
 		}
 		return $this->case;
 	}
 
 	public function data() {
 		if($this->data === null) {
-			$this->data = $this->calculateData($this->component, $this->event, $this->parameter);
+			$this->data = $this->calculateData();
 		}
 		return $this->data;
 	}
@@ -53,19 +53,20 @@ class TestrunHistorizingDataProvider implements DataProvider {
 	private function calculateData() {
 		global $ilLog;
 		if($this->component === 'Services/Object' && $this->event === 'update') {
-			return array('test_title' => ilObject::_lookupTitle($a_parameter['obj_id']));
+			return array('test_title' => ilObject::_lookupTitle($this->parameter['obj_id']));
 		} elseif($this->component === 'Modules/Test' && $this->event === 'testPassIncreased') {
 
 			$test_session = $this->parameter['test_session'];
 			$test = $this->getTestInstanceByObjId($this->getObjIdFromTestSession($test_session));
-			$test_result = $test->getTestResult($test_session->getActiveId());
-			$testrun_finished_ts = (new DateTime($test_session->getSubmittedTimestamp()))->getTimestamp();
+
+			$test_result = $test->getTestResult($test_session->getActiveId(),$test_session->getLastFinishedPass());
+
 			return array(
 				'test_title'			=> $test->getTitle()
 				,'max_points'			=> $test_result['pass']['total_max_points']
 				,'points_achieved'		=> $test_result['pass']['total_reached_points']
 				,'percent_to_pass'		=> $this->getPercentToPass($test_session)
-				,'testrun_finished_ts'	=> $testrun_finished_ts
+				,'testrun_finished_ts'	=> time()
 				,'passed'				=> $test_result['test']['passed']
 				,'pass_scoring'			=> $this->getPassScoring($test)
 				);
@@ -107,15 +108,15 @@ class TestrunHistorizingDataProvider implements DataProvider {
 		return $db->fetchAssoc($db->query($sql))['points_to_pass'];
 	}
 
-	private function calculateCase($a_component, $a_event, array $a_parameter) {
+	private function calculateCase() {
 		if($this->component === 'Services/Object' && $this->event === 'update') {
-			return array('obj_id' => $a_parameter['obj_id']);
+			return array('obj_id' => $this->parameter['obj_id']);
 		} elseif($this->component === 'Modules/Test' && $this->event === 'testPassIncreased') {
 			$test_session = $this->parameter['test_session'];
 			return array(
 				'usr_id' => $test_session->getUserId()
 				,'obj_id' => $this->getObjIdFromTestSession($test_session)
-				,'pass' => $test_session->getPass()
+				,'pass' => $test_session->getLastFinishedPass()
 				);
 		}
 	}
