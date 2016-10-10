@@ -125,7 +125,7 @@ class ilTalentAssessmentObservationsGUI {
 
 	protected function setToolbarReport() {
 		$start_observation_link = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATION_PREVIEW_REPORT);
-		$this->gToolbar->addButton( $this->txt("preview_report"), $start_observation_link);
+		$this->gToolbar->addButton( $this->txt("preview_report"), $start_observation_link, "blank");
 
 		if(!$this->settings->Finished()) {
 			$finish_ta_link = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_FINISH_TA);
