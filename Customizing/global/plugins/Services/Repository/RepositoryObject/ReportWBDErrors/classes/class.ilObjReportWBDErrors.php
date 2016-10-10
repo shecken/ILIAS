@@ -276,9 +276,9 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 	}
 
 	protected function getErrorFilterValues() {
-		return array(1 => $this->plugin->txt("internal")
-				   , 2 => $this->plugin->txt("wbd")
-				);
+		return array( 1 => $this->plugin->txt("internal")
+					, 2 => $this->plugin->txt("wbd")
+					);
 	}
 
 	protected function getActionMenu($err_ids) {
