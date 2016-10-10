@@ -15,10 +15,14 @@ if(!$ilDB->tableExists('hist_usertestrun')) {
 			,'max_points'			=> array('type' => 'integer', 'length' => 4, 'notnull' => false, 'default' => 0)
 			,'points_achieved'		=> array('type' => 'integer', 'length' => 4, 'notnull' => false, 'default' => 0)
 			,'percent_to_pass'		=> array('type' => 'float', 'notnull' => true, 'default' => 0)
-			,'testrun_finished_at'	=> array('type' => 'integer', 'length' => 4, 'notnull' => true, 'default' => 0)
+			,'testrun_finished_ts'	=> array('type' => 'integer', 'length' => 4, 'notnull' => true, 'default' => 0)
 			,'passed'				=> array('type' => 'integer', 'length' => 1, 'notnull' => true)
 			,'pass_scoring'			=> array('type' => 'text', 'length' => 30, 'notnull' => true)
 			));
 	$ilDB->createSequence('hist_usertestrun');
+	$ilDB->addPrimaryKey('hist_usertestrun', array('row_id'));
+	$ilDB->addIndex('hist_usertestrun',array('obj_id'),'tro');
+	$ilDB->addIndex('hist_usertestrun',array('usr_id'),'tru');
+	$ilDB->addIndex('hist_usertestrun',array('pass'),'trp');
 }
 ?>
