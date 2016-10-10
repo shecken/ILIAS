@@ -22,7 +22,7 @@ class ilTestrunHistorizingAppEventListenerPlugin extends ilEventHookPlugin {
 
 
 	public function handleEvent($a_component, $a_event, $a_parameter) {
-		if($this->eventRelevant($a_component, $a_event)) {
+		if($this->eventRelevant($a_component, $a_event, $a_parameter)) {
 			$this->historize($this->dataProvider($a_component,$a_event,$a_parameter), $this->historizer());
 		}
 	}
