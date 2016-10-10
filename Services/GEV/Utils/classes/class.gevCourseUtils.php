@@ -37,7 +37,7 @@ class gevCourseUtils {
 		
 		$this->gLng->loadLanguageModule("crs");
 		
-		$this->crs_id = $a_crs_id;
+		$this->crs_id = (int)$a_crs_id;
 		$this->crs_obj = null;
 		$this->crs_booking_permissions = null;
 		$this->crs_participations = null;
