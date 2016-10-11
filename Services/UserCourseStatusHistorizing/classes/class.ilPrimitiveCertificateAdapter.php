@@ -10,11 +10,11 @@ require_once('./Services/Certificate/classes/class.ilCertificateAdapter.php');
  * Its a mockclass. Only used for instantiation of an ilCertificate class wich needs an ilCartificateAdapter class. 
  */
 class ilPrimitiveCertificateAdapter extends ilCertificateAdapter {
-  
-  function __construct($course_id) {
-	$this->course_id = $course_id;
-  }
-  
+
+	function __construct($course_id) {
+	  $this->course_id = $course_id;
+	}
+
 	/**
 	 * @inherit
 	 */
