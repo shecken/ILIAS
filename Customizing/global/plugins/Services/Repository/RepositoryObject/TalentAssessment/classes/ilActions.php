@@ -196,6 +196,7 @@ class ilActions {
 		$this->gRbacadmin->deassignUser($role_id, $user_id);
 	}
 
+	// TODO: Why can this return null? An empty array would be enough.
 	public function getAssignedUser($obj_id) {
 		$role_id = $this->getLocalRoleId($obj_id);
 
