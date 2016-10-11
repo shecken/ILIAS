@@ -51,7 +51,7 @@ class TestrunHistorizingDataProvider implements DataProvider {
 	}
 
 	private function calculateData() {
-		global $ilLog;
+
 		if($this->component === 'Services/Object' && $this->event === 'update') {
 			return array('test_title' => $this->getTestInstanceByObjId($this->parameter['obj_id'])->getTitle());
 		} elseif($this->component === 'Modules/Test' && $this->event === 'testPassIncreased') {
@@ -60,7 +60,7 @@ class TestrunHistorizingDataProvider implements DataProvider {
 			$test = $this->getTestInstanceByObjId($this->getObjIdFromTestSession($test_session));
 
 			$test_result = $test->getTestResult($test_session->getActiveId(),$test_session->getLastFinishedPass());
-			$ilLog->dump($test_result);
+
 			return array(
 				'test_title'			=> $test->getTitle()
 				,'max_points'			=> $test_result['pass']['total_max_points']
