@@ -82,6 +82,7 @@ class ilObjReportEduBio extends ilObjReportBase {
 							)
 				->static_condition("usr.user_id = ".$this->gIldb->quote($this->target_user_id, "integer"))
 				->static_condition("usrcrs.hist_historic = 0")
+				->static_condition('(crs.is_cancelled IS NULL OR crs.is_cancelled = '.$this->gIldb->quote('Nein','text').')')
 				->static_condition($this->gIldb
 										->in(	"usrcrs.booking_status"
 												, array( "gebucht", "kostenpflichtig storniert")
@@ -107,7 +108,7 @@ class ilObjReportEduBio extends ilObjReportBase {
 				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text')
 								.'	,IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
 								.'		,usrcrs.credit_points'
-								.'		,IF(usrcrs.end_date > '.$this->gIldb->quote($one_year_befone_now,'date').' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL'
+								.'		,IF(usrcrs.end_date > '.$this->gIldb->quote($one_year_befone_now,'date').' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL AND usrcrs.wbd_cancelled != 1'
 								.'			,usrcrs.credit_points,\'-\')'
 								.'	)'
 								.'	,\'-\''
