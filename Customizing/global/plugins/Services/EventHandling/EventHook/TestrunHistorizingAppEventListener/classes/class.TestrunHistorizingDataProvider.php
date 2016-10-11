@@ -60,14 +60,14 @@ class TestrunHistorizingDataProvider implements DataProvider {
 			$test = $this->getTestInstanceByObjId($this->getObjIdFromTestSession($test_session));
 
 			$test_result = $test->getTestResult($test_session->getActiveId(),$test_session->getLastFinishedPass());
-
+			$ilLog->dump($test_result);
 			return array(
 				'test_title'			=> $test->getTitle()
 				,'max_points'			=> $test_result['pass']['total_max_points']
 				,'points_achieved'		=> $test_result['pass']['total_reached_points']
 				,'percent_to_pass'		=> $this->getPercentToPass($test_session)
 				,'testrun_finished_ts'	=> time()
-				,'passed'				=> $test_result['test']['passed']
+				,'test_passed'			=> $test_result['test']['passed']
 				,'pass_scoring'			=> $this->getPassScoring($test)
 				);
 		}
