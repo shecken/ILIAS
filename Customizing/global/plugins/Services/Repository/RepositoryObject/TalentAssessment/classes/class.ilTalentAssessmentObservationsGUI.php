@@ -134,11 +134,19 @@ class ilTalentAssessmentObservationsGUI {
 	}
 
 	protected function startObservation() {
-		$this->actions->setObservationStarted(true);
-		$this->actions->copyClassificationValues($this->settings->getCareerGoalId());
-		$this->actions->copyCopyDefaultText($this->settings->getCareerGoalId());
-		$this->actions->copyObservations($this->getObjId(), $this->settings->getCareerGoalId());
-		$red = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATIONS_LIST, "", false, false);
+		$observator = $this->actions->getAssignedUser($this->getObjId());
+
+		if($observator && count($observator) > 0) {
+			$this->actions->setObservationStarted(true);
+			$this->actions->copyClassificationValues($this->settings->getCareerGoalId());
+			$this->actions->copyCopyDefaultText($this->settings->getCareerGoalId());
+			$this->actions->copyObservations($this->getObjId(), $this->settings->getCareerGoalId());
+			$red = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATIONS_LIST, "", false, false);
+		} else {
+			\ilUtil::sendInfo($this->txt("no_observator_cant_start"), true);
+			$red = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATIONS, "", false, false);
+		}
+
 		\ilUtil::redirect($red);
 	}
 
@@ -151,7 +159,9 @@ class ilTalentAssessmentObservationsGUI {
 		$this->actions->setNoticeFor($obs_id, $_POST["notice"]);
 		$this->actions->setPoints($_POST);
 
+		$this->gCtrl->setParameter($this->parent_obj, "pos", $_GET["pos"]);
 		$red = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATIONS_LIST, "", false, false);
+		$this->gCtrl->setParameter($this->parent_obj, "pos", null);
 		\ilUtil::redirect($red);
 	}
 

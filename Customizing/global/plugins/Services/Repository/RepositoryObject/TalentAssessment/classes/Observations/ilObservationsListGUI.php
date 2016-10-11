@@ -9,6 +9,7 @@ class ilObservationsListGUI {
 		global $tpl;
 
 		$this->gTpl = $tpl;
+		$this->gTpl->addJavaScript("./Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/templates/js/jump_to_marker.js");
 		$this->parent_obj = $parent_obj;
 	}
 
@@ -18,7 +19,11 @@ class ilObservationsListGUI {
 		$spacer = new \catHSpacerGUI();
 
 		foreach ($obs as $key => $ob) {
-			$gui = new ilObservationsListTableGUI($this->parent_obj, $ob);
+			$tpl_marker = new \ilTemplate("tpl.talent_assesment_jump_marker.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/");
+			$tpl_marker->setVariable("IDENTIFIER", $key);
+			$gui = new ilObservationsListTableGUI($this->parent_obj, $ob, $key);
+
+			$html .= $tpl_marker->get();
 			$html .= $gui->getHtml();
 			$html .= $spacer->render();
 		}
