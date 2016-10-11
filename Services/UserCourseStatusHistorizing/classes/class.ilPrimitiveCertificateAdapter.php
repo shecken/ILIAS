@@ -12,14 +12,14 @@ require_once('./Services/Certificate/classes/class.ilCertificateAdapter.php');
 class ilPrimitiveCertificateAdapter extends ilCertificateAdapter {
 
 	function __construct($course_id) {
-	  $this->course_id = $course_id;
+		$this->course_id = $course_id;
 	}
 
 	/**
 	 * @inherit
 	 */
 	public function getCertificateID() {
-	  return $this->course_id;
+		return $this->course_id;
 	}
   
 	/**
