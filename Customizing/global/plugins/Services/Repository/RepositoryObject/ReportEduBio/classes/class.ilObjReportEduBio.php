@@ -104,12 +104,14 @@ class ilObjReportEduBio extends ilObjReportBase {
 				->select("crs.provider")
 				->select("crs.tutor")
 				->select('usrcrs.credit_points')
-				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text').','
-								.'	IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
-								.'		,usrcrs.credit_points,'
-								.'		IF(usrcrs.end_date > '.$this->gIldb->quote($one_year_befone_now,'date').' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL ,usrcrs.credit_points,\'-\')'
+				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text')
+								.'	,IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
+								.'		,usrcrs.credit_points'
+								.'		,IF(usrcrs.end_date > '.$this->gIldb->quote($one_year_befone_now,'date').' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL'
+								.'			,usrcrs.credit_points,\'-\')'
 								.'	)'
-								.',\'-\') as credit_points')
+								.'	,\'-\''
+								.') as credit_points')
 				->select("crs.fee")
 				->select("usrcrs.participation_status")
 				->select("usrcrs.okz")
@@ -118,8 +120,8 @@ class ilObjReportEduBio extends ilObjReportBase {
 				->select_raw("IF(usrcrs.wbd_cancelled != 1, usrcrs.wbd_booking_id, NULL) wbd_booking_id")
 				->select("usrcrs.certificate_filename")
 				->select("oref.ref_id")
-				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text').' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL ,'
-								.'	IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
+				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text').' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL'
+								.'	,IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
 								.'		,'.$this->gIldb->quote('Ja','text')
 								.'		,IF(usrcrs.end_date > '.$this->gIldb->quote($one_year_befone_now,'date').','.$this->gIldb->quote('Nein','text').',\'-\')'
 								.'),\'-\') as wbd_reported')
