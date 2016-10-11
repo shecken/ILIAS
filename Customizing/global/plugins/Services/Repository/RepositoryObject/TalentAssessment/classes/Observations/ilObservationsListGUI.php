@@ -18,7 +18,7 @@ class ilObservationsListGUI {
 		$spacer = new \catHSpacerGUI();
 
 		foreach ($obs as $key => $ob) {
-			$tpl_marker = new \ilTemplate("tpl.talent_assesment_jump_marker.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/");
+			$tpl_marker = new \ilTemplate("tpl.talent_assessment_jump_marker.html", true, true, "Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/");
 			$tpl_marker->setVariable("IDENTIFIER", $key);
 			$gui = new ilObservationsListTableGUI($this->parent_obj, $ob, $key);
 
