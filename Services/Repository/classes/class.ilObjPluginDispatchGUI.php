@@ -23,7 +23,7 @@ class ilObjPluginDispatchGUI
 	function &executeCommand()
 	{
 		global $ilCtrl;
-		
+
 		$next_class = $ilCtrl->getNextClass();
 		$cmd_class = $ilCtrl->getCmdClass();
 
