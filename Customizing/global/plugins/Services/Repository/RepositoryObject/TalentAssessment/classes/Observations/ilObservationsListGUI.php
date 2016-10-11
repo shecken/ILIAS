@@ -9,7 +9,6 @@ class ilObservationsListGUI {
 		global $tpl;
 
 		$this->gTpl = $tpl;
-		$this->gTpl->addJavaScript("./Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/templates/js/jump_to_marker.js");
 		$this->parent_obj = $parent_obj;
 	}
 

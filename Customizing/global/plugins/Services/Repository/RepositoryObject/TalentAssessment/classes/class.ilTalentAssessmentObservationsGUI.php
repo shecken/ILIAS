@@ -119,8 +119,11 @@ class ilTalentAssessmentObservationsGUI {
 	}
 
 	protected function setToolbarObservations() {
-		$start_observation_link = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATION_START);
-		$this->gToolbar->addButton( $this->txt("start_observation"), $start_observation_link);
+		$observator = $this->actions->getAssignedUser($this->getObjId());
+		if ($observator && count($observator) > 0) {
+			$start_observation_link = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATION_START);
+			$this->gToolbar->addButton( $this->txt("start_observation"), $start_observation_link);
+		}
 	}
 
 	protected function setToolbarReport() {
@@ -159,9 +162,8 @@ class ilTalentAssessmentObservationsGUI {
 		$this->actions->setNoticeFor($obs_id, $_POST["notice"]);
 		$this->actions->setPoints($_POST);
 
-		$this->gCtrl->setParameter($this->parent_obj, "pos", $_GET["pos"]);
 		$red = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATIONS_LIST, "", false, false);
-		$this->gCtrl->setParameter($this->parent_obj, "pos", null);
+		$red = $red."#pos".$_GET["pos"];
 		\ilUtil::redirect($red);
 	}
 
