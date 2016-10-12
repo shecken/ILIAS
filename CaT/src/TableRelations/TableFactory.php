@@ -129,6 +129,45 @@ class TableFactory {
 	}
 
 	/**
+	 * Hist user orgu table representation
+	 *
+	 * @param	string	$id
+	 * @return	AbstractTable
+	 */
+	public function histUserTestrun($id) {
+		return $this->table('hist_usertestrun',$id)
+			->addField($this->field('usr_id'))
+			->addField($this->field('obj_id'))
+			->addField($this->field('pass'))
+			->addField($this->field('hist_historic'))
+			->addField($this->field('max_points'))
+			->addField($this->field('points_achieved'))
+			->addField($this->field('test_passed'))
+			->addField($this->field('testrun_finished_ts'))
+			->addField($this->field('test_title'))
+			->addField($this->field('percent_to_pass'))
+		;
+	}
+
+	public function allOrgusOfUsers($id,array $usr_ids = array()) {
+		$orgus = $this->histUserOrgu('orgus');
+		$orgus = $orgus->addConstraint($orgus->field('hist_historic')->EQ->int(0))
+						->addConstraint($orgus->field('action')->GEQ()->int(0));
+		if(count($usr_ids)>0) {
+			$orgus = $orgus->addConstraint($this->predicate_factory->IN($orgus->field('usr_id'),$this->predicate_factory(list_int_by_array($usr_ids))));
+		}
+
+		$all_orgus_space = $this->TableSpace()
+					->addTablePrimary($orgus)
+					->setRootTable($orgus)
+					->request($orgus->field('usr_id'))
+					->request($this->groupConcatFieldSql('orgus'),$orgu->field('orgu_title'))
+					->groupBy($orgus->field('usr_id'));
+
+		return $this->DerivedTable($all_orgus_space,$id);
+	}
+
+	/**
 	 * Derived field equivalent of sql GROUP_CONCAT
 	 *
 	 * @param	string	$name
@@ -179,5 +218,25 @@ class TableFactory {
 				return 'FROM_UNIXTIME('.$timestamp.',\'%d.%m.%Y\')';
 			}
 			,array($timestamp));
+	}
+
+	public function minSql($name, Filters\Preedicates\Field $field) {
+		return $this->DerivedField(
+				$title
+				,function ($fieldname) {
+					return 'MIN('.$fieldname.')';
+				}
+				,array($field)
+			);
+	}
+
+	public function maxSql($name, Filters\Preedicates\Field $field) {
+		return $this->DerivedField(
+				$title
+				,function ($fieldname) {
+					return 'MAX('.$fieldname.')';
+				}
+				,array($field)
+			);
 	}
 }
