@@ -222,7 +222,7 @@ class TableFactory {
 
 	public function minSql($name, Filters\Preedicates\Field $field) {
 		return $this->DerivedField(
-				$title
+				$name
 				,function ($fieldname) {
 					return 'MIN('.$fieldname.')';
 				}
@@ -232,11 +232,37 @@ class TableFactory {
 
 	public function maxSql($name, Filters\Preedicates\Field $field) {
 		return $this->DerivedField(
-				$title
+				$name
 				,function ($fieldname) {
 					return 'MAX('.$fieldname.')';
 				}
 				,array($field)
 			);
+	}
+
+	public function countAllSql($name) {
+		return $this->DerivedField(
+				$name
+				,function () {
+					return 'COUNT(*)';
+				});
+	}
+
+	public function sumSql($name, Filters\Preedicates\Field $field) {
+		return $this->DerivedField(
+				$name
+				,function ($field_name) {
+					return 'SUM('.$fieldname.')';
+				}
+				,$field);
+	}
+
+	public function avgSql($name, Filters\Preedicates\Field $field) {
+		return $this->DerivedField(
+				$name
+				,function ($field_name) {
+					return 'AVG('.$fieldname.')';
+				}
+				,$field);
 	}
 }
