@@ -91,4 +91,8 @@ class Table implements AbstractTable, Graphs\AbstractNode {
 	public function setSubgraph($subgraph) {
 		$this->subgraph = $subgraph;
 	}
+
+	public function field($name) {
+		return $this->fields[$name];
+	}
 }
