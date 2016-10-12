@@ -104,6 +104,10 @@ class TableSpace {
 		return $this;
 	}
 
+	public function table($id) {
+		return $this->graph->getNodeById($id);
+	}
+
 	/**
 	 * Query definition.
 	 */
