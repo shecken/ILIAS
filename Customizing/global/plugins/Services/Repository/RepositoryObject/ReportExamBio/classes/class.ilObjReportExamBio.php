@@ -24,9 +24,17 @@ class ilObjReportExamBio extends ilObjReportBase {
 	public function initType() {
 		$this->setType("xexb");
 	}
-
+//defineFieldColumn($title, $column_id, array $fields = array(), $selectable = false, $sort = true , $no_excel =  false)
 	public function prepareTable(catSelectableReportTableGUI $table) {
+		if($this->isForTrainer()) {
 
+		}
+		$table->defineFieldColumn($this->plugin->txt('test_title'),'test_title',
+					array('test_title' => $this->space->table('recent_pass_data')->field('test_title')))
+			->defineFieldColumn($this->plugin->txt('test_date'),'test_date',
+					array('test_date' => $this->space->table('recent_pass_data')->field('testrun_finished_ts')))
+			->defineFieldColumn($this->plugin->txt('number_of_runs'),'number_of_runs',
+					array('number_of_runs' => $this->tf->countAllSql('number_of_runs')));
 		return $table;
 	}
 
