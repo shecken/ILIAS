@@ -235,11 +235,8 @@ class ilUserCourseStatusHistorizingHelper
 		require_once './Modules/Course/classes/class.ilCourseCertificateAdapter.php';
 
 		$cert = new ilCertificate(new ilPrimitiveCertificateAdapter($course));
-		if($cert->readActive() == 0) {
-		  return false;
-		}
 
-		return ilCourseCertificateAdapter::_hasUserCertificate($user, $course)
+		return $cert->readActive() !== 0
 		    && gevCourseUtils::getInstance($course)->getParticipationStatusLabelOf($user) == "teilgenommen";
 	}
 
