@@ -68,7 +68,10 @@ class SqlQueryInterpreter {
 	}
 
 	protected function orderBy($query) {
-		return ' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode());
+		if(count($query->orderByFields())>0) {
+			return ' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode());
+		}
+		return '';
 	}
 
 	protected function interpretTable(Tables\AbstractTable $table) {
@@ -86,7 +89,7 @@ class SqlQueryInterpreter {
 	}
 
 	protected function interpretDerivedTable(Tables\DerivedTable $table) {
-		return "(".$this->getSql($table->space->query()).") AS ".$table->id();
+		return "(".$this->getSql($table->space()->query()).") AS ".$table->id();
 	}
 
 	protected function interpretPredicate(Filter\Predicates\Predicate $predicate) {
