@@ -163,6 +163,35 @@ class FilterFactory {
 		};
 	}
 
+	/**
+	 * Map this over a dateperiod to get the standard behaviour of
+	 * overlapping periods using Field varables.
+	 *
+	 * @param	\Predicates\Field	$field_start
+	 * @param	\Predicates\Field	$field_end
+	 * @return	\Closure
+	 */
+	public function dateperiod_overlaps_predicate_fields(\Predicates\Field $field_start,\Predicates\Field $field_end) {
+		return function(\DateTime $start, \DateTime $end)  use ($field_start, $field_end) {
+			return	$field_start->LE()->date($end)
+				->_AND(	$f->date($start)->LE($field_end));
+		};
+	}
+
+	/**
+	 * Map this over a dateperiod to get the standard behaviour of
+	 * overlapping periods using Field varables containing timestamps.
+	 *
+	 * @param	\Predicates\Field	$field_start
+	 * @param	\Predicates\Field	$field_end
+	 * @return	\Closure
+	 */
+	public function dateperiod_timestamp_overlaps_predicate_fields(\Predicates\Field $field_start,\Predicates\Field $field_end) {
+		return function(\DateTime $start, \DateTime $end)  use ($field_start, $field_end) {
+			return	$field_start->LE()->int($end->getTimestamp())
+				->_AND(	$f->date($start->getTimestamp())->LE($field_end));
+		};
+	}
 
 	/**
 	 * Map this over a dateperiod to get the standard behaviour of
@@ -195,10 +224,10 @@ class FilterFactory {
 	 * Map this over a text filter to get the standard behaviour where
 	 * a field is compared with the filter.
 	 *
-	 * @param	string	$field
+	 * @param	string	$field_id
 	 * @return	\Closure
 	 */
-	public function text_equals($field) {
+	public function text_equals($field_id) {
 		$f = $this->predicate_factory();
 
 		return function($text) use ($field, $f) {
@@ -208,16 +237,42 @@ class FilterFactory {
 
 	/**
 	 * Map this over a text filter to get the standard behaviour where
-	 * a field is LIKE-compared with the filter.
+	 * a field is compared with the filter.
 	 *
-	 * @param	string	$field
+	 * @param	\Predicates\Field	$field
 	 * @return	\Closure
 	 */
-	public function text_like($field) {
+	public function text_equals_field(\Predicates\Field $field) {
+		return function($text) use ($field) {
+			return $field->EQ()->str($text);
+		};
+	}
+
+	/**
+	 * Map this over a text filter to get the standard behaviour where
+	 * a field is LIKE-compared with the filter.
+	 *
+	 * @param	string	$field_id
+	 * @return	\Closure
+	 */
+	public function text_like($field_id) {
 		$f = $this->predicate_factory();
 
 		return function($text) use ($field, $f) {
 			return $f->field($field)->LIKE()->str($text);
+		};
+	}
+
+	/**
+	 * Map this over a text filter to get the standard behaviour where
+	 * a field is LIKE-compared with the filter.
+	 *
+	 * @param	\Predicates\Field	$field
+	 * @return	\Closure
+	 */
+	public function text_like_field(\Predicates\Field $field) {
+		return function($text) use ($field) {
+			return $field->LIKE()->str($text);
 		};
 	}
 }
