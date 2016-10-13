@@ -150,18 +150,18 @@ class TableFactory {
 	}
 
 	public function allOrgusOfUsers($id,array $usr_ids = array()) {
-		$orgus = $this->histUserOrgu('orgus');
-		$orgus = $orgus->addConstraint($orgus->field('hist_historic')->EQ->int(0))
-						->addConstraint($orgus->field('action')->GEQ()->int(0));
-		if(count($usr_ids)>0) {
-			$orgus = $orgus->addConstraint($this->predicate_factory->IN($orgus->field('usr_id'),$this->predicate_factory(list_int_by_array($usr_ids))));
-		}
 
+		$orgus = $this->histUserOrgu('orgus');
+		$constraint = $orgus->field('hist_historic')->EQ()->int(0)->_AND($orgus->field('action')->GE()->int(0));
+		if(count($usr_ids)>0) {
+			$constraint = $constraint->_AND($this->predicate_factory->IN($orgus->field('usr_id'),$this->predicate_factory->list_int_by_array($usr_ids)));
+		}
+		$orgus->addConstraint($constraint);
 		$all_orgus_space = $this->TableSpace()
 					->addTablePrimary($orgus)
 					->setRootTable($orgus)
 					->request($orgus->field('usr_id'))
-					->request($this->groupConcatFieldSql('orgus'),$orgu->field('orgu_title'))
+					->request($this->groupConcatFieldSql('orgus',$orgus->field('orgu_title')))
 					->groupBy($orgus->field('usr_id'));
 
 		return $this->DerivedTable($all_orgus_space,$id);
@@ -220,7 +220,7 @@ class TableFactory {
 			,array($timestamp));
 	}
 
-	public function minSql($name, Filters\Preedicates\Field $field) {
+	public function minSql($name, Filters\Predicates\Field $field) {
 		return $this->DerivedField(
 				$name
 				,function ($fieldname) {
@@ -230,7 +230,7 @@ class TableFactory {
 			);
 	}
 
-	public function maxSql($name, Filters\Preedicates\Field $field) {
+	public function maxSql($name, Filters\Predicates\Field $field) {
 		return $this->DerivedField(
 				$name
 				,function ($fieldname) {
@@ -245,24 +245,33 @@ class TableFactory {
 				$name
 				,function () {
 					return 'COUNT(*)';
-				});
+				},array());
 	}
 
-	public function sumSql($name, Filters\Preedicates\Field $field) {
+	public function sumSql($name, Filters\Predicates\Field $field) {
 		return $this->DerivedField(
 				$name
-				,function ($field_name) {
+				,function ($fieldname) {
 					return 'SUM('.$fieldname.')';
 				}
-				,$field);
+				,array($field));
 	}
 
-	public function avgSql($name, Filters\Preedicates\Field $field) {
+	public function avgSql($name, Filters\Predicates\Field $field) {
 		return $this->DerivedField(
 				$name
-				,function ($field_name) {
+				,function ($fieldname) {
 					return 'AVG('.$fieldname.')';
 				}
-				,$field);
+				,array($field));
+	}
+
+	public function quotSql($name, Filters\Predicates\Field $enum,Filters\Predicates\Field $denom) {
+		return $this->DerivedField(
+				$name
+				,function ($enum,$denom) {
+					return $enum.'/'.$denom;
+				}
+				,array($enum,$denom));
 	}
 }
