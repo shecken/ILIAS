@@ -234,30 +234,6 @@ protected function afterConstructor() {
 		return $return;
 	}
 
-	protected function renderGroupedTable($data) {
-		$content = "";
-		foreach ($data as $key => $rows) {
-			// We know for sure there is at least one entry in the rows
-			// since we created a group from it.
-			$content .= $this->renderGroupHeader($rows[0]);
-			$content .= $this->renderUngroupedTable($rows);
-		}
-		return $content;
-	}
-
-	protected function renderGroupHeader($data) {
-		$tpl = new ilTemplate( $this->object->deliverTable()->group_head_template_filename
-							 , true, true
-							 , $this->object->deliverTable()->group_head_template_module
-							 );
-
-		foreach ($this->object->deliverTable()->_group_by as $key => $conf) {
-			$tpl->setVariable("VAL_".strtoupper($key), $data[$key]);
-			$tpl->setVariable("TITLE_".strtoupper($key)
-							 , $conf[2] ? $conf[1] : $this->lng->txt($conf[1]));
-		}
-		return $tpl->get();
-	}
 
 	protected function getExcelWriter() {
 		require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.spoutXLSXWriter.php';
