@@ -119,8 +119,11 @@ class ilTalentAssessmentObservationsGUI {
 	}
 
 	protected function setToolbarObservations() {
-		$start_observation_link = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATION_START);
-		$this->gToolbar->addButton( $this->txt("start_observation"), $start_observation_link);
+		$observator = $this->actions->getAssignedUser($this->getObjId());
+		if ($observator && count($observator) > 0) {
+			$start_observation_link = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATION_START);
+			$this->gToolbar->addButton( $this->txt("start_observation"), $start_observation_link);
+		}
 	}
 
 	protected function setToolbarReport() {
@@ -134,11 +137,19 @@ class ilTalentAssessmentObservationsGUI {
 	}
 
 	protected function startObservation() {
-		$this->actions->setObservationStarted(true);
-		$this->actions->copyClassificationValues($this->settings->getCareerGoalId());
-		$this->actions->copyCopyDefaultText($this->settings->getCareerGoalId());
-		$this->actions->copyObservations($this->getObjId(), $this->settings->getCareerGoalId());
-		$red = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATIONS_LIST, "", false, false);
+		$observator = $this->actions->getAssignedUser($this->getObjId());
+
+		if($observator && count($observator) > 0) {
+			$this->actions->setObservationStarted(true);
+			$this->actions->copyClassificationValues($this->settings->getCareerGoalId());
+			$this->actions->copyCopyDefaultText($this->settings->getCareerGoalId());
+			$this->actions->copyObservations($this->getObjId(), $this->settings->getCareerGoalId());
+			$red = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATIONS_LIST, "", false, false);
+		} else {
+			\ilUtil::sendInfo($this->txt("no_observator_cant_start"), true);
+			$red = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATIONS, "", false, false);
+		}
+
 		\ilUtil::redirect($red);
 	}
 
@@ -152,6 +163,7 @@ class ilTalentAssessmentObservationsGUI {
 		$this->actions->setPoints($_POST);
 
 		$red = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATIONS_LIST, "", false, false);
+		$red = $red."#pos".$_GET["pos"];
 		\ilUtil::redirect($red);
 	}
 
