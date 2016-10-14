@@ -230,8 +230,13 @@ class ilUserCourseStatusHistorizingHelper
 
 	public static function hasCertificate($user, $course)
 	{
+		require_once('./Services/Certificate/classes/class.ilCertificate.php');
+		require_once(__DIR__ . '/class.ilPrimitiveCertificateAdapter.php');
 		require_once './Modules/Course/classes/class.ilCourseCertificateAdapter.php';
-		return ilCourseCertificateAdapter::_hasUserCertificate($user, $course)
+
+		$cert = new ilCertificate(new ilPrimitiveCertificateAdapter($course));
+
+		return $cert->readActive() !== 0
 		    && gevCourseUtils::getInstance($course)->getParticipationStatusLabelOf($user) == "teilgenommen";
 	}
 

@@ -68,10 +68,8 @@ class SqlQueryInterpreter {
 	}
 
 	protected function orderBy($query) {
-		if(count($query->orderByFields())>0) {
-			return ' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode());
-		}
-		return '';
+		$fields = $query->orderByFields();
+		return count($fields) > 0 ? ' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode()) : '';
 	}
 
 	protected function interpretTable(Tables\AbstractTable $table) {
