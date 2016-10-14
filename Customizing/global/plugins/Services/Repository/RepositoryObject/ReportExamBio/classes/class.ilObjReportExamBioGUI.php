@@ -333,25 +333,10 @@ protected function afterConstructor() {
 	}
 
 	protected function transformResultRowCommon($rec) {
-	/*	$rec['name'] = $rec['lastname'].', '.$rec['firstname'];
-		$rec['start'] = number_format($rec['start'],2,',','');
-		$rec['current'] = number_format($rec['current'],2,',','');
-		$rec['diff'] = number_format($rec['diff'],2,',','');
-		$rec['expires'] = date('d.m.Y',(int)$rec['expires']);
-
-
-		if(!self::$od_bd_regexp) {
-			require_once './Customizing/global/plugins/Services/Repository/RepositoryObject/ReportCouponNew/config/od_bd_strings.php';
-		}
-		$orgus_above1 = explode(';;', $rec["above1"]);
-		$orgus_above2 = explode(';;', $rec["above2"]);
-		$orgus = array();
-		foreach (array_unique(array_merge($orgus_above1, $orgus_above2)) as $value) {
-			if (preg_match(self::$od_bd_regexp, $value)) {
-				$orgus[] = $value;
-			}
-		}
-		$rec["odbd"]	=  implode(', ', array_unique($orgus));*/
+		$rec['test_date'] = (new DateTime())->setTimestamp($rec['test_date'])->format('d.m.Y');
+		$rec['average'] = number_format($rec['average'],2,',','');
+		$rec['max'] = number_format($rec['max'],2,',','');
+		$rec['passed'] = (int)$rec['passed'] === 1 ? 'Ja' : 'Nein';
 		return $rec;
 	}
 
