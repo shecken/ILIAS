@@ -240,4 +240,8 @@ class PredicateFactory {
 	public function IS_NULL(Predicates\ValueLike $val) {
 		return new Predicates\PredicateIsNull($this, $val);
 	}
+
+	public function LIKE(ValueLike $left, ValueLike $right) {
+		return new Predicate\PredicateLike($this,$left,$right);
+	}
 }
