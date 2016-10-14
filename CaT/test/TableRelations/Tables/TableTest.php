@@ -50,8 +50,8 @@ class TableTest extends PHPUnit_Framework_TestCase {
 	public function space() {
 		$tf = $this->tf;
 		$ts = $tf->TableSpace();
-		$t1 = $this->table(1)->addConstrain($tf->Field("field12","table1_id")->EQ()->int(2));
-		$t2 = $this->table(2)->addConstrain($tf->Field("field11","table2_id")->EQ()->str("bah"));;
+		$t1 = $this->table(1)->addConstraint($tf->Field("field12","table1_id")->EQ()->int(2));
+		$t2 = $this->table(2)->addConstraint($tf->Field("field11","table2_id")->EQ()->str("bah"));;
 		$t3 = $this->table(3);
 		$ts->addTablePrimary($t1);
 		$ts->setRootTable($t1);
@@ -68,7 +68,7 @@ class TableTest extends PHPUnit_Framework_TestCase {
 
 	public function test_table_constrain() {
 		$t = $this->tableSample();
-		$t->addConstrain($this->tf->Field("field1","table_id")->EQ()->int(1));
+		$t->addConstraint($this->tf->Field("field1","table_id")->EQ()->int(1));
 	}
 
 	/**
@@ -83,7 +83,7 @@ class TableTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function test_wrong_field_in_constrain() {
 		$t = $this->tableSample();
-		$t->addConstrain($this->tf->Field("aafield12")->EQ()->int(1));
+		$t->addConstraint($this->tf->Field("aafield12")->EQ()->int(1));
 	}
 
 	public function test_derived_table() {
