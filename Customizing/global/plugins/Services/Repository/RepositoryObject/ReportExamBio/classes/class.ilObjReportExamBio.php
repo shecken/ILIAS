@@ -86,7 +86,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 												return $pf->_TRUE();
 											}
 											$pc = $f->text_like_field($space->table('usr')->field('lastname'));
-											return $pc($lastname);
+											return $pc($lastname.'%');
 										}
 										,$tf->cls("CaT\Filter\Predicates\Predicate"));
 		}
