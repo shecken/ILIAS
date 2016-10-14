@@ -150,12 +150,44 @@ protected function afterConstructor() {
 
 	protected function prepareReport() {
 		$this->object->initSpace();
-		$this->filter = $this->object->prepareFilter(catFilter::create());
-		$this->object->addRelevantParameter($this->filter->getGETName(),$this->filter->encodeSearchParamsForGET());
+		$this->filter = $this->prepareFilter($this->object);
 		$this->enableRelevantParametersCtrl();
 		$table = new catSelectableReportTableGUI($this,'showContent');
 		$this->table = $this->object->prepareTable($table);
 		$this->disableRelevantParametersCtrl();
+	}
+
+	protected function prepareFilter($object) {
+		$filter = $this->object->filter();
+		$this->filter_settings = $this->loadFilterSettings();
+		$this->object->addRelevantParameter('filter_params',$this->encodeFilterParams($this->filter_settings));
+		$display = new \CaT\Filter\DisplayFilter
+						( new \CaT\Filter\FilterGUIFactory
+						, new \CaT\Filter\TypeFactory
+						);
+		if(count($this->filter_settings) > 0) {
+			$this->object->applyFilterToSpace($display->buildFilterValues($filter, $this->filter_settings));
+		}
+		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
+		return new catFilterFlatViewGUI($this, $filter, $display, $this->cmd);
+	}
+
+
+	protected function loadFilterSettings() {
+		if(isset($_POST['filter'])) {
+			return $_POST['filter'];
+		} elseif(isset($_GET['filter_params'])) {
+			return $this->decodeFilterParams($_GET['filter_params']);
+		}
+		return array();
+	}
+
+	protected function encodeFilterParams(array $filter_params) {
+		return json_encode($filter_params);
+	}
+
+	protected function decodeFilterParams($encoded_filter) {
+		return json_decode($encoded_filter,true);
 	}
 
 	/**
@@ -171,7 +203,7 @@ protected function afterConstructor() {
 	protected function render() {
 		$this->gTpl->setTitle(null);
 		return 	($this->title !== null ? $this->title->render() : "")
-				. $this->renderFilter()
+				. $this->filter->render($this->filter_settings)
 				. ($this->spacer !== null ? $this->spacer->render() : "")
 				. $this->renderTable();
 	}
