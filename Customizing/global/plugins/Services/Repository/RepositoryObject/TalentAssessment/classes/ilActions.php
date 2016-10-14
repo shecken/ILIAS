@@ -68,21 +68,21 @@ class ilActions {
 		}
 
 		if(array_key_exists(self::F_DATE, $values)) {
-		  $start_date = $values[self::F_DATE]["start"]["date"];
-		  $start_time = $values[self::F_DATE]["start"]["time"];
-		  $values[self::START_DATE] = new \ilDateTime($start_date." ".$start_time,IL_CAL_DATETIME);
+			$start_date = $values[self::F_DATE]["start"]["date"];
+			$start_time = $values[self::F_DATE]["start"]["time"];
+			$values[self::START_DATE] = new \ilDateTime($start_date." ".$start_time,IL_CAL_DATETIME);
 
-		  $end_date = $values[self::F_DATE]["end"]["date"];
-		  $end_time = $values[self::F_DATE]["end"]["time"];
-		  $values[self::END_DATE] = new \ilDateTime($end_date." ".$end_time,IL_CAL_DATETIME);
+			$end_date = $values[self::F_DATE]["end"]["date"];
+			$end_time = $values[self::F_DATE]["end"]["time"];
+			$values[self::END_DATE] = new \ilDateTime($end_date." ".$end_time,IL_CAL_DATETIME);
 
 
-		  $this->object->updateSettings(function($s) use (&$values) {
+			$this->object->updateSettings(function($s) use (&$values) {
 			return $s
 				->withStartDate($values[self::START_DATE])
 				->withEndDate($values[self::END_DATE])
 				;
-		  });
+			});
 		}
 
 		$this->object->updateSettings(function($s) use (&$values) {
