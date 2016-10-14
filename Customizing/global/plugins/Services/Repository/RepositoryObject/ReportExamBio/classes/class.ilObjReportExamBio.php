@@ -77,7 +77,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 								, $space->table('recent_pass_data')->field('testrun_finished_ts'));
 							return $pc($start,$end);
 						}
-						,$tf->cls($tf->cls("CaT\Filter\Predicates\Predicate"))));
+						,$tf->cls("CaT\Filter\Predicates\Predicate")));
 
 		if($for_trainer) {
 			$sequence_args[] = $f->text($this->plugin->txt('lastname'))
@@ -88,7 +88,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 											$pc = $f->text_like_field($space->table('usr')->field('lastname'));
 											return $pc($lastname);
 										}
-										,$tf->cls($tf->cls("CaT\Filter\Predicates\Predicate")));
+										,$tf->cls("CaT\Filter\Predicates\Predicate"));
 		}
 
 		$sequence_args[] = $f->multiselect($this->plugin->txt('title'),'',$this->getDistinctTests())
@@ -96,20 +96,20 @@ class ilObjReportExamBio extends ilObjReportBase {
 										if(count($obj_ids) === 0) {
 											return $pf->_TRUE();
 										}
-										return $space->table('recent_pass_data')->field('obj_id')->IN($pf->list_int_by_array($usr_ids));
+										return $space->table('recent_pass_data')->field('obj_id')->IN($pf->list_int_by_array($this->convertMixedArrayToIntArray($obj_ids)));
 									}
-									,$tf->cls($tf->cls("CaT\Filter\Predicates\Predicate")));
+									,$tf->cls("CaT\Filter\Predicates\Predicate"));
 
 		$sequence_args[] = $f->multiselect($this->plugin->txt('title'),'',$this->getDistinctPass())
 							->map(	function($pass) use ($f,$space,$pf) {
 										if(count($pass) === 0) {
 											return $pf->_TRUE();
 										}
-										return $space->table('recent_pass_data')->field('test_passed')->IN($pf->list_int_by_array($pass));
+										return $space->table('recent_pass_data')->field('test_passed')->IN($pf->list_int_by_array($this->convertMixedArrayToIntArray($pass)));
 									}
-									,$tf->cls($tf->cls("CaT\Filter\Predicates\Predicate")));
+									,$tf->cls("CaT\Filter\Predicates\Predicate"));
 
-		return call_user_func(array($f,'sequence'),$sequence_args)->map(
+		return call_user_func_array(array($f,'sequence'),$sequence_args)->map(
 				function (/*args*/) use ($for_trainer) {
 					$args = func_get_args();
 					reset($args);
@@ -122,6 +122,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 					$return['test_title_predicate'] = current($args);
 					next($args);
 					$return['test_passed_predicate'] = current($args);
+					return $return;
 				}
 				,$tf->lst($tf->cls("CaT\Filter\Predicates\Predicate"))
 			);
@@ -130,7 +131,9 @@ class ilObjReportExamBio extends ilObjReportBase {
 
 	public function initSpace() {
 		$aux = $this->tf->histUsertestrun('recent_pass_aux');
-		$aux = $aux->addConstraint($aux->field('hist_historic')->EQ()->int(0));
+		$aux = $aux->addConstraint($aux->field('hist_historic')->EQ()->int(0)
+			->_AND($aux->field('usr_id')->IN($this->pf->list_int_by_array($this->relevantUsers())))
+			);
 
 		$recent_pass_case = $this->tf->derivedTable(
 			$this->tf->TableSpace()
@@ -149,9 +152,10 @@ class ilObjReportExamBio extends ilObjReportBase {
 		$recent_pass_data = $recent_pass_data->addConstraint($recent_pass_data->field('hist_historic')->EQ()->int(0));
 
 		$usr = $this->tf->histUser('usr');
-		$usr = $usr->addConstraint($usr->field('hist_historic')->EQ()->int(0));
-		global $ilUser;
-		$orgus = $this->tf->allOrgusOfUsers('orgu_all',array((int)$ilUser->getId()));
+		$usr = $usr->addConstraint($usr->field('hist_historic')->EQ()->int(0)
+			->_AND($usr->field('user_id')->IN($this->pf->list_int_by_array($this->relevantUsers()))));
+
+		$orgus = $this->tf->allOrgusOfUsers('orgu_all',$this->relevantUsers());
 
 		$this->space = $this->tf->TableSpace()
 			->addTablePrimary($recent_pass_case)
@@ -177,6 +181,15 @@ class ilObjReportExamBio extends ilObjReportBase {
 				)
 			->groupBy($recent_pass_case->field('usr_id'))
 			->groupBy($recent_pass_case->field('obj_id'));
+	}
+
+	public function applyFilterToSpace($filter_values) {
+		$settings = call_user_func_array(array($this->filter(), "content"), $filter_values);
+		$predicate = current($settings);
+		while($sub_predicate = next($settings)) {
+			$predicate = $predicate->_AND($sub_predicate);
+		}
+		$this->space->addFilter($predicate);
 	}
 
 	public function buildQuery( $query) {
@@ -232,4 +245,44 @@ class ilObjReportExamBio extends ilObjReportBase {
 		return $this->relevant_parameters;
 	}
 
+	private function getDistinctTests() {
+		$sql = 'SELECT obj_id, test_title FROM hist_usertestrun '
+				.'	WHERE '.$this->gIldb->in('usr_id',$this->relevantUsers(),false,'integer')
+				.'	AND hist_historic = 0'
+				.'	GROUP BY obj_id';
+		$res = $this->gIldb->query($sql);
+		$return = array();
+		while($rec = $this->gIldb->fetchAssoc($res)) {
+			$return[$rec['obj_id']] = $rec['test_title'];
+		}
+		return $return;
+	}
+
+	private function getDistinctPass() {
+		return array(0 => $this->plugin->txt('not_passed')
+					,1 => $this->plugin->txt('passed'));
+	}
+
+	private function relevantUsers () {
+		return array(6);
+	}
+
+	private function convertMixedArrayToIntArray(array $ints) {
+		$return = array();
+		foreach ($ints as $int) {
+			if($this->checkForInt($int)) {
+				$return[] = intval($int);
+			} else {
+				throw new ilReportException('trying to intify non int');
+			}
+		}
+		return $return;
+	}
+
+	private function checkForInt($int) {
+		if(is_numeric($int) && (string)intval($int) === (string)$int) {
+			return true;
+		}
+		return false;
+	}
 }
