@@ -85,7 +85,7 @@ if(!$ilDB->tableExists('hist_usertestrun')) {
 			,'hist_historic' => array('integer',0)
 			,'created_ts' => array('integer',$rec['created_ts'])
 			,'testrun_finished_ts' => array('integer',$rec['testrun_finished_ts'])
-			,'test_title' => array('integer',$rec['test_title'])
+			,'test_title' => array('text',$rec['test_title'])
 			,'creator_usr_id' => array('integer',$rec['creator_usr_id'])
 			,'obj_id' => array('integer',$rec['obj_id'])
 			,'usr_id' => array('integer',$rec['usr_id'])
