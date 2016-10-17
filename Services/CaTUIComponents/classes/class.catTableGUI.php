@@ -19,13 +19,13 @@ class catTableGUI extends ilTable2GUI {
 	protected $_filter_enabled = false;
 	protected $_filter = null;
 	protected $_filter_values = null;
-	protected $ctrl;
+	protected $gCtrl;
 
 	public function __construct($a_parent_obj, $a_parent_cmd="", $a_template_context="") {
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 		parent::setEnableTitle(false);
 		global $ilCtrl;
-		$this->ctrl = $ilCtrl;
+		$this->gCtrl = $ilCtrl;
 		$this->_title = new catTitleGUI();
 	}
 
@@ -128,7 +128,7 @@ class catTableGUI extends ilTable2GUI {
 
 	public function setOrderLink($sort_field, $order_dir) {
 		parent::setOrderLink($sort_field,$order_dir);
-		$this->ctrl->setParameter($this->parent_obj,$this->getNavParameter(),null);
+		$this->gCtrl->setParameter($this->parent_obj,$this->getNavParameter(),null);
 	}
 }
 
