@@ -1,33 +1,35 @@
 <!-- BEGIN table -->
-<table style="background-color:white; width:100%">
+<table class="tbl">
 	<!-- BEGIN tr_header -->
-	<tr>
-		<td>Anforderung</td>
+	<tr class="header_row">
+		<td class="center_txt left_col_width">Anforderung</td>
 		<!-- BEGIN observations -->
-		<td colspan="{COL_SPAN_HEAD}">{OBS_TITLE}</td>
+		<td class="center_txt brd_lr" colspan="{COL_SPAN_HEAD}">{OBS_TITLE}</td>
 		<!-- END observations -->
-		<td>Mittelwert</td>
+		<td class="center_txt right_col_width">Mittelwert</td>
 	</tr>
 	<!-- END tr_header -->
+	<!-- BEGIN height -->
 	<!-- BEGIN tr_observator -->
 	<tr>
-		<td>&nbsp;</td>
+	  <td class="right_border">&nbsp;</td>
 		<!-- BEGIN observator -->
-		<td>{OBSERVATOR_NAME}</td>
+		<td class="brd_lr" style="padding-left:{pad}%; white-space: normal;"><div class="rotate block">{OBSERVATOR_LASTNAME}{OBSERVATOR_FIRSTNAME}</div></td>
 		<!-- END observator -->
-		<td>&nbsp;</td>
+		<td class="left_border">&nbsp;</td>
 	</tr>
-	<!-- BEGIN tr_observator -->
+	<!-- END tr_observator -->
+	<!-- BEGIN height -->
 	<!-- BEGIN tr_requirement -->
 	{PTS_ROW}
 	<!-- END tr_requirement-->
 	<!-- BEGIN tr_sum -->
-	<tr>
-		<td>Mittelwert</td>
+	<tr class="result_row">
+		<td class="center_txt">Mittelwert</td>
 		<!-- BEGIN bla -->
-		<td colspan="{COL_SPAN_FOOTER}">{PTS}</td>
+		<td colspan="{COL_SPAN_FOOTER}" class="center_txt brd_lr" >{PTS}</td>
 		<!-- END bla -->
-		<td>{MIDDLE_TOTAL}</td>
+		<td class="center_txt" >{MIDDLE_TOTAL}</td>
 	</tr>
 	<!-- BEGIN tr_sum -->
 </table>

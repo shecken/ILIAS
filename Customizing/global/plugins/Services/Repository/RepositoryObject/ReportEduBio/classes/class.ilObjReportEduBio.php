@@ -108,11 +108,11 @@ class ilObjReportEduBio extends ilObjReportBase {
 				->select("usrcrs.okz")
 				->select("usrcrs.bill_id")
 				->select("usrcrs.booking_status")
-				->select("usrcrs.wbd_booking_id")
+				->select_raw("IF(usrcrs.wbd_cancelled != 1, usrcrs.wbd_booking_id, NULL) wbd_booking_id")
 				->select("usrcrs.certificate_filename")
 				->select("oref.ref_id")
 				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text').' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL ,'
-								.'	IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL'
+								.'	IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
 								.'		,'.$this->gIldb->quote('Ja','text').','.$this->gIldb->quote('Nein','text').'),\'-\') as wbd_reported')
 				->from("hist_usercoursestatus usrcrs")
 				->join("hist_user usr")
@@ -171,7 +171,7 @@ class ilObjReportEduBio extends ilObjReportBase {
 	}
 
 	protected function academyQuery(ilDate $start = null, ilDate $end = null, $transferred) {
-		$sql = 	"SELECT SUM(usrcrs.credit_points) sum "
+		return 	"SELECT SUM(usrcrs.credit_points) sum "
 				."	FROM hist_usercoursestatus usrcrs "
 				."	JOIN hist_course crs"
 				."		ON crs.crs_id = usrcrs.crs_id "
@@ -190,9 +190,11 @@ class ilObjReportEduBio extends ilObjReportBase {
 				."				AND usrcrs.begin_date > ".$this->gIldb->quote('2013-01-01','date').")"
 				."			OR (crs.type != ".$this->gIldb->quote('Selbstlernkurs','text')
 				."				AND usrcrs.end_date > ".$this->gIldb->quote('2013-01-01','date')."))"
-				."		AND usrcrs.wbd_booking_id IS ".($transferred ? "NOT" : "")." NULL"
-				."		AND usrcrs.last_wbd_report IS ".($transferred ? "NOT" : "")." NULL";
-		return $sql;
+				."		AND usrcrs.wbd_booking_id IS ".($transferred ? "NOT" : "")." NULL "
+							." AND usrcrs.wbd_booking_id ".($transferred ? "!=" : "=")." '-empty-'"
+				."		AND usrcrs.wbd_cancelled != 1 "
+				."		AND usrcrs.last_wbd_report IS ".($transferred ? "NOT" : "")." NULL "
+							." AND usrcrs.last_wbd_report ".($transferred ? "!=" : "=")." '0000-00-00'";
 	}
 
 	protected function wbdQueryWhere(ilDate $start = null, ilDate $end = null) {
@@ -210,7 +212,8 @@ class ilObjReportEduBio extends ilObjReportBase {
 		return   "SELECT SUM(usrcrs.credit_points) sum "
 				." FROM hist_usercoursestatus usrcrs"
 				.$this->wbdQueryWhere($start, $end)
-				." AND NOT usrcrs.wbd_booking_id IS NULL";
+				." AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_booking_id != '-empty-'"
+				." AND usrcrs.wbd_cancelled != 1";
 	}
 
 	public function validateBill($bill_id) {

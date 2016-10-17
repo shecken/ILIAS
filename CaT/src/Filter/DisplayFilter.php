@@ -262,6 +262,16 @@ class DisplayFilter {
 					if ($value === null) {
 						$value = array();
 					}
+					if ($filter->input_type()->repr() == "[int]") {
+						$value = array_map(function($v) {
+							if (is_numeric($v)) {
+								return (int)$v;
+							}
+							else {
+								return $v;
+							}
+						}, $value);
+					}
 					array_push($ret, $value);
 					break;
 				case "CaT\Filter\Filters\Singleselect":

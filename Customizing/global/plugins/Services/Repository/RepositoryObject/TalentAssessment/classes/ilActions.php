@@ -67,24 +67,33 @@ class ilActions {
 			$this->object->setDescription("");
 		}
 
-		$start_date = $values[self::F_DATE]["start"]["date"];
-		$start_time = $values[self::F_DATE]["start"]["time"];
-		$values[self::START_DATE] = new \ilDateTime($start_date." ".$start_time,IL_CAL_DATETIME);
+		if(array_key_exists(self::F_DATE, $values)) {
+			$start_date = $values[self::F_DATE]["start"]["date"];
+			$start_time = $values[self::F_DATE]["start"]["time"];
+			$values[self::START_DATE] = new \ilDateTime($start_date." ".$start_time,IL_CAL_DATETIME);
 
-		$end_date = $values[self::F_DATE]["end"]["date"];
-		$end_time = $values[self::F_DATE]["end"]["time"];
-		$values[self::END_DATE] = new \ilDateTime($end_date." ".$end_time,IL_CAL_DATETIME);
+			$end_date = $values[self::F_DATE]["end"]["date"];
+			$end_time = $values[self::F_DATE]["end"]["time"];
+			$values[self::END_DATE] = new \ilDateTime($end_date." ".$end_time,IL_CAL_DATETIME);
+
+
+			$this->object->updateSettings(function($s) use (&$values) {
+			return $s
+				->withStartDate($values[self::START_DATE])
+				->withEndDate($values[self::END_DATE])
+				;
+			});
+		}
 
 		$this->object->updateSettings(function($s) use (&$values) {
 			return $s
 				->withCareerGoalID((int)$values[self::F_CAREER_GOAL])
 				->withUsername($values[self::F_USERNAME])
-				->withStartDate($values[self::START_DATE])
-				->withEndDate($values[self::END_DATE])
 				->withVenue((int)$values[self::F_VENUE])
 				->withOrgUnit((int)$values[self::F_ORG_UNIT])
 				;
 		});
+
 		$this->object->update();
 	}
 
@@ -187,6 +196,7 @@ class ilActions {
 		$this->gRbacadmin->deassignUser($role_id, $user_id);
 	}
 
+	// TODO: Why can this return null? An empty array would be enough.
 	public function getAssignedUser($obj_id) {
 		$role_id = $this->getLocalRoleId($obj_id);
 

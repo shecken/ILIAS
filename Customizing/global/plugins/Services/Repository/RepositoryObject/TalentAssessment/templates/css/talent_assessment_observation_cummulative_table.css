@@ -1,0 +1,62 @@
+/* 
+    Created on : 22.09.2016, 16:23:46
+    Author     : dweise
+*/
+.tbl{
+  border-collapse: collapse;
+  line-height: 30px;
+  background-color:white;
+  width:100%;
+  height: 100%;
+  table-layout: fixed;
+}
+
+.row_norm{
+  line-height: 30px;
+}
+.row_grey{
+  background-color: #eee;
+  line-height: 30px;
+}
+
+.result_row{
+  border-top: 1px solid #bbb;
+}
+
+.center_txt{
+  text-align: center;
+}
+
+.brd_lr {
+  border-left: 1px solid #bbb;
+  border-right: 1px solid #bbb;
+}
+
+.header_row {
+  border-bottom: 1px solid #bbb;
+  font-weight: lighter;
+}
+
+.small {
+  font-weight: lighter;
+}
+
+.rotate{
+  -ms-writing-mode: tb-lr;
+  -webkit-writing-mode: vertical-rl;
+  -moz-writing-mode: vertical-rl;
+  writing-mode: vertical-rl;
+  padding: 12px 0px 12px 0px;
+}
+
+.block {
+  display: inline-block;
+}
+
+.left_col_width{
+  width: 14%;
+}
+
+.right_col_width{
+  width: 6%;
+}

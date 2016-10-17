@@ -8,6 +8,11 @@ class Navigator {
 
 	protected $tree;
 
+	/**
+	 * @var	array|null
+	 */
+	protected $path = null;
+
 	public function __construct($tree) {
 		$this->tree = $tree;
 	}
@@ -161,7 +166,7 @@ class Navigator {
 	/**
 	 * pointer on first element after entering next level
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function path() {
 		return is_array($this->path) ? implode("_",$this->path) : null;

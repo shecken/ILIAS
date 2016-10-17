@@ -832,4 +832,51 @@ class gevWBD {
 	public function userTPStatusOK() {
 		return !($this->getWBDTPType() === gevWBD::WBD_NO_SERVICE && $this->hasWBDRelevantRole());
 	}
+
+	/**
+	 * Get the crs id according to row id
+	 *
+	 * @param string $row_id
+	 *
+	 * @return int
+	 */
+	public function getCrsIdByRowId($row_id) {
+		$select = "SELECT DISTINCT crs_id\n"
+				 ." FROM hist_usercoursestatus\n"
+				 ." WHERE row_id = ".$this->gDB->quote($this->row_id, "integer")."\n";
+
+		$res = $this->gDB->query($select);
+
+		if($this->gDB->numRows($res) == 0) {
+			throw new Exception("no crs id found for user: ".$this->usr_id." AND row id: ".$row_id);
+		}
+
+		$row = $this->gDB->fetchAssoc($res);
+		return $row["crs_id"];
+	}
+
+	const STATUS_RESOLVED = "resolved";
+	const STATUS_NOT_RESOLVED = "not_resolved";
+	const STATUS_UNABLE_RESOLVE = "unable_resolve";
+	const STATUS_FEEDBACK = "feedback";
+
+	public static function resolveWBDErrorById($id) {
+		global $ilDB;
+
+		$sql = "UPDATE wbd_errors\n"
+			 ." SET resolved = 1\n"
+			 ." WHERE id = ".$ilDB->quote($id, 'integer');
+
+		$ilDB->manipulate($sql);
+	}
+
+	public static function setWBDErrorStatusById($id, $status) {
+		global $ilDB;
+
+		$sql = "UPDATE wbd_errors\n"
+			 ." SET status = \n".$ilDB->quote($status, "text")."\n"
+			 ." WHERE id = ".$ilDB->quote($id, 'integer');
+
+		$ilDB->manipulate($sql);
+	}
 }

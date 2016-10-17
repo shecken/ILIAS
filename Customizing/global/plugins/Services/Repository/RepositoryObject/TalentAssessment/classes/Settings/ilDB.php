@@ -247,6 +247,34 @@ class ilDB implements DB {
 		return $talent_assessment;
 	}
 
+	public function cloneTalentAssessment($target_id, TalentAssessment $talent_assessment) {
+		$values = array
+				( "obj_id" => array("integer", (int)$target_id)
+				, "state" => array("integer", TalentAssessment::IN_PROGRESS)
+				, "career_goal_id" => array("integer", $talent_assessment->getCareerGoalId())
+				, "username" => array("text", $talent_assessment->getUsername())
+				, "start_date" => array("text", $talent_assessment->getStartDate()->get(IL_CAL_DATETIME))
+				, "end_date" => array("text", $talent_assessment->getEndDate()->get(IL_CAL_DATETIME))
+				, "venue" => array("text", $talent_assessment->getVenue())
+				, "org_unit" => array("text", $talent_assessment->getOrgUnit())
+				, "started" => array("integer", false)
+				, "lowmark" => array("float", $talent_assessment->getLowmark())
+				, "should_specification" => array("float", $talent_assessment->getShouldspecification())
+				, "potential" => array("float", 0.0)
+				, "result_comment" => array("text", "")
+				, "last_change" => array("text", date("Y-m-d H:i:s"))
+				, "last_change_user" => array("integer", $this->user->getId())
+				, "default_text_failed" => array("text", $talent_assessment->getDefaultTextFailed())
+				, "default_text_partial" => array("text", $talent_assessment->getDefaultTextPartial())
+				, "default_text_success" => array("text", $talent_assessment->getDefaultTextSuccess())
+				);
+		$this->getDB()->insert(self::PLUGIN_TABLE, $values);
+
+		$new_talent_assessment = $this->select((int)$target_id);
+
+		return $new_talent_assessment;
+	}
+
 	public function isStarted($obj_id) {
 		$select = "SELECT started\n"
 				." FROM ".self::PLUGIN_TABLE."\n"
@@ -290,8 +318,10 @@ class ilDB implements DB {
 	public function getOrgUnitOptions() {
 		$evg_id = \gevOrgUnitUtils::getEVGOrgUnitRefId();
 		$org_unit_utils = \gevOrgUnitUtils::getAllChildren(array($evg_id));
+		$evg_obj_id = \ilObject::_lookupObjId($evg_id);
+		$evg_title = \ilObject::_lookupTitle($evg_obj_id);
 
-		$ret = array();
+		$ret = array($evg_obj_id => $evg_title);
 		foreach($org_unit_utils as $key => $value) {
 			$ret[$value["obj_id"]] = \ilObject::_lookupTitle($value["obj_id"]);
 		}

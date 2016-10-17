@@ -118,7 +118,10 @@ class ilObjReportBookingsByTpl extends ilObjReportBase {
 									 , array()
 									 , ""
 									 , 300
-									 , 160	
+									 , 160
+									 , "integer"
+									 , "asc"
+									 , true
 									 )
 						->multiselect("participation_status"
 									 , $this->plugin->txt("participation_status")
@@ -164,7 +167,8 @@ class ilObjReportBookingsByTpl extends ilObjReportBase {
 									 )
 						->static_condition(" crs.hist_historic = 0")
 						->static_condition(" usrcrs.hist_historic = 0")
-						->static_condition(" crs.template_obj_id != ".$this->gIldb->quote(-1,'integer') )
+						->static_condition(" crs.template_obj_id > ".$this->gIldb->quote(0,'integer') )
+						->static_condition(" crs.template_obj_id IS NOT NULL")
 						->static_condition(" usrcrs.booking_status != ".$this->gIldb->quote('-empty-','text'))
 						->action($this->filter_action)
 						->compile()
@@ -176,11 +180,7 @@ class ilObjReportBookingsByTpl extends ilObjReportBase {
 	 *	@inheritdoc
 	 */
 	protected function buildQuery($query) {
-		$orgu_filter_query =
-				"JOIN (SELECT usr_id  \n"
-					."	FROM hist_userorgu \n"
-					." 	WHERE ".$this->orgu_filter->deliverQuery()." \n"
-					."	AND hist_historic = 0 AND `action` >= 0 GROUP BY usr_id) as orgu ON usrcrs.usr_id = orgu.usr_id \n";
+
 		$query 		->select("crs.template_title")
 					->select("crs.edu_program");
 		foreach( $this->sum_parts as $title => $query_parts) {
@@ -190,6 +190,11 @@ class ilObjReportBookingsByTpl extends ilObjReportBase {
 					->join("hist_usercoursestatus usrcrs")
 						->on("crs.crs_id = usrcrs.crs_id");
 		if($this->orgu_filter->getSelection()) {
+			$orgu_filter_query =
+				"JOIN (SELECT usr_id  \n"
+					."	FROM hist_userorgu \n"
+					." 	WHERE ".$this->orgu_filter->deliverQuery()." \n"
+					."	AND hist_historic = 0 AND `action` >= 0 GROUP BY usr_id) as orgu ON usrcrs.usr_id = orgu.usr_id \n";
 			$query	->raw_join($orgu_filter_query );
 		}
 		$query 		->group_by("crs.template_obj_id")

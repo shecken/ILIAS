@@ -595,7 +595,7 @@ class catCheckboxFilterType {
 	public function sql($a_conf, $a_pars) {
 		global $ilDB;
 	
-		if (($a_pars || ($this->initialLoad() && $a_conf[6])) && $a_conf[3] !== null) {
+		if (($a_pars || ($this->initialLoad($a_pars) && $a_conf[6])) && $a_conf[3] !== null) {
 			return $a_conf[3];
 		}
 		

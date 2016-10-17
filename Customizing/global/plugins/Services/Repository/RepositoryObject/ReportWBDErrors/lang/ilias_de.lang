@@ -20,7 +20,7 @@ root_create_xwbe#:#Report über Fehler bei der WBD-Meldung erzeugen
 cat_create_xwbe#:#Report über Fehler bei der WBD-Meldung erzeugen
 ts#:#Zeitpunkt
 wbd_errors_action#:#Aktion
-wbd_errors_internal#:#Interner Vor-Filter
+wbd_errors_internal#:#Fehlertyp
 usr_id#:#Benutzer-ID
 crs_id#:#Kurs-ID
 firstname#:#Vorname
@@ -31,3 +31,15 @@ end_date#:#Enddatum
 wbd_errors_reason#:#Grund
 wbd_errors_reason_full#:#Grund (Volltext)
 wbd_errors_resolve#:#gelöst
+reason#:#Grund
+action#:#Aktion
+error_type#:#Fehlertyp
+error_dateperiod#:#Zeitraum des Fehlers
+actions#:#Aktionen
+resolve#:#gelöst
+feedback#:#Nachfrage
+unable_resolve#:#kann nicht gelöst werden
+status#:#Status
+not_resolved#:#nicht gelöst
+internal#:#Intern
+wbd#:#WBD

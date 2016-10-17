@@ -17,7 +17,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 	protected $storno_rows;
 	protected $abfrage_usr_ids;
 
-	const EMPTY_BWV_ID_TEXT = "-empty-";
+	const EMPTY_COLUMN_VALUE = "-empty-";
 	const EMPTY_DATE_TEXT = "0000-00-00";
 
 	const WBD_NO_SERVICE 		= "0 - kein Service";
@@ -37,6 +37,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 		require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		require_once("Services/UserCourseStatusHistorizing/classes/class.ilUserCourseStatusHistorizing.php");
 
 
 		require_once "./Services/Context/classes/class.ilContext.php";
@@ -83,7 +84,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$res = $db->query($this->newUserListQuery());
 		
 		while ($rec = $db->fetchAssoc($res)) {
-			$wbd = gevWBD::getInstance($rec['user_id']);
+			$wbd = $this->getWBDInstance($rec['user_id']);
 
 			$checks_to_release = array();
 			switch($rec["next_wbd_action"]) {
@@ -187,8 +188,8 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$res = $db->query($this->releaseUserListQuery());
 
 		while ($rec = $db->fetchAssoc($res)) {
-			$wbd = gevWBD::getInstanceByObjOrId($rec['user_id']);
-			
+			$wbd = $this->getWBDInstance($rec['user_id']);
+
 			$checks_to_release = $wbd->shouldBeReleasedChecks();
 			$failed_checks = $this->performPreliminaryChecks($checks_to_release, $wbd);
 
@@ -233,7 +234,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$res = $db->query($this->affiliateUserListQuery());
 
 		while ($rec = $db->fetchAssoc($res)) {
-			$wbd = gevWBD::getInstanceByObjOrId($rec['user_id']);
+			$wbd = $this->getWBDInstance($rec['user_id']);
 			$checks_to_release = $wbd->shouldBeAffiliateAsTPServiceChecks();
 			$failed_checks = $this->performPreliminaryChecks($checks_to_release, $wbd);
 
@@ -545,8 +546,9 @@ class gevWBDDataCollector implements WBDDataCollector {
 					." AND hist_usercoursestatus.function IN ('Mitglied', 'Teilnehmer')\n"
 					." AND hist_usercoursestatus.okz IN ('OKZ1', 'OKZ2','OKZ3')\n"
 					." AND hist_usercoursestatus.participation_status = 'teilgenommen'\n"
-					." AND hist_usercoursestatus.last_wbd_report IS NULL\n"
-					." AND hist_usercoursestatus.wbd_booking_id IS NULL\n"
+					." AND hist_usercoursestatus.last_wbd_report = ".$this->gDB->quote(self::EMPTY_COLUMN_VALUE, 'text')."\n"
+					." AND hist_usercoursestatus.wbd_booking_id = ".$this->gDB->quote(self::EMPTY_COLUMN_VALUE, 'text')."\n"
+					." AND hist_usercoursestatus.wbd_cancelled = -1\n"
 					." AND hist_usercoursestatus.credit_points > 0\n"
 					." AND (hist_usercoursestatus.end_date > '2013-12-31'\n"
 						." OR (hist_course.type = 'Selbstlernkurs' \n"
@@ -647,7 +649,8 @@ class gevWBDDataCollector implements WBDDataCollector {
 	public function successNewUser(gevWBDSuccessVvErstanlage $success_data) {
 		$usr_id = $success_data->internalAgentId();
 		$usr_utils = gevUserUtils::getInstance($usr_id);
-		$wbd = gevWBD::getInstance($usr_id);
+
+		$wbd = $this->getWBDInstance($usr_id);
 
 		$wbd->setWBDBWVId($success_data->agentId());
 		$wbd->setWBDFirstCertificationPeriodBegin($success_data->beginOfCertificationPeriod());
@@ -681,7 +684,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$usr_id = $success_data->usrId();
 
 		$usr_utils = gevUserUtils::getInstance($usr_id);
-		$wbd = gevWBD::getInstance($usr_id);
+		$wbd = $this->getWBDInstance($usr_id);
 		$wbd->setWbdExitUserData($this->getCurrentDate());
 
 		$this->setNextWBDActionToNothing($usr_id);
@@ -701,7 +704,8 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$row_id = $success_data->rowId();
 
 		$usr_utils = gevUserUtils::getInstance($usr_id);
-		$wbd = gevWBD::getInstance($usr_id);
+		$wbd = $this->getWBDInstance($usr_id);
+
 		$wbd->setWBDTPType(gevWBD::WBD_TP_SERVICE);
 		
 		$this->setNextWBDActionToNothing($usr_id);
@@ -723,7 +727,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		if($success_data->doUpdateBeginOfCertification()) {
 			$usr_id = $success_data->usrId();
 			$usr_utils = gevUserUtils::getInstance($usr_id);
-			$wbd = gevWBD::getInstance($usr_id);
+			$wbd = $this->getWBDInstance($usr_id);
 			$wbd->setWBDFirstCertificationPeriodBegin($success_data->beginOfCertificationPeriod());
 			$this->raiseEventUserChanged($usr_utils->getUser());
 			$this->setLastWBDReportForAutoHistRows($usr_id);
@@ -736,7 +740,20 @@ class gevWBDDataCollector implements WBDDataCollector {
 	* @param gevWBDSuccessWPStorno $success_data 
 	*/
 	public function successStornoRecord(gevWBDSuccessWPStorno $success_data) {
-		//NOTHING HAPPENS!
+		$row_id = $success_data->rowId();
+		$user_id = $success_data->internalAgentId();
+		$wbd = $this->getWBDInstance($user_id);
+		$crs_id = $wbd->getCrsIdByRowId($wbd_booking_id);
+
+		$case_id = array('usr_id' => $user_id
+					   , 'crs_id' => $crs_id
+					);
+
+		$data = array("wbd_cancelled" => true
+					, "last_wbd_report" => $this->getCurrentDate()
+				);
+
+		$this->createHistUserCourseRow($case_id, $data);
 	}
 
 	/** 
@@ -988,7 +1005,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 	**/
 	protected function assignUserToSeminar(gevImportCourseData $values, $crs_id, $user_id) {
 		$usr_id = $user_id;
-		$wbd = gevWBD::getInstanceByObjOrId($usr_id);
+		$wbd = $this->getWBDInstance($usr_id);
 
 		$okz 			= $wbd->getWBDOKZ();
 		$booking_id		= $values->wbdBookingId();
@@ -1058,7 +1075,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 	* @param string $user_id 
 	*/
 	public function setNextWBDActionToNothing($user_id) {
-		$wbd = gevWBD::getInstance($user_id);
+		$wbd = $this->getWBDInstance($user_id);
 		$wbd->setNextWBDAction(gevWBD::USR_WBD_NEXT_ACTION_NOTHING);
 	}
 
@@ -1089,4 +1106,12 @@ class gevWBDDataCollector implements WBDDataCollector {
 					}
 					);
 	}
-}	
+
+	protected function createHistUserCourseRow($case_id, $data) {
+		ilUserCourseStatusHistorizing::updateHistorizedData($case_id, $data);
+	}
+
+	protected function getWBDInstance($user_id) {
+		return gevWBD::getInstanceByObjOrId($user_id);
+	}
+}

@@ -96,7 +96,7 @@ class gevDeferredMails {
 	
 	// This checks weather a deferred mail needs to be send at all, e.g. cancellation
 	// needs not to be send if user was not invited.
-	protected function deferredMailNeedsToBeSend($a_crs_id, $a_mail_id, $a_recipient) {
+	public function deferredMailNeedsToBeSend($a_crs_id, $a_mail_id, $a_recipient) {
 		switch ($a_mail_id) {
 			case "trainer_added":
 			case "trainer_removed":

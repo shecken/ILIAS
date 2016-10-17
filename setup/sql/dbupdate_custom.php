@@ -5171,6 +5171,31 @@ $ilDB->addIndex('hist_userorgu',array('hist_historic','action'),'oha');
 
 <#220>
 <?php
+	if(!$ilDB->tableColumnExists("hist_usercoursestatus", "wbd_cancelled")) {
+		$ilDB->addTableColumn('hist_usercoursestatus', 'wbd_cancelled',
+			array(
+				'type' => 'integer',
+				'length' => 1,
+				'notnull' => true,
+				'default' => '-1'
+		));
+	}
+?>
+
+<#221>
+<?php
+	if(!$ilDB->tableColumnExists('wbd_errors', 'status')) {
+		$ilDB->addTableColumn('wbd_errors', 'status', array(
+			"type" => "text",
+			"length" => 30,
+			"notnull" => true,
+			"default" => "not_resolved"
+		));
+	}
+?>
+
+<#222>
+<?php
 	if(!$ilDB->tableExists('viwis_refs')) {
 		$ilDB->createTable('viwis_refs', array(
 													'ref_id' => array(
@@ -5194,4 +5219,3 @@ $ilDB->addIndex('hist_userorgu',array('hist_historic','action'),'oha');
 	}
 	$ilCtrlStructureReader->getStructure();
 ?>
-
