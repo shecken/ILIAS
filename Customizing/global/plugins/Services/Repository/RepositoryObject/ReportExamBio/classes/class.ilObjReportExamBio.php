@@ -109,8 +109,9 @@ class ilObjReportExamBio extends ilObjReportBase {
 									}
 									,$tf->cls("CaT\Filter\Predicates\Predicate"));
 
-		return call_user_func_array(array($f,'sequence'),$sequence_args)->map(
+		return $f->sequence(call_user_func_array(array($f,'sequence'),$sequence_args)->map(
 				function (/*args*/) use ($for_trainer) {
+					die(var_dump($args));
 					$args = func_get_args();
 					reset($args);
 					$return = array('last_pass_datetime_predicate' => current($args));
@@ -125,7 +126,20 @@ class ilObjReportExamBio extends ilObjReportBase {
 					return $return;
 				}
 				,$tf->lst($tf->cls("CaT\Filter\Predicates\Predicate"))
-			);
+			))->map(function (/*...args...*/)  use ($for_trainer) {
+					$args = func_get_args();
+					reset($args);
+					$return = array('last_pass_datetime_predicate' => current($args));
+					next($args);
+					if($for_trainer) {
+						$return['lastname_predicate'] = current($args);
+					}
+					next($args);
+					$return['test_title_predicate'] = current($args);
+					next($args);
+					$return['test_passed_predicate'] = current($args);
+					return $return;
+				},$tf->lst($tf->cls("CaT\Filter\Predicates\Predicate")));
 
 	}
 
