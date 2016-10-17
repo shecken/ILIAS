@@ -32,7 +32,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 				->defineFieldColumn($this->plugin->txt('firstname'),'firstname'
 						,array('firstname' => $this->space->table('usr')->field('firstname')))
 				->defineFieldColumn($this->plugin->txt('orgunit'),'orgunit'
-						,array('orgunit' => $this->space->table('orgu_all')->field('orgus')));
+						,array('orgunit' => $this->space->table('orgu_all')->field('orgus')),true);
 		}
 
 		$max_points = $this->space->table('all_pass')->field('max_points');
@@ -46,13 +46,13 @@ class ilObjReportExamBio extends ilObjReportBase {
 		$table->defineFieldColumn($this->plugin->txt('test_title'),'test_title',
 					array('test_title' => $test_title))
 			->defineFieldColumn($this->plugin->txt('test_date'),'test_date',
-					array('test_date' => $testrun_finished_ts))
+					array('test_date' => $testrun_finished_ts),true)
 			->defineFieldColumn($this->plugin->txt('passed'),'passed',
 					array('passed' => $passed))
-			->defineFieldColumn($this->plugin->txt('average'),'average',array('average' => $avg))
 			->defineFieldColumn($this->plugin->txt('max'),'max',array('max' => $max))
+			->defineFieldColumn($this->plugin->txt('average'),'average',array('average' => $avg))
 			->defineFieldColumn($this->plugin->txt('number_of_runs'),'runs',
-					array('runs' => $this->tf->countAllSql('number_of_runs')));
+					array('runs' => $this->tf->countAllSql('number_of_runs')),true);
 
 
 		$this->space = $table->prepareTableAndSetRelevantFields($this->space);
@@ -70,7 +70,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 		$for_trainer = $this->isForTrainer();
 		$space = $this->space;
 		$sequence_args = array(
-			$f->dateperiod( $this->plugin->txt("error_dateperiod"), "")
+			$f->dateperiod( $this->plugin->txt("dateperiod"), "")
 				->map(	function($start,$end) use ($f,$space) {
 							$pc = $f->dateperiod_timestamp_overlaps_predicate_fields
 								( $space->table('recent_pass_data')->field('testrun_finished_ts')
@@ -91,7 +91,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 										,$tf->cls("CaT\Filter\Predicates\Predicate"));
 		}
 
-		$sequence_args[] = $f->multiselect($this->plugin->txt('title'),'',$this->getDistinctTests())
+		$sequence_args[] = $f->multiselect($this->plugin->txt('test_title'),'',$this->getDistinctTests())
 							->map(	function($obj_ids) use ($f,$space,$pf) {
 										if(count($obj_ids) === 0) {
 											return $pf->_TRUE();
@@ -100,7 +100,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 									}
 									,$tf->cls("CaT\Filter\Predicates\Predicate"));
 
-		$sequence_args[] = $f->multiselect($this->plugin->txt('title'),'',$this->getDistinctPass())
+		$sequence_args[] = $f->multiselect($this->plugin->txt('pass_status'),'',$this->getDistinctPass())
 							->map(	function($pass) use ($f,$space,$pf) {
 										if(count($pass) === 0) {
 											return $pf->_TRUE();
@@ -111,35 +111,24 @@ class ilObjReportExamBio extends ilObjReportBase {
 
 		return $f->sequence(call_user_func_array(array($f,'sequence'),$sequence_args)->map(
 				function (/*args*/) use ($for_trainer) {
-					die(var_dump($args));
+					$return = array();
 					$args = func_get_args();
-					reset($args);
-					$return = array('last_pass_datetime_predicate' => current($args));
-					next($args);
-					if($for_trainer) {
-						$return['lastname_predicate'] = current($args);
+					if(count($args) > 0) {
+						reset($args);
+						$return['last_pass_datetime_predicate'] = current($args);
+						next($args);
+						if($for_trainer) {
+							$return['lastname_predicate'] = current($args);
+						}
+						next($args);
+						$return['test_title_predicate'] = current($args);
+						next($args);
+						$return['test_passed_predicate'] = current($args);
 					}
-					next($args);
-					$return['test_title_predicate'] = current($args);
-					next($args);
-					$return['test_passed_predicate'] = current($args);
 					return $return;
 				}
 				,$tf->lst($tf->cls("CaT\Filter\Predicates\Predicate"))
-			))->map(function (/*...args...*/)  use ($for_trainer) {
-					$args = func_get_args();
-					reset($args);
-					$return = array('last_pass_datetime_predicate' => current($args));
-					next($args);
-					if($for_trainer) {
-						$return['lastname_predicate'] = current($args);
-					}
-					next($args);
-					$return['test_title_predicate'] = current($args);
-					next($args);
-					$return['test_passed_predicate'] = current($args);
-					return $return;
-				},$tf->lst($tf->cls("CaT\Filter\Predicates\Predicate")));
+			));
 
 	}
 
@@ -198,7 +187,8 @@ class ilObjReportExamBio extends ilObjReportBase {
 	}
 
 	public function applyFilterToSpace($filter_values) {
-		$settings = call_user_func_array(array($this->filter(), "content"), $filter_values);
+		$settings = call_user_func_array(array($this->filter(), "content"), $filter_values)[0];
+
 		$predicate = current($settings);
 		while($sub_predicate = next($settings)) {
 			$predicate = $predicate->_AND($sub_predicate);
@@ -273,8 +263,8 @@ class ilObjReportExamBio extends ilObjReportBase {
 	}
 
 	private function getDistinctPass() {
-		return array(0 => $this->plugin->txt('not_passed')
-					,1 => $this->plugin->txt('passed'));
+		return array(0 => $this->plugin->txt('test_not_passed')
+					,1 => $this->plugin->txt('test_passed'));
 	}
 
 	private function relevantUsers () {
