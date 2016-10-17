@@ -42,7 +42,7 @@ class SqlQueryInterpreter {
 				return $field->name();
 			} elseif($field instanceof Tables\DerivedField)  {
 				//call self recursively as long derived field derive from derived fields...
-				$sub_fields = array_map(array($this, 'interpretField'), $field->derivedFrom());
+				$sub_fields = array_map(array($this, 'interpretField'), $field->derivedFromDirect());
 				return call_user_func_array($field->postprocess(), $sub_fields);
 			} else {
 				throw new TableRelationsException("Unknown field ".$field->name());
