@@ -183,11 +183,11 @@ protected function afterConstructor() {
 	}
 
 	protected function encodeFilterParams(array $filter_params) {
-		return json_encode($filter_params);
+		return base64_encode(json_encode($filter_params));
 	}
 
 	protected function decodeFilterParams($encoded_filter) {
-		return json_decode($encoded_filter,true);
+		return json_decode(base64_decode($encoded_filter),true);
 	}
 
 	/**
