@@ -36,3 +36,11 @@ $career_goal_db = new \CaT\Plugins\CareerGoal\Settings\ilDB($ilDB, $ilUser);
 $settings_db = new \CaT\Plugins\TalentAssessment\Settings\ilDB($ilDB, $ilUser, $career_goal_db);
 $settings_db->install();
 ?>
+
+<#5>
+<?php
+global $ilUser;
+$b = new \CaT\Plugins\CareerGoal\Observations\ilDB($ilDB, $ilUser);
+$settings_db = new \CaT\Plugins\TalentAssessment\Observations\ilDB($ilDB, $ilUser, $b);
+$settings_db->updateColumns();
+?>
