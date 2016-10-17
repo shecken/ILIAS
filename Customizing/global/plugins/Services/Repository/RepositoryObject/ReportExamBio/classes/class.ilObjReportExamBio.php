@@ -1,6 +1,7 @@
 <?php
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catSelectableReportTableGUI.php';
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 use CaT\TableRelations as TableRelations;
 use CaT\Filter as Filters;
 
@@ -57,10 +58,6 @@ class ilObjReportExamBio extends ilObjReportBase {
 
 		$this->space = $table->prepareTableAndSetRelevantFields($this->space);
 		return $table;
-	}
-
-	private function isForTrainer() {
-		return true;
 	}
 
 	public function filter() {
@@ -182,6 +179,8 @@ class ilObjReportExamBio extends ilObjReportBase {
 					->_AND($recent_pass_case->field('obj_id')->EQ($recent_pass_data->field('obj_id')))
 					->_AND($recent_pass_case->field('recent_pass')->EQ($recent_pass_data->field('pass'))))
 				)
+			->request($recent_pass_data->field('usr_id'))
+			->request($recent_pass_data->field('obj_id'))
 			->groupBy($recent_pass_case->field('usr_id'))
 			->groupBy($recent_pass_case->field('obj_id'));
 	}
@@ -267,10 +266,6 @@ class ilObjReportExamBio extends ilObjReportBase {
 					,1 => $this->plugin->txt('test_passed'));
 	}
 
-	private function relevantUsers () {
-		return array(6);
-	}
-
 	private function convertMixedArrayToIntArray(array $ints) {
 		$return = array();
 		foreach ($ints as $int) {
@@ -288,5 +283,41 @@ class ilObjReportExamBio extends ilObjReportBase {
 			return true;
 		}
 		return false;
+	}
+
+	private function relevantUsers() {
+		return array_map(function($nummeric) {return (int)$nummeric;},$this->target_user_ids);
+	}
+
+	public function isForTrainer() {
+		return $this->for_trainer;
+	}
+
+	public function setTargets($viewer_id, $target_user_id = null, $taget_training_id = null) {
+		if(self::checkVisibleByConfig($viewer_id, $target_user_id, $taget_training_id)) {
+			if(null !== $target_user_id && null !== $taget_training_id) {
+				$this->target_user_ids = array($target_user_id);
+				$this->for_trainer = true;
+			} elseif(null === $target_user_id && null !== $taget_training_id) {
+				$this->target_user_ids = gevCourseUtils::getInstance((int)$taget_training_id)->getParticipants();
+				$this->for_trainer = true;
+			} else {
+				$this->target_user_ids = array($viewer_id);
+				$this->for_trainer = false;
+			}
+		} else {
+			throw new ilException('may not view requested parameters');
+		}
+	}
+
+	public static function checkVisibleByConfig($viewer_id, $target_user_id, $taget_training_id) {
+		if(null !== $target_user_id && null !== $taget_training_id) {
+			$crs_utils = gevCourseUtils::getInstance((int)$taget_training_id);
+			return $crs_utils->hasTrainer($viewer_id) && in_array((int)$target_user_id, $crs_utils->getParticipants());
+		} elseif(null === $target_user_id && null !== $taget_training_id) {
+			return gevCourseUtils::getInstance((int)$taget_training_id)->hasTrainer($viewer_id);
+		} else {
+			return null === $target_user_id || (string)$viewer_id === (string)$target_user_id;
+		}
 	}
 }
