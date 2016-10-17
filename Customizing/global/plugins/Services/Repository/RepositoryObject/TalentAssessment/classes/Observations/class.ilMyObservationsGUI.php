@@ -362,14 +362,6 @@ class ilMyObservationsGUI {
 	}
 
 	protected function getOrgUnitOptions() {
-		$evg_id = gevOrgUnitUtils::getEVGOrgUnitRefId();
-		$org_unit_utils = gevOrgUnitUtils::getAllChildren(array($evg_id));
-
-		$ret = array();
-		foreach($org_unit_utils as $key => $value) {
-			$ret[$value["obj_id"]] = ilObject::_lookupTitle($value["obj_id"]);
-		}
-
-		return $ret;
+		return $this->plugin->getSettingsDB()->getOrgUnitOptions();
 	}
 }
