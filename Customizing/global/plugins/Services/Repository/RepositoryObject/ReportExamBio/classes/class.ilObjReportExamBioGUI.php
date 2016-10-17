@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseGUI.php';
+require_once 'Modules/Test/classes/class.ilObjTest.php';
 
 /**
 * User Interface class for example repository object.
@@ -85,23 +86,17 @@ protected function afterConstructor() {
 												 "write", get_class($this));
 					$this->gTabs->activateTab("properties");
 					$this->gTabs->activateSubTab("report_query_view");
-					$this->object->prepareRelevantParameters();
-					$this->setFilterAction($cmd);
 					return $this->renderQueryView();
 				}
 				break;
 			case "exportexcel":
 				if($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
-					$this->object->prepareRelevantParameters();
-					$this->setFilterAction($cmd);
 					$this->exportExcel();
 				}
 				exit();
 			case "showContent":
 				if($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
 					$this->gTabs->activateTab("content");
-					$this->object->prepareRelevantParameters();
-					$this->setFilterAction($cmd);
 					return $this->renderReport();
 				}
 				break;
@@ -149,6 +144,8 @@ protected function afterConstructor() {
 	}
 
 	protected function prepareReport() {
+		$this->addGetParametersToReport();
+							$this->setFilterAction($cmd);
 		$this->object->initSpace();
 		$this->filter = $this->prepareFilter($this->object);
 		$this->enableRelevantParametersCtrl();
@@ -157,19 +154,41 @@ protected function afterConstructor() {
 		$this->disableRelevantParametersCtrl();
 	}
 
+	protected function addGetParametersToReport() {
+		$this_user_id = $this->gUser->getId();
+
+		if(isset($_GET['target_user_id'])) {
+			$target_user_id = $_GET['target_user_id'];
+			$this->object->addRelevantParameter('target_user_id',$target_user_id);
+		} else {
+			$target_user_id = null;
+		}
+
+		if(isset($_GET['target_training_id'])) {
+			$target_training_id = $_GET['target_training_id'];
+			$this->object->addRelevantParameter('target_training_id',$target_training_id);
+		} else {
+			$target_training_id = null;
+		}
+
+		$this->object->setTargets($this_user_id,$target_user_id,$target_training_id);
+	}
+
 	protected function prepareFilter($object) {
 		$filter = $this->object->filter();
 		$this->filter_settings = $this->loadFilterSettings();
-		$this->object->addRelevantParameter('filter_params',$this->encodeFilterParams($this->filter_settings));
+
 		$display = new \CaT\Filter\DisplayFilter
 						( new \CaT\Filter\FilterGUIFactory
 						, new \CaT\Filter\TypeFactory
 						);
+		$this->object->addRelevantParameter('filter_params',$this->encodeFilterParams($this->filter_settings));
 		if(count($this->filter_settings) > 0) {
 			$this->object->applyFilterToSpace($display->buildFilterValues($filter, $this->filter_settings));
 		}
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
-		return new catFilterFlatViewGUI($this, $filter, $display, $this->cmd);
+		$filter_view = new catFilterFlatViewGUI($this, $filter, $display, $this->cmd);
+		return $filter_view;
 	}
 
 
@@ -202,8 +221,9 @@ protected function afterConstructor() {
 
 	protected function render() {
 		$this->gTpl->setTitle(null);
+
 		return 	($this->title !== null ? $this->title->render() : "")
-				. $this->filter->render($this->filter_settings)
+				. $this->renderFilter()
 				. ($this->spacer !== null ? $this->spacer->render() : "")
 				. $this->renderTable();
 	}
@@ -220,6 +240,13 @@ protected function afterConstructor() {
 		return	 $export_btn
 				.$content
 				.$export_btn;
+	}
+
+	protected function renderFilter() {
+		$this->enableRelevantParametersCtrl();
+		$filter_rendered = $this->filter->render($this->filter_settings);
+		$this->disableRelevantParametersCtrl();
+		return $filter_rendered;
 	}
 
 	protected function renderExportButton() {
@@ -314,6 +341,30 @@ protected function afterConstructor() {
 
 
 	public function transformResultRowTable($rec) {
+		if($this->object->isForTrainer()) {
+			$this->gCtrl->setParameterByClass('ilObjReportExamBioGUI', 'target_training_id', $_GET['target_training_id']);
+			$user_link = self::examBiographyLinkForUser($rec['usr_id']);
+			$this->gCtrl->setParameterByClass('ilObjReportExamBioGUI', 'target_training_id', null);
+			$rec['lastname']
+			= '<a href="'
+				.$user_link 
+				.'">'.$rec['lastname'].'</a>';
+
+			$rec['firstname']
+			= '<a href="'
+				.$user_link
+				.'">'.$rec['firstname'].'</a>';
+		}
+		$ref_id = current(ilObject::_getAllReferences($rec['obj_id']));
+		$active_id = ilObjTest::_getActiveIdOfUser($rec['usr_id'], ilObjTest::_getTestIDFromObjectID($rec['obj_id']));
+		$this->gCtrl->setParameterByClass('ilTestEvaluationGUI','ref_id',$ref_id);
+		$this->gCtrl->setParameterByClass('ilTestEvaluationGUI','active_id',$active_id);
+		$rec['test_title'] 
+			= '<a href="'
+				.$this->gCtrl->getLinkTargetByClass(array('ilRepositoryGUI','ilObjTestGUI','ilTestEvaluationGUI'),'outParticipantsResultsOverview')
+				.'">'.$rec['test_title'].'</a>';
+		$this->gCtrl->setParameterByClass('ilTestEvaluationGUI','ref_id',null);
+		$this->gCtrl->setParameterByClass('ilTestEvaluationGUI','active_id',null);
 		return $this->transformResultRowCommon($rec);
 	}
 
@@ -334,8 +385,8 @@ protected function afterConstructor() {
 
 	protected function transformResultRowCommon($rec) {
 		$rec['test_date'] = (new DateTime())->setTimestamp($rec['test_date'])->format('d.m.Y');
-		$rec['average'] = number_format($rec['average'],2,',','');
-		$rec['max'] = number_format($rec['max'],2,',','');
+		$rec['average'] = number_format(100*$rec['average'],0).'%';
+		$rec['max'] = number_format(100*$rec['max'],0).'%';
 		$rec['passed'] = (int)$rec['passed'] === 1 ? 'Ja' : 'Nein';
 		return $rec;
 	}
@@ -432,5 +483,27 @@ protected function afterConstructor() {
 		$this->settings_form_handler->addToForm($settings_form, $this->object->global_report_settings);
 		$this->settings_form_handler->addToForm($settings_form, $this->object->local_report_settings);
 		return $settings_form;
+	}
+
+	public static function examBiographyLinkForTraining($training_id) {
+		global $ilCtrl;
+		$ref_id = current(ilObject::_getAllReferences(current(ilObject::_getObjectsDataForType('xexb', true))["id"]));
+		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'target_training_id', $training_id);
+		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'ref_id', $ref_id);
+		$return = $ilCtrl->getLinkTargetByClass(array('ilObjPluginDispatchGUI', 'ilObjReportExamBioGUI'), '');
+		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'ref_id', null);
+		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'target_training_id', null);
+		return $return;
+	}
+
+	public static function examBiographyLinkForUser($usr_id) {
+		global $ilCtrl;
+		$ref_id = current(ilObject::_getAllReferences(current(ilObject::_getObjectsDataForType('xexb', true))["id"]));
+		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'ref_id', $ref_id);
+		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'target_user_id', $usr_id);
+		$return = $ilCtrl->getLinkTargetByClass(array('ilObjPluginDispatchGUI', 'ilObjReportExamBioGUI'), '');
+		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'ref_id', null);
+		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'target_user_id', null);
+		return $return;
 	}
 }
