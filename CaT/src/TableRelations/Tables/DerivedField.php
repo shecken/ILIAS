@@ -32,6 +32,19 @@ class DerivedField extends Filters\Predicates\Field implements AbstractDerivedFi
 	}
 
 	/**
+	 * Get first order of fields from which this field is derived.
+	 *
+	 * @return	AbstractTableField[]
+	 */
+	public function derivedFromDirect() {
+		$return = array();
+		foreach ($this->derived_from as $field) {
+			$return[] = $field;
+		}
+		return $return;
+	}
+
+	/**
 	 * Get the postprocessing-function to be used by interpreter.
 	 *
 	 * @return	closure 
