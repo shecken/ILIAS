@@ -1570,6 +1570,15 @@ class gevCourseUtils {
 		}
 	}
 	
+	public function getExamBioLink() {
+		return self::getExamBioLinkFor($this->crs_id);
+	}
+
+	static public function getExamBioLinkFor($crs_id) {
+		require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
+		return ilObjReportExamBioGUI::examBiographyLinkForTraining($crs_id);
+	}
+
 	// Participants, Trainers and other members
 	
 	public function getMembership() {
