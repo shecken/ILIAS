@@ -104,7 +104,6 @@ class ilObjReportEduBio extends ilObjReportBase {
 				->select("crs.venue")
 				->select("crs.provider")
 				->select("crs.tutor")
-				->select('usrcrs.credit_points')
 				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text')
 								.'	,IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
 								.'		,usrcrs.credit_points'
