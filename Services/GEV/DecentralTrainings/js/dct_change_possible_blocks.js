@@ -37,9 +37,11 @@ $(document).ready(function() {
 		if(val.length > 0) {
 			$('#form_dct_ab input:submit').removeClass('submit_disabled');
 			$('#form_dct_ab input:submit').addClass('submit');
+			$('#form_dct_ab input:submit').attr('disabled',false);
 		} else {
 			$('#form_dct_ab input:submit').addClass('submit_disabled');
 			$('#form_dct_ab input:submit').removeClass('submit');
+			$('#form_dct_ab input:submit').attr('disabled',true);
 		}
 	});
 });
@@ -114,6 +116,8 @@ function changeBuildingBlockInfos() {
 			$('#target').attr('name', 'blanko_target');
 			$('#target').css('background-color', '#FFF');
 			$('#form_dct_ab input:submit').addClass('submit_disabled');
+			$('#form_dct_ab input:submit').removeClass('submit');
+			$('#form_dct_ab input:submit').attr('disabled',true);
 		}
 
 		calculateCreditPoints();

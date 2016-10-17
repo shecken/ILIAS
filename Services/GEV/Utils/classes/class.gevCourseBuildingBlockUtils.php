@@ -14,6 +14,7 @@ class gevCourseBuildingBlockUtils {
 	static protected $instances = array();
 	const TABLE_NAME = "dct_crs_building_block";
 	const TABLE_NAME_JOIN1 = "dct_building_block";
+	const TABLE_NAME_LEFT_JOIN1 = "dct_blanko_bb_infos";
 	const DURATION_PER_POINT = 45;
 	const MAX_DURATION_MINUTES = 720;
 
@@ -189,10 +190,13 @@ class gevCourseBuildingBlockUtils {
 
 		$sql = "SELECT\n"
 			  ."    base.id, base.crs_id, base.bb_id, base.start_time, base.end_time, base.credit_points, base.practice_session,\n"
-			  ."    join1.title, join1.target, join1.content, base.crs_request_id, base.bb_id, join1.dbv_topic\n"
-			  ." FROM ".self::TABLE_NAME." as base\n"
-			  ." JOIN ".self::TABLE_NAME_JOIN1." as join1\n"
-			  ."   ON  base.bb_id = join1.obj_id\n";
+			  ."    join1.title, join1.target, join1.content, base.crs_request_id, base.bb_id, join1.dbv_topic, join1.is_blanko,\n"
+			  ."    ljoin1.content AS blanko_content, ljoin1.target AS blanko_target\n"
+			  ." FROM ".self::TABLE_NAME." AS base\n"
+			  ." JOIN ".self::TABLE_NAME_JOIN1." AS join1\n"
+			  ."   ON base.bb_id = join1.obj_id\n"
+			  ." LEFT JOIN ".self::TABLE_NAME_LEFT_JOIN1." AS ljoin1\n"
+			  ."   ON base.id = ljoin1.bb_id\n";
 		
 		if($a_crs_ref_id !== null) {
 			$sql .= " WHERE base.crs_id = ".$ilDB->quote($a_crs_ref_id, "integer")."\n";
@@ -201,7 +205,7 @@ class gevCourseBuildingBlockUtils {
 				$sql .= " WHERE base.crs_request_id = ".$ilDB->db->quote($a_request_id, "integer")."\n";
 			}
 		}
-	
+
 		$sql .= " ORDER BY base.start_time";
 
 		$ret = array();
@@ -209,7 +213,7 @@ class gevCourseBuildingBlockUtils {
 		while($row = $ilDB->fetchAssoc($res)) {
 			$ret[] = $row;
 		}
-
+		
 		return $ret;
 	}
 	

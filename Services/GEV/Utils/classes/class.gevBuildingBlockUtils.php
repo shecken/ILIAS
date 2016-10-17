@@ -482,7 +482,6 @@ class gevBuildingBlockUtils {
 		global $ilDB;
 
 		$bb_pool = gevUserUtils::getBuildingBlockPoolsUserHasPermissionsTo($user_id, array(gevSettings::USE_BUILDING_BLOCK, "visible"));
-		var_dump($bb_pool);
 
 		$sql = "SELECT DISTINCT topic FROM ".self::TABLE_NAME." WHERE is_deleted = 0 AND is_active = 1 AND ".$ilDB->in("pool_id", $bb_pool, false, "integer")."\n";
 		$res = $ilDB->query($sql);
@@ -545,7 +544,7 @@ class gevBuildingBlockUtils {
 	static function getBuildingBlockInfosById($id) {
 		global $ilDB;
 
-		$sql = "SELECT content, target, if(is_wp_relevant,'Ja','Nein') AS wp"
+		$sql = "SELECT content, target, IF(is_wp_relevant,'Ja','Nein') AS wp, is_blanko"
 			   ." FROM ".self::TABLE_NAME."\n"
 			   ." WHERE obj_id = ".$ilDB->quote($id, "integer");
 
@@ -555,7 +554,7 @@ class gevBuildingBlockUtils {
 			return $ilDB->fetchAssoc($res);
 		}
 
-		return array("content" => "", "target" => "");
+		return array("content" => "", "target" => "", "is_blanko" => false);
 	}
 
 	static public function getMoveToCourseOptions() {
