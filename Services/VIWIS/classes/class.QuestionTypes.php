@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * Simple helper class to manage question types.
+ */
 class QuestionTypes {
 	protected static $types = array('single','multiple');
 

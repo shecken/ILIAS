@@ -292,9 +292,12 @@ class ilDB implements DB {
 	public function getCareerGoalsOptions() {
 		$ret = array();
 
-		$select = "SELECT obj_id, title\n"
-				." FROM object_data\n"
-				." WHERE type = 'xcgo'";
+		$select = "SELECT obj.obj_id, obj.title\n"
+				." FROM object_data obj\n"
+				." JOIN object_reference ref\n"
+				."   ON obj.obj_id = ref.obj_id\n"
+				." WHERE obj.type = 'xcgo'\n"
+				."   AND ref.deleted IS NULL";
 
 		$res = $this->getDB()->query($select);
 

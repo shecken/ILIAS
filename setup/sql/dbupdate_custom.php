@@ -5196,6 +5196,32 @@ $ilDB->addIndex('hist_userorgu',array('hist_historic','action'),'oha');
 
 <#222>
 <?php
+	if(!$ilDB->tableExists('viwis_refs')) {
+		$ilDB->createTable('viwis_refs', array(
+													'ref_id' => array(
+														'type' => 'integer',
+														'length' => 4,
+														'notnull' => true,
+														'default' => 0
+													),
+													'wbt_item' => array(
+														'type' => 'text',
+														'length' => 20,
+														'notnull' => true
+													),
+													'question_ref' => array(
+														'type' => 'text',
+														'length' => 20,
+														'notnull' => true
+													)
+												)
+					);
+	}
+	$ilCtrlStructureReader->getStructure();
+?>
+
+<#223>
+<?php
 $field = array('type' 		=> 'integer',
 			'length' 	=> 4,
 			'notnull' 	=> false,
@@ -5207,7 +5233,7 @@ if(!$ilDB->tableColumnExists("dct_building_block", "is_blanko")) {
 }
 ?>
 
-<#223>
+<#224>
 <?php
 	require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
 	$blanko_db = new ilBlankoDB();
