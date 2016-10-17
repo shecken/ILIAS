@@ -30,6 +30,18 @@ $(document).ready(function() {
 						break;
 		}
 	});
+
+	$('#content').on("input propertychange", function(e) {
+		var val = $('#content').val().trim();
+
+		if(val.length > 0) {
+			$('#form_dct_ab input:submit').removeClass('submit_disabled');
+			$('#form_dct_ab input:submit').addClass('submit');
+		} else {
+			$('#form_dct_ab input:submit').addClass('submit_disabled');
+			$('#form_dct_ab input:submit').removeClass('submit');
+		}
+	});
 });
 
 /**
@@ -80,11 +92,30 @@ function changeBuildingBlockInfos() {
 	$('#form_dct_ab input:submit').removeClass('submit_disabled');
 	$('#form_dct_ab input:submit').addClass('submit');
 
+	$('#content').attr('disabled',true);
+	$('#content').attr('name', null);
+	$('#content').css('background-color', '#DDD');
+	$('#target').attr('disabled',true);
+	$('#target').attr('name', null);
+	$('#target').css('background-color', '#DDD');
+
 	var selected = $('#blocks option:selected').val();
 	$.getJSON(il.buildingBlock,"selected="+selected+"&type=1", function( data ) {
 		$('#content').val(data["content"]);
 		$('#target').val(data["target"]);
 		$('#isWP').val(data["wp"]);
+		$('#isBlanko').val(data["is_blanko"]);
+
+		if(data["is_blanko"] == 1) {
+			$('#content').attr('disabled',false);
+			$('#content').attr('name', 'blanko_content');
+			$('#content').css('background-color', '#FFF');
+			$('#target').attr('disabled',false);
+			$('#target').attr('name', 'blanko_target');
+			$('#target').css('background-color', '#FFF');
+			$('#form_dct_ab input:submit').addClass('submit_disabled');
+		}
+
 		calculateCreditPoints();
 	});
 }
