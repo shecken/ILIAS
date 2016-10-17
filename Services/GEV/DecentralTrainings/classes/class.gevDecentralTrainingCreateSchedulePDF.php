@@ -254,7 +254,12 @@ class gevDecentralTrainingCreateSchedulePDF
 			$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getTitle()),0,"");
 
 			$this->pdf->setXY($x_fourthColoumn - 0.1, $y_value);
-			$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getContent()),0,"");
+
+			if($value->getBlankoInfo()) {
+				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($value->getBlankoInfo()->getContent()),0,"");
+			} else {
+				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getContent()),0,"");
+			}
 
 			$this->pdf->setXY($x_fithColoumn - 0.1, $y_value);
 			$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getTarget()),0,"");

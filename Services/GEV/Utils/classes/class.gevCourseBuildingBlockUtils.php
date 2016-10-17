@@ -26,6 +26,7 @@ class gevCourseBuildingBlockUtils {
 	protected $crs_request_id = null;
 	protected $credit_points = 0;
 	protected $practice_session = 0;
+	protected $blanko_info = null;
 
 	protected function __construct($a_course_building_block_id) {
 		global $ilDB, $ilUser;
@@ -114,6 +115,14 @@ class gevCourseBuildingBlockUtils {
 					,"end"=>array("time"=>$arr_end_time[1],"date"=>$arr_end_time[0]));
 		
 		return $ret;
+	}
+
+	public function setBlankoInfo($blanko_info) {
+		$this->blanko_info = $blanko_info;
+	}
+
+	public function getBlankoInfo() {
+		return $this->blanko_info;
 	}
 
 	public function loadData() {
@@ -227,6 +236,14 @@ class gevCourseBuildingBlockUtils {
 			$obj->setBuildingBlock($row["bb_id"]);
 			$obj->setCreditPoints($row["credit_points"]);
 			$obj->setPracticeSession($row["practice_session"]);
+			
+			if((bool)$row["is_blanko"]) {
+				require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
+				$blanko_db = new ilBlankoDB();
+				$blanko_info = $blanko_db->getBlankoBuldingBlockForCourse($row["id"], $row["crs_id"]);
+				$obj->setBlankoInfo($blanko_info);
+			}
+			
 			return $obj;
 		}, self::getAllCourseBuildingBlocksRaw($a_crs_ref_id, $a_request_id));
 	}
