@@ -5193,3 +5193,16 @@ $ilDB->addIndex('hist_userorgu',array('hist_historic','action'),'oha');
 		));
 	}
 ?>
+
+<#222>
+<?php
+$field = array('type' 		=> 'integer',
+			'length' 	=> 4,
+			'notnull' 	=> false,
+			'default' 	=> 0
+			);
+
+if(!$ilDB->tableColumnExists("dct_building_block", "is_blanko")) {
+	$ilDB->addTableColumn("dct_building_block", "is_blanko", $field);
+}
+?>
