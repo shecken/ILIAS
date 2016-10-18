@@ -392,7 +392,16 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 	* or the first parent object, if no type given. @return array(obj_id => id, ref_id => id).
 	*/
 	protected function getParentObjectOfTypeIds($type = null) {
-		$data = $this->gTree->getParentNodeData($this->getRefId());
+		return $this->getParentObjectOfObjOfTypeIds($this->getRefId(), $type);
+	}
+
+		/**
+	* We may need to locate the report inside the tree, so it is possible to perform local evaluations.
+	* look for the first parent object of specific @param (string)type,
+	* or the first parent object, if no type given. @return array(obj_id => id, ref_id => id).
+	*/
+	protected function getParentObjectOfObjOfTypeIds($ref_id, $type = null) {
+		$data = $this->gTree->getParentNodeData($ref_id);
 		while( null !== $type && $type !== $data['type'] && (string)ROOT_FOLDER_ID !== (string)$data['ref_id'] ) {
 			$data = $this->gTree->getParentNodeData($data['ref_id']);
 		}
