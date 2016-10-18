@@ -96,4 +96,28 @@ class reportSettingsDataHandler {
 		return $this->db->quote($value, $quote_format);
 	}
 
+	/**
+	 *	Get object metadata meeting search criteria.
+	 * 	@param	string|int[string] $properties
+	 * 	@param	reportSettings	$settings
+	 *
+	 *	@return	string|int[string]
+	 */
+	public function query(array $properties,reportSettings $settings) {
+		$table = $settings->table();
+		$sql = 'SELECT * FROM '.$table.' WHERE '.PHP_EOL;
+		foreach ($properties as $key => $value) {
+			$setting = $settings->setting($key);
+			if($setting === null) {
+				throw new reportSettingsException("unknown setting type".get_class($setting));
+			}
+			$sql.= '	'.$key.' = '.$this->quote($value,$setting).PHP_EOL;
+		}
+		$res = $this->db->query($sql);
+		$return = array();
+		while($rec = $ilDB->fetchAssoc($res)) {
+			$return[] = $rec;
+		}
+		return $return;
+	}
 }
