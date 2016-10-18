@@ -243,7 +243,6 @@ class gevDecentralTrainingCreateSchedulePDF
 				$this->pdf->SetFont($this->crsBlockFontName, $this->crsBlockNoBold, $this->crsBlockFontSize);
 				$y_value += $this->crsBlockSpaceTopAdd + 0.3;
 			}
-		
 
 			$this->pdf->WriteText($x_firstColoumn, $y_value, $this->encodeSpecialChars($value->getStartTime()));
 			$this->pdf->WriteText($x_secondColoumn, $y_value, $this->encodeSpecialChars($value->getEndTime()));
@@ -254,7 +253,6 @@ class gevDecentralTrainingCreateSchedulePDF
 			$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getTitle()),0,"");
 
 			$this->pdf->setXY($x_fourthColoumn - 0.1, $y_value);
-
 			if($value->getBlankoInfo()) {
 				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($value->getBlankoInfo()->getContent()),0,"");
 			} else {
@@ -262,7 +260,11 @@ class gevDecentralTrainingCreateSchedulePDF
 			}
 
 			$this->pdf->setXY($x_fithColoumn - 0.1, $y_value);
-			$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getTarget()),0,"");
+			if($value->getBlankoInfo()) {
+				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($value->getBlankoInfo()->getTarget()),0,"");
+			} else {
+				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getTarget()),0,"");
+			}
 
 			$this->pdf->setXY($x_sixthColoumn - 0.1, $y_value);
 			$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($value->getPracticeSession()),0,"");
