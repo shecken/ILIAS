@@ -16,6 +16,9 @@ require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 use CaT\TableRelations as TableRelations;
 use CaT\Filter as Filters;
 abstract class ilObjReportBase2 extends ilObjectPlugin{
+
+	const URL_PREFIX = "https://";
+	
 	public function __construct($a_ref_id = 0) {
 		global $ilUser;
 		$this->gUser = $ilUser;
