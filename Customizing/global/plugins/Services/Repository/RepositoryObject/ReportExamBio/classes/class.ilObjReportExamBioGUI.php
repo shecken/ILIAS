@@ -26,9 +26,6 @@ class ilObjReportExamBioGUI extends ilObjReportBase2GUI {
 		$this->object->setTargets($this->gUser->getId(), $target_user_id);
 	}
 
-
-
-
 	public function transformResultRowTable($rec) {
 		if($this->object->forTrainerView() && isset($rec['lastname'])) {
 			$this->gCtrl->setParameter($this, 'target_user_id', $rec['usr_id']);
