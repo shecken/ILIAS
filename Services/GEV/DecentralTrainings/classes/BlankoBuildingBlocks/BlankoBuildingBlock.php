@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Immutable class for blanko building block informations
+ * Immutable class for blank building block informations
  */
-class BlankoBuildingBlock {
+class BlankBuildingBlock {
 	protected $content;
 	protected $target;
 	protected $request_id;

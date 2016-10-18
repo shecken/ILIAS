@@ -106,14 +106,14 @@ function changeBuildingBlockInfos() {
 		$('#content').val(data["content"]);
 		$('#target').val(data["target"]);
 		$('#isWP').val(data["wp"]);
-		$('#isBlanko').val(data["is_blanko"]);
+		$('#isBlank').val(data["is_blank"]);
 
-		if(data["is_blanko"] == 1) {
+		if(data["is_blank"] == 1) {
 			$('#content').attr('disabled',false);
-			$('#content').attr('name', 'blanko_content');
+			$('#content').attr('name', 'blank_content');
 			$('#content').css('background-color', '#FFF');
 			$('#target').attr('disabled',false);
-			$('#target').attr('name', 'blanko_target');
+			$('#target').attr('name', 'blank_target');
 			$('#target').css('background-color', '#FFF');
 			$('#form_dct_ab input:submit').addClass('submit_disabled');
 			$('#form_dct_ab input:submit').removeClass('submit');

@@ -3,10 +3,10 @@
 require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/BlankoBuildingBlock.php");
 
 /**
- * Database handle for blanko building block informations
+ * Database handle for blank building block informations
  */
-class ilBlankoDB {
-	const TABLE_NAME = "dct_blanko_bb_infos";
+class ilBlankDB {
+	const TABLE_NAME = "dct_blank_bb_infos";
 
 	public function __construct() {
 		global $ilDB;
@@ -51,27 +51,27 @@ class ilBlankoDB {
 		}
 	}
 
-	public function save(BlankoBuildingBlock $blanko_block) {
+	public function save(BlankBuildingBlock $blank_block) {
 		$values = array
-				( "bb_id" => array("integer", $blanko_block->getBbId())
-				, "crs_id" => array("float", $blanko_block->getCrsId())
-				, "request_id" => array("float", $blanko_block->getRequestId())
-				, "content" => array("text", $blanko_block->getContent())
-				, "target" => array("text", $blanko_block->getTarget())
+				( "bb_id" => array("integer", $blank_block->getBbId())
+				, "crs_id" => array("float", $blank_block->getCrsId())
+				, "request_id" => array("float", $blank_block->getRequestId())
+				, "content" => array("text", $blank_block->getContent())
+				, "target" => array("text", $blank_block->getTarget())
 				);
 
 		$this->getDB()->insert(self::TABLE_NAME, $values);
 	}
 
 	/**
-	 * Get all blanko block informations for request id
+	 * Get all blank block informations for request id
 	 *
 	 * @param int 	$bb_id 			id of course building block
 	 * @param int 	$request_id 	id of the open request
 	 *
-	 * @return array<int, BlankoBuildingBlock>
+	 * @return array<int, BlankBuildingBlock>
 	 */
-	public function getBlankoBuldingBlockForRequest($bb_id, $request_id) {
+	public function getBlankBuldingBlockForRequest($bb_id, $request_id) {
 		$query = $this->getSelectStatement();
 		$query .= " WHERE bb_id = ".$this->getDB()->quote($bb_id, "integer")."\n"
 				 ."     AND request_id = ".$this->getDB()->quote($request_id, "integer")."\n";
@@ -81,7 +81,7 @@ class ilBlankoDB {
 		$ret = null;
 
 		while($row = $this->getDB()->fetchAssoc($res)) {
-			$ret = new BlankoBuildingBlock($row["bb_id"]
+			$ret = new BlankBuildingBlock($row["bb_id"]
 					, $row["crs_id"]
 					, $row["request_id"]
 					, $row["content"]
@@ -93,14 +93,14 @@ class ilBlankoDB {
 	}
 
 	/**
-	 * Get all blanko block informations for crs id
+	 * Get all blank block informations for crs id
 	 *
 	 * @param int 	$bb_id 			id of course building block
 	 * @param int 	$crs_id 	ref id of the crs
 	 *
-	 * @return array<int, BlankoBuildingBlock>
+	 * @return array<int, BlankBuildingBlock>
 	 */
-	public function getBlankoBuldingBlockForCourse($bb_id, $crs_id) {
+	public function getBlankBuldingBlockForCourse($bb_id, $crs_id) {
 		$query = $this->getSelectStatement();
 		$query .= " WHERE bb_id = ".$this->getDB()->quote($bb_id, "integer")."\n"
 				 ."     AND crs_id = ".$this->getDB()->quote($crs_id, "integer")."\n";
@@ -110,7 +110,7 @@ class ilBlankoDB {
 		$ret = null;
 
 		while($row = $this->getDB()->fetchAssoc($res)) {
-			$ret = new BlankoBuildingBlock($row["bb_id"]
+			$ret = new BlankBuildingBlock($row["bb_id"]
 					, $row["crs_id"]
 					, $row["request_id"]
 					, $row["content"]
@@ -122,7 +122,7 @@ class ilBlankoDB {
 	}
 
 	/**
-	 * Delete blanko block information if course block is deleted
+	 * Delete blank block information if course block is deleted
 	 *
 	 * @param int 	$crs_bb 	id of the course block
 	 */

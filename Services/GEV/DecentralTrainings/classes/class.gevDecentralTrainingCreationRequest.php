@@ -207,7 +207,7 @@ class gevDecentralTrainingCreationRequest {
 		if($trgt_utils->isFlexibleDecentrallTraining()) {
 			$this->updateCourseBuildingBlocks($trgt_utils->getRefId());
 			$this->updateCourseWithBuidlingBlockData($trgt_utils->getRefId());
-			$this->updateBlankoCourseBuildingBlocks($trgt_utils->getRefId());
+			$this->updateBlankCourseBuildingBlocks($trgt_utils->getRefId());
 		}
 
 		$trgt_crs = $trgt_utils->getCourse();
@@ -477,10 +477,10 @@ class gevDecentralTrainingCreationRequest {
 		gevCourseBuildingBlockUtils::updateCrsBuildungBlocksCrsIdByCrsRequestId($a_trgt_crs_ref_id,$this->request_id);
 	}
 
-	protected function updateBlankoCourseBuildingBlocks($a_trgt_crs_ref_id) {
+	protected function updateBlankCourseBuildingBlocks($a_trgt_crs_ref_id) {
 		require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
-		$blanko_db = new ilBlankoDB();
-		$blanko_db->moveToCrsId($this->request_id, $a_trgt_crs_ref_id);
+		$blank_db = new ilBlankDB();
+		$blank_db->moveToCrsId($this->request_id, $a_trgt_crs_ref_id);
 	}
 
 	protected function updateCourseWithBuidlingBlockData($a_trgt_crs_ref_id) {

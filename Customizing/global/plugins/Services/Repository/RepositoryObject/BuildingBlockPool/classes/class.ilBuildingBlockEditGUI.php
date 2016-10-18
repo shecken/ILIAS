@@ -10,10 +10,10 @@ class ilBuildingBlockEditGUI {
 	const UPDATE_UNIT = "update";
 	const SAVE_UNIT = "save";
 	const DELETE_UNIT = "delete";
-	const NEW_BLANKO_UNIT = "new_blanko";
-	const EDIT_BLANKO_UNIT = "edit_blanko";
-	const SAVE_BLANKO_UNIT = "save_blanko";
-	const UPDATE_BLANKO_UNIT = "update_blanko";
+	const NEW_BLANK_UNIT = "new_blank";
+	const EDIT_BLANK_UNIT = "edit_blank";
+	const SAVE_BLANK_UNIT = "save_blank";
+	const UPDATE_BLANK_UNIT = "update_blank";
 	const MAX_TEXTAREA_LENGTH = 500;
 
 	public function __construct($obj_id, $mode, $parent_obj) {
@@ -25,7 +25,7 @@ class ilBuildingBlockEditGUI {
 		$this->gCtrl = $ilCtrl;
 		$this->gLng = $lng;
 
-		$this->is_blanko = in_array($mode, $this->getBlankoModes());
+		$this->is_blank = in_array($mode, $this->getBlankModes());
 	}
 
 	public function getHtml($form_gui = null) {
@@ -48,7 +48,7 @@ class ilBuildingBlockEditGUI {
 		$form_gui->setFormAction($this->gCtrl->getFormAction($this->parent_obj));
 		$this->gCtrl->setParameter($this->parent_obj,"bb_id",null);
 
-		if($this->mode == self::EDIT_UNIT || $this->mode == self::EDIT_BLANKO_UNIT) {
+		if($this->mode == self::EDIT_UNIT || $this->mode == self::EDIT_BLANK_UNIT) {
 			require_once ("Services/GEV/Utils/classes/class.gevBuildingBlockUtils.php");
 			$bu_utils = gevBuildingBlockUtils::getInstance($this->obj_id);
 			$bu_utils->loadData();
@@ -103,7 +103,7 @@ class ilBuildingBlockEditGUI {
 		$title->setMaxLength(100);
 		$form_gui->addItem($title);
 
-		if(!$this->is_blanko) {
+		if(!$this->is_blank) {
 			$content = new ilTextAreaInputGUI($this->gLng ->txt("gev_dec_building_block_content"), "frm_content");
 			$content->setValue($vals["content"]);
 			$content->setRows(3);
@@ -124,7 +124,7 @@ class ilBuildingBlockEditGUI {
 		$content_section->setTitle($this->gLng ->txt("gev_dec_training_content"));
 		$form_gui->addItem($content_section);
 
-		if(!$this->is_blanko) {
+		if(!$this->is_blank) {
 			$training_cat = $amd_utils->getOptions(gevSettings::CRS_AMD_TOPIC);
 			$cbx_group_training_cat = new ilCheckBoxGroupInputGUI($this->gLng ->txt("gev_dec_training_training_category"),"frm_training_category");
 
@@ -150,7 +150,7 @@ class ilBuildingBlockEditGUI {
 		}
 		$form_gui->addItem($topic);
 
-		if(!$this->is_blanko) {
+		if(!$this->is_blank) {
 			$topic_options = $amd_utils->getOptions(gevSettings::CRS_AMD_DBV_HOT_TOPIC);
 			$dbv_topic = new ilSelectInputGUI($this->gLng ->txt("gev_dec_training_dbv_topic"),"frm_dbv_topic");
 			$options = array("" => "-") + $topic_options;
@@ -191,7 +191,7 @@ class ilBuildingBlockEditGUI {
 		/*************************
 		* ÜBERNAHME IN KURS?
 		*************************/
-		if(!$this->is_blanko) {
+		if(!$this->is_blank) {
 			$move_to_course_options = gevBuildingBlockUtils::getMoveToCourseOptions();
 			$move_to_course = new ilSelectInputGUI($this->gLng ->txt("gev_dec_training_move_to_course"),"frm_move_to_course");
 			$move_to_course->setOptions($move_to_course_options);
@@ -202,16 +202,16 @@ class ilBuildingBlockEditGUI {
 		}
 
 		if($this->obj_id !== null && $this->obj_id != "") {
-			if(!$this->is_blanko) {
+			if(!$this->is_blank) {
 				$form_gui->addCommandButton("updateBuildingBlock", $this->gLng ->txt("save"));
 			} else {
-				$form_gui->addCommandButton("updateBlankoBuildingBlock", $this->gLng ->txt("save"));
+				$form_gui->addCommandButton("updateBlankBuildingBlock", $this->gLng ->txt("save"));
 			}
 		} else {
-			if(!$this->is_blanko) {
+			if(!$this->is_blank) {
 				$form_gui->addCommandButton("saveBuildingBlock", $this->gLng ->txt("save"));
 			} else {
-				$form_gui->addCommandButton("saveBlankoBuildingBlock", $this->gLng ->txt("save"));
+				$form_gui->addCommandButton("saveBlankBuildingBlock", $this->gLng ->txt("save"));
 			}
 
 		}
@@ -250,12 +250,12 @@ class ilBuildingBlockEditGUI {
 		$bu_utils->setTitle($form->getInput("frm_title"));
 		$bu_utils->setTopic($form->getInput("frm_topic"));
 		$bu_utils->setIsActive($form->getInput("frm_active"));
-		$bu_utils->setIsBlanko(true);
+		$bu_utils->setIsBlank(true);
 		$bu_utils->setMoveToCourse(0);
 		$bu_utils->setPoolId($this->parent_obj->object->getId());
 		$bu_utils->setIsWPRelevant(false);
 
-		if(!$this->is_blanko) {
+		if(!$this->is_blank) {
 			$bu_utils->setContent($form->getInput("frm_content"));
 			$bu_utils->setTarget($form->getInput("frm_target"));
 			$bu_utils->setGDVTopic($form->getInput("frm_gdv_topic"));
@@ -265,7 +265,7 @@ class ilBuildingBlockEditGUI {
 			$bu_utils->setDBVTopic($form->getInput("frm_dbv_topic"));
 			$bu_utils->setMoveToCourse(($form->getInput("frm_move_to_course") == "Ja") ? 1 : 0);
 			$bu_utils->setIsWPRelevant(($bu_utils->getGDVTopic() != ""));
-			$bu_utils->setIsBlanko(false);
+			$bu_utils->setIsBlank(false);
 		}
 
 		return $bu_utils;
@@ -302,7 +302,7 @@ class ilBuildingBlockEditGUI {
 	}
 
 	protected function checkContentAndTargetInputLength($form) {
-		if(!$this->is_blanko) {
+		if(!$this->is_blank) {
 			$content_to_long = $this->isTextToLong($form->getInput("frm_content"));
 			if($content_to_long) {
 				$content = $form->getItemByPostVar("frm_content");
@@ -323,7 +323,7 @@ class ilBuildingBlockEditGUI {
 		return true;
 	}
 
-	protected function getBlankoModes() {
-		return array(self::NEW_BLANKO_UNIT, self::EDIT_BLANKO_UNIT, self::SAVE_BLANKO_UNIT, self::UPDATE_BLANKO_UNIT);
+	protected function getBlankModes() {
+		return array(self::NEW_BLANK_UNIT, self::EDIT_BLANK_UNIT, self::SAVE_BLANK_UNIT, self::UPDATE_BLANK_UNIT);
 	}
 }

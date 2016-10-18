@@ -101,20 +101,20 @@ class ilObjBuildingBlockPoolGUI extends ilObjectPluginGUI {
 				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::NEW_UNIT);
 				$this->gTpl->setContent($bb_edit->getHtml());
 				break;
-			case "addBlankoBuildingBlock":
-				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::NEW_BLANKO_UNIT);
+			case "addBlankBuildingBlock":
+				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::NEW_BLANK_UNIT);
 				$this->gTpl->setContent($bb_edit->getHtml());
 				break;
-			case "editBlankoBuildingBlock":
-				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::EDIT_BLANKO_UNIT);
+			case "editBlankBuildingBlock":
+				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::EDIT_BLANK_UNIT);
 				$this->gTpl->setContent($bb_edit->getHtml());
 				break;
-			case "saveBlankoBuildingBlock":
-				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::SAVE_BLANKO_UNIT);
+			case "saveBlankBuildingBlock":
+				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::SAVE_BLANK_UNIT);
 				$this->gTpl->setContent($bb_edit->save());
 				break;
-			case "updateBlankoBuildingBlock":
-				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::UPDATE_BLANKO_UNIT);
+			case "updateBlankBuildingBlock":
+				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::UPDATE_BLANK_UNIT);
 				$this->gTpl->setContent($bb_edit->update());
 				break;
 			case "importBuildingBlock":
@@ -180,8 +180,8 @@ class ilObjBuildingBlockPoolGUI extends ilObjectPluginGUI {
 		$add_building_bock_link = $this->gCtrl->getLinkTarget($this, "addBuildingBlock");
 		$this->gToolbar->addButton( $this->lng->txt("rep_robj_xbbp_add_building_block"), $add_building_bock_link);
 
-		$add_building_bock_link = $this->gCtrl->getLinkTarget($this, "addBlankoBuildingBlock");
-		$this->gToolbar->addButton( $this->lng->txt("rep_robj_xbbp_add_blanko_building_block"), $add_building_bock_link);
+		$add_building_bock_link = $this->gCtrl->getLinkTarget($this, "addBlankBuildingBlock");
+		$this->gToolbar->addButton( $this->lng->txt("rep_robj_xbbp_add_blank_building_block"), $add_building_bock_link);
 
 		require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/BuildingBlockPool/classes/class.ilBuildingBlockTableGUI.php");
 		$bb_table = new ilBuildingBlockTableGUI(array("pool_id"=>$this->object->getId()), $this, true);

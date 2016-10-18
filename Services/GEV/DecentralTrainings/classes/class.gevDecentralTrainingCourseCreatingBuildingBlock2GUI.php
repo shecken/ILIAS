@@ -332,7 +332,7 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 		$hidden->setValue("");
 		$hidden->insert($form_add_building_block->getTemplate());
 
-		$hidden = new ilHiddenInputGUI("isBlanko");
+		$hidden = new ilHiddenInputGUI("isBlank");
 		$hidden->setValue(0);
 		$hidden->insert($form_add_building_block->getTemplate());
 
@@ -565,16 +565,16 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 
 		$new_crs_bb->save();
 
-		$is_blanko = (bool)$_POST["isBlanko"];
+		$is_blank = (bool)$_POST["isBlank"];
 
-		if($is_blanko) {
-			$content = $_POST["blanko_content"];
-			$target = $_POST["blanko_target"];
+		if($is_blank) {
+			$content = $_POST["blank_content"];
+			$target = $_POST["blank_target"];
 			require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/BlankoBuildingBlock.php");
 			require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
-			$blanko_block = new BlankoBuildingBlock($new_crs_bb->getId(), $this->crs_ref_id, $this->crs_request_id, $content, $target);
-			$blanko_db = new ilBlankoDB();
-			$blanko_db->save($blanko_block);
+			$blank_block = new BlankBuildingBlock($new_crs_bb->getId(), $this->crs_ref_id, $this->crs_request_id, $content, $target);
+			$blank_db = new ilBlankDB();
+			$blank_db->save($blank_block);
 		}
 
 		if($this->crs_obj_id !== NULL) {
@@ -594,8 +594,8 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 		$delete_crs_bb->delete();
 
 		require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
-		$blanko_db = new ilBlankoDB();
-		$blanko_db->deleteByCrsBB($crs_bb_id);
+		$blank_db = new ilBlankDB();
+		$blank_db->deleteByCrsBB($crs_bb_id);
 
 		$this->render();
 	}
