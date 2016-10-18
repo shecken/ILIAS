@@ -154,7 +154,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 			$this->gTabs->addTab(self::TAB_SETTINGS, $this->txt("properties")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_PROPERTIES));
 
-			if(!$this->object->getActions()->ObservationStarted($this->object->getId())) {
+			if(!$this->object->getActions()->observationStarted($this->object->getId())) {
 				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations")
 				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS));
 			} else {
