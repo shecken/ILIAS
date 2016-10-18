@@ -100,27 +100,27 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 										,"start" => $tf->cls("DateTime")
 										,"end" => $tf->cls("DateTime")
 									)))
-						,$f->multiselect
+						,$f->multiselectsearch
 								( $txt("reason")
 								, ""
 								, $this->getFilterValues('reason', 'wbd_errors')
 							)->map(function($id_s) {return array_values($id_s);}
 							,$tf->lst($tf->string()))
 						,
-						$f->multiselect
+						$f->multiselectsearch
 							( $txt("action")
 							, ""
 							, $this->getFilterValues('action', 'wbd_errors')
 						)->map(function($id_s) {return $id_s;}
 							,$tf->lst($tf->string()))
 						,
-						$f->multiselect
+						$f->multiselectsearch
 							( $txt("error_type")
 							, ""
 							, $this->getErrorFilterValues()
 						)->map(function($id_s) {return $id_s;}
 							,$tf->lst($tf->int()))
-						,$f->multiselect
+						,$f->multiselectsearch
 							( $txt("status")
 							, ""
 							, $this->getStatusFilterValues()
