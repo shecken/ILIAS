@@ -221,6 +221,7 @@ class gevDecentralTrainingCreateSchedulePDF
 		foreach ($this->blocks as $key => $value) {
 			$y_value = $this->pdf->GetY() + $this->crsBlockSpaceTopAdd;
 			$base = $value->getBuildingBlock();
+			$blank_building_block = !empty($value->getBlankBuildingBlockInfo());
 			$max_height = $this->calcMaxRowHeight($base->getTitle(),$base->getContent(), $base->getTarget(), $coloumn_width);
 
 			if(($y_value + $max_height * $this->crsBlockSpaceTopAdd) > $this->maxPageHeight) {
@@ -253,15 +254,15 @@ class gevDecentralTrainingCreateSchedulePDF
 			$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getTitle()),0,"");
 
 			$this->pdf->setXY($x_fourthColoumn - 0.1, $y_value);
-			if($value->getBlankInfo()) {
-				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($value->getBlankInfo()->getContent()),0,"");
+			if($blank_building_block) {
+				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($value->getBlankBuildingBlockInfo()->getContent()),0,"");
 			} else {
 				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getContent()),0,"");
 			}
 
 			$this->pdf->setXY($x_fithColoumn - 0.1, $y_value);
-			if($value->getBlankInfo()) {
-				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($value->getBlankInfo()->getTarget()),0,"");
+			if($blank_building_block) {
+				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($value->getBlankBuildingBlockInfo()->getTarget()),0,"");
 			} else {
 				$this->pdf->MultiCell($coloumn_width,$this->crsBlockSpaceTopAdd,$this->encodeSpecialChars($base->getTarget()),0,"");
 			}

@@ -9,6 +9,7 @@
 * @version	$Id$
 */
 require_once("Services/GEV/Utils/classes/class.gevBuildingBlockUtils.php");
+require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
 
 class gevCourseBuildingBlockUtils {
 	static protected $instances = array();
@@ -30,7 +31,8 @@ class gevCourseBuildingBlockUtils {
 
 	protected function __construct($a_course_building_block_id) {
 		global $ilDB, $ilUser;
-				
+
+		$this->blank_db = new ilBlankDB();
 		$this->course_building_block_id = $a_course_building_block_id;
 		$this->db = $ilDB;
 		$this->ilUser = $ilUser;
@@ -117,12 +119,12 @@ class gevCourseBuildingBlockUtils {
 		return $ret;
 	}
 
-	public function setBlankInfo($blank_info) {
-		$this->blank_info = $blank_info;
+	public function setBlankBuildingBlockInfo($blank_building_block_info) {
+		$this->blank_building_block_info = $blank_building_block_info;
 	}
 
-	public function getBlankInfo() {
-		return $this->blank_info;
+	public function getBlankBuildingBlockInfo() {
+		return $this->blank_building_block_info;
 	}
 
 	public function loadData() {
@@ -225,9 +227,9 @@ class gevCourseBuildingBlockUtils {
 		
 		return $ret;
 	}
-	
+
 	static public function getAllCourseBuildingBlocks($a_crs_ref_id, $a_request_id = null) {
-		return array_map(function($row) {
+		return array_map(function($row) use ($blank_db) {
 			$obj = new gevCourseBuildingBlockUtils($row["id"]);
 			$obj->setCrsId($row["crs_id"]);
 			$obj->setStartTime($row["start_time"]);
@@ -238,10 +240,8 @@ class gevCourseBuildingBlockUtils {
 			$obj->setPracticeSession($row["practice_session"]);
 			
 			if((bool)$row["is_blank"]) {
-				require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
-				$blank_db = new ilBlankDB();
-				$blank_info = $blank_db->getBlankBuldingBlockForCourse($row["id"], $row["crs_id"]);
-				$obj->setBlankInfo($blank_info);
+				$blank_info = $this->blank_db->getBlankBuldingBlockForCourse($row["id"], $row["crs_id"]);
+				$obj->setBlankBuildingBlockInfo($blank_info);
 			}
 			
 			return $obj;

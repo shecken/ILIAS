@@ -69,7 +69,7 @@ class ilBlankDB {
 	 * @param int 	$bb_id 			id of course building block
 	 * @param int 	$request_id 	id of the open request
 	 *
-	 * @return array<int, BlankBuildingBlock>
+	 * @return BlankoBuildingBlock[]
 	 */
 	public function getBlankBuldingBlockForRequest($bb_id, $request_id) {
 		$query = $this->getSelectStatement();
@@ -78,7 +78,7 @@ class ilBlankDB {
 
 		$res = $this->getDB()->query($query);
 
-		$ret = null;
+		$ret = array();
 
 		while($row = $this->getDB()->fetchAssoc($res)) {
 			$ret = new BlankBuildingBlock($row["bb_id"]
@@ -98,7 +98,7 @@ class ilBlankDB {
 	 * @param int 	$bb_id 			id of course building block
 	 * @param int 	$crs_id 	ref id of the crs
 	 *
-	 * @return array<int, BlankBuildingBlock>
+	 * @return BlankoBuildingBlock[]
 	 */
 	public function getBlankBuldingBlockForCourse($bb_id, $crs_id) {
 		$query = $this->getSelectStatement();
@@ -107,7 +107,7 @@ class ilBlankDB {
 
 		$res = $this->getDB()->query($query);
 
-		$ret = null;
+		$ret = array();
 
 		while($row = $this->getDB()->fetchAssoc($res)) {
 			$ret = new BlankBuildingBlock($row["bb_id"]
