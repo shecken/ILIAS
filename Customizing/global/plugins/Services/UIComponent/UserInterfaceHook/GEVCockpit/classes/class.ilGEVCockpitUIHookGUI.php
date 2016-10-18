@@ -46,6 +46,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			( $_GET["baseClass"] == "gevDesktopGUI" 
 				|| ($_GET["cmdClass"] == "ilobjreportedubiogui"
 					&& $_GET["target_user_id"] == $this->gUser->getId())
+				|| ($_GET["cmdClass"] == "ilobjreportexambiogui"
+					&& $_GET["target_user_id"] == $this->gUser->getId())
 				|| $_GET["baseClass"] == "ilTEPGUI"
 			)
 			&& $_GET["cmdClass"] != "gevcoursesearchgui"
@@ -70,6 +72,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			}
 			if ($_GET["cmdClass"] == "ilobjreportedubiogui") {
 				return "edubio";
+			}
+			if ($_GET["cmdClass"] == "ilobjreportexambiogui") {
+				return "exambio";
 			}
 			if ($_GET["cmdClass"] == "gevuserprofilegui") {
 				return "profile";
@@ -130,6 +135,11 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		if ($user_utils && ($edu_bio_link = $user_utils->getEduBioLink())) {
 			$items["edubio"]
 				= array($this->gLng->txt("gev_edu_bio"), $user_utils->getEduBioLink());
+		}
+
+		if ($user_utils && ($exam_bio_link = $user_utils->getExamBioLink())) {
+			$items["exambio"]
+				= array($this->gLng->txt("gev_exam_bio"), $exam_bio_link);
 		}
 
 		$items["profile"]
