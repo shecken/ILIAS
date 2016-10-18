@@ -1,33 +1,34 @@
 <?php
-require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase2.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catSelectableReportTableGUI.php';
 require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 use CaT\TableRelations as TableRelations;
 use CaT\Filter as Filters;
 
-class ilObjReportExamBio extends ilObjReportBase {
+class ilObjReportExamBio extends ilObjReportBase2 {
 
-	public function __construct($a_ref_id = 0) {
-		global $ilUser;
-		$this->gUser = $ilUser;
-		parent::__construct($a_ref_id);
-		$this->gf = new TableRelations\GraphFactory();
-		$this->pf = new Filters\PredicateFactory();
-		$this->tf = new TableRelations\TableFactory($this->pf, $this->gf);
+	protected $forwarded = false;
 
-	}
+
 
 	protected function createLocalReportSettings() {
 		$this->local_report_settings =
-			$this->s_f->reportSettings('rep_robj_rcpn');
+			$this->s_f->reportSettings('rep_robj_rexbio')
+				->addSetting($this->s_f
+							->settingBool('for_trainer',$this->plugin->txt('for_trainer')));
+	}
+
+	public function forTrainerView() {
+		return $this->settings['for_trainer'] && !$this->forwarded;
 	}
 
 	public function initType() {
 		$this->setType("xexb");
 	}
-//defineFieldColumn($title, $column_id, array $fields = array(), $selectable = false, $sort = true , $no_excel =  false)
+
 	public function prepareTable(catSelectableReportTableGUI $table) {
-		if($this->isForTrainer()) {
+
+		if($this->forTrainerView()) {
 			$table->defineFieldColumn($this->plugin->txt('lastname'),'lastname'
 						,array('lastname' => $this->space->table('usr')->field('lastname')))
 				->defineFieldColumn($this->plugin->txt('firstname'),'firstname'
@@ -64,7 +65,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 		$pf = new \CaT\Filter\PredicateFactory();
 		$tf = new \CaT\Filter\TypeFactory();
 		$f = new \CaT\Filter\FilterFactory($pf, $tf);
-		$for_trainer = $this->isForTrainer();
+		$for_trainer_view = $this->forTrainerView();
 		$space = $this->space;
 		$sequence_args = array(
 			$f->dateperiod( $this->plugin->txt("dateperiod"), "")
@@ -76,7 +77,7 @@ class ilObjReportExamBio extends ilObjReportBase {
 						}
 						,$tf->cls("CaT\Filter\Predicates\Predicate")));
 
-		if($for_trainer) {
+		if($for_trainer_view) {
 			$sequence_args[] = $f->text($this->plugin->txt('lastname'))
 								->map(	function($lastname) use ($f,$space,$pf) {
 											if(!$lastname) {
@@ -107,14 +108,14 @@ class ilObjReportExamBio extends ilObjReportBase {
 									,$tf->cls("CaT\Filter\Predicates\Predicate"));
 
 		return $f->sequence(call_user_func_array(array($f,'sequence'),$sequence_args)->map(
-				function (/*args*/) use ($for_trainer) {
+				function (/*args*/) use ($for_trainer_view) {
 					$return = array();
 					$args = func_get_args();
 					if(count($args) > 0) {
 						reset($args);
 						$return['last_pass_datetime_predicate'] = current($args);
-						next($args);
-						if($for_trainer) {
+						if($for_trainer_view) {
+							next($args);
 							$return['lastname_predicate'] = current($args);
 						}
 						next($args);
@@ -195,58 +196,6 @@ class ilObjReportExamBio extends ilObjReportBase {
 		$this->space->addFilter($predicate);
 	}
 
-	public function buildQuery( $query) {
-		return;
-	}
-
-	public function buildFilter( $filter) {
-		return;
-	}
-
-	public function prepareFilter(catFilter $filter) {
-		$filter->action($this->filter_action)
-			->compile();
-		return $filter;
-	}
-
-	public function buildQueryStatement() {	
-
-		return $this->getInterpreter()->getSql($this->space->query());
-	}
-
-	protected function getInterpreter() {
-		if(!$this->interpreter) {
-			$this->interpreter = new TableRelations\SqlQueryInterpreter( new Filters\SqlPredicateInterpreter($this->gIldb), $this->pf, $this->gIldb);
-		}
-		return $this->interpreter;
-	}
-
-	public function deliverData(callable $callable) {
-		$res = $this->gIldb->query($this->getInterpreter()->getSql($this->space->query()));
-		$return = array();
-		while($rec = $this->gIldb->fetchAssoc($res)) {
-			$return[] = call_user_func($callable,$rec);
-		}
-		return $return;
-	}
-
-	protected function getRowTemplateTitle() {
-		if($this->settings['admin_mode']) {
-			return "tpl.report_coupons_admin_row.html";
-		}
-		return "tpl.report_coupons_row.html";
-	}
-
-
-	protected function buildOrder($order) {
-		$order 	->defaultOrder("code", "ASC")
-				;
-		return $order;
-	}
-
-	public function getRelevantParameters() {
-		return $this->relevant_parameters;
-	}
 
 	private function getDistinctTests() {
 		$sql = 'SELECT obj_id, test_title FROM hist_usertestrun '
@@ -289,35 +238,27 @@ class ilObjReportExamBio extends ilObjReportBase {
 		return array_map(function($nummeric) {return (int)$nummeric;},$this->target_user_ids);
 	}
 
-	public function isForTrainer() {
-		return $this->for_trainer;
-	}
+	public function setTargets($viewer_id, $target_user_id = null) {
+		if($this->settings['for_trainer']) {
+			//report is accessed inside training
+			$target_training_id = $this->getParentObjectOfTypeIds('crs')['obj_id'];
+			if(!$target_training_id) {
+				throw new ilException('may not view requested parameters');
+			}
+			if($target_user_id === null) {
 
-	public function setTargets($viewer_id, $target_user_id = null, $taget_training_id = null) {
-		if(self::checkVisibleByConfig($viewer_id, $target_user_id, $taget_training_id)) {
-			if(null !== $target_user_id && null !== $taget_training_id) {
+				$this->target_user_ids = gevCourseUtils::getInstanceByObj(new ilObjCourse($target_training_id,false))->getParticipants();
+
+			} elseif($target_user_id !== null) {
+				if(!in_array($target_user_id, gevCourseUtils::getInstanceByObj(new ilObjCourse($target_training_id,false))->getParticipants())) {
+					throw new ilException('may not view requested parameters');
+				}
 				$this->target_user_ids = array($target_user_id);
-				$this->for_trainer = true;
-			} elseif(null === $target_user_id && null !== $taget_training_id) {
-				$this->target_user_ids = gevCourseUtils::getInstance((int)$taget_training_id)->getParticipants();
-				$this->for_trainer = true;
-			} else {
-				$this->target_user_ids = array($viewer_id);
-				$this->for_trainer = false;
+				$this->forwarded = true;
 			}
 		} else {
-			throw new ilException('may not view requested parameters');
-		}
-	}
-
-	public static function checkVisibleByConfig($viewer_id, $target_user_id, $taget_training_id) {
-		if(null !== $target_user_id && null !== $taget_training_id) {
-			$crs_utils = gevCourseUtils::getInstance((int)$taget_training_id);
-			return $crs_utils->hasTrainer($viewer_id) && in_array((int)$target_user_id, $crs_utils->getParticipants());
-		} elseif(null === $target_user_id && null !== $taget_training_id) {
-			return gevCourseUtils::getInstance((int)$taget_training_id)->hasTrainer($viewer_id);
-		} else {
-			return null === $target_user_id || (string)$viewer_id === (string)$target_user_id;
+			// own report, screw the target_user_id parameter
+			$this->target_user_ids = array($viewer_id);
 		}
 	}
 }
