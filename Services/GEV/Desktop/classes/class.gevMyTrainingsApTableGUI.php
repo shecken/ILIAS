@@ -220,6 +220,7 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		$maillog = $this->gCtrl->getLinkTargetByClass("gevTrainerMailHandlingGUI", "showLog");
 		$this->gCtrl->clearParametersByClass("gevTrainerMailHandlingGUI");
 
+		
 		//prepare crs utils
 		$crs_utils = gevCourseUtils::getInstance($a_set["obj_id"]);
 
@@ -231,18 +232,22 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		if($a_set['may_finalize']) {
 			$items[] = array("title" => $this->gLng->txt("gev_mytrainingsap_legend_setstatus"), "link" => $setstatus_link, "image" => $this->setstatus_img, "frame"=>"");
 		}
-		
+
 		// is true after training start
 		if ($crs_utils->isWithAccomodations() && !$a_set["may_finalize"]) {
 			$items[] = array("title" => $this->gLng->txt("gev_mytrainingsap_legend_overnights"), "link" => $overnights_link, "image" => $this->overnight_img, "frame"=>"");
 		}
-		
+
 		if ($crs_utils->canViewBookings($this->user_id)) {
 			$items[] = array("title" => $this->gLng->txt("gev_mytrainingsap_legend_view_bookings"), "link" => $bookings_link, "image" => $this->bookings_img, "frame"=>"");
 		}
 
 		if ($crs_utils->getVirtualClassLink() !== null) {
 			$items[] = array("title" => $this->gLng->txt("gev_virtual_class"), "link" => $crs_utils->getVirtualClassLink(), "image" => $this->virtualclass_img, "frame"=>"_blank");
+		}
+
+		if($crs_utils->hasTrainer($this->user_id)){
+			$items[] = array("title" => $this->gLng->txt("gev_exam_bio"), "link" => $crs_utils->getExamBioLink());
 		}
 
 		if($crs_utils->userHasPermissionTo($this->user_id, gevSettings::VIEW_MAILING)){
