@@ -5228,14 +5228,14 @@ $field = array('type' 		=> 'integer',
 			'default' 	=> 0
 			);
 
-if(!$ilDB->tableColumnExists("dct_building_block", "is_blanko")) {
-	$ilDB->addTableColumn("dct_building_block", "is_blanko", $field);
+if(!$ilDB->tableColumnExists("dct_building_block", "is_blank")) {
+	$ilDB->addTableColumn("dct_building_block", "is_blank", $field);
 }
 ?>
 
 <#224>
 <?php
-	require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
-	$blanko_db = new ilBlankoDB();
-	$blanko_db->install();
+	require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
+	$blank_db = new ilBlankDB();
+	$blank_db->install();
 ?>

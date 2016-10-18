@@ -14,7 +14,7 @@ class gevCourseBuildingBlockUtils {
 	static protected $instances = array();
 	const TABLE_NAME = "dct_crs_building_block";
 	const TABLE_NAME_JOIN1 = "dct_building_block";
-	const TABLE_NAME_LEFT_JOIN1 = "dct_blanko_bb_infos";
+	const TABLE_NAME_LEFT_JOIN1 = "dct_blank_bb_infos";
 	const DURATION_PER_POINT = 45;
 	const MAX_DURATION_MINUTES = 720;
 
@@ -26,7 +26,7 @@ class gevCourseBuildingBlockUtils {
 	protected $crs_request_id = null;
 	protected $credit_points = 0;
 	protected $practice_session = 0;
-	protected $blanko_info = null;
+	protected $blank_info = null;
 
 	protected function __construct($a_course_building_block_id) {
 		global $ilDB, $ilUser;
@@ -117,12 +117,12 @@ class gevCourseBuildingBlockUtils {
 		return $ret;
 	}
 
-	public function setBlankoInfo($blanko_info) {
-		$this->blanko_info = $blanko_info;
+	public function setBlankInfo($blank_info) {
+		$this->blank_info = $blank_info;
 	}
 
-	public function getBlankoInfo() {
-		return $this->blanko_info;
+	public function getBlankInfo() {
+		return $this->blank_info;
 	}
 
 	public function loadData() {
@@ -199,8 +199,8 @@ class gevCourseBuildingBlockUtils {
 
 		$sql = "SELECT\n"
 			  ."    base.id, base.crs_id, base.bb_id, base.start_time, base.end_time, base.credit_points, base.practice_session,\n"
-			  ."    join1.title, join1.target, join1.content, base.crs_request_id, base.bb_id, join1.dbv_topic, join1.is_blanko,\n"
-			  ."    ljoin1.content AS blanko_content, ljoin1.target AS blanko_target\n"
+			  ."    join1.title, join1.target, join1.content, base.crs_request_id, base.bb_id, join1.dbv_topic, join1.is_blank,\n"
+			  ."    ljoin1.content AS blank_content, ljoin1.target AS blank_target\n"
 			  ." FROM ".self::TABLE_NAME." AS base\n"
 			  ." JOIN ".self::TABLE_NAME_JOIN1." AS join1\n"
 			  ."   ON base.bb_id = join1.obj_id\n"
@@ -237,11 +237,11 @@ class gevCourseBuildingBlockUtils {
 			$obj->setCreditPoints($row["credit_points"]);
 			$obj->setPracticeSession($row["practice_session"]);
 			
-			if((bool)$row["is_blanko"]) {
-				require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
-				$blanko_db = new ilBlankoDB();
-				$blanko_info = $blanko_db->getBlankoBuldingBlockForCourse($row["id"], $row["crs_id"]);
-				$obj->setBlankoInfo($blanko_info);
+			if((bool)$row["is_blank"]) {
+				require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
+				$blank_db = new ilBlankDB();
+				$blank_info = $blank_db->getBlankBuldingBlockForCourse($row["id"], $row["crs_id"]);
+				$obj->setBlankInfo($blank_info);
 			}
 			
 			return $obj;

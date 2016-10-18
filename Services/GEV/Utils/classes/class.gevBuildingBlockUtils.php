@@ -162,16 +162,16 @@ class gevBuildingBlockUtils {
 		$this->pool_id = $pool_id;
 	}
 
-	public function setIsBlanko($blanko) {
-		$this->is_blanko = $blanko;
+	public function setIsBlank($blank) {
+		$this->is_blank = $blank;
 	}
 
-	public function getIsBlanko() {
-		return $this->is_blanko;
+	public function getIsBlank() {
+		return $this->is_blank;
 	}
 
 	public function loadData() {
-		$sql = "SELECT obj_id, title, content, target, is_wp_relevant, is_active, gdv_topic, training_categories,topic, dbv_topic, move_to_course, is_blanko\n".
+		$sql = "SELECT obj_id, title, content, target, is_wp_relevant, is_active, gdv_topic, training_categories,topic, dbv_topic, move_to_course, is_blank\n".
 			   "  FROM ".self::TABLE_NAME.
 			   " WHERE obj_id = ".$this->db->quote($this->getId(), "integer");
 
@@ -190,7 +190,7 @@ class gevBuildingBlockUtils {
 			$this->topic = $row["topic"];
 			$this->dbv_topic = $row["dbv_topic"];
 			$this->move_to_course = $row["move_to_course"];
-			$this->is_blanko = $row["is_blanko"];
+			$this->is_blank = $row["is_blank"];
 		}
 	}
 
@@ -224,7 +224,7 @@ class gevBuildingBlockUtils {
 		$sql = "INSERT INTO ".self::TABLE_NAME.""
 			  ." (obj_id, title, content, target, is_wp_relevant, is_active, last_change_user\n"
 			  .", last_change_date, is_deleted, gdv_topic, training_categories, topic, dbv_topic, move_to_course\n"
-			  .", pool_id, is_blanko)"
+			  .", pool_id, is_blank)"
 			  ." VALUES (".$this->db->quote($this->getId(), "integer")."\n"
 			  ."        ,".$this->db->quote($this->getTitle(), "text")."\n"
 			  ."        ,".$this->db->quote($this->getContent(), "text")."\n"
@@ -240,7 +240,7 @@ class gevBuildingBlockUtils {
 			  ."        ,".$this->db->quote($this->getDBVTopic(), "text")."\n"
 			  ."        ,".$this->db->quote($this->getMoveToCourse(), "integer")."\n"
 			  ."        ,".$this->db->quote($this->getPoolId(), "integer")."\n"
-			  ."        ,".$this->db->quote($this->getIsBlanko(), "integer")."\n"
+			  ."        ,".$this->db->quote($this->getIsBlank(), "integer")."\n"
 			  .")";
 		
 		$this->db->manipulate($sql);
@@ -260,7 +260,7 @@ class gevBuildingBlockUtils {
 		$add_where = self::createAdditionalWhere($a_search_opts);
 		$sql = "SELECT bb.obj_id, bb.title, bb.content, bb.target\n"
 			  ."     , bb.is_wp_relevant, bb.is_active, bb.gdv_topic, bb.training_categories, bb.topic, bb.dbv_topic\n"
-			  ."     , usr.login, bb.last_change_date, bb.move_to_course, bb.is_blanko\n"
+			  ."     , usr.login, bb.last_change_date, bb.move_to_course, bb.is_blank\n"
 			  ."  FROM ".self::TABLE_NAME." bb\n"
 			  ."  JOIN usr_data usr ON usr_id = last_change_user\n"
 			  ."  WHERE is_deleted = ".$ilDB->quote(0,"integer")."\n";
@@ -294,7 +294,7 @@ class gevBuildingBlockUtils {
 
 		$sql = "SELECT obj_id, title, content, target\n"
 			  ."     , is_wp_relevant, is_active, gdv_topic, training_categories, topic, dbv_topic\n"
-			  ."	 move_to_course, is_blanko\n"
+			  ."	 move_to_course, is_blank\n"
 			  ."  FROM ".self::TABLE_NAME."\n"  
 			  ."  WHERE is_deleted = ".$ilDB->quote(0,"integer")."\n"
 			  ."  AND pool_id != ".$ilDB->quote($pool_id, "integer");
@@ -544,7 +544,7 @@ class gevBuildingBlockUtils {
 	static function getBuildingBlockInfosById($id) {
 		global $ilDB;
 
-		$sql = "SELECT content, target, IF(is_wp_relevant,'Ja','Nein') AS wp, is_blanko"
+		$sql = "SELECT content, target, IF(is_wp_relevant,'Ja','Nein') AS wp, is_blank"
 			   ." FROM ".self::TABLE_NAME."\n"
 			   ." WHERE obj_id = ".$ilDB->quote($id, "integer");
 
@@ -554,7 +554,7 @@ class gevBuildingBlockUtils {
 			return $ilDB->fetchAssoc($res);
 		}
 
-		return array("content" => "", "target" => "", "is_blanko" => false);
+		return array("content" => "", "target" => "", "is_blank" => false);
 	}
 
 	static public function getMoveToCourseOptions() {

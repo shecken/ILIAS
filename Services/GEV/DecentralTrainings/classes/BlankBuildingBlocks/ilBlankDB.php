@@ -1,6 +1,6 @@
 <?php
 
-require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/BlankoBuildingBlock.php");
+require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/BlankBuildingBlock.php");
 
 /**
  * Database handle for blank building block informations

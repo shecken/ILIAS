@@ -570,8 +570,8 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 		if($is_blank) {
 			$content = $_POST["blank_content"];
 			$target = $_POST["blank_target"];
-			require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/BlankoBuildingBlock.php");
-			require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
+			require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/BlankBuildingBlock.php");
+			require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
 			$blank_block = new BlankBuildingBlock($new_crs_bb->getId(), $this->crs_ref_id, $this->crs_request_id, $content, $target);
 			$blank_db = new ilBlankDB();
 			$blank_db->save($blank_block);
@@ -593,7 +593,7 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 		$delete_crs_bb = gevCourseBuildingBlockUtils::getInstance($crs_bb_id);
 		$delete_crs_bb->delete();
 
-		require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
+		require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
 		$blank_db = new ilBlankDB();
 		$blank_db->deleteByCrsBB($crs_bb_id);
 

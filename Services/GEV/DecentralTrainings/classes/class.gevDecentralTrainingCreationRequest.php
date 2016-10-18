@@ -478,7 +478,7 @@ class gevDecentralTrainingCreationRequest {
 	}
 
 	protected function updateBlankCourseBuildingBlocks($a_trgt_crs_ref_id) {
-		require_once("Services/GEV/DecentralTrainings/classes/BlankoBuildingBlocks/ilBlankoDB.php");
+		require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
 		$blank_db = new ilBlankDB();
 		$blank_db->moveToCrsId($this->request_id, $a_trgt_crs_ref_id);
 	}
