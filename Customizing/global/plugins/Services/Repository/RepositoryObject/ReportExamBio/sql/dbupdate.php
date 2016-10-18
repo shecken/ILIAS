@@ -19,3 +19,15 @@ if(!$ilDB->tableExists("rep_robj_rexbio")) {
 	$ilDB->addPrimaryKey("rep_robj_rexbio", array("id"));
 }
 ?>
+
+<#2>
+<?php
+if(!$ilDB->tableColumnExists('rep_robj_rexbio','for_trainer')) {
+	$ilDB->addTableColumn('rep_robj_rexbio','for_trainer', array(
+			"type" => "integer",
+			"length" => 1,
+			"notnull" => true,
+			"default" => 0
+		));
+}
+?>
