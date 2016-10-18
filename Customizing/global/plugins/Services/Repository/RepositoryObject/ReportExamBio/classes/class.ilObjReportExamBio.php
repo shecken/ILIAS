@@ -2,8 +2,7 @@
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase2.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catSelectableReportTableGUI.php';
 require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
-use CaT\TableRelations as TableRelations;
-use CaT\Filter as Filters;
+
 
 class ilObjReportExamBio extends ilObjReportBase2 {
 
