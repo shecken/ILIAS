@@ -268,4 +268,25 @@ trait gevWBDRequest{
 
 		return $errors;
 	}
+
+	/**
+	 * Translates ILIAS values to WBD Values
+	 *
+	 * @return []|gevWBDError[]
+	 */
+	protected function translate($user_id, $row_id, $crs_id = 0) {
+		$dic_errors = array();
+
+		foreach($this->translate_value as $key => $value) {
+			try{
+				/* Try to translate. If anything went wrong there will be a LogicException throwed */
+				$this->translate_value[$key] = $this->getDictionary()->getWBDName($value["field"], $value["group"]);
+			} catch(LogicException $e) {
+				/* Create new WBD_Error so we have every error in the wbd error report */
+				$dic_errors[] =  self::createError($e->getMessage(), $this->error_group, $user_id, $row_id, $crs_id);
+			}
+		}
+
+		return $dic_errors;
+	}
 }

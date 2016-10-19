@@ -19,12 +19,18 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 	protected $error_group;
 
 	protected function __construct($data) {
+		$this->error_group = gevWBDError::ERROR_GROUP_CRS;
+
+		$this->defineValuesToTranslate();
+		$dic_errors = $this->translate($data["user_id"], $data["row_id"], $data["crs_id"]);
+
+		$this->type 				= new WBDData("LernArt",$this->translate_value["LernArt"]);
+		$this->wbd_topic 			= new WBDData("LernInhalt",$this->translate_value["LernInhalt"]);
+
 		$this->title 				= new WBDData("Weiterbildung",$data["title"]);
 		$this->begin_date 			= new WBDData("SeminarDatumVon",$data["begin_date"]);
 		$this->end_date 			= new WBDData("SeminarDatumBis",$data["end_date"]);
 		$this->credit_points 		= new WBDData("WeiterbildungsPunkte",$data["credit_points"]);
-		$this->type 				= new WBDData("LernArt",$this->getDictionary()->getWBDName($data["type"],gevWBDDictionary::SERACH_IN_COURSE_TYPE));
-		$this->wbd_topic 			= new WBDData("LernInhalt",$this->getDictionary()->getWBDName($data["wbd_topic"],gevWBDDictionary::SEARCH_IN_STUDY_CONTENT));
 		$this->internal_booking_id	= new WBDData("InterneBuchungsId",$data["row_id"]);
 		$this->agent_id 			= new WBDData("VermittlerId",$data["bwv_id"]);
 
@@ -32,9 +38,9 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 		$this->row_id = $data["row_id"];
 		$this->crs_id = $data["crs_id"];
 		$this->begin_of_certification = $data["begin_of_certification"];
-		$this->error_group = gevWBDError::ERROR_GROUP_CRS;
 
-		$errors = $this->checkData();
+		$check_errors = $this->checkData();
+		$errors = $check_errors + $dic_errors;
 
 		if(!empty($errors)) {
 			throw new myLogicException("gevWBDRequestWPMeldung::__construct:checkData failed",0,null, $errors);
@@ -46,10 +52,6 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 			return new gevWBDRequestWPMeldung($data);
 		}catch(myLogicException $e) {
 			return $e->options();
-		} catch(LogicException $e) {
-			$errors = array();
-			$errors[] =  self::createError($e->getMessage(), gevWBDError::ERROR_GROUP_CRS, $data["user_id"], $data["row_id"],$data["crs_id"]);
-			return $errors;
 		}
 	}
 
@@ -99,5 +101,11 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 	public function createWBDError($message) {
 		$reason = $this->parseReason($message);
 		$this->wbd_error = self::createError($reason, $this->error_group, $this->user_id, $this->row_id, $this->crs_id);
+	}
+
+	protected function defineValuesToTranslate() {
+		$this->translate_value = array("LernArt" => array("field" => "type", "group" => gevWBDDictionary::SEARCH_IN_COURSE_TYPE)
+									 , "LernInhalt" => array("field" => "wbd_topic", "group" => gevWBDDictionary::SEARCH_IN_STUDY_CONTENT)
+								);
 	}
 }
