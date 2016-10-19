@@ -72,6 +72,8 @@ class FilterFactory {
 	 * Get a filter that represents a choice of some options from a list
 	 * of possible options.
 	 *
+	 * TODO: This might go away in favour of some rendering option.
+	 *
 	 * @param	string	$label
 	 * @param	string	$description
 	 * @param	array	$options		int|string => string
