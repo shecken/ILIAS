@@ -193,6 +193,10 @@ class ilDB implements DB {
 
 		$res = $this->getDB()->query($select);
 
+		if($this->getDB()->numRows($res) == 0) {
+			return array();
+		}
+
 		$career_goal_id = null;
 		$title = null;
 		$description = null;

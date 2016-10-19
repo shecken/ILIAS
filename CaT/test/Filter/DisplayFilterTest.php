@@ -87,4 +87,16 @@ class DisplayFilterTest extends PHPUnit_Framework_TestCase {
 			$counter++;
 		}
 	}
+
+	public function test_buildFilterValues() {
+		$display_filter = new \CaT\Filter\DisplayFilter($this->gui_factory, $this->type_factory);
+		$f = $this->factory;
+
+		$filter = $f->sequence($f->multiselect("foo", "bar", array(0 => "val_0", 1 => "val_1")));
+		$post = array("0" => array("0"));
+		$filter_settings = $display_filter->buildFilterValues($filter, $post);
+
+		$this->assertEquals(array(0 => array(0)), $filter_settings);
+		$this->assertTrue($filter->input_type()->contains($filter_settings));
+	}
 }

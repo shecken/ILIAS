@@ -29,6 +29,51 @@
 	document.open();
 	document.write(tpl);
 	document.close();    
+/* <!-- BEGIN to_viwis_sco --> */
+	var probe_frame_loading_timeout = 1000;
+	var goto_sco = function() {
+		//console.log("start");
+		if (!document) {
+			//console.log("no document");
+			window.setTimeout(goto_sco, probe_frame_loading_timeout);
+			return;
+		}
+		var sahs_content = document.getElementsByName("sahs_content");
+		if (sahs_content.length == 0) {
+			//console.log("no sahs_content");
+			window.setTimeout(goto_sco, probe_frame_loading_timeout);
+			return;
+		}
+		if (!sahs_content[0].contentWindow) {
+			//console.log("no sahs_content.contentWindow");
+			window.setTimeout(goto_sco, probe_frame_loading_timeout);
+			return;
+		}
+		if (!sahs_content[0].contentWindow.document) {
+			//console.log("no sahs_content.contentWindow.document");
+			window.setTimeout(goto_sco, probe_frame_loading_timeout);
+			return;
+		}
+		var frmSCO = sahs_content[0].contentWindow.document.getElementById("frmSCO");
+		if (!frmSCO) {
+			//console.log("no frmSCO");
+			window.setTimeout(goto_sco, probe_frame_loading_timeout);
+			return;
+		}
+		if (!frmSCO.contentWindow) {
+			//console.log("no frmSCO.contentWindow");
+			window.setTimeout(goto_sco, probe_frame_loading_timeout);
+			return;
+		}
+		if (!frmSCO.contentWindow.gotoSCO) {
+			//console.log("no frmSCO.contentWindow.gotoSCO");
+			window.setTimeout(goto_sco, probe_frame_loading_timeout);
+			return;
+		}
+		frmSCO.contentWindow.gotoSCO("{TARGET_ID}", " ");
+	};
+	window.setTimeout(goto_sco, probe_frame_loading_timeout);
+/* <!-- END to_viwis_sco --> */
 </script>
 
 </html>

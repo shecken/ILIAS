@@ -55,4 +55,13 @@ interface QuestionXMLCreator {
 	 *	@return	questionXMLCreator	$this
 	 */
 	public function setType($question_type);
+
+	/**
+	 * Set the generic feedback,
+	 * that will be shown in case of a right and wrong answer.
+	 *
+	 *	@param	string	$generic_feedback
+	 *	@return	questionXMLCreator	$this
+	 */
+	public function setGenericFeedback($generic_feedback);
 }

@@ -292,9 +292,12 @@ class ilDB implements DB {
 	public function getCareerGoalsOptions() {
 		$ret = array();
 
-		$select = "SELECT obj_id, title\n"
-				." FROM object_data\n"
-				." WHERE type = 'xcgo'";
+		$select = "SELECT obj.obj_id, obj.title\n"
+				." FROM object_data obj\n"
+				." JOIN object_reference ref\n"
+				."   ON obj.obj_id = ref.obj_id\n"
+				." WHERE obj.type = 'xcgo'\n"
+				."   AND ref.deleted IS NULL";
 
 		$res = $this->getDB()->query($select);
 
@@ -318,8 +321,10 @@ class ilDB implements DB {
 	public function getOrgUnitOptions() {
 		$evg_id = \gevOrgUnitUtils::getEVGOrgUnitRefId();
 		$org_unit_utils = \gevOrgUnitUtils::getAllChildren(array($evg_id));
+		$evg_obj_id = \ilObject::_lookupObjId($evg_id);
+		$evg_title = \ilObject::_lookupTitle($evg_obj_id);
 
-		$ret = array();
+		$ret = array($evg_obj_id => $evg_title);
 		foreach($org_unit_utils as $key => $value) {
 			$ret[$value["obj_id"]] = \ilObject::_lookupTitle($value["obj_id"]);
 		}
