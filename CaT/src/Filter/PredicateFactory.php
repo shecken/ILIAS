@@ -105,6 +105,23 @@ class PredicateFactory {
 		return new Predicates\ValueList($val_objs);
 	}
 
+	/**
+	 * Construct a list from array of int values.
+	 *
+	 * @param	Field[]	$fields
+	 * @return	ValueList
+	 */
+	public function list_field_by_array(array $fields) {
+		$val_objs = array();
+		foreach ($fields as $field) {
+			if(!$field instanceof Predicates\Field) {
+				throw new \InvalidArgumentException('arguments must be of type Predicates\Field');
+			}
+			$val_objs[] = $field;
+		}
+		return new Predicates\ValueList($val_objs);
+	}
+
 
 	/**
 	 * Construct a list from str values.
