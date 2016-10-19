@@ -21,7 +21,8 @@ require_once("Services/GEV/Utils/classes/class.gevGeneralUtils.php");
 require_once("Services/CourseBooking/classes/class.ilCourseBooking.php");
 require_once("Services/ParticipationStatus/classes/class.ilParticipationStatusAdminGUI.php");
 require_once "./Services/ParticipationStatus/classes/class.ilParticipationStatusHelper.php";
-
+require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
+require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
 require_once("Services/Calendar/classes/class.ilDatePresentation.php");
 //require_once("Services/Calendar/classes/class.ilDate.php");
 
@@ -247,14 +248,10 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 			$items[] = array("title" => $this->gLng->txt("gev_virtual_class"), "link" => $crs_utils->getVirtualClassLink(), "image" => $this->virtualclass_img, "frame"=>"_blank");
 		}
 
-		$ex_bios = $crs_utils->objsInCourseDataOfType('xexb');
-		if(count($ex_bios) > 0) {
-			$ex_bio = current($ex_bios);
-			require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
-			if($this->gAccess->checkAccess('read', '', $ex_bio['ref_id']) && ilObjReportExamBio::readReportProperties($ex_bio['obj_id'],$this->gIldb)['for_trainer']) {
-				require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
-				$items[] = array('title' => $this->gLng->txt('gev_members_exam_bio'), 'link' => ilObjReportExamBioGUI::examBiographyLinkByRefId($ex_bio['ref_id']));
-			}
+		$exam_bio_refs = ilObjReportExamBio::getAccessibleExambioInCrsForUserRefIds($crs_utils,$this->user_id, $this->gAccess, $this->gIldb);
+		if(count($exam_bio_refs) > 0) {
+			$ref_id = current($exam_bio_refs);
+			$items[] = array('title' => $this->gLng->txt('gev_members_exam_bio'), 'link' => ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id, $this->gCtrl));
 		}
 
 		if($crs_utils->userHasPermissionTo($this->user_id, gevSettings::VIEW_MAILING)){
