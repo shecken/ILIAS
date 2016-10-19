@@ -21,46 +21,22 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 	protected function __construct($data) {
 		$this->error_group = gevWBDError::ERROR_GROUP_USER;
 
-		/**
-		 * Define every ILIAS column that should be translated in WBD specialized values
-		 * e.g.
-		 * WBD_FIELD => array("field" => <ILIAS_FIELD>, "group" => <SEARCH_GROUP_IN_DICTIONARY>)
-		 */
-		$translate_value = array("AdressTyp" => array("field" => "address_type", "group" => gevWBDDictionary::SERACH_IN_ADDRESS_TYPE)
-							   , "AnredeSchluessel" => array("field" => "gender", "group" => gevWBDDictionary::SEARCH_IN_GENDER)
-							   , "VermittlerStatus" => array("field" => "wbd_agent_status", "group" => gevWBDDictionary::SERACH_IN_AGENT_STATUS)
-							   , "TpKennzeichen" => array("field" => "wbd_type", "group" => gevWBDDictionary::SEARCH_IN_WBD_TYPE)
-			);
+		$this->defineValuesToTranslate();
+		$dic_errors = $this->translate($data["user_id"], $data["row_id"]);
 
-		$dic_errors = array();
+		$this->address_type 		= new WBDData("AdressTyp", $this->translate_value["AdressTyp"]);
+		$this->title 				= new WBDData("AnredeSchluessel", $this->translate_value["AnredeSchluessel"]);
+		$this->wbd_agent_status 	= new WBDData("VermittlerStatus", $this->translate_value["VermittlerStatus"]);
+		$this->wbd_type 			= new WBDData("TpKennzeichen", $this->translate_value["TpKennzeichen"]);
 
-		/**
-		 * Translate every value to his WBD value
-		 * 
-		 * If there is an exception catch it and create a new WBD_Error to save in wbd error report
-		 */
-		foreach($translate_value as $key => $value) {
-			try{
-				/* Try to translate. If anything went wrong there will be a LogicException throwed */
-				$translate_value[$key] = $this->getDictionary()->getWBDName($value["field"], $value["group"]);
-			} catch(LogicException $e) {
-				/* Create new WBD_Error so we have every error in the wbd error report */
-				$dic_errors[] =  self::createError($e->getMessage(), gevWBDError::ERROR_GROUP_USER,  $data["user_id"], $data["row_id"],0);
-			}
-		}
-
-		$this->address_type 		= new WBDData("AdressTyp", $translate_value["AdressTyp"]);
 		$this->address_info 		= new WBDData("AdressBemerkung", $data["address_info"]);
-		$this->title 				= new WBDData("AnredeSchluessel", $translate_value["AnredeSchluessel"]);
 		$this->auth_email 			= new WBDData("AuthentifizierungsEmail", $data["email"]);
 		$this->auth_mobile_phone_nr = new WBDData("AuthentifizierungsTelefonnummer", $data["mobile_phone_nr"]);
 		$this->info_via_mail 		= new WBDData("BenachrichtigungPerEmail", $data["info_via_mail"]);
 		$this->send_data 			= new WBDData("DatenuebermittlungsKennzeichen", $data["send_data"]);
 		$this->data_secure 			= new WBDData("DatenschutzKennzeichen", $data["data_secure"]);
-		
 		$normal_email = ($data['wbd_email'] != '') ? $data['wbd_email'] : $data['email'];
 		$this->email 				= new WBDData("Emailadresse", $normal_email);
-		
 		$this->birthday 			= new WBDData("Geburtsdatum", $data["birthday"]);
 		$this->house_number			= new WBDData("Hausnummer", $data["house_number"]);
 		$this->internal_agent_id 	= new WBDData("InterneVermittlerId", $data["user_id"]);
@@ -70,14 +46,10 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 		$this->city 				= new WBDData("Ort", $data["city"]);
 		$this->zipcode 				= new WBDData("Postleitzahl", $data["zipcode"]);
 		$this->street 				= new WBDData("Strasse", $data["street"]);
-
 		$this->phone_nr 			= new WBDData("Telefonnummer", ($data["phone_nr"] != "") ? $data["phone_nr"] : $data["mobile_phone_nr"]);
-		
 		$this->degree 				= new WBDData("Titel", $data["degree"]);
-		$this->wbd_agent_status 	= new WBDData("VermittlerStatus", $translate_value["AdressTyp"]);
 		$this->okz 					= new WBDData("VermittlungsTaetigkeit",$data["okz"]);
 		$this->firstname 			= new WBDData("VorName", $data["VorName"]);
-		$this->wbd_type 			= new WBDData("TpKennzeichen", $translate_value["TpKennzeichen"]);
 
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
@@ -85,8 +57,9 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 
 		$check_errors = $this->checkData();
 		$errors = $check_errors + $dic_errors;
+
 		if(!empty($errors)) {
-			throw new myLogicException("gevWBDRequestVvErstanlage::__construct:checkData failed",0,null, $errors);
+			throw new myLogicException("gevWBDRequestVvErstanlage::__construct:checkData failed", 0, null, $errors);
 		}
 	}
 
@@ -147,5 +120,13 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 	public function createWBDError($message) {
 		$reason = $this->parseReason($message);
 		$this->wbd_error = self::createError($reason, $this->error_group, $this->user_id, $this->row_id);
+	}
+
+	protected function defineValuesToTranslate() {
+		$this->translate_value = array("AdressTyp" => array("field" => "address_type", "group" => gevWBDDictionary::SEARCH_IN_ADDRESS_TYPE)
+							   , "AnredeSchluessel" => array("field" => "gender", "group" => gevWBDDictionary::SEARCH_IN_GENDER)
+							   , "VermittlerStatus" => array("field" => "wbd_agent_status", "group" => gevWBDDictionary::SEARCH_IN_AGENT_STATUS)
+							   , "TpKennzeichen" => array("field" => "wbd_type", "group" => gevWBDDictionary::SEARCH_IN_WBD_TYPE)
+			);
 	}
 }

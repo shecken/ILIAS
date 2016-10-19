@@ -19,14 +19,20 @@ class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
 	protected $error_group;
 
 	protected function __construct($data) {
+		$this->error_group = gevWBDError::ERROR_GROUP_USER;
+
+		$this->defineValuesToTranslate();
+		$dic_errors = $this->translate($data["user_id"], $data["row_id"]);
+
+		$this->certification_period 	= new WBDData("ZertifizierungsPeriode",$this->translate_value["ZertifizierungsPeriode"]);
+
 		$this->agent_id 				= new WBDData("VermittlerId",$data["bwv_id"]);
-		$this->certification_period 	= new WBDData("ZertifizierungsPeriode",$this->getDictionary()->getWBDName($data["certification_period"],gevWBDDictionary::SEARCH_IN_CERTIFICATION_PERIOD));
 
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
-		$this->error_group = gevWBDError::ERROR_GROUP_USER;
 
-		$errors = $this->checkData();
+		$check_errors = $this->checkData();
+		$errors = $check_errors + $dic_errors;
 
 		if(!empty($errors)) {
 			throw new myLogicException("gevWBDRequestWPAbfrage::__construct:checkData failed",0,null, $errors);
@@ -38,10 +44,6 @@ class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
 			return new gevWBDRequestWPAbfrage($data);
 		}catch(myLogicException $e) {
 			return $e->options();
-		} catch(LogicException $e) {
-			$errors = array();
-			$errors[] =  self::createError($e->getMessage(), gevWBDError::ERROR_GROUP_USER,  $data["user_id"], $data["row_id"],0);
-			return $errors;
 		}
 	}
 
@@ -73,5 +75,9 @@ class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
 	public function createWBDError($message) {
 		$reason = $this->parseReason($message);
 		$this->wbd_error = self::createError($reason, $this->error_group, $this->user_id, $this->row_id);
+	}
+
+	protected function defineValuesToTranslate() {
+		$this->translate_value = array("ZertifizierungsPeriode" => array("field" => "certification_period", "group" => gevWBDDictionary::SEARCH_IN_CERTIFICATION_PERIOD));
 	}
 }
