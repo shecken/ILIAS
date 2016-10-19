@@ -17,7 +17,7 @@ class DerivedField extends Filters\Predicates\Field implements AbstractDerivedFi
 	 *
 	 * @return	AbstractTableField[]
 	 */
-	public function derivedFrom() {
+	public function derivedFromRecursive() {
 		$return = array();
 		foreach ($this->derived_from as $field) {
 			if($field instanceof AbstractTableField) {
@@ -36,12 +36,8 @@ class DerivedField extends Filters\Predicates\Field implements AbstractDerivedFi
 	 *
 	 * @return	AbstractTableField[]
 	 */
-	public function derivedFromDirect() {
-		$return = array();
-		foreach ($this->derived_from as $field) {
-			$return[] = $field;
-		}
-		return $return;
+	public function derivedFrom() {
+		return array_values($this->derived_from);
 	}
 
 	/**
