@@ -75,7 +75,7 @@ class ilTalentAssessmentSettingsGUI {
 		$career_goal_options = $this->actions->getCareerGoalsOptions();
 		$venue_options = $this->actions->getVenueOptions();
 		$org_unit_options = $this->actions->getOrgUnitOptions();
-		$this->addSettingsFormItemsUpdate($form, $career_goal_options, $venue_options, $org_unit_options, $this->actions->ObservationStarted($this->obj_id));
+		$this->addSettingsFormItemsUpdate($form, $career_goal_options, $venue_options, $org_unit_options, $this->actions->observationStarted($this->obj_id));
 
 		$form->addCommandButton(self::CMD_SAVE, $this->txt('obj_save'));
 		$form->setFormAction($this->gCtrl->getFormAction($this));

@@ -5,6 +5,14 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	<script type="text/javascript" src="{API_LINK}"></script>
+	<!-- BEGIN to_viwis_sco -->
+	<script>
+		onload = function () {
+			document.getElementsByName('tree')[0].contentWindow.parent.API.IliasAbortSco();
+			document.getElementsByName('tree')[0].contentWindow.parent.API.IliasWaitLaunch('{TARGET_ID}');
+		}
+	</script>
+	<!-- END to_viwis_sco -->
 </head>
 <frameset cols="25%,75%">
 	<frame src="{EXPLORER_LINK}" name="tree" marginwidth="0" marginheight="0" scrolling="auto" />

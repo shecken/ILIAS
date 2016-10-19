@@ -19,6 +19,16 @@ class ilDB implements DB {
 		$this->createTables();
 	}
 
+	public function updateColumns() {
+		if($this->getDB()->tableColumnExists(self::TABLE_OBSERVATIONS_NOTICE, 'notice')) {
+			$this->getDB()->modifyTableColumn(self::TABLE_OBSERVATIONS_NOTICE,'notice', array(
+						'type' 		=> 'text',
+						'length'	=> 255,
+						'notnull' 	=> false
+			));
+		}
+	}
+
 	protected function createTables() {
 		if(!$this->getDB()->tableExists(self::TABLE_OBSERVATIONS)) {
 			$fields = 
@@ -200,7 +210,7 @@ class ilDB implements DB {
 				$ret_ar["title"] = $row["title"];
 				$ret_ar["description"] = $row["description"];
 				$ret_ar["obs_id"] = $row["obj_id"];
-				$ret_ar["notice"] = $row["notice"];
+				$ret_ar["notice"] = $row["notice"] ? $row["notice"] : "";
 				$ret_ar["requirements"] = array();
 				$pos = $row["position"];
 			}

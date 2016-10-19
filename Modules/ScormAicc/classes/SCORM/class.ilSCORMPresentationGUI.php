@@ -102,7 +102,6 @@ class ilSCORMPresentationGUI
 		$this->increase_attemptAndsave_module_version();
 //		$this->increase_attempt();
 //		$this->save_module_version();
-
 		if ($javascriptAPI == false) {
 			if (count($items) > 1
 				|| strtolower(get_class($this->slm)) == "ilobjaicclearningmodule"
@@ -146,8 +145,10 @@ class ilSCORMPresentationGUI
 				}
 				else
 				{
+					//gev-pach start
 //					$this->tpl = new ilTemplate("tpl.sahs_pres_js_debug.html", false, false, "Modules/ScormAicc");
-					$this->tpl = new ilTemplate("tpl.sahs_pres_frameset_js.html", false, false, "Modules/ScormAicc");
+					$this->tpl = new ilTemplate("tpl.sahs_pres_frameset_js.html", false, true, "Modules/ScormAicc");
+					//gev-patch end
 				}
 								
 				$this->tpl->setVariable("EXPLORER_LINK", $exp_link);
@@ -162,11 +163,25 @@ class ilSCORMPresentationGUI
 				}
 				else
 				{
-					$this->tpl = new ilTemplate("tpl.sahs_pres_frameset_js_one_page.html", false, false, "Modules/ScormAicc");
+					// gev-patch start
+					//$this->tpl = new ilTemplate("tpl.sahs_pres_frameset_js_one_page.html", false, false, "Modules/ScormAicc");
+					$this->tpl = new ilTemplate("tpl.sahs_pres_frameset_js_one_page.html", false, true, "Modules/ScormAicc");
+					// gev-patch end
 				}
+
 
 				$this->ctrl->setParameter($this, "autolaunch", $items[0]);
 			}
+			//gev-patch start
+			if(isset($_GET['redirect_viwis'])) {
+				// This is required to make the "outer block" (i.e. the whole tpl)
+				// render at all.
+				$this->tpl->setVariable("BOGUS_SPACE_INSERT_POINT", "    ");
+				$this->tpl->setCurrentBlock('to_viwis_sco');
+				$this->tpl->setVariable('TARGET_ID',$_GET['redirect_viwis']);
+				$this->tpl->parseCurrentBlock();
+			}
+			// gev-patch end
 			$api_link = $this->ctrl->getLinkTarget($this, "apiInitData");
 			$this->tpl->setVariable("API_LINK", $api_link);
 			$this->tpl->show("DEFAULT", false);

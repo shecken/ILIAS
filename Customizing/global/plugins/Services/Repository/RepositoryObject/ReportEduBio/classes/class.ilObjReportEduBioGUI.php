@@ -205,12 +205,6 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 			$rec["date"] = ilDatePresentation::formatDate($start)." - <br/>".ilDatePresentation::formatDate($end);
 		}
 
-		if(in_array($rec["okz"], array("OKZ1", "OKZ2", "OKZ3"))) {
-			$rec['credit_points'] = $rec['credit_points'] >= 0 ? $rec['credit_points'] : 0;
-		} else {
-			$rec['credit_points'] = "-";
-		}
-
 		$rec["action"] = "";
 		if ($rec["bill_id"] != -1 && $rec["bill_id"] != "-empty-") {
 			$params = array("bill_id" => $rec["bill_id"],  "target_user_id" => self::$target_user_id);

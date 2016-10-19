@@ -83,6 +83,7 @@ class ilObjReportEduBio extends ilObjReportBase {
 							)
 				->static_condition("usr.user_id = ".$this->gIldb->quote($this->target_user_id, "integer"))
 				->static_condition("usrcrs.hist_historic = 0")
+				->static_condition('(crs.is_cancelled IS NULL OR crs.is_cancelled = '.$this->gIldb->quote('Nein','text').')')
 				->static_condition($this->gIldb
 										->in(	"usrcrs.booking_status"
 												, array( "gebucht", "kostenpflichtig storniert")
@@ -95,7 +96,8 @@ class ilObjReportEduBio extends ilObjReportBase {
 	}
 
 	protected function buildQuery($query) {
-		$query 	->select("crs.title")
+		$one_year_befone_now  = (new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d');
+		$query ->select("crs.title")
 				->select("crs.type")
 				->select('crs.crs_id')
 				->select("usrcrs.begin_date")
@@ -103,7 +105,16 @@ class ilObjReportEduBio extends ilObjReportBase {
 				->select("crs.venue")
 				->select("crs.provider")
 				->select("crs.tutor")
-				->select("usrcrs.credit_points")
+				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text')
+								.'	,IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
+								.'		,usrcrs.credit_points'
+								.'		,IF((usrcrs.end_date > '.$this->gIldb->quote($one_year_befone_now,'date')
+												.'OR (usrcrs.end_date = '.$this->gIldb->quote($one_year_befone_now,'date').' AND usrcrs.begin_date >= '.$this->gIldb->quote($one_year_befone_now,'date').' ) )'
+												.' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL AND usrcrs.wbd_cancelled != 1'
+								.'			,usrcrs.credit_points,\'-\')'
+								.'	)'
+								.'	,\'-\''
+								.') as credit_points')
 				->select("crs.fee")
 				->select("usrcrs.participation_status")
 				->select("usrcrs.okz")
@@ -112,9 +123,13 @@ class ilObjReportEduBio extends ilObjReportBase {
 				->select_raw("IF(usrcrs.wbd_cancelled != 1, usrcrs.wbd_booking_id, NULL) wbd_booking_id")
 				->select("usrcrs.certificate_filename")
 				->select("oref.ref_id")
-				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text').' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL ,'
-								.'	IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
-								.'		,'.$this->gIldb->quote('Ja','text').','.$this->gIldb->quote('Nein','text').'),\'-\') as wbd_reported')
+				->select_raw('IF('.$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OZ3'),false,'text').' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL'
+								.'	,IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-','text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
+								.'		,'.$this->gIldb->quote('Ja','text')
+								.'		,IF((usrcrs.end_date > '.$this->gIldb->quote($one_year_befone_now,'date')
+								.'				OR (usrcrs.end_date = '.$this->gIldb->quote($one_year_befone_now,'date').' AND usrcrs.begin_date >= '.$this->gIldb->quote($one_year_befone_now,'date').' ) )'
+								.'			,'.$this->gIldb->quote('Nein','text').',\'-\')'
+								.'),\'-\') as wbd_reported')
 				->from("hist_usercoursestatus usrcrs")
 				->join("hist_user usr")
 					->on("usr.user_id = usrcrs.usr_id AND usr.hist_historic = 0")
@@ -172,6 +187,7 @@ class ilObjReportEduBio extends ilObjReportBase {
 	}
 
 	protected function academyQuery(ilDate $start = null, ilDate $end = null, $transferred) {
+		$one_year_befone_now  = (new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d');
 		return 	"SELECT SUM(usrcrs.credit_points) sum "
 				."	FROM hist_usercoursestatus usrcrs "
 				."	JOIN hist_course crs"
@@ -191,11 +207,12 @@ class ilObjReportEduBio extends ilObjReportBase {
 				."				AND usrcrs.begin_date > ".$this->gIldb->quote('2013-01-01','date').")"
 				."			OR (crs.type != ".$this->gIldb->quote('Selbstlernkurs','text')
 				."				AND usrcrs.end_date > ".$this->gIldb->quote('2013-01-01','date')."))"
-				."		AND usrcrs.wbd_booking_id IS ".($transferred ? "NOT" : "")." NULL "
-							." AND usrcrs.wbd_booking_id ".($transferred ? "!=" : "=")." '-empty-'"
+				."		AND (usrcrs.wbd_booking_id IS ".($transferred ? "NOT" : "")." NULL "
+				." 			".($transferred ? "AND" : "OR")." usrcrs.wbd_booking_id ".($transferred ? "!=" : "=")." '-empty-')"
 				."		AND usrcrs.wbd_cancelled != 1 "
-				."		AND usrcrs.last_wbd_report IS ".($transferred ? "NOT" : "")." NULL "
-							." AND usrcrs.last_wbd_report ".($transferred ? "!=" : "=")." '0000-00-00'";
+				."		AND (usrcrs.last_wbd_report IS ".($transferred ? "NOT" : "")." NULL "
+				." 			".($transferred ? "AND" : "OR")." usrcrs.last_wbd_report ".($transferred ? "!=" : "=")." '0000-00-00')"
+				."		".(!$transferred ? " AND usrcrs.end_date > ".$this->gIldb->quote($one_year_befone_now,'date') : "");
 	}
 
 	protected function wbdQueryWhere(ilDate $start = null, ilDate $end = null) {

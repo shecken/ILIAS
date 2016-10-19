@@ -27,13 +27,18 @@ class ilObjReportEmplEduBios extends ilObjReportBase {
 
 
 	protected function points_in_cert_year_sql($year) {
-		return   "SUM( IF (     usrcrs.begin_date >= usr.begin_of_certification + INTERVAL ".($year-1)." YEAR "
-				."               AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL ".$year." YEAR)"
-				."               AND usrcrs.okz <> '-empty-'"
-				."             , usrcrs.credit_points"
-				."             , 0"
-				."             )"
-				."        )";
+		$one_year_befone_now  = (new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d');
+		return   "SUM( IF (	usrcrs.begin_date >= usr.begin_of_certification + INTERVAL ".($year-1)." YEAR "
+				."		AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL ".$year." YEAR)"
+				."		AND ".$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OKZ3'),false,'text')
+				."		AND ((usrcrs.wbd_booking_id != '-empty-' AND usrcrs.wbd_booking_id IS NOT NULL ) "
+				."			OR usrcrs.end_date >= ".$this->gIldb->quote($one_year_befone_now,'date')
+				."			OR (usrcrs.end_date = ".$this->gIldb->quote($one_year_befone_now,'date')." AND usrcrs.begin_date >= ".$this->gIldb->quote($one_year_befone_now,'date').")"
+				."			)"
+				."		, usrcrs.credit_points"
+				."		, 0"
+				."		)"
+				."	)";
 	}
 
 	protected function getRoleIdsForRoleTitles(array $titles) {
@@ -57,10 +62,15 @@ class ilObjReportEmplEduBios extends ilObjReportBase {
 	}
 
 	protected function buildQuery($query) {
+		$one_year_befone_now  = (new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d');
 		$points_in_current_period
-						  =  "SUM( IF (     usrcrs.begin_date >= usr.begin_of_certification"
-							."         AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL 5 YEAR)"
-							."         AND usrcrs.okz <> '-empty-'"
+						  =  "SUM( IF (usrcrs.begin_date >= usr.begin_of_certification"
+							."		AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL 5 YEAR)"
+							."      AND ".$this->gIldb->in('usrcrs.okz',array('OKZ1','OKZ2','OKZ3'),false,'text')
+							."		AND ((usrcrs.wbd_booking_id != '-empty-' AND usrcrs.wbd_booking_id IS NOT NULL ) "
+							."			OR (usrcrs.end_date >= ".$this->gIldb->quote($one_year_befone_now,'date').')'
+							."			OR (usrcrs.end_date = ".$this->gIldb->quote($one_year_befone_now,'date')." AND usrcrs.begin_date >= ".$this->gIldb->quote($one_year_befone_now,'date').")"
+							."			)"
 							."        , usrcrs.credit_points"
 							."        , 0"
 							."        )"
@@ -220,7 +230,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase {
 							," TRUE "
 							)
 				->static_condition($this->gIldb->in("usr.user_id", $this->allowed_user_ids, false, "integer"))
-				->static_condition(" usr.hist_historic = 0")		
+				->static_condition(" usr.hist_historic = 0")
 				->action($this->filter_action)
 				->compile();
 		return $filter;

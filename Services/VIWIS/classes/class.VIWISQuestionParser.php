@@ -1,6 +1,6 @@
 <?php
 require_once 'Services/VIWIS/interfaces/interface.QuestionParser.php';
-require_once 'Services/VIWIS/classes/class.QuestionException.php';
+require_once 'Services/VIWIS/exceptions/class.QuestionException.php';
 require_once 'Services/VIWIS/classes/class.QuestionTypes.php';
 
 /**
