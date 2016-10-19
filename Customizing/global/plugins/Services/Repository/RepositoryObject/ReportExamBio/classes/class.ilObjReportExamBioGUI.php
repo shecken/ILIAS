@@ -72,11 +72,10 @@ class ilObjReportExamBioGUI extends ilObjReportBase2GUI {
 	* Allways call parent methods in final plugin-classmethod static::settingFrom, static::getSettingsData and static::saveSettingsData.
 	*/
 
-	public static function examBiographyLinkByRefId($ref_id) {
-		global $ilCtrl;
-		$ilCtrl->setParameterByClass(self::class, 'ref_id', $ref_id);
-		$return = $ilCtrl->getLinkTargetByClass(array('ilObjPluginDispatchGUI', self::class), '');
-		$ilCtrl->setParameterByClass(self::class, 'ref_id', null);
+	public static function examBiographyLinkByRefId($ref_id,$ctrl) {
+		$ctrl->setParameterByClass(self::class, 'ref_id', $ref_id);
+		$return = $ctrl->getLinkTargetByClass(array('ilObjPluginDispatchGUI', self::class), '');
+		$ctrl->setParameterByClass(self::class, 'ref_id', null);
 		return $return;
 	}
 
