@@ -278,6 +278,7 @@ class DisplayFilter {
 					array_push($ret, $value);
 					break;
 				case "CaT\Filter\Filters\MultiselectSearch":
+					// TODO: Dedup with MultiselectSearch
 					$value = $this->unserializeValue($value);
 					// TODO: this seams to be fishy... what about other filters besides
 					// multiselects?
