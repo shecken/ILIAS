@@ -9,6 +9,8 @@ require_once("./Services/GEV/CourseSearch/classes/class.gevCourseSearch.php");
  * Creates a submenu for the Cockpit of the GEV.
  */
 class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
+	const ASSESSMENT_CHECK_INTERVAL = "300";
+
 	public function __construct() {
 		global $ilUser, $lng, $ilCtrl;
 		$this->gLng = $lng;
@@ -51,9 +53,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			&& $_GET["cmdClass"] != "gevcoursesearchgui"
 			&& $_GET["cmdClass"] != "iladminsearchgui"
 			&& $_GET["cmdClass"] != "gevemployeebookingsgui"
-			&& (
-				$_GET["cmd"] != "toMyAssessments"
-				&& $_GET["cmd"] != "toAllAssessments")
+			&& $_GET["cmd"] != "toAllAssessments"
 			;
 	}
 
@@ -153,9 +153,24 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
 
 		if($ta_plugin->active) {
-			$items["my_assessments"]
-				= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
+			$has_assessments = ilSession::get("gev_has_assessments");
+			$last_assessments_calculation = ilSession::get("gev_has_assessments_calculation_ts");
+
+			if($has_assessments === null
+					||   $last_assessments_calculation + self::ASSESSMENT_CHECK_INTERVAL < time())
+			{
+				$has_admin_trainings = count($ta_plugin->getObservationsDB()->getAssessmentsData(array())) > 0;
+
+				ilSession::set("gev_has_assessments", $has_assessments);
+				ilSession::set("gev_has_assessments_calculation_ts", time());
+			}
+
+			if($has_assessments) {
+				$items["my_assessments"]
+					= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
+			}
 		}
+
 		return $items;
 	}
 
