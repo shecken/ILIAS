@@ -770,12 +770,6 @@ abstract class ilTEPViewGridBased extends ilTEPView
 				$ilCtrl->setParameterByClass("ilparticipationstatusgui", "ref_id", null);
 			}
 
-			if($crs_utils->hasTrainer($this->user_id)) {
-				$sel_item_cnt++;
-				$select_list->addItem($lng->txt('gev_exam_bio'),$crs_utils->getExamBioLink());
-			}
-
-
 			$ilCtrl->setParameterByClass("ilTEPGUI", "ref_id", null);
 			$ilCtrl->setParameterByClass("ilTEPGUI", "crs_id", null);
 			$ilCtrl->setParameterByClass("ilTEPGUI", "obj_id", null);
