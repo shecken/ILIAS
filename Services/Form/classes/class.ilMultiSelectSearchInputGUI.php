@@ -11,7 +11,7 @@ require_once("./Services/Form/classes/class.ilMultiSelectInputGUI.php");
 require_once("./Services/User/classes/class.ilObjUser.php");
 require_once("./Services/UICore/classes/class.ilTemplate.php");
 /**
- * Class srMultipleSelectInputGUI
+ * Class ilMultipleSelectInputGUI
  */
 class ilMultiSelectSearchInputGUI extends ilMultiSelectInputGUI
 {
@@ -68,7 +68,6 @@ class ilMultiSelectSearchInputGUI extends ilMultiSelectInputGUI
 	{
 		global $lng;
 
-		//var_dump($this->getValue());
 		if ($this->getRequired() && count($this->getValue()) == 0)
 		{
 			$this->setAlert($lng->txt("msg_input_is_required"));
@@ -257,8 +256,6 @@ class ilMultiSelectSearchInputGUI extends ilMultiSelectInputGUI
 	}
 
 	public function setValueByArray($array){
-//		print_r($array);
-
 		$val = $array[$this->searchPostVar()];
 		if(is_array($val))
 			$val;
