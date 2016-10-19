@@ -239,8 +239,8 @@ abstract class ilObjReportBase2GUI extends ilObjectPluginGUI {
 	}
 
 	protected function prepareTitle($a_title) {
-		$a_title->title($this->object->getTitle())
-				->subTitle($this->object->getDescription())
+		$a_title->title($this->object->title())
+				->subTitle($this->object->description())
 				->setVideoLink($this->object->settings['video_link'])
 				->setVideoLinkText($this->object->master_plugin->txt("rep_video_desc"))
 				->setPdfLink($this->object->settings['pdf_link'])
