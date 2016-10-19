@@ -327,4 +327,12 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 			return false;
 		});
 	}
+
+	public function titile() {
+		return parent::getTitle();
+	}
+
+	public function description() {
+		return parent::getDescription();
+	}
 }
