@@ -9,7 +9,7 @@ require_once("./Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
  */
 class ilActions {
 	const F_TITLE = "title";
-	const F_DESCRIPTION = "description";
+	const F_DESCRIPTION = "desc";
 	const F_CAREER_GOAL = "career_goal";
 	const F_USERNAME = "username";
 	const F_DATE = "date";

@@ -3,7 +3,7 @@ namespace CaT\Plugins\CareerGoal;
 
 class ilActions {
 	const F_TITLE = "title";
-	const F_DESCRIPTION = "description";
+	const F_DESCRIPTION = "desc";
 	const F_LOWMARK = "lowmark";
 	const F_SHOULD_SPECIFICATION = "should_specification";
 	const F_DEFAULT_TEXT_FAILED = "default_text_failed";
