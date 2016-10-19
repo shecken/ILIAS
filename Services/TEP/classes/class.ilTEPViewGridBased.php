@@ -779,8 +779,9 @@ abstract class ilTEPViewGridBased extends ilTEPView
 			$ilCtrl->setParameterByClass("ilTEPGUI", "ref_id", null);
 			$ilCtrl->setParameterByClass("ilTEPGUI", "crs_id", null);
 			$ilCtrl->setParameterByClass("ilTEPGUI", "obj_id", null);
-			
-			$a_entry["description"] .= "<br /><br />".$select_list->getHTML();
+			if($sel_item_cnt > 0) {
+				$a_entry["description"] .= "<br /><br />".$select_list->getHTML();
+			}
 
 		}
 		// gev-patch end
