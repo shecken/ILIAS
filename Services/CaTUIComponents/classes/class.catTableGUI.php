@@ -126,6 +126,12 @@ class catTableGUI extends ilTable2GUI {
 		}
 	}
 
+	/**
+	 * we would like to avoid some parameters floating around secretly 
+	 * and being glued to some links without out knowledge. it turns
+	 * out the order parameter is newer unset, after applying it to
+	 * the table columns.
+	 */
 	public function setOrderLink($sort_field, $order_dir) {
 		parent::setOrderLink($sort_field,$order_dir);
 		$this->gCtrl->setParameter($this->parent_obj,$this->getNavParameter(),null);
