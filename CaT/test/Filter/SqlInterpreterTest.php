@@ -405,6 +405,8 @@ class  SqlInterpreterTest extends PHPUnit_Framework_TestCase {
 		$i = $this->interpreter;
 		$res = $f->field('foo.bar')->LIKE($f->str('blubb%'));
 		$this->assertEquals($i->interpret($res), "`foo`.`bar` LIKE 'blubb%'");
+		$res = $f->field('foo.bar')->LIKE()->str('blubb%');
+		$this->assertEquals($i->interpret($res), "`foo`.`bar` LIKE 'blubb%'");
 	}
 
     /**
