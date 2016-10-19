@@ -1,5 +1,5 @@
 <?php
-
+require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase2GUI.php';
 require_once 'Modules/Test/classes/class.ilObjTest.php';
 
@@ -79,27 +79,8 @@ class ilObjReportExamBioGUI extends ilObjReportBase2GUI {
 		return $return;
 	}
 
-	public static function examBiographyReferenceForUsers() {
-		global $ilCtrl,$ilDB;
-		$s_f = new settingFactory($ilDB);
-		$settings_data_handler = $s_f->reportSettingsDataHandler();
-	
-		$obj_id = $s_f->reportSettingsDataHandler()
-			->query($s_f->reportSettings('rep_robj_rexbio')
-						->addSetting($s_f
-							->settingBool('for_trainer','')))[0]['obj_id'];
-		$ref_id = current(ilObject::_getAllReferences($obj_id));
-		return $ref_id;
+	public static function examBiographyReferenceForUsers($db) {
+		$obj_id = current(ilObjReportExamBio::queryReports(array('for_trainer' => 0), $db))['id'];
+		return current(ilObject::_getAllReferences($obj_id));
 	}
-
-	public static function examBiographyLinkForUser($ref_id,$usr_id = null) {
-		global $ilCtrl;
-		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'ref_id', $ref_id);
-		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'target_user_id', $usr_id);
-		$return = $ilCtrl->getLinkTargetByClass(array('ilObjPluginDispatchGUI', 'ilObjReportExamBioGUI'), '');
-		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'ref_id', null);
-		$ilCtrl->setParameterByClass('ilObjReportExamBioGUI', 'target_user_id', null);
-		return $return;
-	}
-
 }
