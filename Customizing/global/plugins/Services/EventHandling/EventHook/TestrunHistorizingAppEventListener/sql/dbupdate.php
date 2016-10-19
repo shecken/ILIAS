@@ -1,5 +1,10 @@
 <#1>
 <?php
+
+/**
+ * This service logs the testpassses. every testpass is a case on itself.
+ * Note: a user doing a test may have several cases.
+ */
 if(!$ilDB->tableExists('hist_usertestrun')) {
 	$ilDB->createTable('hist_usertestrun',
 		array(
@@ -8,16 +13,16 @@ if(!$ilDB->tableExists('hist_usertestrun')) {
 			,'hist_historic'		=> array('type' => 'integer', 'length' => 1, 'notnull' => false, 'default' => 0)
 			,'hist_version'			=> array('type' => 'integer', 'length' => 4, 'notnull' => false, 'default' => 0)
 			,'creator_usr_id'		=> array('type' => 'integer', 'length' => 4, 'notnull' => true)
-			,'usr_id'				=> array('type' => 'integer', 'length' => 4, 'notnull' => true)
-			,'obj_id'				=> array('type' => 'integer', 'length' => 4, 'notnull' => true)
-			,'pass'					=> array('type' => 'integer', 'length' => 4, 'notnull' => true)
-			,'test_title'			=> array('type' => 'text', 'length' => 255, 'notnull' => true, 'default' => '') 
-			,'max_points'			=> array('type' => 'integer', 'length' => 4, 'notnull' => false, 'default' => 0)
-			,'points_achieved'		=> array('type' => 'integer', 'length' => 4, 'notnull' => false, 'default' => 0)
-			,'percent_to_pass'		=> array('type' => 'float', 'notnull' => true, 'default' => 0)
-			,'testrun_finished_ts'	=> array('type' => 'integer', 'length' => 4, 'notnull' => true, 'default' => 0)
-			,'test_passed'			=> array('type' => 'integer', 'length' => 1, 'notnull' => true)
-			,'pass_scoring'			=> array('type' => 'text', 'length' => 30, 'notnull' => true)
+			,'usr_id'				=> array('type' => 'integer', 'length' => 4, 'notnull' => true) // obj_id of the user, who did the testrun
+			,'obj_id'				=> array('type' => 'integer', 'length' => 4, 'notnull' => true) // obj_id of the test
+			,'pass'					=> array('type' => 'integer', 'length' => 4, 'notnull' => true) // the # of pass of the corresponding test
+			,'test_title'			=> array('type' => 'text', 'length' => 255, 'notnull' => true, 'default' => '') // title of the test
+			,'max_points'			=> array('type' => 'integer', 'length' => 4, 'notnull' => false, 'default' => 0) // maximum points, that may be achieved in the test
+			,'points_achieved'		=> array('type' => 'integer', 'length' => 4, 'notnull' => false, 'default' => 0) // points achieved in recent testrun
+			,'percent_to_pass'		=> array('type' => 'float', 'notnull' => true, 'default' => 0) // which fracture of max points should be achieven in order to pass the test
+			,'testrun_finished_ts'	=> array('type' => 'integer', 'length' => 4, 'notnull' => true, 'default' => 0) // timestamp of submition of therecent testrun
+			,'test_passed'			=> array('type' => 'integer', 'length' => 1, 'notnull' => true) // is the test passed after this testrun? note, that it may change from 1 to 0 also
+			,'pass_scoring'			=> array('type' => 'text', 'length' => 30, 'notnull' => true) // here it is stored, wether the last testrun pr the best testrun counts in order to pass the test
 			));
 	$ilDB->createSequence('hist_usertestrun');
 	$ilDB->addPrimaryKey('hist_usertestrun', array('row_id'));
