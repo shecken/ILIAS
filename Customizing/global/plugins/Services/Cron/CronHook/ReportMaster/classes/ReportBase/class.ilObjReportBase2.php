@@ -46,6 +46,9 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 		$this->tf = new TableRelations\TableFactory($this->pf, $this->gf);
 	}
 
+	/**
+	 * create the settings, that are relevant for self only
+	 */
 	abstract protected function createLocalReportSettings();
 
 	protected function createGlobalReportSettings() {
@@ -80,14 +83,35 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 								);
 	}
 
+	/**
+	 * configure table for the report according
+	 * to local settings and maybe other parameters
+	 */
 	abstract public function prepareTable(catSelectableReportTableGUI $table);
+
+	/**
+	 * configure filter for the report according
+	 * to local settings and maybe other parameters
+	 */
 	abstract public function filter();
+
+	/**
+	 * define all the tables relevant for report and
+	 * relations between them
+	 */
 	abstract public function initSpace();
 
+	/**
+	 * fetch the sql statement.
+	 */
 	public function buildQueryStatement() {	
 		return $this->getInterpreter()->getSql($this->space->query());
 	}
 
+	/**
+	 * fetch the query interpreter for the query object
+	 * spawned by the space.
+	 */
 	protected function getInterpreter() {
 		if(!$this->interpreter) {
 			$this->interpreter = new TableRelations\SqlQueryInterpreter( new Filters\SqlPredicateInterpreter($this->gIldb), $this->pf, $this->gIldb);
@@ -95,6 +119,9 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 		return $this->interpreter;
 	}
 
+	/**
+	 * query the database and postprocess results using some callback
+	 */
 	public function deliverData(callable $callable) {
 		$res = $this->gIldb->query($this->getInterpreter()->getSql($this->space->query()));
 		$return = array();
@@ -104,14 +131,24 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 		return $return;
 	}
 
+	/**
+	 * which parameters are relevant for this report and should be
+	 * passed on to sub gui-calls and links insisde report
+	 */
 	public function getRelevantParameters() {
 		return $this->relevant_parameters;
 	}
 
+	/**
+	 * get an associative array of settings for the class instance
+	 */
 	public function getSettingsData() {
 		return $this->settings;
 	}
 
+	/**
+	 * get a certain setting
+	 */
 	public function getSettingsDataFor($key) {
 		if(!array_key_exists($key, $this->settings)) {
 			throw new Exception("ilObjReportBase::getSettingsDataFor: key ".$key." not found in settings.");
@@ -124,6 +161,9 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 		$this->settings = $settings;
 	}
 
+	/**
+	 * add a parameter to relevant parameters referenced to by a key
+	 */
 	public function addRelevantParameter($key, $value) {
 		$this->relevant_parameters[$key] = $value;
 	}
@@ -149,6 +189,9 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 		return $data;
 	}
 
+	/**
+	 * interaction with storage
+	 */
 	final public function doCreate() {
 		$this->settings_data_handler->createObjEntry($this->getId(), $this->global_report_settings);
 		$this->settings_data_handler->createObjEntry($this->getId(), $this->local_report_settings);
