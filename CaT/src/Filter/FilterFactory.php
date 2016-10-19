@@ -230,11 +230,7 @@ class FilterFactory {
 	 * @return	\Closure
 	 */
 	public function text_equals($field_id) {
-		$f = $this->predicate_factory();
-
-		return function($text) use ($field_id, $f) {
-			return $f->field($field_id)->EQ()->str($text);
-		};
+		return $this->text_equals_field($this->predicate_factory->field($field_id));
 	}
 
 	/**
@@ -258,11 +254,7 @@ class FilterFactory {
 	 * @return	\Closure
 	 */
 	public function text_like($field_id) {
-		$f = $this->predicate_factory();
-
-		return function($text) use ($field, $f) {
-			return $f->field($field)->LIKE($this->predicate_factory->str($text));
-		};
+		return $this->text_like_field($this->predicate_factory->field($field_id));
 	}
 
 	/**
