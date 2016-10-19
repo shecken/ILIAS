@@ -955,9 +955,21 @@ class PredicateTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(array($f1, $f2), $f1->EQ($f2)->fields());
 		$this->assertEquals(array($f1, $f2, $f3), $f1->EQ($f2)->_OR($f2->LE($f3))->fields());
-
+		$fa = $f->field('a');
+		$this->assertTrue($this->fieldListsEqual($fa->IN($f->list_field_by_array(array($f1,$f2,$f3)))->fields(),array($fa,$f1,$f2,$f3)));
+		$st = $f->str('a');
+		$this->assertTrue($this->fieldListsEqual($st->IN($f->list_field_by_array(array($f1,$f2,$f3)))->fields(),array($f1,$f2,$f3)));
+		//just to check fieldListEqual
+		$this->assertFalse($this->fieldListsEqual($st->IN($f->list_field_by_array(array($f1,$f2,$f3)))->fields(),array($fa,$f1,$f2,$f3)));
 	}
 	
+
+	protected function fieldListsEqual($list1,$list2) {
+		$field_ids1 = array_map(function($field) {return $field->name();},$list1);
+		$field_ids2 = array_map(function($field) {return $field->name();},$list2);
+		return count(array_intersect($field_ids1, $field_ids2)) === count($list1) && count(array_intersect($field_ids1, $field_ids2)) === count($list2);
+	}
+
 	public function test_IN() {
 		$f = $this->factory;
 		$i = $this->interpreter;
@@ -1064,5 +1076,4 @@ class PredicateTest extends PHPUnit_Framework_TestCase {
 		catch (\InvalidArgumentException $ex) {
 		}
 	}
-
 }
