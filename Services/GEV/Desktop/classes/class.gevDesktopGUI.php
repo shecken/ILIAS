@@ -30,6 +30,7 @@
 * @ilCtrl_Calls gevDesktopGUI: gevCrsMailingGUI
 * @ilCtrl_Calls gevDesktopGUI: gevMyTrainingsAdminGUI
 * @ilCtrl_Calls gevDesktopGUI: ilInfoScreenGUI
+* @ilCtrl_Calls gevDesktopGUI: WBTLocatorGUI
 */
 
 class gevDesktopGUI {
@@ -57,7 +58,6 @@ class gevDesktopGUI {
 		if($cmd == "") {
 			$cmd = "toMyCourses";
 		}
-
 		global $ilMainMenu;
 		switch($next_class) {
 			case "gevmycoursesgui":
@@ -198,10 +198,14 @@ class gevDesktopGUI {
 				if(!$this->plugin->active) {
 					throw new Exception("Plugin Talent Assessment is not active");
 				}
-
 				require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes/Observations/class.ilMyObservationsGUI.php");
 				$gui = new \ilMyObservationsGUI($this, \ilMyObservationsGUI::MODE_MY);
 				$ret = $this->ctrl->forwardCommand($gui);
+				break;
+			case 'wbtlocatorgui':
+				require_once 'Services/VIWIS/classes/class.WBTLocatorGUI.php';
+				$locator_gui = new WBTLocatorGUI();
+				$ret = $this->ctrl->forwardCommand($locator_gui);
 				break;
 			default:
 				$this->dispatchCmd($cmd);
@@ -239,12 +243,18 @@ class gevDesktopGUI {
 			case "toMyTrainingsAdmin":
 			case "toMyAssessments":
 			case "toAllAssessments":
+			case 'redirectToViwis':
 				$this->$a_cmd();
 			case "handleExplorerCommand":
 				break;
 			default:
 				throw new Exception("gevDesktopGUI:Unknown command: ".$a_cmd);
 		}
+	}
+
+	protected function redirectToViwis() {
+		$this->ctrl->saveParameterByClass('WBTLocatorGUI','q_ref',$_GET['q_ref']);
+		$this->ctrl->redirectByClass('WBTLocatorGUI','redirect_viwis');
 	}
 
 	protected function toDctBuildingBlockAdm() {

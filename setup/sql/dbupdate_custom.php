@@ -5181,3 +5181,41 @@ $ilDB->addIndex('hist_userorgu',array('hist_historic','action'),'oha');
 		));
 	}
 ?>
+
+<#221>
+<?php
+	if(!$ilDB->tableColumnExists('wbd_errors', 'status')) {
+		$ilDB->addTableColumn('wbd_errors', 'status', array(
+			"type" => "text",
+			"length" => 30,
+			"notnull" => true,
+			"default" => "not_resolved"
+		));
+	}
+?>
+
+<#222>
+<?php
+	if(!$ilDB->tableExists('viwis_refs')) {
+		$ilDB->createTable('viwis_refs', array(
+													'ref_id' => array(
+														'type' => 'integer',
+														'length' => 4,
+														'notnull' => true,
+														'default' => 0
+													),
+													'wbt_item' => array(
+														'type' => 'text',
+														'length' => 20,
+														'notnull' => true
+													),
+													'question_ref' => array(
+														'type' => 'text',
+														'length' => 20,
+														'notnull' => true
+													)
+												)
+					);
+	}
+	$ilCtrlStructureReader->getStructure();
+?>

@@ -123,7 +123,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		}
 
 		$items = array();
-
+		
 		$items["bookings"]
 			= array($this->gLng->txt("gev_bookings"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
 
@@ -149,19 +149,13 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		$items["training_admin"]
 			= array($this->gLng->txt("gev_my_trainings_admin"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAdmin");
 
-		// $this->plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
-		// 					ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
+		$ta_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
+							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
 
-		// if($this->plugin->active) {
-		// 	$items["my_assessments"]
-		// 		= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
-
-		// 	if($user_utils && $user_utils->isAdmin()) {
-		// 		$items["all_assessments"]
-		// 			= array($this->gLng->txt("gev_all_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toAllAssessments");
-		// 	}
-		// }
-
+		if($ta_plugin->active) {
+			$items["my_assessments"]
+				= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
+		}
 		return $items;
 	}
 
@@ -185,7 +179,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 
 	protected function getSubMenuHTML($current_skin) {
 		assert('is_string($current_skin)');
-		$tpl = $this->getTemplate($current_skin, true, true); 
+		$tpl = $this->getTemplate($current_skin, true, true);
 		$count = 1;
 		foreach ($this->items as $id => $data) {
 			list($label, $link) = $data;
@@ -199,7 +193,20 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			$tpl->parseCurrentBlock();
 			$count++;
 		}
+
+		$tpl->addCss("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.css");
+		$tpl->setCurrentBlock("js");
+		$tpl->setVariable("ACTIVE_SLIDE", "<script>var active_slide = " . $this->getCurrentSlide() . ";</script>");
+		$tpl->parseCurrentBlock();
+		$this->addJS();
 		return $tpl->get();
+	}
+
+	protected function addJS() {
+		require_once("./Services/jQuery/classes/class.iljQueryUtil.php");
+		iljQueryUtil::initjQuery();
+		global $tpl;
+		$tpl->addJavaScript("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.js");
 	}
 
 	protected function addCss($current_skin) {
@@ -238,5 +245,17 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 	protected function getSkinFolder($current_skin) {
 		assert('is_string($current_skin)');
 		return "./Customizing/global/skin/$current_skin";
+	}
+
+	protected function getCurrentSlide() {
+	  $items = $this->getItems();
+	  $i = 1;
+	  foreach ($items as $key => $value) {
+		if($key == $this->getActiveItem()) {
+		  return $i;
+		}
+		$i++;
+	  }
+	  return null;
 	}
 }

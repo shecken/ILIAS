@@ -152,7 +152,6 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 			, "gev_others_menu" => array(false, $has_others_menu, array(
 				  "gev_employee_booking" => array($employee_booking, "ilias.php?baseClass=gevDesktopGUI&cmd=toEmployeeBookings",$this->gLng->txt("gev_employee_booking"))
 				, "gev_create_org_unit" => array($can_create_ha_unit, "ilias.php?baseClass=gevDesktopGUI&cmd=createHAUnit", $this->gLng->txt("gev_create_ha_org_unit"))
-				, "gev_my_assessments" => array(true, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments", $this->gLng->txt("gev_my_assessments"))
 				, "gev_all_assessments" => array($view_all_assessments, "ilias.php?baseClass=gevDesktopGUI&cmd=toAllAssessments", $this->gLng->txt("gev_all_assessments"))
 				), $this->gLng->txt("gev_others_menu"))
 			, self::GEV_REPORTING_MENU => array(false, $this->hasReportingMenu(), null)

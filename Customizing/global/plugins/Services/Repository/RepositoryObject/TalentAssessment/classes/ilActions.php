@@ -4,6 +4,9 @@ namespace CaT\Plugins\TalentAssessment;
 
 require_once("./Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 
+/**
+ * Action class for commiunication between plugin (gui, object, ...) and ilias
+ */
 class ilActions {
 	const F_TITLE = "title";
 	const F_DESCRIPTION = "description";
@@ -68,21 +71,21 @@ class ilActions {
 		}
 
 		if(array_key_exists(self::F_DATE, $values)) {
-		  $start_date = $values[self::F_DATE]["start"]["date"];
-		  $start_time = $values[self::F_DATE]["start"]["time"];
-		  $values[self::START_DATE] = new \ilDateTime($start_date." ".$start_time,IL_CAL_DATETIME);
+			$start_date = $values[self::F_DATE]["start"]["date"];
+			$start_time = $values[self::F_DATE]["start"]["time"];
+			$values[self::START_DATE] = new \ilDateTime($start_date." ".$start_time,IL_CAL_DATETIME);
 
-		  $end_date = $values[self::F_DATE]["end"]["date"];
-		  $end_time = $values[self::F_DATE]["end"]["time"];
-		  $values[self::END_DATE] = new \ilDateTime($end_date." ".$end_time,IL_CAL_DATETIME);
+			$end_date = $values[self::F_DATE]["end"]["date"];
+			$end_time = $values[self::F_DATE]["end"]["time"];
+			$values[self::END_DATE] = new \ilDateTime($end_date." ".$end_time,IL_CAL_DATETIME);
 
 
-		  $this->object->updateSettings(function($s) use (&$values) {
+			$this->object->updateSettings(function($s) use (&$values) {
 			return $s
 				->withStartDate($values[self::START_DATE])
 				->withEndDate($values[self::END_DATE])
 				;
-		  });
+			});
 		}
 
 		$this->object->updateSettings(function($s) use (&$values) {
@@ -131,21 +134,27 @@ class ilActions {
 	}
 
 	/**
+	 * Get options of career goals for settings
 	 *
+	 * @return array<int, string>
 	 */
 	public function getCareerGoalsOptions() {
 		return $this->settings_db->getCareerGoalsOptions();
 	}
 
 	/**
+	 * Get options of venue for settings
 	 *
+	 * @return array<int, string>
 	 */
 	public function getVenueOptions() {
 		return $this->settings_db->getVenueOptions();
 	}
 
 	/**
+	 * Get options of org units for settings
 	 *
+	 * @return array<int, string>
 	 */
 	public function getOrgUnitOptions() {
 		return $this->settings_db->getOrgUnitOptions();
@@ -203,6 +212,13 @@ class ilActions {
 		return $this->gRbacreview->assignedUsers($role_id, array("usr_id", "firstname", "lastname", "login", "email"));
 	}
 
+	/**
+	 * Get the local role id for obj
+	 *
+	 * @param int 	$obj_id
+	 *
+	 * @return int 	$role_id
+	 */
 	public function getLocalRoleId($obj_id) {
 		$role_name = $this->getLocalRoleNameFor($obj_id);
 
@@ -217,10 +233,20 @@ class ilActions {
 		return self::OBSERVATOR_ROLE_NAME."_".$obj_id;
 	}
 
-	public function ObservationStarted($obj_id) {
+	/**
+	 * Is the observation sarted or not
+	 *
+	 * @param int 	$obj_id
+	 */
+	public function observationStarted($obj_id) {
 		return $this->settings_db->isStarted($obj_id);
 	}
 
+	/**
+	 * Set the satte of observation to startetd
+	 *
+	 * @param boolean 	$started
+	 */
 	public function setObservationStarted($started) {
 		$this->object->updateSettings(function($s) use ($started) {
 			return $s
@@ -230,6 +256,11 @@ class ilActions {
 		$this->object->update();
 	}
 
+	/**
+	 * Copy the default texts from career foal to ta
+	 *
+	 * @param int 	$career_goal_id
+	 */
 	public function copyCopyDefaultText($career_goal_id) {
 		$default_texts = $this->settings_db->getCareerGoalDefaultText($career_goal_id);
 
@@ -248,22 +279,53 @@ class ilActions {
 		$this->object->update();
 	}
 
+	/**
+	 * Copy observations from career goal
+	 *
+	 * @param int 	$obj_id
+	 * @param int 	$career_goal_id
+	 */
 	public function copyObservations($obj_id, $career_goal_id) {
 		$this->observations_db->copyObservations($obj_id, $career_goal_id);
 	}
 
+	/**
+	 * Get observations from career goal
+	 *
+	 * @param int 	$career_goal_id
+	 *
+	 * @return array
+	 */
 	public function getBaseObservations($career_goal_id) {
 		return $this->observations_db->getBaseObservations($career_goal_id);
 	}
 
+	/**
+	 * Get observation for overview
+	 *
+	 * @param int 	$obj_id
+	 *
+	 * @return array
+	 */
 	public function getObservationListData($obj_id) {
 		return $this->observations_db->getObservations($obj_id);
 	}
 
+	/**
+	 * Set the notice for observation
+	 *
+	 * @param int 		$obj_id
+	 * @param string 	$notice
+	 */
 	public function setNoticeFor($obs_id, $notice) {
 		$this->observations_db->setNotice((int)$obs_id, $notice);
 	}
 
+	/**
+	 * Set points for observation
+	 *
+	 * @param array 	$post
+	 */
 	public function setPoints($post) {
 		$points = $post[self::SI_PREFIX];
 
@@ -272,18 +334,45 @@ class ilActions {
 		}
 	}
 
+	/**
+	 * Get data for observation overview
+	 *
+	 * @param int 	$obj_id
+	 * @param int 	$role_id
+	 *
+	 * @return array
+	 */
 	public function getObservationOverviewData($obj_id, $role_id) {
 		return $this->observations_db->getObservationOverviewData($obj_id, $role_id);
 	}
 
+	/**
+	 * Get data for cumulative view
+	 *
+	 * @param int 	$obj_id
+	 *
+	 * @return array
+	 */
 	public function getObservationsCumulative($obj_id) {
 		return $this->observations_db->getObservationsCumulative($obj_id);
 	}
 
+	/**
+	 * Get request result for cumulative view
+	 *
+	 * @param int 	$obs_ids
+	 *
+	 * @return array
+	 */
 	public function getRequestresultCumulative($obs_ids) {
 		return $this->observations_db->getRequestresultCumulative($obs_ids);
 	}
 
+	/**
+	 * Copy lowmark and should from career goal
+	 *
+	 * @param int 	$career_goal_id
+	 */
 	public function copyClassificationValues($career_goal_id) {
 		$career_goal_obj = \ilObjectFactory::getInstanceByObjId($career_goal_id);
 
@@ -296,6 +385,11 @@ class ilActions {
 		$this->object->update();
 	}
 
+	/**
+	 * Save the values for report
+	 *
+	 * @param array 	$post
+	 */
 	public function saveReportData($post) {
 		$settings = $this->object->getSettings();
 		$potential = $settings->getPotential();
@@ -330,6 +424,9 @@ class ilActions {
 		$this->object->update();
 	}
 
+	/**
+	 * Finish the talent assessment
+	 */
 	public function finishTA() {
 		$this->object->updateSettings(function($s) {
 			return $s
@@ -339,6 +436,11 @@ class ilActions {
 		$this->object->update();
 	}
 
+	/**
+	 * Update the potential of tested user
+	 *
+	 * @param int 	$potential
+	 */
 	public function updatePotential($potential) {
 		$this->object->updateSettings(function($s) use ($potential) {
 			return $s
@@ -348,12 +450,25 @@ class ilActions {
 		$this->object->update();
 	}
 
+	/**
+	 * Get the potential of user for form
+	 *
+	 * @param array 	$values
+	 * @param int 		$potential
+	 *
+	 * @return array
+	 */
 	public function setPotentialToValues($values, $potential) {
 		$values[self::F_STATE] = $potential;
 
 		return $values;
 	}
 
+	/**
+	 * Get the potential text according to current potential
+	 *
+	 * @return string
+	 */
 	public function potentialText() {
 		$settings = $this->object->getSettings();
 
@@ -374,6 +489,11 @@ class ilActions {
 		}
 	}
 
+	/**
+	 * Get the middle of all observations
+	 *
+	 * @return float
+	 */
 	public function requestsMiddle() {
 		$obs = $this->getObservationsCumulative($this->object->getId());
 		$req_res = $this->getRequestresultCumulative(array_keys($obs));
@@ -389,18 +509,39 @@ class ilActions {
 		return round($middle_total,1);
 	}
 
+	/**
+	 * Get the name of the venue
+	 *
+	 * @param int 	$venue_id
+	 *
+	 * @return string
+	 */
 	public function getVenueName($venue_id) {
 		$org_unit_utils = \gevOrgUnitUtils::getInstance($venue_id);
 
 		return $org_unit_utils->getLongTitle();
 	}
 
+	/**
+	 * Get the title of the org unit
+	 *
+	 * @param int 	$org_unit_id
+	 *
+	 * @return string
+	 */
 	public function getOrgUnitTitle($org_unit_id) {
 		$org_unit_utils = \gevOrgUnitUtils::getInstance($org_unit_id);
 
 		return $org_unit_utils->getTitle();
 	}
 
+	/**
+	 * Get the title of career goal
+	 *
+	 * @param int 	$career_goal_id
+	 *
+	 * @return string
+	 */
 	public function getCareerGoalTitle($career_goal_id) {
 		$obj = \ilObjectFactory::getInstanceByObjId($career_goal_id);
 		return $obj->getTitle();
