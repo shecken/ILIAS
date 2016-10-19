@@ -179,6 +179,10 @@ class gevMyTrainingsAdmin {
 				);
 	}
 
+	public function hasAdminCourse(array $roles) {
+		return count($this->getCourseIds($roles)) > 0;
+	}
+
 	public function getMyTrainingsAdminCourseInformation($a_order_field, $a_order_direction, array $roles) {
 		if ((!$a_order_field && $a_order_direction) || ($a_order_field && !$a_order_direction)) {
 			throw new Exception("gevUserUtils::getMyTrainingsAdminCourseInformation: ".

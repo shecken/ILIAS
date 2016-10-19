@@ -4,11 +4,15 @@
 
 require_once("./Services/UIComponent/classes/class.ilUIHookPluginGUI.php");
 require_once("./Services/GEV/CourseSearch/classes/class.gevCourseSearch.php");
+require_once("./Services/GEV/Utils/classes/class.gevMyTrainingsAdmin.php");
+require_once("./Services/GEV/Utils/classes/class.gevSettings.php");
 
 /**
  * Creates a submenu for the Cockpit of the GEV.
  */
 class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
+	const ADMIN_TRAININGS_CHECK_INTERVAL = "300";
+
 	public function __construct() {
 		global $ilUser, $lng, $ilCtrl;
 		$this->gLng = $lng;
@@ -146,8 +150,23 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 				= array($this->gLng->txt("gev_mytrainingsap_title"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAp");
 		}
 
-		$items["training_admin"]
-			= array($this->gLng->txt("gev_my_trainings_admin"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAdmin");
+		$has_admin_trainings = ilSession::get("gev_has_admin_trainings");
+		$last_admin_trainings_calculation = ilSession::get("gev_has_admin_trainings_calculation_ts");
+
+		if ( $has_admin_trainings === null
+				||   $last_admin_trainings_calculation + self::ADMIN_TRAININGS_CHECK_INTERVAL < time()) 
+		{
+			$my_training_admin_utils = new gevMyTrainingsAdmin($this->gUser->getId());
+			$has_admin_trainings = $my_training_admin_utils->hasAdminCourse(gevSettings::$CRS_MANAGER_ROLES);
+
+			ilSession::set("gev_has_admin_trainings", $has_admin_trainings);
+			ilSession::set("gev_has_admin_trainings_calculation_ts", time());
+		}
+
+		if($has_admin_trainings) {
+			$items["training_admin"]
+				= array($this->gLng->txt("gev_my_trainings_admin"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAdmin");
+		}
 
 		$ta_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
 							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
