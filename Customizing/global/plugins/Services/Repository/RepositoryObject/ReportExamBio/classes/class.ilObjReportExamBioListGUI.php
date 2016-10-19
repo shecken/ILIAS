@@ -28,7 +28,7 @@ class ilObjReportExamBioListGUI extends ilObjReportBaseListGUI {
 		$props = array();
 
 		$this->plugin->includeClass("class.ilObjReportExamBioAccess.php");
-		if (!ilObjReportCouponNewAccess::checkOnline($this->obj_id)) {
+		if (!ilObjReportExamBioAccess::checkOnline($this->obj_id)) {
 			$props[] = array("alert" => true, "property" => $this->lng->txt("status"),
 			"value" => $this->lng->txt("offline"));
 		}
