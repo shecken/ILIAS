@@ -232,8 +232,8 @@ class FilterFactory {
 	public function text_equals($field_id) {
 		$f = $this->predicate_factory();
 
-		return function($text) use ($field, $f) {
-			return $f->field($field)->EQ()->str($text);
+		return function($text) use ($field_id, $f) {
+			return $f->field($field_id)->EQ()->str($text);
 		};
 	}
 
