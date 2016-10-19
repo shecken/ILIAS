@@ -88,6 +88,9 @@ class DisplayFilter {
 			case "CaT\Filter\Filters\Multiselect":
 				return $this->gui_factory->multiselect_gui($filter, $navi->path());
 				break;
+			case "CaT\Filter\Filters\MultiselectSearch":
+				return $this->gui_factory->multiselectsearch_gui($filter, $navi->path());
+				break;
 			case "CaT\Filter\Filters\Singleselect":
 				return $this->gui_factory->singleselect_gui($filter, $navi->path());
 				break;
@@ -256,6 +259,26 @@ class DisplayFilter {
 					array_push($ret, $value);
 					break;
 				case "CaT\Filter\Filters\Multiselect":
+					$value = $this->unserializeValue($value);
+					// TODO: this seams to be fishy... what about other filters besides
+					// multiselects?
+					if ($value === null) {
+						$value = array();
+					}
+					if ($filter->input_type()->repr() == "[int]") {
+						$value = array_map(function($v) {
+							if (is_numeric($v)) {
+								return (int)$v;
+							}
+							else {
+								return $v;
+							}
+						}, $value);
+					}
+					array_push($ret, $value);
+					break;
+				case "CaT\Filter\Filters\MultiselectSearch":
+					// TODO: Dedup with MultiselectSearch
 					$value = $this->unserializeValue($value);
 					// TODO: this seams to be fishy... what about other filters besides
 					// multiselects?
