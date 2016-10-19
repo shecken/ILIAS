@@ -273,4 +273,15 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 			$this->target_user_ids = array($viewer_id);
 		}
 	}
+
+	public static function getAccessibleExambioInCrsForUserRefIds(gevCourseUtils $crs,$usr_id, $access, $db) {
+		$ex_bios = $crs->objsInCourseOfType('xexb');
+		$return = array();
+		foreach ($ex_bios as $ex_bio) {
+			if($access->checkAccessOfUser($usr_id ,'read', '', $ex_bio['ref_id']) && ilObjReportExamBio::readReportProperties($ex_bio['obj_id'],$db)['for_trainer']) {
+				$return[] = $ex_bio['ref_id'];
+			}
+		}
+		return $return;
+	}
 }
