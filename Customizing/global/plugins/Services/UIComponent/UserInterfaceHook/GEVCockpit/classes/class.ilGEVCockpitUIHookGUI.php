@@ -4,16 +4,18 @@
 
 require_once("./Services/UIComponent/classes/class.ilUIHookPluginGUI.php");
 require_once("./Services/GEV/CourseSearch/classes/class.gevCourseSearch.php");
-
+require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
 /**
  * Creates a submenu for the Cockpit of the GEV.
  */
 class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 	public function __construct() {
-		global $ilUser, $lng, $ilCtrl;
+		global $ilUser, $lng, $ilCtrl, $ilDB, $ilAccess;
 		$this->gLng = $lng;
 		$this->gUser = $ilUser;
 		$this->gCtrl = $ilCtrl;
+		$this->gIldb = $ilDB;
+		$this->gAccess = $ilAccess;
 	}
 
 	/**
@@ -137,9 +139,11 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 				= array($this->gLng->txt("gev_edu_bio"), $user_utils->getEduBioLink());
 		}
 
-		if ($user_utils && ($exam_bio_link = $user_utils->getExamBioLink())) {
-			$items["exambio"]
-				= array($this->gLng->txt("gev_exam_bio"), $exam_bio_link);
+		if ($user_utils && ($ref_id = ilObjReportExamBioGUI::examBiographyReferenceForUsers($this->gIldb))) {
+			if($this->gAccess->checkAccessOfUser($this->gUser->getId,'read','',$ref_id) || $user_utils->isAdmin()) {
+				$items["exambio"]
+					= array($this->gLng->txt("gev_exam_bio"), ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id,$this->gCtrl));
+			}
 		}
 
 		$items["profile"]
