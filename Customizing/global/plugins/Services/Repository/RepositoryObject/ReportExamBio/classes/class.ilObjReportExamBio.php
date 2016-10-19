@@ -6,7 +6,39 @@ require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 
 class ilObjReportExamBio extends ilObjReportBase2 {
 
-	protected $forwarded = false;
+	private $forwarded = false;
+	private $taget_user = null;
+	private $target_course = null;
+
+	const TRAINING = 'training';
+	const TRAINING_USER = 'training_user';
+	const USER = 'user';
+
+	public function title() {
+		switch($this->mode) {
+			case self::USER:
+				return $this->plugin->txt('my_exam_bio');
+			case self::TRAINING:
+				return sprintf($this->plugin->txt('participants_exam_bio'),$this->target_course->getTitle());
+			case self::TRAINING_USER:
+				return sprintf($this->plugin->txt('others_exam_bio'),$this->target_user->getLastname(),$this->target_user->getFirstname());
+			default:
+				return parent::title();
+		}
+	}
+
+	public function description() {
+		switch($this->mode) {
+			case self::USER:
+				return $this->plugin->txt('my_exam_bio_desc');
+			case self::TRAINING:
+				return sprintf($this->plugin->txt('participants_exam_bio_desc'));
+			case self::TRAINING_USER;
+				return sprintf($this->plugin->txt('others_exam_bio_desc'));
+			default:
+				return parent::description();
+		}
+	}
 
 	private static function getNonvisualSettings($s_f) {
 		return $s_f->reportSettings('rep_robj_rexbio')
@@ -259,17 +291,20 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 				throw new ilException('may not view requested parameters');
 			}
 			if($target_user_id === null) {
-
-				$this->target_user_ids = gevCourseUtils::getInstanceByObj(new ilObjCourse($target_training_id,false))->getParticipants();
-
+				$this->mode = self::TRAINING;
+				$this->target_course = gevCourseUtils::getInstanceByObj(new ilObjCourse($target_training_id,false));
+				$this->target_user_ids = $this->target_course->getParticipants();
 			} elseif($target_user_id !== null) {
 				if(!in_array($target_user_id, gevCourseUtils::getInstanceByObj(new ilObjCourse($target_training_id,false))->getParticipants())) {
 					throw new ilException('may not view requested parameters');
 				}
+				$this->mode = self::TRAINING_USER;
+				$this->target_user = gevUserUtils::getInstance($target_user_id);
 				$this->target_user_ids = array($target_user_id);
 				$this->forwarded = true;
 			}
 		} else {
+			$this->mode = self::USER;
 			// own report, screw the target_user_id parameter
 			$this->target_user_ids = array($viewer_id);
 		}
