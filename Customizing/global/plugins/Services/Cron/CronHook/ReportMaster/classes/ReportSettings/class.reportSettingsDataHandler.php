@@ -104,14 +104,15 @@ class reportSettingsDataHandler {
 	 *	@return	string|int[string]
 	 */
 	public function query(array $properties,reportSettings $settings) {
+		if(count(array_intersect($properties,$settings->settingIds())) === 0) {
+			throw new reportSettingsException('no known settings in query parameters');
+		}
 		$table = $settings->table();
 		$sql = 'SELECT * FROM '.$table.' WHERE '.PHP_EOL;
-		foreach ($properties as $key => $value) {
-			$setting = $settings->setting($key);
-			if($setting === null) {
-				throw new reportSettingsException("unknown setting type".get_class($setting));
+		foreach ($settings->settingIds() as $key) {
+			if(isset($properties[$key])) {
+				$sql.= '	'.$key.' = '.$this->quote($properties[$key],$settings->setting($key)).PHP_EOL;
 			}
-			$sql.= '	'.$key.' = '.$this->quote($value,$setting).PHP_EOL;
 		}
 		$res = $this->db->query($sql);
 		$return = array();
