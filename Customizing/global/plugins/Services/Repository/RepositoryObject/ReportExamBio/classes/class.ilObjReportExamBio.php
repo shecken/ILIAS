@@ -8,7 +8,20 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 
 	protected $forwarded = false;
 
+	private static function getNonvisualSettings($s_f) {
+		return $s_f->reportSettings('rep_robj_rexbio')
+				->addSetting($s_f->settingBool('for_trainer',''));
+	}
 
+	public static function queryReports(array $obj_properties, $db) {
+		$s_f = new settingFactory($db);
+		return $s_f->reportSettingsDataHandler()->query($obj_properties,self::getNonvisualSettings($s_f));
+	}
+
+	public static function readReportProperties($obj_id, $db) {
+		$s_f = new settingFactory($db);
+		return $s_f->reportSettingsDataHandler()->readObjEntry($obj_id,self::getNonvisualSettings($s_f));
+	}
 
 	protected function createLocalReportSettings() {
 		$this->local_report_settings =
