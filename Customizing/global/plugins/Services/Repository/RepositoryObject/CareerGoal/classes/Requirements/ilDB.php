@@ -138,7 +138,7 @@ class ilDB implements DB {
 		$res = $this->getDB()->query($select);
 
 		if($this->getDB()->numRows($res) == 0) {
-			throw new \InvalidArgumentException("Invalid id '$obj_id' for Requirement-object");
+			return array();
 		}
 
 		while($row = $this->getDB()->fetchAssoc($res)) {
