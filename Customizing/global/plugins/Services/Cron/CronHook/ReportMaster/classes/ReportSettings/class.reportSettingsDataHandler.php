@@ -104,7 +104,7 @@ class reportSettingsDataHandler {
 	 *	@return	string|int[string]
 	 */
 	public function query(array $properties,reportSettings $settings) {
-		if(count(array_intersect($properties,$settings->settingIds())) === 0) {
+		if(count(array_intersect(array_keys($properties),$settings->settingIds())) === 0) {
 			throw new reportSettingsException('no known settings in query parameters');
 		}
 		$table = $settings->table();
@@ -116,7 +116,7 @@ class reportSettingsDataHandler {
 		}
 		$res = $this->db->query($sql);
 		$return = array();
-		while($rec = $ilDB->fetchAssoc($res)) {
+		while($rec = $this->db->fetchAssoc($res)) {
 			$return[] = $rec;
 		}
 		return $return;
