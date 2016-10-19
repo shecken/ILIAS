@@ -261,7 +261,7 @@ class FilterFactory {
 		$f = $this->predicate_factory();
 
 		return function($text) use ($field, $f) {
-			return $f->field($field)->LIKE()->str($text);
+			return $f->field($field)->LIKE($this->predicate_factory->str($text));
 		};
 	}
 
@@ -274,7 +274,7 @@ class FilterFactory {
 	 */
 	public function text_like_field(Predicates\Field $field) {
 		return function($text) use ($field) {
-			return $field->LIKE()->str($text);
+			return $field->LIKE($this->predicate_factory->str($text));
 		};
 	}
 }

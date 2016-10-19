@@ -241,7 +241,7 @@ class PredicateFactory {
 		return new Predicates\PredicateIsNull($this, $val);
 	}
 
-	public function LIKE(ValueLike $left, ValueLike $right) {
-		return new Predicate\PredicateLike($this,$left,$right);
+	public function LIKE(Predicates\ValueLike $left, Predicates\ValueLike $right) {
+		return new Predicates\PredicateLike($this,$left,$right);
 	}
 }

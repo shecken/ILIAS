@@ -93,6 +93,9 @@ class SqlPredicateInterpreter {
 			if($p instanceof  \CaT\Filter\Predicates\PredicateLt) {
 				return $left_quote.' < '.$right_quote.' ';
 			}
+			if($p instanceof \CaT\Filter\Predicates\PredicateLike) {
+				return $left_quote.' LIKE '.$right_quote;
+			}
 		}
 		throw new \InvalidArgumentException("SqlPredicateInterpreter::interpret : possibly unknown prediacte type");
 	}
