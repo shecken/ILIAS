@@ -34,7 +34,7 @@ class gevCourseUtils {
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gTree = $tree;
-		
+
 		$this->gLng->loadLanguageModule("crs");
 		
 		$this->crs_id = $a_crs_id;
@@ -1570,15 +1570,6 @@ class gevCourseUtils {
 		}
 	}
 	
-	public function getExamBioLink() {
-		return self::getExamBioLinkFor($this->crs_id);
-	}
-
-	static public function getExamBioLinkFor($crs_id) {
-		require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
-		return ilObjReportExamBioGUI::examBiographyLinkForTraining($crs_id);
-	}
-
 	// Participants, Trainers and other members
 	
 	public function getMembership() {
@@ -3746,7 +3737,7 @@ class gevCourseUtils {
 		return $ret;
 	}
 
-	public function objsInCourseDataOfType($type = '') {
+	public function objsInCourseOfType($type = '') {
 		return $this->gTree->getSubTree(
 			$this->gTree->getNodeData($this->getRefId()),true, $type);
 	}
