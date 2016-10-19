@@ -244,15 +244,6 @@ class gevUserUtils {
 		return ilObjReportEduBio::getEduBioLinkFor($a_target_user_id);
 	}
 
-	public function getExamBioLink() {
-		return self::getExamBioLinkFor($this->user_id);
-	}
-
-	static public function getExamBioLinkFor($a_target_user_id) {
-		require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
-		return ilObjReportExamBioGUI::examBiographyLinkForUser($a_target_user_id);
-	}
-
 	public function filter_for_online_courses($ar){
 		/*
 		check, if course exists and is online;
