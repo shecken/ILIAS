@@ -31,11 +31,12 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 	public function __construct($a_user_id, $a_parent_obj, $a_parent_cmd="", $a_template_context="") {
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $ilCtrl, $lng, $ilAccess;
+		global $ilCtrl, $lng, $ilAccess, $ilDB;
 
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gAccess = $ilAccess;
+		$this->gIldb = $ilDB;
 
 		$user_util = gevUserUtils::getInstance($a_user_id);
 		$this->user_id = $a_user_id;
@@ -246,8 +247,14 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 			$items[] = array("title" => $this->gLng->txt("gev_virtual_class"), "link" => $crs_utils->getVirtualClassLink(), "image" => $this->virtualclass_img, "frame"=>"_blank");
 		}
 
-		if($crs_utils->hasTrainer($this->user_id)){
-			$items[] = array("title" => $this->gLng->txt("gev_exam_bio"), "link" => $crs_utils->getExamBioLink());
+		$ex_bios = $crs_utils->objsInCourseDataOfType('xexb');
+		if(count($ex_bios) > 0) {
+			$ex_bio = current($ex_bios);
+			require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
+			if($this->gAccess->checkAccess('read', '', $ex_bio['ref_id']) && ilObjReportExamBio::readReportProperties($ex_bio['obj_id'],$this->gIldb)['for_trainer']) {
+				require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
+				$items[] = array('title' => $this->gLng->txt('gev_members_exam_bio'), 'link' => ilObjReportExamBioGUI::examBiographyLinkByRefId($ex_bio['ref_id']));
+			}
 		}
 
 		if($crs_utils->userHasPermissionTo($this->user_id, gevSettings::VIEW_MAILING)){
@@ -269,7 +276,6 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		if ($crs_utils->userCanCancelCourse($this->user_id)){
 			$items[] = array("title" => $this->gLng->txt("gev_cancel_training"), "link" => $cancel_training_link, "image" => $this->cancel_training_img, "frame"=>"");
 		}
-
 		return $items;
 	}
 }
