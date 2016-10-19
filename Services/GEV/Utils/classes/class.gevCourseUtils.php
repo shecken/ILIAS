@@ -3745,4 +3745,9 @@ class gevCourseUtils {
 
 		return $ret;
 	}
+
+	public function objsInCourseDataOfType($type = '') {
+		return $this->gTree->getSubTree(
+			$this->gTree->getNodeData($this->getRefId()),true, $type);
+	}
 }
