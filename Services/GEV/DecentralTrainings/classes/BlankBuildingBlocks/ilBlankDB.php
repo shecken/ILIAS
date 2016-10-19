@@ -64,50 +64,21 @@ class ilBlankDB {
 	}
 
 	/**
-	 * Get all blank block informations for request id
+	 * Get blank block informations for crs id and course building block
 	 *
 	 * @param int 	$bb_id 			id of course building block
-	 * @param int 	$request_id 	id of the open request
+	 * @param int 	$crs_id 		ref id of the crs
 	 *
-	 * @return BlankoBuildingBlock[]
+	 * @return BlankoBuildingBlock | null
 	 */
-	public function getBlankBuldingBlockForRequest($bb_id, $request_id) {
-		$query = $this->getSelectStatement();
-		$query .= " WHERE bb_id = ".$this->getDB()->quote($bb_id, "integer")."\n"
-				 ."     AND request_id = ".$this->getDB()->quote($request_id, "integer")."\n";
-
-		$res = $this->getDB()->query($query);
-
-		$ret = array();
-
-		while($row = $this->getDB()->fetchAssoc($res)) {
-			$ret = new BlankBuildingBlock($row["bb_id"]
-					, $row["crs_id"]
-					, $row["request_id"]
-					, $row["content"]
-					, $row["target"]
-				);
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * Get all blank block informations for crs id
-	 *
-	 * @param int 	$bb_id 			id of course building block
-	 * @param int 	$crs_id 	ref id of the crs
-	 *
-	 * @return BlankoBuildingBlock[]
-	 */
-	public function getBlankBuldingBlockForCourse($bb_id, $crs_id) {
+	public function getBlankBuldingBlockForCourseBB($bb_id, $crs_id) {
 		$query = $this->getSelectStatement();
 		$query .= " WHERE bb_id = ".$this->getDB()->quote($bb_id, "integer")."\n"
 				 ."     AND crs_id = ".$this->getDB()->quote($crs_id, "integer")."\n";
 
 		$res = $this->getDB()->query($query);
 
-		$ret = array();
+		$ret = null;
 
 		while($row = $this->getDB()->fetchAssoc($res)) {
 			$ret = new BlankBuildingBlock($row["bb_id"]

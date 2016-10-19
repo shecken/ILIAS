@@ -221,7 +221,7 @@ class gevDecentralTrainingCreateSchedulePDF
 		foreach ($this->blocks as $key => $value) {
 			$y_value = $this->pdf->GetY() + $this->crsBlockSpaceTopAdd;
 			$base = $value->getBuildingBlock();
-			$blank_building_block = !empty($value->getBlankBuildingBlockInfo());
+			$blank_building_block = $value->getBlankBuildingBlockInfo();
 			$max_height = $this->calcMaxRowHeight($base->getTitle(),$base->getContent(), $base->getTarget(), $coloumn_width);
 
 			if(($y_value + $max_height * $this->crsBlockSpaceTopAdd) > $this->maxPageHeight) {

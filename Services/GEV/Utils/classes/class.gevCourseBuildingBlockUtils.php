@@ -32,7 +32,6 @@ class gevCourseBuildingBlockUtils {
 	protected function __construct($a_course_building_block_id) {
 		global $ilDB, $ilUser;
 
-		$this->blank_db = new ilBlankDB();
 		$this->course_building_block_id = $a_course_building_block_id;
 		$this->db = $ilDB;
 		$this->ilUser = $ilUser;
@@ -229,6 +228,8 @@ class gevCourseBuildingBlockUtils {
 	}
 
 	static public function getAllCourseBuildingBlocks($a_crs_ref_id, $a_request_id = null) {
+		$blank_db = new ilBlankDB();
+
 		return array_map(function($row) use ($blank_db) {
 			$obj = new gevCourseBuildingBlockUtils($row["id"]);
 			$obj->setCrsId($row["crs_id"]);
@@ -238,12 +239,12 @@ class gevCourseBuildingBlockUtils {
 			$obj->setBuildingBlock($row["bb_id"]);
 			$obj->setCreditPoints($row["credit_points"]);
 			$obj->setPracticeSession($row["practice_session"]);
-			
+
 			if((bool)$row["is_blank"]) {
-				$blank_info = $this->blank_db->getBlankBuldingBlockForCourse($row["id"], $row["crs_id"]);
+				$blank_info = $blank_db->getBlankBuldingBlockForCourseBB($row["id"], $row["crs_id"]);
 				$obj->setBlankBuildingBlockInfo($blank_info);
 			}
-			
+
 			return $obj;
 		}, self::getAllCourseBuildingBlocksRaw($a_crs_ref_id, $a_request_id));
 	}
