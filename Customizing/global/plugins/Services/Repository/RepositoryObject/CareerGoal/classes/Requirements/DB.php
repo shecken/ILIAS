@@ -43,7 +43,7 @@ interface DB {
 	 *
 	 * @param 	int 			$obj_id
 	 *
-	 * @return true|false
+	 * @return	bool
 	 */
 	public function delete($obj_id);
 
