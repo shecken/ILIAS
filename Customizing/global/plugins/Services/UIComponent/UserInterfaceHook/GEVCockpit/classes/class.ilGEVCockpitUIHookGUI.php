@@ -7,6 +7,8 @@ require_once("./Services/GEV/CourseSearch/classes/class.gevCourseSearch.php");
 require_once("./Services/GEV/Utils/classes/class.gevMyTrainingsAdmin.php");
 require_once("./Services/GEV/Utils/classes/class.gevSettings.php");
 
+use \CaT\Plugins\TalentAssessment;
+
 /**
  * Creates a submenu for the Cockpit of the GEV.
  */
@@ -15,10 +17,11 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 	const ASSESSMENT_CHECK_INTERVAL = "300";
 
 	public function __construct() {
-		global $ilUser, $lng, $ilCtrl;
+		global $ilUser, $lng, $ilCtrl, $rbacreview;
 		$this->gLng = $lng;
 		$this->gUser = $ilUser;
 		$this->gCtrl = $ilCtrl;
+		$this->gRbacreview = $rbacreview;
 	}
 
 	/**
@@ -184,7 +187,18 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			if($has_assessments === null
 					||   $last_assessments_calculation + self::ASSESSMENT_CHECK_INTERVAL < time())
 			{
-				$has_admin_trainings = count($ta_plugin->getObservationsDB()->getAssessmentsData(array())) > 0;
+				$assessments = $ta_plugin->getObservationsDB()->getAssessmentsData(array());
+
+				foreach ($assessments as $key => $assessment) {
+					$role_id = $this->gRbacreview->roleExists(TalentAssessment\ilActions::OBSERVATOR_ROLE_NAME."_".$assessment["obj_id"]);
+					$usr_ids = $this->gRbacreview->assignedUsers($role_id);
+
+					if(!in_array($this->gUser->getId(), $usr_ids)) {
+						unset($assessments[$key]);
+					}
+				}
+
+				$has_assessments = count($assessments) > 0;
 
 				ilSession::set("gev_has_assessments", $has_assessments);
 				ilSession::set("gev_has_assessments_calculation_ts", time());
