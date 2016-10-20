@@ -3737,6 +3737,14 @@ class gevCourseUtils {
 		return $ret;
 	}
 
+	/**
+	 * Locate all objects contained by the course of a given type.
+	 * Note, that the course itself will also be found, as well as
+	 * well as the rolefolder.
+	 *
+	 * @param	string	$type
+	 * @return	string[][]
+	 */
 	public function objsInCourseOfType($type = '') {
 		return $this->gTree->getSubTree(
 			$this->gTree->getNodeData($this->getRefId()),true, $type);
