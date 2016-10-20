@@ -9,11 +9,13 @@
 * @version	$Id$
 */
 require_once("Services/GEV/Utils/classes/class.gevBuildingBlockUtils.php");
+require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
 
 class gevCourseBuildingBlockUtils {
 	static protected $instances = array();
 	const TABLE_NAME = "dct_crs_building_block";
 	const TABLE_NAME_JOIN1 = "dct_building_block";
+	const TABLE_NAME_LEFT_JOIN1 = "dct_blank_bb_infos";
 	const DURATION_PER_POINT = 45;
 	const MAX_DURATION_MINUTES = 720;
 
@@ -25,10 +27,11 @@ class gevCourseBuildingBlockUtils {
 	protected $crs_request_id = null;
 	protected $credit_points = 0;
 	protected $practice_session = 0;
+	protected $blank_info = null;
 
 	protected function __construct($a_course_building_block_id) {
 		global $ilDB, $ilUser;
-				
+
 		$this->course_building_block_id = $a_course_building_block_id;
 		$this->db = $ilDB;
 		$this->ilUser = $ilUser;
@@ -115,6 +118,14 @@ class gevCourseBuildingBlockUtils {
 		return $ret;
 	}
 
+	public function setBlankBuildingBlockInfo($blank_building_block_info) {
+		$this->blank_building_block_info = $blank_building_block_info;
+	}
+
+	public function getBlankBuildingBlockInfo() {
+		return $this->blank_building_block_info;
+	}
+
 	public function loadData() {
 		$sql = "SELECT crs_id, bb_id, start_time, end_time, credit_points, practice_session\n"
 			  ."  FROM ".self::TABLE_NAME." WHERE id = ".$this->db->quote($this->getId(), "integer");
@@ -189,10 +200,13 @@ class gevCourseBuildingBlockUtils {
 
 		$sql = "SELECT\n"
 			  ."    base.id, base.crs_id, base.bb_id, base.start_time, base.end_time, base.credit_points, base.practice_session,\n"
-			  ."    join1.title, join1.target, join1.content, base.crs_request_id, base.bb_id, join1.dbv_topic\n"
-			  ." FROM ".self::TABLE_NAME." as base\n"
-			  ." JOIN ".self::TABLE_NAME_JOIN1." as join1\n"
-			  ."   ON  base.bb_id = join1.obj_id\n";
+			  ."    join1.title, join1.target, join1.content, base.crs_request_id, base.bb_id, join1.dbv_topic, join1.is_blank,\n"
+			  ."    ljoin1.content AS blank_content, ljoin1.target AS blank_target\n"
+			  ." FROM ".self::TABLE_NAME." AS base\n"
+			  ." JOIN ".self::TABLE_NAME_JOIN1." AS join1\n"
+			  ."   ON base.bb_id = join1.obj_id\n"
+			  ." LEFT JOIN ".self::TABLE_NAME_LEFT_JOIN1." AS ljoin1\n"
+			  ."   ON base.id = ljoin1.bb_id\n";
 		
 		if($a_crs_ref_id !== null) {
 			$sql .= " WHERE base.crs_id = ".$ilDB->quote($a_crs_ref_id, "integer")."\n";
@@ -201,7 +215,7 @@ class gevCourseBuildingBlockUtils {
 				$sql .= " WHERE base.crs_request_id = ".$ilDB->db->quote($a_request_id, "integer")."\n";
 			}
 		}
-	
+
 		$sql .= " ORDER BY base.start_time";
 
 		$ret = array();
@@ -209,12 +223,14 @@ class gevCourseBuildingBlockUtils {
 		while($row = $ilDB->fetchAssoc($res)) {
 			$ret[] = $row;
 		}
-
+		
 		return $ret;
 	}
-	
+
 	static public function getAllCourseBuildingBlocks($a_crs_ref_id, $a_request_id = null) {
-		return array_map(function($row) {
+		$blank_db = new ilBlankDB();
+
+		return array_map(function($row) use ($blank_db) {
 			$obj = new gevCourseBuildingBlockUtils($row["id"]);
 			$obj->setCrsId($row["crs_id"]);
 			$obj->setStartTime($row["start_time"]);
@@ -223,6 +239,12 @@ class gevCourseBuildingBlockUtils {
 			$obj->setBuildingBlock($row["bb_id"]);
 			$obj->setCreditPoints($row["credit_points"]);
 			$obj->setPracticeSession($row["practice_session"]);
+
+			if((bool)$row["is_blank"]) {
+				$blank_info = $blank_db->getBlankBuldingBlockForCourseBB($row["id"], $row["crs_id"]);
+				$obj->setBlankBuildingBlockInfo($blank_info);
+			}
+
 			return $obj;
 		}, self::getAllCourseBuildingBlocksRaw($a_crs_ref_id, $a_request_id));
 	}

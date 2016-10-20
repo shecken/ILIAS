@@ -5219,3 +5219,23 @@ $ilDB->addIndex('hist_userorgu',array('hist_historic','action'),'oha');
 	}
 	$ilCtrlStructureReader->getStructure();
 ?>
+
+<#223>
+<?php
+$field = array('type' 		=> 'integer',
+			'length' 	=> 4,
+			'notnull' 	=> false,
+			'default' 	=> 0
+			);
+
+if(!$ilDB->tableColumnExists("dct_building_block", "is_blank")) {
+	$ilDB->addTableColumn("dct_building_block", "is_blank", $field);
+}
+?>
+
+<#224>
+<?php
+	require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
+	$blank_db = new ilBlankDB();
+	$blank_db->install();
+?>
