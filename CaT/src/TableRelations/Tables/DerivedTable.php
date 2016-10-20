@@ -54,6 +54,9 @@ class DerivedTable implements AbstractTable, Graphs\AbstractNode {
 		return $this->fields;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function field($id) {
 		return $this->fields[$id];
 	}
