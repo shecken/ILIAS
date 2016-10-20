@@ -86,8 +86,8 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 		$test_title = $this->space->table('recent_pass_data')->field('test_title');
 		$passed = $this->space->table('recent_pass_data')->field('test_passed');
 		$testrun_finished_ts = $this->space->table('recent_pass_data')->field('testrun_finished_ts');
-		$avg = $this->tf->avgSql('average', $this->tf->quotSql('quot',$acheived_points,$max_points));
-		$max = $this->tf->maxSql('best', $this->tf->quotSql('quot',$acheived_points,$max_points));
+		$avg = $this->tf->avg('average', $this->tf->quot('quot',$acheived_points,$max_points));
+		$max = $this->tf->max('best', $this->tf->quot('quot',$acheived_points,$max_points));
 
 		$table->defineFieldColumn($this->plugin->txt('test_title'),'test_title',
 					array('test_title' => $test_title))
@@ -98,7 +98,7 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 			->defineFieldColumn($this->plugin->txt('max'),'max',array('max' => $max))
 			->defineFieldColumn($this->plugin->txt('average'),'average',array('average' => $avg))
 			->defineFieldColumn($this->plugin->txt('number_of_runs'),'runs',
-					array('runs' => $this->tf->countAllSql('number_of_runs')),true);
+					array('runs' => $this->tf->countAll('number_of_runs')),true);
 
 
 		$this->space = $table->prepareTableAndSetRelevantFields($this->space);
@@ -186,7 +186,7 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 				->setRootTable($aux)
 				->request($aux->field('usr_id'))
 				->request($aux->field('obj_id'))
-				->request($this->tf->maxSql('recent_pass',$aux->field('pass')))
+				->request($this->tf->max('recent_pass',$aux->field('pass')))
 				->groupBy($aux->field('usr_id'))
 				->groupBy($aux->field('obj_id')),'recent_pass_case');
 
