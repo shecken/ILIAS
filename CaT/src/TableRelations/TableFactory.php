@@ -221,8 +221,8 @@ class TableFactory {
 	 * @param	AbstractField
 	 * @return	AbsractDerivedField
 	 */
-	public function diff($name, Filters\Predicates\Field $minuend, Filters\Predicates\Field $subtrahend) {
-		return new Tables\DerivedFields\Diff($this->predicate_factory, $name, $minuend, $subtrahend);
+	public function minus($name, Filters\Predicates\Field $minuend, Filters\Predicates\Field $subtrahend) {
+		return new Tables\DerivedFields\Minus($this->predicate_factory, $name, $minuend, $subtrahend);
 	}
 
 	/**
