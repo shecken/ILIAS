@@ -1,17 +1,12 @@
 <?php
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseListGUI.php';
 /**
-* ListGUI implementation for Example object plugin. This one
-* handles the presentation in container items (categories, courses, ...)
-* together with the corresponfing ...Access class.
-*
-* PLEASE do not create instances of larger classes here. Use the
-* ...Access class to get DB data and keep it small.
-*/
+ * @inheritdoc
+ */
 class ilObjReportExamBioListGUI extends ilObjReportBaseListGUI {
-/**
-* Init type
-*/
+	/**
+	 * Init type
+	 */
 	public function initType() {
 		$this->setType("xexb");
 		parent::initType();
