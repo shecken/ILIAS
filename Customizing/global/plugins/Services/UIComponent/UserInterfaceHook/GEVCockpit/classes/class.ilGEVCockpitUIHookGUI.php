@@ -93,6 +93,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			if ($_GET["cmdClass"] == "gevmytrainingsadmingui") {
 				return "training_admin";
 			}
+			if ($_GET["cmd"] == "toMyAssessments") {
+				return "my_assessments";
+			}
 		}
 		if ($this->isSearch()) {
 			$this->target_user_id = $_POST["target_user_id"]
