@@ -104,6 +104,12 @@ class TableSpace {
 		return $this;
 	}
 
+	/**
+	 * Get the table corresponding to $id, if exists in space
+	 *
+	 * @param	string	$id
+	 * @return	AbstractTable
+	 */
 	public function table($id) {
 		return $this->graph->getNodeById($id);
 	}
