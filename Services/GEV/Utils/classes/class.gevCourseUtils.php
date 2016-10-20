@@ -3739,6 +3739,7 @@ class gevCourseUtils {
 
 	/**
 	 * Locate all objects contained by the course of a given type.
+	 * And get corresponding metadata, like obj_id, ref_id, lft, rgt...
 	 * Note, that the course itself will also be found, as well as
 	 * well as the rolefolder.
 	 *
