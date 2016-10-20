@@ -18,6 +18,7 @@ $(document).ready( function () {
 			tep_event.height(200);
 
 		tep_event.css("z-index", 100);
+		tep_event.css("overflow", "visible");
 
 		target.parent().children(".il_tep_expand").css("visibility", "hidden");
 		target.parent().children(".il_tep_fold").css("visibility", "visible");
@@ -36,6 +37,7 @@ $(document).ready( function () {
 		tep_event.height(tep_event.attr("originalHeight"));
 
 		tep_event.css("z-index", 1);
+		tep_event.css("overflow", "hidden");
 
 		target.parent().children(".il_tep_expand").css("visibility", "visible");
 		target.parent().children(".il_tep_fold").css("visibility", "hidden");
