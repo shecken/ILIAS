@@ -1,6 +1,7 @@
 <?php
 namespace CaT\TableRelations;
 use CaT\Filter as Filter;
+use CaT\TableRelations\Tables\DerivedFields as Derived;
 
 /**
  * Creates a sql-query or data from a query object.
@@ -39,15 +40,41 @@ class SqlQueryInterpreter {
 
 	protected function interpretField(Filter\Predicates\Field $field) {
 			if($field instanceof Tables\TableField) {
-				return $field->name();
+				return ' '.$field->name();
 			} elseif($field instanceof Tables\DerivedField)  {
 				//call self recursively as long derived field derive from derived fields...
-				$sub_fields = array_map(array($this, 'interpretField'), $field->derivedFrom());
-				return call_user_func_array($field->postprocess(), $sub_fields);
+				return $this->interpreteDerivedField($field);
 			} else {
 				throw new TableRelationsException("Unknown field ".$field->name());
 			}
+	}
 
+	protected function interpreteDerivedField(Tables\DerivedField $field) {
+		if($field instanceof Derived\Sum ) {
+			return ' SUM('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Count ) {
+			return ' COUNT(*)';
+		} elseif( $field instanceof Derived\GroupConcat ) {
+			return ' GROUP_CONCAT('.$this->interpretField($field->argument()).' SEPARATOR \''.$field->separator().'\')';
+		} elseif( $field instanceof Derived\FromUnixtime ) {
+			return ' FROM_UNIXTIME('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Avg ) {
+			return ' AVG('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Max ) {
+			return ' MAX('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Min ) {
+			return ' MIN('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Plus ) {
+			return $this->interpretField($field->left()).' +'.$this->interpretField($field->right());
+		} elseif( $field instanceof Derived\Minus ) {
+			return $this->interpretField($field->left()).' -'.$this->interpretField($field->right());
+		} elseif( $field instanceof Derived\Quot ) {
+			return $this->interpretField($field->left()).' /'.$this->interpretField($field->right());
+		} elseif( $field instanceof Derived\Times ) {
+			return $this->interpretField($field->left()).' *'.$this->interpretField($field->right());
+		} else {
+			throw new TableRelationsException("Unknown field type".$field->name());
+		}
 	}
 
 	/**
