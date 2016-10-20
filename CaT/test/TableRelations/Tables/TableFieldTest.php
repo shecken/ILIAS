@@ -24,11 +24,14 @@ class TableFieldTest extends PHPUnit_Framework_TestCase {
 		$aux = $f->plus('sum',$min,$quot);
 		$plus1 = $f->plus('plus1',$fa,$fb);
 		$plus2 = $f->plus('plus2',$plus1,$min);
+		$group_concat = $f->groupConcat('plus2',$plus1, '///' );
+		$this->assertEquals($group_concat->separator(),'///');
 		$this->assertTrue($this->fieldListsEqual(array($quot->left,$quot->right),array($fa,$fb)));
 		$this->assertTrue($this->fieldListsEqual(array($min->argument()),array($fc)));
 		$this->assertTrue($this->fieldListsEqual(array($aux->left(),$aux->right()),array($min,$quot)));
 		$this->assertTrue($this->fieldListsEqual($aux->derivedFromRecursive(),array($fa,$fb,$fc)));
 		$this->assertTrue($this->fieldListsEqual($plus2->derivedFromRecursive(),array($fa,$fb,$fc)));
+		$this->assertFalse($this->fieldListsEqual($plus2->derivedFromRecursive(),array($fa,$fb,$fc,$min)));
 	}
 
 	protected function fieldListsEqual($list1,$list2) {
