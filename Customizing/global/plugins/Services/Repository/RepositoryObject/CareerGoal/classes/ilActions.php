@@ -140,7 +140,7 @@ class ilActions {
 	 * @param int 	$obj_id
 	 */
 	public function deleteRequirement($obj_id) {
-		$this->requirements_db->delete($obj_id);
+		return $this->requirements_db->delete($obj_id);
 	}
 
 	/**
