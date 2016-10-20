@@ -47,16 +47,20 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 	}
 
 	protected function isCockpit() {
+		$base_class = strtolower($_GET["baseClass"]);
+		$cmd_class = strtolower($_GET["cmdClass"]);
+		$cmd = strtolower($_GET["cmd"]);
+
 		return
-			( $_GET["baseClass"] == "gevDesktopGUI" 
-				|| ($_GET["cmdClass"] == "ilobjreportedubiogui"
+			( $base_class == "gevdesktopgui" 
+				|| ($cmd_class == "ilobjreportedubiogui"
 					&& $_GET["target_user_id"] == $this->gUser->getId())
-				|| $_GET["baseClass"] == "ilTEPGUI"
+				|| $base_class == "iltepgui"
 			)
-			&& $_GET["cmdClass"] != "gevcoursesearchgui"
-			&& $_GET["cmdClass"] != "iladminsearchgui"
-			&& $_GET["cmdClass"] != "gevemployeebookingsgui"
-			&& $_GET["cmd"] != "toAllAssessments"
+			&& $cmd_class != "gevcoursesearchgui"
+			&& $cmd_class != "iladminsearchgui"
+			&& $cmd_class != "gevemployeebookingsgui"
+			&& $cmd != "toallassessments"
 			;
 	}
 
