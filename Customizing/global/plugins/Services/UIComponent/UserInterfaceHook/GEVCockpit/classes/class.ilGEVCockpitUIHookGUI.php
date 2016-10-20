@@ -12,6 +12,7 @@ require_once("./Services/GEV/Utils/classes/class.gevSettings.php");
  */
 class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 	const ADMIN_TRAININGS_CHECK_INTERVAL = "300";
+	const ASSESSMENT_CHECK_INTERVAL = "300";
 
 	public function __construct() {
 		global $ilUser, $lng, $ilCtrl;
@@ -55,9 +56,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			&& $_GET["cmdClass"] != "gevcoursesearchgui"
 			&& $_GET["cmdClass"] != "iladminsearchgui"
 			&& $_GET["cmdClass"] != "gevemployeebookingsgui"
-			&& (
-				$_GET["cmd"] != "toMyAssessments"
-				&& $_GET["cmd"] != "toAllAssessments")
+			&& $_GET["cmd"] != "toAllAssessments"
 			;
 	}
 
@@ -150,6 +149,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 				= array($this->gLng->txt("gev_mytrainingsap_title"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAp");
 		}
 
+		// TODO: The next time anybody comes here, this RBAC caching stuff in the session should be
+		// abstracted.
+
 		$has_admin_trainings = ilSession::get("gev_has_admin_trainings");
 		$last_admin_trainings_calculation = ilSession::get("gev_has_admin_trainings_calculation_ts");
 
@@ -172,9 +174,24 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
 
 		if($ta_plugin->active) {
-			$items["my_assessments"]
-				= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
+			$has_assessments = ilSession::get("gev_has_assessments");
+			$last_assessments_calculation = ilSession::get("gev_has_assessments_calculation_ts");
+
+			if($has_assessments === null
+					||   $last_assessments_calculation + self::ASSESSMENT_CHECK_INTERVAL < time())
+			{
+				$has_admin_trainings = count($ta_plugin->getObservationsDB()->getAssessmentsData(array())) > 0;
+
+				ilSession::set("gev_has_assessments", $has_assessments);
+				ilSession::set("gev_has_assessments_calculation_ts", time());
+			}
+
+			if($has_assessments) {
+				$items["my_assessments"]
+					= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
+			}
 		}
+
 		return $items;
 	}
 
