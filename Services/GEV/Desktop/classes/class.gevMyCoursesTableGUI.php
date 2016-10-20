@@ -26,7 +26,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		global $ilCtrl, $lng;
 
 		$this->gLng = $lng;
-		$this->gCtrl = $ilCtrl;
 
 		$user_util = gevUserUtils::getInstance($a_user_id);
 
