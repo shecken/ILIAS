@@ -42,6 +42,8 @@ interface DB {
 	 * delete requirement for $obj_id
 	 *
 	 * @param 	int 			$obj_id
+	 *
+	 * @return	bool
 	 */
 	public function delete($obj_id);
 
