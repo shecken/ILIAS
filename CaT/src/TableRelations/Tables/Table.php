@@ -88,14 +88,16 @@ class Table implements AbstractTable, Graphs\AbstractNode {
 	}
 
 	/**
-	 * @inheritdoc
+	 * which subgraph does this table belong to?
 	 */
 	public function subgraph() {
 		return $this->subgraph;
 	}
 
 	/**
-	 * @inheritdoc
+	 * set the subgraph corresponding to which this table belongs.
+	 *
+	 * @param	sting|int	$subgraph
 	 */
 	public function setSubgraph($subgraph) {
 		$this->subgraph = $subgraph;
