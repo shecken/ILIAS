@@ -93,7 +93,10 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 		$this->gTpl->setTitle(null);
 		if(!$this->object->getWBD()->userTPStatusOK() &&
 			!$this->object->getWBD()->wbdRegistrationIsPending()) {
-			ilUtil::sendFailure($this->plugin->txt("wbd_role_no_service_warning"));
+			$tpl = new ilTemplate("tpl.wbd_role_no_service_warning.html", true, true, $this->object->plugin->getDirectory());
+			$tpl->setVariable("MESSAGE", $this->plugin->txt("wbd_role_no_service_warning"));
+			$tpl_html = $tpl->get();
+			ilUtil::sendFailure($tpl_html);
 		}
 		return 	$this->title->render()
 				.($this->object->deliverFilter() !== null ? $this->object->deliverFilter()->render() : "")
