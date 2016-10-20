@@ -327,7 +327,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php");
 		$entries = array();
 
-		$visible_repo_reports = ilObjReportBase::getVisibleReportsObjectData($this->gUser);
+		$visible_repo_reports = array_merge(ilObjReportBase2::getVisibleReportsObjectData($this->gUser));
 		foreach ($visible_repo_reports as $info) {
 			$entries[] = array(true, ilLink::_getStaticLink($info["ref_id"], $info["type"]),$info["title"]);
 		}
