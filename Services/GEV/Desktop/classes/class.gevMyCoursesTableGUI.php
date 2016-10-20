@@ -170,17 +170,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("TARGET_GROUP", $a_set["target_group"]);
 		$this->tpl->setVariable("GOALS", $a_set["goals"]);
 		$this->tpl->setVariable("CONTENTS", $a_set["content"]);
-
-		if($a_set["type"] == "Selbstlernkurs") {
-			$ref_id = gevObjectUtils::getRefId($a_set["obj_id"]);
-			$this->gCtrl->setParameterByClass("ilobjcoursegui", "ref_id", $ref_id);
-			$crs_link = $this->gCtrl->getLinkTargetByClass("ilobjcoursegui", "view");
-			$this->gCtrl->clearParametersByClass("ilobjcoursegui");
-		} else {
-			$crs_link = gevCourseUtils::getLinkTo($a_set["obj_id"]);
-		}
-
-		$this->tpl->setVariable("CRS_LINK", $crs_link);
+		$this->tpl->setVariable("CRS_LINK", gevCourseUtils::getLinkTo($a_set["obj_id"]));
 
 		$tutors = $crs_utils->getTrainers(true);
 		$tutors = implode("; ", $tutors);
