@@ -80,18 +80,30 @@ class Table implements AbstractTable, Graphs\AbstractNode {
 		return $this->title;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function constraint() {
 		return $this->constraint;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function subgraph() {
 		return $this->subgraph;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function setSubgraph($subgraph) {
 		$this->subgraph = $subgraph;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function field($name) {
 		return $this->fields[$name];
 	}
