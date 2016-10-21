@@ -73,9 +73,9 @@ class ilObjReportExamBioGUI extends ilObjReportBase2GUI {
 	*/
 
 	public static function examBiographyLinkByRefId($ref_id,$ctrl) {
-		$ctrl->setParameterByClass(self::class, 'ref_id', $ref_id);
-		$return = $ctrl->getLinkTargetByClass(array('ilObjPluginDispatchGUI', self::class), '');
-		$ctrl->setParameterByClass(self::class, 'ref_id', null);
+		$ctrl->setParameterByClass("ilObjReportExamBioGUI", 'ref_id', $ref_id);
+		$return = $ctrl->getLinkTargetByClass(array('ilObjPluginDispatchGUI', "ilObjReportExamBioGUI"), '');
+		$ctrl->setParameterByClass("ilObjReportExamBioGUI", 'ref_id', null);
 		return $return;
 	}
 
