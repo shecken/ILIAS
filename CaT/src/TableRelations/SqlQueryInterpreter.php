@@ -34,7 +34,7 @@ class SqlQueryInterpreter {
 		foreach ($query->requested() as $id => $field) {
 			$sql_requested[] = $this->interpretField($field)." AS ".$id;
 		}
-		return implode(", ", $sql_requested);
+		return implode(", ", $sql_requested).PHP_EOL;
 	}
 
 
@@ -85,18 +85,18 @@ class SqlQueryInterpreter {
 	 */
 	public function getSql($query) {
 		return 
-			"SELECT ".$this->requestedFields($query).PHP_EOL
-				.$this->from($query).PHP_EOL
-				.$this->join($query).PHP_EOL
-				.$this->where($query).PHP_EOL
-				.$this->groupBy($query).PHP_EOL
-				.$this->having($query).PHP_EOL
+			"SELECT ".$this->requestedFields($query)
+				.$this->from($query)
+				.$this->join($query)
+				.$this->where($query)
+				.$this->groupBy($query)
+				.$this->having($query)
 				.$this->orderBy($query);
 	}
 
 	protected function orderBy($query) {
 		$fields = $query->orderByFields();
-		return count($fields) > 0 ? ' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode()) : '';
+		return count($fields) > 0 ? ' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode()).PHP_EOL : '';
 	}
 
 	protected function interpretTable(Tables\AbstractTable $table) {
@@ -140,7 +140,7 @@ class SqlQueryInterpreter {
 			}
 			$joins[] = $join." ON ".$this->interpretPredicate($condition_aggregate);
 		}
-		return count($joins) > 0 ? implode(PHP_EOL,$joins) : "";
+		return count($joins) > 0 ? implode(PHP_EOL,$joins).PHP_EOL : "";
 	}
 
 	protected function where(Tables\AbstractQuery $query) {
@@ -151,16 +151,16 @@ class SqlQueryInterpreter {
 			if($root_constraint) {
 				$predicate = $predicate->_AND($root_constraint);
 			}
-			return "WHERE ".$this->interpretPredicate($predicate);
+			return "WHERE ".$this->interpretPredicate($predicate).PHP_EOL;
 		} elseif( $root_constraint) {
-			return "WHERE ".$this->interpretPredicate($root_constraint);
+			return "WHERE ".$this->interpretPredicate($root_constraint).PHP_EOL;
 		}
 		return "";
 	}
 
 	protected function having(Tables\AbstractQuery $query) {
 		if($query->having()) {
-			return " HAVING ".$this->interpretPredicate($query->having());
+			return " HAVING ".$this->interpretPredicate($query->having()).PHP_EOL;
 		}
 		return "";
 	}
@@ -171,6 +171,6 @@ class SqlQueryInterpreter {
 		foreach($query->groupBy() as $field) {
 			$group_by[] = $field->name();
 		}
-		return "GROUP BY ".implode(", ",$group_by);
+		return count($group_by) > 0 ?  "GROUP BY ".implode(", ",$group_by).PHP_EOL : '';
 	}
 };
