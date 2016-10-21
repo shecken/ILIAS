@@ -1,3 +1,6 @@
 [submodule "Customizing/global/plugins/Services/Repository/RepositoryObject/CSN"]
 	path = Customizing/global/plugins/Services/Repository/RepositoryObject/CSN
 	url = https://github.com/conceptsandtraining/CSN.git
+[submodule "Customizing/global/plugins/Services/Repository/RepositoryObject/Jill"]
+	path = Customizing/global/plugins/Services/Repository/RepositoryObject/Jill
+	url = https://github.com/conceptsandtraining/Jill.git
