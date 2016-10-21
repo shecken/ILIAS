@@ -33,12 +33,12 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 		$this->filter = null;
 		$this->order = null;
 
-		$this->s_f = new settingFactory($this->gIldb);
+		$this->sf = new settingFactory($this->gIldb);
 		$this->master_plugin = new ilReportMasterPlugin();
 		$this->settings = array();
 		$this->createLocalReportSettings();
 		$this->createGlobalReportSettings();
-		$this->settings_data_handler = $this->s_f->reportSettingsDataHandler();
+		$this->settings_data_handler = $this->sf->reportSettingsDataHandler();
 
 		$this->validateUrl = new \CaT\Validate\ValidateUrl;
 		$this->gf = new TableRelations\GraphFactory();
@@ -54,11 +54,11 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 	protected function createGlobalReportSettings() {
 
 		$this->global_report_settings =
-			$this->s_f->reportSettings('rep_master_data')
-				->addSetting($this->s_f
+			$this->sf->reportSettings('rep_master_data')
+				->addSetting($this->sf
 								->settingBool('is_online', $this->master_plugin->txt('is_online'))
 								)
-				->addSetting($this->s_f
+				->addSetting($this->sf
 								->settingString('pdf_link', $this->master_plugin->txt('rep_pdf_desc'))
 									->setFromForm(function ($string) {
 										$string = trim($string);
@@ -68,7 +68,7 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 										return self::URL_PREFIX.$string;
 									})
 								)
-				->addSetting($this->s_f
+				->addSetting($this->sf
 								->settingString('video_link', $this->master_plugin->txt('rep_video_desc'))
 									->setFromForm(function ($string) {
 										$string = trim($string);
@@ -78,7 +78,7 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 										return self::URL_PREFIX.$string;
 									})
 								)
-				->addSetting($this->s_f
+				->addSetting($this->sf
 								->settingRichText('tooltip_info', $this->master_plugin->txt('rep_tooltip_desc'))
 								);
 	}

@@ -22,8 +22,8 @@ abstract class ilObjReportBase2GUI extends ilObjectPluginGUI {
 		$this->gLog = $ilLog;
 		$this->gAccess = $ilAccess;
 		$this->gTabs = $ilTabs;
-		$this->s_f = new settingFactory($this->gIldb);
-		$this->settings_form_handler = $this->s_f->reportSettingsFormHandler();
+		$this->sf = new settingFactory($this->gIldb);
+		$this->settings_form_handler = $this->sf->reportSettingsFormHandler();
 		// TODO: this is crapy. The root cause of this problem is, that the
 		// filter should no need to know about it's action. The _rendering_
 		// of the filter needs to know about the action.

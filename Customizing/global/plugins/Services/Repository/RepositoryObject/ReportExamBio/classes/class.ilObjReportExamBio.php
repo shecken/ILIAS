@@ -40,25 +40,25 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 		}
 	}
 
-	private static function getNonvisualSettings($s_f) {
-		return $s_f->reportSettings('rep_robj_rexbio')
-				->addSetting($s_f->settingBool('for_trainer',''));
+	private static function getNonvisualSettings($sf) {
+		return $sf->reportSettings('rep_robj_rexbio')
+				->addSetting($sf->settingBool('for_trainer',''));
 	}
 
 	public static function queryReports(array $obj_properties, $db) {
-		$s_f = new settingFactory($db);
-		return $s_f->reportSettingsDataHandler()->query($obj_properties,self::getNonvisualSettings($s_f));
+		$sf = new settingFactory($db);
+		return $sf->reportSettingsDataHandler()->query($obj_properties,self::getNonvisualSettings($sf));
 	}
 
 	public static function readReportProperties($obj_id, $db) {
-		$s_f = new settingFactory($db);
-		return $s_f->reportSettingsDataHandler()->readObjEntry($obj_id,self::getNonvisualSettings($s_f));
+		$sf = new settingFactory($db);
+		return $sf->reportSettingsDataHandler()->readObjEntry($obj_id,self::getNonvisualSettings($sf));
 	}
 
 	protected function createLocalReportSettings() {
 		$this->local_report_settings =
-			$this->s_f->reportSettings('rep_robj_rexbio')
-				->addSetting($this->s_f
+			$this->sf->reportSettings('rep_robj_rexbio')
+				->addSetting($this->sf
 							->settingBool('for_trainer',$this->plugin->txt('for_trainer')));
 	}
 
