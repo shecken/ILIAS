@@ -156,16 +156,12 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 					$return = array();
 					$args = func_get_args();
 					if(count($args) > 0) {
-						reset($args);
-						$return['last_pass_datetime_predicate'] = current($args);
+						$return['last_pass_datetime_predicate'] = array_shift($args);
 						if($for_trainer_view) {
-							next($args);
-							$return['lastname_predicate'] = current($args);
+							$return['lastname_predicate'] = array_shift($args);
 						}
-						next($args);
-						$return['test_title_predicate'] = current($args);
-						next($args);
-						$return['test_passed_predicate'] = current($args);
+						$return['test_title_predicate'] = array_shift($args);
+						$return['test_passed_predicate'] = array_shift($args);
 					}
 					return $return;
 				}
