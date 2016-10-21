@@ -94,8 +94,9 @@ abstract class ilObjReportBase2GUI extends ilObjectPluginGUI {
 			case "exportexcel":
 				if($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
 					$this->exportExcel();
+					exit();
 				}
-				exit();
+
 			case "showContent":
 				if($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
 					$this->gTabs->activateTab("content");
