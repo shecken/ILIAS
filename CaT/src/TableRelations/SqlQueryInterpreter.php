@@ -96,7 +96,7 @@ class SqlQueryInterpreter {
 
 	protected function orderBy($query) {
 		$fields = $query->orderByFields();
-		return count($fields) > 0 ? ' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode()).PHP_EOL : '';
+		return count($fields) > 0 ? PHP_EOL.' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode()) : '';
 	}
 
 	protected function interpretTable(Tables\AbstractTable $table) {
@@ -110,11 +110,11 @@ class SqlQueryInterpreter {
 	}
 
 	protected function from(Tables\AbstractQuery $query) {
-		return " FROM ".$this->interpretTable($query->rootTable());
+		return PHP_EOL." FROM ".$this->interpretTable($query->rootTable());
 	}
 
 	protected function interpretDerivedTable(Tables\DerivedTable $table) {
-		return "(".$this->getSql($table->space()->query()).") AS ".$table->id();
+		return PHP_EOL."(".$this->getSql($table->space()->query()).") AS ".$table->id();
 	}
 
 	protected function interpretPredicate(Filter\Predicates\Predicate $predicate) {
@@ -140,7 +140,7 @@ class SqlQueryInterpreter {
 			}
 			$joins[] = $join." ON ".$this->interpretPredicate($condition_aggregate);
 		}
-		return count($joins) > 0 ? implode(PHP_EOL,$joins).PHP_EOL : "";
+		return count($joins) > 0 ? PHP_EOL.implode(PHP_EOL,$joins) : "";
 	}
 
 	protected function where(Tables\AbstractQuery $query) {
@@ -151,16 +151,16 @@ class SqlQueryInterpreter {
 			if($root_constraint) {
 				$predicate = $predicate->_AND($root_constraint);
 			}
-			return "WHERE ".$this->interpretPredicate($predicate).PHP_EOL;
+			return PHP_EOL." WHERE ".$this->interpretPredicate($predicate);
 		} elseif( $root_constraint) {
-			return "WHERE ".$this->interpretPredicate($root_constraint).PHP_EOL;
+			return PHP_EOL." WHERE ".$this->interpretPredicate($root_constraint);
 		}
 		return "";
 	}
 
 	protected function having(Tables\AbstractQuery $query) {
 		if($query->having()) {
-			return " HAVING ".$this->interpretPredicate($query->having()).PHP_EOL;
+			return PHP_EOL." HAVING ".$this->interpretPredicate($query->having());
 		}
 		return "";
 	}
@@ -171,6 +171,6 @@ class SqlQueryInterpreter {
 		foreach($query->groupBy() as $field) {
 			$group_by[] = $field->name();
 		}
-		return count($group_by) > 0 ?  "GROUP BY ".implode(", ",$group_by).PHP_EOL : '';
+		return count($group_by) > 0 ?  PHP_EOL." GROUP BY ".implode(", ",$group_by) : '';
 	}
 };
