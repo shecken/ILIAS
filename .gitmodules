@@ -4,3 +4,6 @@
 [submodule "Customizing/global/plugins/Services/Repository/RepositoryObject/Jill"]
 	path = Customizing/global/plugins/Services/Repository/RepositoryObject/Jill
 	url = https://github.com/conceptsandtraining/Jill.git
+[submodule "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/BareContentView"]
+	path = Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/BareContentView
+	url = https://github.com/conceptsandtraining/BareContentView.git
