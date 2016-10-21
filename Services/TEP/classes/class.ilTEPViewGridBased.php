@@ -3,8 +3,8 @@
 
 include_once "Services/TEP/classes/class.ilTEPView.php";
 require_once "./Services/ParticipationStatus/classes/class.ilParticipationStatus.php";
-require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
-require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
 
 /**
  * TEP grid-based views base class
@@ -772,12 +772,15 @@ abstract class ilTEPViewGridBased extends ilTEPView
 				$select_list->addItem($lng->txt("gev_attendance_list"),"",$ilCtrl->getLinkTargetByClass(array('ilparticipationstatusadmingui','ilparticipationstatusgui'), "viewAttendanceList"));
 				$ilCtrl->setParameterByClass("ilparticipationstatusgui", "ref_id", null);
 			}
-
-			$exam_bio_refs = ilObjReportExamBio::getAccessibleExambioInCrsForUserRefIds($crs_utils, $cur_user_id, $ilAccess, $ilDB);
-			if(count($exam_bio_refs) > 0) {
-				$sel_item_cnt++;
-				$ref_id = current($exam_bio_refs);
-				$select_list->addItem($lng->txt('gev_members_exam_bio'),"",ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id, $ilCtrl));
+			$ass_bio_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
+								ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xexb"));
+			if($ass_bio_plugin && $ass_bio_plugin->active) {
+				$exam_bio_refs = ilObjReportExamBio::getAccessibleExambioInCrsForUserRefIds($crs_utils, $cur_user_id, $ilAccess, $ilDB);
+				if(count($exam_bio_refs) > 0) {
+					$sel_item_cnt++;
+					$ref_id = current($exam_bio_refs);
+					$select_list->addItem($lng->txt('gev_members_exam_bio'),"",ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id, $ilCtrl));
+				}
 			}
 
 			$ilCtrl->setParameterByClass("ilTEPGUI", "ref_id", null);

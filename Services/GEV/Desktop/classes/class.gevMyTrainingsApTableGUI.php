@@ -21,8 +21,8 @@ require_once("Services/GEV/Utils/classes/class.gevGeneralUtils.php");
 require_once("Services/CourseBooking/classes/class.ilCourseBooking.php");
 require_once("Services/ParticipationStatus/classes/class.ilParticipationStatusAdminGUI.php");
 require_once "./Services/ParticipationStatus/classes/class.ilParticipationStatusHelper.php";
-require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
-require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
 require_once("Services/Calendar/classes/class.ilDatePresentation.php");
 //require_once("Services/Calendar/classes/class.ilDate.php");
 
@@ -247,11 +247,14 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		if ($crs_utils->getVirtualClassLink() !== null) {
 			$items[] = array("title" => $this->gLng->txt("gev_virtual_class"), "link" => $crs_utils->getVirtualClassLink(), "image" => $this->virtualclass_img, "frame"=>"_blank");
 		}
-
-		$exam_bio_refs = ilObjReportExamBio::getAccessibleExambioInCrsForUserRefIds($crs_utils,$this->user_id, $this->gAccess, $this->gIldb);
-		if(count($exam_bio_refs) > 0) {
-			$ref_id = current($exam_bio_refs);
-			$items[] = array('title' => $this->gLng->txt('gev_members_exam_bio'), 'link' => ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id, $this->gCtrl));
+		$ass_bio_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
+							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xexb"));
+		if($ass_bio_plugin && $ass_bio_plugin->active) {
+			$exam_bio_refs = ilObjReportExamBio::getAccessibleExambioInCrsForUserRefIds($crs_utils,$this->user_id, $this->gAccess, $this->gIldb);
+			if(count($exam_bio_refs) > 0) {
+				$ref_id = current($exam_bio_refs);
+				$items[] = array('title' => $this->gLng->txt('gev_members_exam_bio'), 'link' => ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id, $this->gCtrl));
+			}
 		}
 
 		if($crs_utils->userHasPermissionTo($this->user_id, gevSettings::VIEW_MAILING)){
