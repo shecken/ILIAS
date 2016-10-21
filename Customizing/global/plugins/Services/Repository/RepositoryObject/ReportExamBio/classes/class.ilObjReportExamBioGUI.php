@@ -79,8 +79,20 @@ class ilObjReportExamBioGUI extends ilObjReportBase2GUI {
 		return $return;
 	}
 
+	/**
+	 * Get some ref_id for an exam biography for the current user.
+	 *
+	 * @param	\ilDB	$db
+	 * @return	null|int
+	 */
 	public static function examBiographyReferenceForUsers($db) {
-		$obj_id = current(ilObjReportExamBio::queryReports(array('for_trainer' => 0), $db))['id'];
-		return current(ilObject::_getAllReferences($obj_id));
+		try {
+			$obj_id = current(ilObjReportExamBio::queryReports(array('for_trainer' => 0), $db))['id'];
+			return current(ilObject::_getAllReferences($obj_id));
+		}
+		// This would happen if plugin database is not created yet.
+		catch (\reportSettingsException $e) {
+			return null;
+		}
 	}
 }
