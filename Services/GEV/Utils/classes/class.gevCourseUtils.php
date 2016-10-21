@@ -881,7 +881,7 @@ class gevCourseUtils {
 	}
         
         public function getVenueRoomNr() {
-                $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_VENUE_ROOM_NR);
+                return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_VENUE_ROOM_NR);
         }
         
         public function setVenueRoomNr($a_venue_room_nr) {

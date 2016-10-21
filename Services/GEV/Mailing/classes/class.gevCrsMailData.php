@@ -222,7 +222,7 @@ class gevCrsMailData extends ilMailData {
 				}
 				$val = implode("<br />", $val);
 				break;
-			case "VO-NAME":
+                        case "VO-NAME":
 				$val = $this->crs_utils->getVenueTitle();
 				if (!$val) {
 					return $this->crs_utils->getVenueFreeText();
@@ -237,7 +237,10 @@ class gevCrsMailData extends ilMailData {
 			case "VO-PLZ":
 				$val = $this->crs_utils->getVenueZipcode();
 				break;
-			case "VO-ORT":
+			case "VO-RAUMNUMMER":
+				$val = $this->crs_utils->getVenueRoomNr();
+				break;
+                        case "VO-ORT":
 				$val = $this->crs_utils->getVenueCity();
 				break;
 			case "VO-TELEFON":
@@ -372,7 +375,6 @@ class gevCrsMailData extends ilMailData {
 		$val = $this->maybeFormatEmptyField($val);
 		if (!$a_markup) 
 			$val = str_replace("<br />", "\n", $val);
-		
 		return $val;
 	}
 

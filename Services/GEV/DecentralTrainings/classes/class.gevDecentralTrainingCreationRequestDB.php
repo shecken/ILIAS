@@ -506,4 +506,12 @@ class gevDecentralTrainingCreationRequestDB {
 			));
 		}
 	}
+
+        static public function install_step7(ilDB $ilDB) {
+		$ilDB->modifyTableColumn(self::TABLE_NAME, 'venue_room_nr', array(
+			"type" => "text",
+			"length" => 250,
+			"notnull" => false
+		));
+	}
 }

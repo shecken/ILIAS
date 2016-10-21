@@ -80,6 +80,7 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 							,"VO-HAUSNUMMER" 				=> $crs_utils->getVenueHouseNumber()
 							,"VO-PLZ" 						=> $crs_utils->getVenueZipcode()
 							,"VO-ORT" 						=> $crs_utils->getVenueCity()
+                                                        ,"VO-RAUMNUMMER"                                => $crs_utils->getVenueRoomNr()
 							,"VO-TELEFON" 					=> $crs_utils->getVenuePhone()
 							,"VO-INTERNET" 					=> $crs_utils->getVenueHomepage()
 							,"ORGANISATORISCHES" 			=> $crs_utils->getOrgaInfo()
@@ -218,6 +219,7 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 							,"VO-HAUSNUMMER" 				=> $crs_utils->getVenueHouseNumber()
 							,"VO-PLZ" 						=> $crs_utils->getVenueZipcode()
 							,"VO-ORT" 						=> $crs_utils->getVenueCity()
+                                                        ,"VO-RAUMNUMMER"                                => $crs_utils->getVenueRoomNr()
 							,"VO-TELEFON" 					=> $crs_utils->getVenuePhone()
 							,"VO-INTERNET" 					=> $crs_utils->getVenueHomepage()
 							,"ORGANISATORISCHES" 			=> $request->settings()->orgaInfo()
@@ -334,6 +336,7 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 			$data_base["VO-HAUSNUMMER"] = $ven->getHouseNumber();
 			$data_base["VO-PLZ"] = $ven->getZipcode();
 			$data_base["VO-ORT"] = $ven->getCity();
+                        $data_base["VO_RAUMNUMMER"] = $ven->getRoomNr();
 			$data_base["VO-TELEFON"] = $ven->getContactPhone();
 			$data_base["VO-INTERNET"] = $ven->getHomepage();
 	}
