@@ -77,7 +77,7 @@ obj_xtas#:#TA Termin
 xtas_new#:#Neuen TA Termin hinzufügen
 objs_xtas_duplicate#:#TA Termin kopieren
 xtas_add#:#Hinzufügen
-my_observations#:#Meine Assessmenttermine
+my_observations#:#Assessmenttermine
 my_observations_info#:#Hier sehen Sie auf einen Blick alle Assessments, denen Sie als Beobachter zugeordnet sind.
 pls_select#:#Bitte wählen
 actions#:#Aktionen

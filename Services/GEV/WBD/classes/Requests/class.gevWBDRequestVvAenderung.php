@@ -19,16 +19,21 @@ class gevWBDRequestVvAenderung extends WBDRequestVvAenderung {
 	protected $error_group;
 
 	protected function __construct($data) {
-		$this->address_type 		= new WBDData("AdressTyp",$this->getDictionary()->getWBDName($data["address_type"],gevWBDDictionary::SERACH_IN_ADDRESS_TYPE));
+		$this->error_group = gevWBDError::ERROR_GROUP_USER;
+
+		$this->defineValuesToTranslate();
+		$dic_errors = $this->translate($data["user_id"], $data["row_id"]);
+
+		$this->address_type 		= new WBDData("AdressTyp",$this->translate_value["AdressTyp"]);
+		$this->title 				= new WBDData("AnredeSchluessel",$this->translate_value["AnredeSchluessel"]);
+		$this->wbd_agent_status 	= new WBDData("VermittlerStatus",$this->translate_value["VermittlerStatus"]);
+
 		$this->address_info 		= new WBDData("AdressBemerkung",$data["address_info"]);
-		$this->title 				= new WBDData("AnredeSchluessel",$this->getDictionary()->getWBDName($data["gender"],gevWBDDictionary::SERACH_IN_GENDER));
 		$this->auth_email 			= new WBDData("AuthentifizierungsEmail",$data["email"]);
 		$this->auth_mobile_phone_nr = new WBDData("AuthentifizierungsTelefonnummer",$data["mobile_phone_nr"]);
 		$this->info_via_mail 		= new WBDData("BenachrichtigungPerEmail",$data["info_via_mail"]);
-
 		$normal_email = ($data['wbd_email'] != '') ? $data['wbd_email'] : $data['email'];
 		$this->email 				= new WBDData("Emailadresse",$normal_email);
-	
 		$this->birthday 			= new WBDData("Geburtsdatum",$data["birthday"]);
 		$this->house_number			= new WBDData("Hausnummer",$data["house_number"]);
 		$this->internal_agent_id 	= new WBDData("InterneVermittlerId",$data["user_id"]);
@@ -41,15 +46,14 @@ class gevWBDRequestVvAenderung extends WBDRequestVvAenderung {
 		$this->phone_nr 			= new WBDData("Telefonnummer", ($data["phone_nr"] != "") ? $data["phone_nr"] : $data["mobile_phone_nr"]);
 		$this->degree 				= new WBDData("Titel",$data["degree"]);
 		$this->agent_id 			= new WBDData("VermittlerId",$data["bwv_id"]);
-		$this->wbd_agent_status 	= new WBDData("VermittlerStatus",$this->getDictionary()->getWBDName($data["wbd_agent_status"],gevWBDDictionary::SERACH_IN_AGENT_STATUS));
 		$this->okz 					= new WBDData("VermittlungsTaetigkeit",$data["okz"]);
 		$this->firstname 			= new WBDData("VorName",$data["firstname"]);
-		
+
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
-		$this->error_group = gevWBDError::ERROR_GROUP_USER;
 
-		$errors = $this->checkData();
+		$check_errors = $this->checkData();
+		$errors = $check_errors + $dic_errors;
 
 		if(!empty($errors)) {
 			throw new myLogicException("gevWBDRequestVvAenderung::__construct:checkData failed",0,null, $errors);
@@ -63,10 +67,6 @@ class gevWBDRequestVvAenderung extends WBDRequestVvAenderung {
 			return new gevWBDRequestVvAenderung($data);
 		}catch(myLogicException $e) {
 			return $e->options();
-		} catch(LogicException $e) {
-			$errors = array();
-			$errors[] =  self::createError($e->getMessage(), gevWBDError::ERROR_GROUP_USER,  $data["user_id"], $data["row_id"],0);
-			return $errors;
 		}
 	}
 
@@ -117,5 +117,12 @@ class gevWBDRequestVvAenderung extends WBDRequestVvAenderung {
 	public function createWBDError($message) {
 		$reason = $this->parseReason($message);
 		$this->wbd_error = self::createError($reason, $this->error_group, $this->user_id, $this->row_id);
+	}
+
+	protected function defineValuesToTranslate() {
+		$this->translate_value = array("AdressTyp" => array("field" => "address_type", "group" => gevWBDDictionary::SEARCH_IN_ADDRESS_TYPE)
+							   , "AnredeSchluessel" => array("field" => "gender", "group" => gevWBDDictionary::SEARCH_IN_GENDER)
+							   , "VermittlerStatus" => array("field" => "wbd_agent_status", "group" => gevWBDDictionary::SEARCH_IN_AGENT_STATUS)
+			);
 	}
 }

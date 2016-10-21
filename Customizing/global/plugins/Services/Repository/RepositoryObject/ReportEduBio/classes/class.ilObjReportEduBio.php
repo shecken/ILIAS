@@ -65,7 +65,8 @@ class ilObjReportEduBio extends ilObjReportBase {
 	}
 
 	protected function buildOrder($order) {
-		$order	->mapping('date',array('usrcrs.begin_date'))
+		$order	->defaultOrder('date','asc')
+				->mapping('date',array('usrcrs.begin_date'))
 				->mapping('status',array("usrcrs.participation_status"))
 				->mapping('wbd',array("usrcrs.okz"));
 				return $order;
@@ -276,7 +277,8 @@ class ilObjReportEduBio extends ilObjReportBase {
 			$ilCtrl->setParameterByClass("ilObjReportEduBioGUI", "target_user_id", $usr_id);
 			$ilCtrl->setParameterByClass("ilObjReportEduBioGUI", "ref_id", $ref_id);
 			$return = $ilCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", "ilObjReportEduBioGUI"), '');
-			$ilCtrl->clearParametersByClass("ilObjReportEduBioGUI");
+			$ilCtrl->setParameterByClass("ilObjReportEduBioGUI", "target_user_id", null);
+			$ilCtrl->setParameterByClass("ilObjReportEduBioGUI", "ref_id", null);
 			return $return;
 		}
 		return "";

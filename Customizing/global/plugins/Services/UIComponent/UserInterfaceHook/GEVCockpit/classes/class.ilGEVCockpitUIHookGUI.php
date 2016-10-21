@@ -4,18 +4,27 @@
 
 require_once("./Services/UIComponent/classes/class.ilUIHookPluginGUI.php");
 require_once("./Services/GEV/CourseSearch/classes/class.gevCourseSearch.php");
+require_once("./Services/GEV/Utils/classes/class.gevMyTrainingsAdmin.php");
+require_once("./Services/GEV/Utils/classes/class.gevSettings.php");
 require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
+
+use \CaT\Plugins\TalentAssessment;
+
 /**
  * Creates a submenu for the Cockpit of the GEV.
  */
 class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
+	const ADMIN_TRAININGS_CHECK_INTERVAL = "300";
+	const ASSESSMENT_CHECK_INTERVAL = "300";
+
 	public function __construct() {
-		global $ilUser, $lng, $ilCtrl, $ilDB, $ilAccess;
+		global $ilUser, $lng, $ilCtrl, $ilDB, $ilAccess, $rbacreview;
 		$this->gLng = $lng;
 		$this->gUser = $ilUser;
 		$this->gCtrl = $ilCtrl;
 		$this->gIldb = $ilDB;
 		$this->gAccess = $ilAccess;
+		$this->gRbacreview = $rbacreview;
 	}
 
 	/**
@@ -44,20 +53,22 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 	}
 
 	protected function isCockpit() {
+		$base_class = strtolower($_GET["baseClass"]);
+		$cmd_class = strtolower($_GET["cmdClass"]);
+		$cmd = strtolower($_GET["cmd"]);
+
 		return
-			( $_GET["baseClass"] == "gevDesktopGUI" 
-				|| ($_GET["cmdClass"] == "ilobjreportedubiogui"
+			( $base_class == "gevdesktopgui" 
+				|| ($cmd_class == "ilobjreportedubiogui"
 					&& $_GET["target_user_id"] == $this->gUser->getId())
-				|| ($_GET["cmdClass"] == "ilobjreportexambiogui"
+				|| ($cmd_class == "ilobjreportexambiogui"
 					&& $_GET["target_user_id"] == $this->gUser->getId())
-				|| $_GET["baseClass"] == "ilTEPGUI"
+				|| $base_class == "iltepgui"
 			)
-			&& $_GET["cmdClass"] != "gevcoursesearchgui"
-			&& $_GET["cmdClass"] != "iladminsearchgui"
-			&& $_GET["cmdClass"] != "gevemployeebookingsgui"
-			&& (
-				$_GET["cmd"] != "toMyAssessments"
-				&& $_GET["cmd"] != "toAllAssessments")
+			&& $cmd_class != "gevcoursesearchgui"
+			&& $cmd_class != "iladminsearchgui"
+			&& $cmd_class != "gevemployeebookingsgui"
+			&& $cmd != "toallassessments"
 			;
 	}
 
@@ -89,6 +100,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			}
 			if ($_GET["cmdClass"] == "gevmytrainingsadmingui") {
 				return "training_admin";
+			}
+			if ($_GET["cmd"] == "toMyAssessments") {
+				return "my_assessments";
 			}
 		}
 		if ($this->isSearch()) {
@@ -160,16 +174,60 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 				= array($this->gLng->txt("gev_mytrainingsap_title"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAp");
 		}
 
-		$items["training_admin"]
-			= array($this->gLng->txt("gev_my_trainings_admin"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAdmin");
+		// TODO: The next time anybody comes here, this RBAC caching stuff in the session should be
+		// abstracted.
+
+		$has_admin_trainings = ilSession::get("gev_has_admin_trainings");
+		$last_admin_trainings_calculation = ilSession::get("gev_has_admin_trainings_calculation_ts");
+
+		if ( $has_admin_trainings === null
+				||   $last_admin_trainings_calculation + self::ADMIN_TRAININGS_CHECK_INTERVAL < time()) 
+		{
+			$my_training_admin_utils = new gevMyTrainingsAdmin($this->gUser->getId());
+			$has_admin_trainings = $my_training_admin_utils->hasAdminCourse(gevSettings::$CRS_MANAGER_ROLES);
+
+			ilSession::set("gev_has_admin_trainings", $has_admin_trainings);
+			ilSession::set("gev_has_admin_trainings_calculation_ts", time());
+		}
+
+		if($has_admin_trainings) {
+			$items["training_admin"]
+				= array($this->gLng->txt("gev_my_trainings_admin"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAdmin");
+		}
 
 		$ta_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
 							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
 
 		if($ta_plugin->active) {
-			$items["my_assessments"]
-				= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
+			$has_assessments = ilSession::get("gev_has_assessments");
+			$last_assessments_calculation = ilSession::get("gev_has_assessments_calculation_ts");
+
+			if($has_assessments === null
+					||   $last_assessments_calculation + self::ASSESSMENT_CHECK_INTERVAL < time())
+			{
+				$assessments = $ta_plugin->getObservationsDB()->getAssessmentsData(array());
+
+				foreach ($assessments as $key => $assessment) {
+					$role_id = $this->gRbacreview->roleExists(TalentAssessment\ilActions::OBSERVATOR_ROLE_NAME."_".$assessment["obj_id"]);
+					$usr_ids = $this->gRbacreview->assignedUsers($role_id);
+
+					if(!in_array($this->gUser->getId(), $usr_ids)) {
+						unset($assessments[$key]);
+					}
+				}
+
+				$has_assessments = count($assessments) > 0;
+
+				ilSession::set("gev_has_assessments", $has_assessments);
+				ilSession::set("gev_has_assessments_calculation_ts", time());
+			}
+
+			if($has_assessments) {
+				$items["my_assessments"]
+					= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
+			}
 		}
+
 		return $items;
 	}
 

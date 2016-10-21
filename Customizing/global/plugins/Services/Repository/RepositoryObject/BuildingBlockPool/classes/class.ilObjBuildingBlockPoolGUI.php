@@ -101,6 +101,22 @@ class ilObjBuildingBlockPoolGUI extends ilObjectPluginGUI {
 				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::NEW_UNIT);
 				$this->gTpl->setContent($bb_edit->getHtml());
 				break;
+			case "addBlankBuildingBlock":
+				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::NEW_BLANK_UNIT);
+				$this->gTpl->setContent($bb_edit->getHtml());
+				break;
+			case "editBlankBuildingBlock":
+				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::EDIT_BLANK_UNIT);
+				$this->gTpl->setContent($bb_edit->getHtml());
+				break;
+			case "saveBlankBuildingBlock":
+				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::SAVE_BLANK_UNIT);
+				$this->gTpl->setContent($bb_edit->save());
+				break;
+			case "updateBlankBuildingBlock":
+				$bb_edit = $this->getBuildingBlockEditGUI(gevSettings::EDIT_BUILDING_BLOCKS, $_GET["bb_id"], ilBuildingBlockEditGUI::UPDATE_BLANK_UNIT);
+				$this->gTpl->setContent($bb_edit->update());
+				break;
 			case "importBuildingBlock":
 				if($this->gAccess->checkAccess(gevSettings::EDIT_BUILDING_BLOCKS, "", $this->object->getRefId())) {
 					$this->gTabs->activateTab("content");
@@ -163,6 +179,9 @@ class ilObjBuildingBlockPoolGUI extends ilObjectPluginGUI {
 		$this->gTabs->activateTab("content");
 		$add_building_bock_link = $this->gCtrl->getLinkTarget($this, "addBuildingBlock");
 		$this->gToolbar->addButton( $this->lng->txt("rep_robj_xbbp_add_building_block"), $add_building_bock_link);
+
+		$add_building_bock_link = $this->gCtrl->getLinkTarget($this, "addBlankBuildingBlock");
+		$this->gToolbar->addButton( $this->lng->txt("rep_robj_xbbp_add_blank_building_block"), $add_building_bock_link);
 
 		require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/BuildingBlockPool/classes/class.ilBuildingBlockTableGUI.php");
 		$bb_table = new ilBuildingBlockTableGUI(array("pool_id"=>$this->object->getId()), $this, true);

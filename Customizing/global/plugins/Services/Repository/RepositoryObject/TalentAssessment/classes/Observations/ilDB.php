@@ -408,7 +408,7 @@ class ilDB implements DB {
 		return $ret;
 	}
 
-	public function getAssessmentsData($filter, $filter_values) {
+	public function getAssessmentsData($filter_values) {
 		$to_sql = new \CaT\Filter\SqlPredicateInterpreter($this->getDB());
 		$select = $this->getSelect();
 		$where = "";

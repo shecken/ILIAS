@@ -266,7 +266,7 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 
 		$this->table->setData($data);
 		$this->enableRelevantParametersCtrl();
-		$return = $this->table->getHtml();
+		$return = $this->table->getHTML();
 		$this->disableRelevantParametersCtrl();
 		return $return;
 	}

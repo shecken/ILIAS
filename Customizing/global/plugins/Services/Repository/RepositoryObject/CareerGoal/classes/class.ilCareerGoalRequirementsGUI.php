@@ -123,7 +123,12 @@ class ilCareerGoalRequirementsGUI {
 
 	protected function confirmedDeleteRequirement() {
 		$to_delete_obj_id = $_POST["obj_id"];
-		$this->getActions()->deleteRequirement($to_delete_obj_id);
+
+		if($this->getActions()->deleteRequirement($to_delete_obj_id)) {
+			\ilUtil::sendSuccess($this->txt("requirement_deleted"));
+		} else {
+			\ilUtil::sendInfo($this->txt("requirement_could_not_be_deleted"));
+		}
 
 		$this->showRequirements();
 	}
@@ -148,9 +153,15 @@ class ilCareerGoalRequirementsGUI {
 
 	protected function confirmedDeleteSelected() {
 		$to_delete_obj_ids = $_POST["obj_ids"];
-		
+
 		foreach ($to_delete_obj_ids as $value) {
-			$this->getActions()->deleteRequirement($value);
+			$ret[] = $this->getActions()->deleteRequirement($value);
+		}
+
+		if(in_array(false, $ret)) {
+			\ilUtil::sendInfo($this->txt("some_requirements_could_not_be_deleted"));
+		} else {
+			\ilUtil::sendSuccess($this->txt("requirements_deleted"));
 		}
 
 		$this->showRequirements();

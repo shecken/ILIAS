@@ -59,3 +59,7 @@ xcgo_add#:#Neues Karriereziel anlegen
 objs_xcgo_duplicate#:#Karriereziel kopieren
 new_observation#:#Neue Beobachtung
 order_saved#:#Reihenfolge erfolgreich gespeichert.
+requirements_deleted#:#Die Anforderungen wurden erfolgreich entfernt.
+some_requirements_could_not_be_deleted#:#Einige Anforderungen konnten nicht gelöscht werden, da sie noch einer oder mehr Beobachtungen zugewiesen sind.
+requirement_deleted#:#Die Anforderung wurde erfolgreich entfernt.
+requirement_could_not_be_deleted#:#Die Anforderung konnte nicht entfernt werden, da sie noch mindestens einer Beobachtung zugeordnet ist.

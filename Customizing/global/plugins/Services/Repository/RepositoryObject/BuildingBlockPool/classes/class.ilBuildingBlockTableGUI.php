@@ -108,8 +108,14 @@ class ilBuildingBlockTableGUI extends ilTable2GUI {
 
 	protected function getActionMenuItems($a_set) {
 		$this->ctrl->setParameter($this->parent_obj, "bb_id", $a_set['obj_id']);
-		$edit_link = $this->ctrl->getLinkTarget($this->parent_obj, "editBuildingBlock");
+		if((bool)$a_set["is_blank"]) {
+			$edit_link = $this->ctrl->getLinkTarget($this->parent_obj, "editBlankBuildingBlock");
+		} else {
+			$edit_link = $this->ctrl->getLinkTarget($this->parent_obj, "editBuildingBlock");
+		}
+
 		$delete_link = $this->ctrl->getLinkTarget($this->parent_obj, "deleteBuildingBlock");
+
 		$this->ctrl->clearParameters($this->parent_obj);
 
 		$items = array();

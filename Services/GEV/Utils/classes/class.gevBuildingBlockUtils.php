@@ -162,8 +162,16 @@ class gevBuildingBlockUtils {
 		$this->pool_id = $pool_id;
 	}
 
+	public function setIsBlank($blank) {
+		$this->is_blank = $blank;
+	}
+
+	public function getIsBlank() {
+		return $this->is_blank;
+	}
+
 	public function loadData() {
-		$sql = "SELECT obj_id, title, content, target, is_wp_relevant, is_active, gdv_topic, training_categories,topic, dbv_topic, move_to_course\n".
+		$sql = "SELECT obj_id, title, content, target, is_wp_relevant, is_active, gdv_topic, training_categories,topic, dbv_topic, move_to_course, is_blank\n".
 			   "  FROM ".self::TABLE_NAME.
 			   " WHERE obj_id = ".$this->db->quote($this->getId(), "integer");
 
@@ -173,15 +181,16 @@ class gevBuildingBlockUtils {
 			$row = $this->db->fetchAssoc($res);
 
 			$this->title = $row["title"];
-			$this->content = $row["content"];
-			$this->target = $row["target"];
+			$this->content = $row["content"] ? $row["content"] : "";
+			$this->target = $row["target"] ? $row["target"] : "";
 			$this->is_wp_relevant = $row["is_wp_relevant"];
 			$this->is_active = $row["is_active"];
 			$this->gdv_topic = $row["gdv_topic"];
-			$this->training_categories = unserialize($row["training_categories"]);
+			$this->training_categories = $row["training_categories"] ? unserialize($row["training_categories"]) : array();
 			$this->topic = $row["topic"];
 			$this->dbv_topic = $row["dbv_topic"];
 			$this->move_to_course = $row["move_to_course"];
+			$this->is_blank = $row["is_blank"];
 		}
 	}
 
@@ -209,14 +218,13 @@ class gevBuildingBlockUtils {
 	}
 
 	public function save() {
-		
 		$isWPRelevant = (!$this->isWPRelevant()) ? "0" : "1";
 		$isActive = ($this->isActive() === "") ? "0" : "1";
 
 		$sql = "INSERT INTO ".self::TABLE_NAME.""
 			  ." (obj_id, title, content, target, is_wp_relevant, is_active, last_change_user\n"
 			  .", last_change_date, is_deleted, gdv_topic, training_categories, topic, dbv_topic, move_to_course\n"
-			  .", pool_id)"
+			  .", pool_id, is_blank)"
 			  ." VALUES (".$this->db->quote($this->getId(), "integer")."\n"
 			  ."        ,".$this->db->quote($this->getTitle(), "text")."\n"
 			  ."        ,".$this->db->quote($this->getContent(), "text")."\n"
@@ -232,6 +240,7 @@ class gevBuildingBlockUtils {
 			  ."        ,".$this->db->quote($this->getDBVTopic(), "text")."\n"
 			  ."        ,".$this->db->quote($this->getMoveToCourse(), "integer")."\n"
 			  ."        ,".$this->db->quote($this->getPoolId(), "integer")."\n"
+			  ."        ,".$this->db->quote($this->getIsBlank(), "integer")."\n"
 			  .")";
 		
 		$this->db->manipulate($sql);
@@ -251,7 +260,7 @@ class gevBuildingBlockUtils {
 		$add_where = self::createAdditionalWhere($a_search_opts);
 		$sql = "SELECT bb.obj_id, bb.title, bb.content, bb.target\n"
 			  ."     , bb.is_wp_relevant, bb.is_active, bb.gdv_topic, bb.training_categories, bb.topic, bb.dbv_topic\n"
-			  ."     , usr.login, bb.last_change_date, bb.move_to_course\n"
+			  ."     , usr.login, bb.last_change_date, bb.move_to_course, bb.is_blank\n"
 			  ."  FROM ".self::TABLE_NAME." bb\n"
 			  ."  JOIN usr_data usr ON usr_id = last_change_user\n"
 			  ."  WHERE is_deleted = ".$ilDB->quote(0,"integer")."\n";
@@ -285,7 +294,7 @@ class gevBuildingBlockUtils {
 
 		$sql = "SELECT obj_id, title, content, target\n"
 			  ."     , is_wp_relevant, is_active, gdv_topic, training_categories, topic, dbv_topic\n"
-			  ."	 move_to_course\n"
+			  ."	 move_to_course, is_blank\n"
 			  ."  FROM ".self::TABLE_NAME."\n"  
 			  ."  WHERE is_deleted = ".$ilDB->quote(0,"integer")."\n"
 			  ."  AND pool_id != ".$ilDB->quote($pool_id, "integer");
@@ -535,7 +544,7 @@ class gevBuildingBlockUtils {
 	static function getBuildingBlockInfosById($id) {
 		global $ilDB;
 
-		$sql = "SELECT content, target, if(is_wp_relevant,'Ja','Nein') AS wp"
+		$sql = "SELECT content, target, IF(is_wp_relevant,'Ja','Nein') AS wp, is_blank"
 			   ." FROM ".self::TABLE_NAME."\n"
 			   ." WHERE obj_id = ".$ilDB->quote($id, "integer");
 
@@ -545,7 +554,7 @@ class gevBuildingBlockUtils {
 			return $ilDB->fetchAssoc($res);
 		}
 
-		return array("content" => "", "target" => "");
+		return array("content" => "", "target" => "", "is_blank" => false);
 	}
 
 	static public function getMoveToCourseOptions() {

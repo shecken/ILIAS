@@ -46,6 +46,18 @@ class FilterGUIFactory {
 	}
 
 	/**
+	 * Get the gui of Multiselect search Filter
+	 *
+	 * @param	Filter		$filter
+	 * @param	string		$path 
+	 * @return	FilterGUI
+	 */
+	public function multiselectsearch_gui(Filters\MultiselectSearch $filter, $path) {
+		require_once ("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterMultiselectSearchGUI.php");
+		return new \catFilterMultiselectSearchGUI($filter, $path);
+	}
+
+	/**
 	 * Get the gui of Singleselect Filter
 	 *
 	 * @param	Filter		$filter

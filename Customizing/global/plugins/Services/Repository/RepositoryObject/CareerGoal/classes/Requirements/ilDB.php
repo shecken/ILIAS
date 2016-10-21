@@ -96,7 +96,11 @@ class ilDB implements DB {
 				." WHERE obj_id = ".$this->getDB()->quote($obj_id, "integer");
 
 			$this->getDB()->manipulate($delete);
+
+			return true;
 		}
+
+		return false;
 	}
 
 	public function deleteByCareerGoal($career_goal_id) {
