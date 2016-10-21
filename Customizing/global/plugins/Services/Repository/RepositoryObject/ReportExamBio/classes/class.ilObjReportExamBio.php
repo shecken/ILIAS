@@ -172,9 +172,12 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 
 	public function initSpace() {
 		$aux = $this->tf->histUsertestrun('recent_pass_aux');
-		$aux = $aux->addConstraint($aux->field('hist_historic')->EQ()->int(0)
-			->_AND(count($this->relevantUsers()) > 0 ? $aux->field('usr_id')->IN($this->pf->list_int_by_array($this->relevantUsers())) : $this->pf->_FALSE())
-			);
+
+		if(count($this->relevantUsers()) > 0 ) {
+			$aux = $aux->addConstraint($aux->field('hist_historic')->EQ()->int(0)->_AND($aux->field('usr_id')->IN($this->pf->list_int_by_array($this->relevantUsers()))));
+		} else {
+			$aux = $aux->addConstraint($this->pf->_FALSE());
+		}
 
 		$recent_pass_case = $this->tf->derivedTable(
 			$this->tf->TableSpace()
@@ -193,9 +196,12 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 		$recent_pass_data = $recent_pass_data->addConstraint($recent_pass_data->field('hist_historic')->EQ()->int(0));
 
 		$usr = $this->tf->histUser('usr');
-		$usr = $usr->addConstraint($usr->field('hist_historic')->EQ()->int(0)
-			->_AND(count($this->relevantUsers()) > 0 ?
-				$usr->field('user_id')->IN($this->pf->list_int_by_array($this->relevantUsers())) : $this->pf->_FALSE()));
+
+		if(count($this->relevantUsers()) > 0 ) {
+			$usr = $usr->addConstraint($usr->field('hist_historic')->EQ()->int(0)->_AND($usr->field('user_id')->IN($this->pf->list_int_by_array($this->relevantUsers()))));
+		} else {
+			$usr = $usr->addConstraint($this->pf->_FALSE());
+		}
 
 		$orgus = $this->tf->allOrgusOfUsers('orgu_all',$this->relevantUsers());
 
