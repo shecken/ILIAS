@@ -1,0 +1,41 @@
+<!-- language file start -->
+obj_xexb#:#Prüfungsbiografie
+objs_xexb#:#Prüfungsbiografien
+obj_xexb_duplicate#:#Prüfungsbiografie kopieren
+objs_xexb_duplicate#:#Prüfungsbiografien kopieren
+obj_xexb_select#:#Prüfungsbiografie auswählen
+xexb_add#:#Prüfungsbiografie hinzufügen
+xexb_new#:#Neuen Prüfungsbiografie hinzufügen
+xexb_read#:#Lesezugriff zum Prüfungsbiografie
+xexb_write#:#Prüfungsbiografie bearbeiten
+xexb_delete#:#Prüfungsbiografie löschen
+xexb_visible#:#sichtbar
+xexb_edit_permission#:#schreibberechtigt
+crs_create_xexb#:#Prüfungsbiografie erzeugen
+grp_create_xexb#:#Prüfungsbiografie erzeugen
+fold_create_xexb#:#Prüfungsbiografie erzeugen
+root_create_xexb#:#Prüfungsbiografie erzeugen
+cat_create_xexb#:#Prüfungsbiografie erzeugen
+xexb_content#:#Report
+xexb_properties#:#Eigenschaften
+my_exam_bio#:#Meine Prüfungsbiografie
+my_exam_bio_desc#:#Hier sehen Sie die von Ihnen abgeschlossenen Tests und deren Ergebnisse.
+participants_exam_bio#:#Prüfungsbiografie meiner Teilnehmer im Training "%s".
+participants_exam_bio_desc#:#Hier sehen Sie alle Tests, die die Teilnehmeer des gewählten Trainings abgeschlossen haben.
+others_exam_bio#:#Hier sehen Sie die Prüfungsbiografie von %s, %s.
+others_exam_bio_desc#:#Hier sehen Sie die abgeschlossenen Tests und deren Ergebnisse.
+lastname#:#Nachname
+firstname#:#Vorname
+orgunit#:#Org.-Einheit
+test_title#:#Titel
+test_title_filter#:#Test
+test_date#:#Datum des letzten Tests
+passed#:#Bestanden?
+max#:#Bestes Ergebnis
+average#:#Durchschnitt
+number_of_runs#:#Wiederholungen/&shy;Durchführungen
+pass_status#:#Status
+test_passed#:#bestanden
+test_not_passed#:#nicht bestanden
+dateperiod#:#Zeitraum
+for_trainer#:#Trainerasicht
