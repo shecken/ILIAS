@@ -38,16 +38,16 @@ class ilObjReportCouponNew extends ilObjReportBase {
 	public function prepareTable(catSelectableReportTableGUI $table) {
 		$table	->defineFieldColumn($this->plugin->txt("code"), 'code', array('code' => $this->fields['c']['coupon_code']))
 				->defineFieldColumn($this->plugin->txt("start"), 'start', array('start' => $this->fields['c2']['coupon_value']))
-				->defineFieldColumn($this->plugin->txt("diff"), 'diff', array('diff' => $this->tf->diffFieldsSql('diff',$this->fields['c2']['coupon_value'],$this->fields['c']['coupon_value'])))
+				->defineFieldColumn($this->plugin->txt("diff"), 'diff', array('diff' => $this->tf->minus('diff',$this->fields['c2']['coupon_value'],$this->fields['c']['coupon_value'])))
 				->defineFieldColumn($this->plugin->txt("current"), 'current', array( 'current' => $this->fields['c']['coupon_value']))
 				->defineFieldColumn($this->plugin->txt("expires"),'expires',array('expires' => $this->fields['c']['coupon_expires']),true);
 		if($this->settings['admin_mode']) {
 			$table
 				->defineFieldColumn($this->plugin->txt("name"), 'name', array('lastname' => $this->fields['hu']['lastname']
 																			, 'firstname' => $this->fields['hu']['firstname']),true)
-				->defineFieldColumn($this->plugin->txt("odbd"), 'odbd', array('above1' => $this->tf->groupConcatFieldSql('above1', $this->fields['huo']['org_unit_above1'],';;')
-																			, 'above2' => $this->tf->groupConcatFieldSql('above2', $this->fields['huo']['org_unit_above2'],';;')),true,false)
-				->defineFieldColumn($this->plugin->txt("orgu"), 'orgu', array('orgu' => $this->tf->groupConcatFieldSql('orgu', $this->fields['huo']['orgu_title'])),true);
+				->defineFieldColumn($this->plugin->txt("odbd"), 'odbd', array('above1' => $this->tf->groupConcat('above1', $this->fields['huo']['org_unit_above1'],';;')
+																			, 'above2' => $this->tf->groupConcat('above2', $this->fields['huo']['org_unit_above2'],';;')),true,false)
+				->defineFieldColumn($this->plugin->txt("orgu"), 'orgu', array('orgu' => $this->tf->groupConcat('orgu', $this->fields['huo']['orgu_title'])),true);
 		}
 		$this->space = $table->prepareTableAndSetRelevantFields($this->space);
 		return $table;

@@ -13,25 +13,15 @@ require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * This class performs all interactions with the database in order to get report-content. Puplic methods may be accessed in 
 * in the GUI via $this->object->{method-name}.
 */
-abstract class ilObjReportBase extends ilObjectPlugin {
-	protected $online;
-	protected $gIldb;
-	protected $gTree;
-
-	protected $filter = null;
-	protected $filter_action = null;
-	protected $query = null;
-	protected $table = null;
-	protected $order = null;
-	protected $user_utils;
-
-	public $sf;
-	public $master_plugin;
-	public $settings;
+use CaT\TableRelations as TableRelations;
+use CaT\Filter as Filters;
+abstract class ilObjReportBase2 extends ilObjectPlugin{
 
 	const URL_PREFIX = "https://";
-
+	
 	public function __construct($a_ref_id = 0) {
+		global $ilUser;
+		$this->gUser = $ilUser;
 		parent::__construct($a_ref_id);
 		global $ilDB, $ilUser, $tree;
 		$this->user_utils = gevUserUtils::getInstanceByObj($ilUser);
@@ -43,27 +33,32 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 		$this->filter = null;
 		$this->order = null;
 
-		$this->s_f = new settingFactory($this->gIldb);
+		$this->sf = new settingFactory($this->gIldb);
 		$this->master_plugin = new ilReportMasterPlugin();
 		$this->settings = array();
 		$this->createLocalReportSettings();
 		$this->createGlobalReportSettings();
-		$this->settings_data_handler = $this->s_f->reportSettingsDataHandler();
+		$this->settings_data_handler = $this->sf->reportSettingsDataHandler();
 
 		$this->validateUrl = new \CaT\Validate\ValidateUrl;
+		$this->gf = new TableRelations\GraphFactory();
+		$this->pf = new Filters\PredicateFactory();
+		$this->tf = new TableRelations\TableFactory($this->pf, $this->gf);
 	}
 
-
+	/**
+	 * create the settings, that are relevant for self only
+	 */
 	abstract protected function createLocalReportSettings();
 
 	protected function createGlobalReportSettings() {
 
 		$this->global_report_settings =
-			$this->s_f->reportSettings('rep_master_data')
-				->addSetting($this->s_f
+			$this->sf->reportSettings('rep_master_data')
+				->addSetting($this->sf
 								->settingBool('is_online', $this->master_plugin->txt('is_online'))
 								)
-				->addSetting($this->s_f
+				->addSetting($this->sf
 								->settingString('pdf_link', $this->master_plugin->txt('rep_pdf_desc'))
 									->setFromForm(function ($string) {
 										$string = trim($string);
@@ -73,7 +68,7 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 										return self::URL_PREFIX.$string;
 									})
 								)
-				->addSetting($this->s_f
+				->addSetting($this->sf
 								->settingString('video_link', $this->master_plugin->txt('rep_video_desc'))
 									->setFromForm(function ($string) {
 										$string = trim($string);
@@ -83,19 +78,77 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 										return self::URL_PREFIX.$string;
 									})
 								)
-				->addSetting($this->s_f
+				->addSetting($this->sf
 								->settingRichText('tooltip_info', $this->master_plugin->txt('rep_tooltip_desc'))
 								);
 	}
 
-	public function prepareRelevantParameters() {
+	/**
+	 * configure table for the report according
+	 * to local settings and maybe other parameters
+	 */
+	abstract public function prepareTable(catSelectableReportTableGUI $table);
 
+	/**
+	 * configure filter for the report according
+	 * to local settings and maybe other parameters
+	 */
+	abstract public function filter();
+
+	/**
+	 * define all the tables relevant for report and
+	 * relations between them
+	 */
+	abstract public function initSpace();
+
+	/**
+	 * fetch the sql statement.
+	 */
+	public function buildQueryStatement() {	
+		return $this->getInterpreter()->getSql($this->space->query());
 	}
 
+	/**
+	 * fetch the query interpreter for the query object
+	 * spawned by the space.
+	 */
+	protected function getInterpreter() {
+		if(!$this->interpreter) {
+			$this->interpreter = new TableRelations\SqlQueryInterpreter( new Filters\SqlPredicateInterpreter($this->gIldb), $this->pf, $this->gIldb);
+		}
+		return $this->interpreter;
+	}
+
+	/**
+	 * query the database and postprocess results using some callback
+	 */
+	public function deliverData(callable $callable) {
+		$res = $this->gIldb->query($this->getInterpreter()->getSql($this->space->query()));
+		$return = array();
+		while($rec = $this->gIldb->fetchAssoc($res)) {
+			$return[] = call_user_func($callable,$rec);
+		}
+		return $return;
+	}
+
+	/**
+	 * which parameters are relevant for this report and should be
+	 * passed on to sub gui-calls and links insisde report
+	 */
+	public function getRelevantParameters() {
+		return $this->relevant_parameters;
+	}
+
+	/**
+	 * get an associative array of settings for the class instance
+	 */
 	public function getSettingsData() {
 		return $this->settings;
 	}
 
+	/**
+	 * get a certain setting
+	 */
 	public function getSettingsDataFor($key) {
 		if(!array_key_exists($key, $this->settings)) {
 			throw new Exception("ilObjReportBase::getSettingsDataFor: key ".$key." not found in settings.");
@@ -108,152 +161,14 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 		$this->settings = $settings;
 	}
 
-	public function prepareReport() {
-		$this->filter = $this->buildFilter(catFilter::create());
-		$this->table = $this->buildTable(catReportTable::create());
-		$this->query = $this->buildQuery(catReportQuery::create());
-		$this->order = $this->buildOrder(catReportOrder::create($this->table));
-		$this->addFilterToRelevantParameters();
-	}
-
+	/**
+	 * add a parameter to relevant parameters referenced to by a key
+	 */
 	public function addRelevantParameter($key, $value) {
 		$this->relevant_parameters[$key] = $value;
 	}
 
-	protected function addFilterToRelevantParameters() {
-		if($this->filter) {
-			$this->addRelevantParameter($this->filter->getGETName(),$this->filter->encodeSearchParamsForGET());
-		}
-	}
-
-	public function deliverFilter() {
-		return $this->filter;
-	}
-
-	public function deliverTable() {
-		if($this->table !== null ) {
-			return $this->table;
-		}
-		throw new Exception("cilObjReportBase::deliverTable: you need to define a table.");
-	}
-
-	public function deliverOrder() {
-		return $this->order;
-	}
-
-	/**
-	 * Prepare a query to be used for data retrieval in Report later on.
-	 *
-	 * @param	catReportQuery	$query
-	 * @return	catReportQuery	$query
-	 */
-	abstract protected function buildQuery($query);
-
-	/**
-	 * Prepare a filter to be rendered in Report later on.
-	 *
-	 * @param	catFilter	$filter
-	 * @return	catFilter	$filter
-	 */
-	abstract protected function buildFilter($filter);
-
-	/**
-	 * Prepare a order for retrieved data in Report later on.
-	 *
-	 * @param	catReportOrder	$order
-	 * @return	catReportOrder	$order
-	 */
-	abstract protected function buildOrder($order);
-	
-	/**
-	 * Prepare a table to render in Report later on.
-	 *
-	 * @param	catReportTable	$table
-	 * @return	catReportTable	$table
-	 */
-	protected function buildTable($table) {
-		return $table	->template($this->getRowTemplateTitle(), $this->plugin->getDirectory());
-	}
-
-	/**
-	 * The sql-query is built by the following methods.
-	 */
-	protected function queryWhere() {
-		$query_part = $this->query ? $this->query->getSqlWhere() : ' TRUE ';
-		$filter_part = $this->filter ? $this->filter->getSQLWhere() : ' TRUE ';
-		return ' WHERE '.$filter_part.' AND '.$query_part;
-	}
-	
-	protected function queryHaving() {
-		if ($this->filter === null) {
-			return "";
-		}
-		$having = $this->filter->getSQLHaving();
-		if (trim($having) === "") {
-			return "";
-		}
-		return " HAVING ".$having;
-	}
-	
-	protected function queryOrder() {
-		if ($this->order === null ||
-			in_array($this->order->getOrderField(), 
-				$this->internal_sorting_fields ? $this->internal_sorting_fields : array())
-			) {
-			return "";
-		}
-		return $this->order->getSQL();
-	}
-
-	protected function groupData($data) {
-		$grouped = array();
-		
-		foreach ($data as $row) {
-			$group_key = $this->makeGroupKey($row);
-			if (!array_key_exists($group_key, $grouped)) {
-				$grouped[$group_key] = array();
-			}
-			$grouped[$group_key][] = $row;
-		}
-
-		return $grouped;
-	}
-
-	protected function makeGroupKey($row) {
-		$head = "";
-		$tail = "";
-		foreach ($this->table->_group_by as $key => $value) {
-			$head .= strlen($row[$key])."-";
-			$tail .= $row[$key];
-		}
-		return $head.$tail;
-	}
-
-	/**
-	 * The following methods perform the query and collect data.
-	 * getData returns the results, to be put into the table.
-	 */
-
-	public function deliverData(callable $callback) {  
-		if ($this->data == false){
-			$this->data = $this->fetchData($callback);
-		}
-		return $this->data;
-	}
-
-	public function deliverGroupedData(callable $callback) {
-		return $this->groupData($this->deliverData($callback));
-	}
-
-	public function buildQueryStatement() {
-		return $this->query->sql()."\n "
-			   . $this->queryWhere()."\n "
-			   . $this->query->sqlGroupBy()."\n"
-			   . $this->queryHaving()."\n"
-			   . $this->queryOrder();
-	}
-
-	/**
+		/**
 	 * Stores query results to an array after postprocessing with callback
 	 *
 	 * @param	callable	$callback
@@ -274,17 +189,9 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 		return $data;
 	}
 
-	public function setFilterAction($link) {
-		$this->filter_action = $link;
-	}
-
-	public function getRelevantParameters() {
-		return $this->relevant_parameters;
-	}
-
-	abstract protected function getRowTemplateTitle();
-
-
+	/**
+	 * interaction with storage
+	 */
 	final public function doCreate() {
 		$this->settings_data_handler->createObjEntry($this->getId(), $this->global_report_settings);
 		$this->settings_data_handler->createObjEntry($this->getId(), $this->local_report_settings);
@@ -310,8 +217,6 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 		$new_obj->setDescription($this->getDescription());
 		$new_obj->update();
 	}
-
-	// Report discovery
 
 	/**
 	 * Get a list with object data (obj_id, title, type, description, icon_small) of all
@@ -458,11 +363,20 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 	protected static function filterPlugins($plugins) {
 		return array_filter($plugins, function($plugin) {
 			if ($plugin instanceof ilReportBasePlugin
+				&& !($plugin instanceof ilReportExamBioPlugin)
 				&& !($plugin instanceof ilReportEduBioPlugin)
 				) {
 				return true;
 			}
 			return false;
 		});
+	}
+
+	public function titile() {
+		return parent::getTitle();
+	}
+
+	public function description() {
+		return parent::getDescription();
 	}
 }

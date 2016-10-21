@@ -1,6 +1,7 @@
 <?php
 namespace CaT\TableRelations;
 use CaT\Filter as Filter;
+use CaT\TableRelations\Tables\DerivedFields as Derived;
 
 /**
  * Creates a sql-query or data from a query object.
@@ -33,21 +34,47 @@ class SqlQueryInterpreter {
 		foreach ($query->requested() as $id => $field) {
 			$sql_requested[] = $this->interpretField($field)." AS ".$id;
 		}
-		return implode(", ", $sql_requested);
+		return implode(", ", $sql_requested).PHP_EOL;
 	}
 
 
 	protected function interpretField(Filter\Predicates\Field $field) {
 			if($field instanceof Tables\TableField) {
-				return $field->name();
+				return ' '.$field->name();
 			} elseif($field instanceof Tables\DerivedField)  {
 				//call self recursively as long derived field derive from derived fields...
-				$sub_fields = array_map(array($this, 'interpretField'), $field->derivedFrom());
-				return call_user_func_array($field->postprocess(), $sub_fields);
+				return $this->interpreteDerivedField($field);
 			} else {
 				throw new TableRelationsException("Unknown field ".$field->name());
 			}
+	}
 
+	protected function interpreteDerivedField(Tables\DerivedField $field) {
+		if($field instanceof Derived\Sum ) {
+			return ' SUM('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Count ) {
+			return ' COUNT(*)';
+		} elseif( $field instanceof Derived\GroupConcat ) {
+			return ' GROUP_CONCAT('.$this->interpretField($field->argument()).' SEPARATOR \''.$field->separator().'\')';
+		} elseif( $field instanceof Derived\FromUnixtime ) {
+			return ' FROM_UNIXTIME('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Avg ) {
+			return ' AVG('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Max ) {
+			return ' MAX('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Min ) {
+			return ' MIN('.$this->interpretField($field->argument()).')';
+		} elseif( $field instanceof Derived\Plus ) {
+			return $this->interpretField($field->left()).' +'.$this->interpretField($field->right());
+		} elseif( $field instanceof Derived\Minus ) {
+			return $this->interpretField($field->left()).' -'.$this->interpretField($field->right());
+		} elseif( $field instanceof Derived\Quot ) {
+			return $this->interpretField($field->left()).' /'.$this->interpretField($field->right());
+		} elseif( $field instanceof Derived\Times ) {
+			return $this->interpretField($field->left()).' *'.$this->interpretField($field->right());
+		} else {
+			throw new TableRelationsException("Unknown field type".$field->name());
+		}
 	}
 
 	/**
@@ -58,18 +85,18 @@ class SqlQueryInterpreter {
 	 */
 	public function getSql($query) {
 		return 
-			"SELECT ".$this->requestedFields($query).PHP_EOL
-				.$this->from($query).PHP_EOL
-				.$this->join($query).PHP_EOL
-				.$this->where($query).PHP_EOL
-				.$this->groupBy($query).PHP_EOL
-				.$this->having($query).PHP_EOL
+			"SELECT ".$this->requestedFields($query)
+				.$this->from($query)
+				.$this->join($query)
+				.$this->where($query)
+				.$this->groupBy($query)
+				.$this->having($query)
 				.$this->orderBy($query);
 	}
 
 	protected function orderBy($query) {
 		$fields = $query->orderByFields();
-		return count($fields) > 0 ? ' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode()) : '';
+		return count($fields) > 0 ? PHP_EOL.' ORDER BY '.implode(' '.strtoupper($query->orderByMode()).', ',$query->orderByFields()).' '.strtoupper($query->orderByMode()) : '';
 	}
 
 	protected function interpretTable(Tables\AbstractTable $table) {
@@ -83,11 +110,11 @@ class SqlQueryInterpreter {
 	}
 
 	protected function from(Tables\AbstractQuery $query) {
-		return " FROM ".$this->interpretTable($query->rootTable());
+		return PHP_EOL." FROM ".$this->interpretTable($query->rootTable());
 	}
 
 	protected function interpretDerivedTable(Tables\DerivedTable $table) {
-		return "(".$this->getSql($table->space->query()).") AS ".$table->id();
+		return PHP_EOL."(".$this->getSql($table->space()->query()).") AS ".$table->id();
 	}
 
 	protected function interpretPredicate(Filter\Predicates\Predicate $predicate) {
@@ -113,7 +140,7 @@ class SqlQueryInterpreter {
 			}
 			$joins[] = $join." ON ".$this->interpretPredicate($condition_aggregate);
 		}
-		return count($joins) > 0 ? implode(PHP_EOL,$joins) : "";
+		return count($joins) > 0 ? PHP_EOL.implode(PHP_EOL,$joins) : "";
 	}
 
 	protected function where(Tables\AbstractQuery $query) {
@@ -124,16 +151,16 @@ class SqlQueryInterpreter {
 			if($root_constraint) {
 				$predicate = $predicate->_AND($root_constraint);
 			}
-			return "WHERE ".$this->interpretPredicate($predicate);
+			return PHP_EOL." WHERE ".$this->interpretPredicate($predicate);
 		} elseif( $root_constraint) {
-			return "WHERE ".$this->interpretPredicate($root_constraint);
+			return PHP_EOL." WHERE ".$this->interpretPredicate($root_constraint);
 		}
 		return "";
 	}
 
 	protected function having(Tables\AbstractQuery $query) {
 		if($query->having()) {
-			return " HAVING ".$this->interpretPredicate($query->having());
+			return PHP_EOL." HAVING ".$this->interpretPredicate($query->having());
 		}
 		return "";
 	}
@@ -144,6 +171,6 @@ class SqlQueryInterpreter {
 		foreach($query->groupBy() as $field) {
 			$group_by[] = $field->name();
 		}
-		return "GROUP BY ".implode(", ",$group_by);
+		return count($group_by) > 0 ?  PHP_EOL." GROUP BY ".implode(", ",$group_by) : '';
 	}
 };

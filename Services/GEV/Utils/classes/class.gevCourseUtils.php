@@ -34,7 +34,7 @@ class gevCourseUtils {
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gTree = $tree;
-		
+
 		$this->gLng->loadLanguageModule("crs");
 		
 		$this->crs_id = $a_crs_id;
@@ -3735,5 +3735,19 @@ class gevCourseUtils {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Locate all objects contained by the course of a given type.
+	 * And get corresponding metadata, like obj_id, ref_id, lft, rgt...
+	 * Note, that the course itself will also be found, as well as
+	 * well as the rolefolder.
+	 *
+	 * @param	string	$type
+	 * @return	string[][]
+	 */
+	public function objsInCourseOfType($type = '') {
+		return $this->gTree->getSubTree(
+			$this->gTree->getNodeData($this->getRefId()),true, $type);
 	}
 }

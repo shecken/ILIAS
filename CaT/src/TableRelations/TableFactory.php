@@ -63,16 +63,6 @@ class TableFactory {
 	}
 
 	/**
-	 * @param	string	$name
-	 * @param	clousre	$postprocess
-	 * @param	AbstractField[]	$fields
-	 * @return	AbstractDerivedField
-	 */
-	public function DerivedField($name, \Closure $postprocess, array $fields) {
-		return new Tables\DerivedField($this->predicate_factory,$name,$postprocess,$fields);
-	}
-
-	/**
 	 * @return	TableSpace
 	 */
 	public function TableSpace() {
@@ -129,6 +119,45 @@ class TableFactory {
 	}
 
 	/**
+	 * Hist user orgu table representation
+	 *
+	 * @param	string	$id
+	 * @return	AbstractTable
+	 */
+	public function histUserTestrun($id) {
+		return $this->table('hist_usertestrun',$id)
+			->addField($this->field('usr_id'))
+			->addField($this->field('obj_id'))
+			->addField($this->field('pass'))
+			->addField($this->field('hist_historic'))
+			->addField($this->field('max_points'))
+			->addField($this->field('points_achieved'))
+			->addField($this->field('test_passed'))
+			->addField($this->field('testrun_finished_ts'))
+			->addField($this->field('test_title'))
+			->addField($this->field('percent_to_pass'))
+		;
+	}
+
+	public function allOrgusOfUsers($id,array $usr_ids = array()) {
+
+		$orgus = $this->histUserOrgu('orgus');
+		$constraint = $orgus->field('hist_historic')->EQ()->int(0)->_AND($orgus->field('action')->GE()->int(0));
+		if(count($usr_ids)>0) {
+			$constraint = $constraint->_AND($this->predicate_factory->IN($orgus->field('usr_id'),$this->predicate_factory->list_int_by_array($usr_ids)));
+		}
+		$orgus->addConstraint($constraint);
+		$all_orgus_space = $this->TableSpace()
+					->addTablePrimary($orgus)
+					->setRootTable($orgus)
+					->request($orgus->field('usr_id'))
+					->request($this->groupConcat('orgus',$orgus->field('orgu_title')))
+					->groupBy($orgus->field('usr_id'));
+
+		return $this->DerivedTable($all_orgus_space,$id);
+	}
+
+	/**
 	 * Derived field equivalent of sql GROUP_CONCAT
 	 *
 	 * @param	string	$name
@@ -136,34 +165,10 @@ class TableFactory {
 	 * @param	string	$separator
 	 * @return	AbsractDerivedField
 	 */
-	public function groupConcatFieldSql($name, Filters\Predicates\Field $field, $separator = ', ') {
-		return $this->DerivedField(
-			$name
-			,function($field) use ($separator){
-				return 'GROUP_CONCAT(DISTINCT '
-					.$field
-					.' ORDER BY '.$field
-					.' DESC SEPARATOR \''.$separator.'\')';
-			}
-			,array($field));
+	public function groupConcat($name, Filters\Predicates\Field $field, $separator = ', ') {
+		return new Tables\DerivedFields\GroupConcat($this->predicate_factory, $name, $field, $separator);
 	}
 
-	/**
-	 * Derived field equivalent of sql -
-	 *
-	 * @param	string	$name
-	 * @param	AbstractField	$minuend
-	 * @param	AbstractField	$subtrahend
-	 * @return	AbsractDerivedField
-	 */
-	public function diffFieldsSql($name, Filters\Predicates\Field $minuend, Filters\Predicates\Field $subtrahend) {
-		return $this->DerivedField(
-			$name
-			,function($minuend,$subtrahend) {
-				return $minuend.' - '.$subtrahend;
-			}
-			,array($minuend,$subtrahend));
-	}
 
 	/**
 	 * Derived field equivalent of sql FROM_UNIXTIME
@@ -172,12 +177,76 @@ class TableFactory {
 	 * @param	AbstractField	$timestamp
 	 * @return	AbsractDerivedField
 	 */
-	public function fromUnixtimeSql($name, Filters\Predicates\Field $timestamp) {
-		return $this->DerivedField(
-			$name
-			,function($timestamp) {
-				return 'FROM_UNIXTIME('.$timestamp.',\'%d.%m.%Y\')';
-			}
-			,array($timestamp));
+	public function fromUnixtime($name, Filters\Predicates\Field $timestamp) {
+		return new Tables\DerivedFields\FromUnixtime($this->predicate_factory, $name, $field);
 	}
+
+	public function min($name, Filters\Predicates\Field $field) {
+		return new Tables\DerivedFields\Min($this->predicate_factory, $name, $field);
+	}
+
+	public function max($name, Filters\Predicates\Field $field) {
+		return new Tables\DerivedFields\Max($this->predicate_factory, $name, $field);
+	}
+
+	public function countAll($name) {
+		return new Tables\DerivedFields\Count($this->predicate_factory, $name);
+	}
+
+	public function sum($name, Filters\Predicates\Field $field) {
+		return new Tables\DerivedFields\Sum($this->predicate_factory, $name, $field);
+	}
+
+	public function avg($name, Filters\Predicates\Field $field) {
+		return new Tables\DerivedFields\Avg($this->predicate_factory, $name, $field);
+	}
+
+	/**
+	 * Derived field equivalent of sql /
+	 *
+	 * @param	string	$name
+	 * @param	AbstractField
+	 * @param	AbstractField
+	 * @return	AbsractDerivedField
+	 */
+	public function quot($name, Filters\Predicates\Field $enum,Filters\Predicates\Field $denom) {
+		return new Tables\DerivedFields\Quot($this->predicate_factory, $name, $enum,$denom);
+	}
+
+	/**
+	 * Derived field equivalent of sql -
+	 *
+	 * @param	string	$name
+	 * @param	AbstractField
+	 * @param	AbstractField
+	 * @return	AbsractDerivedField
+	 */
+	public function minus($name, Filters\Predicates\Field $minuend, Filters\Predicates\Field $subtrahend) {
+		return new Tables\DerivedFields\Minus($this->predicate_factory, $name, $minuend, $subtrahend);
+	}
+
+	/**
+	 * Derived field equivalent of sql +
+	 *
+	 * @param	string	$name
+	 * @param	AbstractField
+	 * @param	AbstractField
+	 * @return	AbsractDerivedField
+	 */
+	public function plus($name, Filters\Predicates\Field $summand1, Filters\Predicates\Field $summand2) {
+		return new Tables\DerivedFields\Plus($this->predicate_factory, $name, $summand1, $summand2);
+	}
+
+	/**
+	 * Derived field equivalent of sql *
+	 *
+	 * @param	string	$name
+	 * @param	AbstractField
+	 * @param	AbstractField
+	 * @return	AbsractDerivedField
+	 */
+	public function times($name, Filters\Predicates\Field $factor1, Filters\Predicates\Field $factor2) {
+		return new Tables\DerivedFields\Times($this->predicate_factory, $name, $factor1, $factor2);
+	}
+
 }

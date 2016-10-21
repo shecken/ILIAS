@@ -1,4 +1,5 @@
 <?php
+require_once 'Services/CaTUIComponents/classes/class.catTableGUI.php';
 /**
  * Table with selectable columns for report taking care of requested fields
  */

@@ -110,4 +110,16 @@ class ValueLike {
 	public function IS_NULL() {
 		return $this->factory->IS_NULL($this);
 	}
+
+	public function LIKE(ValueLike $val = null) {
+		if($val !== null) {
+			return $this->factory->LIKE($this,$val);
+		}
+		$self = $this;
+		return $this->fluent_factory(
+			function(ValueLike $value) use ($self) {
+				return $self->LIKE($value);
+			}
+		);
+	}
 }

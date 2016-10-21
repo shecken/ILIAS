@@ -6,6 +6,7 @@ require_once("./Services/UIComponent/classes/class.ilUIHookPluginGUI.php");
 require_once("./Services/GEV/CourseSearch/classes/class.gevCourseSearch.php");
 require_once("./Services/GEV/Utils/classes/class.gevMyTrainingsAdmin.php");
 require_once("./Services/GEV/Utils/classes/class.gevSettings.php");
+require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
 
 use \CaT\Plugins\TalentAssessment;
 
@@ -17,10 +18,12 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 	const ASSESSMENT_CHECK_INTERVAL = "300";
 
 	public function __construct() {
-		global $ilUser, $lng, $ilCtrl, $rbacreview;
+		global $ilUser, $lng, $ilCtrl, $ilDB, $ilAccess, $rbacreview;
 		$this->gLng = $lng;
 		$this->gUser = $ilUser;
 		$this->gCtrl = $ilCtrl;
+		$this->gIldb = $ilDB;
+		$this->gAccess = $ilAccess;
 		$this->gRbacreview = $rbacreview;
 	}
 
@@ -58,6 +61,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			( $base_class == "gevdesktopgui" 
 				|| ($cmd_class == "ilobjreportedubiogui"
 					&& $_GET["target_user_id"] == $this->gUser->getId())
+				|| ($cmd_class == "ilobjreportexambiogui"
+					&& $_GET["target_user_id"] == $this->gUser->getId())
 				|| $base_class == "iltepgui"
 			)
 			&& $cmd_class != "gevcoursesearchgui"
@@ -80,6 +85,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			}
 			if ($_GET["cmdClass"] == "ilobjreportedubiogui") {
 				return "edubio";
+			}
+			if ($_GET["cmdClass"] == "ilobjreportexambiogui") {
+				return "exambio";
 			}
 			if ($_GET["cmdClass"] == "gevuserprofilegui") {
 				return "profile";
@@ -143,6 +151,13 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		if ($user_utils && ($edu_bio_link = $user_utils->getEduBioLink())) {
 			$items["edubio"]
 				= array($this->gLng->txt("gev_edu_bio"), $user_utils->getEduBioLink());
+		}
+
+		if ($user_utils && ($ref_id = ilObjReportExamBioGUI::examBiographyReferenceForUsers($this->gIldb))) {
+			if($this->gAccess->checkAccessOfUser($this->gUser->getId,'read','',$ref_id) || $user_utils->isAdmin()) {
+				$items["exambio"]
+					= array($this->gLng->txt("gev_exam_bio"), ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id,$this->gCtrl));
+			}
 		}
 
 		$items["profile"]

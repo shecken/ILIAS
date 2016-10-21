@@ -3,27 +3,22 @@ namespace CaT\TableRelations\Tables;
 
 use CaT\Filter as Filters;
 
-class DerivedField extends Filters\Predicates\Field implements AbstractDerivedField{
+abstract class DerivedField extends Filters\Predicates\Field implements AbstractDerivedField{
 
 	protected $derived_from = array();
-	public function __construct(Filters\PredicateFactory $f, $name, \Closure $postprocess, $fields = array()) {
-		$this->derived_from = $fields;
-		$this->postprocess = $postprocess;
-		parent::__construct($f, $name);
-	}
 
 	/**
 	 * Get all fields from which this field is derived.
 	 *
 	 * @return	AbstractTableField[]
 	 */
-	public function derivedFrom() {
+	public function derivedFromRecursive() {
 		$return = array();
 		foreach ($this->derived_from as $field) {
 			if($field instanceof AbstractTableField) {
 				$return[$field->name()] = $field;
 			} elseif($field instanceof self) {
-				$return = array_merge($return, $field->derived_from);
+				$return = array_merge($return, $field->derivedFromRecursive());
 			} else {
 				throw new TableExcepiton('unknown field type');
 			}
@@ -32,12 +27,12 @@ class DerivedField extends Filters\Predicates\Field implements AbstractDerivedFi
 	}
 
 	/**
-	 * Get the postprocessing-function to be used by interpreter.
+	 * Get first order of fields from which this field is derived.
 	 *
-	 * @return	closure 
+	 * @return	AbstractTableField[]
 	 */
-	public function postprocess() {
-		return $this->postprocess;
+	public function derivedFrom() {
+		return array_values($this->derived_from);
 	}
 
 	/**

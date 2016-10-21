@@ -92,6 +92,38 @@ class PredicateFactory {
 	}
 
 	/**
+	 * Construct a list from array of int values.
+	 *
+	 * @param	string[]|int[]	$ints
+	 * @return	ValueList
+	 */
+	public function list_int_by_array($ints) {
+		$val_objs = array();
+		foreach ($ints as $int) {
+			$val_objs[] = $this->int($int);
+		}
+		return new Predicates\ValueList($val_objs);
+	}
+
+	/**
+	 * Construct a list from array of int values.
+	 *
+	 * @param	Field[]	$fields
+	 * @return	ValueList
+	 */
+	public function list_field_by_array(array $fields) {
+		$val_objs = array();
+		foreach ($fields as $field) {
+			if(!$field instanceof Predicates\Field) {
+				throw new \InvalidArgumentException('arguments must be of type Predicates\Field');
+			}
+			$val_objs[] = $field;
+		}
+		return new Predicates\ValueList($val_objs);
+	}
+
+
+	/**
 	 * Construct a list from str values.
 	 *
 	 * @param	string[]|int[]	$elements
@@ -224,5 +256,9 @@ class PredicateFactory {
 	
 	public function IS_NULL(Predicates\ValueLike $val) {
 		return new Predicates\PredicateIsNull($this, $val);
+	}
+
+	public function LIKE(Predicates\ValueLike $left, Predicates\ValueLike $right) {
+		return new Predicates\PredicateLike($this,$left,$right);
 	}
 }
