@@ -6,7 +6,8 @@ require_once("./Services/UIComponent/classes/class.ilUIHookPluginGUI.php");
 require_once("./Services/GEV/CourseSearch/classes/class.gevCourseSearch.php");
 require_once("./Services/GEV/Utils/classes/class.gevMyTrainingsAdmin.php");
 require_once("./Services/GEV/Utils/classes/class.gevSettings.php");
-require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
 
 use \CaT\Plugins\TalentAssessment;
 
@@ -153,10 +154,14 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 				= array($this->gLng->txt("gev_edu_bio"), $user_utils->getEduBioLink());
 		}
 
-		if ($user_utils && ($ref_id = ilObjReportExamBioGUI::examBiographyReferenceForUsers($this->gIldb))) {
-			if($this->gAccess->checkAccessOfUser($this->gUser->getId,'read','',$ref_id) || $user_utils->isAdmin()) {
-				$items["exambio"]
-					= array($this->gLng->txt("gev_exam_bio"), ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id,$this->gCtrl));
+		$ass_bio_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
+							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xexb"));
+		if($ass_bio_plugin && $ass_bio_plugin->active) {
+			if ($user_utils && ($ref_id = ilObjReportExamBioGUI::examBiographyReferenceForUsers($this->gIldb))) {
+				if($this->gAccess->checkAccessOfUser($this->gUser->getId,'read','',$ref_id) || $user_utils->isAdmin()) {
+					$items["exambio"]
+						= array($this->gLng->txt("gev_exam_bio"), ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id,$this->gCtrl));
+				}
 			}
 		}
 
