@@ -1131,6 +1131,14 @@ class gevDecentralTrainingGUI {
 			$venue->setDisabled($a_form_values["no_changes_allowed"]);
 			$form->addItem($venue);
 
+                        $venue_room_nr = new ilTextInputGUI($this->lng->txt("gev_venue_room_nr"), "venue_room_nr");
+			$venue_room_nr->setDisabled($a_form_values["no_changes_allowed"]);
+			
+			if ($a_form_values["venue_free_text"] && $a_fill) {
+				$venue_room_nr->setValue($a_form_values["venue_free_text"]);
+			}
+			$form->addItem($venue_room_nr);
+                        
 			$venue_free_text = new ilTextInputGUI($this->lng->txt("gev_venue_free_text"), "venue_free_text");
 			$venue_free_text->setInfo($this->lng->txt("gev_dec_training_venue_free_text_info"));
 			$venue_free_text->setDisabled($a_form_values["no_changes_allowed"]);
@@ -1361,6 +1369,14 @@ class gevDecentralTrainingGUI {
 			$venue->setDisabled($a_form_values["no_changes_allowed"]);
 			$form->addItem($venue);
 
+                        $venue_room_nr = new ilTextInputGUI($this->lng->txt("gev_venue_room_nr"), "venue_room_nr");
+			$venue_room_nr->setDisabled($a_form_values["no_changes_allowed"]);
+			
+			if ($a_form_values["venue_free_text"] && $a_fill) {
+				$venue_room_nr->setValue($a_form_values["venue_free_text"]);
+			}
+			$form->addItem($venue_room_nr);
+                        
 			$venue_free_text = new ilTextInputGUI($this->lng->txt("gev_venue_free_text"), "venue_free_text");
 			$venue_free_text->setInfo($this->lng->txt("gev_dec_training_venue_free_text_info"));
 			$venue_free_text->setDisabled($a_form_values["no_changes_allowed"]);
