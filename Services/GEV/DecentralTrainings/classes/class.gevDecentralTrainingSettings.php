@@ -20,7 +20,7 @@ class gevDecentralTrainingSettings {
 	protected $venue_obj_id; 
 	
         // @var string|null             Rommnumber of the Venue
-        protected $nenue_room_nr;
+        protected $venue_room_nr;
         
 	// @var string|null		A free form Venue.
 	protected $venue_text;
@@ -139,6 +139,10 @@ class gevDecentralTrainingSettings {
 	public function venueObjId() {
 		return $this->venue_obj_id;
 	}
+        
+        public function venueRoomNr() {
+                return $this->venue_room_nr;
+        }
 	
 	public function venueText() {
 		return $this->venue_text;
@@ -217,6 +221,7 @@ class gevDecentralTrainingSettings {
 		$crs_utils->setSchedule(array($start[0].":".$start[1]."-".$end[0].":".$end[1]));
 
 		$crs_utils->setVenueId($this->venueObjId());
+                $crs_utils->setVenueRoomNr($this->venueRoomNr());
 		$crs_utils->setVenueFreeText($this->venueText());
 		$crs_utils->setVirtualClassLink($this->webinarLink());
 		$crs_utils->setVirtualClassPassword($this->webinarPassword());
