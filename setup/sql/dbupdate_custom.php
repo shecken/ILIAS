@@ -5271,9 +5271,3 @@ gevDecentralTrainingCreationRequestDB::install_step6($ilDB);
 require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCreationRequestDB.php");
 gevDecentralTrainingCreationRequestDB::install_step7($ilDB);
 ?>
-
-<#229>
-<?php
-require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCreationRequestDB.php");
-gevDecentralTrainingCreationRequestDB::install_step8($ilDB);
-?>
