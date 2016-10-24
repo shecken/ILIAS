@@ -986,6 +986,15 @@ class gevCourseUtils {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_TRAINING_CREATOR);
 	}
 
+	//Lernzeit
+	public function getLearningTime() {
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_LEARNING_TIME);
+	}
+
+	public function setLearningTime($learning_time) {
+		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_LEARNING_TIME, $learning_time);
+	}
+
 	
 	// Accomodation
 	
