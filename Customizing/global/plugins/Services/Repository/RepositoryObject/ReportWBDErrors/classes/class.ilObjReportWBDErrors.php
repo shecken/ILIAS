@@ -270,7 +270,6 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 
 	protected function getStatusFilterDefaults() {
 		return array("not_resolved" => $this->plugin->txt("not_resolved")
-				   , "resolved" => $this->plugin->txt("resolve")
 				   , "feedback" => $this->plugin->txt("feedback")
 			);
 	}
