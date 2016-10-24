@@ -931,3 +931,18 @@ gevAMDUtils::removeAMDField(gevSettings::CRS_AMD_HIGHLIGHT);
 gevAMDUtils::removeAMDRecord("Highlight");
 ?>
 
+<#29>
+<?php
+require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+
+gevAMDUtils::addAMDField( "Orte und Anbieter" 
+                                                ,"Raumnummer"
+						,gevSettings::CRS_AMD_VENUE_ROOM_NR
+	 	   					 , null
+	 	   					 , true
+	 	   					 , null
+	 	   					 , ilAdvancedMDFieldDefinition::TYPE_TEXT
+	 	   					 );
+?>

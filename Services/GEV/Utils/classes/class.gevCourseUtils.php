@@ -879,6 +879,14 @@ class gevCourseUtils {
 	public function setVenueId($a_venue) {
 		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_VENUE, $a_venue);
 	}
+        
+        public function getVenueRoomNr() {
+                return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_VENUE_ROOM_NR);
+        }
+        
+        public function setVenueRoomNr($a_venue_room_nr) {
+            $this->amd->setField($this->crs_id, gevSettings::CRS_AMD_VENUE_ROOM_NR, $a_venue_room_nr);
+        } 
 
 	public function setVenueFreeText($a_venue_free_text) {
 		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_VENUE_FREE_TEXT,$a_venue_free_text);

@@ -28,7 +28,7 @@ class gevDecentralTrainingCreationRequestDB {
 			"INSERT INTO ".self::TABLE_NAME."\n".
 			"       (request_id, user_id, template_obj_id, requested_ts,\n".
 			"       finished_ts, created_obj_id, trainer_ids, start_dt,\n".
-			"       end_dt, venue_obj_id, venue_text, orgu_ref_id, description,\n".
+			"       end_dt, venue_obj_id, venue_room_nr, venue_text, orgu_ref_id, description,\n".
 			"       orga_info, webinar_link, webinar_password, session_id,title,vc_type,\n".
 			"       training_category,target_group,gdv_topic,tmp_path_string,added_files)\n".
 			" VALUES ( ".$ilDB->quote($request_id, "integer")."\n".
@@ -41,6 +41,7 @@ class gevDecentralTrainingCreationRequestDB {
 			"        , ".$ilDB->quote($settings->start()->get(IL_CAL_DATETIME), "timestamp")."\n".
 			"        , ".$ilDB->quote($settings->end()->get(IL_CAL_DATETIME), "timestamp")."\n".
 			"        , ".$ilDB->quote($settings->venueObjId(), "integer")."\n".
+			"        , ".$ilDB->quote($settings->venueRoomNr(), "text")."\n".
 			"        , ".$ilDB->quote($settings->venueText(), "text")."\n".
 			"        , ".$ilDB->quote($settings->orguRefId(), "integer")."\n".
 			"        , ".$ilDB->quote($settings->description(), "text")."\n".
@@ -79,6 +80,7 @@ class gevDecentralTrainingCreationRequestDB {
 			"     , start_dt = ".$ilDB->quote($settings->start()->get(IL_CAL_DATETIME), "timestamp")."\n".
 			"     , end_dt = ".$ilDB->quote($settings->end()->get(IL_CAL_DATETIME), "timestamp")."\n".
 			"     , venue_obj_id = ".$ilDB->quote($settings->venueObjId(), "integer")."\n".
+			"     , venue_room_nr = ".$ilDB->quote($settings->venueRoomNr(), "text")."\n".
 			"     , venue_text = ".$ilDB->quote($settings->venueText(), "text")."\n".
 			"     , orgu_ref_id= ".$ilDB->quote($settings->orguRefId(), "integer")."\n".
 			"     , description = ".$ilDB->quote($settings->description(), "text")."\n".
@@ -119,6 +121,7 @@ class gevDecentralTrainingCreationRequestDB {
 			$settings = $this->newSettings( new ilDateTime($rec["start_dt"], IL_CAL_DATETIME)
 										  , new ilDateTime($rec["end_dt"], IL_CAL_DATETIME)
 										  , $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null
+										  , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
 										  , $rec["venue_text"] ? $rec["venue_text"] : null
 										  , $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null
 										  , $rec["description"] ? $rec["description"] : ""
@@ -166,6 +169,7 @@ class gevDecentralTrainingCreationRequestDB {
 			$settings = $this->newSettings( new ilDateTime($rec["start_dt"], IL_CAL_DATETIME)
 										  , new ilDateTime($rec["end_dt"], IL_CAL_DATETIME)
 										  , $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null
+										  , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
 										  , $rec["venue_text"] ? $rec["venue_text"] : null
 										  , $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null
 										  , $rec["description"] ? $rec["description"] : ""
@@ -208,6 +212,7 @@ class gevDecentralTrainingCreationRequestDB {
 			$settings = $this->newSettings( new ilDateTime($rec["start_dt"], IL_CAL_DATETIME)
 										  , new ilDateTime($rec["end_dt"], IL_CAL_DATETIME)
 										  , $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null
+										  , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
 										  , $rec["venue_text"] ? $rec["venue_text"] : null
 										  , $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null
 										  , $rec["description"] ? $rec["description"] : ""
@@ -296,6 +301,7 @@ class gevDecentralTrainingCreationRequestDB {
 	protected function newSettings( ilDateTime $a_start_datetime
 							   , ilDateTime $a_end_datetime
 							   , $a_venue_obj_id
+							   , $a_venue_room_nr
 							   , $a_venue_text
 							   , $a_orgu_ref_id
 							   , $a_description
@@ -311,7 +317,7 @@ class gevDecentralTrainingCreationRequestDB {
 							   , $a_added_files
 								  ) {
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingSettings.php");
-		return new gevDecentralTrainingSettings( $a_start_datetime, $a_end_datetime, $a_venue_obj_id, $a_venue_text
+		return new gevDecentralTrainingSettings( $a_start_datetime, $a_end_datetime, $a_venue_obj_id, $a_venue_room_nr, $a_venue_text
 											   , $a_orgu_ref_id, $a_description, $a_orga_info, $a_webinar_link
 											   , $a_webinar_password,$a_title,$a_vc_type,$a_training_category,$a_target_group,$a_gdv_topic
 											   , $a_tmp_path_string, $a_added_files);
@@ -505,5 +511,13 @@ class gevDecentralTrainingCreationRequestDB {
 				"notnull" => false
 			));
 		}
+	}
+
+        static public function install_step8(ilDB $ilDB) {
+		$ilDB->addTableColumn(self::TABLE_NAME, 'venue_room_nr', array(
+			"type" => "text",
+			"length" => 250,
+			"notnull" => false
+		));
 	}
 }
