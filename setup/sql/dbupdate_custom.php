@@ -2629,7 +2629,6 @@ if(!$ilDB->tableExists('hist_tep'))
 
 <#81>
 <?php
-
 	require_once "Customizing/class.ilCustomInstaller.php";
 	ilCustomInstaller::maybeInitClientIni();
 	ilCustomInstaller::maybeInitPluginAdmin();
@@ -4415,7 +4414,7 @@ $ilias->db = $ilDB;
 
 require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 
-// $central_training_category_ref_ids = array(1696, 1783, 1621, 1644, 1686, 47318 , 43277, 1699, 34937);
+$central_training_category_ref_ids = array(1696, 1783, 1621, 1644, 1686, 47318 , 43277, 1699, 34937);
 
 foreach ($central_training_category_ref_ids as $ref_id) {
 	gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "Administrator", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));

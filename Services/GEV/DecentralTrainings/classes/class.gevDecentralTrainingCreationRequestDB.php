@@ -41,7 +41,7 @@ class gevDecentralTrainingCreationRequestDB {
 			"        , ".$ilDB->quote($settings->start()->get(IL_CAL_DATETIME), "timestamp")."\n".
 			"        , ".$ilDB->quote($settings->end()->get(IL_CAL_DATETIME), "timestamp")."\n".
 			"        , ".$ilDB->quote($settings->venueObjId(), "integer")."\n".
-            "        , ".$ilDB->quote($settings->venueRoomNr(), "text")."\n".
+			"        , ".$ilDB->quote($settings->venueRoomNr(), "text")."\n".
 			"        , ".$ilDB->quote($settings->venueText(), "text")."\n".
 			"        , ".$ilDB->quote($settings->orguRefId(), "integer")."\n".
 			"        , ".$ilDB->quote($settings->description(), "text")."\n".
@@ -80,7 +80,7 @@ class gevDecentralTrainingCreationRequestDB {
 			"     , start_dt = ".$ilDB->quote($settings->start()->get(IL_CAL_DATETIME), "timestamp")."\n".
 			"     , end_dt = ".$ilDB->quote($settings->end()->get(IL_CAL_DATETIME), "timestamp")."\n".
 			"     , venue_obj_id = ".$ilDB->quote($settings->venueObjId(), "integer")."\n".
-            "     , venue_room_nr = ".$ilDB->quote($settings->venueRoomNr(), "text")."\n".
+			"     , venue_room_nr = ".$ilDB->quote($settings->venueRoomNr(), "text")."\n".
 			"     , venue_text = ".$ilDB->quote($settings->venueText(), "text")."\n".
 			"     , orgu_ref_id= ".$ilDB->quote($settings->orguRefId(), "integer")."\n".
 			"     , description = ".$ilDB->quote($settings->description(), "text")."\n".
@@ -121,7 +121,7 @@ class gevDecentralTrainingCreationRequestDB {
 			$settings = $this->newSettings( new ilDateTime($rec["start_dt"], IL_CAL_DATETIME)
 										  , new ilDateTime($rec["end_dt"], IL_CAL_DATETIME)
 										  , $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null
-                                          , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
+										  , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
 										  , $rec["venue_text"] ? $rec["venue_text"] : null
 										  , $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null
 										  , $rec["description"] ? $rec["description"] : ""
@@ -169,7 +169,7 @@ class gevDecentralTrainingCreationRequestDB {
 			$settings = $this->newSettings( new ilDateTime($rec["start_dt"], IL_CAL_DATETIME)
 										  , new ilDateTime($rec["end_dt"], IL_CAL_DATETIME)
 										  , $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null
-                                          , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
+										  , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
 										  , $rec["venue_text"] ? $rec["venue_text"] : null
 										  , $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null
 										  , $rec["description"] ? $rec["description"] : ""
@@ -212,7 +212,7 @@ class gevDecentralTrainingCreationRequestDB {
 			$settings = $this->newSettings( new ilDateTime($rec["start_dt"], IL_CAL_DATETIME)
 										  , new ilDateTime($rec["end_dt"], IL_CAL_DATETIME)
 										  , $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null
-                                          , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
+										  , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
 										  , $rec["venue_text"] ? $rec["venue_text"] : null
 										  , $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null
 										  , $rec["description"] ? $rec["description"] : ""
@@ -301,7 +301,7 @@ class gevDecentralTrainingCreationRequestDB {
 	protected function newSettings( ilDateTime $a_start_datetime
 							   , ilDateTime $a_end_datetime
 							   , $a_venue_obj_id
-                                                           , $a_venue_room_nr
+							   , $a_venue_room_nr
 							   , $a_venue_text
 							   , $a_orgu_ref_id
 							   , $a_description
