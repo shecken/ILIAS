@@ -28,7 +28,7 @@ class PredicateIn extends Predicate{
 	}
 
 	public function fields() {
-		$fields = $this->addPossibleFieldsToFields($this->list, array());
-		return $this->addPossibleFieldsToFields($this->value, $fields);
+		$fields = $this->addPossibleFieldsToFields($this->list->values(), array());
+		return $this->addPossibleFieldsToFields(array($this->value), $fields);
 	}
 }

@@ -399,11 +399,24 @@ class  SqlInterpreterTest extends PHPUnit_Framework_TestCase {
 					.','.$db->quote(3,'integer').') ');
 	}
 
-	/**
-	* not needed atm
-	*/
+
 	public function test_LIKE() {
-		$this->assertTrue(true);
+		$f = $this->factory;
+		$i = $this->interpreter;
+		$res = $f->field('foo.bar')->LIKE($f->str('blubb%'));
+		$this->assertEquals($i->interpret($res), "`foo`.`bar` LIKE 'blubb%'");
+		$res = $f->field('foo.bar')->LIKE()->str('blubb%');
+		$this->assertEquals($i->interpret($res), "`foo`.`bar` LIKE 'blubb%'");
+	}
+
+    /**
+     * @expectedException InvalidArgumentException 
+     */
+	public function test_LIKE_fail() {
+		$f = $this->factory;
+		$i = $this->interpreter;
+		$res = $f->int(1)->LIKE($f->str('blubb%'));
+		$i->interpret($res);
 	}
 
 	public function test_IsNull() {

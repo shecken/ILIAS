@@ -135,7 +135,12 @@ class ilMyObservationsTableGUI extends catTableGUI {
 		$this->gCtrl->clearParametersByClass("ilObjTalentAssessmentGUI");
 
 		$items = array();
-		$items[] = array("title" => $this->txt("show_pdf"), "link" => $link_pdf, "image" => "", "frame"=>"");
+
+		$vals = $this->parent_obj->plugin->getObservationsDB()->getObservationsCumulative(ilObject::_lookupObjId($ref_id));
+		if(!empty($vals)) {
+			$items[] = array("title" => $this->txt("show_pdf"), "link" => $link_pdf, "image" => "", "frame"=>"");
+		}
+
 		$items[] = array("title" => $this->txt("open"), "link" => $link_ta, "image" => "", "frame"=>"");
 
 		return $items;

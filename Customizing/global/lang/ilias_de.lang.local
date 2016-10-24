@@ -1192,6 +1192,7 @@ gev#:#gev_default_role_agtid_does_not_exist#:#Lokale Benutzer können nicht hinz
 gev#:#gev_new_pos_self_learnings_in_table#:#Die Selbstlernkurse finden Sie ab sofort am Ende der Trainingsübersicht!
 gev#:#gev_finalize_booking_booked_out_error#:#Das Training konnte leider nicht für Sie gebucht werden, da es inzwischen ausgebucht ist.
 gev#:#gev_crs_srch_my_table_desc_advice#:#Hinweis:<br />Die Selbstlernkurse finden Sie ab sofort am Ende der Trainingsübersicht bzw. im Reiter "Selbstlernkurs"!
+gev#:#gev_venue_room_nr#:#Raumnummer
 gev#:#gev_venue_free_text#:#Freitext Veranstaltungsort
 gev#:#gev_orga_info#:#Organisatorisches
 gev#:#gev_training_id2#:#Trainings-Id
@@ -1541,3 +1542,5 @@ gev#:#gev_my_assessments#:#Assessmenttermine
 gev#:#gev_all_assessments#:#Alle Assessmenttermine
 gev#:#no_wbt_found_for_ref#:#Kein Training zur Frage Nr. %s gefunden.
 gev#:#placeholder#:#Bitte wählen
+gev#:#gev_exam_bio#:#Prüfungsbiografie
+gev#:#gev_members_exam_bio#:#Prüfungsbiografie

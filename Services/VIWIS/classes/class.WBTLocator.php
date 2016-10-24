@@ -64,7 +64,8 @@ class WBTLocator {
 			$ident = $item['identifier'];
 			foreach ($item->metadata->lom->general->catalogentry as $cat) {
 				$q_id = current($cat->entry->langstring);
-				if(!isset($return[$q_id])) {
+				if(!isset($return[$q_id]) && $q_id) {
+					//echo $q_id.'<br>';
 					$return[$q_id] = $id_sco;
 				}
 			}
@@ -91,7 +92,8 @@ class WBTLocator {
 			$id_sco = $this->db->fetchAssoc($res)['obj_id'];
 			foreach ($item->metadata->lom->general->catalogentry as $cat) {
 				$q_id = implode('.',array_map(function($el) {return ltrim($el,'0');},explode('.', current($cat->entry->langstring))));
-				if(!isset($return[$q_id])) {
+				if(!isset($return[$q_id]) && $q_id) {
+					//echo $q_id.'<br>';
 					$return[$q_id] = $id_sco;
 				}
 			}

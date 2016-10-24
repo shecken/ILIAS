@@ -730,7 +730,6 @@ class gevWBDDataCollector implements WBDDataCollector {
 			$wbd = $this->getWBDInstance($usr_id);
 			$wbd->setWBDFirstCertificationPeriodBegin($success_data->beginOfCertificationPeriod());
 			$this->raiseEventUserChanged($usr_utils->getUser());
-			$this->setLastWBDReportForAutoHistRows($usr_id);
 		}
 	}
 

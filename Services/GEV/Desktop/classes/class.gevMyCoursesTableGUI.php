@@ -25,8 +25,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 
 		global $ilCtrl, $lng;
 
-		$this->lng = &$lng;
-		$this->ctrl = &$ilCtrl;
+		$this->gLng = $lng;
 
 		$user_util = gevUserUtils::getInstance($a_user_id);
 
@@ -50,12 +49,12 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 
 		$this->setRowTemplate("tpl.gev_my_courses_row.html", "Services/GEV/Desktop");
 		$this->addColumn("", "expand", "0px", false, "catTableExpandButton");
-		$this->addColumn($this->lng->txt("title"), "title");
-		$this->addColumn($this->lng->txt("status"), "status");
-		$this->addColumn($this->lng->txt("gev_learning_type"), "type");
-		$this->addColumn($this->lng->txt("gev_location"), "location");
-		$this->addColumn($this->lng->txt("date"), "start_date");
-		$this->addColumn($this->lng->txt("gev_points"), "points");
+		$this->addColumn($this->gLng->txt("title"), "title");
+		$this->addColumn($this->gLng->txt("status"), "status");
+		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
+		$this->addColumn($this->gLng->txt("gev_location"), "location");
+		$this->addColumn($this->gLng->txt("date"), "start_date");
+		$this->addColumn($this->gLng->txt("gev_points"), "points");
 		$this->addColumn("&euro;", "fee");
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "actions", "20px", false);
 
@@ -89,7 +88,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 
 		if ($a_set["start_date"] === null) {
 			if ($a_set["scheduled_for"] === null) {
-				$date = $this->lng->txt("gev_table_no_entry");
+				$date = $this->gLng->txt("gev_table_no_entry");
 			}
 			else {
 				$date = $a_set["scheduled_for"];
@@ -109,7 +108,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 			$status = "";
 		}
 
-
 		$action = "";
 		$show_cancel_link = 
 			(  $a_set["start_date"] === null 
@@ -126,7 +124,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 			$action .= '<a href="'.gevCourseUtils::getCancelLinkTo($a_set["obj_id"], $this->user_id).'">'.
 					  $this->cancel_img."</a>";
 		}
-		
+
 		$datetime = new ilDateTime();
 		$offset =  $datetime->getUTCOffset(); 
 
@@ -144,22 +142,21 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 
 		$show_cancel_date = true;
 		if ($a_set["cancel_date"] == null) {
-			$cancel_date = $this->lng->txt("gev_unlimited");
+			$cancel_date = $this->gLng->txt("gev_unlimited");
 		}
 		else {
 			$cancel_date = ilDatePresentation::formatDate($a_set["cancel_date"]);
 			$show_cancel_date = ilDateTime::_before($now, $a_set["cancel_date"]);;
 		}
-		
+
 		$show_absolute_cancel_date = true;
 		if ($a_set["absolute_cancel_date"] == null) {
-			$absolute_cancel_date = $this->lng->txt("gev_unlimited");
+			$absolute_cancel_date = $this->gLng->txt("gev_unlimited");
 		}
 		else {
 			$absolute_cancel_date = ilDatePresentation::formatDate($a_set["absolute_cancel_date"]);
 			$show_absolute_cancel_date = ilDateTime::_before($now, $a_set["absolute_cancel_date"]);;
 		}
-
 
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("STATUS", $status);
@@ -174,7 +171,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("CONTENTS", $a_set["content"]);
 		$this->tpl->setVariable("CRS_LINK", gevCourseUtils::getLinkTo($a_set["obj_id"]));
 
-		
 		$tutors = $crs_utils->getTrainers(true);
 		$tutors = implode("; ", $tutors);
 
@@ -195,14 +191,11 @@ class gevCoursesTableGUI extends catAccordionTableGUI {
 			$this->tpl->setVariable("ABSOLUTE_CANCEL_DATE", $absolute_cancel_date);
 			$this->tpl->parseCurrentBlock();
 		}
-
 	}
-	
+
 	// overwritten from ilTable2GUI to get sorting of fee right.
 	function numericOrdering($a_field)
 	{
 		return $a_field == "fee";
 	}
 }
-
-?>

@@ -111,6 +111,7 @@ class gevSettings {
 	// Veranstaltungsort
 	const CRS_AMD_VENUE				= "crs_amd_venue";
 	const CRS_AMD_VENUE_FREE_TEXT	= "crs_amd_venue_free_text";
+	const CRS_AMD_VENUE_ROOM_NR		= "crs_amd_venue_room_nr";
 	// Übernachtungsort
 	const CRS_AMD_ACCOMODATION		= "crs_amd_accomodation";
 	// Veranstaltungsort Internet
@@ -134,6 +135,9 @@ class gevSettings {
 
 	//Traingsersteller
 	const CRS_AMD_TRAINING_CREATOR 		= "crs_amd_training_creator";
+
+	//Lernzeit
+	const CRS_AMD_LEARNING_TIME = "crs_amd_learning_time";
 
 	// Crs User PState
 	const CRS_USR_STATE_SUCCESS			= "erfolgreich";

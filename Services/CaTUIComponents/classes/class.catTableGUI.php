@@ -19,11 +19,13 @@ class catTableGUI extends ilTable2GUI {
 	protected $_filter_enabled = false;
 	protected $_filter = null;
 	protected $_filter_values = null;
+	protected $gCtrl;
 
 	public function __construct($a_parent_obj, $a_parent_cmd="", $a_template_context="") {
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 		parent::setEnableTitle(false);
-
+		global $ilCtrl;
+		$this->gCtrl = $ilCtrl;
 		$this->_title = new catTitleGUI();
 	}
 
@@ -122,6 +124,17 @@ class catTableGUI extends ilTable2GUI {
 		foreach ($a_set as $key => $value) {
 			$this->tpl->setVariable("VAL_".strtoupper($key), $value);
 		}
+	}
+
+	/**
+	 * we would like to avoid some parameters floating around secretly 
+	 * and being glued to some links without out knowledge. it turns
+	 * out the order parameter is newer unset, after applying it to
+	 * the table columns.
+	 */
+	public function setOrderLink($sort_field, $order_dir) {
+		parent::setOrderLink($sort_field,$order_dir);
+		$this->gCtrl->setParameter($this->parent_obj,$this->getNavParameter(),null);
 	}
 }
 

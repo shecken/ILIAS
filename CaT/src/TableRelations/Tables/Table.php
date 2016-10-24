@@ -80,15 +80,33 @@ class Table implements AbstractTable, Graphs\AbstractNode {
 		return $this->title;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function constraint() {
 		return $this->constraint;
 	}
 
+	/**
+	 * which subgraph does this table belong to?
+	 */
 	public function subgraph() {
 		return $this->subgraph;
 	}
 
+	/**
+	 * set the subgraph corresponding to which this table belongs.
+	 *
+	 * @param	sting|int	$subgraph
+	 */
 	public function setSubgraph($subgraph) {
 		$this->subgraph = $subgraph;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function field($name) {
+		return $this->fields[$name];
 	}
 }

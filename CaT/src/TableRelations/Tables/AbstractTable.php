@@ -43,4 +43,12 @@ interface AbstractTable {
 	 * Check if a field is contained in this table.
 	 */
 	public function fieldInTable(AbstractTableField $field);
+
+	/**
+	 * Get the field with the corresponding id, if it is in table.
+	 *
+	 * @param	string	$id
+	 * @return	AbstractTableField
+	 */
+	public function field($id);
 }

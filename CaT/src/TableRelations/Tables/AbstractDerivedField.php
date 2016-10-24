@@ -9,14 +9,7 @@ interface AbstractDerivedField {
 	 *
 	 * @return	AbstractTableField[]
 	 */
-	public function derivedFrom();
-
-	/**
-	 * Get the postprocessing-function to be used by interpreter.
-	 *
-	 * @return	closure 
-	 */
-	public function postprocess();
+	public function derivedFromRecursive();
 
 	/**
 	 * Get the name associated with the field to be used by interpreter.

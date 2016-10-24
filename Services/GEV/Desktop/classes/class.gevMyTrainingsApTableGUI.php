@@ -21,7 +21,8 @@ require_once("Services/GEV/Utils/classes/class.gevGeneralUtils.php");
 require_once("Services/CourseBooking/classes/class.ilCourseBooking.php");
 require_once("Services/ParticipationStatus/classes/class.ilParticipationStatusAdminGUI.php");
 require_once "./Services/ParticipationStatus/classes/class.ilParticipationStatusHelper.php";
-
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
 require_once("Services/Calendar/classes/class.ilDatePresentation.php");
 //require_once("Services/Calendar/classes/class.ilDate.php");
 
@@ -31,11 +32,12 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 	public function __construct($a_user_id, $a_parent_obj, $a_parent_cmd="", $a_template_context="") {
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $ilCtrl, $lng, $ilAccess;
+		global $ilCtrl, $lng, $ilAccess, $ilDB;
 
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gAccess = $ilAccess;
+		$this->gIldb = $ilDB;
 
 		$user_util = gevUserUtils::getInstance($a_user_id);
 		$this->user_id = $a_user_id;
@@ -220,6 +222,7 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		$maillog = $this->gCtrl->getLinkTargetByClass("gevTrainerMailHandlingGUI", "showLog");
 		$this->gCtrl->clearParametersByClass("gevTrainerMailHandlingGUI");
 
+		
 		//prepare crs utils
 		$crs_utils = gevCourseUtils::getInstance($a_set["obj_id"]);
 
@@ -231,18 +234,27 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		if($a_set['may_finalize']) {
 			$items[] = array("title" => $this->gLng->txt("gev_mytrainingsap_legend_setstatus"), "link" => $setstatus_link, "image" => $this->setstatus_img, "frame"=>"");
 		}
-		
+
 		// is true after training start
 		if ($crs_utils->isWithAccomodations() && !$a_set["may_finalize"]) {
 			$items[] = array("title" => $this->gLng->txt("gev_mytrainingsap_legend_overnights"), "link" => $overnights_link, "image" => $this->overnight_img, "frame"=>"");
 		}
-		
+
 		if ($crs_utils->canViewBookings($this->user_id)) {
 			$items[] = array("title" => $this->gLng->txt("gev_mytrainingsap_legend_view_bookings"), "link" => $bookings_link, "image" => $this->bookings_img, "frame"=>"");
 		}
 
 		if ($crs_utils->getVirtualClassLink() !== null) {
 			$items[] = array("title" => $this->gLng->txt("gev_virtual_class"), "link" => $crs_utils->getVirtualClassLink(), "image" => $this->virtualclass_img, "frame"=>"_blank");
+		}
+		$ass_bio_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
+							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xexb"));
+		if($ass_bio_plugin && $ass_bio_plugin->active) {
+			$exam_bio_refs = ilObjReportExamBio::getAccessibleExambioInCrsForUserRefIds($crs_utils,$this->user_id, $this->gAccess, $this->gIldb);
+			if(count($exam_bio_refs) > 0) {
+				$ref_id = current($exam_bio_refs);
+				$items[] = array('title' => $this->gLng->txt('gev_members_exam_bio'), 'link' => ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id, $this->gCtrl));
+			}
 		}
 
 		if($crs_utils->userHasPermissionTo($this->user_id, gevSettings::VIEW_MAILING)){
@@ -264,7 +276,6 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		if ($crs_utils->userCanCancelCourse($this->user_id)){
 			$items[] = array("title" => $this->gLng->txt("gev_cancel_training"), "link" => $cancel_training_link, "image" => $this->cancel_training_img, "frame"=>"");
 		}
-
 		return $items;
 	}
 }

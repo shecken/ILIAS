@@ -37,10 +37,6 @@ class gevWBDRequestWPStorno extends WBDRequestWPStorno {
 			return new gevWBDRequestWPStorno($data);
 		}catch(myLogicException $e) {
 			return $e->options();
-		} catch(LogicException $e) {
-			$errors = array();
-			$errors[] =  self::createError($e->getMessage(), gevWBDError::ERROR_GROUP_CRS,  $data["user_id"], $data["row_id"],0);
-			return $errors;
 		}
 	}
 

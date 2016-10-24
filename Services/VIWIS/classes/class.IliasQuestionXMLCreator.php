@@ -1,6 +1,6 @@
 <?php
 require_once 'Services/VIWIS/interfaces/interface.QuestionXMLCreator.php';
-require_once 'Services/VIWIS/exception/class.QuestionException.php';
+require_once 'Services/VIWIS/exceptions/class.QuestionException.php';
 require_once 'Services/VIWIS/classes/class.QuestionTypes.php';
 require_once 'Services/VIWIS/classes/class.GenericFeedback.php';
 require_once 'Modules/TestQuestionPool/classes/class.assSingleChoice.php';
@@ -63,9 +63,8 @@ class IliasQuestionXMLCreator implements QuestionXMLCreator {
 				 *	the floating point representation of points for any right answer is
 				 *	exact and thus the sum remains 1.
 				 */
-				while($cnt_correct_answers % 3 === 0 || $cnt_correct_answers % 7 === 0) { 	//in principle we should continue to exclude all primes > 10
-					$step++;																//for now we will assume that there are no questions having more
-					$cnt_correct_answers++;													//than 10 correct answers.
+				while(($cnt_correct_answers + $step) % 3 === 0 || ($cnt_correct_answers + $step) % 7 === 0) { 	//in principle we should continue to exclude all primes > 10
+					$step++;																//for now we will assume that there are no questions having more											//than 10 correct answers.
 				}
 				$pnts = 1/($cnt_correct_answers + $step);
 				$cnt = 0;

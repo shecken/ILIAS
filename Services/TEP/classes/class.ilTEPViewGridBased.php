@@ -3,6 +3,8 @@
 
 include_once "Services/TEP/classes/class.ilTEPView.php";
 require_once "./Services/ParticipationStatus/classes/class.ilParticipationStatus.php";
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
+include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
 
 /**
  * TEP grid-based views base class
@@ -673,8 +675,9 @@ abstract class ilTEPViewGridBased extends ilTEPView
 		// gev-patch start
 		// Buttons for #840
 		if ($a_entry["course_ref_id"]) {
+
 			require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
-			global $ilUser, $ilCtrl, $lng;
+			global $ilUser, $ilCtrl, $lng, $ilAccess, $ilDB;
 			$cur_user_id = $ilUser->getId();
 			$ref_id = $a_entry["course_ref_id"];
 			$crs_id = $a_entry["context_id"];
@@ -691,19 +694,20 @@ abstract class ilTEPViewGridBased extends ilTEPView
 				}
 			}
 
+			$select_list = $this->buildDropdown($crs_id.'_'.$cur_user_id);
+			$sel_item_cnt = 0;
+
 			if ($crs_utils->userHasPermissionTo($cur_user_id,gevSettings::LOAD_MEMBER_LIST)) {
-				$memberlist_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-table-eye.png").'" />';
+				$sel_item_cnt++;
 				$ilCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $ref_id);
-				$actions .=  "<a href='".$ilCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "trainer")
-							."' title='".$lng->txt("gev_mytrainingsap_legend_memberlist")."'>".$memberlist_img."</a>&nbsp;";
+				$select_list->addItem($lng->txt("gev_mytrainingsap_legend_memberlist"),"",$ilCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "trainer"));
 				$ilCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", null);
 			}
 
 			if ($crs_utils->userHasPermissionTo($cur_user_id, gevSettings::LOAD_SIGNATURE_LIST)) {
-				$signatures_img = '<img src="'.ilUtil::getImagePath("GEV_img/icon-table-signature.png").'" />';
+				$sel_item_cnt++;
 				$ilCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $ref_id);
-				$actions .=  "<a href='".$ilCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_signature_list")
-							."' title='".$lng->txt("gev_mytrainingsap_legend_signature_list")."'>".$signatures_img."</a>&nbsp;";
+				$select_list->addItem($lng->txt("gev_mytrainingsap_legend_signature_list"),"",$ilCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_signature_list"));
 				$ilCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", null);
 			}
 
@@ -711,81 +715,81 @@ abstract class ilTEPViewGridBased extends ilTEPView
 			$ilCtrl->setParameterByClass("ilTEPGUI", "crs_id", $crs_id);
 
 			if ( $crs_utils->canModifyParticipationStatus($cur_user_id)) {
-				$setstatus_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-table-state-neutral.png").'" />';
-				$actions .=  "<a href='".$ilCtrl->getLinkTargetByClass("ilTEPGUI", "showParticipationStatus")
-							."' title='".$lng->txt("gev_mytrainingsap_legend_setstatus")."'>".$setstatus_img."</a>&nbsp;";
+				$sel_item_cnt++;
+				$select_list->addItem($lng->txt("gev_mytrainingsap_legend_setstatus"),"",$ilCtrl->getLinkTargetByClass("ilTEPGUI", "showParticipationStatus"));
 			}
+
 			if ($crs_utils->isWithAccomodations() && $a_entry["start"] > date("Y-m-d") && $cur_user_id == $a_entry["user_id"]) {
-				$overnight_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-edit.png").'" />';
-				$actions .=  "<a href='".$ilCtrl->getLinkTargetByClass("ilTEPGUI", "showOvernights")
-							."' title='".$lng->txt("gev_mytrainingsap_legend_overnights")."'>".$overnight_img."</a>&nbsp;";
+				$sel_item_cnt++;
+				$select_list->addItem($lng->txt("gev_mytrainingsap_legend_overnights"),"",$ilCtrl->getLinkTargetByClass("ilTEPGUI", "showOvernights"));
 			}
 
 			if ($crs_utils->canViewBookings($cur_user_id)) {
-				$bookings_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-table-booking.png").'" />';
-				$actions .=  "<a href='".$ilCtrl->getLinkTargetByClass("ilTEPGUI", "showBookings")
-							."' title='".$lng->txt("gev_mytrainingsap_legend_view_bookings")."'>".$bookings_img."</a>&nbsp;";
+				$sel_item_cnt++;
+				$select_list->addItem($lng->txt("gev_mytrainingsap_legend_view_bookings"),"",$ilCtrl->getLinkTargetByClass("ilTEPGUI", "showBookings"));
 			}
 
 			if($crs_utils->getVirtualClassLink() !== null) {
-				$vc_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-classroom.png").'" />';
-				$actions .=  "<a href='".$crs_utils->getVirtualClassLink()
-							."' title='".$lng->txt("gev_virtual_class")."' target='_blank'>".$vc_img."</a>&nbsp;";
+				$sel_item_cnt++;
+				$select_list->addItem($lng->txt("gev_virtual_class"),"",$crs_utils->getVirtualClassLink());
 			}
 
-			if($crs_utils->userHasPermissionTo($cur_user_id, gevSettings::VIEW_MAILING)){
+			if($crs_utils->userHasPermissionTo($cur_user_id, gevSettings::VIEW_MAILING)) {
+				$sel_item_cnt++;
 				require_once("Services/GEV/Mailing/classes/class.gevTrainerMailHandlingGUI.php");
 				$ilCtrl->setParameterByClass("gevTrainerMailHandlingGUI", "obj_id", $a_set["obj_id"]);
 				$ilCtrl->setParameterByClass("ilTEPGUI", "obj_id", $a_set["obj_id"]);
-				$maillog_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-invitation.png").'" />';
-				$actions .= '<a href="'.$ilCtrl->getLinkTargetByClass("gevTrainerMailHandlingGUI", "showLog").'"'
-						.' title="'.$lng->txt("gev_trainer_view_mailing").'">'.$maillog_img.'</a>&nbsp;';
+				$select_list->addItem($lng->txt("gev_trainer_view_mailing"),"",$ilCtrl->getLinkTargetByClass("gevTrainerMailHandlingGUI", "showLog"));
 				$ilCtrl->clearParametersByClass("gevTrainerMailHandlingGUI");
 			}
 
 			if($crs_utils->isFlexibleDecentrallTraining() && 
 					(($crs_utils->hasTrainer($cur_user_id) && $crs_utils->userHasPermissionTo($cur_user_id,gevSettings::VIEW_SCHEDULE_PDF)) 
-						|| $crs_utils->userHasPermissionTo($cur_user_id,gevSettings::VIEW_SCHEDULE_PDF))) 
-			{
-				$schedule_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-flowchart.png").'" />';
+						|| $crs_utils->userHasPermissionTo($cur_user_id,gevSettings::VIEW_SCHEDULE_PDF))) {
+				$sel_item_cnt++;
 				$ilCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $ref_id);
-				$actions .=  "<a href='".$ilCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_crs_schedule")
-							."' title='".$lng->txt("gev_dec_crs_building_block_title")."'>".$schedule_img."</a>&nbsp;";
+				$select_list->addItem($lng->txt("gev_dec_crs_building_block_title"),"",$ilCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_crs_schedule"));
 				$ilCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", null);
 			}
 			
-			if($crs_utils->userHasPermissionTo($cur_user_id, gevSettings::LOAD_CSN_LIST) && $crs_utils->getVirtualClassType() == "CSN"){
-				$csn_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-calllist.png").'" />';
+			if($crs_utils->userHasPermissionTo($cur_user_id, gevSettings::LOAD_CSN_LIST) && $crs_utils->getVirtualClassType() == "CSN") {
+				$sel_item_cnt++;
 				$ilCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $ref_id);
-				$actions .=  "<a href='".$ilCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "csn")
-							."' title='".$lng->txt("gev_csn_list")."'>".$csn_img."</a>&nbsp;";
+				$select_list->addItem($lng->txt("gev_csn_list"),"",$ilCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "csn"));
 				$ilCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", null);
 			}
 
-			if($crs_utils->userCanCancelCourse($cur_user_id))
-			{
-				$cancel_training_img = '<img src="'.ilUtil::getImagePath("gev_cancel_action.png").'" />';
+			if($crs_utils->userCanCancelCourse($cur_user_id)) {
+				$sel_item_cnt++;
 				$ilCtrl->setParameterByClass("ilObjCourseGUI", "ref_id", $ref_id);
-				$actions .=  "<a href='".$ilCtrl->getLinkTargetByClass("ilObjCourseGUI", "confirmTrainingCancellation")
-							."' title='".$lng->txt("gev_cancel_training")."'>".$cancel_training_img."</a>&nbsp;";
+				$select_list->addItem($lng->txt("gev_cancel_training"),"",$ilCtrl->getLinkTargetByClass("ilObjCourseGUI", "confirmTrainingCancellation"));
 				$ilCtrl->setParameterByClass("ilObjCourseGUI", "ref_id", null);
 			}
 
 			if ($crs_utils->userHasPermissionTo($cur_user_id, gevSettings::LOAD_SIGNATURE_LIST) && ilParticipationStatus::getInstance($crs_utils->getCourse())->getAttendanceList()) {
-				$signatures_img = '<img src="'.ilUtil::getImagePath("GEV_img/icon_attendance.png").'" />';
+				$sel_item_cnt++;
 				$ilCtrl->setParameterByClass("ilparticipationstatusgui", "ref_id", $ref_id);
-				$actions .=  "<a href='".$ilCtrl->getLinkTargetByClass(array('ilparticipationstatusadmingui','ilparticipationstatusgui'), "viewAttendanceList")
-							."' title='".$lng->txt("gev_attendance_list")."'>".$signatures_img."</a>&nbsp;";
+				$select_list->addItem($lng->txt("gev_attendance_list"),"",$ilCtrl->getLinkTargetByClass(array('ilparticipationstatusadmingui','ilparticipationstatusgui'), "viewAttendanceList"));
 				$ilCtrl->setParameterByClass("ilparticipationstatusgui", "ref_id", null);
+			}
+			$ass_bio_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
+								ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xexb"));
+			if($ass_bio_plugin && $ass_bio_plugin->active) {
+				$exam_bio_refs = ilObjReportExamBio::getAccessibleExambioInCrsForUserRefIds($crs_utils, $cur_user_id, $ilAccess, $ilDB);
+				if(count($exam_bio_refs) > 0) {
+					$sel_item_cnt++;
+					$ref_id = current($exam_bio_refs);
+					$select_list->addItem($lng->txt('gev_members_exam_bio'),"",ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id, $ilCtrl));
+				}
 			}
 
 			$ilCtrl->setParameterByClass("ilTEPGUI", "ref_id", null);
 			$ilCtrl->setParameterByClass("ilTEPGUI", "crs_id", null);
 			$ilCtrl->setParameterByClass("ilTEPGUI", "obj_id", null);
-			
-			if ($actions) {
-				$a_entry["description"] .= "<br /><br />".$actions;
+			if($sel_item_cnt > 0) {
+				$a_entry["description"] .= "<br /><br />".$select_list->getHTML();
 			}
+
 		}
 		// gev-patch end
 		if($a_entry["description"])
@@ -819,6 +823,20 @@ abstract class ilTEPViewGridBased extends ilTEPView
 		}
 	}
 	
+	private function buildDropdown($id) {
+		include_once("Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php");
+		$current_selection_list = new ilAdvancedSelectionListGUI();
+		$current_selection_list->setId($id);
+		$current_selection_list->setAsynch(false);
+		$current_selection_list->setListTitle($this->gLng->txt("actions"));
+		$current_selection_list->setSelectionHeaderClass("small");
+		$current_selection_list->setItemLinkClass("xsmall");
+		$current_selection_list->setLinksMode("il_ContainerItemCommand2");
+		$current_selection_list->setHeaderIcon(ilAdvancedSelectionListGUI::DOWN_ARROW_DARK);
+		$current_selection_list->setUseImages(false);
+		return $current_selection_list;
+	}
+
 	/**
 	 * Render day content
 	 * 

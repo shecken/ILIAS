@@ -34,7 +34,7 @@ class gevCourseUtils {
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gTree = $tree;
-		
+
 		$this->gLng->loadLanguageModule("crs");
 		
 		$this->crs_id = $a_crs_id;
@@ -879,6 +879,14 @@ class gevCourseUtils {
 	public function setVenueId($a_venue) {
 		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_VENUE, $a_venue);
 	}
+        
+        public function getVenueRoomNr() {
+                return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_VENUE_ROOM_NR);
+        }
+        
+        public function setVenueRoomNr($a_venue_room_nr) {
+            $this->amd->setField($this->crs_id, gevSettings::CRS_AMD_VENUE_ROOM_NR, $a_venue_room_nr);
+        } 
 
 	public function setVenueFreeText($a_venue_free_text) {
 		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_VENUE_FREE_TEXT,$a_venue_free_text);
@@ -976,6 +984,15 @@ class gevCourseUtils {
 
 	public function getTrainingCreatorLogin() {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_TRAINING_CREATOR);
+	}
+
+	//Lernzeit
+	public function getLearningTime() {
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_LEARNING_TIME);
+	}
+
+	public function setLearningTime($learning_time) {
+		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_LEARNING_TIME, $learning_time);
 	}
 
 	
@@ -3735,5 +3752,19 @@ class gevCourseUtils {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Locate all objects contained by the course of a given type.
+	 * And get corresponding metadata, like obj_id, ref_id, lft, rgt...
+	 * Note, that the course itself will also be found, as well as
+	 * well as the rolefolder.
+	 *
+	 * @param	string	$type
+	 * @return	string[][]
+	 */
+	public function objsInCourseOfType($type = '') {
+		return $this->gTree->getSubTree(
+			$this->gTree->getNodeData($this->getRefId()),true, $type);
 	}
 }

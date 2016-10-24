@@ -150,7 +150,7 @@ class ilMyObservationsGUI {
 			$filter_values = $df->buildFilterValues($fs, $this->filter_settings);
 		}
 
-		$base_data = $this->plugin->getObservationsDB()->getAssessmentsData($fs, $filter_values);
+		$base_data = $this->plugin->getObservationsDB()->getAssessmentsData($filter_values);
 		$data = array();
 
 		foreach ($base_data as $key => $row) {
@@ -278,7 +278,7 @@ class ilMyObservationsGUI {
 			$filter_values = $df->buildFilterValues($fs, $this->filter_settings);
 		}
 
-		$base_data = $this->plugin->getObservationsDB()->getAssessmentsData($fs, $filter_values);
+		$base_data = $this->plugin->getObservationsDB()->getAssessmentsData($filter_values);
 
 		foreach ($base_data as $key => $row) {
 			$row = $this->addVenueName($row);

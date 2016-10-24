@@ -96,4 +96,29 @@ class reportSettingsDataHandler {
 		return $this->db->quote($value, $quote_format);
 	}
 
+	/**
+	 *	Get object metadata meeting search criteria.
+	 * 	@param	string|int[string] $properties
+	 * 	@param	reportSettings	$settings
+	 *
+	 *	@return	string|int[string]
+	 */
+	public function query(array $properties,reportSettings $settings) {
+		if(count(array_intersect(array_keys($properties),$settings->settingIds())) === 0) {
+			throw new reportSettingsException('no known settings in query parameters');
+		}
+		$table = $settings->table();
+		$sql = 'SELECT * FROM '.$table.' WHERE '.PHP_EOL;
+		foreach ($settings->settingIds() as $key) {
+			if(isset($properties[$key])) {
+				$sql.= '	'.$key.' = '.$this->quote($properties[$key],$settings->setting($key)).PHP_EOL;
+			}
+		}
+		$res = $this->db->query($sql);
+		$return = array();
+		while($rec = $this->db->fetchAssoc($res)) {
+			$return[] = $rec;
+		}
+		return $return;
+	}
 }

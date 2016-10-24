@@ -105,6 +105,16 @@ class TableSpace {
 	}
 
 	/**
+	 * Get the table corresponding to $id, if exists in space
+	 *
+	 * @param	string	$id
+	 * @return	AbstractTable
+	 */
+	public function table($id) {
+		return $this->graph->getNodeById($id);
+	}
+
+	/**
 	 * Query definition.
 	 */
 	public function request(Predicates\Field $field, $id = null) {
@@ -128,7 +138,7 @@ class TableSpace {
 				throw new TableException("requested field $name not in space");
 			}
 		} elseif($field instanceof AbstractDerivedField) {
-			foreach($field->derivedFrom() as $b_field) {
+			foreach($field->derivedFromRecursive() as $b_field) {
 				if(!$this->fieldInSpace($b_field)) {
 					$name = $b_field->name_simple();
 					throw new TableException("requested field $name not in space");
@@ -295,7 +305,7 @@ class TableSpace {
 		if($field instanceof AbstractTableField) {
 			return isset($this->requested_fields[$field->name_simple()]);
 		} elseif($field instanceof AbstractDerivedField) {
-			foreach($derived_field->derivedFrom() as $filed) {
+			foreach($derived_field->derivedFromRecursive() as $filed) {
 				if(!$this->fieldInSpace($field)) {
 					$name = $field->name_simple();
 					throw new TableExcepton("requested field $name not in space");
