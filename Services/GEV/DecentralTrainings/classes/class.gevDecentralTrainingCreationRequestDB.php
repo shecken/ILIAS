@@ -513,7 +513,7 @@ class gevDecentralTrainingCreationRequestDB {
 		}
 	}
 
-        static public function install_step8(ilDB $ilDB) {
+	static public function install_step7(ilDB $ilDB) {
 		$ilDB->addTableColumn(self::TABLE_NAME, 'venue_room_nr', array(
 			"type" => "text",
 			"length" => 250,
