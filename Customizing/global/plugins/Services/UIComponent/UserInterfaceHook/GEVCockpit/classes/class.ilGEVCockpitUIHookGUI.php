@@ -158,7 +158,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xexb"));
 		if($ass_bio_plugin && $ass_bio_plugin->active) {
 			if ($user_utils && ($ref_id = ilObjReportExamBioGUI::examBiographyReferenceForUsers($this->gIldb))) {
-				if($this->gAccess->checkAccessOfUser($this->gUser->getId,'read','',$ref_id) || $user_utils->isAdmin()) {
+				if($this->gAccess->checkAccessOfUser($this->gUser->getId(),'read','',$ref_id) || $user_utils->isAdmin()) {
 					$items["exambio"]
 						= array($this->gLng->txt("gev_exam_bio"), ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id,$this->gCtrl));
 				}
