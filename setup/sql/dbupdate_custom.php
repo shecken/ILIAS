@@ -2548,7 +2548,7 @@ if(!$ilDB->tableExists('hist_tep'))
 
 <#79>
 <?php
-/*	require_once "Customizing/class.ilCustomInstaller.php";
+	require_once "Customizing/class.ilCustomInstaller.php";
 	ilCustomInstaller::maybeInitClientIni();
 	ilCustomInstaller::maybeInitPluginAdmin();
 	ilCustomInstaller::maybeInitObjDefinition();
@@ -2590,12 +2590,10 @@ if(!$ilDB->tableExists('hist_tep'))
 	else {
 		die("Custom Update #79: Expected to find org_unit with import_id = 'dbv_tmplt'");
 	}
-*/
 ?>
 
 <#80>
 <?php
-/*
 	require_once "Customizing/class.ilCustomInstaller.php";
 	ilCustomInstaller::maybeInitClientIni();
 	ilCustomInstaller::maybeInitPluginAdmin();
@@ -2627,7 +2625,6 @@ if(!$ilDB->tableExists('hist_tep'))
 	else {
 		die("Custom Update #79: Expected to find org_unit with import_id = 'na_tmplt'");
 	}
-*/
 ?>
 
 <#81>
@@ -4399,7 +4396,6 @@ require_once "Customizing/class.ilCustomInstaller.php";
 
 <#171>
 <?php
-/*
 require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::maybeInitClientIni();
@@ -4428,12 +4424,10 @@ foreach ($central_training_category_ref_ids as $ref_id) {
 	gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "admin", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 	gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "trainer", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 }
-*/
 ?>
 
 <#172>
 <?php
-/*
 require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::maybeInitClientIni();
@@ -4476,12 +4470,10 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_r
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "admin", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "trainer", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Pool Trainingsersteller", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
-*/
 ?>
 
 <#173>
 <?php
-/*
 require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::maybeInitClientIni();
@@ -4509,7 +4501,6 @@ gevCourseUtils::revokePermissionsForAllCoursesBelow($fixed_dec_training_category
 $flex_dec_training_category_ref_id = 49840;
 
 gevCourseUtils::revokePermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "DBV UVG", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
-*/
 ?>
 
 <#174>
@@ -4550,7 +4541,6 @@ require_once "Customizing/class.ilCustomInstaller.php";
 
 <#179>
 <?php
-/*
 require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::maybeInitClientIni();
@@ -4591,7 +4581,6 @@ while ($rec = $ilDB->fetchAssoc($res)) {
 	$user->setEmail($rec["value"]);
 	$user->update();
 }
-*/
 ?>
 
 <#180>
@@ -4713,7 +4702,6 @@ if($ilDB->tableExists('hist_userrole')) {
 
 <#190>
 <?php
-/*
 require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::maybeInitClientIni();
@@ -4756,12 +4744,10 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_r
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "trainer", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf", "cancel_training"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Pool Trainingsersteller", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf", "cancel_training", "write_reduced_settings"));
 gevCourseUtils::revokePermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Pool Trainingsersteller", array("write"));
-*/
 ?>
 
 <#191>
 <?php
-/*
 
 require_once "Customizing/class.ilCustomInstaller.php";
 
@@ -4789,7 +4775,6 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_
 $flex_dec_training_category_ref_id = 49840;
 
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Pool Trainingsersteller", array("visible", "read", "view_bookings", "book_users", "cancel_bookings", "view_participation_status", "set_participation_status", "review_participation_status"));
-*/
 ?>
 
 <#192>
@@ -4872,7 +4857,6 @@ if (!$ilDB->tableColumnExists('wbd_errors_categories', 'error_group'))
 
 <#199>
 <?php
-/*
 	require_once "Customizing/class.ilCustomInstaller.php";
 	require_once('Modules/OrgUnit/classes/Types/class.ilOrgUnitType.php');
 	require_once('Services/GEV/Utils/classes/class.gevSettings.php');
@@ -4897,7 +4881,6 @@ if (!$ilDB->tableColumnExists('wbd_errors_categories', 'error_group'))
 
 	$settings = gevSettings::getInstance();
 	$settings->setTypeIDOrgUnitTypeDB($type->getId());
-*/
 ?>
 
 <#200>
@@ -5161,7 +5144,6 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "User", "udfc", "GEVUserData"
 
 <#219>
 <?php
-/*
 $ilDB->addIndex('hist_course',array('template_obj_id'),'cti');
 $ilDB->addIndex('hist_course',array('is_template'),'ct');
 $ilDB->addIndex('hist_course',array('type'),'ctp');
@@ -5177,7 +5159,6 @@ $ilDB->addIndex('hist_topics',array('topic_id'),'ti');
 $ilDB->addIndex('hist_topicset2topic',array('topic_set_id'),'t2s');
 $ilDB->addIndex('hist_topicset2topic',array('topic_id'),'t2t');
 $ilDB->addIndex('hist_userorgu',array('hist_historic','action'),'oha');
-*/
 ?>
 
 <#220>

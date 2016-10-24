@@ -548,7 +548,7 @@ class gevDecentralTrainingGUI {
 		$new_vals["time"] = $_POST["time"];
 		$new_vals["orgu_id"] = $_POST["orgu_id"];
 		$new_vals["venue_id"] = null;
-                $new_vals["venue_room_nr"] = null;
+        $new_vals["venue_room_nr"] = null;
 		$new_vals["venue_free"] = null;
 		$new_vals["vc_type"] = null;
 		$new_vals["webx_link"] = null;
@@ -801,7 +801,7 @@ class gevDecentralTrainingGUI {
 				$venue_text = $venue_free_text ? $venue_free_text : null;
 			}
                         
-                        $venue_room_nr = $a_form->getInput("venue_room_nr");
+            $venue_room_nr = $a_form->getInput("venue_room_nr");
 			$venue_room_nr = $venue_room_nr ? $venue_room_nr : null;
 		}
 		else {
@@ -855,7 +855,7 @@ class gevDecentralTrainingGUI {
 						( $start_datetime
 						, $end_datetime
 						, $venue_obj_id ? (int)$venue_obj_id : null
-                                                , $venue_room_nr
+                        , $venue_room_nr
 						, $venue_text
 						, $orgu_id ? (int)$orgu_id : null
 						, $description ? $description : ""
@@ -1138,7 +1138,7 @@ class gevDecentralTrainingGUI {
 			$venue->setDisabled($a_form_values["no_changes_allowed"]);
 			$form->addItem($venue);
 
-                        $venue_room_nr = new ilTextInputGUI($this->lng->txt("gev_venue_room_nr"), "venue_room_nr");
+            $venue_room_nr = new ilTextInputGUI($this->lng->txt("gev_venue_room_nr"), "venue_room_nr");
 			$venue_room_nr->setDisabled($a_form_values["no_changes_allowed"]);
 			
 			if ($a_form_values["venue_room_nr"] && $a_fill) {
@@ -1376,7 +1376,7 @@ class gevDecentralTrainingGUI {
 			$venue->setDisabled($a_form_values["no_changes_allowed"]);
 			$form->addItem($venue);
 
-                        $venue_room_nr = new ilTextInputGUI($this->lng->txt("gev_venue_room_nr"), "venue_room_nr");
+            $venue_room_nr = new ilTextInputGUI($this->lng->txt("gev_venue_room_nr"), "venue_room_nr");
 			$venue_room_nr->setDisabled($a_form_values["no_changes_allowed"]);
 			
 			if ($a_form_values["venue_free_text"] && $a_fill) {
@@ -1762,7 +1762,7 @@ class gevDecentralTrainingGUI {
 			, "end_datetime" => $request->settings()->end()
 			, "time" => null
 			, "venue" => $request->settings()->venueObjId()
-                        , "venue_room_nr" => $request->settings()->venueRoomNr()
+            , "venue_room_nr" => $request->settings()->venueRoomNr()
 			, "venue_free_text" => $request->settings()->venueText()
 			, "webinar_link" => $request->settings()->webinarLink()
 			, "webinar_password" => $request->settings()->webinarPassword()

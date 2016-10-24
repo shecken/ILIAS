@@ -65,7 +65,7 @@ class gevCrsMailTypeAdapter extends ilMailTypeAdapter {
 				, array("VO-Hausnummer"					, "Hausnummer des Veranstaltungsorts")
 				, array("VO-PLZ"						, "Postleitzahl des Veranstaltungsorts")
 				, array("VO-Ort"						, "Ort des Veranstaltungsorts")
-                                , array("VO-Raumnummer"                                       , "Raumnummer des Veranstaltungsorts")
+                , array("VO-Raumnummer"                 , "Raumnummer des Veranstaltungsorts")
 				, array("VO-Telefon"					, "Telefonnummer des Veranstaltungsorts")
 				, array("VO-Internet"					, "Internetseite des Veranstaltungsorts")
 				, array("Webinar-Link"					, "Am Training hinterlegter Weblink zum WebEx-Klassenraum")

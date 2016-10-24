@@ -19,8 +19,8 @@ class gevDecentralTrainingSettings {
 	// @var int|null		Id of the Venue, where the training takes place.
 	protected $venue_obj_id; 
 	
-        // @var string|null             Rommnumber of the Venue
-        protected $venue_room_nr;
+	// @var string|null             Rommnumber of the Venue
+	protected $venue_room_nr;
         
 	// @var string|null		A free form Venue.
 	protected $venue_text;
@@ -49,7 +49,7 @@ class gevDecentralTrainingSettings {
 	public function __construct( ilDateTime $a_start_datetime
 							   , ilDateTime $a_end_datetime
 							   , $a_venue_obj_id
-                                                           , $a_venue_room_nr
+                               , $a_venue_room_nr
 							   , $a_venue_text
 							   , $a_orgu_ref_id
 							   , $a_description
@@ -67,7 +67,7 @@ class gevDecentralTrainingSettings {
 		assert($a_start_datetime->get(IL_CAL_DATE) == $a_end_datetime->get(IL_CAL_DATE));
 		
 		assert($a_venue_obj_id === null || is_int($a_venue_obj_id));
-                assert($venue_room_nr == null || is_string($venue_room_nr));
+        assert($venue_room_nr == null || is_string($venue_room_nr));
 		assert($a_venue_text === null || is_string($a_venue_text));
 		assert($a_venue_obj_id === null || $a_venue_text === null);
 		
@@ -91,7 +91,7 @@ class gevDecentralTrainingSettings {
 		$this->start_datetime = $a_start_datetime;
 		$this->end_datetime = $a_end_datetime;
 		$this->venue_obj_id = $a_venue_obj_id; 
-                $this->venue_room_nr = $a_venue_room_nr;
+        $this->venue_room_nr = $a_venue_room_nr;
 		$this->venue_text = $a_venue_text;
 		$this->trainer_ids = $a_trainer_ids;
 		$this->orgu_ref_id = $a_orgu_ref_id;
@@ -140,9 +140,9 @@ class gevDecentralTrainingSettings {
 		return $this->venue_obj_id;
 	}
         
-        public function venueRoomNr() {
-                return $this->venue_room_nr;
-        }
+	public function venueRoomNr() {
+		return $this->venue_room_nr;
+	}
 	
 	public function venueText() {
 		return $this->venue_text;

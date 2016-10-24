@@ -311,7 +311,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 				, "gev_org_mgmt" => array($main_menue_permissions["manage_org_units"], "ilias.php?baseClass=ilAdministrationGUI&ref_id=56&cmd=jump",$this->gLng->txt("gev_org_mgmt"))
 				, "gev_mail_mgmt" => array($main_menue_permissions["manage_mails"], "ilias.php?baseClass=ilAdministrationGUI&ref_id=12&cmd=jump",$this->gLng->txt("gev_mail_mgmt")));
 
-		$bb_pool = array(); // gevUserUtils::getBuildingBlockPoolsTitleUserHasPermissionsTo($this->gUser->getId(), array(gevSettings::USE_BUILDING_BLOCK, "visible"));
+		$bb_pool = gevUserUtils::getBuildingBlockPoolsTitleUserHasPermissionsTo($this->gUser->getId(), array(gevSettings::USE_BUILDING_BLOCK, "visible"));
 		foreach ($bb_pool as $key => $value) {
 			$this->gCtrl->setParameterByClass("ilobjbuildingblockpoolgui", "ref_id", gevObjectUtils::getRefId($key));
 			$link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI","ilobjbuildingblockpoolgui"),"showContent");
