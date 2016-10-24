@@ -806,7 +806,7 @@ class gevDecentralTrainingGUI {
 		}
 		else {
 			$venue_obj_id = null;
-                        $venue_room_nr = null;
+			$venue_room_nr = null;
 			$venue_text = null;
 		}
 		
@@ -1379,8 +1379,8 @@ class gevDecentralTrainingGUI {
 			$venue_room_nr = new ilTextInputGUI($this->lng->txt("gev_venue_room_nr"), "venue_room_nr");
 			$venue_room_nr->setDisabled($a_form_values["no_changes_allowed"]);
 			
-			if ($a_form_values["venue_free_text"] && $a_fill) {
-				$venue_room_nr->setValue($a_form_values["venue_free_text"]);
+			if ($a_form_values["venue_room_nr"] && $a_fill) {
+				$venue_room_nr->setValue($a_form_values["venue_room_nr"]);
 			}
 			$form->addItem($venue_room_nr);
                         
