@@ -4395,6 +4395,7 @@ require_once "Customizing/class.ilCustomInstaller.php";
 
 <#171>
 <?php
+
 require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::maybeInitClientIni();
@@ -4423,10 +4424,12 @@ foreach ($central_training_category_ref_ids as $ref_id) {
 	gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "admin", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 	gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "trainer", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 }
+
 ?>
 
 <#172>
 <?php
+
 require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::maybeInitClientIni();
@@ -4469,10 +4472,12 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_r
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "admin", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "trainer", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Pool Trainingsersteller", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
+
 ?>
 
 <#173>
 <?php
+
 require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::maybeInitClientIni();
@@ -4500,6 +4505,7 @@ gevCourseUtils::revokePermissionsForAllCoursesBelow($fixed_dec_training_category
 $flex_dec_training_category_ref_id = 49840;
 
 gevCourseUtils::revokePermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "DBV UVG", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
+
 ?>
 
 <#174>
@@ -4701,6 +4707,7 @@ if($ilDB->tableExists('hist_userrole')) {
 
 <#190>
 <?php
+
 require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::maybeInitClientIni();
@@ -4743,6 +4750,7 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_r
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "trainer", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf", "cancel_training"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Pool Trainingsersteller", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf", "cancel_training", "write_reduced_settings"));
 gevCourseUtils::revokePermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Pool Trainingsersteller", array("write"));
+
 ?>
 
 <#191>
@@ -4774,6 +4782,7 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_
 $flex_dec_training_category_ref_id = 49840;
 
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Pool Trainingsersteller", array("visible", "read", "view_bookings", "book_users", "cancel_bookings", "view_participation_status", "set_participation_status", "review_participation_status"));
+
 ?>
 
 <#192>
