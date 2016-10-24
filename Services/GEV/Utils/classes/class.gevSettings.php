@@ -136,6 +136,9 @@ class gevSettings {
 	//Traingsersteller
 	const CRS_AMD_TRAINING_CREATOR 		= "crs_amd_training_creator";
 
+	//Lernzeit
+	const CRS_AMD_LEARNING_TIME = "crs_amd_learning_time";
+
 	// Crs User PState
 	const CRS_USR_STATE_SUCCESS			= "erfolgreich";
 	const CRS_USR_STATE_SUCCESS_VAL		= "2";

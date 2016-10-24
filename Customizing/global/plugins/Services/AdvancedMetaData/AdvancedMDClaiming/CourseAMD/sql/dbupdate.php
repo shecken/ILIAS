@@ -946,3 +946,21 @@ gevAMDUtils::addAMDField( "Orte und Anbieter"
 	 	   					 , ilAdvancedMDFieldDefinition::TYPE_TEXT
 	 	   					 );
 ?>
+
+<#30>
+<?php
+
+require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+
+gevAMDUtils::addAMDField( "Zeitraum"
+						, "Lernzeit"
+						, gevSettings::CRS_AMD_LEARNING_TIME
+						, ""
+						, false
+						, null
+						, ilAdvancedMDFieldDefinition::TYPE_TEXT
+						);
+
+?>
