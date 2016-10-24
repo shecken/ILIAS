@@ -229,6 +229,10 @@ class ilDB implements DB {
 	public function copyObservations($ta_obj_id, $career_goal_id) {
 		$obs = $this->base_observations_db->getDataForCopy($career_goal_id);
 
+		if(empty($obs[0])) {
+			return null;
+		}
+
 		foreach ($obs as $key => $ob) {
 			$obj_id = $this->getObjId(self::TABLE_OBSERVATIONS);
 			$values = array("obj_id" => array("integer", $obj_id)
