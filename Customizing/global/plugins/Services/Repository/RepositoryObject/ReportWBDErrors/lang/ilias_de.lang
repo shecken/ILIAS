@@ -36,7 +36,7 @@ action#:#Aktion
 error_type#:#Fehlertyp
 error_dateperiod#:#Zeitraum des Fehlers
 actions#:#Aktionen
-resolve#:#gelöst
+resolved#:#gelöst
 feedback#:#Nachfrage
 unable_resolve#:#kann nicht gelöst werden
 status#:#Status

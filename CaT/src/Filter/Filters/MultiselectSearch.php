@@ -4,6 +4,9 @@
 
 namespace CaT\Filter\Filters;
 
+/**
+ * TODO: Extend from MultiSelect if there are no differences in use
+ */
 class MultiselectSearch extends SelectBase {
 	/**
 	 * @var	int[]|string[]

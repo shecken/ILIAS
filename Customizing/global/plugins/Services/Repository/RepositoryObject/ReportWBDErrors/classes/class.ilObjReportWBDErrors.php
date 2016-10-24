@@ -189,6 +189,10 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 			if(!empty($settings[0]["status"])) {
 				$query .= "    AND ".$db->in("err.status", $settings[0]["status"], false, "text");
 			}
+		} else {
+			$year = date("y");
+			$query .= " WHERE ((`err`.`ts` < '".$year."-12-31' ) OR (`err`.`ts` = '".$year."-12-31' ) ) AND (('".$year."-01-01' < `err`.`ts` ) OR ('".$year."-01-01' = `err`.`ts` ) )";
+			$query .= "     AND err.status IN ('feedback','not_resolved')";
 		}
 
 		$query .= " GROUP BY usr_id, crs_id, internal, reason, err_date, action, firstname, lastname, status";
@@ -269,8 +273,8 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 	}
 
 	protected function getStatusFilterDefaults() {
-		return array("not_resolved" => $this->plugin->txt("not_resolved")
-				   , "feedback" => $this->plugin->txt("feedback")
+		return array("not_resolved"
+				   , "feedback"
 			);
 	}
 

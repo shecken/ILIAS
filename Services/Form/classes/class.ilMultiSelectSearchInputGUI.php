@@ -2,6 +2,7 @@
 /**
  * Created by JetBrains PhpStorm.
  * @author: Oskar Truffer <ot@studer-raimann.ch>
+ * @author: Stefan Hecken <stefan.heclen@concepts-and-training.de>
  * Date: 20/06/13
  * Time: 11:12 AM
  * To change this template use File | Settings | File Templates.
@@ -11,7 +12,7 @@ require_once("./Services/Form/classes/class.ilMultiSelectInputGUI.php");
 require_once("./Services/User/classes/class.ilObjUser.php");
 require_once("./Services/UICore/classes/class.ilTemplate.php");
 /**
- * Class ilMultipleSelectInputGUI
+ * Class ilMultiSelectSearchInputGUI
  */
 class ilMultiSelectSearchInputGUI extends ilMultiSelectInputGUI
 {
@@ -53,7 +54,7 @@ class ilMultiSelectSearchInputGUI extends ilMultiSelectInputGUI
 
 		$this->lng = $lng;
 		$tpl->addJavaScript("./Services/Form/lib/select2/js/select2.full.js");
-		//$tpl->addJavaScript("./Services/Form/lib/select2/select2_locale_".$ilUser->getCurrentLanguage().".js");
+		$tpl->addJavaScript("./Services/Form/lib/select2/js/select2_locale_".$ilUser->getCurrentLanguage().".js");
 		$tpl->addCss("./Services/Form/lib/select2/css/select2.min.css");
 		$this->setInputTemplate(new ilTemplate("tpl.multiple_select.html", true, true,"Services/Form"));
 		$this->setWidth("300px");
@@ -242,7 +243,6 @@ class ilMultiSelectSearchInputGUI extends ilMultiSelectInputGUI
 	{
 		return $this->input_template;
 	}
-
 
 	/**
 	 * This implementation might sound silly. But the multiple select input used parses the post vars differently if you use ajax. thus we have to do this stupid "trick". Shame on select2 project ;)
