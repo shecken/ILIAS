@@ -239,7 +239,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 			if((int)$rec["internal"] === 1) {
 				$rec["internal"] = $this->plugin->txt("internal");
 			} else if ((int)$rec["internal"] === 0) {
-				$rec["internal"] = $this->plugin->txt("WBD");
+				$rec["internal"] = $this->plugin->txt("wbd");
 			}
 
 			$rec["ts"] = $rec["err_date"];
@@ -280,7 +280,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 
 	protected function getErrorFilterValues() {
 		return array( 1 => $this->plugin->txt("internal")
-					, 2 => $this->plugin->txt("wbd")
+					, 0 => $this->plugin->txt("wbd")
 					);
 	}
 
