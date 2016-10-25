@@ -1013,6 +1013,9 @@ function Output($name='', $dest='')
 			break;
 		case 'D':
 			// Download file
+			//gev-patch 2559 do not show pre loader on download
+			ilUtil::setCookie("download_started", "started", false, false, false);
+			//gev-patch end
 			$this->_checkoutput();
 			header('Content-Type: application/x-download');
 			header('Content-Disposition: attachment; filename="'.$name.'"');
