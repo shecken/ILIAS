@@ -17,6 +17,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		$this->gCtrl = $ilCtrl;
 		$this->gLng = $lng;
 		$this->filter_settings = null;
+		$this->id_counter = 1;
 	}
 
 	public function initType() {
@@ -290,7 +291,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		$current_selection_list->setAsynch(false);
 		$current_selection_list->setAsynchUrl(true);
 		$current_selection_list->setListTitle($this->txt("actions"));
-		$current_selection_list->setId($err_ids);
+		$current_selection_list->setId($this->id_counter);
 		$current_selection_list->setSelectionHeaderClass("small");
 		$current_selection_list->setItemLinkClass("xsmall");
 		$current_selection_list->setLinksMode("il_ContainerItemCommand2");
@@ -301,7 +302,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		foreach ($this->getActionMenuItems($err_ids) as $key => $value) {
 			$current_selection_list->addItem($value["title"],"",$value["link"],$value["image"],"",$value["frame"]);
 		}
-
+		$this->id_counter ++;
 		return $current_selection_list->getHTML();
 	}
 
