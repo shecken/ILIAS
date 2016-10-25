@@ -2214,10 +2214,6 @@ class ilUtil
 		if ( true )
 		// gev-patch end
 		{
-			//gev-patch 2559 do not show pre loader on download
-			ilUtil::setCookie("download_started", "started", false, false, false);
-			//gev-patch end
-
 			// Added different handling for IE and HTTPS => send pragma after content informations
 			/**
 			* We need to set the following headers to make downloads work using IE in HTTPS mode.
@@ -2280,7 +2276,11 @@ class ilUtil
 		{
 			return false;
 		}	
-		
+
+		//gev-patch 2559 do not show pre loader on download
+		ilUtil::setCookie("download_started", "started", false, false, false);
+		//gev-patch end
+
 		// gev-patch start
 		// for the sake of ie 8
 		header("Pragma: ");
