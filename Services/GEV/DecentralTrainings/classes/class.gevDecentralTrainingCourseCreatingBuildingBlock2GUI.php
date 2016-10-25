@@ -303,6 +303,7 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 		$content->setRows(5);
 		$form_add_building_block->getTemplate()->setVariable("CONTENT",$content->render());
 		$form_add_building_block->getTemplate()->setVariable("CONTENT_LABEL",$this->lng->txt("gev_dec_training_content"));
+		$form_add_building_block->getTemplate()->setVariable("CONTENT_BYLINE",$this->lng->txt("gev_dec_training_content_info"));
 
 		$time = new ilDateDurationInputGUI($this->lng->txt("gev_duration"), "duration");
 		$time->setShowDate(false);

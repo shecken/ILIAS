@@ -10,6 +10,8 @@ $(document).ready(function() {
 		$('#form_dct_ab input:submit').addClass('submit_disabled');
 		$('#form_dct_ab input:submit').removeClass('submit');
 		$('#form_dct_ab input:submit').attr('disabled',true);
+		$('#dct_conten_required').hide();
+		$('#dct_content_byline').hide();
 	}
 
 	$('#wp').attr('readonly',true);
@@ -97,6 +99,8 @@ function changeBuildingBlockInfos() {
 	$('#content').attr('disabled',true);
 	$('#content').attr('name', null);
 	$('#content').css('background-color', '#DDD');
+	$('#dct_conten_required').hide();
+	$('#dct_content_byline').hide();
 	$('#target').attr('disabled',true);
 	$('#target').attr('name', null);
 	$('#target').css('background-color', '#DDD');
@@ -118,6 +122,8 @@ function changeBuildingBlockInfos() {
 			$('#form_dct_ab input:submit').addClass('submit_disabled');
 			$('#form_dct_ab input:submit').removeClass('submit');
 			$('#form_dct_ab input:submit').attr('disabled',true);
+			$('#dct_conten_required').show();
+			$('#dct_content_byline').show();
 		}
 
 		calculateCreditPoints();

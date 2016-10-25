@@ -1544,3 +1544,4 @@ gev#:#no_wbt_found_for_ref#:#Kein Training zur Frage Nr. %s gefunden.
 gev#:#placeholder#:#Bitte wählen
 gev#:#gev_exam_bio#:#Prüfungsbiografie
 gev#:#gev_members_exam_bio#:#Prüfungsbiografie
+gev#:#gev_dec_training_content_info#:#Um einen Freitextbaustein hinzufügen zu können, müssen Sie einen Inhalt definieren.
