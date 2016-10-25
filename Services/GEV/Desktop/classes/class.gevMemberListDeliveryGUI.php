@@ -23,6 +23,10 @@ class gevMemberListDeliveryGUI {
 		$user_utils = gevUserUtils::getInstance($this->user_id);
 		$may_access	= $user_utils->hasRoleIn($access_roles);
 
+		//gev-patch 2559 do not show pre loader on download
+		ilUtil::setCookie("download_started", "started", false, false, false);
+		//gev-patch end
+
 		switch($cmd) {
 
 			case "hotel":
