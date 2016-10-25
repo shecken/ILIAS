@@ -206,7 +206,7 @@ class FilterFactory {
 		$f = $this->predicate_factory();
 		return function(\DateTime $start, \DateTime $end) use ($field_start, $field_end, $f) {
 			$start->setTime(0,0,0);
-			$end->setTime(23,59,0);
+			$end->setTime(23,59,59);
 			return	$field_start->LE()->int($end->getTimestamp())
 				->_AND(	$f->int($start->getTimestamp())->LE($field_end));
 		};
