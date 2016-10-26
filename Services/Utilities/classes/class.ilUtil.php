@@ -2214,7 +2214,6 @@ class ilUtil
 		if ( true )
 		// gev-patch end
 		{
-
 			// Added different handling for IE and HTTPS => send pragma after content informations
 			/**
 			* We need to set the following headers to make downloads work using IE in HTTPS mode.
@@ -2277,7 +2276,11 @@ class ilUtil
 		{
 			return false;
 		}	
-		
+
+		//gev-patch 2559 do not show pre loader on download
+		ilUtil::setCookie("download_started", "started", false, false, false);
+		//gev-patch end
+
 		// gev-patch start
 		// for the sake of ie 8
 		header("Pragma: ");
@@ -5096,7 +5099,7 @@ class ilUtil
 		return md5(rand(1,9999999) + str_replace(" ", "", (string) microtime()));
 	}
 	
-	public static function setCookie($a_cookie_name,$a_cookie_value = '', $a_also_set_super_global = true, $a_set_cookie_invalid = false)
+	public static function setCookie($a_cookie_name,$a_cookie_value = '', $a_also_set_super_global = true, $a_set_cookie_invalid = false, $a_http_only = null)
 	{
 		/*
 		if(!(bool)$a_set_cookie_invalid) $expire = IL_COOKIE_EXPIRE;
@@ -5111,8 +5114,13 @@ class ilUtil
 		if( version_compare(PHP_VERSION, '5.2.0', '>=') )
 		{
 			// PHP version >= 5.2.0
+			//gev-patch 2559 do not show pre loader on download
+			if ($a_http_only === null) {
+				$a_http_only = IL_COOKIE_HTTPONLY;
+			}
+			//gev-patch end
 			setcookie( $a_cookie_name, $a_cookie_value, $expire,
-				IL_COOKIE_PATH, IL_COOKIE_DOMAIN, IL_COOKIE_SECURE, IL_COOKIE_HTTPONLY
+				IL_COOKIE_PATH, IL_COOKIE_DOMAIN, IL_COOKIE_SECURE, $a_http_only
 			);
 		}
 		else

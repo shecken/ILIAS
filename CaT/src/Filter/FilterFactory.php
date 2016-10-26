@@ -204,7 +204,9 @@ class FilterFactory {
 	 */
 	public function dateperiod_timestamp_overlaps_predicate_fields(Predicates\Field $field_start,Predicates\Field $field_end) {
 		$f = $this->predicate_factory();
-		return function(\DateTime $start, \DateTime $end)  use ($field_start, $field_end, $f) {
+		return function(\DateTime $start, \DateTime $end) use ($field_start, $field_end, $f) {
+			$start->setTime(0,0,0);
+			$end->setTime(23,59,59);
 			return	$field_start->LE()->int($end->getTimestamp())
 				->_AND(	$f->int($start->getTimestamp())->LE($field_end));
 		};

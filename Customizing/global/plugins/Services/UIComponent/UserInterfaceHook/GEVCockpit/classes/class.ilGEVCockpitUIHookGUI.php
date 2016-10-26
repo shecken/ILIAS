@@ -69,6 +69,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			&& $cmd_class != "gevcoursesearchgui"
 			&& $cmd_class != "iladminsearchgui"
 			&& $cmd_class != "gevemployeebookingsgui"
+			&& $cmd_class != "gevdecentraltraininggui"
 			&& $cmd != "toallassessments"
 			;
 	}
