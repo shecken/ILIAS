@@ -50,6 +50,12 @@ class ilTCPDFGenerator
 			$pdf->writeHTML($page, true, false, true, false, '');			
 		}
 
+		if($job->getOutputMode() == ilTestPDFGenerator::PDF_OUTPUT_DOWNLOAD) {
+			//gev-patch 2559 do not show pre loader on download
+			ilUtil::setCookie("download_started", "started", false, false, false);
+			//gev-patch end
+		}
+
 		$result = $pdf->Output($job->getFilename(), $job->getOutputMode() ); // (I - Inline, D - Download, F - File)
 	}
 }
