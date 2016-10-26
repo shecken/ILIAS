@@ -843,12 +843,12 @@ class gevWBD {
 	public function getCrsIdByRowId($row_id) {
 		$select = "SELECT DISTINCT crs_id\n"
 				 ." FROM hist_usercoursestatus\n"
-				 ." WHERE row_id = ".$this->gDB->quote($this->row_id, "integer")."\n";
+				 ." WHERE row_id = ".$this->gDB->quote($row_id, "integer")."\n";
 
 		$res = $this->gDB->query($select);
 
 		if($this->gDB->numRows($res) == 0) {
-			throw new Exception("no crs id found for user: ".$this->usr_id." AND row id: ".$row_id);
+			throw new Exception("no crs id found for user: ".$this->user_id." AND row id: ".$row_id);
 		}
 
 		$row = $this->gDB->fetchAssoc($res);
