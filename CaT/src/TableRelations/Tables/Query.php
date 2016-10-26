@@ -24,14 +24,23 @@ class Query implements AbstractQuery {
 		return $this->path ? $this->path->valid() : false;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function key() {
 		return $this->path->key();
 	}
-
+	
+	/**
+	 * @inheritdoc
+	 */
 	public function current() {
 		return $this->path->current();
 	}
-
+	
+	/**
+	 * @inheritdoc
+	 */
 	public function next() {
 		$this->current++;
 		return $this->path->next();
@@ -47,6 +56,11 @@ class Query implements AbstractQuery {
 		}
 	}
 
+	/**
+	 * Get the join condition, on which the current object is joined.
+	 *
+	 * @return Predicates\Predicate
+	 */
 	public function currentJoinCondition() {
 		return $this->join_conditions[$this->key()];
 	}
@@ -166,6 +180,9 @@ class Query implements AbstractQuery {
 		return $return;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function withOrderBy(array $order_by,$order_mode = self::ORDER_ASC) {
 		$return = clone $this;
 		$return->order_by = $order_by;

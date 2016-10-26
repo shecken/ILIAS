@@ -61,6 +61,13 @@ class TableSpace {
 		return $this;
 	}
 
+	/**
+	 * Any dependency connects two tables by a predicate on
+	 * fields within these. Add dependencies using this method.
+	 *
+	 * @param	AbstractTableDependency	$dep
+	 * @return	this
+	 */
 	public function addDependency(AbstractTableDependency $dep) {
 		$from = $dep->from();
 		$to = $dep->to();
@@ -81,7 +88,13 @@ class TableSpace {
 		}
 		return $this;
 	}
-
+	/**
+	 * Add a primary table. Primary tables will be included in
+	 * any query, indifferent of wether any field there is relevant.
+	 *
+	 * @param	AbstractTable	$table
+	 * @return	this
+	 */
 	public function addTablePrimary(AbstractTable $table) {
 		$table->setSubgraph(self::PRIMARY);
 		$this->relevant_table_ids[] = $table->id();
@@ -89,12 +102,25 @@ class TableSpace {
 		return $this;
 	}
 
+	/**
+	 * Add a secondary table. Secondary tables only will be included in
+	 * the case that any field there is relevant.
+	 *
+	 * @param	AbstractTable	$table
+	 * @return	this
+	 */
 	public function addTableSecondary(AbstractTable $table) {
 		$table->setSubgraph(self::SECONDARY);
 		$this->addTable($table);
 		return $this;
 	}
 
+	/**
+	 * Set the root table. Any query will be built starting there.
+	 *
+	 * @param	AbstractTable	$table
+	 * @return	this
+	 */
 	public function setRootTable(AbstractTable $table) {
 		$id = $table->id();
 		if($this->graph->getNodeById($id) != $table) {
@@ -116,6 +142,14 @@ class TableSpace {
 
 	/**
 	 * Query definition.
+	 */
+
+	/**
+	 * request a field, simple or derived, to be included in the query result.
+	 *
+	 * @param	Predicates\Field	$field
+	 * @param	string|null	$id
+	 * @return	this
 	 */
 	public function request(Predicates\Field $field, $id = null) {
 
@@ -154,8 +188,15 @@ class TableSpace {
 
 	public function requested() {
 		return $this->requested_fields;
-	} 
+	}
 
+	/**
+	 * Add a filter applied after all the dependencies are
+	 * resolved.
+	 *
+	 * @param	Predicates\Predicate	$predicate
+	 * @return	this
+	 */
 	public function addFilter(Predicates\Predicate $predicate) {
 		foreach($predicate->fields() as $field) {
 			if(!$this->fieldInSpace($field)) {
@@ -171,6 +212,12 @@ class TableSpace {
 		return $this;
 	}
 
+	/**
+	 * Group the query results by a field.
+	 *
+	 * @param	Predicates\Field	$field
+	 * @return	this
+	 */
 	public function groupBy(Predicates\Field $field) {
 		if($field instanceof AbstractTableField) {
 			if(!$this->fieldInSpace($field)) {
@@ -188,6 +235,12 @@ class TableSpace {
 		return $this;
 	}
 
+	/**
+	 * Order the query results by a field in selection.
+	 *
+	 * @param	string[]	$field_ids
+	 * @param	string	$direction
+	 */
 	public function orderBy(array $field_ids, $direction ) {
 		foreach($order_by as $requested_id) {
 			if(!isset($this->requested_fields[$requested_id])) {
@@ -201,6 +254,12 @@ class TableSpace {
 		$this->order_direction = $direction;
 	}
 
+	/**
+	 * Filter final query results according to predicate
+	 *
+	 * @param	Predicates\Predicate	$predicate
+	 * @return	this
+	 */
 	public function addHaving(Predicates\Predicate $predicate) {
 		foreach($predicate->fields() as $field) {
 			if(!isset($this->requested_fields[$field->name()])) {
@@ -215,6 +274,11 @@ class TableSpace {
 		return $this;
 	}
 
+	/**
+	 * Get the query corresponding to parameters defined above.
+	 *
+	 * @return	AbstractQuery
+	 */
 	public function query() {
 		$paths = $this->getPathsFromGraph();
 		$o_path = $this->getOrderedPathFromPaths($paths);
@@ -241,6 +305,11 @@ class TableSpace {
 		return $query;
 	}
 
+	/**
+	 * The following methods will seek out paths
+	 * from graph and postprocess in order to build
+	 * the query object.
+	 */
 	protected function getPathsFromGraph() {
 		$paths = array();
 		foreach (array_unique($this->relevant_table_ids) as $node_id) {
