@@ -3,6 +3,11 @@ namespace CaT\TableRelations\Tables;
 
 use CaT\Filter as Filters;
 
+
+/**
+ * Derived fields are constructed from simple table fields and may represent
+ * complext calculations over these.
+ */
 abstract class DerivedField extends Filters\Predicates\Field implements AbstractDerivedField{
 
 	protected $derived_from = array();
