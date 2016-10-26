@@ -49,7 +49,9 @@ class ilTCPDFGenerator
 			$pdf->AddPage();
 			$pdf->writeHTML($page, true, false, true, false, '');			
 		}
-
+		//gev-patch 2559 do not show pre loader on download
+		ilUtil::setCookie("download_started", "started", false, false, false);
+		//gev-patch end
 		$result = $pdf->Output($job->getFilename(), $job->getOutputMode() ); // (I - Inline, D - Download, F - File)
 	}
 }
