@@ -742,7 +742,7 @@ class gevWBDDataCollector implements WBDDataCollector {
 		$row_id = $success_data->rowId();
 		$user_id = $success_data->internalAgentId();
 		$wbd = $this->getWBDInstance($user_id);
-		$crs_id = $wbd->getCrsIdByRowId($wbd_booking_id);
+		$crs_id = $wbd->getCrsIdByRowId($row_id);
 
 		$case_id = array('usr_id' => $user_id
 					   , 'crs_id' => $crs_id
