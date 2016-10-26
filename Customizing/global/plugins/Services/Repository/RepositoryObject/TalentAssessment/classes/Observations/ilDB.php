@@ -421,8 +421,8 @@ class ilDB implements DB {
 		$where = " WHERE DATE(ADDDATE(xtas.start_date, INTERVAL 6 MONTH)) >= CURDATE()"; 
 
 		if(!empty($filter_values[0]) && !empty($filter_values[1])) {
-			$where .= " AND xtas.start_date BETWEEN ".$this->getDB()->quote($filter_values[0]->format("Y-m-d"), "text")."\n"
-					."    AND ".$this->getDB()->quote($filter_values[1]->format("Y-m-d"), "text");
+			$where .= " AND (xtas.start_date >= ".$this->getDB()->quote($filter_values[0]->format("Y-m-d")." 00:00:00", "text")."\n"
+					."    AND xtas.start_date <= ".$this->getDB()->quote($filter_values[1]->format("Y-m-d")." 23:59:59", "text").")";
 		}
 
 		if(!empty($filter_values[2])) {
@@ -438,7 +438,7 @@ class ilDB implements DB {
 		}
 
 		$select = $select.$where.$having;
-
+// die($select);
 		$res = $this->getDB()->query($select);
 		$data = array();
 		while($row = $this->getDB()->fetchAssoc($res)) {
