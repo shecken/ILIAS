@@ -1,7 +1,7 @@
 <?php
-require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.reportSettingsException.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.ReportSettingsException.php';
 
-class reportSettings {
+class ReportSettings {
 
 	protected $table_name;
 	protected $settings;
@@ -9,7 +9,7 @@ class reportSettings {
 
 	public function __construct($table_name, $db) {
 		if(!$db->tableExists($table_name)) {
-			throw new reportSettingsException("invalid value for table name, table $table_name does not exist");
+			throw new ReportSettingsException("invalid value for table name, table $table_name does not exist");
 		}
 		$this->db = $db;
 		$this->table_name = $table_name;
@@ -20,10 +20,10 @@ class reportSettings {
 		return $this->table_name;
 	}
 
-	public function addSetting(setting $setting) {
+	public function addSetting(Setting $setting) {
 		$id = $setting->id();
 		if(!$this->db->tableColumnExists($this->table_name, $id)) {
-			throw new reportSettingsException("invalid value for id, column $id in table $this->table_name does not exist");
+			throw new ReportSettingsException("invalid value for id, column $id in table $this->table_name does not exist");
 		}
 		$this->settings[$id] = $setting;
 		return $this;
