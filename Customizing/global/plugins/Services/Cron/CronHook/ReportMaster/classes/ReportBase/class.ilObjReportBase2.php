@@ -6,8 +6,7 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catReportQueryOn.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilter.php';
 require_once 'Services/GEV/Utils/classes/class.gevUserUtils.php';
-require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.reportSettingsDataHandler.php");
-require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.settingFactory.php");
+require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingFactory.php");
 require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/class.ilReportMasterPlugin.php");
 /**
 * This class performs all interactions with the database in order to get report-content. Puplic methods may be accessed in 
@@ -33,7 +32,7 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 		$this->filter = null;
 		$this->order = null;
 
-		$this->sf = new settingFactory($this->gIldb);
+		$this->sf = new SettingFactory($this->gIldb);
 		$this->master_plugin = new ilReportMasterPlugin();
 		$this->settings = array();
 		$this->createLocalReportSettings();
