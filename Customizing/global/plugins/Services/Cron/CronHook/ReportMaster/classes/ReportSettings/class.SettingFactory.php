@@ -5,9 +5,13 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingFloat.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingBool.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingListInt.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingHiddenInt.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingHiddenString.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingRichText.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingText.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.ReportSettings.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.ReportSettingsDataHandler.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.ReportSettingsFormHandler.php';
 class SettingFactory {
 	protected $db;
 
@@ -41,6 +45,14 @@ class SettingFactory {
 
 	public function settingListInt($id, $name) {
 		return new SettingListInt($id, $name);
+	}
+
+	public function settingHiddenInt($id, $name) {
+		return new SettingHiddenInt($id, $name);
+	}
+
+	public function settingHiddenString($id, $name) {
+		return new SettingHiddenString($id, $name);
 	}
 
 	public function reportSettings($table) {
