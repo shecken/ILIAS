@@ -4,7 +4,7 @@ require_once 'Services/Form/classes/class.ilNumberInputGUI.php';
 require_once 'Services/Form/classes/class.ilCheckboxInputGUI.php';
 require_once 'Services/Form/classes/class.ilTextInputGUI.php';
 require_once 'Services/Form/classes/class.ilTextAreaInputGUI.php';
-
+require_once 'Services/Form/classes/class.ilHiddenInputGUI.php';
 
 /**
  *	This class implements the logic of commmunication between a report object and a FormSettingsGui
@@ -95,12 +95,12 @@ class ReportSettingsFormHandler {
 
 		}
 		if($setting instanceof SettingHidden) {
-			return new ilHiddenInputGUI($name, $id);
+			return new ilHiddenInputGUI($id);
 		}
 		throw new ReportSettingsException("no formtype defined for setting");
 	}
 
-	protected function validSettingGUIRelation(Setting $setting, ilSubEnabledFormPropertyGUI $form_member_gui) {
+	protected function validSettingGUIRelation(Setting $setting, ilFormPropertyGUI $form_member_gui) {
 		if($setting instanceof SettingInt && $form_member_gui instanceof ilNumberInputGUI) {
 			return true;
 		} elseif($setting instanceof SettingFloat && $form_member_gui instanceof ilNumberInputGUI) {
@@ -122,7 +122,7 @@ class ReportSettingsFormHandler {
 		}
 	}
 
-	protected function extractSettingFromFormMember(Setting $setting, ilSubEnabledFormPropertyGUI $form_member_gui) {
+	protected function extractSettingFromFormMember(Setting $setting, ilFormPropertyGUI $form_member_gui) {
 		assert('$this->validSettingGUIRelation($setting, $form_member_gui)');
 		if($setting instanceof SettingBool && $form_member_gui instanceof ilCheckboxInputGUI) {
 			return call_user_func($setting->fromForm(), $form_member_gui->getChecked());
@@ -136,7 +136,7 @@ class ReportSettingsFormHandler {
 
 	}
 
-	protected function insertSettingIntoFormMember($setting_data, Setting $setting, ilSubEnabledFormPropertyGUI $form_member_gui) {
+	protected function insertSettingIntoFormMember($setting_data, Setting $setting, ilFormPropertyGUI $form_member_gui) {
 		assert('$this->validSettingGUIRelation($setting, $form_member_gui)');
 		if($setting instanceof SettingBool && $form_member_gui instanceof ilCheckboxInputGUI) {
 			if($setting_data) {
