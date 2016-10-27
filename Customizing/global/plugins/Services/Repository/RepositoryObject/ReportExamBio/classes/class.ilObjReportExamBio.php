@@ -46,12 +46,12 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 	}
 
 	public static function queryReports(array $obj_properties, $db) {
-		$sf = new settingFactory($db);
+		$sf = new SettingFactory($db);
 		return $sf->reportSettingsDataHandler()->query($obj_properties,self::getNonvisualSettings($sf));
 	}
 
 	public static function readReportProperties($obj_id, $db) {
-		$sf = new settingFactory($db);
+		$sf = new SettingFactory($db);
 		return $sf->reportSettingsDataHandler()->readObjEntry($obj_id,self::getNonvisualSettings($sf));
 	}
 
