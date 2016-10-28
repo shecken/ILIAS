@@ -261,13 +261,13 @@ class ilObjectStatusGUI
 			if (substr($ops['operation'], 0, 7) == "create_" &&
 				$objDefinition->isPlugin(substr($ops['operation'], 7)))
 			{
-				$result_set[$counter][] = ilPlugin::lookupTxt("rep_robj", substr($ops['operation'],7),
+				$result_set[$counter][] = ilPlugin::lookupTxtById(substr($ops['operation'],7),
 					#$this->object->getType()."_".$ops['operation']);
 					'rbac_'.$ops['operation']);
 			}
 			else if ($objDefinition->isPlugin($this->object->getType()))
 			{
-				$result_set[$counter][] = ilPlugin::lookupTxt("rep_robj", $this->object->getType(),
+				$result_set[$counter][] = ilPlugin::lookupTxtById($this->object->getType(),
 					$this->object->getType()."_".$ops['operation']);
 			}
 			elseif(substr($ops['operation'],0,7) == 'create_')

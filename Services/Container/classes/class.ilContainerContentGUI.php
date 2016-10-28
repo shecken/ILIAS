@@ -20,7 +20,7 @@ abstract class ilContainerContentGUI
 	const DETAILS_ALL = 2;
 	
 	protected $details_level = self::DETAILS_DEACTIVATED;
-	
+
 	var $container_gui;
 	var $container_obj;
 
@@ -702,7 +702,7 @@ abstract class ilContainerContentGUI
 			else
 			{
 				include_once("./Services/Component/classes/class.ilPlugin.php");
-				$title = ilPlugin::lookupTxt("rep_robj", $a_type, "objs_".$a_type);
+				$title = ilPlugin::lookupTxtById($a_type, "objs_".$a_type);
 			}
 		}
 		else
@@ -822,7 +822,7 @@ abstract class ilContainerContentGUI
 		else
 		{
 			include_once("./Services/Component/classes/class.ilPlugin.php");
-			$title = ilPlugin::lookupTxt("rep_robj", $a_type, "objs_".$a_type);
+			$title = ilPlugin::lookupTxtById($a_type, "objs_".$a_type);
 		}
 		$a_message = str_replace("[type]", $type, $a_message);
 		
