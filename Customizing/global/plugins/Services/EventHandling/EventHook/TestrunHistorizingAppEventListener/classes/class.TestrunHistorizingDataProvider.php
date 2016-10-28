@@ -54,7 +54,7 @@ class TestrunHistorizingDataProvider implements DataProvider {
 
 		if($this->component === 'Services/Object' && $this->event === 'update') {
 			return array('test_title' => $this->getTestInstanceByObjId($this->parameter['obj_id'])->getTitle());
-		} elseif($this->component === 'Modules/Test' && $this->event === 'testPassIncreased') {
+		} elseif($this->component === 'Modules/Test' && $this->event === 'testPassFinished') {
 
 			$test_session = $this->parameter['test_session'];
 			$test = $this->getTestInstanceByObjId($this->getObjIdFromTestSession($test_session));
@@ -111,7 +111,7 @@ class TestrunHistorizingDataProvider implements DataProvider {
 	private function calculateCase() {
 		if($this->component === 'Services/Object' && $this->event === 'update') {
 			return array('obj_id' => $this->parameter['obj_id']);
-		} elseif($this->component === 'Modules/Test' && $this->event === 'testPassIncreased') {
+		} elseif($this->component === 'Modules/Test' && $this->event === 'testPassFinished') {
 			$test_session = $this->parameter['test_session'];
 			return array(
 				'usr_id' => $test_session->getUserId()

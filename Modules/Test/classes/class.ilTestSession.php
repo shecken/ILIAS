@@ -209,7 +209,7 @@ class ilTestSession
 				}
 			}
 			global $ilAppEventHandler;
-			$ilAppEventHandler->raise('Modules/Test','testPassIncreased',array('test_session' => $this));
+			$ilAppEventHandler->raise('Modules/Test','testPassFinished',array('test_session' => $this));
 		}
 	}
 	

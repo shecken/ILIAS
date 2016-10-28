@@ -47,7 +47,7 @@ class ilTestrunHistorizingAppEventListenerPlugin extends ilEventHookPlugin {
 	}
 
 	public function eventRelevant($a_component, $a_event, $a_parameter) {
-		return ($a_component === 'Modules/Test' && $a_event === 'testPassIncreased') ||
+		return ($a_component === 'Modules/Test' && $a_event === 'testPassFinished') ||
 		($a_component === 'Services/Object' && $a_event === 'update' && $a_parameter['obj_type'] === 'tst');
 	}
 }
