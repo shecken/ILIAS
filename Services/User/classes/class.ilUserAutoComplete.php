@@ -213,11 +213,13 @@ class ilUserAutoComplete
 	 */
 	public function getList($a_str)
 	{
+		//spx-patch start lng for ainactive message
 		/**
 		 * @var $ilDB  ilDB
 		 * @var $ilLog ilLog
 		 */
-		global $ilDB, $ilLog;
+		global $ilDB, $ilLog, $lng;
+		//spx-patch end
 
 		$select_part   = $this->getSelectPart();
 		$where_part    = $this->getWherePart($a_str);
@@ -241,14 +243,22 @@ class ilUserAutoComplete
 			$add_email = false;
 		}
 
+		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		include_once './Services/Search/classes/class.ilSearchSettings.php';
 		$max = ilSearchSettings::getInstance()->getAutoCompleteLength();
 		$cnt    = 0;
 		$result = array();
 		while(($rec = $ilDB->fetchAssoc($res)) && $cnt < $max)
 		{
+			//spx-patch start loo active or not and add suffix
+			$user_utils = gevUserUtils::getInstance($rec["usr_id"]);
+			$inactive_mesage = '';
+			if(!$user_utils->isActive()) {
+				$inactive_mesage = $lng->txt("user_inactive");
+			}
 			// @todo: Open discussion: We should remove all non public fields from result
-			$label = $rec['lastname'] . ', ' . $rec['firstname'] . ' [' . $rec['login'] . ']';
+			$label = $rec['lastname'] . ', ' . $rec['firstname'] . ' [' . $rec['login'] . '] '.$inactive_mesage;
+			//spx-patch end
 
 			if($add_email && $rec['email'] && (self::PRIVACY_MODE_RESPECT_USER_SETTING != $this->getPrivacyMode() || 'y' == $rec['email_value']))
 			{
@@ -270,12 +280,15 @@ class ilUserAutoComplete
 	 */
 	protected function getSelectPart()
 	{
+		//spx-patch start select usr_id
 		$fields = array(
+			'usr_id',
 			'login',
 			'firstname',
 			'lastname',
 			'email'
 		);
+		//spx-patch end
 
 		if(self::PRIVACY_MODE_RESPECT_USER_SETTING == $this->getPrivacyMode())
 		{
