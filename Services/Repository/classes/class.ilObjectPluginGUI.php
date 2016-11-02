@@ -14,7 +14,7 @@ include_once("./Services/Component/classes/class.ilPlugin.php");
 abstract class ilObjectPluginGUI extends ilObject2GUI
 {
 
-	protected $plugin;
+	public $plugin;
 	/**
 	* Constructor.
 	*/
