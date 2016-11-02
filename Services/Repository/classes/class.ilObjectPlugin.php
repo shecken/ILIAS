@@ -14,7 +14,7 @@ abstract class ilObjectPlugin extends ilObject2
 {
 	private $object;
 
-	protected $plugin;
+	public $plugin;
 
 	/**
 	* Constructor.
