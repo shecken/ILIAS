@@ -7,6 +7,7 @@
 		<exclude name="Generic.WhiteSpace.DisallowTabIndent"/>
 		<exclude name="PSR2.Namespaces.NamespaceDeclaration"/>
 		<exclude name="PSR1.Classes.ClassDeclaration"/>
+		<exclude name="PSR1.Methods.CamelCapsMethodName"/>
  	</rule>
  	<rule ref="Squiz.WhiteSpace.SuperfluousWhitespace">
 		<properties>
