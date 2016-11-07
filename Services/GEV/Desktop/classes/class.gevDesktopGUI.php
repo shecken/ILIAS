@@ -25,6 +25,7 @@
 * @ilCtrl_Calls gevDesktopGUI: gevDecentralTrainingGUI
 * @ilCtrl_Calls gevDesktopGUI: gevEmployeeEduBiosGUI
 * @ilCtrl_Calls gevDesktopGUI: ilFormPropertyDispatchGUI
+* @ilCtrl_Calls gevDesktopGUI: gevMyEffectivenessAnalysisGUI
 */
 
 class gevDesktopGUI {
@@ -176,6 +177,7 @@ class gevDesktopGUI {
 			case "toEmployeeBookings":
 			case "toReportEmployeeEduBios":
 			case "createHAUnit":
+			case "toMyEffectivenessAnalysis":
 				$this->$a_cmd();
 			default:
 				throw new Exception("Unknown command: ".$a_cmd);
@@ -240,6 +242,10 @@ class gevDesktopGUI {
 		$this->ctrl->setParameterByClass("gevBookingGUI", "user_id", $usr_id);
 		$this->ctrl->setParameterByClass("gevBookingGUI", "crs_id", $crs_id);
 		$this->ctrl->redirectByClass("gevBookingGUI", "book");
+	}
+
+	protected function toMyEffectivenessAnalysis() {
+		$this->ctrl->redirectByClass("gevMyEffectivenessAnalysisGUI");
 	}
 }
 

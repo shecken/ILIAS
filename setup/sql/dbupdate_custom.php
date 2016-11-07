@@ -3373,3 +3373,8 @@ if(!$ilDB->tableColumnExists('hist_course', 'reason_for_training')){
 	);
 }
 ?>
+
+<#104>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
