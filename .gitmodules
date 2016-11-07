@@ -1,0 +1,3 @@
+[submodule "ExitedUserCleanup"]
+	path = ExitedUserCleanup
+	url = https://github.com/conceptsandtraining/ExitedUserCleanup.git
