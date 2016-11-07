@@ -1,3 +1,6 @@
 [submodule "ExitedUserCleanup"]
 	path = ExitedUserCleanup
 	url = https://github.com/conceptsandtraining/ExitedUserCleanup.git
+[submodule "Customizing/global/plugins/Services/Cron/CronHook/ExitedUserCleanup"]
+	path = Customizing/global/plugins/Services/Cron/CronHook/ExitedUserCleanup
+	url = https://github.com/conceptsandtraining/ExitedUserCleanup.git
