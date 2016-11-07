@@ -3354,3 +3354,22 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "
 <?php
 $ilCtrlStructureReader->getStructure();
 ?>
+
+<#102>
+<?php
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::initPluginEnv();
+ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
+?>
+
+<#103>
+<?php
+if(!$ilDB->tableColumnExists('hist_course', 'reason_for_training')){
+	$ilDB->addTableColumn('hist_course', 'reason_for_training', array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => false
+		)
+	);
+}
+?>
