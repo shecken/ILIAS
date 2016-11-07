@@ -281,4 +281,9 @@ class ilCourseHistorizingHelper
 
 	}
 
+	public static function getReasonForTraining($course) {
+		$utils = gevCourseUtils::getInstanceByObjOrId($course);
+		return $utils->getReasonForTraining();
+	}
+
 }
