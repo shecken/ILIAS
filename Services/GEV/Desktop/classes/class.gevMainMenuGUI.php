@@ -97,6 +97,8 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 
 		$is_trainer = $tep_permissions->isTutor();
 
+		$has_effectiveness_analysis = $this->userUtils->isAdmin() || $this->userUtils->isSuperior();
+
 		//get all OrgUnits of superior
 		$arr_org_units_of_superior = $this->userUtils->getOrgUnitsWhereUserIsDirectSuperior();
 		$arr_local_user_admin_links = array();
@@ -123,6 +125,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 				  "gev_my_courses" => array(true, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses",$this->lng->txt("gev_my_courses"))
 				, "gev_my_settings" => array(true, "ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSettings",$this->lng->txt("gev_my_settings"))
 				, "gev_my_trainer_ap" => array($is_trainer, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAp",$this->lng->txt("gev_my_trainer_ap"))
+				, "gev_my_effectiveness_analysis" => array($has_effectiveness_analysis, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyEffectivenessAnalysis",$this->lng->txt("gev_my_effectiveness_analysis"))
 				), $this->lng->txt("gev_me_menu"))
 			, "gev_others_menu" => array(false, $has_others_menu, array(
 				  "gev_employee_booking" => array($employee_booking, "ilias.php?baseClass=gevDesktopGUI&cmd=toEmployeeBookings",$this->lng->txt("gev_employee_booking"))
