@@ -14751,3 +14751,5 @@ gev#:#xls_title#:#Title
 gev#:#xls_subtitle#:#Subtitle
 gev#:#gev_training_date#:#Date
 common#:#federal_state#:#Country
+gev#:#to_superior#:#Superior in CC
+gev#:#user_inactive#:#(RETIRED)

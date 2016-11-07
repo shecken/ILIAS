@@ -849,6 +849,10 @@ class gevUserUtils {
 	public function getFullName() {
 		return $this->getLastname().", ".$this->getFirstname();
 	}
+
+	public function isActive() {
+		return $this->getUser()->getActive();
+	}
 	
 	static public function getFullNames($a_user_ids) {
 		global $ilDB;

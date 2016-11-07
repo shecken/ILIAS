@@ -13,6 +13,9 @@ require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 */
 
 class gevCrsMailingGUI extends ilMailingGUI {
+	const TO_SUPERIOR = "to_superior";
+	const TO_CC = "to_cc";
+
 	protected function attachmentsSubtabVisible() {
 		return true;
 	}
@@ -542,5 +545,165 @@ class gevCrsMailingGUI extends ilMailingGUI {
 		$form->addItem($suppress_mails);
 		
 		return $form;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function getMailToMembersForm($a_recipients) {
+		require_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
+		require_once("./Services/Form/classes/class.ilNonEditableValueGUI.php");
+		require_once("./Services/Form/classes/class.ilTextInputGUI.php");
+		require_once("./Services/Form/classes/class.ilTextAreaInputGUI.php");
+		require_once("./Services/Form/classes/class.ilHiddenInputGUI.php");
+
+		$user_data = $this->getUserData($a_recipients);
+
+		$to = implode(", ", array_map(array($this, "userDataToString"), $user_data));
+		$from = implode(", ", array_map( array($this, "userDataToString")
+									   , $this->getUserData(array($this->user->getId()))
+									   ));
+
+		$form = new ilPropertyFormGUI();
+		$form->setFormAction($this->ctrl->getFormAction($this));
+		$form->setTitle($this->lng->txt("mail_to_members"));
+
+		$from_field = new ilNonEditableValueGUI($this->lng->txt("sender"), "from");
+		$from_field->setValue($from);
+		$form->addItem($from_field);
+
+		$to_field = new ilNonEditableValueGUI($this->lng->txt("recipient"), "to");
+		$to_field->setValue($to);
+		$form->addItem($to_field);
+
+		$to_superior = new ilCheckboxInputGUI($this->lng->txt("to_superior"), self::TO_SUPERIOR);
+		$form->addItem($to_superior);
+
+		$to_cc = new ilTextInputGUI($this->lng->txt("cc"), self::TO_CC);
+		$form->addItem($to_cc);
+
+		$about_field = new ilTextInputGUI($this->lng->txt("subject"), "subject");
+		$form->addItem($about_field);
+
+		$message_field = new ilTextAreaInputGUI($this->lng->txt("message"), "message");
+		$message_field->setRows(10);
+		$form->addItem($message_field);
+
+		$attachment_select = $this->getAttachmentSelect();
+		$form->addItem($attachment_select);
+
+		foreach ($a_recipients as $recipient) {
+			$recipient_hidden = new ilHiddenInputGUI("recipients[]");
+			$recipient_hidden->setValue($recipient);
+			$form->addItem($recipient_hidden);
+		}
+
+		$form->addCommandButton("sendMailToMembers", $this->lng->txt("send_mail"));
+
+		return $form;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function sendMailToMembers() {
+		require_once("./Services/Utilities/classes/class.ilConfirmationGUI.php");
+
+		$recipients = $_POST["recipients"];
+		if (!$recipients) {
+			$this->selectMailToMembersRecipients();
+			return;
+		}
+
+		$this->setCC($recipients, $_POST[self::TO_SUPERIOR], $_POST[self::TO_CC]);
+
+		$form = $this->getMailToMembersForm($recipients);
+
+		$form->setValuesByPost();
+
+		if (!$form->checkInput()) {
+			$this->tpl->setContent($form->getHTML());
+			return;
+		}
+
+		$this->send( $this->user->getId()
+				   , $form->getInput("recipients")
+				   , $form->getInput("subject")
+				   , $form->getInput("message")
+				   , $form->getInput("attachments")
+				   );
+
+		ilUtil::sendSuccess($this->lng->txt("mail_to_members_send_successfully"));
+		$this->showLog();
+	}
+
+	/**
+	 * @inheritdoc
+	 **/
+	protected function send($a_from, $a_to, $a_subject, $a_message, $a_attachments) {
+		require_once("./Services/Mail/classes/class.ilMimeMail.php");
+
+		$attachments = array_map(array($this, "mapAttachmentToRecord"), $a_attachments);
+
+		// gev-patch start
+		global $ilias, $ilSetting;
+		$fn = $ilSetting->get("mail_system_sender_name");
+		$fm = $ilias->getSetting("mail_external_sender_noreply");
+		// gev-patch end
+
+		foreach($a_to as $recipient) {
+			var_dump($this->mapUserIdToMailString($recipient));
+			$mail_data = array(
+						// gev-patch start
+						//"from" => $this->mapUserIdToMailString($a_from)
+						   "from" => $fn." <".$fm.">"
+						// gev-patch end
+						 , "to" => $this->mapUserIdToMailString($recipient)
+						 , "cc" => $this->getCC($recipient)
+						 , "bcc" => array()
+						 , "subject" => $a_subject
+						 , "message_plain" => $a_message
+						 , "attachments" => $attachments
+						 );
+
+			$mail = new ilMimeMail();
+			$mail->From($mail_data["from"]);
+			$mail->To($mail_data["to"]);
+			$mail->Cc($mail_data["cc"]);
+			$mail->Bcc($mail_data["bcc"]);
+			$mail->Subject($mail_data["subject"]);
+			$mail->Body($mail_data["message_plain"]);
+			foreach ($mail_data["attachments"] as $attachment) {
+				$mail->Attach($attachment["path"]);
+			}
+
+			$mail->Send();
+			$this->log($mail_data, $this->lng->txt("send_by").": ".ilObjUser::_lookupFullname($a_from));
+		}
+	}
+
+	protected function getCC($recipient) {
+		return $this->cc[$recipient];
+	}
+
+	protected function setCC($recipients, $to_superior, $to_cc) {
+		$to_ccs = array();
+
+		if($to_cc) {
+			$to_cc = preg_replace('/,|;| /', '|', $to_cc);
+			$to_ccs = array_filter(explode("|", $to_cc));
+		}
+
+		foreach ($recipients as $recipient) {
+			$to_superios = array();
+			if((bool)$to_superior) {
+				$usr_utils = gevUserUtils::getInstance($recipient);
+				foreach ($usr_utils->getDirectSuperiors() as $superior_id) {
+					$to_superios[] = $this->mapUserIdToMailString($superior_id);
+				}
+			}
+
+			$this->cc[$recipient] = array_merge($to_superios, $to_ccs);
+		}
 	}
 }
