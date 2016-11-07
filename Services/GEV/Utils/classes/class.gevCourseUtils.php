@@ -507,6 +507,10 @@ class gevCourseUtils {
 	public function getEduProgramm() {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_EDU_PROGRAM);
 	}
+
+	public function getReasonForTraining() {
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_REASON_FOR_TRAINING);
+	}
 	
 	public function getTargetGroupDesc() {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_TARGET_GROUP_DESC);

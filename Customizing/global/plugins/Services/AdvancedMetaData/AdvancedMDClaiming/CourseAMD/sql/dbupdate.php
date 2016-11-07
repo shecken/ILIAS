@@ -365,3 +365,23 @@ $amdutils = gevAMDUtils::getInstance();
 $amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_EDU_PROGRAM, $options);
 
 ?>
+
+<#3>
+<?php
+require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+
+gevAMDUtils::addAMDField( "Topic"
+						, "Reason for training"
+						, gevSettings::CRS_AMD_REASON_FOR_TRAINING
+						, null
+						, false
+						, array( "R - Rechtliche Anforderung, Pflichtschulung"
+							, "D - Maßnahmen aus Defizit"
+							, "PE - Personalentwicklung"
+							, "O - Online Training"
+							)
+						, ilAdvancedMDFieldDefinition::TYPE_SELECT
+						);
+?>
