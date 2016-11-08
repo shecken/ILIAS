@@ -21,7 +21,7 @@ xexb_properties#:#Eigenschaften
 my_exam_bio#:#Meine Prüfungsbiografie
 my_exam_bio_desc#:#Hier sehen Sie die von Ihnen abgeschlossenen Tests und deren Ergebnisse.
 participants_exam_bio#:#Prüfungsbiografie meiner Teilnehmer im Training "%s".
-participants_exam_bio_desc#:#Hier sehen Sie alle Tests, die die Teilnehmeer des gewählten Trainings abgeschlossen haben.
+participants_exam_bio_desc#:#Hier sehen Sie alle Tests, die die Teilnehmer des gewählten Trainings abgeschlossen haben.
 others_exam_bio#:#Hier sehen Sie die Prüfungsbiografie von %s, %s.
 others_exam_bio_desc#:#Hier sehen Sie die abgeschlossenen Tests und deren Ergebnisse.
 lastname#:#Nachname
@@ -38,4 +38,4 @@ pass_status#:#Status
 test_passed#:#bestanden
 test_not_passed#:#nicht bestanden
 dateperiod#:#Zeitraum
-for_trainer#:#Trainerasicht
+for_trainer#:#Traineransicht
