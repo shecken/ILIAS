@@ -7,8 +7,27 @@ class ilCodingStandard_Sniffs_NameSniffs_MethodNameSniff extends NameSniff\NameS
 	protected static $valid_name_regexp =
 			'#^[a-z]+([A-Z][a-z]*)*$#';
 
+	protected static $magic_methods =
+		array(	'__construct',
+				'__destruct',
+				'__call',
+				'__callStatic',
+				'__get',
+				'__set',
+				'__isset',
+				'__unset',
+				'__slee',
+				'__wakeup',
+				'__toString',
+				'__invoke',
+				'__set_state',
+				'__clone',
+				'__debugInfo');
+
 	const INVALID_METHOD_NAME_ERROR =
 			'Method name invalid: %s::%s';
+	const NO_METHOD_NAME_ERROR =
+			'Can\'t locate method name, check line %i in %s';
 
 	public function register()
 	{
@@ -40,16 +59,16 @@ class ilCodingStandard_Sniffs_NameSniffs_MethodNameSniff extends NameSniff\NameS
 			$tokens[$stack_ptr]['parenthesis_opener']
 		);
 		if (null !== $method_name) {
-			if (!$this->validName($method_name)) {
+			if (!$this->validName($method_name) && !in_array($method_name, self::$magic_methods)) {
 				$this->handleError(
 					$phpcs_file,
-					sprintf(self::INVALID_METHOD_NAME_ERROR, $context_name, $method_name),
+					self::INVALID_METHOD_NAME_ERROR,
 					$stack_ptr,
-					$tokens[$stack_ptr]
+					array($context_name, $method_name)
 				);
 			}
 		} else {
-			$this->handleError($phpcs_file, self::NO_METHOD_NAME_ERROR, $stack_ptr, $tokens[$stack_ptr]);
+			$this->handleError($phpcs_file, self::NO_METHOD_NAME_ERROR, $stack_ptr, array($tokens[$stack_ptr]['line'], $context_name));
 		}
 	}
 }
