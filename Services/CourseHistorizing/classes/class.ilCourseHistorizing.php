@@ -134,7 +134,7 @@ class ilCourseHistorizing extends ilHistorizingStorage
 			'target_groups' 		=> 'text',
 			'training_number' 		=> 'text',
 			'objectives_benefits' 	=> 'text',
-			'trainig_topics' 		=> 'text',
+			'training_topics' 		=> 'text',
 			'language' 			=> 'text'
 
 		);

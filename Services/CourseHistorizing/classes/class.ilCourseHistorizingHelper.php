@@ -292,7 +292,7 @@ class ilCourseHistorizingHelper
 		$ret = array('target_groups' 	=> $utils->getTargetGroupDesc(),
 			'training_number' 			=> $utils->getCustomId(),
 			'objectives_benefits' 		=> $utils->getGoals(),
-			'trainig_topics' 			=> $utils->getContents(),
+			'training_topics' 			=> $utils->getContents(),
 			'language' 					=> $utils->getLanguage());
 
 		return $ret;
