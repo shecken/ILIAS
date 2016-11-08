@@ -32,9 +32,8 @@ abstract class NameSniffBase implements \PHP_CodeSniffer_Sniff
 		return 1 === preg_match(static::$valid_name_regexp, $name);
 	}
 
-	protected function handleError(\PHP_CodeSniffer_File $phpcs_file, $error, $stack_ptr, $token)
+	protected function handleError(\PHP_CodeSniffer_File $phpcs_file, $error, $stack_ptr, array $replace)
 	{
-		$data = 'line:'.$token['line'].' column:'.$token['column'].' ';
-		$phpcs_file->addError($error, $stack_ptr, 'Found', $data);
+		$phpcs_file->addWarning($error, $stack_ptr, 'Found', $replace);
 	}
 }
