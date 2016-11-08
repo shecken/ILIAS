@@ -15136,3 +15136,21 @@ gev#:#gev_crs#:#Training
 gev#:#gev_my_effectiveness_analysis#:#Wirksamkeitsanalyse
 gev#:#to_superior#:#Vorgesetzte in CC
 gev#:#user_inactive#:#(AUSGESCHIEDEN)
+gev#:#gev_eff_analysis_lastname#:#Nachname
+gev#:#gev_eff_analysis_firstname#:#Vorname
+gev#:#gev_eff_analysis_email#:#Email
+gev#:#gev_eff_analysis_org_unit#:#Org.-Einheit
+gev#:#gev_eff_analysis_title#:#Training (Titel)
+gev#:#gev_eff_analysis_training_type#:#Trainingstyp
+gev#:#gev_eff_analysis_date#:#Datum
+gev#:#gev_eff_analysis_lang#:#Sprache
+gev#:#gev_eff_analysis_finished_at#:#Erledigt am
+gev#:#gev_eff_analysis_login#:#Benutzer
+gev#:#gev_eff_analysis_id#:#ID
+gev#:#gev_eff_analysis_city#:#Ort
+gev#:#gev_eff_analysis_target_group#:#Zielgruppe
+gev#:#gev_eff_analysis_objectives#:#Ziele und Nutzen
+gev#:#gev_eff_analysis_content#:#Inhalt
+gev#:#gev_eff_analysis_result#:#Beurteilung Schulungsmaßnahme durch Vorgesetzten für jeweiligen Mitarbeiter
+gev#:#gev_eff_analysis_show_finished#:#Auch bearbeitete anzeigen
+gev#:#gev_eff_analysis_org_unit#:#Org-Einheit

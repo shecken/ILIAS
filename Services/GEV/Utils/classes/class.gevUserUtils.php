@@ -1351,6 +1351,27 @@ class gevUserUtils {
 		
 		return $this->superior_ou_names;
 	}
+
+	public function getOrgUnitNamesWhereUserIsDirectSuperior() {
+		if ($this->superior_ou_names !== null) {
+			return $this->superior_ou_names;
+		}
+		
+		$ids = $this->getOrgUnitsWhereUserIsDirectSuperior();
+		foreach($ids as $key => $value) {
+			$ids[$key] = $ids[$key]["obj_id"];
+		}
+		
+		$res = $this->db->query( "SELECT title FROM object_data "
+								."WHERE ".$this->db->in("obj_id", $ids, false, "integer")
+								);
+		$this->superior_ou_names = array();
+		while ($rec = $this->db->fetchAssoc($res)) {
+			$this->superior_ou_names[] = $rec["title"];
+		}
+		
+		return $this->superior_ou_names;
+	}
 	
 	
 	

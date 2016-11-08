@@ -149,6 +149,13 @@ class gevDesktopGUI {
 				$ret = $this->ctrl->forwardCommand($gui);
 				break;
 
+			case "gevmyeffectivenessanalysisgui":
+				$ilMainMenu->setActive("gev_me_menu");
+				require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevMyEffectivenessAnalysisGUI.php");
+				$gui = new gevMyEffectivenessAnalysisGUI();
+				$ret = $this->ctrl->forwardCommand($gui);
+				break;
+
 			default:	
 				$this->dispatchCmd($cmd);
 				break;
