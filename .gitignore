@@ -15,7 +15,8 @@
 .DS_Store
 /ilias.log
 
-/git_hooks/composer
+/git_hooks/composer/vendor/
+/git_hooks/composer/composer.lock
 
 *~
 db_template_writer.php
