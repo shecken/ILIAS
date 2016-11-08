@@ -23,14 +23,14 @@ class ilCodingStandard_Sniffs_NameSniffs_ClassNameSniff extends NameSniff\NameSn
 			$tokens,
 			$stack_ptr,
 			$tokens[$stack_ptr]['scope_opener'],
-			array(T_EXTENDS,T_IMPLEMENTS)
+			array(T_EXTENDS, T_IMPLEMENTS)
 		);
 		if (null !== $class_name) {
 			if (!$this->validName($class_name)) {
-				$this->handleError($phpcs_file, sprintf(self::INVALID_CLASS_NAME_ERROR, $class_name), $stack_ptr, $tokens[$stack_ptr]);
+				$this->handleError($phpcs_file, self::INVALID_CLASS_NAME_ERROR, $stack_ptr, array($class_name));
 			}
 		} else {
-			$this->handleError($phpcs_file, self::NO_NAME_ERROR, $stack_ptr, $tokens[$stack_ptr]);
+			$this->handleError($phpcs_file, self::NO_NAME_ERROR, $stack_ptr);
 		}
 	}
 }
