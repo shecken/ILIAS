@@ -130,7 +130,10 @@ class ilAllObservationsTableGUI extends catTableGUI {
 		$this->gCtrl->clearParameters($this->parent_obj);
 
 		$items = array();
-		$items[] = array("title" => $this->txt("show_pdf"), "link" => $link_pdf, "image" => "", "frame"=>"");
+		$vals = $this->parent_obj->plugin->getObservationsDB()->getObservationsCumulative(ilObject::_lookupObjId($ref_id));
+		if(!empty($vals)) {
+			$items[] = array("title" => $this->txt("show_pdf"), "link" => $link_pdf, "image" => "", "frame"=>"");
+		}
 
 		return $items;
 	}
