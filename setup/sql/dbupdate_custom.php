@@ -3391,7 +3391,7 @@ $eff_analysis_db->createTable();
 	$fields = array("target_groups"=>array("type"=>"clob", "notnull"=>false)
 		, "training_number"=>array("type"=>"text", "length"=>64, "notnull"=>false)
 		, "objectives_benefits"=>array("type"=>"clob", "notnull"=>false)
-		, "trainig_topics"=>array("type"=>"clob", "notnull"=>false)
+		, "training_topics"=>array("type"=>"clob", "notnull"=>false)
 		, "language"=>array("type"=>"text", "length"=>64, "notnull"=>false)
 	);
 
