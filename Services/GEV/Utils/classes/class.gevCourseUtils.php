@@ -520,6 +520,10 @@ class gevCourseUtils {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_FEE);
 	}
 	
+	public function getLanguage() {
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_LANG);
+	}
+
 	public function getFormattedFee() {
 		$fee = $this->getFee();
 		if ($fee) {

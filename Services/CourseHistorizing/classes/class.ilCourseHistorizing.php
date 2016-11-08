@@ -130,7 +130,12 @@ class ilCourseHistorizing extends ilHistorizingStorage
 			'dl_storno'				=> 'integer',
 			'dl_booking'			=> 'integer',
 			'dl_waitinglist'		=> 'integer',
-			'reason_for_training' 	=> 'text'
+			'reason_for_training' 	=> 'text',
+			'target_groups' 		=> 'text',
+			'training_number' 		=> 'text',
+			'objectives_benefits' 	=> 'text',
+			'trainig_topics' 		=> 'text',
+			'language' 			=> 'text'
 
 		);
 
