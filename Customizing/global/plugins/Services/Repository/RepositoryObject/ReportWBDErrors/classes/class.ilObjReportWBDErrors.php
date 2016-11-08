@@ -267,7 +267,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 
 	protected function getStatusFilterValues() {
 		return array("not_resolved" => $this->plugin->txt("not_resolved")
-				   , "resolved" => $this->plugin->txt("resolve")
+				   , "resolved" => $this->plugin->txt("resolved")
 				   , "feedback" => $this->plugin->txt("feedback")
 				   , "unable_resolve" => $this->plugin->txt("unable_resolve")
 			);
@@ -314,7 +314,7 @@ class ilObjReportWBDErrors extends ilObjReportBase {
 		$this->gCtrl->clearParametersByClass("ilObjReportWBDErrorsGUI");
 
 		$items = array();
-		$items[] = array("title" => $this->plugin->txt("resolve"), "link" => $link_resolve, "image" => "", "frame"=>"");
+		$items[] = array("title" => $this->plugin->txt("resolved"), "link" => $link_resolve, "image" => "", "frame"=>"");
 		$items[] = array("title" => $this->plugin->txt("feedback"), "link" => $link_feedback, "image" => "", "frame"=>"");
 		$items[] = array("title" => $this->plugin->txt("unable_resolve"), "link" => $link_unable_resolve, "image" => "", "frame"=>"");
 
