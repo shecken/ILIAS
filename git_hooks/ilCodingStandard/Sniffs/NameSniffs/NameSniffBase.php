@@ -1,21 +1,24 @@
 <?php
 
-abstract class  NameSniffBase
-	implements PHP_CodeSniffer_Sniff
-{	
+namespace ilCodingStandard\Sniffs\NameSniff;
+
+abstract class NameSniffBase implements \PHP_CodeSniffer_Sniff
+{
+
 	const NO_NAME_ERROR =
 			'Can not locate name of object.';
 
 	protected function getTokenName(
-			array $tokens
-		,	$start_ptr
-		,	$end_ptr
-		,	array $stop_at_token_codes = array()) {
+		array $tokens,
+		$start_ptr,
+		$end_ptr,
+		array $stop_at_token_codes = array()
+	) {
 
-		$stack_ptr = $start_pnt + 1;
+		$stack_ptr = $start_ptr + 1;
 		$token = $tokens[$stack_ptr];
-		while(!in_array($token['code'], $stop_at_token_codes) && $stack_ptr < $end_ptr) {
-			if(T_STRING === $token['code']) {
+		while (!in_array($token['code'], $stop_at_token_codes) && $stack_ptr < $end_ptr) {
+			if (T_STRING === $token['code']) {
 				return $token['content'];
 			}
 			$stack_ptr++;
@@ -24,11 +27,13 @@ abstract class  NameSniffBase
 		return null;
 	}
 
-	protected function validName($name) {
-		return 1 === preg_match(self::$valid_name_regexp, $name);
+	protected function validName($name)
+	{
+		return 1 === preg_match(static::$valid_name_regexp, $name);
 	}
 
-	protected function handleError(PHP_CodeSniffer_File $phpcs_file, $error, $stack_ptr, $token) {
+	protected function handleError(\PHP_CodeSniffer_File $phpcs_file, $error, $stack_ptr, $token)
+	{
 		$data = 'line:'.$token['line'].' column:'.$token['column'].' ';
 		$phpcs_file->addError($error, $stack_ptr, 'Found', $data);
 	}
