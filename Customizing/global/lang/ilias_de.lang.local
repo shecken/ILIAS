@@ -15151,6 +15151,22 @@ gev#:#gev_eff_analysis_city#:#Ort
 gev#:#gev_eff_analysis_target_group#:#Zielgruppe
 gev#:#gev_eff_analysis_objectives#:#Ziele und Nutzen
 gev#:#gev_eff_analysis_content#:#Inhalt
-gev#:#gev_eff_analysis_result#:#Beurteilung Schulungsmaßnahme durch Vorgesetzten für jeweiligen Mitarbeiter
+gev#:#gev_eff_analysis_result_long#:#Beurteilung Schulungsmaßnahme durch Vorgesetzten für jeweiligen Mitarbeiter
 gev#:#gev_eff_analysis_show_finished#:#Auch bearbeitete anzeigen
 gev#:#gev_eff_analysis_org_unit#:#Org-Einheit
+gev#:#gev_eff_analysis_save#:#Speichern
+gev#:#gev_eff_analysis_user#:#Name des Mitarbeiters
+gev#:#gev_eff_analysis_department#:#Bereich / Abteilung
+gev#:#gev_eff_analysis_training#:#Training
+gev#:#gev_eff_analysis#:#Wirksamkeitsanalyse
+gev#:#gev_eff_analysis_result#:#Beurteilung
+gev#:#result_0#:#0 - Noch zu beurteilen
+gev#:#result_1#:#1 - Kein erkennbarer Lernerfolg
+gev#:#result_2#:#2 - Zeigt noch starke Schwächen
+gev#:#result_3#:#3 - Zeigt noch Schwächen
+gev#:#result_4#:#4 - Genügender Lernerfolg
+gev#:#result_5#:#5 - Guter Lernerfolg
+gev#:#result_6#:#6 - Sehr guter Lernerfolg
+gev#:#gev_eff_analysis_cancel#:#Abbrechen
+gev#:#gev_eff_analysis_confirm#:#Möchten Sie die Wirksamkeitsanalyse abschließen? Im Anschluss ist eine Bearbeitung nicht mehr möglich.
+gev#:#gev_eff_analysis_info#:#Begründung

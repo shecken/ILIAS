@@ -395,6 +395,17 @@ class gevCourseUtils {
 		$val = ilDatePresentation::formatDate($d);
 		return $val;
 	}
+
+	public function getFormattedDate() {
+		$start = $this->getFormattedStartDate();
+		$end = $this->getFormattedEndDate();
+
+		if($start == $end) {
+			return $start;
+		}
+
+		return $start." - ".$end;
+	}
 	
 	public function setEndDate($a_date) {
 		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_END_DATE, $a_date);

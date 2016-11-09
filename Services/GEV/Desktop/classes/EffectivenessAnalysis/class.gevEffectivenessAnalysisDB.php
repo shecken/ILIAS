@@ -33,7 +33,7 @@ class gevEffectivenessAnalysisDB {
 				),
 				'finish_date' => array(
 					'type' => 'date',
-					'notnull' => true
+					'notnull' => false
 				)
 			));
 
@@ -79,7 +79,21 @@ class gevEffectivenessAnalysisDB {
 		return $this->gDB->numRows($res);
 	}
 
+	public function saveResult($crs_id, $user_id, $result, $result_info) {
+		$values = array("crs_id" => array("integer", $crs_id)
+					  , "user_id" => array("integer", $user_id)
+					  , "result" => array("integer", $result)
+					  , "info" => array("text", $result_info)
+					  , "finish_date" => array("text", date('Y-m-d'))
+			);
+
+		$this->gDB->insert('eff_analysis', $values);
+	}
+
 	protected function getSelectBase($employees, array $reason_for_eff_analysis) {
+		$today_ts = strtotime(date('Y-m-d'). '00:00:00');
+		$today_date = date('Y-m-d', strtotime(date('Y-m-d'). '00:00:00'));
+
 		return " FROM hist_course hcrs\n"
 				." JOIN crs_book crsb\n"
 				."    ON crsb.crs_id = hcrs.crs_id\n"
@@ -91,11 +105,22 @@ class gevEffectivenessAnalysisDB {
 				."    ON husrorgu.usr_id = husr.user_id\n"
 				."        AND husrorgu.hist_historic = 0\n"
 				."        AND husrorgu.action = 1\n"
+				." JOIN crs_pstatus_usr psusr\n"
+				."    ON psusr.crs_id = hcrs.crs_id\n"
+				."        AND psusr.user_id = husr.user_id\n"
 				." LEFT JOIN eff_analysis effa\n"
 				."    ON effa.crs_id = hcrs.crs_id\n"
 				."        AND effa.user_id = husr.user_id\n"
 				." WHERE hcrs.hist_historic = 0\n"
-				."     AND ".$this->gDB->in("hcrs.reason_for_training", $reason_for_eff_analysis, false, "text")."\n";
+				."     AND ".$this->gDB->in("hcrs.reason_for_training", $reason_for_eff_analysis, false, "text")."\n"
+				."     AND (\n"
+				."           (hcrs.type = ".$this->gDB->quote('Online Trainng', 'text')."\n"
+				."                AND psusr.status = ".$this->gDB->quote(3, "integer")."\n"
+				."                AND (psusr.changed_on + (90 * 24 * 60 * 60)) <= ".$this->gDB->quote($today_ts, "integer").")\n"
+				."         OR\n"
+				."           (".$this->gDB->in("hcrs.type", array('Live Training', 'Webinar'), false, "text")."\n"
+				."                AND DATE_ADD(hcrs.end_date, INTERVAL 90 DAY) <= ".$this->gDB->quote($today_date, "text").")\n"
+				."         )\n";
 	}
 
 	protected function getGroupBy() {

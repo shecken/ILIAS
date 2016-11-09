@@ -1,14 +1,13 @@
 <?php
 
 class gevEffectivenessAnalysis {
-	
-
 	const F_TITLE = "title";
 	const F_ORG_UNIT = "org_unit";
 	const F_LOGIN = "login";
 	const F_FINISHED = "finished";
 	const F_PERIOD = "period";
 	const F_PREFIX = "filter_";
+	const RESULT_PREFIX = "result";
 
 	static $instance = null;
 	static $reason_for_eff_analysis = array("D - Maßnahmen aus Defizit", "R - Rechtliche Anforderung, Pflichtschulung");
@@ -80,6 +79,10 @@ class gevEffectivenessAnalysis {
 		}
 
 		return $this->eff_analysis_db->getCountEffectivenessAnalysisData($my_employees, self::$reason_for_eff_analysis, $filter);
+	}
+
+	public function saveResult($crs_id, $user_id, $result, $result_info) {
+		$this->eff_analysis_db->saveResult($crs_id, $user_id, $result, $result_info);
 	}
 
 	protected function getOrgunitsOf($user_id, $filter_orgus) {
@@ -178,44 +181,55 @@ class gevEffectivenessAnalysis {
 									, "");
 	}
 
-	public function getFilterValues($post) {
+	public function buildFilterValuesFromFilter($filter) {
 		$filter_values = array();
-		
-		if(isset($post[self::F_PREFIX.self::F_FINISHED])) {
-			$filter_values[self::F_FINISHED] = (bool)$post[self::F_PREFIX.self::F_FINISHED];
+
+		if($filter->get(self::F_FINISHED)) {
+			$filter_values[self::F_FINISHED] = true;
 		}
 
-		if(isset($post[self::F_PREFIX.self::F_PERIOD])) {
-			$start_arr = $post[self::F_PREFIX.self::F_PERIOD]["start"]["date"];
-			$end_arr = $post[self::F_PREFIX.self::F_PERIOD]["end"]["date"];
+		$date = $filter->get(self::F_PERIOD);
+		$filter_values[self::F_PERIOD] = array("start"=>$this->createDate($date["start"]->get(IL_CAL_DATE), "00:00:00")
+											 , "end"=>$this->createDate($date["end"]->get(IL_CAL_DATE), "23:59:59"));
 
-			$filter_values[self::F_PERIOD] = array("start"=>$this->createDate($start_arr, "00:00:00"), "end"=>$this->createDate($end_arr, "23:59:59"));
-		}
-		
-		if(isset($post[self::F_PREFIX.self::F_TITLE])) {
-			$filter_values[self::F_TITLE] = $post[self::F_PREFIX.self::F_TITLE];
+		$title = $filter->get(self::F_TITLE);
+		if($title != "") {
+			$filter_values[self::F_TITLE] = $title;
 		}
 
-		if(isset($post[self::F_PREFIX.self::F_LOGIN])) {
-			$filter_values[self::F_LOGIN] = $post[self::F_PREFIX.self::F_LOGIN];
+		$login = $filter->get(self::F_LOGIN);
+		if($login != "") {
+			$filter_values[self::F_LOGIN] = $login;
 		}
 
-		if(isset($post[self::F_PREFIX.self::F_ORG_UNIT])) {
-			$filter_values[self::F_ORG_UNIT] = $post[self::F_PREFIX.self::F_ORG_UNIT];
-			unset($filter_values[self::F_ORG_UNIT]["send"]);
+		$orgunit = $filter->get(self::F_ORG_UNIT);
+		if(!empty($orgunit)) {
+			$filter_values[self::F_ORG_UNIT] = $orgunit;
 		}
 
 		return $filter_values;
 	}
 
-	protected function createDate($values, $time) {
-		$m = $this->padLeading($values["m"]);
-		$d = $this->padLeading($values["d"]);
-
-		return new ilDateTime($values["y"]."-".$m."-".$d." ".$time, IL_CAL_DATETIME);
+	protected function createDate($date, $time) {
+		return new ilDateTime($date." ".$time, IL_CAL_DATETIME);
 	}
 
 	protected function padLeading($value) {
 		return str_pad($value, 2, "0", STR_PAD_LEFT);
+	}
+
+	public function getResultText($result_id) {
+		return $this->gLng->txt(self::RESULT_PREFIX."_".$result_id);
+	}
+
+	public function getResultOptions() {
+		return array(0 => $this->getResultText(0)
+					,1 => $this->getResultText(1)
+					,2 => $this->getResultText(2)
+					,3 => $this->getResultText(3)
+					,4 => $this->getResultText(4)
+					,5 => $this->getResultText(5)
+					,6 => $this->getResultText(6)
+				);
 	}
 }

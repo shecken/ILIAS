@@ -1,5 +1,7 @@
 <?php
-
+/**
+* @ilCtrl_Calls gevMyEffectivenessAnalysisGUI: gevEffectivenessAnalysisGUI
+*/
 class gevMyEffectivenessAnalysisGUI {
 	const CMD_VIEW = "view";
 	const CMD_FILTER = "filter";
@@ -33,20 +35,35 @@ class gevMyEffectivenessAnalysisGUI {
 
 	public function executeCommand() {
 		$cmd = $this->gCtrl->getCmd(self::CMD_VIEW);
+		$next_class = $this->gCtrl->getNextClass();
 
-		switch($cmd) {
-			case self::CMD_VIEW:
-			case self::CMD_FILTER:
-				$this->$cmd();
+		switch($next_class) {
+			case "geveffectivenessanalysisgui":
+				require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysisGUI.php");
+				$gui = new gevEffectivenessAnalysisGUI();
+				$this->gCtrl->forwardCommand($gui);
 				break;
 			default:
+				switch($cmd) {
+					case self::CMD_VIEW:
+					case self::CMD_FILTER:
+						$this->view();
+						break;
+				default:
+			}
 		}
 	}
 
-	protected function view(array $filter = array()) {
+	protected function view() {
 		$html = $this->getTitle()->render();
-		$html .= $this->getFilter()->render();
-		$html .= $this->getTable($filter)->getHtml();
+
+		$filter = $this->getFilter();
+		$filter_values = $this->eff_analysis->buildFilterValuesFromFilter($filter);
+		$html .= $filter->render();
+
+		$this->gCtrl->setParameter($this, $filter->getGETName(), $filter->encodeSearchParamsForGET());
+		$html .= $this->getTable($filter_values)->getHtml();
+		$this->gCtrl->setParameter($this, $filter->getGETName(), null);
 
 		$this->gTpl->setContent($html);
 	}
@@ -57,12 +74,6 @@ class gevMyEffectivenessAnalysisGUI {
 				->compile();
 
 		return $filter;
-	}
-
-	protected function filter() {
-		$filter_values = $this->eff_analysis->getFilterValues($_POST);
-
-		$this->view($filter_values);
 	}
 
 	protected function getTitle() {

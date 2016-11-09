@@ -955,6 +955,18 @@ class gevUserUtils {
 			return gevOrgUnitUtils::getInstance($orgu_id)->getTitle();
 		}
 	}
+
+	public function getTitelOfAllOrgUnits() {
+		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php");
+		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+		$tree = ilObjOrgUnitTree::_getInstance();
+		foreach($tree->getOrgUnitOfUser($this->user_id) as $orgu) {
+			$obj_id = ilObject::_lookupObjId($orgu);
+			$ret[] = gevOrgUnitUtils::getInstance((int)$obj_id)->getTitle();
+		}
+
+		return $ret;
+	}
 	
 	public function getODTitle() {
 		$od = $this->getOD();

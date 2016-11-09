@@ -2,8 +2,6 @@
 require_once("Services/CaTUIComponents/classes/class.catAccordionTableGUI.php");
 
 class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
-	const RESULT_PREFIX = "";
-
 	/**
 	 * @var ilCtrl
 	 */
@@ -61,10 +59,10 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 		}
 
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysis.php");
-		$eff_analysis = gevEffectivenessAnalysis::getInstance();
-		$this->setMaxCount($eff_analysis->getCountEffectivenessAnalysis($this->gUser->getId(), $filter));
+		$this->eff_analysis = gevEffectivenessAnalysis::getInstance();
+		$this->setMaxCount($this->eff_analysis->getCountEffectivenessAnalysis($this->gUser->getId(), $filter));
 
-		$data = $eff_analysis->getEffectivenessAnalysis(
+		$data = $this->eff_analysis->getEffectivenessAnalysis(
 										$this->gUser->getId(),
 										$filter, 
 										$this->getOffset(),
@@ -88,8 +86,8 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("ORG_UNIT", $a_set["orgunit"]);
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("TRAINING_TYPE", $a_set["type"]);
-		$start = $a_set["begin_date"];
-		$end = $a_set["end_date"];
+		$start = date("d.m.Y", strtotime($a_set["begin_date"]));
+		$end = date("d.m.Y", strtotime($a_set["end_date"]));
 
 		if($start != $end) {
 			$date = $start." - ".$end;
@@ -107,7 +105,7 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("TARGET_GROUP_HEADER", $this->gLng->txt("gev_eff_analysis_target_group"));
 		$this->tpl->setVariable("OBJECTIVES_HEADER", $this->gLng->txt("gev_eff_analysis_objectives"));
 		$this->tpl->setVariable("CONTENT_HEADER", $this->gLng->txt("gev_eff_analysis_content"));
-		$this->tpl->setVariable("RESULT_HEADER", $this->gLng->txt("gev_eff_analysis_result"));
+		$this->tpl->setVariable("RESULT_HEADER", $this->gLng->txt("gev_eff_analysis_result_long"));
 
 		$this->tpl->setVariable("TARGET_GROUP", $a_set["training_number"]);
 		$this->tpl->setVariable("CITY", $a_set["venue"]);
@@ -117,7 +115,7 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 
 		if($a_set["result"] != "-") {
 			$this->tpl->setVariable("ACTIONS", "");
-			$this->tpl->setVariable("RESULT", $this->gLng->txt(self::RESULT_PREFIX.$a_set["result"]));
+			$this->tpl->setVariable("RESULT", $this->eff_analysis->getResultText($a_set["result"]));
 		} else {
 			$this->tpl->setVariable("ACTIONS", $this->getAction($a_set["crs_id"], $a_set["user_id"]));
 			$this->tpl->setVariable("RESULT", $a_set["result"]);
@@ -125,6 +123,10 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 	}
 
 	protected function getAction($crs_id, $user_id) {
-		return "";
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "crs_id", $crs_id);
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "user_id", $user_id);
+		$link = $this->gCtrl->getLinkTargetByClass(array("gevMyEffectivenessAnalysisGUI", "gevEffectivenessAnalysisGUI"));
+		$this->gCtrl->clearParametersByClass("gevEffectivenessAnalysisGUI");
+		return $link;
 	}
 }
