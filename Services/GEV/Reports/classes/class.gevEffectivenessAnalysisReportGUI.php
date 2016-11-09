@@ -61,11 +61,14 @@ public function __construct() {
 			$order = $table_nav_cmd[0];
 
 			if ($table_nav_cmd[1] == "asc") {
-				$order_direction = " ASC";
+				$order_direction = "ASC";
 			}
 			else {
-				$order_direction = " DESC";
+				$order_direction = "DESC";
 			}
+		} else {
+			$order = "title";
+			$order_direction = "ASC";
 		}
 
 		$data = $this->eff_analysis->getEffectivenessAnalysisReportData($this->user->getId(), $filter_values, $order, $order_direction);

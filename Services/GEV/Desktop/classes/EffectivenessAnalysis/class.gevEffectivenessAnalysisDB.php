@@ -94,6 +94,7 @@ class gevEffectivenessAnalysisDB {
 		$query .= $this->getSelectBase($employees, $reason_for_eff_analysis);
 		$query .= $this->getWhereByFilter($filter);
 		$query .= $this->getGroupBy();
+		$query .= " ORDER BY ".$order." ".$order_direction;
 
 		$res = $this->gDB->query($query);
 
