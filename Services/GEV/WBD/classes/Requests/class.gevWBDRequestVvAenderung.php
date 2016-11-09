@@ -22,7 +22,7 @@ class gevWBDRequestVvAenderung extends WBDRequestVvAenderung {
 		$this->error_group = gevWBDError::ERROR_GROUP_USER;
 
 		$this->defineValuesToTranslate();
-		$dic_errors = $this->translate($data["user_id"], $data["row_id"]);
+		$dic_errors = $this->translate($data, $data["user_id"], $data["row_id"]);
 
 		$this->address_type 		= new WBDData("AdressTyp",$this->translate_value["AdressTyp"]);
 		$this->title 				= new WBDData("AnredeSchluessel",$this->translate_value["AnredeSchluessel"]);
