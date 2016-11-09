@@ -171,10 +171,12 @@ class gevEffectivenessAnalysisDB {
 	protected function getWhereByFilter(array $filter) {
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysis.php");
 		$where = "";
+
 		if(!isset($filter[gevEffectivenessAnalysis::F_STATUS]) 
 			&& isset($filter[gevEffectivenessAnalysis::F_FINISHED]) 
 			&& $filter[gevEffectivenessAnalysis::F_FINISHED] == gevEffectivenessAnalysis::STATE_FILTER_OPEN) 
 		{
+			echo "sdsd";
 			$where .= "     AND effa.finish_date IS NULL\n";
 		}
 

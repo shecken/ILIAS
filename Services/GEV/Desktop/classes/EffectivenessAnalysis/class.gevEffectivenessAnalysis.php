@@ -320,8 +320,8 @@ class gevEffectivenessAnalysis {
 			}
 		}
 
-		$filter_values[self::F_STATUS] = self::STATE_FILTER_ALL;
 		if($filter->filterExists(self::F_STATUS)) {
+			$filter_values[self::F_STATUS] = self::STATE_FILTER_ALL;
 			$status = $filter->get(self::F_STATUS);
 			if(!empty($status)) {
 				if(count($status) == 1) {
