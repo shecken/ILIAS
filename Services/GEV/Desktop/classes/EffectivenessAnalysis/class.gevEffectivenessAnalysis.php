@@ -222,6 +222,16 @@ class gevEffectivenessAnalysis {
 		return $this->gLng->txt(self::RESULT_PREFIX."_".$result_id);
 	}
 
+	public function checkInfoIsRequired($result, $result_text) {
+		var_dump($result);
+		var_dump(in_array($result, array(1,2,3)));
+		if(in_array($result, array(1,2,3)) && $result_text == "") {
+			return true;
+		}
+
+		return false;
+	}
+
 	public function getResultOptions() {
 		return array(0 => $this->getResultText(0)
 					,1 => $this->getResultText(1)

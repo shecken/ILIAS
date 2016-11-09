@@ -50,9 +50,18 @@ class gevEffectivenessAnalysisGUI {
 
 	protected function confirmEntry() {
 		$form = $this->initForm();
+		$post = $_POST;
 
 		if(!$form->checkInput()) {
 			$form->setValuesByPost();
+			$this->newEntry($form);
+			return;
+		}
+
+		if($this->eff_analysis->checkInfoIsRequired($post[self::F_RESULT], $post[self::F_RESULT_TEXT])) {
+			$form->setValuesByPost();
+			$ele = $form->getItemByPostVar(self::F_RESULT_TEXT);
+			$ele->setAlert($this->gLng->txt("gev_eff_analysis_info_needed"));
 			$this->newEntry($form);
 			return;
 		}
@@ -64,13 +73,13 @@ class gevEffectivenessAnalysisGUI {
 		$confirmation_gui->setCancel($this->gLng->txt("gev_eff_analysis_cancel"), self::CMD_NEW);
 		$confirmation_gui->setConfirm($this->gLng->txt("gev_eff_analysis_save"), self::CMD_SAVE);
 
-		$confirmation_gui->addItem("", "", $this->gLng->txt("gev_eff_analysis_result").": ".$this->eff_analysis->getResultText($_POST[self::F_RESULT]));
-		$confirmation_gui->addItem("", "", $this->gLng->txt("gev_eff_analysis_info").": ".$_POST[self::F_RESULT_TEXT]);
+		$confirmation_gui->addItem("", "", $this->gLng->txt("gev_eff_analysis_result").": ".$this->eff_analysis->getResultText($post[self::F_RESULT]));
+		$confirmation_gui->addItem("", "", $this->gLng->txt("gev_eff_analysis_info").": ".$post[self::F_RESULT_TEXT]);
 
-		$confirmation_gui->addHiddenItem(self::F_USER_ID, $_POST[self::F_USER_ID]);
-		$confirmation_gui->addHiddenItem(self::F_CRS_ID, $_POST[self::F_CRS_ID]);
-		$confirmation_gui->addHiddenItem(self::F_RESULT, $_POST[self::F_RESULT]);
-		$confirmation_gui->addHiddenItem(self::F_RESULT_TEXT, $_POST[self::F_RESULT_TEXT]);
+		$confirmation_gui->addHiddenItem(self::F_USER_ID, $post[self::F_USER_ID]);
+		$confirmation_gui->addHiddenItem(self::F_CRS_ID, $post[self::F_CRS_ID]);
+		$confirmation_gui->addHiddenItem(self::F_RESULT, $post[self::F_RESULT]);
+		$confirmation_gui->addHiddenItem(self::F_RESULT_TEXT, $post[self::F_RESULT_TEXT]);
 
 		$this->gTpl->setContent($confirmation_gui->getHTML());
 	}
@@ -113,8 +122,7 @@ class gevEffectivenessAnalysisGUI {
 		$si->setRequired(true);
 		$form->addItem($si);
 
-		$ta = new ilTextareaInputGUI($this->gLng->txt("gev_eff_analysis_insert_info"), self::F_RESULT_TEXT);
-		$ta->setRequired(true);
+		$ta = new ilTextAreaInputGUI($this->gLng->txt("gev_eff_analysis_insert_info"), self::F_RESULT_TEXT);
 		$form->addItem($ta);
 
 		return $form;

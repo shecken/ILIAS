@@ -15133,7 +15133,7 @@ gev#:#ts#:#Zeitpunkt
 gev#:#gev_warning_to_book_crs_self_because_period#:#Sie haben bereits ein oder mehrere andere Trainings im gleichen Zeitraum gebucht!
 gev#:#gev_warning_to_book_crs_for_others_because_period#:#Der Teilnehmer hat bereits ein oder mehrere andere Trainings im gleichen Zeitraum gebucht!
 gev#:#gev_crs#:#Training
-gev#:#gev_my_effectiveness_analysis#:#Wirksamkeitsanalyse
+gev#:#gev_my_effectiveness_analysis#:#Meine Beurteilungen
 gev#:#to_superior#:#Vorgesetzte in CC
 gev#:#user_inactive#:#(AUSGESCHIEDEN)
 gev#:#gev_eff_analysis_lastname#:#Nachname
@@ -15154,7 +15154,7 @@ gev#:#gev_eff_analysis_content#:#Inhalt
 gev#:#gev_eff_analysis_result_long#:#Beurteilung Schulungsmaßnahme durch Vorgesetzten für jeweiligen Mitarbeiter
 gev#:#gev_eff_analysis_show_finished#:#Auch bearbeitete anzeigen
 gev#:#gev_eff_analysis_org_unit#:#Org-Einheit
-gev#:#gev_eff_analysis_save#:#Speichern
+gev#:#gev_eff_analysis_save#:#Ergebnis senden
 gev#:#gev_eff_analysis_user#:#Name des Mitarbeiters
 gev#:#gev_eff_analysis_department#:#Bereich / Abteilung
 gev#:#gev_eff_analysis_training#:#Training
@@ -15169,4 +15169,5 @@ gev#:#result_5#:#5 - Guter Lernerfolg
 gev#:#result_6#:#6 - Sehr guter Lernerfolg
 gev#:#gev_eff_analysis_cancel#:#Abbrechen
 gev#:#gev_eff_analysis_confirm#:#Möchten Sie die Wirksamkeitsanalyse abschließen? Im Anschluss ist eine Bearbeitung nicht mehr möglich.
-gev#:#gev_eff_analysis_info#:#Begründung
+gev#:#gev_eff_analysis_insert_info#:#Begründung
+gev#:#gev_eff_analysis_info_needed#:#Bitte geben Sie eine Begründung ein.
