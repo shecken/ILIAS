@@ -15171,3 +15171,14 @@ gev#:#gev_eff_analysis_cancel#:#Abbrechen
 gev#:#gev_eff_analysis_confirm#:#Möchten Sie die Wirksamkeitsanalyse abschließen? Im Anschluss ist eine Bearbeitung nicht mehr möglich.
 gev#:#gev_eff_analysis_insert_info#:#Begründung
 gev#:#gev_eff_analysis_info_needed#:#Bitte geben Sie eine Begründung ein.
+gev#:#gev_eff_analysis_report#:#Wirksamkeitsanalyse
+gev#:#gev_eff_analysis_report_title#:#Wirksamkeitsanalyse
+gev#:#gev_eff_analysis_report_description#:# 
+gev#:#gev_eff_analysis_reason_for#:#Schulungsgrund
+gev#:#gev_eff_analysis_superior#:#Vorgesetzte
+gev#:#gev_eff_analysis_member#:#Teilnehmer
+gev#:#gev_eff_analysis_scheduled#:#Geplant für
+gev#:#gev_eff_analysis_status#:#Status
+gev#:#gev_eff_analysis_show_until#:#bis
+gev#:#gev_eff_analysis_rep_finished#:#Abgeschlossen
+gev#:#gev_eff_analysis_rep_open#:#Noch nicht abgeschlossen

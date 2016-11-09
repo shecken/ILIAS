@@ -43,7 +43,7 @@ class gevEffectivenessAnalysisDB {
 
 	public function getEffectivenessAnalysisData($employees, array $reason_for_eff_analysis, array $filter, $offset, $limit, $order, $order_direction) {
 		$query = "SELECT husr.user_id, husr.lastname, husr.firstname, husr.email\n"
-				.", GROUP_CONCAT(husrorgu.orgu_title SEPARATOR ', ') AS orgunit\n"
+				.", GROUP_CONCAT(DISTINCT husrorgu.orgu_title SEPARATOR ', ') AS orgunit\n"
 				.", hcrs.title, hcrs.type, hcrs.begin_date, hcrs.end_date, hcrs.language, hcrs.training_number\n"
 				."    , hcrs.venue, hcrs.target_groups, hcrs.objectives_benefits, hcrs.training_topics, hcrs.crs_id\n"
 				.", effa.finish_date, effa.result\n";
@@ -79,6 +79,37 @@ class gevEffectivenessAnalysisDB {
 		return $this->gDB->numRows($res);
 	}
 
+	public function getEffectivenessAnalysisReportData($employees, array $reason_for_eff_analysis, array $filter, $order, $order_direction) {
+		$query = "SELECT husr.user_id, GROUP_CONCAT(DISTINCT CONCAT_WS(', ', husr.lastname, husr.firstname)) AS member, husr.email\n"
+				.", GROUP_CONCAT(DISTINCT husrorgu.orgu_title SEPARATOR ', ') AS orgunit\n"
+				.", GROUP_CONCAT(DISTINCT IF(ISNULL(husr2.lastname),NULL,CONCAT_WS(', ', husr2.lastname, husr2.firstname)) SEPARATOR ', ') AS superior\n"
+				.", hcrs.title, hcrs.type, hcrs.begin_date, hcrs.end_date, hcrs.language, hcrs.training_number\n"
+				."    , hcrs.venue, hcrs.target_groups, hcrs.objectives_benefits, hcrs.training_topics, hcrs.crs_id\n"
+				."    , hcrs.reason_for_training\n"
+				.", CASE hcrs.type\n"
+				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (90 * 24 * 60 * 60)), '%Y-%b-%e')\n"
+				."      ELSE DATE_ADD(hcrs.end_date, INTERVAL 90 DAY)\n"
+				."  END AS scheduled\n"
+				.", effa.finish_date, effa.result\n";
+		$query .= $this->getSelectBase($employees, $reason_for_eff_analysis);
+		$query .= $this->getWhereByFilter($filter);
+		$query .= $this->getGroupBy();
+
+		$res = $this->gDB->query($query);
+
+		while($row = $this->gDB->fetchAssoc($res)) {
+			foreach($row as $key => $value) {
+				if($value == self::EMPTY_DATE || $value == self::EMPTY_TEXT || $value === null) {
+					$row[$key] = "-";
+				}
+			}
+
+			$ret[] = $row;
+		}
+
+		return $ret;
+	}
+
 	public function saveResult($crs_id, $user_id, $result, $result_info) {
 		$values = array("crs_id" => array("integer", $crs_id)
 					  , "user_id" => array("integer", $user_id)
@@ -105,6 +136,13 @@ class gevEffectivenessAnalysisDB {
 				."    ON husrorgu.usr_id = husr.user_id\n"
 				."        AND husrorgu.hist_historic = 0\n"
 				."        AND husrorgu.action = 1\n"
+				." LEFT JOIN hist_userorgu husrorgu2\n"
+				."    ON husrorgu2.orgu_id = husrorgu.orgu_id\n"
+				."        AND husrorgu2.hist_historic = 0\n"
+				."        AND husrorgu2.action = 1\n"
+				."        AND husrorgu2.rol_title = ".$this->gDB->quote("Vorgesetzter", "text")."\n"
+				." LEFT JOIN hist_user husr2\n"
+				."    ON husrorgu2.usr_id = husr2.user_id\n"
 				." JOIN crs_pstatus_usr psusr\n"
 				."    ON psusr.crs_id = hcrs.crs_id\n"
 				."        AND psusr.user_id = husr.user_id\n"
@@ -114,7 +152,7 @@ class gevEffectivenessAnalysisDB {
 				." WHERE hcrs.hist_historic = 0\n"
 				."     AND ".$this->gDB->in("hcrs.reason_for_training", $reason_for_eff_analysis, false, "text")."\n"
 				."     AND (\n"
-				."           (hcrs.type = ".$this->gDB->quote('Online Trainng', 'text')."\n"
+				."           (hcrs.type = ".$this->gDB->quote('Online Training', 'text')."\n"
 				."                AND psusr.status = ".$this->gDB->quote(3, "integer")."\n"
 				."                AND (psusr.changed_on + (90 * 24 * 60 * 60)) <= ".$this->gDB->quote($today_ts, "integer").")\n"
 				."         OR\n"
@@ -130,20 +168,45 @@ class gevEffectivenessAnalysisDB {
 	}
 
 	protected function getWhereByFilter(array $filter) {
+		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysis.php");
 		$where = "";
-		if(!isset($filter["finished"])) {
+		if(!isset($filter[gevEffectivenessAnalysis::F_STATUS]) 
+			&& isset($filter[gevEffectivenessAnalysis::F_FINISHED]) 
+			&& $filter[gevEffectivenessAnalysis::F_FINISHED] == gevEffectivenessAnalysis::STATE_FILTER_OPEN) 
+		{
 			$where .= "     AND effa.finish_date IS NULL\n";
 		}
 
-		if(isset($filter["period"])) {
-			$start = $filter["period"]["start"]->get(IL_CAL_DATE);
-			$end = $filter["period"]["end"]->get(IL_CAL_DATE);
+		if(isset($filter[gevEffectivenessAnalysis::F_PERIOD])) {
+			$start = $filter[gevEffectivenessAnalysis::F_PERIOD]["start"]->get(IL_CAL_DATE);
+			$end = $filter[gevEffectivenessAnalysis::F_PERIOD]["end"]->get(IL_CAL_DATE);
 
 			$where .= "     AND hcrs.begin_date >= ".$this->gDB->quote($start, "text"). " AND hcrs.begin_date <= ".$this->gDB->quote($end, "text")."\n";
 		}
 
-		if(isset($filter["title"]) && $filter["title"] != "") {
-			$where .= "     AND hcrs.title = ".$this->gDB->quote($filter["title"], "text")."\n";
+		if(isset($filter[gevEffectivenessAnalysis::F_TITLE]) && $filter[gevEffectivenessAnalysis::F_TITLE] != "") {
+			$where .= "     AND hcrs.title = ".$this->gDB->quote($filter[gevEffectivenessAnalysis::F_TITLE], "text")."\n";
+		}
+
+		if(isset($filter[gevEffectivenessAnalysis::F_RESULT]) && $filter[gevEffectivenessAnalysis::F_RESULT] != "") {
+			$where .= "     AND effa.result = ".$this->gDB->quote($filter[gevEffectivenessAnalysis::F_RESULT], "integer")."\n";
+		}
+
+		if(isset($filter[gevEffectivenessAnalysis::F_STATUS]) && !empty($filter[gevEffectivenessAnalysis::F_STATUS])) {
+			$status = $filter[gevEffectivenessAnalysis::F_STATUS];
+			
+			switch($status) {
+				case gevEffectivenessAnalysis::STATE_FILTER_FINISHED:
+					$where .= "     AND effa.finish_date IS NOT NULL\n";
+					break;
+				case gevEffectivenessAnalysis::STATE_FILTER_OPEN:
+					$where .= "     AND effa.finish_date IS NULL\n";
+					break;
+				case gevEffectivenessAnalysis::STATE_FILTER_ALL:
+					break;
+				default;
+					throw new Exception("gevEffectivenessAnalysisDB::getWhereByFilter: Wrong value for Filter ".gevEffectivenessAnalysis::F_STATUS);
+			}
 		}
 
 		return $where;

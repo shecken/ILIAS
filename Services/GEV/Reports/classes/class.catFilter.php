@@ -359,6 +359,14 @@ class catFilter {
 			throw new Exception("catFilter::checkNameExists: Name ".$a_name." already used.");
 		}
 	}
+
+	public function filterExists($name) {
+		if (array_key_exists($name, $this->filters)) {
+			return true;
+		}
+
+		return false;
+	}
 }
 
 

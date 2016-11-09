@@ -26,6 +26,7 @@
 * @ilCtrl_Calls gevDesktopGUI: gevEmployeeEduBiosGUI
 * @ilCtrl_Calls gevDesktopGUI: ilFormPropertyDispatchGUI
 * @ilCtrl_Calls gevDesktopGUI: gevMyEffectivenessAnalysisGUI
+* @ilCtrl_Calls gevDesktopGUI: gevEffectivenessAnalysisReportGUI
 */
 
 class gevDesktopGUI {
@@ -156,6 +157,12 @@ class gevDesktopGUI {
 				$ret = $this->ctrl->forwardCommand($gui);
 				break;
 
+			case "geveffectivenessanalysisreportgui":
+				$ilMainMenu->setActive("gev_reporting_menu");
+				require_once("Services/GEV/Reports/classes/class.gevEffectivenessAnalysisReportGUI.php");
+				$gui = new gevEffectivenessAnalysisReportGUI();
+				$ret = $this->ctrl->forwardCommand($gui);
+				break;
 			default:	
 				$this->dispatchCmd($cmd);
 				break;
@@ -185,6 +192,7 @@ class gevDesktopGUI {
 			case "toReportEmployeeEduBios":
 			case "createHAUnit":
 			case "toMyEffectivenessAnalysis":
+			case "toReportEffectivenessAnalysis":
 				$this->$a_cmd();
 			default:
 				throw new Exception("Unknown command: ".$a_cmd);
@@ -253,6 +261,10 @@ class gevDesktopGUI {
 
 	protected function toMyEffectivenessAnalysis() {
 		$this->ctrl->redirectByClass("gevMyEffectivenessAnalysisGUI");
+	}
+
+	protected function toReportEffectivenessAnalysis() {
+		$this->ctrl->redirectByClass("gevEffectivenessAnalysisReportGUI");
 	}
 }
 
