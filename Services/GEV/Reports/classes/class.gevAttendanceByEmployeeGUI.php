@@ -45,6 +45,7 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 						->column("type", "gev_learning_type")
 						->column("date", "date")
 						->column("booking_status", "gev_booking_status")
+						->column("reason_for_training", "gev_eff_analysis_reason_for")
 						->column("participation_status", "gev_participation_status")
 						->template("tpl.gev_attendance_by_employee_row.html", "Services/GEV/Reports")
 						;
@@ -67,6 +68,7 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 						->select("crs.type")
 						->select("usrcrs.booking_status")
 						->select("usrcrs.participation_status")
+						->select("crs.reason_for_training")
 						->select("crs.begin_date")
 						->select("crs.end_date")
 						->left_join("hist_userorgu huo")
@@ -163,7 +165,10 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 		else {
 			$date = '-';
 		}
-		
+
+		$reason_for_training = explode("-", $rec["reason_for_training"]);
+		$rec["reason_for_training"] = trim($reason_for_training[0]);
+
 		$rec["date"] = $date;
 		$rec["booking_status"] = $this->lng->txt($rec["booking_status"]);
 		$rec["participation_status"] = $this->lng->txt($rec["participation_status"]);
