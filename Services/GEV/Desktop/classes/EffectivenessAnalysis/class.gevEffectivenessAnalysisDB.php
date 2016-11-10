@@ -1,5 +1,11 @@
 <?php
+/* Copyright (c) 1998-2016 ILIAS open source, Extended GPL, see docs/LICENSE */
 
+/**
+ * Database abstraction for effectiveness analyis
+ *
+ * @author Stefan Hecken <stefan.hecken@cocepts-and-training.de>
+ */
 class gevEffectivenessAnalysisDB {
 
 	const EMPTY_TEXT = "-empty-";
@@ -9,6 +15,9 @@ class gevEffectivenessAnalysisDB {
 		$this->gDB = $db;
 	}
 
+	/**
+	 * Create the effectiveness analysis result table
+	 */
 	public function createTable() {
 		if( !$this->gDB->tableExists('eff_analysis') ) {
 			$this->gDB->createTable('eff_analysis', array(
@@ -41,6 +50,19 @@ class gevEffectivenessAnalysisDB {
 		}
 	}
 
+	/**
+	 * Get data for my effectiveness analysis view
+	 *
+	 * @param int[] 		$employees
+	 * @param string[] 		$reason_for_eff_analysis
+	 * @param mixed[]		$filter
+	 * @param int 			$offset
+	 * @param int 			$limit
+	 * @param string 		$order
+	 * @param string 		$order_direction
+	 *
+	 * @return array<mixed[]>
+	 */
 	public function getEffectivenessAnalysisData($employees, array $reason_for_eff_analysis, array $filter, $offset, $limit, $order, $order_direction) {
 		$query = "SELECT husr.user_id, husr.lastname, husr.firstname, husr.email\n"
 				.", GROUP_CONCAT(DISTINCT husrorgu.orgu_title SEPARATOR ', ') AS orgunit\n"
@@ -68,6 +90,14 @@ class gevEffectivenessAnalysisDB {
 		return $ret;
 	}
 
+	/**
+	 * Get number of possible effectiveness analysis without offset and limit
+	 *
+	 * @param int 		$user_id
+	 * @param mixed[]	$filter
+	 *
+	 * @return int
+	 */
 	public function getCountEffectivenessAnalysisData($employees, array $reason_for_eff_analysis, array $filter) {
 		$query = "SELECT count(hcrs.crs_id) AS cnt\n";
 		$query .= $this->getSelectBase($employees, $reason_for_eff_analysis);
@@ -79,6 +109,16 @@ class gevEffectivenessAnalysisDB {
 		return $this->gDB->numRows($res);
 	}
 
+	/**
+	 * Get data for the effectiveness analyis report
+	 *
+	 * @param int 		$user_id
+	 * @param mixed[] 	$filter
+	 * @param string 	$order
+	 * @param string 	$order_direction
+	 *
+	 * @return mixed[]
+	 */
 	public function getEffectivenessAnalysisReportData($employees, array $reason_for_eff_analysis, array $filter, $order, $order_direction) {
 		$query = "SELECT husr.user_id, GROUP_CONCAT(DISTINCT CONCAT_WS(', ', husr.lastname, husr.firstname)) AS member, husr.email\n"
 				.", GROUP_CONCAT(DISTINCT husrorgu.orgu_title SEPARATOR ', ') AS orgunit\n"
@@ -111,6 +151,14 @@ class gevEffectivenessAnalysisDB {
 		return $ret;
 	}
 
+	/**
+	 * Save result for effectiveness analysis for each user
+	 *
+	 * @param int 		$crs_id
+	 * @param int 		$user_id
+	 * @param int 		$result
+	 * @param string 	$result_info
+	 */
 	public function saveResult($crs_id, $user_id, $result, $result_info) {
 		$values = array("crs_id" => array("integer", $crs_id)
 					  , "user_id" => array("integer", $user_id)
@@ -122,6 +170,11 @@ class gevEffectivenessAnalysisDB {
 		$this->gDB->insert('eff_analysis', $values);
 	}
 
+	/**
+	 * Get the base of select statement
+	 *
+	 * @return string
+	 */
 	protected function getSelectBase($employees, array $reason_for_eff_analysis) {
 		$today_ts = strtotime(date('Y-m-d'). '00:00:00');
 		$today_date = date('Y-m-d', strtotime(date('Y-m-d'). '00:00:00'));
@@ -162,12 +215,24 @@ class gevEffectivenessAnalysisDB {
 				."         )\n";
 	}
 
+	/**
+	 * Get the group by statement
+	 *
+	 * @return string
+	 */
 	protected function getGroupBy() {
 		return " GROUP BY husr.user_id, husr.lastname, husr.firstname, husr.email, hcrs.title, hcrs.type, hcrs.begin_date\n"
 				 .", hcrs.end_date, hcrs.language, hcrs.training_number, hcrs.venue, hcrs.target_groups, hcrs.objectives_benefits\n"
 				 .", hcrs.training_topics, hcrs.crs_id, effa.finish_date, effa.result";
 	}
 
+	/**
+	 * Get where by filter values
+	 *
+	 * @param mixed[]		$filter
+	 *
+	 * @return string
+	 */
 	protected function getWhereByFilter(array $filter) {
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysis.php");
 		$where = "";

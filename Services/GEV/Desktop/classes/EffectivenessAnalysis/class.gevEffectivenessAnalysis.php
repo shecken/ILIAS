@@ -1,5 +1,12 @@
 <?php
+/* Copyright (c) 1998-2016 ILIAS open source, Extended GPL, see docs/LICENSE */
 
+/**
+ * Utils class for effectiveness analysis.
+ * Handle communication between GUI's and ILIAS (db abstraction)
+ *
+ * @author Stefan Hecken <stefan.hecken@concepts-and-training.de>
+ */
 class gevEffectivenessAnalysis {
 	const F_TITLE = "title";
 	const F_ORG_UNIT = "org_unit";
@@ -17,8 +24,20 @@ class gevEffectivenessAnalysis {
 	const STATE_FILTER_OPEN = "rep_open";
 	const STATE_FILTER_ALL = "rep_all";
 
+	/**
+	 * @var self | null
+	 */
 	static $instance = null;
+
+	/**
+	 * @var string[]
+	 */
 	static $reason_for_eff_analysis = array("D - Maßnahmen aus Defizit", "R - Rechtliche Anforderung, Pflichtschulung");
+
+	/**
+	 * @var gevEffectivenessAnalysisDB
+	 */
+	protected $eff_analysis_db;
 
 	public function __construct() {
 		global $ilCtrl, $lng, $ilDB;
@@ -31,6 +50,9 @@ class gevEffectivenessAnalysis {
 		$this->eff_analysis_db = new gevEffectivenessAnalysisDB($ilDB);
 	}
 
+	/**
+	 * Get an instance of this
+	 */
 	public static function getInstance() {
 		if(self::$instance === null) {
 			self::$instance = new gevEffectivenessAnalysis();
@@ -61,6 +83,14 @@ class gevEffectivenessAnalysis {
 		return $this->eff_analysis_db->getEffectivenessAnalysisData($my_employees, self::$reason_for_eff_analysis, $filter, $offset, $limit, $order, $order_direction);
 	}
 
+	/**
+	 * Get number of possible effectiveness analysis without offset and limit
+	 *
+	 * @param int 		$user_id
+	 * @param mixed[]	$filter
+	 *
+	 * @return int
+	 */
 	public function getCountEffectivenessAnalysis($user_id, array $filter) {
 		$my_employees = $this->getMyEmployees($user_id, $filter[self::F_ORG_UNIT], $filter[self::F_LOGIN]);
 
@@ -71,10 +101,28 @@ class gevEffectivenessAnalysis {
 		return $this->eff_analysis_db->getCountEffectivenessAnalysisData($my_employees, self::$reason_for_eff_analysis, $filter);
 	}
 
+	/**
+	 * Save result for effectiveness analysis for each user
+	 *
+	 * @param int 		$crs_id
+	 * @param int 		$user_id
+	 * @param int 		$result
+	 * @param string 	$result_info
+	 */
 	public function saveResult($crs_id, $user_id, $result, $result_info) {
 		$this->eff_analysis_db->saveResult($crs_id, $user_id, $result, $result_info);
 	}
 
+	/**
+	 * Get data for the effectiveness analyis report
+	 *
+	 * @param int 		$user_id
+	 * @param mixed[] 	$filter
+	 * @param string 	$order
+	 * @param string 	$order_direction
+	 *
+	 * @return mixed[]
+	 */
 	public function getEffectivenessAnalysisReportData($user_id, array $filter, $order, $order_direction) {
 		if($superior_id = $this->getIdOfSearchedSupervisor($filter)) {
 			$my_employees = $this->getMyEmployees($superior_id, $filter[self::F_ORG_UNIT], $filter[self::F_LOGIN]);
@@ -89,6 +137,15 @@ class gevEffectivenessAnalysis {
 		return $this->eff_analysis_db->getEffectivenessAnalysisReportData($my_employees, self::$reason_for_eff_analysis, $filter, $order, $order_direction);
 	}
 
+	/**
+	 * Get all employess of user.
+	 *
+	 * @param int 		$user_id
+	 * @param string[] 	$filter_orgunit 	values from org unit filter
+	 * @param string 	$filter_user		value from member filter
+	 *
+	 * @return int[]
+	 */
 	protected function getMyEmployees($user_id, $filter_orgunit, $filter_user) {
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		$user_utils = gevUserUtils::getInstance($user_id);
@@ -117,6 +174,14 @@ class gevEffectivenessAnalysis {
 		return $my_employees;
 	}
 
+	/**
+	 * Get orgunit where user is superior, filtered by orgu filter if needed
+	 *
+	 * @param int 		$user_id
+	 * @param string[] 	$$filter_orgus
+	 *
+	 * @return int[]
+	 */
 	protected function getOrgunitsOf($user_id, $filter_orgus) {
 		$user_utils = gevUserUtils::getInstance($user_id);
 		$orgus = $user_utils->getOrgUnitsWhereUserIsDirectSuperior();
@@ -149,6 +214,11 @@ class gevEffectivenessAnalysis {
 
 	}
 
+	/**
+	 * Get title of all existing orguntis
+	 *
+	 * @return string[]
+	 */
 	public function getOrgunitTitle() {
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
@@ -161,6 +231,14 @@ class gevEffectivenessAnalysis {
 		return $orgus;
 	}
 
+	/**
+	 * Get employees of user filtered by searched user if needed
+	 *
+	 * @param int[] 		$orgus
+	 * @param int 			$login_id
+	 *
+	 * @return int[]
+	 */
 	protected function getEmployees($orgus, $login_id) {
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
@@ -182,6 +260,14 @@ class gevEffectivenessAnalysis {
 		});
 	}
 
+	/**
+	 * Get all members of org unit
+	 *
+	 * @param int 		$org_unit_ref_id
+	 * @param int 		$login_id 			id of filtered user
+	 *
+	 * @return int[]
+	 */
 	protected function getAllPeopleIn($org_unit_ref_id, $login_id) {
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
@@ -203,6 +289,13 @@ class gevEffectivenessAnalysis {
 		});
 	}
 
+	/**
+	 * Get filter for my effectiveness analysis
+	 *
+	 * @param int 		$user_id
+	 *
+	 * @return catFilter
+	 */
 	public function getFilter($user_id) {
 		require_once("Services/GEV/Reports/classes/class.catFilter.php");
 		return catFilter::create()
@@ -235,6 +328,11 @@ class gevEffectivenessAnalysis {
 									, "");
 	}
 
+	/**
+	 * Get the filter for effectiveness analysis report
+	 *
+	 * @return catFilter
+	 */
 	public function getReportFilter() {
 		require_once("Services/GEV/Reports/classes/class.catFilter.php");
 		return catFilter::create()
@@ -276,6 +374,13 @@ class gevEffectivenessAnalysis {
 						;
 	}
 
+	/**
+	 * Get user filter inputs
+	 *
+	 * @param catFilter
+	 *
+	 * @return mixed[]
+	 */
 	public function buildFilterValuesFromFilter($filter) {
 		$filter_values = array();
 
@@ -350,18 +455,35 @@ class gevEffectivenessAnalysis {
 		return $filter_values;
 	}
 
+	/**
+	 * Get a new date with time
+	 *
+	 * @param string 		$date
+	 * @param string 		$time
+	 *
+	 * @return ilDateTime
+	 */
 	protected function createDate($date, $time) {
 		return new ilDateTime($date." ".$time, IL_CAL_DATETIME);
 	}
 
-	protected function padLeading($value) {
-		return str_pad($value, 2, "0", STR_PAD_LEFT);
-	}
-
+	/**
+	 * Get full text for result value
+	 *
+	 * @param int 		$result_id
+	 *
+	 * @return string
+	 */
 	public function getResultText($result_id) {
 		return $this->gLng->txt(self::RESULT_PREFIX."_".$result_id);
 	}
 
+	/**
+	 * Check if a result info text is needed
+	 *
+	 * @param int 		$result
+	 * @param string 	$result_text
+	 */
 	public function checkInfoIsRequired($result, $result_text) {
 		var_dump($result);
 		var_dump(in_array($result, array(1,2,3)));
@@ -372,6 +494,11 @@ class gevEffectivenessAnalysis {
 		return false;
 	}
 
+	/**
+	 * get possible results for effectiveness analysis
+	 *
+	 * @return array<int, string> 		<result_value, result_text>
+	 */
 	public function getResultOptions() {
 		return array(0 => $this->getResultText(0)
 					,1 => $this->getResultText(1)
@@ -383,32 +510,27 @@ class gevEffectivenessAnalysis {
 				);
 	}
 
+	/**
+	 * Get options for effectivenes status filter
+	 *
+	 * @return string[]
+	 */
 	protected function getStatusOptions() {
 		return array($this->gLng->txt(self::STATE_FNISHED), $this->gLng->txt(self::STATE_OPEN));
 	}
 
+	/**
+	 * Get the user_id of searched supervisor
+	 *
+	 * @param mixed[]
+	 *
+	 * @return int
+	 */
 	public function getIdOfSearchedSupervisor($filter_values) {
 		if(isset($filter_values[self::F_SUPERIOR])) {
 			return ilObjUser::_lookupId($filter_values[self::F_SUPERIOR]);
 		}
 		
 		return false;
-	}
-
-	public function isEmployeeOf($user_id, $superior_id) {
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		$user_utils = gevUserUtils::getInstance($user_id);
-		return $user_utils->isEmployeeOf($superior_id);
-	}
-
-	public function getSuperiorOf($user_id) {
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		$user_utils = gevUserUtils::getInstance($user_id);
-		$superiors = array_map(function($sup) {
-			$sup_data = ilObjUser::_lookupName($sup);
-			return $sup_data["lastname"].", ".$sup_data["firstname"];
-		}, $user_utils->getDirectSuperiors());
-
-		return implode("<br />", $superiors);
 	}
 }

@@ -1,4 +1,6 @@
 <?php
+/* Copyright (c) 1998-2016 ILIAS open source, Extended GPL, see docs/LICENSE */
+
 require_once("Services/CaTUIComponents/classes/class.catAccordionTableGUI.php");
 
 class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
