@@ -96,7 +96,9 @@ public function __construct() {
 
 		$rec["scheduled"] = date("d.m.Y", strtotime($rec["scheduled"]));
 
-		$rec["result"] = $this->eff_analysis->getResultText($rec["result"]);
+		if($rec["result"] !== "-") {
+			$rec["result"] = $this->eff_analysis->getResultText($rec["result"]);
+		}
 
 		return $rec;
 	}
