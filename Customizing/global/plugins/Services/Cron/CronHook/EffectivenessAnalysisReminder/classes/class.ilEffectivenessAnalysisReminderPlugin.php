@@ -1,6 +1,13 @@
 <?php
+/* Copyright (c) 1998-2016 ILIAS open source, Extended GPL, see docs/LICENSE */
+
 require_once("Services/Cron/classes/class.ilCronHookPlugin.php");
 
+/**
+ * Plugin for effectiveness alalysis
+ *
+ * @author Stefan Hecken <stefan.hecken@cencepts-and-training.de>
+ */
 class ilEffectivenessAnalysisReminderPlugin extends ilCronHookPlugin {
 	public function getPluginName() {
 		return "EffectivenessAnalysisReminder";

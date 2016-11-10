@@ -16,10 +16,16 @@ class ilEffectivenessAnalysisReminderDB {
 		$this->db = $db;
 	}
 
+	/**
+	 * install the plugin
+	 */
 	public function install() {
 		$this->createTable();
 	}
 
+	/**
+	 * Create table for maillog
+	 */
 	protected function createTable() {
 		if(!$this->db->tableExists(self::TABLE_NAME)) {
 			$fields = array(
@@ -58,6 +64,14 @@ class ilEffectivenessAnalysisReminderDB {
 		$this->db->insert(self::TABLE_NAME, $values);
 	}
 
+	/**
+	 * Should the first reminder be send
+	 *
+	 * @param int 		$crs_id
+	 * @param string 	$type_first
+	 *
+	 * @return bool
+	 */
 	public function shouldSendFirstReminder($crs_id, $type_first) {
 		$query = "SELECT send\n"
 				." FROM ".self::TABLE_NAME."\n"
@@ -73,6 +87,15 @@ class ilEffectivenessAnalysisReminderDB {
 		return false;
 	}
 
+	/**
+	 * Should the second reminder be send
+	 *
+	 * @param int 		$crs_id
+	 * @param string 	$type_first
+	 * @param string 	$type_second
+	 *
+	 * @return bool
+	 */
 	public function shouldSendSecondReminder($crs_id, $type_first, $type_second) {
 		$query = "SELECT MAX(first.send) AS first_send, MAX(second.send) AS second_send\n"
 				." FROM ".self::TABLE_NAME." first\n"

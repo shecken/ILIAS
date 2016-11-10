@@ -5,6 +5,11 @@ require_once("Services/Cron/classes/class.ilCronManager.php");
 require_once("Services/Cron/classes/class.ilCronJob.php");
 require_once("Services/Cron/classes/class.ilCronJobResult.php");
 
+/**
+ * Cronjob class for effectiveness analysis plugin
+ *
+ * @author Stefan Hecken <stefan.hecken@concepts-and-training.de>
+ */
 class ilEffectivenessAnalysisReminderJob extends ilCronJob {
 	/**
 	 * @var ilObjUser
