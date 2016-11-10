@@ -17,6 +17,7 @@ class gevEffectivenessAnalysis {
 	const F_RESULT = "result";
 	const F_STATUS = "status";
 	const F_SUPERIOR = "superior";
+	const F_SCHEDULED = "scheduled";
 	const RESULT_PREFIX = "result";
 	const STATE_FNISHED = "gev_eff_analysis_rep_finished";
 	const STATE_OPEN = "gev_eff_analysis_rep_open";
@@ -138,6 +139,23 @@ class gevEffectivenessAnalysis {
 	}
 
 	/**
+	 * Get informations for reminder
+	 *
+	 * @param int 		$user_id
+	 *
+	 * @return mixed[]
+	 */
+	public function getOpenEffectivenessAnalysis($user_id) {
+		$my_employees = $this->getMyEmployees($user_id, array(), "");
+		$filter = array();
+
+		$filter[self::F_FINISHED] = self::STATE_FILTER_OPEN;
+		$filter[self::F_SCHEDULED] = date("Y-m-d");
+
+		return $this->eff_analysis_db->getEffectivenessAnalysisOpen($my_employees, self::$reason_for_eff_analysis, $filter);
+	}
+
+	/**
 	 * Get all employess of user.
 	 *
 	 * @param int 		$user_id
@@ -156,8 +174,8 @@ class gevEffectivenessAnalysis {
 		}
 
 		$my_employees = array();
-		if($user_utils->isAdmin()) {
-			$my_employees = $this->getAllPeopleIn(ilObjOrgUnit::getRootOrgRefId(), $login_id);
+		if($user_utils->isAdmin() && empty($filter_orgunit)) {
+			$my_employees = $this->getAllPeopleIn(array(ilObjOrgUnit::getRootOrgRefId()), $login_id);
 		} else {
 			$orgus = $this->getOrgunitsOf($user_id, $filter_orgunit);
 			if(empty($orgus) || (count($orgus) == 1 && !$orgus[0])) {
@@ -263,12 +281,12 @@ class gevEffectivenessAnalysis {
 	/**
 	 * Get all members of org unit
 	 *
-	 * @param int 		$org_unit_ref_id
+	 * @param int[] 		$org_unit_ref_id
 	 * @param int 		$login_id 			id of filtered user
 	 *
 	 * @return int[]
 	 */
-	protected function getAllPeopleIn($org_unit_ref_id, $login_id) {
+	protected function getAllPeopleIn(array $org_unit_ref_id, $login_id) {
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 
@@ -280,7 +298,7 @@ class gevEffectivenessAnalysis {
 			} else {
 				return $usr_id;
 			}
-		}, gevOrgUnitUtils::getAllEmployees(array($org_unit_ref_id)));
+		}, gevOrgUnitUtils::getAllEmployees($org_unit_ref_id));
 
 		return array_filter($empl, function($id) {
 			if($id !== null) {
@@ -485,8 +503,6 @@ class gevEffectivenessAnalysis {
 	 * @param string 	$result_text
 	 */
 	public function checkInfoIsRequired($result, $result_text) {
-		var_dump($result);
-		var_dump(in_array($result, array(1,2,3)));
 		if(in_array($result, array(1,2,3)) && $result_text == "") {
 			return true;
 		}

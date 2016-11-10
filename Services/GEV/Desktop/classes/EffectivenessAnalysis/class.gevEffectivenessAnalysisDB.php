@@ -151,6 +151,39 @@ class gevEffectivenessAnalysisDB {
 		return $ret;
 	}
 
+	public function getEffectivenessAnalysisOpen($employees, array $reason_for_eff_analysis, array $filter) {
+		$query = "SELECT GROUP_CONCAT(DISTINCT husr2.user_id SEPARATOR ':') AS superiors\n"
+				.", hcrs.crs_id\n"
+				.", CASE hcrs.type\n"
+				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (105 * 24 * 60 * 60)), '%Y-%b-%e')\n"
+				."      ELSE DATE_ADD(hcrs.end_date, INTERVAL 105 DAY)\n"
+				."  END AS scheduled\n";
+		$query .= $this->getSelectBase($employees, $reason_for_eff_analysis);
+		$query .= $this->getWhereByFilter($filter);
+		$query .= $this->getGroupBy();
+		$query .= " HAVING scheduled <= ".$this->gDB->quote($filter[gevEffectivenessAnalysis::F_SCHEDULED], "text")."\n";
+
+		$res = $this->gDB->query($query);
+		while($row = $this->gDB->fetchAssoc($res)) {
+			foreach($row as $key => $value) {
+				if($value == self::EMPTY_DATE || $value == self::EMPTY_TEXT || $value === null) {
+					$row[$key] = "-";
+				}
+			}
+
+			$sups = explode(":", $row["superiors"]);
+			$crs_id = $row["crs_id"];
+
+			if(array_key_exists($crs_id, $ret)) {
+				$ret[$row["crs_id"]] = array_unique(array_merge($ret[$row["crs_id"]], $sups));
+			} else {
+				$ret[$row["crs_id"]] = $sups;
+			}
+		}
+
+		return $ret;
+	}
+
 	/**
 	 * Save result for effectiveness analysis for each user
 	 *
@@ -183,6 +216,7 @@ class gevEffectivenessAnalysisDB {
 				." JOIN crs_book crsb\n"
 				."    ON crsb.crs_id = hcrs.crs_id\n"
 				."        AND ".$this->gDB->in("crsb.user_id", $employees, false, "integer")."\n"
+				."        AND status != ".$this->gDB->quote(4, "integer")."\n"
 				." JOIN hist_user husr\n"
 				."    ON husr.user_id = crsb.user_id\n"
 				."        AND husr.hist_historic = 0\n"
@@ -197,7 +231,7 @@ class gevEffectivenessAnalysisDB {
 				."        AND husrorgu2.rol_title = ".$this->gDB->quote("Vorgesetzter", "text")."\n"
 				." LEFT JOIN hist_user husr2\n"
 				."    ON husrorgu2.usr_id = husr2.user_id\n"
-				." JOIN crs_pstatus_usr psusr\n"
+				." LEFT JOIN crs_pstatus_usr psusr\n"
 				."    ON psusr.crs_id = hcrs.crs_id\n"
 				."        AND psusr.user_id = husr.user_id\n"
 				." LEFT JOIN eff_analysis effa\n"
@@ -241,7 +275,6 @@ class gevEffectivenessAnalysisDB {
 			&& isset($filter[gevEffectivenessAnalysis::F_FINISHED]) 
 			&& $filter[gevEffectivenessAnalysis::F_FINISHED] == gevEffectivenessAnalysis::STATE_FILTER_OPEN) 
 		{
-			echo "sdsd";
 			$where .= "     AND effa.finish_date IS NULL\n";
 		}
 
