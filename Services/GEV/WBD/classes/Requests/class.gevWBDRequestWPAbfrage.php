@@ -22,7 +22,7 @@ class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
 		$this->error_group = gevWBDError::ERROR_GROUP_USER;
 
 		$this->defineValuesToTranslate();
-		$dic_errors = $this->translate($data["user_id"], $data["row_id"]);
+		$dic_errors = $this->translate($data, $data["user_id"], $data["row_id"]);
 
 		$this->certification_period 	= new WBDData("ZertifizierungsPeriode",$this->translate_value["ZertifizierungsPeriode"]);
 

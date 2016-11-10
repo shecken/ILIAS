@@ -22,7 +22,7 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 		$this->error_group = gevWBDError::ERROR_GROUP_CRS;
 
 		$this->defineValuesToTranslate();
-		$dic_errors = $this->translate($data["user_id"], $data["row_id"], $data["crs_id"]);
+		$dic_errors = $this->translate($data, $data["user_id"], $data["row_id"], $data["crs_id"]);
 
 		$this->type 				= new WBDData("LernArt",$this->translate_value["LernArt"]);
 		$this->wbd_topic 			= new WBDData("LernInhalt",$this->translate_value["LernInhalt"]);

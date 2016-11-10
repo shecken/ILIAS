@@ -22,7 +22,7 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 		$this->error_group = gevWBDError::ERROR_GROUP_USER;
 
 		$this->defineValuesToTranslate();
-		$dic_errors = $this->translate($data["user_id"], $data["row_id"]);
+		$dic_errors = $this->translate($data, $data["user_id"], $data["row_id"]);
 
 		$this->address_type 		= new WBDData("AdressTyp", $this->translate_value["AdressTyp"]);
 		$this->title 				= new WBDData("AnredeSchluessel", $this->translate_value["AnredeSchluessel"]);
@@ -49,7 +49,7 @@ class gevWBDRequestVvErstanlage extends WBDRequestVvErstanlage {
 		$this->phone_nr 			= new WBDData("Telefonnummer", ($data["phone_nr"] != "") ? $data["phone_nr"] : $data["mobile_phone_nr"]);
 		$this->degree 				= new WBDData("Titel", $data["degree"]);
 		$this->okz 					= new WBDData("VermittlungsTaetigkeit",$data["okz"]);
-		$this->firstname 			= new WBDData("VorName", $data["VorName"]);
+		$this->firstname 			= new WBDData("VorName", $data["firstname"]);
 
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
