@@ -9,6 +9,7 @@ class ilTalentAssessmentSettingsGUI {
 
 	const CMD_SHOW = "showSettings";
 	const CMD_SAVE = "saveSettings";
+	const CMD_AUTOCOMPLETE = "userfieldAutocomplete";
 
 	/**
 	 * @var Closure
@@ -37,6 +38,7 @@ class ilTalentAssessmentSettingsGUI {
 		switch($cmd) {
 			case self::CMD_SHOW:
 			case self::CMD_SAVE:
+			case self::CMD_AUTOCOMPLETE:
 				$this->$cmd();
 				break;
 			default:
@@ -75,7 +77,9 @@ class ilTalentAssessmentSettingsGUI {
 		$career_goal_options = $this->actions->getCareerGoalsOptions();
 		$venue_options = $this->actions->getVenueOptions();
 		$org_unit_options = $this->actions->getOrgUnitOptions();
-		$this->addSettingsFormItemsUpdate($form, $career_goal_options, $venue_options, $org_unit_options, $this->actions->observationStarted($this->obj_id));
+		$autocomplete_link = $this->gCtrl->getLinkTarget($this, self::CMD_AUTOCOMPLETE, "", true);
+		var_dump($autocomplete_link);
+		$this->addSettingsFormItemsUpdate($form, $career_goal_options, $venue_options, $org_unit_options, $this->actions->observationStarted($this->obj_id), $autocomplete_link);
 
 		$form->addCommandButton(self::CMD_SAVE, $this->txt('obj_save'));
 		$form->setFormAction($this->gCtrl->getFormAction($this));
@@ -105,5 +109,18 @@ class ilTalentAssessmentSettingsGUI {
 			\ilUtil::sendFailure($this->txt("not_saved"), true);
 			$this->gTpl->setContent($form->getHTML());
 		}
+	}
+
+	public function userfieldAutocomplete() {
+		include_once './Services/User/classes/class.ilUserAutoComplete.php';
+		$auto = new ilUserAutoComplete();
+		$auto->setSearchFields(array('login','firstname','lastname','email'));
+		$auto->enableFieldSearchableCheck(false);
+		if(($_REQUEST['fetchall']))
+		{
+			$auto->setLimit(ilUserAutoComplete::MAX_ENTRIES);
+		}
+		echo $auto->getList($_REQUEST['term']);
+		exit();
 	}
 }
