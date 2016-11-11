@@ -258,24 +258,16 @@ class gevEffectivenessAnalysis {
 	 * @return int[]
 	 */
 	protected function getEmployees($orgus, $login_id) {
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 
-		$empl = array_map(function($usr_id) use ($login_id) {
-			if($login_id !== -1) {
-				if($login_id == $usr_id) {
-					return $usr_id;
-				}
-			} else {
-				return $usr_id;
-			}
-		}, gevOrgUnitUtils::getEmployeesIn($orgus));
+		$empl = gevOrgUnitUtils::getEmployeesIn($orgus);
 
-		return array_filter($empl, function($id) {
-			if($id !== null) {
-				return $id;
-			}
-		});
+		if($login_id != -1) {
+			$empl = $this->reduceToFilteredUser($empl, $login_id);
+		}
+
+		return $empl;
 	}
 
 	/**
@@ -290,18 +282,24 @@ class gevEffectivenessAnalysis {
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 
-		$empl = array_map(function($usr_id) use ($login_id) {
-			if($login_id !== -1) {
-				if($login_id == $usr_id) {
-					return $usr_id;
-				}
-			} else {
-				return $usr_id;
-			}
-		}, gevOrgUnitUtils::getAllEmployees($org_unit_ref_id));
+		$empl = gevOrgUnitUtils::getAllEmployees($org_unit_ref_id);
 
-		return array_filter($empl, function($id) {
-			if($id !== null) {
+		if($login_id != -1) {
+			$empl = $this->reduceToFilteredUser($empl, $login_id);
+		}
+
+		return $empl;
+	}
+
+	/**
+	 * Reduce employees to searched from filter
+	 *
+	 * @param int[] 		$employess
+	 * @param int 			$login_id
+	 */
+	protected function reduceToFilteredUser($employees, $login_id) {
+		return array_filter($employees, function($id) use ($login_id){
+			if($id == $login_id) {
 				return $id;
 			}
 		});
