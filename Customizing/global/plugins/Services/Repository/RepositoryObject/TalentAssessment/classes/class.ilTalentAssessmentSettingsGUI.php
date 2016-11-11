@@ -78,7 +78,6 @@ class ilTalentAssessmentSettingsGUI {
 		$venue_options = $this->actions->getVenueOptions();
 		$org_unit_options = $this->actions->getOrgUnitOptions();
 		$autocomplete_link = $this->gCtrl->getLinkTarget($this, self::CMD_AUTOCOMPLETE, "", true);
-		var_dump($autocomplete_link);
 		$this->addSettingsFormItemsUpdate($form, $career_goal_options, $venue_options, $org_unit_options, $this->actions->observationStarted($this->obj_id), $autocomplete_link);
 
 		$form->addCommandButton(self::CMD_SAVE, $this->txt('obj_save'));
