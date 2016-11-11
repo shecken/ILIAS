@@ -213,7 +213,7 @@ class ilCourseBookings
 	}
 	
 	// gev-patch start
-	public function cleanWaitingList()
+	public function cleanWaitingList($supress_mail = false)
 	{
 		require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
 		
@@ -234,7 +234,10 @@ class ilCourseBookings
 				}
 				
 				$this->cancelWithoutCosts($user_id);					
-				$automails->send("waiting_list_cancelled", array($user_id));
+
+				if(!$supress_mail) {
+					$automails->send("waiting_list_cancelled", array($user_id));
+				}
 			}
 			return true;
 		}

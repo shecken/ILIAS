@@ -1629,8 +1629,8 @@ class gevCourseUtils {
 		return $this->getBookings()->fillFreePlaces();
 	}
 	
-	public function cleanWaitingList() {
-		$ws = $this->getBookings()->cleanWaitingList();
+	public function cleanWaitingList($supress_mail = false) {
+		$ws = $this->getBookings()->cleanWaitingList($supress_mail);
 		$this->setWaitingListActive(false);
 	}
 	
@@ -1639,7 +1639,7 @@ class gevCourseUtils {
 		$mails = new gevCrsAutoMails($this->crs_id);
 		
 		// Cancel participants
-		$this->cleanWaitingList();
+		$this->cleanWaitingList(true);
 		
 		$participants = $this->getParticipants();
 		foreach($participants as $participant) {
