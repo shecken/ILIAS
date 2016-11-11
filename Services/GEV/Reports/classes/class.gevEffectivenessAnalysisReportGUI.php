@@ -50,6 +50,28 @@ public function __construct() {
 					 ->compile();
 	}
 
+	public function executeCommand() {
+		$this->checkPermission();
+
+		$cmd = $this->ctrl->getCmd();
+		$res = $this->executeCustomCommand($cmd);
+		if ($res !== null) {
+			return $res;
+		}
+		
+		switch ($cmd) {
+			case "exportxls":
+				$this->exportXLS();
+				exit();
+				//no "break;" !
+			case "userfieldAutocomplete":
+				$this->$cmd();
+				break;
+			default:
+				return $this->render();
+		}
+	}
+
 	protected function fetchData($xls = false) {
 		$filter_values = $this->eff_analysis->buildFilterValuesFromFilter($this->filter);
 
@@ -138,5 +160,9 @@ public function __construct() {
 		$legend = new catLegendGUI();
 		$legend->addItem($this->eff_analysis_icon, "gev_eff_analysis_report_details");
 		return $legend;
+	}
+
+	protected function userfieldAutocomplete() {
+		$this->eff_analysis->userfieldAutocomplete();
 	}
 }

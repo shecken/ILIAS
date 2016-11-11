@@ -343,7 +343,8 @@ class gevEffectivenessAnalysis {
 									, "")
 						->textinput(self::F_LOGIN
 									, $this->gLng->txt("gev_eff_analysis_login").":"
-									, "");
+									, ""
+									, $this->gCtrl->getLinkTargetByClass(array("gevMyEffectivenessAnalysisGUI"), "userfieldAutocomplete", "", true));
 	}
 
 	/**
@@ -385,10 +386,12 @@ class gevEffectivenessAnalysis {
 									, "")
 						->textinput(self::F_LOGIN
 									, $this->gLng->txt("gev_eff_analysis_member").":"
-									, "")
+									, ""
+									, $this->gCtrl->getLinkTargetByClass(array("gevEffectivenessAnalysisReportGUI"), "userfieldAutocomplete", "", true))
 						->textinput(self::F_SUPERIOR
 									, $this->gLng->txt("gev_eff_analysis_superior").":"
-									, "")
+									, ""
+									, $this->gCtrl->getLinkTargetByClass(array("gevEffectivenessAnalysisReportGUI"), "userfieldAutocomplete", "", true))
 						;
 	}
 
@@ -548,5 +551,18 @@ class gevEffectivenessAnalysis {
 		}
 		
 		return false;
+	}
+
+	public function userfieldAutocomplete() {
+		include_once './Services/User/classes/class.ilUserAutoComplete.php';
+		$auto = new ilUserAutoComplete();
+		$auto->setSearchFields(array('login','firstname','lastname','email'));
+		$auto->enableFieldSearchableCheck(false);
+		if(($_REQUEST['fetchall']))
+		{
+			$auto->setLimit(ilUserAutoComplete::MAX_ENTRIES);
+		}
+		echo $auto->getList($_REQUEST['term']);
+		exit();
 	}
 }

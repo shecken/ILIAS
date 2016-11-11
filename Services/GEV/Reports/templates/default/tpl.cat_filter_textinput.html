@@ -1,2 +1,49 @@
 <label for="inp_{POST_VAR}">{OPTION_TITLE}</label>
-<input id="inp_{POST_VAR}" type="text" name="{POST_VAR}" value="{VALUE}" />
+<input id="inp_{POST_VAR}" {AUTOCOMPLETE} type="text" name="{POST_VAR}" value="{VALUE}" />
+<!-- BEGIN autocomplete -->
+<script type="text/javascript">
+	il.Util.addOnLoad(
+		function() {
+			$.widget( "custom.iladvancedautocomplete", $.ui.autocomplete, {
+				more: false,
+				_renderMenu: function(ul, items) {
+					var that = this;
+					$.each(items, function(index, item) {
+						that._renderItemData(ul, item);
+					});
+
+					that.options.requestUrl = that.options.requestUrl.replace(/&fetchall=1/g, '');
+
+					if (that.more) {
+						ul.append("<li class='ui-menu-category ui-menu-more ui-state-disabled'><span>&raquo;mehr</span></li>");
+						ul.find('li').last().on('click', function(e) {
+							that.options.requestUrl += '&fetchall=1';
+							that.close(e);
+							that.search(null, e);
+							e.preventDefault();
+						});
+					}
+				}
+			});
+
+			$('#inp_{POST_VAR_COM}').iladvancedautocomplete({
+				requestUrl: "{REQUERST_LINK}",
+				source: function( request, response ) {
+					var that = this;
+					$.getJSON( that.options.requestUrl, {
+						term: request.term
+					}, function(data) {
+						if (typeof data.items == "undefined") {
+							response(data);
+						} else {
+							that.more = data.hasMoreResults;
+							response(data.items);
+						}
+					});
+				},
+				minLength: 3
+			});
+		}
+	);
+</script>
+<!-- END autocomplete -->

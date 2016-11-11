@@ -33,6 +33,7 @@ class gevEffectivenessAnalysisGUI {
 			case self::CMD_NEW:
 			case self::CMD_CONFIRM:
 			case self::CMD_SAVE:
+			case self::CMD_SEARCH_USER:
 				$this->$cmd();
 				break;
 			default:

@@ -7,6 +7,7 @@
 class gevMyEffectivenessAnalysisGUI {
 	const CMD_VIEW = "view";
 	const CMD_FILTER = "filter";
+	const CMD_SEARCH_USER = "userfieldAutocomplete";
 
 	/**
 	 * @var ilCrl
@@ -53,6 +54,9 @@ class gevMyEffectivenessAnalysisGUI {
 					case self::CMD_FILTER:
 						$this->view();
 						break;
+					case self::CMD_SEARCH_USER:
+						$this->$cmd();
+						break;
 				default:
 			}
 		}
@@ -98,5 +102,9 @@ class gevMyEffectivenessAnalysisGUI {
 	protected function getTable(array $filter) {
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevMyEffectivenessAnalysisTableGUI.php");
 		return new gevMyEffectivenessAnalysisTableGUI($filter, $this, $this->eff_analysis_icon);
+	}
+
+	protected function userfieldAutocomplete() {
+		$this->eff_analysis->userfieldAutocomplete();
 	}
 }
