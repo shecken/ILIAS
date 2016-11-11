@@ -24,6 +24,10 @@ class gevEffectivenessAnalysisFirstReminder extends gevCrsAutoMail {
 	}
 	
 	public function getCC($a_recipient) {
+		return array();
+	}
+
+	protected function getBCC($a_recipient) {
 		$training_officer_name = $this->getTrainingOfficerName();
 		$training_officer_mail = $this->getTrainingOfficerMail();
 
@@ -46,7 +50,7 @@ class gevEffectivenessAnalysisFirstReminder extends gevCrsAutoMail {
 												, $this->getFullnameForTemplate($a_recipient)
 												, $this->getEmailForTemplate($a_recipient));
 
-		return array( "from" => $this->getFrom()
+		$mail = array( "from" => $this->getFrom()
 					, "to" => $this->getTo($a_recipient)
 					, "cc" => $this->getCC($a_recipient)
 					, "bcc" => $this->getBCC($a_recipient)
@@ -60,6 +64,14 @@ class gevEffectivenessAnalysisFirstReminder extends gevCrsAutoMail {
 									  .$this->template_frame->getImageName()
 					, "image_styles" => $this->template_frame->getImageStyles()
 					);
+
+		if(!$this->send_to_training_officer) {
+			$mail["bcc"] = array();
+		} else {
+			$this->send_to_training_officer = false;
+		}
+
+		return $mail;
 	}
 }
 
