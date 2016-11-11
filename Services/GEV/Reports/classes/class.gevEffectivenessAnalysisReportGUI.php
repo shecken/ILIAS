@@ -18,11 +18,13 @@ public function __construct() {
 
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysis.php");
 		$this->eff_analysis = gevEffectivenessAnalysis::getInstance();
+		$this->eff_analysis_icon = '<img src="'.ilUtil::getImagePath("GEV_img/ico_eff_analysis.png").'" />';
 
 		$this->title = catTitleGUI::create()
 						->title("gev_eff_analysis_report_title")
 						->subTitle("gev_eff_analysis_report_description")
 						->image("GEV_img/ico-head-rep-billing.png")
+						->setLegend($this->getLegend())
 						;
 
 		$this->table = catReportTable::create()
@@ -39,7 +41,7 @@ public function __construct() {
 						->column("scheduled", "gev_eff_analysis_scheduled")
 						->column("finish_date", "gev_eff_analysis_finished_at")
 						->column("result", "gev_eff_analysis_result")
-						->column("link", "", false, "", true)
+						->column("link", "actions", false, "", true)
 						->template("tpl.gev_eff_analysis.html", "Services/GEV/Reports")
 						;
 
@@ -107,7 +109,7 @@ public function __construct() {
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "back", "report");
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "filter_params", null);
 		$rec["link"] = $this->ctrl->getLinkTargetByClass(array("gevMyEffectivenessAnalysisGUI", "gevEffectivenessAnalysisGUI"));
-		$rec["icon"] = '<img src="'.ilUtil::getImagePath("GEV_img/ico_eff_analysis.png").'" />';
+		$rec["icon"] = $this->eff_analysis_icon;
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "crs_id", null);
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "user_id", null);
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "readonly", null);
@@ -130,5 +132,11 @@ public function __construct() {
 		$rec["scheduled"] = date("d.m.Y", strtotime($rec["scheduled"]));
 
 		return $rec;
+	}
+
+	protected function getLegend() {
+		$legend = new catLegendGUI();
+		$legend->addItem($this->eff_analysis_icon, "gev_eff_analysis_report_details");
+		return $legend;
 	}
 }

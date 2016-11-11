@@ -14732,3 +14732,5 @@ gev#:#gev_eff_analysis_status#:#State
 gev#:#gev_eff_analysis_show_until#:#to
 gev#:#gev_eff_analysis_rep_finished#:#Finished
 gev#:#gev_eff_analysis_rep_open#:#Not finished
+gev#:#gev_eff_analysis_report_details#:#Details
+gev#:#gev_eff_analysis_report_enter_result#:#Send result

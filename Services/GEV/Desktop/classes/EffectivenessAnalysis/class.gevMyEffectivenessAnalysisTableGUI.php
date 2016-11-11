@@ -19,7 +19,7 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 	 */
 	protected $gUser;
 
-	public function __construct(array $filter, $a_parent_obj, $a_parent_cmd = "", $a_template_context = "") {
+	public function __construct(array $filter, $a_parent_obj, $image_link, $a_parent_cmd = "", $a_template_context = "") {
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
 		global $ilCtrl, $lng, $ilUser;
@@ -51,7 +51,7 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->gLng->txt("gev_eff_analysis_finished_at"), "finish_date");
 		$this->addColumn($this->gLng->txt("actions"), null);
 
-		$this->eff_analysis_icon = '<img src="'.ilUtil::getImagePath("GEV_img/ico_eff_analysis.png").'" />';
+		$this->eff_analysis_icon = $image_link;
 
 		if(!$this->getOrderField()) {
 			$order = "title";

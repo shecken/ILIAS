@@ -33,6 +33,8 @@ class gevMyEffectivenessAnalysisGUI {
 
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysis.php");
 		$this->eff_analysis = gevEffectivenessAnalysis::getInstance();
+
+		$this->eff_analysis_icon = '<img src="'.ilUtil::getImagePath("GEV_img/ico_eff_analysis.png").'" />';
 	}
 
 	public function executeCommand() {
@@ -80,11 +82,21 @@ class gevMyEffectivenessAnalysisGUI {
 
 	protected function getTitle() {
 		require_once("Services/CaTUIComponents/classes/class.catTitleGUI.php");
-		return new catTitleGUI("gev_my_effectiveness_analysis");
+		$title = catTitleGUI::create()
+						->title("gev_my_effectiveness_analysis")
+						->image("GEV_img/ico-head-rep-billing.png")
+						->setLegend($this->getLegend()); 
+		return $title;
+	}
+
+	protected function getLegend() {
+		$legend = new catLegendGUI();
+		$legend->addItem($this->eff_analysis_icon, "gev_eff_analysis_report_enter_result");
+		return $legend;
 	}
 
 	protected function getTable(array $filter) {
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevMyEffectivenessAnalysisTableGUI.php");
-		return new gevMyEffectivenessAnalysisTableGUI($filter, $this);
+		return new gevMyEffectivenessAnalysisTableGUI($filter, $this, $this->eff_analysis_icon);
 	}
 }
