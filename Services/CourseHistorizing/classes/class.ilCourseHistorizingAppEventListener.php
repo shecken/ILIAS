@@ -143,9 +143,7 @@ class ilCourseHistorizingAppEventListener
 			'is_template'						=> self::$ilCourseHistorizingHelper->getIsTemplate($parameter),
 			'wbd_topic'							=> self::$ilCourseHistorizingHelper->getWBDTopicOf($parameter),
 			'edu_program'						=> self::$ilCourseHistorizingHelper->getEduProgramOf($parameter),
-			'is_online'							=> self::$ilCourseHistorizingHelper->isOnline($parameter),
-			'reason_for_training'				=> self::$ilCourseHistorizingHelper->getReasonForTraining($parameter)
-		
+			'is_online'							=> self::$ilCourseHistorizingHelper->isOnline($parameter)
 		);
 
 		$deadline_data = self::$ilCourseHistorizingHelper->getDeadlineDataOf($parameter);

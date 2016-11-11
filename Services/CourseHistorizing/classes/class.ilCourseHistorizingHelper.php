@@ -281,11 +281,6 @@ class ilCourseHistorizingHelper
 
 	}
 
-	public static function getReasonForTraining($course) {
-		$utils = gevCourseUtils::getInstanceByObjOrId($course);
-		return $utils->getReasonForTraining();
-	}
-
 	public static function getAMDDataOf($course) {
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 
@@ -293,7 +288,8 @@ class ilCourseHistorizingHelper
 			'training_number' 			=> $utils->getCustomId(),
 			'objectives_benefits' 		=> $utils->getGoals(),
 			'training_topics' 			=> $utils->getContents(),
-			'language' 					=> $utils->getLanguage());
+			'language' 					=> $utils->getLanguage(),
+			'reason_for_training'		=> $utils->getReasonForTraining());
 
 		return $ret;
 	}
