@@ -233,11 +233,11 @@ class gevEffectivenessAnalysis {
 	}
 
 	/**
-	 * Get title of all existing orguntis
+	 * Get titles of all existing orguntis
 	 *
 	 * @return string[]
 	 */
-	public function getOrgunitTitle() {
+	public function getOrgunitTitles() {
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		$orgus = gevOrgUnitUtils::getAllChildren(array(ilObjOrgUnit::getRootOrgRefId()));
@@ -335,7 +335,7 @@ class gevEffectivenessAnalysis {
 						->multiselect(self::F_ORG_UNIT
 									 , $this->gLng->txt("gev_eff_analysis_org_unit")
 									 , null
-									 , $this->getOrgunitTitle()
+									 , $this->getOrgunitTitles()
 									 , array()
 									 )
 						->textinput(self::F_TITLE
@@ -372,7 +372,7 @@ class gevEffectivenessAnalysis {
 						->multiselect(self::F_ORG_UNIT
 									 , $this->gLng->txt("gev_eff_analysis_org_unit")
 									 , null
-									 , $this->getOrgunitTitle()
+									 , $this->getOrgunitTitles()
 									 , array()
 									 )
 						->multiselect(self::F_RESULT
