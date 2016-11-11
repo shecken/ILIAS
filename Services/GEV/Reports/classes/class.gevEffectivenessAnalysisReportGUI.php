@@ -100,14 +100,19 @@ public function __construct() {
 			$rec["result"] = $this->eff_analysis->getResultText($rec["result"]);
 		}
 
+		$filter_param = $this->ctrl->getParameterArrayByClass("gevEffectivenessAnalysisReportGUI")["filter_params"];
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "crs_id", $rec["crs_id"]);
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "user_id", $rec["user_id"]);
-		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "readonly", 1);
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "readonly", "readonly");
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "back", "report");
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "filter_params", null);
 		$rec["link"] = $this->ctrl->getLinkTargetByClass(array("gevMyEffectivenessAnalysisGUI", "gevEffectivenessAnalysisGUI"));
 		$rec["icon"] = '<img src="'.ilUtil::getImagePath("GEV_img/ico_eff_analysis.png").'" />';
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "crs_id", null);
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "user_id", null);
 		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "readonly", null);
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "back", null);
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisReportGUI", "filter_params", $filter_param);
 
 		return $rec;
 	}

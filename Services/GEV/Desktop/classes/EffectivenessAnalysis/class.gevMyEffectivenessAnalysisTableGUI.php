@@ -129,10 +129,20 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 	}
 
 	protected function getAction($crs_id, $user_id) {
+		$filter_param = $this->gCtrl->getParameterArrayByClass("gevEffectivenessAnalysisGUI")["filter_params"];
+
 		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "crs_id", $crs_id);
 		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "user_id", $user_id);
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "readonly", "read");
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "filter_params", null);
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "back", "view");
 		$link = $this->gCtrl->getLinkTargetByClass(array("gevMyEffectivenessAnalysisGUI", "gevEffectivenessAnalysisGUI"));
-		$this->gCtrl->clearParametersByClass("gevEffectivenessAnalysisGUI");
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "crs_id", null);
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "user_id", null);
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "readonly", null);
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "back", null);
+		$this->gCtrl->setParameterByClass("gevEffectivenessAnalysisGUI", "filter_params", $filter_param);
+
 		return $link;
 	}
 }

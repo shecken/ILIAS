@@ -15,10 +15,11 @@ class gevEffectivenessAnalysisGUI {
 	const F_RESULT_TEXT = "resultText";
 
 	public function __construct() {
-		global $ilCtrl, $tpl, $lng;
+		global $ilCtrl, $tpl, $lng, $ilTabs;
 		$this->gCtrl = $ilCtrl;
 		$this->gTpl = $tpl;
 		$this->gLng = $lng;
+		$this->gTabs = $ilTabs;
 
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysis.php");
 		$this->eff_analysis = gevEffectivenessAnalysis::getInstance();
@@ -26,6 +27,7 @@ class gevEffectivenessAnalysisGUI {
 
 	public function executeCommand() {
 		$cmd = $this->gCtrl->getCmd(self::CMD_NEW);
+		$this->setTabs();
 
 		switch($cmd) {
 			case self::CMD_NEW:
@@ -96,10 +98,16 @@ class gevEffectivenessAnalysisGUI {
 	}
 
 	protected function initForm() {
+		$readonly = $this->getReadonly();
+
 		require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->gCtrl->getFormAction($this, self::CMD_CONFIRM));
-		$form->addCommandButton(self::CMD_CONFIRM, $this->gLng->txt("gev_eff_analysis_save"));
+
+		if(!$readonly) {
+			$form->addCommandButton(self::CMD_CONFIRM, $this->gLng->txt("gev_eff_analysis_save"));
+		}
+
 		$form->setTitle($this->gLng->txt("gev_eff_analysis"));
 
 		$ne = new ilNonEditableValueGUI($this->gLng->txt("gev_eff_analysis_user"), self::F_NAME);
@@ -121,9 +129,11 @@ class gevEffectivenessAnalysisGUI {
 		$options = array(null=>"-") + $this->getResultOptions();
 		$si->setOptions($options);
 		$si->setRequired(true);
+		$si->setDisabled($readonly);
 		$form->addItem($si);
 
 		$ta = new ilTextAreaInputGUI($this->gLng->txt("gev_eff_analysis_insert_info"), self::F_RESULT_TEXT);
+		$ta->setDisabled($readonly);
 		$form->addItem($ta);
 
 		return $form;
@@ -188,5 +198,38 @@ class gevEffectivenessAnalysisGUI {
 		}
 
 		return null;
+	}
+
+	protected function getReadonly() {
+		if(isset($_GET["readonly"])) {
+			$val = $_GET["readonly"];
+			if($val == "read") {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	protected function setTabs() {
+		$back_link = $this->getBackLink();
+
+		if($back_link && $back_link != "") {
+			$this->gTabs->setBackTarget($this->gLng->txt("back"), $back_link);
+		}
+	}
+
+	protected function getBackLink() {
+		if(isset($_GET["back"])) {
+			$back = $_GET["back"];
+
+			if($back == "report") {
+				return "ilias.php?baseClass=gevDesktopGUI&cmd=toReportEffectivenessAnalysis";
+			} else if($back == "view") {
+				return "ilias.php?baseClass=gevDesktopGUI&cmd=toMyEffectivenessAnalysis";
+			}
+		}
+
+		return "";
 	}
 }
