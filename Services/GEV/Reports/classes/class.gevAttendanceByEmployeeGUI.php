@@ -68,7 +68,7 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 						->select("usrcrs.booking_status")
 						->select("usrcrs.participation_status")
 						->select("crs.begin_date")
-						->select("crs.end_date")
+						->select_raw("IF(crs.type = 'Online Training' AND usrcrs.participation_status = 'status_successful', usrcrs.end_date, crs.end_date) as end_date")
 						->left_join("hist_userorgu huo")
 							->on(" 	huo.usr_id = usr.user_id "
 								."	AND huo.hist_historic = 0"
