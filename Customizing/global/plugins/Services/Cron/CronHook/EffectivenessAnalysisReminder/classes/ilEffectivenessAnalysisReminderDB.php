@@ -72,19 +72,16 @@ class ilEffectivenessAnalysisReminderDB {
 	 *
 	 * @return bool
 	 */
-	public function shouldSendFirstReminder($crs_id, $type_first) {
+	public function getNumRowsOfSentFirstReminder($crs_id, $type_first) {
 		$query = "SELECT send\n"
 				." FROM ".self::TABLE_NAME."\n"
 				." WHERE crs_id = ".$this->db->quote($crs_id, "integer")."\n"
 				."     AND type = ".$this->db->quote($type_first, "text")."\n";
 
 		$result = $this->db->query($query);
+		return $this->db->numRows($result);
 
-		if($this->db->numRows($result) == 0) {
-			return true;
-		}
-
-		return false;
+		
 	}
 
 	/**
@@ -96,7 +93,7 @@ class ilEffectivenessAnalysisReminderDB {
 	 *
 	 * @return bool
 	 */
-	public function shouldSendSecondReminder($crs_id, $type_first, $type_second) {
+	public function getLastSendDates($crs_id, $type_first, $type_second) {
 		$query = "SELECT MAX(first.send) AS first_send, MAX(second.send) AS second_send\n"
 				." FROM ".self::TABLE_NAME." first\n"
 				." LEFT JOIN ".self::TABLE_NAME." second\n"
@@ -108,24 +105,6 @@ class ilEffectivenessAnalysisReminderDB {
 		$result = $this->db->query($query);
 		$row = $this->db->fetchAssoc($result);
 
-		if($row["first_send"] && !$row["second_send"]) {
-			$time = strtotime(date("Y-m-d"));
-			$time = $time - (15 * 24 * 60 * 60);
-			$next_send = date("Y-m-d", $time);
-
-			if($row["first_send"] <= $next_send) {
-				return true;
-			}
-		} else {
-			$time = strtotime(date("Y-m-d"));
-			$time = $time - (2 * 24 * 60 * 60);
-			$next_send = date("Y-m-d", $time);
-
-			if($row["second_send"] <= $next_send) {
-				return true;
-			}
-		}
-
-		return false;
+		return $row;
 	}
 }

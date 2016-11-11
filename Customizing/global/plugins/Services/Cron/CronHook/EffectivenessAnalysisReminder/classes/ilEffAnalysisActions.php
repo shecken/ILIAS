@@ -51,7 +51,13 @@ class ilEffAnalysisActions {
 	 * @return bool
 	 */
 	public function shouldSendFirstReminder($crs_id) {
-		return $this->db->shouldSendFirstReminder($crs_id, self::FIRST);
+		$row_count = $this->db->getNumRowsOfSentFirstReminder($crs_id, self::FIRST);
+
+		if($row_count == 0) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -62,7 +68,27 @@ class ilEffAnalysisActions {
 	 * @return bool
 	 */
 	public function shouldSendSecondReminder($crs_id) {
-		return $this->db->shouldSendSecondReminder($crs_id, self::FIRST, self::SECOND);
+		$row = $this->db->getLastSendDates($crs_id, self::FIRST, self::SECOND);
+
+		if($row["first_send"] && !$row["second_send"]) {
+			$time = strtotime(date("Y-m-d"));
+			$time = $time - (15 * 24 * 60 * 60);
+			$next_send = date("Y-m-d", $time);
+
+			if($row["first_send"] <= $next_send) {
+				return true;
+			}
+		} else {
+			$time = strtotime(date("Y-m-d"));
+			$time = $time - (2 * 24 * 60 * 60);
+			$next_send = date("Y-m-d", $time);
+
+			if($row["second_send"] <= $next_send) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
