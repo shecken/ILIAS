@@ -114,13 +114,23 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		
 		$unlimited = $a_set["max_participants"] == 0;
 
-		$booking_deadline_expired = $a_set["booking_date"] ? (date("Y-m-d") > $a_set["booking_date"]->get(IL_CAL_DATE)):false;
-		$bookable = !$booking_deadline_expired && ($a_set["free_places"] > 0 || $a_set["waiting_list_active"]);
-		
+		if($a_set["type"] == "Webinar") {
+			$booking_deadline = $a_set["schedule"][0];
+			$booking_deadline = explode("-", $booking_deadline);
+			$booking_deadline = $booking_deadline[0].":00";
+			$booking_deadline = strtotime($a_set["start_date"]->get(IL_CAL_DATE)." ".$booking_deadline) - (14 * 60);
+
+			$booking_deadline_expired = $booking_deadline < time();
+			$bookable = !$booking_deadline_expired && ($a_set["free_places"] > 0 || $a_set["waiting_list_active"]);
+		} else {
+			$booking_deadline_expired = $a_set["booking_date"] ? (date("Y-m-d") > $a_set["booking_date"]->get(IL_CAL_DATE)):false;
+			$bookable = !$booking_deadline_expired && ($a_set["free_places"] > 0 || $a_set["waiting_list_active"]);
+		}
+
 		$booking_action = '<a href="'.gevCourseUtils::getBookingLinkTo($a_set["obj_id"], $this->user_id).'">'.
 						  $this->book_img."</a>";
 		$contact_action = '<a href="mailto:'.$this->gSetting->get("admin_email").'">'.$this->email_img.'</a>';
-		
+
 		if (!$booking_deadline_expired && ($a_set["free_places"] > 0 || $unlimited)) {
 			$status = $this->bookable_img;
 			$action = $booking_action;

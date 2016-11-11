@@ -589,17 +589,20 @@ class gevUserUtils {
 				 "   AND cs.activation_end > ".time().
 				 "   AND oref.deleted IS NULL".
 				 "   AND is_template.value = ".$this->db->quote(gevSettings::NO, "text").
-				 "   AND (   ( (ltype.value = ".$this->db->quote(gevSettings::LIVE_TRAINING, "text").
-				 "              OR ltype.value = ".$this->db->quote(gevSettings::WEBINAR, "text").
-				 "              )".
+				 "   AND (".
+				 "         (ltype.value = ".$this->db->quote(gevSettings::LIVE_TRAINING, "text").
 				 "            AND start_date.value > ".$this->db->quote(date("Y-m-d"), "text").
-				 "		     )".
-				 "		  OR (".$this->db->in("ltype.value", array(gevSettings::ONLINE_TRAINING), false, "text").
-				 "			 )".
-				 "		 )".
+				 "         )".
+				 "         OR".
+				 "         (ltype.value = ".$this->db->quote(gevSettings::WEBINAR, "text").
+				 "            AND start_date.value >= ".$this->db->quote(date("Y-m-d"), "text").
+				 "         )".
+				 "         OR".
+				 "         (".$this->db->in("ltype.value", array(gevSettings::ONLINE_TRAINING), false, "text").
+				 "         )".
+				 "       )".
 				 $additional_where.
 				 "";
-				 
 
 		$res = $this->db->query($query);
 		
