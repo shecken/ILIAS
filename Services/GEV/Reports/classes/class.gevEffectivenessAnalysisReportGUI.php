@@ -100,6 +100,15 @@ public function __construct() {
 			$rec["result"] = $this->eff_analysis->getResultText($rec["result"]);
 		}
 
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "crs_id", $rec["crs_id"]);
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "user_id", $rec["user_id"]);
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "readonly", 1);
+		$rec["link"] = $this->ctrl->getLinkTargetByClass(array("gevMyEffectivenessAnalysisGUI", "gevEffectivenessAnalysisGUI"));
+		$rec["icon"] = '<img src="'.ilUtil::getImagePath("GEV_img/ico_eff_analysis.png").'" />';
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "crs_id", null);
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "user_id", null);
+		$this->ctrl->setParameterByClass("gevEffectivenessAnalysisGUI", "readonly", null);
+
 		return $rec;
 	}
 
