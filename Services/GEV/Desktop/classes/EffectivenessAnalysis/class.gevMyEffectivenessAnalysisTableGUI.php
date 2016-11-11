@@ -51,7 +51,7 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->gLng->txt("gev_eff_analysis_finished_at"), "finish_date");
 		$this->addColumn($this->gLng->txt("actions"), null);
 
-		$this->eff_analysis_icon = "";
+		$this->eff_analysis_icon = '<img src="'.ilUtil::getImagePath("GEV_img/ico_eff_analysis.png").'" />';
 
 		if(!$this->getOrderField()) {
 			$order = "title";
@@ -116,10 +116,14 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("CONTENT", $a_set["training_topics"]);
 
 		if($a_set["result"] != "-") {
-			$this->tpl->setVariable("ACTIONS", "");
+			$this->touchBlock("action_blanco");
 			$this->tpl->setVariable("RESULT", $this->eff_analysis->getResultText($a_set["result"]));
 		} else {
+			$this->tpl->setCurrentBlock("action_icon");
 			$this->tpl->setVariable("ACTIONS", $this->getAction($a_set["crs_id"], $a_set["user_id"]));
+			$this->tpl->setVariable("IMAGE", $this->eff_analysis_icon);
+			$this->tpl->parseCurrentBlock();
+			
 			$this->tpl->setVariable("RESULT", $a_set["result"]);
 		}
 	}
