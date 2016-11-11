@@ -3401,3 +3401,8 @@ $eff_analysis_db->createTable();
 	}
 }
 ?>
+
+<#107>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
