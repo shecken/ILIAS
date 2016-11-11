@@ -24,6 +24,15 @@ class ilEffAnalysisActions {
 	}
 
 	/**
+	 * Get distinct id's of all superiors
+	 */
+	public function getAllSuperiors() {
+		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
+		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+		return gevOrgUnitUtils::getAllSuperios(ilObjOrgUnit::getRootOrgRefId());
+	}
+
+	/**
 	 * Get open effective analysis
 	 *
 	 * @param int 	$user_id

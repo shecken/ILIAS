@@ -79,21 +79,25 @@ class ilEffectivenessAnalysisReminderJob extends ilCronJob {
 		$actions = $this->plugin->getActions();
 		$cron_result = new ilCronJobResult();
 
-		foreach($actions->getOpenEffectivenessAnalysis($this->gUser->getId()) as $crs_id => $superiors) {
-			$send_first = false;
+		$all_superiors = $actions->getAllSuperiors();
 
-			if($actions->shouldSendFirstReminder($crs_id)) {
-				$this->gLog->write("SEND FIRST REMINDER");
-				$actions->sendFirst($crs_id, $superiors);
-				$send_first = true;
-			}
-			ilCronManager::ping($this->getId());
+		foreach($all_superiors as $superior_id) {
+			foreach($actions->getOpenEffectivenessAnalysis($superior_id) as $crs_id => $superiors) {
+				$send_first = false;
 
-			if(!$send_first && $actions->shouldSendSecondReminder( $crs_id)) {
-				$this->gLog->write("SEND SECOND REMINDER");
-				$actions->sendSecond($crs_id, $superiors);
+				if($actions->shouldSendFirstReminder($crs_id)) {
+					$this->gLog->write("SEND FIRST REMINDER");
+					$actions->sendFirst($crs_id, $superiors);
+					$send_first = true;
+				}
+				ilCronManager::ping($this->getId());
+
+				if(!$send_first && $actions->shouldSendSecondReminder( $crs_id)) {
+					$this->gLog->write("SEND SECOND REMINDER");
+					$actions->sendSecond($crs_id, $superiors);
+				}
+				ilCronManager::ping($this->getId());
 			}
-			ilCronManager::ping($this->getId());
 		}
 
 		$cron_result->setStatus(ilCronJobResult::STATUS_OK);
