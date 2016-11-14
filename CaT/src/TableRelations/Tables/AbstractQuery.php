@@ -6,7 +6,7 @@ use CaT\Filter\Predicates as Predicates;
 use CaT\TableRelations\Graphs as Graphs;
 
 /**
- * An object representing quereis on a graph.
+ * An object representing queries on a graph.
  * Tables inside query may be iterated inside a 
  * foreach loop.
  */
