@@ -1,7 +1,7 @@
 <#1>
 <?php
 global $ilDB;
-require_once("Customizing/global/plugins/Services/Cron/CronHook/EffectivenessAnalysisReminder/classes/EffectivenessAnalysisReminderDB.php");
-$db = new EffectivenessAnalysisReminderDB($ilDB);
+require_once("Customizing/global/plugins/Services/Cron/CronHook/EffectivenessAnalysisReminder/classes/ilEffectivenessAnalysisReminderDB.php");
+$db = new ilEffectivenessAnalysisReminderDB($ilDB);
 $db->install();
 ?>
