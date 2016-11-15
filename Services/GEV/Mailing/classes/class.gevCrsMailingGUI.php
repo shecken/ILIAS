@@ -219,7 +219,7 @@ class gevCrsMailingGUI extends ilMailingGUI {
 		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 
 		$roles = gevCourseUtils::getCustomRoles($this->obj_id);
-		$ret = array($this->lng->txt("crs_member"));
+		$ret = array($this->lng->txt("crs_member"), $this->lng->txt("crs_tutor"));
 		
 		foreach($roles as $role) {
 			$ret[] = $role["title"];
