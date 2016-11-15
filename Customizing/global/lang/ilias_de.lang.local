@@ -15133,5 +15133,54 @@ gev#:#ts#:#Zeitpunkt
 gev#:#gev_warning_to_book_crs_self_because_period#:#Sie haben bereits ein oder mehrere andere Trainings im gleichen Zeitraum gebucht!
 gev#:#gev_warning_to_book_crs_for_others_because_period#:#Der Teilnehmer hat bereits ein oder mehrere andere Trainings im gleichen Zeitraum gebucht!
 gev#:#gev_crs#:#Training
+gev#:#gev_my_effectiveness_analysis#:#Meine Beurteilungen
 gev#:#to_superior#:#Vorgesetzte in CC
 gev#:#user_inactive#:#(AUSGESCHIEDEN)
+gev#:#gev_eff_analysis_lastname#:#Nachname
+gev#:#gev_eff_analysis_firstname#:#Vorname
+gev#:#gev_eff_analysis_email#:#Email
+gev#:#gev_eff_analysis_org_unit#:#Org.-Einheit
+gev#:#gev_eff_analysis_title#:#Training (Titel)
+gev#:#gev_eff_analysis_training_type#:#Trainingstyp
+gev#:#gev_eff_analysis_date#:#Datum
+gev#:#gev_eff_analysis_lang#:#Sprache
+gev#:#gev_eff_analysis_finished_at#:#Erledigt am
+gev#:#gev_eff_analysis_login#:#Benutzer
+gev#:#gev_eff_analysis_id#:#ID
+gev#:#gev_eff_analysis_city#:#Ort
+gev#:#gev_eff_analysis_target_group#:#Zielgruppe
+gev#:#gev_eff_analysis_objectives#:#Ziele und Nutzen
+gev#:#gev_eff_analysis_content#:#Inhalt
+gev#:#gev_eff_analysis_result_long#:#Beurteilung Schulungsmaßnahme durch Vorgesetzten für jeweiligen Mitarbeiter
+gev#:#gev_eff_analysis_show_finished#:#Auch bearbeitete anzeigen
+gev#:#gev_eff_analysis_org_unit#:#Org-Einheit
+gev#:#gev_eff_analysis_save#:#Ergebnis senden
+gev#:#gev_eff_analysis_user#:#Name des Mitarbeiters
+gev#:#gev_eff_analysis_department#:#Bereich / Abteilung
+gev#:#gev_eff_analysis_training#:#Training
+gev#:#gev_eff_analysis#:#Wirksamkeitsanalyse
+gev#:#gev_eff_analysis_result#:#Beurteilung
+gev#:#result_0#:#0 - Noch zu beurteilen
+gev#:#result_1#:#1 - Kein erkennbarer Lernerfolg
+gev#:#result_2#:#2 - Zeigt noch starke Schwächen
+gev#:#result_3#:#3 - Zeigt noch Schwächen
+gev#:#result_4#:#4 - Genügender Lernerfolg
+gev#:#result_5#:#5 - Guter Lernerfolg
+gev#:#result_6#:#6 - Sehr guter Lernerfolg
+gev#:#gev_eff_analysis_cancel#:#Abbrechen
+gev#:#gev_eff_analysis_confirm#:#Möchten Sie die Wirksamkeitsanalyse abschließen? Im Anschluss ist eine Bearbeitung nicht mehr möglich.
+gev#:#gev_eff_analysis_insert_info#:#Begründung
+gev#:#gev_eff_analysis_info_needed#:#Bitte geben Sie eine Begründung ein.
+gev#:#gev_eff_analysis_report#:#Wirksamkeitsanalyse
+gev#:#gev_eff_analysis_report_title#:#Wirksamkeitsanalyse
+gev#:#gev_eff_analysis_report_description#:# 
+gev#:#gev_eff_analysis_reason_for#:#Schulungsgrund
+gev#:#gev_eff_analysis_superior#:#Vorgesetzte
+gev#:#gev_eff_analysis_member#:#Teilnehmer
+gev#:#gev_eff_analysis_scheduled#:#Geplant für
+gev#:#gev_eff_analysis_status#:#Status
+gev#:#gev_eff_analysis_show_until#:#bis
+gev#:#gev_eff_analysis_rep_finished#:#Abgeschlossen
+gev#:#gev_eff_analysis_rep_open#:#Noch nicht abgeschlossen
+gev#:#gev_eff_analysis_report_details#:#Details
+gev#:#gev_eff_analysis_report_enter_result#:#Beurteilung abgeben

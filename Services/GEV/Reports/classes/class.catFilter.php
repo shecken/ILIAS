@@ -359,6 +359,14 @@ class catFilter {
 			throw new Exception("catFilter::checkNameExists: Name ".$a_name." already used.");
 		}
 	}
+
+	public function filterExists($name) {
+		if (array_key_exists($name, $this->filters)) {
+			return true;
+		}
+
+		return false;
+	}
 }
 
 
@@ -695,6 +703,7 @@ class catTextInputFilter {
 	// id
 	// label
 	// field(s)
+	// autocomplete (optional)
 	
 	public function checkConfig($a_conf) {
 		if (count($a_conf) < 4) {
@@ -714,6 +723,14 @@ class catTextInputFilter {
 		
 		$a_tpl->setVariable("VALUE", $a_pars);
 		$a_tpl->setVariable("OPTION_TITLE", $a_conf[2]);
+
+		if(isset($a_conf[4])) {
+			$a_tpl->setVariable("AUTOCOMPLETE", 'class="form-control ui-autocomplete-input"');
+			$a_tpl->setCurrentBlock("autocomplete");
+			$a_tpl->setVariable("POST_VAR_COM", $a_postvar);
+			$a_tpl->setVariable("REQUERST_LINK", $a_conf[4]);
+			$a_tpl->parseCurrentBlock();
+		}
 		
 		return true;
 	}

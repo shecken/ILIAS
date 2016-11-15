@@ -97,6 +97,9 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 
 		$is_trainer = $tep_permissions->isTutor();
 
+		$has_my_effectiveness_analysis = $this->userUtils->isSuperior();
+		$has_effectiveness_analysis_report = $this->userUtils->isAdmin() || $this->userUtils->isSuperior();
+
 		//get all OrgUnits of superior
 		$arr_org_units_of_superior = $this->userUtils->getOrgUnitsWhereUserIsDirectSuperior();
 		$arr_local_user_admin_links = array();
@@ -123,6 +126,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 				  "gev_my_courses" => array(true, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses",$this->lng->txt("gev_my_courses"))
 				, "gev_my_settings" => array(true, "ilias.php?baseClass=ilPersonalDesktopGUI&cmd=jumpToSettings",$this->lng->txt("gev_my_settings"))
 				, "gev_my_trainer_ap" => array($is_trainer, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAp",$this->lng->txt("gev_my_trainer_ap"))
+				, "gev_my_effectiveness_analysis" => array($has_my_effectiveness_analysis, "ilias.php?baseClass=gevDesktopGUI&cmd=toMyEffectivenessAnalysis",$this->lng->txt("gev_my_effectiveness_analysis"))
 				), $this->lng->txt("gev_me_menu"))
 			, "gev_others_menu" => array(false, $has_others_menu, array(
 				  "gev_employee_booking" => array($employee_booking, "ilias.php?baseClass=gevDesktopGUI&cmd=toEmployeeBookings",$this->lng->txt("gev_employee_booking"))
@@ -141,6 +145,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 				, "gev_report_employee_edu_bio" => array($report_permission_employee_edu_bio, "ilias.php?baseClass=gevDesktopGUI&cmd=toReportEmployeeEduBios",$this->lng->txt("gev_report_employee_edu_bios"))
 				, "gev_report_bookingbyvenue" => array($report_permission_bookingsbyvenue, "ilias.php?baseClass=gevDesktopGUI&cmd=toReportBookingsByVenue",$this->lng->txt("gev_report_bookingbyvenue"))
 				, "gev_report_wbd_edupoints" => array($report_permission_wbd, "ilias.php?baseClass=gevDesktopGUI&cmd=toReportWBDEdupoints",$this->lng->txt("gev_report_wbd_edupoints"))
+				, "gev_report_effectiveness_analysis" => array($has_effectiveness_analysis_report, "ilias.php?baseClass=gevDesktopGUI&cmd=toReportEffectivenessAnalysis",$this->lng->txt("gev_eff_analysis_report"))
 				), $this->lng->txt("gev_reporting_menu"))
 			, "gev_admin_menu" => array(false, $has_managment_menu, array(
 				  "gev_course_mgmt" => array($manage_courses, "goto.php?target=root_1",$this->lng->txt("gev_course_mgmt"))

@@ -395,6 +395,17 @@ class gevCourseUtils {
 		$val = ilDatePresentation::formatDate($d);
 		return $val;
 	}
+
+	public function getFormattedDate() {
+		$start = $this->getFormattedStartDate();
+		$end = $this->getFormattedEndDate();
+
+		if($start == $end) {
+			return $start;
+		}
+
+		return $start." - ".$end;
+	}
 	
 	public function setEndDate($a_date) {
 		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_END_DATE, $a_date);
@@ -507,6 +518,10 @@ class gevCourseUtils {
 	public function getEduProgramm() {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_EDU_PROGRAM);
 	}
+
+	public function getReasonForTraining() {
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_REASON_FOR_TRAINING);
+	}
 	
 	public function getTargetGroupDesc() {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_TARGET_GROUP_DESC);
@@ -516,6 +531,10 @@ class gevCourseUtils {
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_FEE);
 	}
 	
+	public function getLanguage() {
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_LANG);
+	}
+
 	public function getFormattedFee() {
 		$fee = $this->getFee();
 		if ($fee) {

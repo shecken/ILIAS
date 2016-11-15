@@ -3354,3 +3354,55 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "
 <?php
 $ilCtrlStructureReader->getStructure();
 ?>
+
+<#102>
+<?php
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::initPluginEnv();
+ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
+?>
+
+<#103>
+<?php
+if(!$ilDB->tableColumnExists('hist_course', 'reason_for_training')){
+	$ilDB->addTableColumn('hist_course', 'reason_for_training', array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => false
+		)
+	);
+}
+?>
+
+<#104>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+
+<#105>
+<?php
+require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysisDB.php");
+$eff_analysis_db = new gevEffectivenessAnalysisDB($ilDB);
+$eff_analysis_db->createTable();
+?>
+
+<#106>
+<?php
+	$fields = array("target_groups"=>array("type"=>"clob", "notnull"=>false)
+		, "training_number"=>array("type"=>"text", "length"=>64, "notnull"=>false)
+		, "objectives_benefits"=>array("type"=>"clob", "notnull"=>false)
+		, "training_topics"=>array("type"=>"clob", "notnull"=>false)
+		, "language"=>array("type"=>"text", "length"=>64, "notnull"=>false)
+	);
+
+	foreach ($fields as $name => $values) {
+		if(!$ilDB->tableColumnExists('hist_course', $name)){
+			$ilDB->addTableColumn('hist_course', $name, $values);
+	}
+}
+?>
+
+<#107>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>

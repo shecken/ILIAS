@@ -50,6 +50,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 						->column("custom_id", "gev_training_id")
 						->column("title", "title")
 						->column("type", "gev_learning_type")
+						->column("reason_for_training", "gev_eff_analysis_reason_for")
 						->column("date", "date", false, "112px")
 						->column("venue", "gev_location")
 						->column("provider", "gev_provider")
@@ -63,6 +64,7 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 						->select("crs.custom_id")
 						->select("crs.title")
 						->select("crs.type")
+						->select("crs.reason_for_training")
 						->select("usrcrs.begin_date")
 						->select("usrcrs.end_date")
 						->select("crs.venue")
@@ -242,7 +244,10 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 			$rec["link_open"] = "";
 			$rec["link_close"] = "";
 		}
-		
+
+		$reason_for_training = explode("-", $rec["reason_for_training"]);
+		$rec["reason_for_training"] = trim($reason_for_training[0]);
+
 		return $rec;
 	}
 
@@ -283,6 +288,9 @@ class gevEduBiographyGUI extends catBasicReportGUI {
 		}
 		
 		$rec["action"] = "";
+
+		$reason_for_training = explode("-", $rec["reason_for_training"]);
+		$rec["reason_for_training"] = trim($reason_for_training[0]);
 		
 		return $rec;
 	}

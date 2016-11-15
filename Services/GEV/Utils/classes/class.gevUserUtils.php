@@ -958,6 +958,18 @@ class gevUserUtils {
 			return gevOrgUnitUtils::getInstance($orgu_id)->getTitle();
 		}
 	}
+
+	public function getTitelOfAllOrgUnits() {
+		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php");
+		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+		$tree = ilObjOrgUnitTree::_getInstance();
+		foreach($tree->getOrgUnitOfUser($this->user_id) as $orgu) {
+			$obj_id = ilObject::_lookupObjId($orgu);
+			$ret[] = gevOrgUnitUtils::getInstance((int)$obj_id)->getTitle();
+		}
+
+		return $ret;
+	}
 	
 	public function getODTitle() {
 		$od = $this->getOD();
@@ -1340,6 +1352,27 @@ class gevUserUtils {
 		}
 		
 		$ids = $this->getOrgUnitsWhereUserIsSuperior();
+		foreach($ids as $key => $value) {
+			$ids[$key] = $ids[$key]["obj_id"];
+		}
+		
+		$res = $this->db->query( "SELECT title FROM object_data "
+								."WHERE ".$this->db->in("obj_id", $ids, false, "integer")
+								);
+		$this->superior_ou_names = array();
+		while ($rec = $this->db->fetchAssoc($res)) {
+			$this->superior_ou_names[] = $rec["title"];
+		}
+		
+		return $this->superior_ou_names;
+	}
+
+	public function getOrgUnitNamesWhereUserIsDirectSuperior() {
+		if ($this->superior_ou_names !== null) {
+			return $this->superior_ou_names;
+		}
+		
+		$ids = $this->getOrgUnitsWhereUserIsDirectSuperior();
 		foreach($ids as $key => $value) {
 			$ids[$key] = $ids[$key]["obj_id"];
 		}

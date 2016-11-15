@@ -479,6 +479,25 @@ class gevOrgUnitUtils {
 		}
 		return $ret;
 	}
+
+	static public function getSuperiorsIn($a_ref_ids) {
+		global $ilDB;
+
+		$res = $ilDB->query(
+			 "SELECT ua.usr_id"
+			."  FROM rbac_ua ua"
+			."  JOIN tree tr ON ".$ilDB->in("tr.parent", $a_ref_ids, false, "integer")
+			."  JOIN rbac_fa fa ON fa.parent = tr.child"
+			."  JOIN object_data od ON od.obj_id = fa.rol_id"
+			." WHERE ua.rol_id = fa.rol_id"
+			."   AND od.title LIKE 'il_orgu_superior_%'"
+			);
+		$ret = array();
+		while ($rec = $ilDB->fetchAssoc($res)) {
+			$ret[] = $rec["usr_id"];
+		}
+		return $ret;
+	}
 	
 	// Get all people in the org-unit that count as employees, that is the employees
 	// in the org-unit and all people in the org-units below.
@@ -486,6 +505,15 @@ class gevOrgUnitUtils {
 		$empls = self::getEmployeesIn(array($a_ref_id));
 		$sub_units = array_map(function($arr) {return $arr["ref_id"];}, self::getAllChildren(array($a_ref_id)));
 		$all = self::getAllPeopleIn($sub_units);
+		return array_unique(array_merge($empls, $all));
+	}
+
+	// Get all people in the org-unit that count as superior, that is the employees
+	// in the org-unit and all superiors in the org-units below.
+	static public function getAllSuperios($a_ref_id) {
+		$empls = self::getSuperiorsIn(array($a_ref_id));
+		$sub_units = array_map(function($arr) {return $arr["ref_id"];}, self::getAllChildren(array($a_ref_id)));
+		$all = self::getSuperiorsIn($sub_units);
 		return array_unique(array_merge($empls, $all));
 	}
 	

@@ -557,6 +557,14 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 	protected function getDefaultOccasion() {
 		return $this->getDescription();
 	}
+
+	protected function getTrainingOfficerMail() {
+		return gevCourseUtils::getInstance($this->crs_id)->getTrainingOfficerEMail();
+	}
+
+	protected function getTrainingOfficerName() {
+		return gevCourseUtils::getInstance($this->crs_id)->getTrainingOfficerName();
+	}
 }
 
 ?>

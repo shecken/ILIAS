@@ -144,11 +144,11 @@ class ilCourseHistorizingAppEventListener
 			'wbd_topic'							=> self::$ilCourseHistorizingHelper->getWBDTopicOf($parameter),
 			'edu_program'						=> self::$ilCourseHistorizingHelper->getEduProgramOf($parameter),
 			'is_online'							=> self::$ilCourseHistorizingHelper->isOnline($parameter)
-		
 		);
 
 		$deadline_data = self::$ilCourseHistorizingHelper->getDeadlineDataOf($parameter);
-		$data_payload = array_merge($data_payload, $deadline_data);
+		$crs_amd_data = self::$ilCourseHistorizingHelper->getAMDDataOf($parameter);
+		$data_payload = array_merge($data_payload, $deadline_data, $crs_amd_data);
 
 		return $data_payload;
 	}

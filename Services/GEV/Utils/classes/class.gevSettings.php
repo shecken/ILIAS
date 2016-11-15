@@ -72,7 +72,8 @@ class gevSettings {
 	const CRS_AMD_EDU_PROGRAM		= "crs_amd_edu_program";
 	// Sprache
 	const CRS_AMD_LANG				= "crs_amd_lang";
-
+	// Wirksamkeitsanalyse
+	const CRS_AMD_REASON_FOR_TRAINING = "crs_amd_reason_for_training";
 
 	// Zielgruppenbeschreibung
 	const CRS_AMD_TARGET_GROUP_DESC	= "crs_amd_target_group_desc";

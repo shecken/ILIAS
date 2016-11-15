@@ -25,7 +25,7 @@ class gevCrsAutoMails extends ilAutoMails {
 		, "superior_cancel_waiting_to_cancelled_without_costs" 	=> "gevSuperiorCancelWaitingToCancelledWithoutCosts"
 		, "admin_cancel_booked_to_cancelled_without_costs" 		=> "gevAdminCancelBookedToCancelledWithoutCosts"
 		, "admin_cancel_waiting_to_cancelled_without_costs" 	=> "gevAdminCancelWaitingToCancelledWithoutCosts"
-		, "participant_waiting_to_booked" 						=> "gevParticipantWaitingToBooked"		
+		, "participant_waiting_to_booked" 						=> "gevParticipantWaitingToBooked"
 
 		, "participant_successfull" 							=> "gevParticipantSuccessfull"
 		, "participant_absent_excused" 							=> "gevParticipantAbsentExcused"
@@ -40,6 +40,8 @@ class gevCrsAutoMails extends ilAutoMails {
 		, "invitation" 											=> "gevInvitation"
 		
 		, "waiting_list_cancelled"								=> "gevWaitingListCancelled"
+		, "eff_analysis_first_reminder"							=> "gevEffectivenessAnalysisFirstReminder"
+		, "eff_analysis_second_reminder"						=> "gevEffectivenessAnalysisSecondReminder"
 		);
 
 		parent::__construct($a_obj_id);

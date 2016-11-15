@@ -14801,5 +14801,54 @@ gev#:#gev_warning_to_book_crs_for_others_because_period#:#The participant has al
 gev#:#begin_date#:#Startdate
 gev#:#end_date#:#Enddate
 gev#:#gev_crs#:#Course
+gev#:#gev_my_effectiveness_analysis#:#My effectiveness analysis
 gev#:#to_superior#:#Superior in CC
 gev#:#user_inactive#:#(RETIRED)
+gev#:#gev_eff_analysis_lastname#:#Firstname
+gev#:#gev_eff_analysis_firstname#:#Lastname
+gev#:#gev_eff_analysis_email#:#Email
+gev#:#gev_eff_analysis_org_unit#:#Org.-Unit
+gev#:#gev_eff_analysis_title#:#Training (Titel)
+gev#:#gev_eff_analysis_training_type#:#Trainingtype
+gev#:#gev_eff_analysis_date#:#Date
+gev#:#gev_eff_analysis_lang#:#Language
+gev#:#gev_eff_analysis_finished_at#:#Finished date
+gev#:#gev_eff_analysis_login#:#User
+gev#:#gev_eff_analysis_id#:#ID
+gev#:#gev_eff_analysis_city#:#City
+gev#:#gev_eff_analysis_target_group#:#Target group
+gev#:#gev_eff_analysis_objectives#:#Objectives and benefits
+gev#:#gev_eff_analysis_content#:#Training Topics
+gev#:#gev_eff_analysis_result_long#:#Trainigfeedback from superior for each employee
+gev#:#gev_eff_analysis_show_finished#:#Show finished
+gev#:#gev_eff_analysis_org_unit#:#Org-Unit
+gev#:#gev_eff_analysis_save#:#Send result
+gev#:#gev_eff_analysis_user#:#Name of Member
+gev#:#gev_eff_analysis_department#:#Division / Department
+gev#:#gev_eff_analysis_training#:#Training
+gev#:#gev_eff_analysis#:#Effektiveness analysis
+gev#:#gev_eff_analysis_result#:#Feedback
+gev#:#result_0#:#0 - Noch zu beurteilen
+gev#:#result_1#:#1 - Kein erkennbarer Lernerfolg
+gev#:#result_2#:#2 - Zeigt noch starke Schwächen
+gev#:#result_3#:#3 - Zeigt noch Schwächen
+gev#:#result_4#:#4 - Genügender Lernerfolg
+gev#:#result_5#:#5 - Guter Lernerfolg
+gev#:#result_6#:#6 - Sehr guter Lernerfolg
+gev#:#gev_eff_analysis_cancel#:#Cancel
+gev#:#gev_eff_analysis_confirm#:#Möchten Sie die Wirksamkeitsanalyse abschließen? Im Anschluss ist eine Bearbeitung nicht mehr möglich.
+gev#:#gev_eff_analysis_insert_info#:#Reason
+gev#:#gev_eff_analysis_info_needed#:#Bitte geben Sie eine Begründung ein.
+gev#:#gev_eff_analysis_report#:#Effektiveness analysis
+gev#:#gev_eff_analysis_report_title#:#Effektiveness analysis
+gev#:#gev_eff_analysis_report_description#:# 
+gev#:#gev_eff_analysis_reason_for#:#Reason for training
+gev#:#gev_eff_analysis_superior#:#Superior
+gev#:#gev_eff_analysis_member#:#Participant
+gev#:#gev_eff_analysis_scheduled#:#Scheduled for
+gev#:#gev_eff_analysis_status#:#State
+gev#:#gev_eff_analysis_show_until#:#to
+gev#:#gev_eff_analysis_rep_finished#:#Finished
+gev#:#gev_eff_analysis_rep_open#:#Not finished
+gev#:#gev_eff_analysis_report_details#:#Details
+gev#:#gev_eff_analysis_report_enter_result#:#Send result
