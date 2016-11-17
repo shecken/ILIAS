@@ -278,7 +278,11 @@ class ilObjectAddNewItemGUI
 		});
 
 		foreach ($plugins as $key => $value) {
-			$this->sub_objects[] = $value;
+			//plugin visible in repo object creation list
+			$plugin_object = ilPlugin::getRepoPluginObjectByType($value["value"]);
+			if($plugin_object->useInRepoCreation()) {
+				$this->sub_objects[] = $value;
+			}
 		}
 		// gev patch end
 		return (bool)sizeof($this->sub_objects);

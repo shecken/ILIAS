@@ -7,3 +7,6 @@
 [submodule "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/BareContentView"]
 	path = Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/BareContentView
 	url = https://github.com/conceptsandtraining/BareContentView.git
+[submodule "Customizing/global/plugins/Services/Repository/RepositoryObject/ILIASSoapSSO"]
+	path = Customizing/global/plugins/Services/Repository/RepositoryObject/ILIASSoapSSO
+	url = https://github.com/conceptsandtraining/ILIASSoapSSO.git

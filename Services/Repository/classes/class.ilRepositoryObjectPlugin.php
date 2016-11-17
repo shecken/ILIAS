@@ -207,5 +207,16 @@ abstract class ilRepositoryObjectPlugin extends ilPlugin
 		$par_types = array("root", "cat", "crs", "grp", "fold");
 		return $par_types;
 	}
+
+	//gev-patch start
+	/**
+	 * get object should be visible in repo new object structure
+	 *
+	 * @return bool
+	 */
+	public function useInRepoCreation() {
+		return true;
+	}
+	//gev-patch end
 }
 ?>
