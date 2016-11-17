@@ -15158,7 +15158,7 @@ gev#:#gev_eff_analysis_save#:#Ergebnis senden
 gev#:#gev_eff_analysis_user#:#Name des Mitarbeiters
 gev#:#gev_eff_analysis_department#:#Bereich / Abteilung
 gev#:#gev_eff_analysis_training#:#Training
-gev#:#gev_eff_analysis#:#Wirksamkeitsanalyse
+gev#:#gev_eff_analysis#:#Beurteilung
 gev#:#gev_eff_analysis_result#:#Beurteilung
 gev#:#result_0#:#0 - Noch zu beurteilen
 gev#:#result_1#:#1 - Kein erkennbarer Lernerfolg
@@ -15168,11 +15168,11 @@ gev#:#result_4#:#4 - Genügender Lernerfolg
 gev#:#result_5#:#5 - Guter Lernerfolg
 gev#:#result_6#:#6 - Sehr guter Lernerfolg
 gev#:#gev_eff_analysis_cancel#:#Abbrechen
-gev#:#gev_eff_analysis_confirm#:#Möchten Sie die Wirksamkeitsanalyse abschließen? Im Anschluss ist eine Bearbeitung nicht mehr möglich.
+gev#:#gev_eff_analysis_confirm#:#Möchten Sie die Beurteilung abschließen? Im Anschluss ist eine Bearbeitung nicht mehr möglich.
 gev#:#gev_eff_analysis_insert_info#:#Begründung
 gev#:#gev_eff_analysis_info_needed#:#Bitte geben Sie eine Begründung ein.
-gev#:#gev_eff_analysis_report#:#Wirksamkeitsanalyse
-gev#:#gev_eff_analysis_report_title#:#Wirksamkeitsanalyse
+gev#:#gev_eff_analysis_report#:#Beurteilung
+gev#:#gev_eff_analysis_report_title#:#Beurteilung
 gev#:#gev_eff_analysis_report_description#:# 
 gev#:#gev_eff_analysis_reason_for#:#Schulungsgrund
 gev#:#gev_eff_analysis_superior#:#Vorgesetzte
