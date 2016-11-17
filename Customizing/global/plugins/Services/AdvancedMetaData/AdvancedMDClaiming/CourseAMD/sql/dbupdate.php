@@ -373,13 +373,13 @@ require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
 require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 
 gevAMDUtils::addAMDField( "Topic"
-						, "Reason for training"
+						, "Reasons for training"
 						, gevSettings::CRS_AMD_REASON_FOR_TRAINING
 						, null
 						, false
-						, array( "R - Rechtliche Anforderung, Pflichtschulung"
-							, "D - Maßnahmen aus Defizit"
-							, "PE - Personalentwicklung"
+						, array( "R/LR - Legal Requirements"
+							, "D/D - Resulting from Deficits"
+							, "PE/HRD - Human Resource Development"
 							, "O - Online Training"
 							)
 						, ilAdvancedMDFieldDefinition::TYPE_SELECT
