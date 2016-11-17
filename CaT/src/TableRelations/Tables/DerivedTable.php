@@ -5,7 +5,7 @@ use CaT\TableRelations\Graphs as Graphs;
 use CaT\Filter as Filters;
 
 /**
- * Table derived form space (~subselect)
+ * Table derived from space (~subselect).
  */
 class DerivedTable implements AbstractTable, Graphs\AbstractNode {
 	protected $space;

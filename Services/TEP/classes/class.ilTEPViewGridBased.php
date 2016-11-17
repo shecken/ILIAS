@@ -683,14 +683,14 @@ abstract class ilTEPViewGridBased extends ilTEPView
 			$crs_id = $a_entry["context_id"];
 			$crs_utils = gevCourseUtils::getInstance($crs_id);
 			
-			$actions = "";
+
 			if($crs_utils->isVirtualTraining() || $crs_utils->isPraesenztraining()) {
 				if($crs_utils->getVirtualClassLoginTutor()) {
-					$actions .= "VC Login: ".$crs_utils->getVirtualClassLoginTutor()."<br />";
+					$a_entry['description'] .= '<br>VC Login: '.$crs_utils->getVirtualClassLoginTutor();
 				}
 
 				if($crs_utils->getVirtualClassPasswordTutor()) {
-					$actions .= "VC Passwort: ".$crs_utils->getVirtualClassPasswordTutor()."<br /><br />";
+					$a_entry['description'] .= '<br>VC Passwort: '.$crs_utils->getVirtualClassPasswordTutor().'<br>';
 				}
 			}
 
@@ -787,7 +787,7 @@ abstract class ilTEPViewGridBased extends ilTEPView
 			$ilCtrl->setParameterByClass("ilTEPGUI", "crs_id", null);
 			$ilCtrl->setParameterByClass("ilTEPGUI", "obj_id", null);
 			if($sel_item_cnt > 0) {
-				$a_entry["description"] .= "<br /><br />".$select_list->getHTML();
+				$a_entry["description"] .= '<br>'.$select_list->getHTML();
 			}
 
 		}
