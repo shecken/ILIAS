@@ -22,6 +22,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	const CMD_PROPERTIES = "editProperties";
 	const CMD_SHOWCONTENT = "showContent";
 	const CMD_SUMMARY = "showSummary";
+	const CMD_AUTOCOMPLETE = "userfieldAutocomplete";
 
 	const TAB_SETTINGS = "tab_settings";
 	const TAB_OBSERVATIONS = "tab_observations";
@@ -99,6 +100,9 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 					case ilTalentAssessmentObservationsGUI::CMD_FINISH_TA:
 						$this->forwardObservations();
 						break;
+					case self::CMD_AUTOCOMPLETE:
+						$this->$cmd();
+						break;
 				}
 		}
 	}
@@ -123,8 +127,9 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 		$db = $this->plugin->getSettingsDB();
 		$career_goal_options = $db->getCareerGoalsOptions();
 		$venue_options = $db->getVenueOptions();
+		$autocomplete_link = $this->gCtrl->getLinkTarget($this, self::CMD_AUTOCOMPLETE, "", true);
 		$org_unit_options = $db->getOrgUnitOptions();
-		$this->addSettingsFormItems($form, $career_goal_options, $venue_options, $org_unit_options);
+		$this->addSettingsFormItems($form, $career_goal_options, $venue_options, $org_unit_options, $autocomplete_link);
 
 		return $form;
 	}
@@ -263,5 +268,18 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 		$info->addProperty($this->txt('end_time'), $end_time[1]);
 
 		return $info;
+	}
+
+	public function userfieldAutocomplete() {
+		include_once './Services/User/classes/class.ilUserAutoComplete.php';
+		$auto = new ilUserAutoComplete();
+		$auto->setSearchFields(array('login','firstname','lastname','email'));
+		$auto->enableFieldSearchableCheck(false);
+		if(($_REQUEST['fetchall']))
+		{
+			$auto->setLimit(ilUserAutoComplete::MAX_ENTRIES);
+		}
+		echo $auto->getList($_REQUEST['term']);
+		exit();
 	}
 }
