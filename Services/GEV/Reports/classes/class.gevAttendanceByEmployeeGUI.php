@@ -113,7 +113,7 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 						->compile()
 						;
 
-		require_once("Services/jQuery/classes/classes/class.iljQueryUtil.php");
+		require_once("Services/jQuery/classes/class.iljQueryUtil.php");
 		iljQueryUtil::initjQueryUI();
 	}
 

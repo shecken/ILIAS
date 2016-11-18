@@ -37,7 +37,7 @@ class gevMyEffectivenessAnalysisGUI {
 
 		$this->eff_analysis_icon = '<img src="'.ilUtil::getImagePath("GEV_img/ico_eff_analysis.png").'" />';
 
-		require_once("Services/jQuery/classes/classes/class.iljQueryUtil.php");
+		require_once("Services/jQuery/classes/class.iljQueryUtil.php");
 		iljQueryUtil::initjQueryUI();
 	}
 
