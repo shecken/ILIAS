@@ -116,7 +116,7 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 		$this->tpl->setVariable("CONTENT", $a_set["training_topics"]);
 
 		if($a_set["result"] != "-") {
-			$this->touchBlock("action_blanco");
+			$this->tpl->touchBlock("action_blanco");
 			$this->tpl->setVariable("RESULT", $this->eff_analysis->getResultText($a_set["result"]));
 		} else {
 			$this->tpl->setCurrentBlock("action_icon");
