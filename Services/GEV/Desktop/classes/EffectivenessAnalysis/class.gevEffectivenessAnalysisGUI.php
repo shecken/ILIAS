@@ -155,8 +155,10 @@ class gevEffectivenessAnalysisGUI {
 		$values[self::F_USER_ID] = $user_utils->getId();
 		$values[self::F_CRS_ID] = $crs_utils->getId();
 
-		$values[self::F_RESULT] = $this->getResult();
-		$values[self::F_RESULT_TEXT] = $this->getResultText();
+		$result = $this->getResultData($crs_utils->getId(), $user_utils->getId());
+
+		$values[self::F_RESULT] = $result["result"];
+		$values[self::F_RESULT_TEXT] = $result["info"];
 
 		return $values;
 	}
@@ -185,22 +187,6 @@ class gevEffectivenessAnalysisGUI {
 		}
 	}
 
-	protected function getResult() {
-		if(isset($_POST[self::F_RESULT])) {
-			return (int)$_POST[self::F_RESULT];
-		}
-
-		return null;
-	}
-
-	protected function getResultText() {
-		if(isset($_POST[self::F_RESULT_TEXT])) {
-			return $_POST[self::F_RESULT_TEXT];
-		}
-
-		return null;
-	}
-
 	protected function getReadonly() {
 		var_dump($_GET);
 		if(isset($_GET["readonly"])) {
@@ -211,6 +197,10 @@ class gevEffectivenessAnalysisGUI {
 		}
 
 		return false;
+	}
+
+	protected function getResultData($crs_id, $user_id) {
+		return $this->eff_analysis->getResultDataFor($crs_id, $user_id);
 	}
 
 	protected function setTabs() {

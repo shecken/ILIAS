@@ -563,4 +563,8 @@ class gevEffectivenessAnalysis {
 		echo $auto->getList($_REQUEST['term']);
 		exit();
 	}
+
+	public function getResultDataFor($crs_id, $user_id) {
+		return $this->eff_analysis_db->getResultData($crs_id, $user_id);
+	}
 }
