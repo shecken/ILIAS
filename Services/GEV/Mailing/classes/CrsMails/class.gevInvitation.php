@@ -21,7 +21,7 @@ class gevInvitation extends gevCrsAutoMail {
 	}
 
 	public function getTitle() {
-		return "Invitation Participant";
+		return "Invitation";
 	}
 
 	public function getDescription() {
@@ -54,7 +54,7 @@ class gevInvitation extends gevCrsAutoMail {
 	}
 
 	public function getRecipientUserIDs() {
-		return array_merge($this->getCourseParticipants(), $this->getCourseSpecialMembers());
+		return array_merge($this->getCourseParticipants(), $this->getCourseTrainers(), $this->getCourseSpecialMembers());
 	}
 
 	public function getRecipientAddresses() {
