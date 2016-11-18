@@ -303,4 +303,24 @@ class gevEffectivenessAnalysisDB {
 
 		return $where;
 	}
+
+	/**
+	 * Get reuslt data for crs and user
+	 *
+	 * @param int 		$crs_id
+	 * @param int 		$user_id
+	 *
+	 * @return string[]
+	 */
+	public function getResultData($crs_id, $user_id) {
+		$query = "SELECT result, info\n"
+				." FROM eff_analysis\n"
+				." WHERE crs_id = ".$this->gDB->quote($crs_id, "integer")."\n"
+				."     AND user_id = ".$this->gDB->quote($user_id, "integer");
+
+		$res = $this->gDB->query($query);
+		$row = $this->gDB->fetchAssoc($res);
+
+		return $row;
+	}
 }
