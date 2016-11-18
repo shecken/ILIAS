@@ -112,9 +112,6 @@ class gevAttendanceByEmployeeGUI extends catBasicReportGUI{
 						->action($this->ctrl->getLinkTarget($this, "view"))
 						->compile()
 						;
-
-		require_once("Services/jQuery/classes/class.iljQueryUtil.php");
-		iljQueryUtil::initjQueryUI();
 	}
 
 	
