@@ -48,6 +48,10 @@ public function __construct() {
 		$this->filter = $this->eff_analysis->getReportFilter();
 		$this->filter->action($this->ctrl->getLinkTarget($this, "view"))
 					 ->compile();
+
+
+		require_once("Services/jQuery/classes/class.iljQueryUtil.php");
+		iljQueryUtil::initjQueryUI();
 	}
 
 	public function executeCommand() {
