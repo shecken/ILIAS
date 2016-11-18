@@ -85,16 +85,16 @@ class ilEffectivenessAnalysisReminderJob extends ilCronJob {
 			foreach($actions->getOpenEffectivenessAnalysis($superior_id) as $crs_id) {
 				$send_first = false;
 
-				if($actions->shouldSendFirstReminder($crs_id)) {
+				if($actions->shouldSendFirstReminder($crs_id, $superior_id)) {
 					$this->gLog->write("SEND FIRST REMINDER");
-					$actions->sendFirst($crs_id, $superior_id);
+					$actions->sendFirst($crs_id, array($superior_id));
 					$send_first = true;
 				}
 				ilCronManager::ping($this->getId());
 
-				if(!$send_first && $actions->shouldSendSecondReminder( $crs_id)) {
+				if(!$send_first && $actions->shouldSendSecondReminder($crs_id, $superior_id)) {
 					$this->gLog->write("SEND SECOND REMINDER");
-					$actions->sendSecond($crs_id, $superior_id);
+					$actions->sendSecond($crs_id, array($superior_id));
 				}
 				ilCronManager::ping($this->getId());
 			}
