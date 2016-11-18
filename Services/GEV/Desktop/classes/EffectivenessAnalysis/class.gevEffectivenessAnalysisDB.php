@@ -152,11 +152,10 @@ class gevEffectivenessAnalysisDB {
 	}
 
 	public function getEffectivenessAnalysisOpen($employees, array $reason_for_eff_analysis, array $filter) {
-		$query = "SELECT GROUP_CONCAT(DISTINCT husr2.user_id SEPARATOR ':') AS superiors\n"
-				.", hcrs.crs_id\n"
+		$query = "SELECT hcrs.crs_id\n"
 				.", CASE hcrs.type\n"
-				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (105 * 24 * 60 * 60)), '%Y-%b-%e')\n"
-				."      ELSE DATE_ADD(hcrs.end_date, INTERVAL 105 DAY)\n"
+				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (90 * 24 * 60 * 60)), '%Y-%b-%e')\n"
+				."      ELSE DATE_ADD(hcrs.end_date, INTERVAL 90 DAY)\n"
 				."  END AS scheduled\n";
 		$query .= $this->getSelectBase($employees, $reason_for_eff_analysis);
 		$query .= $this->getWhereByFilter($filter);
@@ -165,20 +164,7 @@ class gevEffectivenessAnalysisDB {
 
 		$res = $this->gDB->query($query);
 		while($row = $this->gDB->fetchAssoc($res)) {
-			foreach($row as $key => $value) {
-				if($value == self::EMPTY_DATE || $value == self::EMPTY_TEXT || $value === null) {
-					$row[$key] = "-";
-				}
-			}
-
-			$sups = explode(":", $row["superiors"]);
-			$crs_id = $row["crs_id"];
-
-			if(array_key_exists($crs_id, $ret)) {
-				$ret[$row["crs_id"]] = array_unique(array_merge($ret[$row["crs_id"]], $sups));
-			} else {
-				$ret[$row["crs_id"]] = $sups;
-			}
+			$ret[] = $row["crs_id"];
 		}
 
 		return $ret;

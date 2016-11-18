@@ -47,11 +47,12 @@ class ilEffAnalysisActions {
 	 * Should send first reminder
 	 *
 	 * @param int 		$crs_id
+	 * @param int 		$superior_id
 	 *
 	 * @return bool
 	 */
-	public function shouldSendFirstReminder($crs_id) {
-		$row_count = $this->db->getNumRowsOfSentFirstReminder($crs_id, self::FIRST);
+	public function shouldSendFirstReminder($crs_id, $superior_id) {
+		$row_count = $this->db->getNumRowsOfSentFirstReminder($crs_id, $superior_id, self::FIRST);
 
 		if($row_count == 0) {
 			return true;
@@ -64,11 +65,12 @@ class ilEffAnalysisActions {
 	 * Should send secon reminder
 	 *
 	 * @param int 		$crs_id
+	 * @param int 		$superior_id
 	 *
 	 * @return bool
 	 */
-	public function shouldSendSecondReminder($crs_id) {
-		$row = $this->db->getLastSendDates($crs_id, self::FIRST, self::SECOND);
+	public function shouldSendSecondReminder($crs_id, $superior_id) {
+		$row = $this->db->getLastSendDates($crs_id, $superior_id, self::FIRST, self::SECOND);
 
 		if($row["first_send"] && !$row["second_send"]) {
 			$time = strtotime(date("Y-m-d"));
@@ -99,7 +101,7 @@ class ilEffAnalysisActions {
 	 */
 	public function sendFirst($crs_id, array $superiors) {
 		$this->send($crs_id, $superiors, self::FIRST_KEY);
-		$this->db->reminderSend($crs_id, self::FIRST);
+		$this->db->reminderSend($crs_id, $superiors[0], self::FIRST);
 	}
 
 	/**
@@ -110,7 +112,7 @@ class ilEffAnalysisActions {
 	 */
 	public function sendSecond($crs_id, array $superiors) {
 		$this->send($crs_id, $superiors, self::SECOND_KEY);
-		$this->db->reminderSend($crs_id, self::SECOND);
+		$this->db->reminderSend($crs_id, $superiors[0], self::SECOND);
 	}
 
 	/**

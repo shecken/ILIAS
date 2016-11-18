@@ -202,14 +202,15 @@ class gevEffectivenessAnalysisGUI {
 	}
 
 	protected function getReadonly() {
+		var_dump($_GET);
 		if(isset($_GET["readonly"])) {
 			$val = $_GET["readonly"];
-			if($val == "read") {
-				return false;
+			if($val == "readonly") {
+				return true;
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	protected function setTabs() {
