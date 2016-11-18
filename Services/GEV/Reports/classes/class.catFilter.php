@@ -468,8 +468,11 @@ class catDatePeriodFilterType {
 				  ."        OR ".catFilter::quoteDBId($a_conf[5])." = '0000-00-00' "
 				  ."        OR ".catFilter::quoteDBId($a_conf[5])." = '-empty-'"
 				  ."    )"
-				  ."   AND ".catFilter::quoteDBId($a_conf[4])
+				  ."   AND (".catFilter::quoteDBId($a_conf[4])
 				  			." <= ".$ilDB->quote($a_pars["end"], "date")
+				  ."           AND ".catFilter::quoteDBId($a_conf[4])." != '-empty-'"
+				  ."           AND ".catFilter::quoteDBId($a_conf[4])." != '0000-00-00'"
+				  ."       )"
 				  ."  )"
 				  .$a_conf[9]
 				  .")"
