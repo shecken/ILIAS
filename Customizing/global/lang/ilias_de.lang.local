@@ -15173,7 +15173,7 @@ gev#:#gev_eff_analysis_insert_info#:#Begründung
 gev#:#gev_eff_analysis_info_needed#:#Bitte geben Sie eine Begründung ein.
 gev#:#gev_eff_analysis_report#:#Beurteilung
 gev#:#gev_eff_analysis_report_title#:#Beurteilung
-gev#:#gev_eff_analysis_report_description#:# 
+gev#:#gev_eff_analysis_report_description#:#Hier sehen Sie alle offenen und abgeschlossenen Beurteilungen.
 gev#:#gev_eff_analysis_reason_for#:#Schulungsgrund
 gev#:#gev_eff_analysis_superior#:#Vorgesetzte
 gev#:#gev_eff_analysis_member#:#Teilnehmer
@@ -15184,3 +15184,4 @@ gev#:#gev_eff_analysis_rep_finished#:#Abgeschlossen
 gev#:#gev_eff_analysis_rep_open#:#Noch nicht abgeschlossen
 gev#:#gev_eff_analysis_report_details#:#Details
 gev#:#gev_eff_analysis_report_enter_result#:#Beurteilung abgeben
+gev#:#gev_eff_analysis_info#:#Begründung
