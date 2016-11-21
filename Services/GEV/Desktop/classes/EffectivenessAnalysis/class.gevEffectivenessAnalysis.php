@@ -33,7 +33,7 @@ class gevEffectivenessAnalysis {
 	/**
 	 * @var string[]
 	 */
-	static $reason_for_eff_analysis = array("D - Maßnahmen aus Defizit", "R - Rechtliche Anforderung, Pflichtschulung");
+	static $reason_for_eff_analysis = array("D/D - Resulting from Deficits", "R/LR - Legal Requirements");
 
 	/**
 	 * @var gevEffectivenessAnalysisDB
