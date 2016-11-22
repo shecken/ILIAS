@@ -127,8 +127,7 @@ class gevEffectivenessAnalysisGUI {
 		$form->addItem($hi);
 
 		$si = new ilSelectInputGUI($this->gLng->txt("gev_eff_analysis_result"), self::F_RESULT);
-		$options = array(null=>"-") + $this->getResultOptions();
-		$si->setOptions($options);
+		$si->setOptions($this->getResultOptions());
 		$si->setRequired(true);
 		$si->setDisabled($readonly);
 		$form->addItem($si);
