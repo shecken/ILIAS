@@ -281,7 +281,7 @@ class gevEffectivenessAnalysisDB {
 		}
 
 		if(isset($filter[gevEffectivenessAnalysis::F_RESULT]) && $filter[gevEffectivenessAnalysis::F_RESULT] != "") {
-			$where .= "     AND effa.result = ".$this->gDB->quote($filter[gevEffectivenessAnalysis::F_RESULT], "integer")."\n";
+			$where .= "     AND ".$this->gDB->in("effa.result", $filter[gevEffectivenessAnalysis::F_RESULT], false,  "integer")."\n";
 		}
 
 		if(isset($filter[gevEffectivenessAnalysis::F_STATUS]) && !empty($filter[gevEffectivenessAnalysis::F_STATUS])) {
