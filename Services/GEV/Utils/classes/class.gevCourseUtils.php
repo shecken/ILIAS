@@ -1658,7 +1658,7 @@ class gevCourseUtils {
 		$mails = new gevCrsAutoMails($this->crs_id);
 		
 		// Cancel participants
-		$this->cleanWaitingList(true);
+		$this->cleanWaitingList(false);
 		
 		$participants = $this->getParticipants();
 		foreach($participants as $participant) {
