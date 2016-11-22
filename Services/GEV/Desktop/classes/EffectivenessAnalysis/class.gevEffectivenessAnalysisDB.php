@@ -38,7 +38,7 @@ class gevEffectivenessAnalysisDB {
 				),
 				'info' => array(
 					'type' => 'clob',
-					'notnull' => true
+					'notnull' => false
 				),
 				'finish_date' => array(
 					'type' => 'date',
