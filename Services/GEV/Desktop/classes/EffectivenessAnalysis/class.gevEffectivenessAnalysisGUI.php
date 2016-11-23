@@ -133,6 +133,7 @@ class gevEffectivenessAnalysisGUI {
 		$form->addItem($si);
 
 		$ta = new ilTextAreaInputGUI($this->gLng->txt("gev_eff_analysis_insert_info"), self::F_RESULT_TEXT);
+		$ta->setRequired(true);
 		$ta->setDisabled($readonly);
 		$form->addItem($ta);
 
