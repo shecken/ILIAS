@@ -41,11 +41,12 @@ class gevEffectivenessAnalysis {
 	protected $eff_analysis_db;
 
 	public function __construct() {
-		global $ilCtrl, $lng, $ilDB;
+		global $ilCtrl, $lng, $ilDB, $ilUser;
 
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gDB = $ilDB;
+		$this->gUser = $ilUser;
 
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysisDB.php");
 		$this->eff_analysis_db = new gevEffectivenessAnalysisDB($ilDB);
@@ -220,31 +221,26 @@ class gevEffectivenessAnalysis {
 	}
 
 	/**
-	 * Get all orgunit titles where user is direct superior
-	 *
-	 * @param int $user_id
-	 *
-	 * @return sting[]
-	 */
-	protected function getOrgunitTitlesOf($user_id) {
-		$user_utils = gevUserUtils::getInstance($user_id);
-		return $user_utils->getOrgUnitNamesWhereUserIsDirectSuperior();
-
-	}
-
-	/**
 	 * Get titles of all existing orguntis
 	 *
 	 * @return string[]
 	 */
-	public function getOrgunitTitles() {
-		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
-		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
-		$orgus = gevOrgUnitUtils::getAllChildren(array(ilObjOrgUnit::getRootOrgRefId()));
-		$orgus = array_map(function($orgu) {
-			require_once("Services/Object/classes/class.ilObject.php");
-			return ilObject::_lookupTitle($orgu["obj_id"]);
-		}, $orgus);
+	public function getOrgunitTitles($user_id) {
+		$user_utils = gevUserUtils::getInstance($user_id);
+
+		$orgus = array();
+
+		if($user_utils->isAdmin()) {
+			require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
+			require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+			$orgus = gevOrgUnitUtils::getAllChildren(array(ilObjOrgUnit::getRootOrgRefId()));
+			$orgus = array_map(function($orgu) {
+				require_once("Services/Object/classes/class.ilObject.php");
+				return ilObject::_lookupTitle($orgu["obj_id"]);
+			}, $orgus);
+		} else {
+			$orgus = $user_utils->getOrgUnitNamesWhereUserIsDirectSuperior();
+		}
 
 		return $orgus;
 	}
@@ -333,7 +329,7 @@ class gevEffectivenessAnalysis {
 						->multiselect(self::F_ORG_UNIT
 									 , $this->gLng->txt("gev_eff_analysis_org_unit")
 									 , null
-									 , $this->getOrgunitTitles()
+									 , $this->getOrgunitTitles($this->gUser->getId())
 									 , array()
 									 )
 						->textinput(self::F_TITLE
@@ -370,7 +366,7 @@ class gevEffectivenessAnalysis {
 						->multiselect(self::F_ORG_UNIT
 									 , $this->gLng->txt("gev_eff_analysis_org_unit")
 									 , null
-									 , $this->getOrgunitTitles()
+									 , $this->getOrgunitTitles($this->gUser->getId())
 									 , array()
 									 )
 						->multiselect(self::F_RESULT
