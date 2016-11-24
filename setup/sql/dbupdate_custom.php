@@ -5634,12 +5634,11 @@ if (! $ilDB->sequenceExists('prg_translations')) {
 <#233>
 <?php
 include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
-
 $parent_types = array('root', 'cat', 'prg');
 ilDBUpdateNewObjectType::addRBACCreate('create_prg', 'Create Study Programme', $parent_types);
 ?>
 
-#234>
+<#234>
 <?php
 	include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
 	$obj_type_id = ilDBUpdateNewObjectType::getObjectTypeId("prg");
@@ -5649,21 +5648,22 @@ ilDBUpdateNewObjectType::addRBACCreate('create_prg', 'Create Study Programme', $
 		ilDBUpdateNewObjectType::addRBACOperation($obj_type_id, $op_id);
 	}
 ?>
+
 <#235>
 <?php
 include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
 
 $type_id = ilDBUpdateNewObjectType::getObjectTypeId('prg');
 $new_ops_id = ilDBUpdateNewObjectType::addCustomRBACOperation('manage_members', 'Manage Members', 'object', 2400);
+
 if($type_id && $new_ops_id)
 {
 	ilDBUpdateNewObjectType::addRBACOperation($type_id, $new_ops_id);
 }
 ?>
+
 <#236>
 <?php
-	include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
-	$src_ops_id = ilDBUpdateNewObjectType::getCustomRBACOperationId('write');
-	$tgt_ops_id = ilDBUpdateNewObjectType::getCustomRBACOperationId('manage_members');
-	ilDBUpdateNewObjectType::cloneOperation('prg', $src_ops_id, $tgt_ops_id);
+
+	$ilCtrlStructureReader->getStructure();
 ?>
