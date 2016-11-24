@@ -653,10 +653,8 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI {
 	 * @param string $a_target
 	 */
 	public static function _goto($a_target) {
-		global $DIC;
-		$ilAccess = $DIC['ilAccess'];
-		$ilErr = $DIC['ilErr'];
-		$ilCtrl = $DIC['ilCtrl'];
+		global $ilAccess, $ilErr, $ilCtrl;
+
 		$id = explode("_", $a_target);
 		$ilCtrl->setTargetScript("ilias.php");
 		$ilCtrl->initBaseClass("ilRepositoryGUI");
@@ -666,8 +664,7 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI {
 	}
 
 	public function addToNavigationHistory(){
-		global $DIC;
-		$ilNavigationHistory = $DIC['ilNavigationHistory'];
+		global $ilNavigationHistory;
 		
 		if(!$this->getCreationMode() &&
 			$this->ilAccess->checkAccess('read', '', $_GET['ref_id']))
