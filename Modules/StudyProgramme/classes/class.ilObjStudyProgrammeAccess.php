@@ -60,7 +60,7 @@ class ilObjStudyProgrammeAccess extends ilObjectAccess {
 	 *        array('permission' => 'write', 'cmd' => 'edit', 'lang_var' => 'edit'),
 	 *    );
 	 */
-	static function _getCommands()
+	public function _getCommands()
 	{
 		$commands = array();
 		$commands[] = array('permission' => 'read', 'cmd' => 'view', 'lang_var' => 'show', 'default' => true);
@@ -73,7 +73,7 @@ class ilObjStudyProgrammeAccess extends ilObjectAccess {
 	/**
 	 * check whether goto script will succeed
 	 */
-	static function _checkGoto($a_target)
+	public function _checkGoto($a_target)
 	{
 		global $DIC;
 		$ilAccess = $DIC['ilAccess'];
