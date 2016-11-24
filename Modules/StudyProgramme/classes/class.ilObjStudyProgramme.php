@@ -1,7 +1,6 @@
 <?php
 
 /* Copyright (c) 2015 Richard Klees <richard.klees@concepts-and-training.de> Extended GPL, see docs/LICENSE */
-
 require_once("./Services/Container/classes/class.ilContainer.php");
 require_once('./Services/Container/classes/class.ilContainerSorting.php');
 require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgramme.php");
@@ -9,6 +8,7 @@ require_once("./Modules/StudyProgramme/classes/class.ilObjectFactoryWrapper.php"
 require_once("./Modules/StudyProgramme/classes/interfaces/interface.ilStudyProgrammeLeaf.php");
 require_once("./Modules/StudyProgramme/classes/exceptions/class.ilStudyProgrammeTreeException.php");
 require_once("./Modules/StudyProgramme/classes/class.ilObjStudyProgrammeCache.php");
+require_once("./Services/AdvancedMetaData/classes/class.ilAdvancedMDRecord.php");
 
 /**
  * Class ilObjStudyProgramme
