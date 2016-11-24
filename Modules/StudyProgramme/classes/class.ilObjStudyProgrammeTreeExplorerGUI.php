@@ -3,7 +3,6 @@
 require_once("./Services/UIComponent/Explorer2/classes/class.ilTreeExplorerGUI.php");
 require_once("./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php");
 require_once("./Services/UIComponent/Glyph/classes/class.ilGlyphGUI.php");
-require_once("./Services/UIComponent/Button/classes/class.ilLinkButton.php");
 require_once("./Modules/StudyProgramme/classes/class.ilObjStudyProgrammeSettingsGUI.php");
 /**
  * Class ilStudyProgrammeTreeGUI
