@@ -75,8 +75,7 @@ class ilStudyProgrammeTypeTranslation extends ActiveRecord {
 	}
 
     public function __construct($primary_key=0, $a_lang_code='') {
-        global $DIC;
-        $ilLog = $DIC['ilLog'];
+        global $ilLog;
         $this->log = $ilLog;
 
 	    parent::__construct($primary_key);

@@ -162,8 +162,7 @@ class ilStudyProgrammeUserProgress {
 	 * Get a user readable representation of a status.
 	 */
 	static public function statusToRepr($a_status) {
-		global $DIC;
-		$lng = $DIC['lng'];
+		global $lng;
 		$lng->loadLanguageModule("prg");
 		
 		if ($a_status == ilStudyProgrammeProgress::STATUS_IN_PROGRESS) {

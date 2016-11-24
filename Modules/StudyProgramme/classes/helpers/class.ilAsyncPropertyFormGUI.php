@@ -56,8 +56,7 @@ class ilAsyncPropertyFormGUI extends ilPropertyFormGUI {
 	 * @param null $js_base_path
 	 */
 	public static function addJavaScript($add_form_loader = false, $js_base_path = null) {
-		global $DIC;
-		$tpl = $DIC['tpl'];
+		global $tpl;
 
 		$js_path = (isset($js_base_path))? $js_base_path : self::$js_path;
 
@@ -121,8 +120,7 @@ class ilAsyncPropertyFormGUI extends ilPropertyFormGUI {
 	 * @return string
 	 */
 	public static function getErrorMessageTemplate() {
-		global $DIC;
-		$lng = $DIC['lng'];
+		global $lng;
 
 		$tpl = new ilTemplate("tpl.property_form.html", true, true, "Services/Form");
 
@@ -175,8 +173,7 @@ class ilAsyncPropertyFormGUI extends ilPropertyFormGUI {
 	 * @param $content
 	 */
 	protected static function addOnLoadCode($id, $content) {
-		global $DIC;
-		$tpl = $DIC['tpl'];
+		global $tpl;
 
 		if(!isset(self::$js_on_load_added[$id])) {
 			$tpl->addOnLoadCode($content);

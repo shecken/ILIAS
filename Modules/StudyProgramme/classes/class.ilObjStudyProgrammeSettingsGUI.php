@@ -62,16 +62,7 @@ class ilObjStudyProgrammeSettingsGUI {
 	protected $tmp_heading;
 
 	public function __construct($a_parent_gui, $a_ref_id) {
-		global $DIC;
-		$tpl = $DIC['tpl'];
-		$ilCtrl = $DIC['ilCtrl'];
-		$ilAccess = $DIC['ilAccess'];
-		$ilToolbar = $DIC['ilToolbar'];
-		$ilLocator = $DIC['ilLocator'];
-		$tree = $DIC['tree'];
-		$lng = $DIC['lng'];
-		$ilLog = $DIC['ilLog'];
-		$ilias = $DIC['ilias'];
+		global $tpl, $ilCtrl, $ilAccess, $ilToolbar, $ilLocator, $tree, $lng, $ilLog, $ilias;
 
 		$this->parent_gui = $a_parent_gui;
 		$this->ref_id = $a_ref_id;
@@ -280,8 +271,7 @@ class ilObjStudyProgrammeSettingsGUI {
 	}
 	
 	static protected function getStatusOptions() {
-		global $DIC;
-		$lng = $DIC['lng'];
+		global $lng;
 		
 		return array( ilStudyProgramme::STATUS_DRAFT 
 						=> $lng->txt("prg_status_draft")

@@ -44,8 +44,7 @@ class ilStudyProgrammeLeafMock extends ilObject2 implements ilStudyProgrammeLeaf
 	
 	// Mark this leaf as completed for a user.
 	public function markCompletedFor($a_user_id) {
-		global $DIC;
-		$ilAppEventHandler = $DIC['ilAppEventHandler'];
+		global $ilAppEventHandler;
 
 		$ilAppEventHandler->raise("Services/Tracking", "updateStatus", array(
 			"obj_id" => $this->getId(),

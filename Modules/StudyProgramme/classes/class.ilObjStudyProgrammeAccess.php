@@ -75,8 +75,8 @@ class ilObjStudyProgrammeAccess extends ilObjectAccess {
 	 */
 	public function _checkGoto($a_target)
 	{
-		global $DIC;
-		$ilAccess = $DIC['ilAccess'];
+		global $ilAccess;
+
 		$t_arr = explode('_', $a_target);
 		if ($t_arr[0] != 'prg' || ((int)$t_arr[1]) <= 0) {
 			return false;

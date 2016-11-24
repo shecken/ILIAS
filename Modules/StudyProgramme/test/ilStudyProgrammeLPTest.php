@@ -38,12 +38,10 @@ class ilStudyProgrammeLPTest extends PHPUnit_Framework_TestCase {
 		$this->node1->addLeaf($this->leaf1);
 		$this->node2->addLeaf($this->leaf2);
 		
-		global $DIC;
-		$tree = $DIC['tree'];
+		global $tree;
 		$this->tree = $tree;	
 		
-		global $DIC;
-		$ilUser = $DIC['ilUser'];
+		global $ilUser;
 		$this->user = $ilUser;
 	}
 	

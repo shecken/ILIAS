@@ -13,8 +13,7 @@ class ilStudyProgrammeEvents {
 	
 	static protected function initAppEventHandler() {
 		if (self::$app_event_handler === null) {
-			global $DIC;
-			$ilAppEventHandler = $DIC['ilAppEventHandler'];
+			global $ilAppEventHandler;
 			self::$app_event_handler = $ilAppEventHandler;
 		}
 	}

@@ -28,12 +28,10 @@ class ilStudyProgrammeProgressCalculationTest extends PHPUnit_Framework_TestCase
 		$this->root->setStatus(ilStudyProgramme::STATUS_ACTIVE)
 				   ->update();
 		
-		global $DIC;
-		$tree = $DIC['tree'];
+		global $tree;
 		$this->tree = $tree;
 		
-		global $DIC;
-		$ilUser = $DIC['ilUser'];
+		global $ilUser;
 		$this->user = $ilUser;
 	}
 	

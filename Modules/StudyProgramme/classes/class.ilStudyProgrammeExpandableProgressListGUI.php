@@ -41,11 +41,7 @@ class ilStudyProgrammeExpandableProgressListGUI extends ilStudyProgrammeProgress
 	function __construct(ilStudyProgrammeUserProgress $a_progress) {
 		parent::__construct($a_progress);
 		
-		global $DIC;
-		$tpl = $DIC['tpl'];
-		$rbacsystem = $DIC['rbacsystem'];
-		$ilSetting = $DIC['ilSetting'];
-		$ilAccess = $DIC['ilAccess'];
+		global $tpl, $rbacsystem, $ilSetting, $ilAccess;
 		$this->il_tpl = $tpl;
 		$this->il_rbacsystem = $rbacsystem;
 		$this->il_setting = $ilSetting;

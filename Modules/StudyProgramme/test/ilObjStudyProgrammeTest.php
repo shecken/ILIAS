@@ -50,12 +50,10 @@ class ilObjStudyProgrammeTest extends PHPUnit_Framework_TestCase {
 		
 		// 
 		
-		global $DIC;
-		$tree = $DIC['tree'];
+		global $tree;
 		$this->tree = $tree;
 		
-		global $DIC;
-		$objDefinition = $DIC['objDefinition'];
+		global $objDefinition;
 		$this->obj_definition = $objDefinition;
 	}
 	
@@ -595,8 +593,7 @@ class ilObjStudyProgrammeTest extends PHPUnit_Framework_TestCase {
 		$this->root_object->delete();
 		$this->root_object = null;
 		
-		global $DIC;
-		$ilDB = $DIC['ilDB'];
+		global $ilDB;
 		$res = $ilDB->query( "SELECT COUNT(*) cnt "
 							." FROM ".ilStudyProgramme::returnDbTableName()
 							." WHERE obj_id = ".$this->root_object_obj_id

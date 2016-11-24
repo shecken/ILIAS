@@ -36,10 +36,7 @@ class ilStudyProgrammeTypeFormGUI extends ilPropertyFormGUI {
 
 
     public function __construct($parent_gui, ilStudyProgrammeType $type) {
-        global $DIC;
-        $tpl = $DIC['tpl'];
-        $ilCtrl = $DIC['ilCtrl'];
-        $lng = $DIC['lng'];
+        global $tpl, $ilCtrl, $lng;
         $this->parent_gui = $parent_gui;
         $this->type = $type;
         $this->tpl = $tpl;

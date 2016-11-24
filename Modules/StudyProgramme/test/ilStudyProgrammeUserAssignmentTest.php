@@ -38,8 +38,7 @@ class ilStudyProgrammeUserAssignmentTest extends PHPUnit_Framework_TestCase {
 		$this->node1->addLeaf($this->leaf1);
 		$this->node2->addLeaf($this->leaf2);
 		
-		global $DIC;
-		$tree = $DIC['tree'];
+		global $tree;
 		$this->tree = $tree;
 	}
 	
@@ -241,8 +240,7 @@ class ilStudyProgrammeUserAssignmentTest extends PHPUnit_Framework_TestCase {
 		$this->root->delete();
 		$this->root = null;
 		
-		global $DIC;
-		$ilDB = $DIC['ilDB'];
+		global $ilDB;
 		$res = $ilDB->query( "SELECT COUNT(*) cnt "
 							." FROM ".ilStudyProgrammeAssignment::returnDbTableName()
 							." WHERE root_prg_id = ".$root_id
@@ -257,8 +255,7 @@ class ilStudyProgrammeUserAssignmentTest extends PHPUnit_Framework_TestCase {
 		$ass1 = $this->root->assignUser($user->getId());
 		$ass1->deassign();
 		
-		global $DIC;
-		$ilDB = $DIC['ilDB'];
+		global $ilDB;
 		$res = $ilDB->query( "SELECT COUNT(*) cnt "
 							." FROM ".ilStudyProgrammeAssignment::returnDbTableName()
 							." WHERE id = ".$ass1->getId()

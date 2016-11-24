@@ -41,8 +41,7 @@ class ilAsyncNotifications {
 	 * Setup the message templates and add the js onload code
 	 */
 	public function initJs() {
-		global $DIC;
-		$tpl = $DIC['tpl'];
+		global $tpl;
 
 		if(!$this->js_init) {
 			$tpl->addJavaScript($this->getJsPath().'ilStudyProgramme.js');
@@ -65,8 +64,7 @@ class ilAsyncNotifications {
 	 * Returns the component (returns the js tag)
 	 */
 	public function getHTML() {
-		global $DIC;
-		$tpl = $DIC['tpl'];
+		global $tpl;
 
 		$this->initJs();
 	}

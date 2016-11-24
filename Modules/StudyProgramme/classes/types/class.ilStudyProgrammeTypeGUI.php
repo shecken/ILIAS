@@ -60,17 +60,7 @@ class ilStudyProgrammeTypeGUI {
 	 * @param ilObjStudyProgrammeGUI $parent_gui
 	 */
 	public function __construct($parent_gui) {
-		global $DIC;
-		$tpl = $DIC['tpl'];
-		$ilCtrl = $DIC['ilCtrl'];
-		$ilAccess = $DIC['ilAccess'];
-		$ilToolbar = $DIC['ilToolbar'];
-		$ilLocator = $DIC['ilLocator'];
-		$tree = $DIC['tree'];
-		$lng = $DIC['lng'];
-		$ilLog = $DIC['ilLog'];
-		$ilias = $DIC['ilias'];
-		$ilTabs = $DIC['ilTabs'];
+		global $tpl, $ilCtrl, $ilAccess, $ilToolbar, $ilLocator, $tree, $lng, $ilLog, $ilias, $ilTabs;
 
 		$this->tpl = $tpl;
 		$this->ctrl = $ilCtrl;

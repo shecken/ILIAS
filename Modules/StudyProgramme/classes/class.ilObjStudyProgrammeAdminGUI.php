@@ -21,10 +21,8 @@ class ilObjStudyProgrammeAdminGUI extends ilObjectGUI {
 	 * @param bool $a_prepare_output
 	 */
 	public function __construct($a_data, $a_id, $a_call_by_reference = true, $a_prepare_output = true) {
-		global $DIC;
-		$ilCtrl = $DIC['ilCtrl'];
-		$ilAccess = $DIC['ilAccess'];
-		$ilSetting = $DIC['ilSetting'];
+		global $ilCtrl, $ilAccess, $ilSetting;
+
 		$this->ctrl = $ilCtrl;
 		$this->ilAccess = $ilAccess;
 		$this->ilSetting = $ilSetting;
@@ -123,8 +121,7 @@ class ilObjStudyProgrammeAdminGUI extends ilObjectGUI {
 	}
 
 	public function getAdminTabs() {
-		global $DIC;
-		$rbacsystem = $DIC['rbacsystem'];
+		global $rbacsystem;
 		/**
 		 * @var $rbacsystem ilRbacSystem
 		 */
