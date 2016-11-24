@@ -542,7 +542,9 @@ class ilObjStudyProgrammeTest extends PHPUnit_Framework_TestCase {
 		$children = $this->root_object->getChildren();
 		$child_l = $children[0];
 		
-		$all_possible_subobjects = $this->root_object->getPossibleSubObjects();
+		global $objDefinition;
+		$all_possible_subobjects = $objDefinition->getSubObjects($this->root_object->getType());
+
 		// don't take rolfs into account, we don't need rolf anymore
 		unset($all_possible_subobjects["rolf"]);
 		
