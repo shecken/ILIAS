@@ -539,7 +539,7 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI {
 					   , $this->getLinkTarget("members")
 					   );
 		}
-		parent::getTabs();
+		parent::getTabs($this->tabs_gui);
 	}
 
 	/**
