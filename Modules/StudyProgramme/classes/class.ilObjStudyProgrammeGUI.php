@@ -89,17 +89,7 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI {
 
 
 	public function __construct() {
-		global $DIC;
-		$tpl = $DIC['tpl'];
-		$ilCtrl = $DIC['ilCtrl'];
-		$ilAccess = $DIC['ilAccess'];
-		$ilToolbar = $DIC['ilToolbar'];
-		$ilLocator = $DIC['ilLocator'];
-		$tree = $DIC['tree'];
-		$lng = $DIC['lng'];
-		$ilLog = $DIC['ilLog'];
-		$ilias = $DIC['ilias'];
-		$ilHelp = $DIC['ilHelp'];
+		global $tpl, $ilCtrl, $ilAccess, $ilToolbar, $ilLocator, $tree, $lng, $ilLog, $ilias, $ilHelp;
 
 		parent::__construct(array(), (int) $_GET['ref_id'], true, false);
 
@@ -378,9 +368,6 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI {
 		// set default sort to manual
 		$settings = new ilContainerSortingSettings($a_new_object->getId());
 		$settings->setSortMode(ilContainer::SORT_MANUAL);
-		$settings->setSortDirection(ilContainer::SORT_DIRECTION_ASC);
-		$settings->setSortNewItemsOrder(ilContainer::SORT_NEW_ITEMS_ORDER_CREATION);
-		$settings->setSortNewItemsPosition(ilContainer::SORT_NEW_ITEMS_POSITION_BOTTOM);
 		$settings->save();
 
 		$async_response = ilAsyncOutputHandler::encodeAsyncResponse(array("cmd" =>"cancel", "success"=>true, "message"=>$this->lng->txt("object_added")));
