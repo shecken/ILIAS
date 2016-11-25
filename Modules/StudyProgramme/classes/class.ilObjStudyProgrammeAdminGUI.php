@@ -12,6 +12,8 @@ require_once('./Modules/StudyProgramme/classes/class.ilObjStudyProgrammeAdmin.ph
  *
  * @ilCtrl_Calls ilObjStudyProgrammeAdminGUI: ilStudyProgrammeTypeGUI
  * @ilCtrl_Calls ilObjStudyProgrammeAdminGUI: ilPermissionGUI
+ *
+ * @ilCtrl_isCalledBy ilObjStudyProgrammeAdminGUI: ilAdministrationGUI
  */
 class ilObjStudyProgrammeAdminGUI extends ilObjectGUI {
 	/**
