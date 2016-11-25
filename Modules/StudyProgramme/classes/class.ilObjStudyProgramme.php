@@ -1225,18 +1225,18 @@ class ilObjStudyProgramme extends ilContainer {
 	*
 	*/
 	public function updateCustomIcon() {
-		$subtype = $this->getSubType();
+		// $subtype = $this->getSubType();
 
-		if($subtype) {
-			if(is_file($subtype->getIconPath(true))) {
-				$icon = $subtype->getIconPath(true);
-				$this->saveIcons($icon);
-			} else {
-				$this->removeCustomIcon();
-			}
-		} else {
-			$this->removeCustomIcon();
-		}
+		// if($subtype) {
+		// 	if(is_file($subtype->getIconPath(true))) {
+		// 		$icon = $subtype->getIconPath(true);
+		// 		$this->saveIcons($icon);
+		// 	} else {
+		// 		$this->removeCustomIcon();
+		// 	}
+		// } else {
+		// 	$this->removeCustomIcon();
+		// }
 	}
 	
 	////////////////////////////////////
