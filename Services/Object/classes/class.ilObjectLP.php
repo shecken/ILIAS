@@ -92,6 +92,11 @@ class ilObjectLP
 					$instance = new ilPluginLP($a_obj_id);
 					break;
 
+				case "mass":
+					include_once "Modules/ManualAssessment/classes/class.ilManualAssessmentLP.php";
+					$instance = new ilManualAssessmentLP($a_obj_id);
+					break;
+
 				default:
 					// :TODO: should we return anything?
 					$instance = new self($a_obj_id);			
