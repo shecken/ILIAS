@@ -1309,6 +1309,27 @@ class ilObjStudyProgramme extends ilContainer {
 			}
 		}
 	}
+
+	/**
+	 * Remove not creatable subtype by types of childs
+	 *
+	 * @param array<string, array>
+	 *
+	 * @return array<string, array>
+	 */
+	public function filterCreatableSubtype(array $subtypes) {
+		if($this->hasLPChildren()) {
+			unset($subtypes["prg"]);
+			return $subtypes;
+		}
+
+		if($this->hasChildren()) {
+			unset($subtypes["crsr"]);
+			return $subtypes;
+		}
+
+		return $subtypes;
+	}
 }
 
 ?>
