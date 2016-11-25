@@ -394,7 +394,7 @@ class ilConditionHandler
 	*/
 	function getTriggerTypes()
 	{
-		return array('crs','exc','tst','sahs', 'svy');
+		return array('crs','exc','tst','sahs', 'svy', 'mass');
 	}
 
 
