@@ -4,7 +4,7 @@ require_once 'Modules/ManualAssessment/classes/Members/class.ilManualAssessmentM
 require_once 'Modules/ManualAssessment/classes/Members/class.ilManualAssessmentMembersStorageDB.php';
 require_once 'Modules/ManualAssessment/classes/Settings/class.ilManualAssessmentSettings.php';
 require_once 'Modules/ManualAssessment/interfaces/AccessControl/interface.ManualAssessmentAccessHandler.php';
-require_once 'Modules/ManualAssessment/interfaces/Notification/interface.ManualAssessmentNotificator.php';
+require_once 'Modules/ManualAssessment/interfaces/Notification/interface.ilManualAssessmentNotificator.php';
 /**
  * @backupGlobals disabled
  */
@@ -53,11 +53,15 @@ class ilManualAssessmentMembersTest extends PHPUnit_Framework_TestCase {
 	}
 
 	protected function rbacHandlerMock() {
-		return $this->getMock('ManualAssessmentAccessHandler');
+		return $this->getMockBuilder('ManualAssessmentAccessHandler')
+								 ->disableOriginalConstructor()
+								 ->getMock();
 	}
 
 	protected function notificaterMock() {
-		return $this->getMock('ilManualAssessmentNotificator');
+		return $this->getMockBuilder('ilManualAssessmentNotificator')
+								 ->disableOriginalConstructor()
+								 ->getMock();
 	}
 
 	public function test_create_members() {
@@ -119,7 +123,7 @@ class ilManualAssessmentMembersTest extends PHPUnit_Framework_TestCase {
 	public function test_remove_members($usrs) {
 		$new_usr = $this->createUser();
 		$members = self::$storage->loadMembers(self::$mass)->withAdditionalUser($new_usr);
-		$members->updateStorageAndRBAC(self::$storage);
+		$members->updateStorageAndRBAC(self::$storage,$this->rbacHandlerMock());
 		$members = self::$storage->loadMembers(self::$mass);
 		$usrs[$new_usr->getId()] = $new_usr;
 		$this->compareMembersUsrList($members, $usrs);
