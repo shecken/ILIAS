@@ -15,6 +15,7 @@ require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgrammeAdvan
 require_once("./Services/AdvancedMetaData/classes/class.ilAdvancedMDRecordGUI.php");
 require_once("./Services/Object/classes/class.ilObjectCopyGUI.php");
 require_once("./Services/Repository/classes/class.ilRepUtil.php");
+require_once("./Services/Search/classes/class.ilRepositorySearchGUI.php");
 
 /**
  * Class ilObjStudyProgrammeGUI class
@@ -107,6 +108,21 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI {
 		$lng->loadLanguageModule("prg");
 	}
 
+	/**
+	 * Add session locator
+	 *
+	 * @access public
+	 *
+	 */
+	public function addLocatorItems()
+	{
+		global $ilLocator, $ilAccess;
+
+		if(is_object($this->object) && $ilAccess->checkAccess("write", "", $this->object->getRefId()))
+		{
+			$ilLocator->addItem($this->object->getTitle(), $this->ctrl->getLinkTarget($this), "", $_GET["ref_id"]);
+		}
+	}
 
 	public function executeCommand() {
 		$cmd = $this->ctrl->getCmd();
@@ -665,12 +681,11 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI {
 
 	public function addToNavigationHistory(){
 		global $ilNavigationHistory;
-		
+
 		if(!$this->getCreationMode() &&
 			$this->ilAccess->checkAccess('read', '', $_GET['ref_id']))
 		{
 			$link = $this->ctrl->getLinkTargetByClass("ilrepositorygui", "frameset");
-			
 			$ilNavigationHistory->addItem($_GET['ref_id'],
 				$link, 'prg');
 		}
