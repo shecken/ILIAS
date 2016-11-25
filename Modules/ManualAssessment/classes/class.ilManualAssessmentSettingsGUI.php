@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @ilCtrl_Calls ilManualAssessmentSettingsGUI: ilConditionHandlerInterface
+*/
 class ilManualAssessmentSettingsGUI {
 
 	const PROP_CONTENT = "content";
@@ -15,6 +17,7 @@ class ilManualAssessmentSettingsGUI {
 
 	const TAB_EDIT = 'settings';
 	const TAB_EDIT_INFO = 'infoSettings';
+	const TAB_PRECONDITIONS = 'preconditions';
 
 	public function __construct($a_parent_gui, $a_ref_id) {
 		global $ilCtrl, $tpl, $lng;
@@ -35,24 +38,37 @@ class ilManualAssessmentSettingsGUI {
 		$tabs->addSubTab(self::TAB_EDIT_INFO,
 									$this->lng->txt("mass_edit_info"),
 									 $this->ctrl->getLinkTarget($this,'editInfo'));
+		$tabs->addSubTab(self::TAB_PRECONDITIONS,
+												 $this->lng->txt("mass_edit_conditions"),
+												 $this->ctrl->getLinkTargetByClass(array('ilManualAssessmentSettingsGUI','ilConditionHandlerInterface'),'listConditions'));
 	}
 
 	public function executeCommand() {
+		$next_class = $this->ctrl->getNextClass($this);
 		$cmd = $this->ctrl->getCmd();
-		switch($cmd) {
-			case 'edit':
-			case 'update':
-			case 'cancel':
-			case 'editInfo':
-			case 'updateInfo':
-				if(!$this->object->accessHandler()->checkAccessToObj($this->object,'write')) {
-					$this->parent_gui->handleAccessViolation();
-				}
-				$this->$cmd();
-			break;
+
+		switch($next_class) {
+			case "ilconditionhandlerinterface":
+				include_once './Services/AccessControl/classes/class.ilConditionHandlerInterface.php';
+				$this->tabs_gui->setSubTabActive(self::TAB_PRECONDITIONS);
+				$new_gui =& new ilConditionHandlerInterface($this);
+				$this->ctrl->forwardCommand($new_gui);
+				break;
+			default:
+				switch($cmd) {
+					case 'edit':
+					case 'update':
+					case 'cancel':
+					case 'editInfo':
+					case 'updateInfo':
+						if(!$this->object->accessHandler()->checkAccessToObj($this->object,'write')) {
+							$this->parent_gui->handleAccessViolation();
+						}
+						$this->$cmd();
+					break;
+			}
 		}
 	}
-
 
 	protected function cancel() {
 		$this->ctrl->redirect($this->parent_gui);
