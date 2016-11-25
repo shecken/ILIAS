@@ -297,7 +297,7 @@ class ilLPObjSettings
 				return $lng->txt('trac_mode_collection_tlt');
 
 			case self::LP_MODE_MANUAL_ASSESSMENT:
-				return $this->txt('trac_mode_manual_assessment');
+				return $lng->txt('trac_mode_manual_assessment');
 		}
 	}
 	
@@ -354,7 +354,7 @@ class ilLPObjSettings
 				return $lng->txt('trac_mode_collection_tlt_info');
 
 			case self::LP_MODE_MANUAL_ASSESSMENT:
-				return $this->txt('trac_mode_manual_assessment_info');
+				return $lng->txt('trac_mode_manual_assessment_info');
 		}
 	}
 }
