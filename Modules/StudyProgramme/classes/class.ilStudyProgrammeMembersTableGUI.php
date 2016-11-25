@@ -111,12 +111,13 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 	}
 
 	protected function buildActionDropDown($a_actions, $a_prgrs_id, $a_ass_id) {
-		$l = new ilAdvancedSelectionListGUI();
+		$current_selection_list = new ilAdvancedSelectionListGUI();
+		$current_selection_list->setId($a_prgrs_id);
 		foreach($a_actions as $action) {
 			$target = $this->getLinkTargetForAction($action, $a_prgrs_id, $a_ass_id);
-			$l->addItem($this->lng->txt("prg_$action"), $action, $target);
+			$current_selection_list->addItem($this->lng->txt("prg_$action"), $action, $target);
 		}
-		return $l->getHTML();
+		return $current_selection_list->getHTML();
 	}
 
 	protected function getLinkTargetForAction($a_action, $a_prgrs_id, $a_ass_id) {
