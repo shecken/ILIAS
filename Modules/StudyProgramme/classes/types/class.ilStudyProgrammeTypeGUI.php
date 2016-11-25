@@ -3,7 +3,6 @@ require_once('./Modules/StudyProgramme/classes/types/class.ilStudyProgrammeTypeT
 require_once('./Modules/StudyProgramme/classes/types/class.ilStudyProgrammeTypeFormGUI.php');
 require_once('./Modules/StudyProgramme/classes/types/class.ilStudyProgrammeTypeCustomIconsFormGUI.php');
 require_once('./Modules/StudyProgramme/classes/types/class.ilStudyProgrammeTypeAdvancedMetaDataFormGUI.php');
-require_once('./Services/UIComponent/Button/classes/class.ilLinkButton.php');
 /**
  * Class ilStudyProgrammeTypeGUI
  *
@@ -199,10 +198,7 @@ class ilStudyProgrammeTypeGUI {
 	 * Display all types in a table with actions to edit/delete
 	 */
 	protected function listTypes() {
-		$button = ilLinkButton::getInstance();
-		$button->setCaption('prg_subtype_add');
-		$button->setUrl($this->ctrl->getLinkTarget($this, 'add'));
-		$this->toolbar->addButtonInstance($button);
+		$this->toolbar->addButton($this->lng->txt('prg_subtype_add'), $this->ctrl->getLinkTarget($this, 'add'));
 
 		$table = new ilStudyProgrammeTypeTableGUI($this, 'listTypes');
 		$this->tpl->setContent($table->getHTML());
