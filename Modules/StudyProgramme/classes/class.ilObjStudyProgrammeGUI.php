@@ -108,22 +108,6 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI {
 		$lng->loadLanguageModule("prg");
 	}
 
-	/**
-	 * Add session locator
-	 *
-	 * @access public
-	 *
-	 */
-	public function addLocatorItems()
-	{
-		global $ilLocator, $ilAccess;
-
-		if(is_object($this->object) && $ilAccess->checkAccess("write", "", $this->object->getRefId()))
-		{
-			$ilLocator->addItem($this->object->getTitle(), $this->ctrl->getLinkTarget($this), "", $_GET["ref_id"]);
-		}
-	}
-
 	public function executeCommand() {
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass($this);
