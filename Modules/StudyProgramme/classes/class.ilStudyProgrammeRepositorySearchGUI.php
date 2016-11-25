@@ -36,7 +36,7 @@ class ilStudyProgrammeRepositorySearchGUI extends ilRepositorySearchGUI {
 		{
 			$toolbar = $ilToolbar;
 		}
-		
+
 		// Fill default options
 		if(!isset($a_options['auto_complete_name']))
 		{
@@ -50,7 +50,7 @@ class ilStudyProgrammeRepositorySearchGUI extends ilRepositorySearchGUI {
 		{
 			$a_options['submit_name'] = $lng->txt('btn_add');
 		}
-		
+
 		$ajax_url = $ilCtrl->getLinkTargetByClass(array(get_class($parent_object),'ilStudyProgrammeRepositorySearchGUI'), 
 			'doUserAutoComplete', '', true,false);
 
@@ -58,87 +58,53 @@ class ilStudyProgrammeRepositorySearchGUI extends ilRepositorySearchGUI {
 		$ul = new ilTextInputGUI($a_options['auto_complete_name'], 'user_login');
 		$ul->setDataSource($ajax_url);		
 		$ul->setSize($a_options['auto_complete_size']);
-		if(!$a_sticky)
-		{
-			$toolbar->addInputItem($ul, true);
-		}
-		else
-		{
-			$toolbar->addStickyItem($ul, true);
-		}
+		$toolbar->addInputItem($ul, true);
 
 		if(count((array) $a_options['user_type']))
 		{
 			include_once './Services/Form/classes/class.ilSelectInputGUI.php';
 			$si = new ilSelectInputGUI("", "user_type");
 			$si->setOptions($a_options['user_type']);
-			if(!$a_sticky)
-			{
-				$toolbar->addInputItem($si);
-			}
-			else
-			{
-				$toolbar->addStickyItem($si);
-			}
+			$toolbar->addInputItem($si);
 		}
-		
-		include_once "Services/UIComponent/Button/classes/class.ilSubmitButton.php";
-		$button = ilSubmitButton::getInstance();
-		$button->setCaption($a_options['submit_name'], false);
-		$button->setCommand('addUserFromAutoComplete');
-		if(!$a_sticky)
-		{
-			$toolbar->addButtonInstance($button);
-		}
-		else
-		{
-			$toolbar->addStickyItem($button);
-		}
+
+		$toolbar->addFormButton($a_options['submit_name'], 'addUserFromAutoComplete');
 
 		if((bool)$a_options['add_search'] || 
 			is_numeric($a_options['add_from_container']))
-		{		
+		{
 			$lng->loadLanguageModule("search");
-			
+
 			$toolbar->addSeparator();
-					
+
 			if((bool)$a_options['add_search'])
-			{											
-				include_once "Services/UIComponent/Button/classes/class.ilLinkButton.php";
-				$button = ilLinkButton::getInstance();
-				$button->setCaption("search_users");
-				$button->setUrl($ilCtrl->getLinkTargetByClass('ilStudyProgrammeRepositorySearchGUI',''));
-				$toolbar->addButtonInstance($button);				
+			{
+				$toolbar->addButton($lng->txt("search_users"), $ilCtrl->getLinkTargetByClass('ilStudyProgrammeRepositorySearchGUI',''));
 			}
 
 			if(is_numeric($a_options['add_from_container']))
-			{				
+			{
 				$parent_ref_id = (int)$a_options['add_from_container'];
 				$parent_container_ref_id = $tree->checkForParentType($parent_ref_id, "grp");
 				$parent_container_type = "grp";
 				if(!$parent_container_ref_id)
-				{			
-					$parent_container_ref_id = $tree->checkForParentType($parent_ref_id, "crs");	
+				{
+					$parent_container_ref_id = $tree->checkForParentType($parent_ref_id, "crs");
 					$parent_container_type = "crs";
 				}
 				if($parent_container_ref_id)
 				{
 					if((bool)$a_options['add_search'])
-					{	
+					{
 						$toolbar->addSpacer();
 					}
-					
+
 					$ilCtrl->setParameterByClass('ilStudyProgrammeRepositorySearchGUI', "list_obj", ilObject::_lookupObjId($parent_container_ref_id));
-					
-					include_once "Services/UIComponent/Button/classes/class.ilLinkButton.php";
-					$button = ilLinkButton::getInstance();
-					$button->setCaption("search_add_members_from_container_".$parent_container_type);
-					$button->setUrl($ilCtrl->getLinkTargetByClass(array(get_class($parent_object),'ilStudyProgrammeRepositorySearchGUI'), 'listUsers'));
-					$toolbar->addButtonInstance($button);		
+					$toolbar->addButton("search_add_members_from_container_".$parent_container_type, $ilCtrl->getLinkTargetByClass(array(get_class($parent_object),'ilStudyProgrammeRepositorySearchGUI'), 'listUsers'));
 				}
 			}
 		}
-		
+
 		$toolbar->setFormAction(
 			$ilCtrl->getFormActionByClass(
 				array(
