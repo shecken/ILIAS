@@ -20,14 +20,14 @@ class ilManualAssessmentMembersGUI {
 	protected $lng;
 
 	public function __construct($a_parent_gui, $a_ref_id) {
-		global $DIC;
-		$this->ctrl = $DIC['ilCtrl'];
+		global $ilCtrl, $tpl, $lng, $ilToolbar;
+		$this->ctrl = $ilCtrl;
 		$this->parent_gui = $a_parent_gui;
 		$this->object = $a_parent_gui->object;
 		$this->ref_id = $a_ref_id;
-		$this->tpl =  $DIC['tpl'];
-		$this->lng = $DIC['lng'];
-		$this->toolbar = $DIC['ilToolbar'];
+		$this->tpl =  $tpl;
+		$this->lng = $lng;
+		$this->toolbar = $ilToolbar;
 		$this->access_handler = $this->object->accessHandler();
 	}
 

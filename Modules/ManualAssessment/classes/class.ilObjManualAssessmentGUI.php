@@ -31,18 +31,18 @@ class ilObjManualAssessmentGUI extends ilObjectGUI {
 	const TAB_EXPORT = 'export';
 	public function __construct($a_data, $a_id = 0, $a_call_by_reference = true, $a_prepare_output = true) {
 
-		global $DIC;
-		$this->ilNavigationHistory = $DIC['ilNavigationHistory'];
+		global $ilNavigationHistory, $tpl, $ilCtrl, $ilUser, $ilias, $lng, $ilAccess, $ilLocator;
+		$this->ilNavigationHistory = $ilNavigationHistory;
 		$this->type = 'mass';
-		$this->tpl = $DIC['tpl'];
-		$this->ctrl = $DIC['ilCtrl'];
-		$this->usr = $DIC['ilUser'];
-		$this->ilias = $DIC['ilias'];
-		$this->lng = $DIC['lng'];
-		$this->ilAccess = $DIC['ilAccess'];
+		$this->tpl = $tpl;
+		$this->ctrl = $ilCtrl;
+		$this->usr = $ilUser;
+		$this->ilias = $ilias;
+		$this->lng = $lng;
+		$this->ilAccess = $ilAccess;
 		$this->lng->loadLanguageModule('mass');
 		$this->tpl->getStandardTemplate();
-		$this->locator = $DIC['ilLocator'];
+		$this->locator = $ilLocator;
 		parent::__construct($a_data, $a_id, $a_call_by_reference, $a_prepare_output);
 	}
 
@@ -279,13 +279,13 @@ public function getTabs() {
 	}
 
 	public function handleAccessViolation() {
-		global $DIC;
-		$DIC['ilias']->raiseError($DIC['lng']->txt("msg_no_perm_read"), $DIC['ilias']->error_obj->WARNING);
+		global $ilias, $lng;
+		$ilias->raiseError($lng->txt("msg_no_perm_read"), $ilias->error_obj->WARNING);
 	}
 
 	public static function _goto($a_target, $a_add = '') {
-		global $DIC;
-		if ($DIC['ilAccess']->checkAccess( 'read', '', $a_target)) {
+		global $ilAccess;
+		if ($ilAccess->checkAccess( 'read', '', $a_target)) {
 			ilObjectGUI::_gotoRepositoryNode($a_target, 'view');
 		}
 	}

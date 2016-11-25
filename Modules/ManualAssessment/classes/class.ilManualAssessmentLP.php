@@ -30,7 +30,6 @@ class ilManualAssessmentLP extends ilObjectLP {
 	 */
 	public function getMembers($a_search = true) {
 		if($this->members_ids === null ) {
-			global $DIC;
 			require_once("Modules/ManualAssessment/classes/class.ilObjManualAssessment.php");
 			$mass = new ilObjManualAssessment($this->obj_id, false);
 			$this->members_ids = $mass->loadMembers()->membersIds();

@@ -33,8 +33,8 @@ class ilManualAssessmentLPInterface {
 	}
 
 	protected static function getMembersStorage() {
-		global $DIC;
-		return new ilManualAssessmentMembersStorageDB($DIC['ilDB']);
+		global $ilDB;
+		return new ilManualAssessmentMembersStorageDB($ilDB);
 	}
 
 	public static function getMembersHavingStatusIn($mass_id, $status) {

@@ -18,16 +18,16 @@ class ilObjManualAssessment extends ilObject {
 	protected $lp_active = null;
 
 	public function __construct($a_id = 0, $a_call_by_reference = true) {
-		global $DIC;
+		global $ilAcces, $ilDB, $rbacadmin, $rbacreview, $ilUser;
 		$this->type = 'mass';
 		parent::__construct($a_id, $a_call_by_reference);
-		$this->settings_storage = new ilManualAssessmentSettingsStorageDB($DIC['ilDB']);
-		$this->members_storage =  new ilManualAssessmentMembersStorageDB($DIC['ilDB']);
+		$this->settings_storage = new ilManualAssessmentSettingsStorageDB($ilDB);
+		$this->members_storage =  new ilManualAssessmentMembersStorageDB($ilDB);
 		$this->access_handler = new ilManualAssessmentAccessHandler(
-				 $DIC['ilAccess']
-				,$DIC['rbacadmin']
-				,$DIC['rbacreview']
-				,$DIC['ilUser']);
+				 $ilAccess
+				,$rbacadmin
+				,$rbacreview
+				,$ilUser);
 
 	}
 
@@ -45,8 +45,8 @@ class ilObjManualAssessment extends ilObject {
 	 */
 	public function read() {
 		parent::read();
-		global $DIC;
-		$settings_storage = new ilManualAssessmentSettingsStorageDB($DIC['ilDB']);
+		global $ilDB;
+		$settings_storage = new ilManualAssessmentSettingsStorageDB($ilDB);
 		$this->settings = $settings_storage->loadSettings($this);
 		$this->info_settings = $settings_storage->loadInfoSettings($this);
 	}
@@ -175,16 +175,13 @@ class ilObjManualAssessment extends ilObject {
 	 * Starts from object with id $id.
 	 * Ends at root or when a given $type of object is found.
 	 *
-	 * @global array $DIC
 	 * @param int $id start at this id
 	 * @param string[] $types search for these strings
 	 *
 	 * @return int the obj_id or 0 if root is reached
 	 */
 	public function getParentContainerIdByType($id, array $types) {
-		global $DIC;
-
-		$tree = $DIC['tree'];
+		global $tree;
 		$node = $tree->getParentNodeData($id);
 
 		while($node['type'] !== "root") {

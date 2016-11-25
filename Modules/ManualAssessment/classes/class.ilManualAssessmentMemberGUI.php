@@ -21,18 +21,18 @@ class ilManualAssessmentMemberGUI {
 
 		public function __construct($members_gui ,$a_parent_gui, $a_ref_id) {
 			$this->notificator = new ilManualAssessmentPrimitiveInternalNotificator();
-			global $DIC;
-			$this->ctrl = $DIC['ilCtrl'];
+			global $ilCtrl, $tpl, $lng, $ilUser, $ilTabs;
+			$this->ctrl = $ilCtrl;
 			$this->members_gui = $members_gui;
 			$this->parent_gui = $a_parent_gui;
 			$this->object = $a_parent_gui->object;
 			$this->ref_id = $a_ref_id;
-			$this->tpl =  $DIC['tpl'];
-			$this->lng = $DIC['lng'];
+			$this->tpl =  $tpl;
+			$this->lng = $lng;
 			$this->ctrl->saveParameter($this,'usr_id');
 			$this->examinee = new ilObjUser($_GET['usr_id']);
-			$this->examiner = $DIC['ilUser'];
-			$this->setTabs($DIC['ilTabs']);
+			$this->examiner = $ilUser;
+			$this->setTabs($ilTabs);
 			$this->member = $this->object->membersStorage()
 								->loadMember($this->object, $this->examinee);
 	}

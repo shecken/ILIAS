@@ -8,9 +8,9 @@ require_once 'Services/Tracking/classes/class.ilLPStatus.php';
 class ilManualAssessmentMembersTableGUI extends ilTable2GUI {
 	public function __construct($a_parent_obj, $a_parent_cmd="", $a_template_context="") {
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
-		global $DIC;
-		$this->ctrl = $DIC['ilCtrl'];
-		$this->lng = $DIC['lng'];
+		global $ilCtrl, $lng, $ilUser;
+		$this->ctrl = $ilCtrl;
+		$this->lng = $lng;
 		$this->setEnableTitle(true);
 		$this->setTopCommands(true);
 		$this->setEnableHeader(true);
@@ -23,7 +23,7 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI {
 		$this->may_view = $this->userMayViewGrades();
 		$this->may_book = $this->userMayEditMembers();
 		$this->columns = $this->visibleColumns();
-		$this->viewer_id = $DIC['ilUser']->getId();
+		$this->viewer_id = $ilUser->getId();
 		foreach ($this->columns as $lng_var => $params) {
 			$this->addColumn($this->lng->txt($lng_var), $params[0]);
 		}

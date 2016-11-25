@@ -14,7 +14,6 @@ class ilManualAssessmentExporter extends ilXmlExporter {
 	 * initialize the exporter
 	 */
 	public function init() {
-		global $DIC;
 		$this->ds = new ilManualAssessmentDataSet();
 	}
 
