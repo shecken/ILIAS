@@ -13,11 +13,13 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler {
 
 	const DEFAULT_ROLE = 'il_mass_member';
 
-	public function __construct(ilAccessHandler $handler, ilRbacAdmin $admin, ilRbacReview $review, ilObjUser $usr) {
+	public function __construct(ilAccessHandler $handler, ilRbacAdmin $admin, ilRbacReview $review, ilObjUser $usr, ilDB $db, ilRbacAdmin $rbacadmin) {
 		$this->handler = $handler;
 		$this->admin = $admin;
 		$this->review = $review;
 		$this->usr = $usr;
+		$this->db = $db;
+		$this->rbacadmin = $rbacadmin;
 	}
 
 	/**
@@ -43,12 +45,14 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler {
 	 * @inheritdoc
 	 */
 	public function initDefaultRolesForObject(ilObjManualAssessment $mass) {
-		$role = ilObjRole::createDefaultRole(
-				$this->getRoleTitleByObj($mass),
-				"Admin of mass obj_no.".$mass->getId(),
-				self::DEFAULT_ROLE,
-				$mass->getRefId()
-		);
+		$rolf_obj = $mass->createRoleFolder();
+
+		// CREATE ADMIN ROLE
+		$role_obj = $rolf_obj->createRole($this->getRoleTitleByObj($mass), "");
+		$admin_id = $role_obj->getId();
+
+		$rolt_obj_id = $this->getRoltId();
+		$this->rbacadmin->copyRoleTemplatePermissions($rolt_obj_id,ROLE_FOLDER_ID,$rolf_obj->getRefId(),$role_obj->getId());
 	}
 
 	/**
@@ -71,5 +75,14 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler {
 
 	protected function getMemberRoleIdForObj(ilObjManualAssessment $mass) {
 		return current($this->review->getLocalRoles($mass->getRefId()));
+	}
+
+	protected function getRoltId() {
+		$query = "SELECT obj_id FROM object_data ".
+			" WHERE type = 'rolt' AND title = ".$this->db->quote(self::DEFAULT_ROLE, "text");
+
+		$res = $this->db->getRow($query, DB_FETCHMODE_ASSOC);
+
+		return $res["obj_id"];
 	}
 }

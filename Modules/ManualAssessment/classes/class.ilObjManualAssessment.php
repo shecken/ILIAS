@@ -18,7 +18,7 @@ class ilObjManualAssessment extends ilObject {
 	protected $lp_active = null;
 
 	public function __construct($a_id = 0, $a_call_by_reference = true) {
-		global $ilAcces, $ilDB, $rbacadmin, $rbacreview, $ilUser;
+		global $ilAccess, $ilDB, $rbacadmin, $rbacreview, $ilUser;
 		$this->type = 'mass';
 		parent::__construct($a_id, $a_call_by_reference);
 		$this->settings_storage = new ilManualAssessmentSettingsStorageDB($ilDB);
@@ -27,7 +27,9 @@ class ilObjManualAssessment extends ilObject {
 				 $ilAccess
 				,$rbacadmin
 				,$rbacreview
-				,$ilUser);
+				,$ilUser
+				,$ilDB
+				,$rbacadmin);
 
 	}
 
