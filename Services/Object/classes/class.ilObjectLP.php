@@ -92,6 +92,11 @@ class ilObjectLP
 					$instance = new ilPluginLP($a_obj_id);
 					break;
 
+				case "prg":
+					include_once "Modules/StudyProgramme/classes/class.ilStudyProgrammeLP.php";
+					$instance = new ilStudyProgrammeLP($a_obj_id);
+					break;
+
 				default:
 					// :TODO: should we return anything?
 					$instance = new self($a_obj_id);			
