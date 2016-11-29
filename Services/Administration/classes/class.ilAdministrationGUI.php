@@ -470,7 +470,7 @@ class ilAdministrationGUI
 				"objects" =>
 					array("reps", "---", "blga", "chta", "crss", "facs", "frma", 
 						"grps", "lrss", "mcts", "mobs", "svyf", "assf", "wbrs", "wiks",
-						"---", 'otpl',"root", "recf")
+						"---", 'otpl',"root", "recf", "prgs")
 				)
 			);
 		

@@ -40,7 +40,9 @@ class ilObjReportCouponNew extends ilObjReportBase {
 				->defineFieldColumn($this->plugin->txt("start"), 'start', array('start' => $this->fields['c2']['coupon_value']))
 				->defineFieldColumn($this->plugin->txt("diff"), 'diff', array('diff' => $this->tf->minus('diff',$this->fields['c2']['coupon_value'],$this->fields['c']['coupon_value'])))
 				->defineFieldColumn($this->plugin->txt("current"), 'current', array( 'current' => $this->fields['c']['coupon_value']))
+				->defineFieldColumn($this->plugin->txt("created"), 'created', array( 'created' => $this->fields['c']['coupon_created']), true)
 				->defineFieldColumn($this->plugin->txt("expires"),'expires',array('expires' => $this->fields['c']['coupon_expires']),true);
+
 		if($this->settings['admin_mode']) {
 			$table
 				->defineFieldColumn($this->plugin->txt("name"), 'name', array('lastname' => $this->fields['hu']['lastname']
