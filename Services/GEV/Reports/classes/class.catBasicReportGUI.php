@@ -148,8 +148,13 @@ class catBasicReportGUI {
 
 		$table->addColumn("", "blank", "0px", false);
 		foreach ($this->table->columns as $col) {
+			$sort = "";
+			if($col[5]) {
+				$sort = $col[0];
+			}
+
 			$table->addColumn( $col[2] ? $col[1] : $this->lng->txt($col[1])
-							 , $col[0]
+							 , $sort
 							 , $col[3]
 							 );
 		}
@@ -384,12 +389,13 @@ class catReportTable {
 		return new catReportTable();
 	}
 	
-	public function column($a_id, $a_title, $a_no_lng_var = false, $a_width = "", $a_no_excel = false) {
+	public function column($a_id, $a_title, $a_no_lng_var = false, $a_width = "", $a_no_excel = false, $a_sorting = true) {
 		$this->columns[$a_id] = array( $a_id
 									 , $a_title
 									 , $a_no_lng_var
 									 , $a_width
 									 , $a_no_excel
+									 , $a_sorting
 									 );
 		$this->all_columns[$a_id] = $this->columns[$a_id];
 		return $this;
