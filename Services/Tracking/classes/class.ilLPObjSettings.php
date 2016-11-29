@@ -40,6 +40,7 @@ class ilLPObjSettings
 	const LP_MODE_COLLECTION_TLT = 15;
 	const LP_MODE_COLLECTION_MANUAL = 16;
 	const LP_MODE_MANUAL_ASSESSMENT = 23;
+	const LP_MODE_STUDY_PROGRAMME = 22;
 
 	const LP_DEFAULT_VISITS = 30;
 
@@ -298,6 +299,9 @@ class ilLPObjSettings
 
 			case self::LP_MODE_MANUAL_ASSESSMENT:
 				return $lng->txt('trac_mode_manual_assessment');
+
+			case self::LP_MODE_STUDY_PROGRAMME:
+				return $lng->txt('trac_mode_study_programme');
 		}
 	}
 	
@@ -355,6 +359,9 @@ class ilLPObjSettings
 
 			case self::LP_MODE_MANUAL_ASSESSMENT:
 				return $lng->txt('trac_mode_manual_assessment_info');
+
+			case self::LP_MODE_STUDY_PROGRAMME:
+				return $lng->txt('trac_mode_study_programme_info');
 		}
 	}
 }
