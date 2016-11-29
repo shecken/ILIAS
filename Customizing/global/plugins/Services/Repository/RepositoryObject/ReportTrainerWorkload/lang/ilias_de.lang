@@ -39,3 +39,5 @@ until#:#bis
 annual_norm_training#:#Sollzahl Trainingstage
 annual_norm_operation#:#Sollzahl Einsatztage
 annual_norm_office#:#Sollzahl Bürotage
+dateperiod#:#Zeitraum
+presence#:#Anwesenheit

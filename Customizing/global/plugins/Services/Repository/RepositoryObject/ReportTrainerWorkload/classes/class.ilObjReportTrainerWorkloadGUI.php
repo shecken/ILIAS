@@ -9,6 +9,17 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * @ilCtrl_Calls ilObjReportTrainerWorkloadGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportTrainerWorkloadGUI extends ilObjReportBaseGUI {
+	const CMD_FILTER = "filter";
+
+	public function performCustomCommand($cmd) {
+		switch ($cmd) {
+			case self::CMD_FILTER:
+				$this->$cmd();
+				return true;
+			default:
+				return false;
+		}
+	}
 
 	public function getType() {
 		return 'xrtw';
@@ -19,6 +30,38 @@ class ilObjReportTrainerWorkloadGUI extends ilObjReportBaseGUI {
 		if($this->object->plugin) {
 			$this->tpl->addCSS($this->object->plugin->getStylesheetLocation('report.css'));
 		}
+	}
+
+	protected function filter() {
+		if(isset($_POST['filter'])) {
+			$this->filter_settings = $_POST['filter'];
+		}
+		$this->showContent();
+	}
+
+	protected function render() {
+		$res = $this->renderFilter()."<br />";
+		$res .= $this->renderTable();
+
+		return $res;
+	}
+
+	protected function renderFilter() {
+		// $this->loadFilterSettings();
+		$filter = $this->object->filter();
+		$display = new \CaT\Filter\DisplayFilter
+						( new \CaT\Filter\FilterGUIFactory
+						, new \CaT\Filter\TypeFactory
+						);
+
+		if($this->filter_settings) {
+			$this->object->filter_settings = $display->buildFilterValues($filter, $this->filter_settings);
+		}
+
+		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
+		$filter_flat_view = new catFilterFlatViewGUI($this, $filter, $display, self::CMD_FILTER);
+
+		return $filter_flat_view->render($this->filter_settings);
 	}
 
 	protected function prepareTitle($a_title) {
