@@ -56,48 +56,12 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	}
 
 	protected function buildQuery($query) {
-		$query 	->select("hu.user_id")
-				->select_raw("CONCAT(hu.lastname, ', ', hu.firstname) as fullname")
-				->select_raw($this->gIldb->quote($this->filter->get('org_unit')[0],"text")." as orgu_title");
-		foreach($this->cats as $condition => $cat_settings) {
-			$query->select_raw($this->hoursPerConditionRatioNorm($cat_settings['condition'],$condition,$cat_settings['weight']));
-		}
-		$query->from("hist_tep ht")
-					->join("hist_user hu")
-						->on("ht.user_id = hu.user_id"
-								." AND ".$this->gIldb->in("hu.user_id",$this->getRelevantUsers(),false,"integer"))
-					->join("hist_tep_individ_days htid")
-						->on("individual_days = id")
-					->left_join("hist_course hc")
-						->on("context_id = crs_id AND ht.category  = 'Training' AND hc.hist_historic = 0")
-					->group_by("hu.user_id")
-					->compile();
-		return $query;
+		return null;
 	}
 
 	protected function buildFilter($filter) {
-		$this->orgu_filter = new recursiveOrguFilter('org_unit', 'huo.orgu_id', true, true);
-		$this->orgu_filter->setFilterOptionsByArray($this->getRelevantOrgus());
-		$this->orgu_filter->addToFilter($filter);
-		$filter	->dateperiod( 	"period"
-								 , $this->plugin->txt("period")
-								 , $this->plugin->txt("until")
-								 , "ht.begin_date"
-								 , "ht.begin_date"
-								 , date("Y")."-01-01"
-								 , date("Y")."-12-31"
-								 , false
-								 )
-				->static_condition("hu.hist_historic = 0")
-				->static_condition("ht.hist_historic = 0")
-				->static_condition("(ht.category != 'Training' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))")
-				->static_condition("ht.deleted = 0")
-				->static_condition("ht.row_id > ".self::MIN_ROW)
-				->action($this->filter_action)
-				->compile()
-				;
 
-		return $filter;
+		return null;
 	}
 
 
@@ -204,92 +168,97 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		$db = $this->gIldb;
 		$filter = $this->filter();
 
+		$query =   "SELECT `hu`.`user_id` ,CONCAT(hu.lastname, ', ', hu.firstname) as fullname
+					,SUM(IF( ht.category = 'Training' AND hc.type = 'Päsenztraining' ,	TIME_TO_SEC( TIMEDIFF( htid.end_time, htid.start_time )) /3600 ,	0)) as presence
+					,SUM(IF( ht.category = 'Training' AND hc.type = 'Virtuelles Training' , 0.5 ,	0)) as virtual 
+					FROM `hist_tep` ht
+					JOIN `hist_user` hu ON ht.user_id = hu.user_id";
+		$query .= " AND " .$db->in('hu.user_id',$this->getRelevantUsers(),false,'integer') . " ";
+		$query .= "	JOIN `hist_tep_individ_days` htid ON individual_days = id
+					LEFT JOIN `hist_course` hc ON context_id = crs_id AND ht.category = 'Training' AND hc.hist_historic = 0
+					WHERE true
+						AND hu.hist_historic = 0
+						AND ht.hist_historic = 0
+						AND (ht.category != 'Training' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))
+						AND ht.deleted = 0";
 		if($this->filter_settings) {
 			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
 			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
 			$dt_query = $to_sql->interpret($settings[0]["period_pred"]);
 
-			$query =   "SELECT `hu`.`user_id` ,CONCAT(hu.lastname, ', ', hu.firstname) as fullname
-						,SUM(IF( ht.category = 'Training' AND hc.type = 'Päsenztraining' ,	TIME_TO_SEC( TIMEDIFF( htid.end_time, htid.start_time )) /3600 ,	0)) as presence
-						,SUM(IF( ht.category = 'Training' AND hc.type = 'Virtuelles Training' , 0.5 ,	0)) as virtual 
-						FROM `hist_tep` ht
-						JOIN `hist_user` hu ON ht.user_id = hu.user_id";
-			$query .= " AND " .$db->in('hu.user_id',$this->getRelevantUsers(),false,'integer') . " ";
-			$query .= "	JOIN `hist_tep_individ_days` htid ON individual_days = id
-						LEFT JOIN `hist_course` hc ON context_id = crs_id AND ht.category = 'Training' AND hc.hist_historic = 0
-						WHERE true
-							AND hu.hist_historic = 0
-							AND ht.hist_historic = 0
-							AND (ht.category != 'Training' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))
-							AND ht.deleted = 0";
 			$query .= " AND " .$dt_query;
 
 			if(!empty($settings[0]['org_unit'][0])) {
 				$query .= " AND " .$db->in("ht.orgu_id", $settings[0]['org_unit'], false, "integer");
 			}
 
-			$query .= " GROUP BY `hu`.`user_id`";
-			$norms = $this->getNorms();
-			$res = $db->query($query);
-
-			while($data = $db->fetchAssoc($res)) {
-
-				$count_rows = 0;
-				$this->sum_row = array();
-				foreach ($this->meta_cats as $meta_category => $categories) {
-					foreach($categories as $category) {
-						$this->sum_row[$category] = 0;
-					}
-					if(count($categories)>1) {
-						$this->sum_row[$meta_category.'_sum'] = 0;
-					}
-					if(isset($norms[$meta_category])) {
-						$this->sum_row[$meta_category.'_workload'] = 0;
-					}
-				}
-				$period_days_factor = $this->getPeriodDays()/365;
-				foreach($data as &$trainer_data) {
-					$count_rows++;
-					foreach ($this->meta_cats as $meta_category => $categories) {
-						if(count($categories)>1) {
-							$trainer_data[$meta_category.'_sum'] = 0;
-							foreach ($categories as $category) {
-								$this->sum_row[$category] += $trainer_data[$category];
-								$trainer_data[$meta_category.'_sum'] += $trainer_data[$category];
-							}
-							$this->sum_row[$meta_category.'_sum'] += $trainer_data[$meta_category.'_sum'];
-							if( isset($norms[$meta_category])) {
-								$trainer_data[$meta_category.'_workload'] = 100*$trainer_data[$meta_category.'_sum']/($norms[$meta_category]*$period_days_factor);
-								$this->sum_row[$meta_category.'_workload'] += $trainer_data[$meta_category.'_workload'];
-							}
-						} else {
-							$this->sum_row[$meta_category] += $trainer_data[$meta_category];
-							if( isset($this->norms[$meta_category])) {
-								$meta_category_sum = count($categories)>1 ? $trainer_data[$meta_category.'_sum'] : $trainer_data[ $categories[0]];
-								$trainer_data[$meta_category.'_workload'] = 100*$meta_category_sum/($norms[$meta_category]*$period_days_factor);
-								$this->sum_row[$meta_category.'_workload'] += $trainer_data[$meta_category.'_workload'];
-							}
-						}
-					}
-					$trainer_data = call_user_func($callback,$trainer_data);
-				}
-				$count_rows = ($count_rows == 0) ? 1 : $count_rows;
-				foreach($norms as $meta_category => $norm) {
-					$this->sum_row[$meta_category.'_workload'] = $this->sum_row[$meta_category.'_workload']/$count_rows;
-				}
-				$this->sum_row = call_user_func($callback,$this->sum_row);
-				}
-			return $data;
+			$period_days_factor = $this->getPeriodDays($settings[0]['start'], $settings[0]['end'])/365;
+		} else {
+			$period_days_factor = $this->getPeriodDays(new DateTime(date("Y")."-01-01"), new DateTime(date("Y")."-12-31"))/365;
 		}
+
+		$query .= " GROUP BY `hu`.`user_id`";
+		$norms = $this->getNorms();
+		$res = $db->query($query);
+
+		while($rec = $db->fetchAssoc($res)) {
+			$data[] = $rec;
+		}
+
+		$count_rows = 0;
+		$this->sum_row = array();
+		foreach ($this->meta_cats as $meta_category => $categories) {
+			foreach($categories as $category) {
+				$this->sum_row[$category] = 0;
+			}
+			if(count($categories)>1) {
+				$this->sum_row[$meta_category.'_sum'] = 0;
+			}
+			if(isset($norms[$meta_category])) {
+				$this->sum_row[$meta_category.'_workload'] = 0;
+			}
+		}
+
+		foreach($data as &$trainer_data) {
+			$count_rows++;
+			foreach ($this->meta_cats as $meta_category => $categories) {
+				if(count($categories)>1) {
+					$trainer_data[$meta_category.'_sum'] = 0;
+					foreach ($categories as $category) {
+						$this->sum_row[$category] += $trainer_data[$category];
+						$trainer_data[$meta_category.'_sum'] += $trainer_data[$category];
+					}
+					$this->sum_row[$meta_category.'_sum'] += $trainer_data[$meta_category.'_sum'];
+					if( isset($norms[$meta_category])) {
+						$trainer_data[$meta_category.'_workload'] = 100*$trainer_data[$meta_category.'_sum']/($norms[$meta_category]*$period_days_factor);
+						$this->sum_row[$meta_category.'_workload'] += $trainer_data[$meta_category.'_workload'];
+					}
+				} else {
+					$this->sum_row[$meta_category] += $trainer_data[$meta_category];
+					if( isset($this->norms[$meta_category])) {
+						$meta_category_sum = count($categories)>1 ? $trainer_data[$meta_category.'_sum'] : $trainer_data[ $categories[0]];
+						$trainer_data[$meta_category.'_workload'] = 100*$meta_category_sum/($norms[$meta_category]*$period_days_factor);
+						$this->sum_row[$meta_category.'_workload'] += $trainer_data[$meta_category.'_workload'];
+					}
+				}
+			}
+			$trainer_data = call_user_func($callback,$trainer_data);
+		}
+		$count_rows = ($count_rows == 0) ? 1 : $count_rows;
+		foreach($norms as $meta_category => $norm) {
+			$this->sum_row[$meta_category.'_workload'] = $this->sum_row[$meta_category.'_workload']/$count_rows;
+		}
+		$this->sum_row = call_user_func($callback,$this->sum_row);
+
+		return $data;
 	}
 
-	protected function getPeriodDays() {
-		$dates = $this->filter->get("period");
-        foreach($dates as &$il_date_obj) {
-            $il_date_obj = $il_date_obj->getUnixTime();
+	protected function getPeriodDays(\DateTime $start, \DateTime $end) {
+        foreach($a_dat as &$il_date_obj) {
+            $il_date_obj = $il_date_obj->getTimestamp();
         }
 
-       	return $period_days = ($dates["end"] - $dates["start"])/86400+1;
+        return $period_days = ($send->getTimestamp - $a_dat["start"])/86400+1;
 	}
 
 	static protected function identity ($rec) {
@@ -364,10 +333,6 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 				."		ON huo.`action` >= 0 AND huo.hist_historic = 0 "
 				."			AND huo.usr_id = rua.usr_id "
 				."			AND ore.obj_id = huo.orgu_id ";
-		//$org_units_filter = $this->filter->get("org_unit");
-		// if(count($org_units_filter)>0) {
-		// 	$sql .= " 	AND ".$this->orgu_filter->deliverQuery();
-		// }
 		$sql .= "	WHERE hur.hist_historic IS NULL"
 				."	AND ".$this->gIldb->in("huo.usr_id", $this->user_utils->getEmployees(), false, "integer");
 		$res = $this->gIldb->query($sql);
