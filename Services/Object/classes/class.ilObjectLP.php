@@ -92,6 +92,11 @@ class ilObjectLP
 					$instance = new ilPluginLP($a_obj_id);
 					break;
 
+				case "mass":
+					include_once "Modules/ManualAssessment/classes/class.ilManualAssessmentLP.php";
+					$instance = new ilManualAssessmentLP($a_obj_id);
+					break;
+
 				case "prg":
 					include_once "Modules/StudyProgramme/classes/class.ilStudyProgrammeLP.php";
 					$instance = new ilStudyProgrammeLP($a_obj_id);

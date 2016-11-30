@@ -357,8 +357,9 @@ class ilLPTableBaseGUI extends ilTable2GUI
 		$options['grp'] = $lng->txt('objs_grp');
 		$options['exc'] = $lng->txt('objs_exc');
 		$options['tst'] = $lng->txt('objs_tst');
+		$options['mass'] = $lng->txt('objs_mass');
 		$options['prg'] = $lng->txt('objs_prg');
-		
+
 		if($a_allow_undefined_lp)
 		{
 			$options["file"] = $lng->txt("objs_file");
