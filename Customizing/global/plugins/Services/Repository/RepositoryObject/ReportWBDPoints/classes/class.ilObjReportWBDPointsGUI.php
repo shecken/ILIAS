@@ -9,6 +9,8 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * @ilCtrl_Calls ilObjReportWBDPointsGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
+	const CMD_SAVE_FILTER = "saveFilter";
+
 	public function getType() {
 		return 'xwbp';
 	}
@@ -17,5 +19,88 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
 		$a_title = parent::prepareTitle($a_title);
 		$a_title->image("GEV_img/ico-head-edubio.png");
 		return $a_title;
+	}
+
+	public function performCustomCommand($cmd) {
+		switch ($cmd) {
+			case self::CMD_SAVE_FILTER:
+				$this->showContent();
+				break;
+			default:
+				return parent::performCustomCommand($cmd);
+		}
+	}
+
+	protected function afterConstructor() {
+		parent::afterConstructor();
+		if($this->object->plugin) {
+			$this->tpl->addCSS($this->object->plugin->getStylesheetLocation('report.css'));
+		}
+		$this->filter = $this->object->filter();
+		$this->display = new \CaT\Filter\DisplayFilter
+						( new \CaT\Filter\FilterGUIFactory
+						, new \CaT\Filter\TypeFactory
+						);
+		$this->loadFilterSettings();
+	}
+
+	protected function render() {
+		$res = $this->renderFilter()."<br />";
+		$res .= $this->renderTable();
+
+		return $res;
+	}
+
+	protected function renderFilter() {
+		$this->loadFilterSettings();
+		$filter = $this->object->filter();
+		$display = new \CaT\Filter\DisplayFilter
+						( new \CaT\Filter\FilterGUIFactory
+						, new \CaT\Filter\TypeFactory
+						);
+
+		if($this->filter_settings) {
+			$this->object->filter_settings = $display->buildFilterValues($filter, $this->filter_settings);
+		}
+
+		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
+		$filter_flat_view = new catFilterFlatViewGUI($this, $filter, $display, self::CMD_SAVE_FILTER);
+
+		return $filter_flat_view->render($this->filter_settings);
+	}
+
+	protected function renderTable() {
+		$this->gCtrl->setParameter($this, 'filter', base64_encode(serialize($this->filter_settings)));
+		$table = parent::renderTable();
+		// $sum_table = $this->renderSumTable();
+		$this->gCtrl->setParameter($this, 'filter', null);
+		return $table;
+	}
+
+
+	// public static function transformResultRow($rec) {
+	// 	global $ilCtrl;
+	// 	foreach ($rec as $key => &$value) {
+	// 		if($key != 'fullname') {
+	// 			if(strpos($key,'_workload') === false) {
+	// 				$value = number_format($value,2,',','.');
+	// 			} else {
+	// 				$value = number_format($value,0,',','.');
+	// 			}
+	// 		}
+	// 	}
+	// 	return parent::transformResultRow($rec);
+	// }
+
+	protected function loadFilterSettings() {
+		if(isset($_POST['filter'])) {
+			$this->filter_settings = $_POST['filter'];
+		}
+		if(isset($_GET['filter'])) {
+			$this->filter_settings = unserialize(base64_decode($_GET['filter']));
+		}
+		if($this->filter_settings) {
+			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
+		}
 	}
 }
