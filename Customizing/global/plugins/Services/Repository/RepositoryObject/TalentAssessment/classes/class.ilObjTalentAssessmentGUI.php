@@ -155,10 +155,10 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	protected function setTabs() {
 		$this->addInfoTab();
 
-		if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
-			$this->gTabs->addTab(self::TAB_SETTINGS, $this->txt("properties")
-				,$this->gCtrl->getLinkTarget($this, self::CMD_PROPERTIES));
-
+		$view_obsrvations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
+		$edit_obsrvations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
+		$finish_ta = $this->gAccess->checkAccess("finish_talent_assessment", "", $this->object->getRefId());
+		if ($view_obsrvations || $edit_obsrvations || $finish_ta) {
 			if(!$this->object->getActions()->observationStarted($this->object->getId())) {
 				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations")
 				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS));
@@ -166,9 +166,16 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations")
 				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS_LIST));
 			}
+		}
 
+		if ($this->gAccess->checkAccess("edit_observator", "", $this->object->getRefId())) {
 			$this->gTabs->addTab(self::TAB_OBSERVATOR, $this->txt("observator")
 				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservatorGUI::CMD_SHOW));
+		}
+
+		if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+			$this->gTabs->addTab(self::TAB_SETTINGS, $this->txt("properties")
+				,$this->gCtrl->getLinkTarget($this, self::CMD_PROPERTIES));
 		}
 
 		$this->addPermissionTab();
@@ -188,12 +195,23 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	}
 
 	protected function showContent() {
-		$_GET["cmd"] = ilTalentAssessmentSettingsGUI::CMD_SHOW;
-		$this->forwardSettings();
+		if ($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
+			$this->gCtrl->redirectByClass("ilinfoscreengui", "showSummary");
+		} elseif ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+			$_GET["cmd"] = ilTalentAssessmentSettingsGUI::CMD_SHOW;
+			$this->forwardSettings();
+		} else {
+			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
+			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
+		}
 	}
 
 	protected function forwardObservations() {
-		if(!$this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+		$view_obsrvations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
+		$edit_obsrvations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
+		$finish_ta = $this->gAccess->checkAccess("finish_talent_assessment", "", $this->object->getRefId());
+
+		if(!($view_obsrvations || $edit_obsrvations || $finish_ta)) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {
@@ -224,7 +242,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	}
 
 	protected function forwardObservator() {
-		if(!$this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+		if(!$this->gAccess->checkAccess("edit_observator", "", $this->object->getRefId())) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {

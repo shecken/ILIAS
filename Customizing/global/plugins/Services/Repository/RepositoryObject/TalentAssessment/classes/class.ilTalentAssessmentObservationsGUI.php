@@ -19,12 +19,13 @@ class ilTalentAssessmentObservationsGUI {
 
 
 	public function __construct($parent_obj, $actions, Closure $txt, \CaT\Plugins\TalentAssessment\Settings\TalentAssessment $settings, $obj_id) {
-		global $tpl, $ilCtrl, $ilToolbar, $ilTabs;
+		global $tpl, $ilCtrl, $ilToolbar, $ilTabs, $ilAccess;
 
 		$this->gTpl = $tpl;
 		$this->gCtrl = $ilCtrl;
 		$this->gToolbar = $ilToolbar;
 		$this->gTabs = $ilTabs;
+		$this->gAccess = $ilAccess;
 		$this->parent_obj = $parent_obj;
 		$this->actions = $actions;
 		$this->txt = $txt;
@@ -168,16 +169,28 @@ class ilTalentAssessmentObservationsGUI {
 	}
 
 	protected function setSubtabs($activate) {
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_LIST, $this->txt("observation_list")
+		$view_obsrvations = $this->gAccess->checkAccess("view_observations", "", $this->parent_obj->object->getRefId());
+		$edit_obsrvations = $this->gAccess->checkAccess("edit_observation", "", $this->parent_obj->object->getRefId());
+		$finish_ta = $this->gAccess->checkAccess("finish_talent_assessment", "", $this->parent_obj->object->getRefId());
+
+		if($view_obsrvations) {
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_LIST, $this->txt("observation_list")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_LIST));
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_OVERVIEW, $this->txt("observation_overview")
+		}
+
+		if($edit_obsrvations) {
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_OVERVIEW, $this->txt("observation_overview")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_OVERVIEW));
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_CUMULATIVE, $this->txt("observation_cumultativ")
-				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_CUMULATIVE));
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_DIAGRAMM, $this->txt("observation_diagramm")
-				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_DIAGRAMM));
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_REPORT, $this->txt("observation_report")
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_CUMULATIVE, $this->txt("observation_cumultativ")
+					,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_CUMULATIVE));
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_DIAGRAMM, $this->txt("observation_diagramm")
+					,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_DIAGRAMM));
+		}
+
+		if($finish_ta) {
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_REPORT, $this->txt("observation_report")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_REPORT));
+		}
 
 		$this->gTabs->activateSubTab($activate);
 	}
