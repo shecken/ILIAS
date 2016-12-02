@@ -33,6 +33,12 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 								);
 	}
 
+	protected function getTopics() {
+		require_once 'Services/GEV/Utils/classes/class.gevAMDUtils.php';
+		require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
+		return	gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_TOPIC);
+	}
+
 	protected function buildTable($table) {
 		$table	->column('tpl_title', $this->plugin->txt('tpl_title'), true)
 				->column('title', $this->plugin->txt('crs_title'), true)
@@ -75,9 +81,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 				->on(' usrcrs.crs_id = crs.crs_id AND usrcrs.hist_historic = 0 ')
 			->left_join('hist_user usr')
 				->on('usr.user_id = usrcrs.usr_id '
-					.' AND usr.hist_historic = 0 ');
-		$this->crs_topics_filter->addToQuery($query)
-			->group_by('crs.crs_id')
+					.' AND usr.hist_historic = 0 ')
 			->compile();
 		return $query;
 	}
@@ -156,6 +160,224 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 			->action($this->filter_action)
 			->compile();
 		return $filter;
+	}
+
+	public function filter() {
+		$db = $this->gIldb;
+		$pf = new \CaT\Filter\PredicateFactory();
+		$tf = new \CaT\Filter\TypeFactory();
+		$f = new \CaT\Filter\FilterFactory($pf, $tf);
+		$txt = function($id) { return $this->plugin->txt($id); };
+
+		return
+		$f->sequence
+		(
+			$f->sequence
+			(
+
+				/* BEGIN BLOCK - PERIOD */
+				$f->dateperiod
+				(
+					$txt("period")
+					, ""
+				)->map
+					(
+						function($start,$end) use ($f)
+						{
+							$pc = $f->dateperiod_overlaps_predicate
+							(
+								"crs.begin_date"
+								,"crs.begin_date"
+							);
+							return array ("date_period_predicate" => $pc($start,$end)
+										 ,"start" => $start
+										 ,"end" => $end);
+						},
+						$tf->dict
+						(
+							array
+							(
+								"date_period_predicate" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
+								,"start" => $tf->cls("DateTime")
+								,"end" => $tf->cls("DateTime")
+							)
+						)
+					),
+					/* END BLOCK - PERIOD */
+
+
+				/* BEGIN BLOCK - FILTER TOPICS */
+				$f->multiselectsearch
+				(
+					$txt("filter_topics")
+					, ""
+					, $this->getTopics()
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - FILTER TOPICS */
+
+
+				/* BEGIN BLOCK - TRAINING TYPE */
+				$f->multiselectsearch
+				(
+					$txt("training_type")
+					, ""
+					, array('Webinar' => 'Webinar','Präsenztraining' => 'Präsenztraining','Virtuelles Training' => 'Virtuelles Training')
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - TRAINING TYPE */
+
+
+				/* BEGIN BLOCK - STATUS */
+				$f->multiselectsearch
+				(
+					$txt("status")
+					, ""
+					, array('min_participants > bookings' => $txt('cancel_danger'), 'min_participants <= bookings' => $txt('no_cancel_danger'))
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - STATUS */
+
+				/* BEGIN BLOCK - WAITING LIST */
+				$f->multiselectsearch
+				(
+					$txt("waiting_list")
+					, ""
+					, array("crs.waitinglist_active = 'Ja'" => $txt('waiting_list'), "crs.waitinglist_active = 'Nein'" => $txt('no_waiting_list'))
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - WAITING LIST */
+
+				/* BEGIN BLOCK - BOOKING OVER */
+				$f->multiselectsearch
+				(
+					$txt("booking_over")
+					, ""
+					, array($db->quote(date('Y-m-d'),'text')." > booking_dl " => $txt('book_dl_over'),
+							$db->quote(date('Y-m-d'),'text')." <= booking_dl " => $txt('book_dl_not_over'))
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					)
+				/* END BLOCK - BOOKING OVER */
+
+			)->map
+				(
+					function($date_period_predicate, $start, $end, $filter_topics, $training_type, $status, $waiting_list, $booking_over)
+					{
+						return array("period_pred" => $date_period_predicate
+									,"start" => $start
+									,"end" => $end
+									,"filter_topics" => $filter_topics
+									,"training_type" => $training_type
+									,"status" => $status
+									,"waiting_list" => $waiting_list
+									,"booking_over" => $booking_over);
+					},
+					$tf->dict
+					(
+						array("period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
+							 ,"start" => $tf->cls("DateTime")
+							 ,"end" => $tf->cls("DateTime")
+							 ,"filter_topics" => $tf->lst($tf->string())
+							 ,"training_type" => $tf->lst($tf->string())
+							 ,"status" => $tf->lst($tf->string())
+							 ,"waiting_list" => $tf->lst($tf->string())
+							 ,"booking_over" => $tf->lst($tf->string())
+						)
+					)
+				)
+		);
+	}
+
+	protected function fetchData(callable $callback) {
+		$db = $this->gIldb;
+		$query_object = $this->buildQuery(catReportQuery::create());
+		$select = $query_object->sql();
+// print_r($select);exit;
+		$where = " WHERE  (crs.end_date < " .$db->quote(date('Y-m-d'),"text") ."OR crs.is_cancelled = 'Ja' )\n"
+				."     AND crs.hist_historic = 0\n"
+				."     AND crs.is_template = 'Nein'\n"
+				."     AND crs.begin_date != '0000-00-00'\n"
+				."     AND tpl.hist_historic = 0\n"
+				."     AND tpl.is_template = 'Ja'";
+
+		$filter = $this->filter();
+		if($this->filter_settings) {
+			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
+			$dt_query = $to_sql->interpret($settings[0]['period_pred']);
+			$where .= "    AND " .$dt_query;
+			$having = "HAVING TRUE ";
+
+			if(!empty($settings[0]['filter_topics'])) {
+				$select .= " JOIN (SELECT topic_set_id FROM hist_topicset2topic JOIN hist_topics\n"
+						  ."         USING (topic_id)\n"
+						  ."         WHERE ".$db->in('topic_title', $settings[0]['filter_topics'], false, 'text') ."\n"
+						  ."         GROUP BY topic_set_id) AS crs_topics\n"
+						  ." ON crs.topic_set = crs_topics.topic_set_id\n";
+
+				$where .= "     AND crs.topic_set != -1";
+			}
+
+			if(!empty($settings[0]['training_type'])) {
+				$where .= "    AND " .$db->in("crs.type", $settings[0]['training_type'], false, "text");
+			}else {
+				$where .= "    AND crs.type IN ('Webinar','Pr√§senztraining','Virtuelles Training')";
+			}
+
+
+			if(!empty($settings[0]['status'][0]) && !empty($settings[0]['status'][1])) {
+				$having .= "    AND (" .$settings[0]['status'][0]
+						.  "    OR " .$settings[0]['status'][1] .")";
+			} else if (!empty($settings[0]['status'][0])) {
+				$having .= "    AND (" .$settings[0]['status'][0] .")";
+			} else if (!empty($settings[0]['status'][1])) {
+				$having .= "    AND (" .$settings[0]['status'][1] .")";
+			}
+
+			if(!empty($settings[0]['waiting_list'])) {
+				$where .= "    AND (" .$settings[0]['waiting_list'][0] .")";
+			}
+
+			if(!empty($settings[0]['booking_over'])) {
+				$having .= "    AND (" .$settings[0]['booking_over'][0] .")";
+			}
+		}
+
+		$group = " GROUP BY ('crs.crs_id') ";
+		$order = " ORDER BY `tpl_title` ASC, `title` ASC, `begin_date` ASC";
+
+		$filter = $this->filter();
+
+		$query = $select . $where . $group .$having .$order;
+
+		$res = $db->query($query);
+		$data = [];
+
+		while($rec = $db->fetchAssoc($res)) {
+			$data[] = call_user_func($callback, $rec);
+		}
+		return $data;
+
+// $local_condition = $this->settings['is_local'] === "1"
+// 			? $this->gIldb->in('crs.template_obj_id',array_unique($this->getSubtreeCourseTemplates()),false,'integer')
+// 			: 'TRUE';
+		// $this->crs_topics_filter->addToQuery($query)
+		// ->group_by('crs.crs_id')
 	}
 
 	public function getRelevantParameters() {
