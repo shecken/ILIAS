@@ -25,12 +25,13 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
 		parent::afterConstructor();
 		if($this->object->plugin) {
 			$this->tpl->addCSS($this->object->plugin->getStylesheetLocation('report.css'));
-		}
-		$this->filter = $this->object->filter();
-		$this->display = new \CaT\Filter\DisplayFilter
+			$this->filter = $this->object->filter();
+			$this->display = new \CaT\Filter\DisplayFilter
 						( new \CaT\Filter\FilterGUIFactory
 						, new \CaT\Filter\TypeFactory
 						);
+		}
+
 		$this->loadFilterSettings();
 	}
 
