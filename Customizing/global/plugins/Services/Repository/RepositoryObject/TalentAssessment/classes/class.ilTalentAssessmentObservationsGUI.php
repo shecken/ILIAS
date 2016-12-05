@@ -34,6 +34,8 @@ class ilTalentAssessmentObservationsGUI {
 
 		$this->possible_cmd = array("CMD_OBSERVATION_SAVE_VALUES"=>self::CMD_OBSERVATION_SAVE_VALUES
 								  , "CMD_OBSERVATION_SAVE_REPORT"=>self::CMD_OBSERVATION_SAVE_REPORT);
+
+		$this->defineUserPermissions();
 	}
 
 	public function executeCommand() {
@@ -71,8 +73,21 @@ class ilTalentAssessmentObservationsGUI {
 	}
 
 	protected function showObservationsList() {
-		$gui = new TalentAssessment\Observations\ilObservationsListGUI($this);
-		$this->gTpl->setContent($gui->render());
+		if($this->edit_observations) {
+			$gui = new TalentAssessment\Observations\ilObservationsListGUI($this);
+			$this->gTpl->setContent($gui->render());
+			return;
+		}
+
+		if($this->view_observations) {
+			$this->showObservationsOverview();
+			return;
+		}
+
+		if($this->ta_manager) {
+			$this->showObservationsReport();
+			return;
+		}
 	}
 
 	protected function showObservationsOverview() {
@@ -121,7 +136,8 @@ class ilTalentAssessmentObservationsGUI {
 
 	protected function setToolbarObservations() {
 		$observator = $this->actions->getAssignedUser($this->getObjId());
-		if ($observator && count($observator) > 0) {
+
+		if ($observator && count($observator) > 0 && $this->ta_manager) {
 			$start_observation_link = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATION_START);
 			$this->gToolbar->addButton( $this->txt("start_observation"), $start_observation_link);
 		}
@@ -169,16 +185,12 @@ class ilTalentAssessmentObservationsGUI {
 	}
 
 	protected function setSubtabs($activate) {
-		$view_obsrvations = $this->gAccess->checkAccess("view_observations", "", $this->parent_obj->object->getRefId());
-		$edit_obsrvations = $this->gAccess->checkAccess("edit_observation", "", $this->parent_obj->object->getRefId());
-		$finish_ta = $this->gAccess->checkAccess("finish_talent_assessment", "", $this->parent_obj->object->getRefId());
-
-		if($view_obsrvations) {
+		if($this->edit_observations) {
 			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_LIST, $this->txt("observation_list")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_LIST));
 		}
 
-		if($edit_obsrvations) {
+		if($this->view_observations) {
 			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_OVERVIEW, $this->txt("observation_overview")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_OVERVIEW));
 			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_CUMULATIVE, $this->txt("observation_cumultativ")
@@ -187,12 +199,21 @@ class ilTalentAssessmentObservationsGUI {
 					,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_DIAGRAMM));
 		}
 
-		if($finish_ta) {
+		if($this->ta_manager) {
 			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_REPORT, $this->txt("observation_report")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_REPORT));
 		}
 
 		$this->gTabs->activateSubTab($activate);
+	}
+
+	/**
+	 * Define permissions of observations for ilUser
+	 */
+	protected function defineUserPermissions() {
+		$this->view_observations = $this->gAccess->checkAccess("view_observations", "", $this->parent_obj->object->getRefId());
+		$this->edit_observations = $this->gAccess->checkAccess("edit_observation", "", $this->parent_obj->object->getRefId());
+		$this->ta_manager = $this->gAccess->checkAccess("ta_manager", "", $this->parent_obj->object->getRefId());
 	}
 
 	/**

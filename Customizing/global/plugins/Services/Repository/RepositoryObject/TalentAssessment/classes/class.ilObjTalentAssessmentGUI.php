@@ -155,10 +155,10 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	protected function setTabs() {
 		$this->addInfoTab();
 
-		$view_obsrvations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
-		$edit_obsrvations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
-		$finish_ta = $this->gAccess->checkAccess("finish_talent_assessment", "", $this->object->getRefId());
-		if ($view_obsrvations || $edit_obsrvations || $finish_ta) {
+		$view_observations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
+		$edit_observations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
+		$finish_ta = $this->gAccess->checkAccess("ta_manager", "", $this->object->getRefId());
+		if ($view_observations || $edit_observations || $finish_ta) {
 			if(!$this->object->getActions()->observationStarted($this->object->getId())) {
 				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations")
 				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS));
@@ -207,11 +207,11 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	}
 
 	protected function forwardObservations() {
-		$view_obsrvations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
-		$edit_obsrvations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
-		$finish_ta = $this->gAccess->checkAccess("finish_talent_assessment", "", $this->object->getRefId());
+		$view_observations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
+		$edit_observations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
+		$ta_manager = $this->gAccess->checkAccess("ta_manager", "", $this->object->getRefId());
 
-		if(!($view_obsrvations || $edit_obsrvations || $finish_ta)) {
+		if(!($view_observations || $edit_observations || $ta_manager)) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {

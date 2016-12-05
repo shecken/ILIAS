@@ -52,9 +52,8 @@ include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObje
 $type_id = ilDBUpdateNewObjectType::getObjectTypeId('xtas');
 $new_rbac_options = array(array("view_observations", "View observations", "object", 2700)
 						, array("edit_observation", "Edit observation", "object", 2710)
-						, array("finish_talent_assessment", "Finish talent assessment", "object", 2720)
+						, array("ta_manager", "Start and finish talent assessment", "object", 2720)
 						, array("edit_observator", "Edit observator", "object", 2730)
-
 	);
 
 foreach ($new_rbac_options as $value) {
