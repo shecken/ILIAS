@@ -87,79 +87,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 	}
 
 	protected function buildFilter($filter) {
-		$local_condition = $this->settings['is_local'] === "1"
-			? $this->gIldb->in('crs.template_obj_id',array_unique($this->getSubtreeCourseTemplates()),false,'integer') 
-			: 'TRUE';
-
-		$this->crs_topics_filter = new courseTopicsFilter('crs_topics','crs.topic_set');
-		$this->crs_topics_filter->addToFilter($filter);
-		$filter
-			->dateperiod( 	  "period"
-							, $this->plugin->txt("period")
-							, $this->plugin->txt("until")
-							, "crs.begin_date"
-							, "crs.begin_date"
-							, date("Y")."-01-01"
-							, date("Y")."-12-31"
-							, false
-							)
-			->multiselect_custom( 'status' 
-								, $this->plugin->txt("status")
-								, array('min_participants > bookings' => $this->plugin->txt('cancel_danger'),
-										'min_participants <= bookings' => $this->plugin->txt('no_cancel_danger'))
-								, array()
-								, ' OR min_participants IS NULL '
-								, 200
-								, 160
-								, "text"
-								, "asc"
-								, true
-								)
-			->multiselect_custom( 'waiting_list' 
-								, $this->plugin->txt('waiting_list_filter')
-								, array("crs.waitinglist_active = 'Ja'" => $this->plugin->txt('waiting_list'),
-									"crs.waitinglist_active = 'Nein'" => $this->plugin->txt('no_waiting_list'))
-								, array()
-								, ' '
-								, 200
-								, 160
-								, "text"
-								)
-			->multiselect_custom( 'booking_over'
-								, $this->plugin->txt('booking_over')
-								, array($this->gIldb->quote(date('Y-m-d'),'text')." > booking_dl " 
-											=> $this->plugin->txt('book_dl_over'),
-										$this->gIldb->quote(date('Y-m-d'),'text')." <= booking_dl " 
-											=> $this->plugin->txt('book_dl_not_over'))
-								, array()
-								, ' '
-								, 200
-								, 160
-								, "text"
-								, "asc"
-								,	true
-								)
-			->multiselect(	   "training_type"
-							 , $this->plugin->txt("training_type")
-							 , 'crs.type'
-							 , array('Webinar','Präsenztraining','Virtuelles Training')
-							 , array()
-							 , ""
-							 , 200
-							 , 160					
-							)
-			->static_condition('crs.begin_date >= '.$this->gIldb->quote(date('Y-m-d'),'text'))
-			->static_condition("(crs.is_cancelled != 'Ja' OR crs.is_cancelled IS NULL)")
-			->static_condition('crs.hist_historic = 0')
-			->static_condition("crs.is_template = 'Nein'")
-			->static_condition("crs.begin_date != '0000-00-00'")
-			->static_condition($this->gIldb->in('crs.type',array('Webinar','Präsenztraining','Virtuelles Training'),false,'text'))
-			->static_condition($local_condition)
-			->static_condition('tpl.hist_historic = 0')
-			->static_condition('tpl.is_template = '.$this->gIldb->quote('Ja','text'))
-			->action($this->filter_action)
-			->compile();
-		return $filter;
+		return null;
 	}
 
 	public function filter() {
@@ -307,7 +235,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 		$db = $this->gIldb;
 		$query_object = $this->buildQuery(catReportQuery::create());
 		$select = $query_object->sql();
-// print_r($select);exit;
+
 		$where = " WHERE  (crs.end_date < " .$db->quote(date('Y-m-d'),"text") ."OR crs.is_cancelled = 'Ja' )\n"
 				."     AND crs.hist_historic = 0\n"
 				."     AND crs.is_template = 'Nein'\n"
@@ -339,6 +267,11 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 				$where .= "    AND crs.type IN ('Webinar','Pr√§senztraining','Virtuelles Training')";
 			}
 
+			if(!empty($settings['is_local'])) {
+				if($settings['is_local'] === '1') {
+					$where .= "    AND " .$db->in("crs.template_obj_id", array_unique($this->getSubtreeCourseTemplates()),false,'integer');
+				}
+			}
 
 			if(!empty($settings[0]['status'][0]) && !empty($settings[0]['status'][1])) {
 				$having .= "    AND (" .$settings[0]['status'][0]
@@ -372,12 +305,6 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 			$data[] = call_user_func($callback, $rec);
 		}
 		return $data;
-
-// $local_condition = $this->settings['is_local'] === "1"
-// 			? $this->gIldb->in('crs.template_obj_id',array_unique($this->getSubtreeCourseTemplates()),false,'integer')
-// 			: 'TRUE';
-		// $this->crs_topics_filter->addToQuery($query)
-		// ->group_by('crs.crs_id')
 	}
 
 	public function getRelevantParameters() {
