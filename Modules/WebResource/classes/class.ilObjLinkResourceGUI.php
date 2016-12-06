@@ -761,7 +761,12 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 		$des->setRows(3);
 		$des->setCols(40);
 		$this->form->addItem($des);
-		
+
+		//gev-patch 2666
+		$che = new ilCheckboxInputGUI($this->lng->txt('gev_open_same_window'),'window');
+		$che->setValue(1);
+		$this->form->addItem($che);
+		//gev-patch end
 		
 		if($a_mode != self::LINK_MOD_CREATE)
 		{
