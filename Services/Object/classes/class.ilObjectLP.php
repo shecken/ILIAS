@@ -316,8 +316,11 @@ class ilObjectLP
 		
 	final static public function handleMove($a_source_ref_id)
 	{	
-		global $tree, $ilDB;
-		
+		global $tree, $ilDB, $ilLog;
+		$ilLog->write("###############");
+		$ilLog->write("Move object (ilObjectLP::handleMove) with ref id:");
+		$ilLog->dump($a_source_ref_id);
+		$ilLog->write("###############");
 		$ref_ids = $tree->getSubTreeIds($a_source_ref_id);
 		$ref_ids[] = $a_source_ref_id;
 		
@@ -355,12 +358,16 @@ class ilObjectLP
 				if(!stristr($new_path, $coll_path))
 				{
 					// delete all items of moved (sub-)tree
-					$query = "DELETE FROM ut_lp_collections".
+					//gev-patch start 2659
+					if(ilObject2::_lookupType($a_source_ref_id, true) != "cat") {
+						$query = "DELETE FROM ut_lp_collections".
 						" WHERE obj_id = ".$ilDB->quote($rec["obj_id"], "integer").
 						" AND ".$ilDB->in("item_id", $ref_ids, "", "integer");
-					$ilDB->manipulate($query);
-					
-					ilLPStatusWrapper::_refreshStatus($rec["obj_id"]);			
+						$ilDB->manipulate($query);
+
+						ilLPStatusWrapper::_refreshStatus($rec["obj_id"]);
+					}
+					//gev-patch end
 				}
 			}
 		}		
