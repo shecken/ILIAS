@@ -65,31 +65,32 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 		$where = " WHERE TRUE ";
 
 		$filter = $this->filter();
-		if($this->filter_settings) {//var_dump($this->filter_settings);exit;
+		if($this->filter_settings) {
 			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
 			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
 			$dt_query = $to_sql->interpret($settings[0]['period_pred']);
 			$where .= "    AND " .$dt_query;
 
-			if(!empty($settings['edu_program'])) {
-				$where .= "    AND " .$db->in('hc.edu_program', $settings['edu_program'], false, 'text');
+			if(!empty($settings[0]['edu_program'])) {
+				$where .= "    AND " .$db->in('hc.edu_program', $settings[0]['edu_program'], false, 'text');
 			}
 
-			if(!empty($settings['crs_title'])) {
-				$where .= "    AND " .$db->in('hc.title', $settings['crs_title'], false, 'text');
+			if(!empty($settings[0]['crs_title'])) {
+				$where .= "    AND " .$db->in('hc.title', $settings[0]['crs_title'], false, 'text');
 			}
 
-			if(!empty($settings['course_type'])) {
-				$where .= "    AND " .$db->in('hc_type', $settings['course_type'], false, 'text');
+			if(!empty($settings[0]['course_type'])) {
+				$where .= "    AND " .$db->in('hc.type', $settings[0]['course_type'], false, 'text');
 			}
 
-			if(!empty($settings['venue'])) {
-				$where .= "    AND " .$db->in('hc.venue', $settings['venue'], false, 'text');
+			if(!empty($settings[0]['venue'])) {
+				$where .= "    AND " .$db->in('hc.venue', $settings[0]['venue'], false, 'text');
 			}
 		}
 
 		$group = "GROUP BY hu.user_id";
-		$query = $select . $from . $join . $where . $group .$having .$order;//var_dump($query);exit;
+		$query = $select . $from . $join . $where . $group .$having .$order;
+		// var_dump($query);exit;
 		$res = $db->query($query);
 		$data = [];
 
@@ -117,54 +118,6 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 	}
 
 	protected function buildFilter($filter) {
-		// $orgu_filter =  new recursiveOrguFilter('orgu_unit','ht.orgu_id',false,false);
-		// $orgu_filter->setFilterOptionsAll();
-		// $filter	->multiselect( "edu_program"
-		// 					 , $this->plugin->txt("edu_program")
-		// 					 , "hc.edu_program"
-		// 					 , gevCourseUtils::getEduProgramsFromHisto()
-		// 					 , array()
-		// 					 , ""
-		// 					 , 200
-		// 					 , 160	
-		// 					 )
-		// 		->multiselect( "template_title"
-		// 					 , $this->plugin->txt("crs_title")
-		// 					 , "hc.template_title"
-		// 					 , gevCourseUtils::getTemplateTitleFromHisto()
-		// 					 , array()
-		// 					 , ""
-		// 					 , 300
-		// 					 , 160	
-		// 					 )
-		// 		->multiselect( "type"
-		// 					 , $this->plugin->txt("course_type")
-		// 					 , "type"
-		// 					 , gevCourseUtils::getLearningTypesFromHisto()
-		// 					 , array()
-		// 					 , ""
-		// 					 , 200
-		// 					 , 160	
-		// 					 )
-		// $orgu_filter->addToFilter($filter);
-		// $filter	->multiselect( "venue"
-		// 					 , $this->plugin->txt("venue")
-		// 					 , "ht.location"
-		// 					 , gevOrgUnitUtils::getVenueNames()
-		// 					 , array()
-		// 					 , ""
-		// 					 , 300
-		// 					 , 160
-		// 					 )
-		// 		->static_condition("(hc.hist_historic = 0 OR hc.hist_historic IS NULL)")
-		// 		->static_condition("ht.hist_historic = 0")
-		// 		->static_condition("ht.deleted = 0")
-		// 		->static_condition("hu.hist_historic = 0")
-		// 		->static_condition("(ht.category != 'Training' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))")
-		// 		->static_condition($this->gIldb->in('ht.category',$this->categories,false,'text'))
-		// 		->static_condition(' ht.row_id > '.self::MIN_ROW) 
-		// 		->action($this->filter_action)
-		// 		->compile();
 		return null;
 	}
 
@@ -217,7 +170,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 				(
 					$txt("edu_program")
 					, ""
-					, gevCourseUtils::getEduProgramsFromHisto()
+					, $this->changeArrKeys(gevCourseUtils::getEduProgramsFromHisto())
 				)->map
 					(
 						function($types) { return $types; }
@@ -231,7 +184,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 				(
 					$txt("crs_title")
 					, ""
-					, gevCourseUtils::getTemplateTitleFromHisto()
+					, $this->changeArrKeys(gevCourseUtils::getTemplateTitleFromHisto())
 				)->map
 					(
 						function($types) { return $types; }
@@ -245,7 +198,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 				(
 					$txt("course_type")
 					, ""
-					, gevCourseUtils::getLearningTypesFromHisto()
+					, $this->changeArrKeys(gevCourseUtils::getLearningTypesFromHisto())
 				)->map
 					(
 						function($types) { return $types; }
@@ -258,7 +211,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 				(
 					$txt("venue")
 					, ""
-					, gevOrgUnitUtils::getVenueNames()
+					, $this->changeArrKeys(gevOrgUnitUtils::getVenueNames())
 				)->map
 					(
 						function($types) { return $types; }
@@ -320,4 +273,12 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 		return "tpl.trainer_op_by_tep_cat_row.html";
 	}
 
+	protected function changeArrKeys(array $arr) {
+		$ret = array();
+
+		foreach ($arr as $value) {
+			$ret[$value] = $value;
+		}
+		return $ret;
+	}
 }
