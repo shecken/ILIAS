@@ -355,12 +355,14 @@ class ilObjectLP
 				if(!stristr($new_path, $coll_path))
 				{
 					// delete all items of moved (sub-)tree
-					$query = "DELETE FROM ut_lp_collections".
-						" WHERE obj_id = ".$ilDB->quote($rec["obj_id"], "integer").
-						" AND ".$ilDB->in("item_id", $ref_ids, "", "integer");
-					$ilDB->manipulate($query);
+					//gev-patch start 2659
+					// $query = "DELETE FROM ut_lp_collections".
+					// 	" WHERE obj_id = ".$ilDB->quote($rec["obj_id"], "integer").
+					// 	" AND ".$ilDB->in("item_id", $ref_ids, "", "integer");
+					// $ilDB->manipulate($query);
 					
-					ilLPStatusWrapper::_refreshStatus($rec["obj_id"]);			
+					// ilLPStatusWrapper::_refreshStatus($rec["obj_id"]);
+					//gev-patch end
 				}
 			}
 		}		
