@@ -318,7 +318,7 @@ class ilObjectLP
 	{	
 		global $tree, $ilDB, $ilLog;
 		$ilLog->write("###############");
-		$ilLog->write("Move object (ilObjectLP::hanfleMove) with ref id:");
+		$ilLog->write("Move object (ilObjectLP::handleMove) with ref id:");
 		$ilLog->dump($a_source_ref_id);
 		$ilLog->write("###############");
 		$ref_ids = $tree->getSubTreeIds($a_source_ref_id);
