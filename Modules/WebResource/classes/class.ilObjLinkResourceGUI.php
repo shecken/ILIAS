@@ -587,7 +587,8 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 				'des'		=> $values['description'],
 				'act'		=> (int) $values['active'],
 				'che'		=> (int) $values['disable_check'],
-				'vali'		=> (int) $values['valid']
+				'vali'		=> (int) $values['valid'],
+				'window'	=> (int) $values['open_same_window']
 			)
 		);				
 	}
