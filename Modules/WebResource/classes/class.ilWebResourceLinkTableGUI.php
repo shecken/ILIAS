@@ -192,6 +192,7 @@ class ilWebResourceLinkTableGUI extends ilTable2GUI
 		if(!$a_set['open_same_window']) {
 			$this->tpl->setVariable('TARGET_WINDOW', "_blank");
 		}
+		//gev-patch end
 	}
 	
 	
