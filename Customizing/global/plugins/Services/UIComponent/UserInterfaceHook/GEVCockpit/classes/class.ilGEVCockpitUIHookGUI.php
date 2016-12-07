@@ -275,7 +275,11 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 
 		$tpl->addCss("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.css");
 		$tpl->setCurrentBlock("js");
-		$tpl->setVariable("ACTIVE_SLIDE", "<script>var active_slide = " . $this->getCurrentSlide() . ";</script>");
+
+		if($this->getCurrentSlide()) {
+			$tpl->setVariable("ACTIVE_SLIDE", "<script>var active_slide = " . $this->getCurrentSlide() . ";</script>");
+		}
+
 		$tpl->parseCurrentBlock();
 		$this->addJS();
 		return $tpl->get();
