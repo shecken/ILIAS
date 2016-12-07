@@ -95,7 +95,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			if ($_GET["cmdClass"] == "gevuserprofilegui") {
 				return "profile";
 			}
-			if ($_GET["baseClass"] == "ilTEPGUI") {
+			if (strtolower($_GET["baseClass"]) == "iltepgui") {
 				return "tep";
 			}
 			if ($_GET["cmdClass"] == "gevmytrainingsapgui") {
