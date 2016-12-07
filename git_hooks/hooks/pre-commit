@@ -28,6 +28,14 @@ else
 	err+=1
 fi
 
+if ./git_hooks/support/check_code_format
+then
+	echo "all files seem to obey ilias coding standarts"
+else
+	err+=1
+fi
+
+
 if [[ $err -gt 0 ]]
 then
 	exit 1
