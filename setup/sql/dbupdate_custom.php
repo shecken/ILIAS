@@ -5281,3 +5281,15 @@ ilCustomInstaller::initPluginEnv();
 ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
 
 ?>
+
+<#230>
+<?php
+$field = array('type' 		=> 'integer',
+			'length' 	=> 1,
+			'notnull' 	=> false
+			);
+
+if(!$ilDB->tableColumnExists("webr_items", "open_same_window")) {
+	$ilDB->addTableColumn("webr_items", "open_same_window", $field);
+}
+?>

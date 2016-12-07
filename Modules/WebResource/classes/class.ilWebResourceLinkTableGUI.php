@@ -126,6 +126,9 @@ class ilWebResourceLinkTableGUI extends ilTable2GUI
 			$tmp['description'] = $link['description'];
 			$tmp['target'] = $link['target'];
 			$tmp['link_id'] = $link['link_id'];
+			//gev-patch start 2666
+			$tmp['open_same_window'] = $link['open_same_window'];
+			//gev-patch end
 			
 			$rows[] = $tmp;
 		}
@@ -184,6 +187,12 @@ class ilWebResourceLinkTableGUI extends ilTable2GUI
 			$ilCtrl->getLinkTargetByClass(get_class($this->getParentObject()),'confirmDeleteLink')
 		);
 		$this->tpl->setVariable('ACTION_HTML',$actions->getHTML());
+
+		//gev-patch start 2666
+		if(!$a_set['open_same_window']) {
+			$this->tpl->setVariable('TARGET_WINDOW', "_blank");
+		}
+		//gev-patch end
 	}
 	
 	
