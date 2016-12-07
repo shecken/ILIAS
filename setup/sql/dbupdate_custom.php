@@ -5887,3 +5887,15 @@ if(!$ilDB->indexExistsByFields('mass_members', array('obj_id','usr_id'))) {
 <?php
 	$ilCtrlStructureReader->getStructure();
 ?>
+
+<#242>
+<?php
+$field = array('type' 		=> 'integer',
+			'length' 	=> 1,
+			'notnull' 	=> false
+			);
+
+if(!$ilDB->tableColumnExists("webr_items", "open_same_window")) {
+	$ilDB->addTableColumn("webr_items", "open_same_window", $field);
+}
+?>

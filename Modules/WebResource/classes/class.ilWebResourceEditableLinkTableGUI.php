@@ -41,6 +41,7 @@ class ilWebResourceEditableLinkTableGUI extends ilTable2GUI
 		$this->addColumn($this->lng->txt('valid'),'valid','10px');
 		$this->addColumn($this->lng->txt('webr_active'),'active','10px');
 		$this->addColumn($this->lng->txt('webr_disable_check'),'disable_check','10px');
+		$this->addColumn($this->lng->txt('gev_open_same_window'),'open_same_window','10px');
 		#$this->addColumn('','','10px');
 		
 		// TODO: Dynamic fields
@@ -97,6 +98,9 @@ class ilWebResourceEditableLinkTableGUI extends ilTable2GUI
 			$tmp['disable_check'] = $link['disable_check'];
 			$tmp['valid'] = $link['valid'];
 			$tmp['last_check'] = $link['last_check'];
+			//gev-patch start 2666
+			$tmp['open_same_window'] = $link['open_same_window'];
+			//gev-patch end
 			$tmp['params'] = array();
 			
 			$rows[] = $tmp;
@@ -120,6 +124,9 @@ class ilWebResourceEditableLinkTableGUI extends ilTable2GUI
 			$tmp['active'] = $_POST['links'][$link_id]['act'];
 			$tmp['value'] = $_POST['links'][$link_id]['val'];
 			$tmp['name'] = $_POST['links'][$link_id]['nam'];
+			//gev-patch start 2666
+			$tmp['open_same_window'] = $_POST['links'][$link_id]['window'];
+			//gev-patch end
 			$tmp['params'] = array();
 			
 			// var_dump($_POST, $link_id);
@@ -156,6 +163,9 @@ class ilWebResourceEditableLinkTableGUI extends ilTable2GUI
 			$tmp['disable_check'] = $link['disable_check'];
 			$tmp['valid'] = $link['valid'];
 			$tmp['last_check'] = $link['last_check'];
+			//gev-patch start 2666
+			$tmp['open_same_window'] = $link['open_same_window'];
+			//gev-patch end
 			
 			$tmp['params'] = ilParameterAppender::_getParams($link['link_id']);
 			
@@ -286,6 +296,11 @@ class ilWebResourceEditableLinkTableGUI extends ilTable2GUI
 		
 		// Column Target
 		$this->tpl->setVariable('TXT_TARGET',$this->lng->txt('target'));
+
+		//gev-patch start 2666
+		$this->tpl->setVariable('VAL_OPEN_SAME_WINDOW',
+			ilUtil::formCheckbox($a_set['open_same_window'], 'links['.$a_set['id'].'][window]', 1));
+		//gev-patch end
 	}
 		
 	/**

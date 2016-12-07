@@ -94,12 +94,18 @@ class ilObjLinkResourceListGUI extends ilObjectListGUI
 	*/
 	function getCommandFrame($a_cmd)
 	{
+		$link = $this->__readLink();
+
 		switch($a_cmd)
 		{
 			case "":
 				if(ilObjLinkResourceAccess::_checkDirectLink($this->obj_id))
 				{
-					$frame = '_blank';
+					if(!$link["open_same_window"]) {
+						$frame = '_blank';
+					} else {
+						$frame = "";
+					}
 				}
 				else
 				{
