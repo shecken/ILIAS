@@ -10,15 +10,60 @@ require_once 'Services/Form/classes/class.ilCheckboxInputGUI.php';
 * @ilCtrl_Calls ilObjReportCompanyGlobalGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI {
+	const CMD_SHOW_CONTENT = "showContent";
 	static $rows = array("type", "part_book", "part_user", "wp_part", "book_book", "book_user");
 
 	protected function afterConstructor() {
 		parent::afterConstructor();
+		if($this->object->plugin) {
+			$this->tpl->addCSS($this->object->plugin->getStylesheetLocation('report.css'));
+		}
 
+		if($this->object) {
+			$this->filter = $this->object->filter();
+			$this->display = new \CaT\Filter\DisplayFilter
+						( new \CaT\Filter\FilterGUIFactory
+						, new \CaT\Filter\TypeFactory
+						);
+		}
+
+		$this->loadFilterSettings();
 	}
 
 	public function getType() {
 		return 'xrcg';
+	}
+
+	protected function loadFilterSettings() {
+		if(isset($_POST['filter'])) {
+			$this->filter_settings = $_POST['filter'];
+		}
+		if(isset($_GET['filter'])) {
+			$this->filter_settings = unserialize(base64_decode($_GET['filter']));
+		}
+		if($this->filter_settings) {
+			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
+			var_dump($this->object->filter_settings);exit;
+		}
+	}
+
+	protected function render() {
+		$res = $this->renderFilter()."<br />";
+		$res .= $this->renderTable();
+		return $res;
+	}
+
+	protected function renderFilter() {
+		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
+		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, self::CMD_SHOW_CONTENT);
+		return $filter_flat_view->render($this->filter_settings);
+	}
+
+	protected function renderTable() {
+		$this->gCtrl->setParameter($this, 'filter', base64_encode(serialize($this->filter_settings)));
+		$table = parent::renderTable();
+		$this->gCtrl->setParameter($this, 'filter', null);
+		return $sum_table.$table;
 	}
 
 	protected function prepareTitle($a_title) {
@@ -135,6 +180,6 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI {
 			}
 			$rowcount++;
 		}
-		$workbook->close();		
+		$workbook->close();
 	}
 }

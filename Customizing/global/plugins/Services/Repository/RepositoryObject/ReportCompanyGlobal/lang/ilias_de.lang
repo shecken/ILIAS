@@ -46,3 +46,5 @@ xrcg_properties#:#Eigenschaften
 edu_points#:#Weiterbildungspunkte
 participations#:#Teilnahmen
 filter_no_wbd_imported#:#Keine Trainings aus der WBD
+crs_filter_topics#:#Trainingskategorien
+org_unit_recursive#:#Auch alle Mitarbeiter der darunterliegenden Organisationseinheiten anzeigen

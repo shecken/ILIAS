@@ -37,6 +37,15 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 		return $this->prepareQueryComponents($query);
 	}
 
+	protected function getFilterSettings() {
+		$filter = $this->filter();
+		if($this->filter_settings) {
+			$settings = call_user_func(array($filter, "content"), $this->filter_settings);
+		}
+		// var_dump($settings);exit;
+		return $settings;
+	}
+
 	protected function createLocalReportSettings() {
 		$this->local_report_settings =
 			$this->s_f->reportSettings('rep_robj_rcg');
@@ -47,8 +56,12 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 		// but since right now __clone is not defined for queries...
 		$this->query_class = get_class($query);
 
+		$set = $this->getFilterSettings();
+		// var_dump($set);exit;
+
 		// this is quite a hack, but once we have the new filter-api it can be fixed
 		$filter_orgus = $this->orgu_filter->getSelection();
+
 		if(count($filter_orgus) > 0) {
 			$this->sql_filter_orgus = 
 			"SELECT DISTINCT usr_id FROM hist_userorgu"
@@ -165,7 +178,228 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 				->action($this->filter_action)
 				->compile()
 				;
-		return $filter;
+		return null;
+	}
+
+	public function filter() {
+		require_once 'Services/GEV/Utils/classes/class.gevAMDUtils.php';
+		require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
+
+		$db = $this->gIldb;
+		$crs_topics_filter = new courseTopicsFilter('crs_topics','hc.topic_set');
+		$pf = new \CaT\Filter\PredicateFactory();
+		$tf = new \CaT\Filter\TypeFactory();
+		$f = new \CaT\Filter\FilterFactory($pf, $tf);
+		$txt = function($id) { return $this->plugin->txt($id); };
+
+		return
+		$f->sequence
+		(
+
+				$f->option
+				(
+					$txt("filter_no_wbd_imported")
+					, ""
+				)->map
+					(
+						function($types) { return (bool)$types[0]; }
+						,$tf->bool()
+					),
+
+				$f->option
+				(
+					$txt("org_unit_recursive")
+					, ""
+				)->map
+					(
+						function($types) { return (bool)$types[0]; }
+						,$tf->bool()
+					),
+
+
+			$f->sequence
+			(
+
+
+				/* BEGIN BLOCK - PERIOD */
+				$f->dateperiod
+				(
+					$txt("period")
+					, ""
+				)->map
+					(
+						function($start,$end) use ($f)
+						{
+							$pc = $f->dateperiod_overlaps_predicate
+							(
+								"hucs.begin_date"
+								,"hucs.begin_date"
+							);
+							return array ("date_period_predicate" => $pc($start,$end)
+										 ,"start" => $start
+										 ,"end" => $end);
+						},
+						$tf->dict
+						(
+							array
+							(
+								"date_period_predicate" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
+								,"start" => $tf->cls("DateTime")
+								,"end" => $tf->cls("DateTime")
+							)
+						)
+					),
+					/* END BLOCK - PERIOD */
+
+
+				/* BEGIN BLOCK - ORG UNIT */
+				$f->multiselectsearch
+				(
+					$txt("org_unit_short")
+					, ""
+					, $this->getAllOrguIds()
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->int())
+					),
+				/* END BLOCK - ORG UNIT */
+
+
+				/* BEGIN BLOCK - COURSE TOPICS */
+				$f->multiselectsearch
+				(
+					$txt("crs_filter_topics")
+					, ""
+					, gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_TOPIC)
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - COURSE TOPICS */
+
+
+				/* BEGIN BLOCK - EDU PROGRAMS */
+				$f->multiselectsearch
+				(
+					$txt("edu_program")
+					, ""
+					, gevCourseUtils::getEduProgramsFromHisto()
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - EDU PROGRAMS */
+
+				/* BEGIN BLOCK - TEMPLATE TITLE */
+				$f->multiselectsearch
+				(
+					$txt("template_title")
+					, ""
+					, gevCourseUtils::getTemplateTitleFromHisto()
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - TEMPLATE TITLE */
+
+				/* BEGIN BLOCK - COURSE TYPE */
+				$f->multiselectsearch
+				(
+					$txt("course_type")
+					, ""
+					, array("hc.edu_program = ".$db->quote("dezentrales Training","text")." AND hc.dct_type = ".$db->quote("fixed","text")
+										=> $txt("dec_fixed")
+									,"hc.edu_program = ".$db->quote("dezentrales Training","text")." AND hc.dct_type = ".$db->quote("flexible","text")
+										=> $txt("dec_flexible")
+									,"hc.edu_program != ".$db->quote("dezentrales Training","text")
+										=> $txt("non_dec"))
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - COURSE TYPE */
+
+
+				/* BEGIN BLOCK - WBD RELEVANT */
+				$f->multiselectsearch
+				(
+					$txt("wbd_relevant")
+					, ""
+					, array($db->in('hucs.okz',self::$wbd_relevant,false,'text')
+										=> $txt('yes')
+									,$db->in('hucs.okz',self::$wbd_relevant,true,'text')
+										=> $txt('no'))
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - WBD RELEVANT */
+
+				/* BEGIN BLOCK - WB POINTS */
+				$f->multiselectsearch
+				(
+					$txt("edupoints")
+					, ""
+					,  array(
+								' hc.max_credit_points > 0 OR hc.crs_id < 0'
+									=> $txt('trainings_w_points')
+								,$db->in("hc.max_credit_points ",array('0','-empty-') ,false,'text')." AND hc.crs_id > 0"
+									=> $txt('trainings_wo_points'))
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					)
+				/* END BLOCK - WB POINTS */
+
+			)->map
+				(
+					function($date_period_predicate, $start, $end, $org_unit_short, $edu_program, $template_title, $course_type, $wbd_relevant, $edupoints)
+					{
+						return array("period_pred" => $date_period_predicate
+									,"start" => $start
+									,"end" => $end
+									,"org_unit_short" => $org_unit_short
+									,"edu_program" => $edu_program
+									,"template_title" => $template_title
+									,"course_type" => $course_type
+									,"wbd_relevant" => $booking_over
+									,"edupoints" => $edupoints);
+					},
+					$tf->dict
+					(
+						array("period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
+							 ,"start" => $tf->cls("DateTime")
+							 ,"end" => $tf->cls("DateTime")
+							 ,"org_unit_short" => $tf->lst($tf->string())
+							 ,"edu_program" => $tf->lst($tf->string())
+							 ,"template_title" => $tf->lst($tf->string())
+							 ,"course_type" => $tf->lst($tf->string())
+							 ,"wbd_relevant" => $tf->lst($tf->string())
+							 ,"edupoints" => $tf->lst($tf->string())
+						)
+					)
+				)
+		)->map
+			(
+				function($filter_no_wbd_imported, $org_unit_recursive)
+				{
+					return array("filter_no_wbd_imported" => $filter_no_wbd_imported
+								,"org_unit_recursive" => $org_unit_recursive);
+				},
+				$tf->dict
+				(
+					array("filter_no_wbd_imported" => $tf->bool()
+						 ,"org_unit_recursive" => $tf->bool()
+					)
+				)
+			);
 	}
 
 	protected function fetchData(callable $callback){
@@ -298,6 +532,17 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
  
 	public function getRelevantParameters() {
 		return $this->relevant_parameters;
+	}
+
+	protected function getAllOrguIds() {
+		$query = "SELECT DISTINCT obj_id, title FROM object_data JOIN object_reference USING(obj_id)"
+				."	WHERE type = 'orgu' AND deleted IS NULL";
+		$res = $this->gIldb->query($query);
+		$return = array();
+		while($rec = $this->gIldb->fetchAssoc($res)) {
+			$return[$rec["obj_id"]] = $rec["title"];
+		}
+		return $return;
 	}
 
 }
