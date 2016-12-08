@@ -43,7 +43,6 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI {
 		}
 		if($this->filter_settings) {
 			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
-			var_dump($this->object->filter_settings);exit;
 		}
 	}
 

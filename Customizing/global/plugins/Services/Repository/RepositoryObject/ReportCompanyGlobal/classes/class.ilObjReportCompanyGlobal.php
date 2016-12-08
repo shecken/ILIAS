@@ -40,9 +40,9 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 	protected function getFilterSettings() {
 		$filter = $this->filter();
 		if($this->filter_settings) {
-			$settings = call_user_func(array($filter, "content"), $this->filter_settings);
+			var_dump($this->filter_settings);exit;
+			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
 		}
-		// var_dump($settings);exit;
 		return $settings;
 	}
 
@@ -57,7 +57,6 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 		$this->query_class = get_class($query);
 
 		$set = $this->getFilterSettings();
-		// var_dump($set);exit;
 
 		// this is quite a hack, but once we have the new filter-api it can be fixed
 		$filter_orgus = $this->orgu_filter->getSelection();
@@ -196,26 +195,17 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 		$f->sequence
 		(
 
-				$f->option
-				(
-					$txt("filter_no_wbd_imported")
-					, ""
-				)->map
-					(
-						function($types) { return (bool)$types[0]; }
-						,$tf->bool()
-					),
+			$f->option
+			(
+				$txt("filter_no_wbd_imported")
+				, ""
+			),
 
-				$f->option
-				(
-					$txt("org_unit_recursive")
-					, ""
-				)->map
-					(
-						function($types) { return (bool)$types[0]; }
-						,$tf->bool()
-					),
-
+			$f->option
+			(
+				$txt("org_unit_recursive")
+				, ""
+			),
 
 			$f->sequence
 			(
@@ -386,20 +376,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 						)
 					)
 				)
-		)->map
-			(
-				function($filter_no_wbd_imported, $org_unit_recursive)
-				{
-					return array("filter_no_wbd_imported" => $filter_no_wbd_imported
-								,"org_unit_recursive" => $org_unit_recursive);
-				},
-				$tf->dict
-				(
-					array("filter_no_wbd_imported" => $tf->bool()
-						 ,"org_unit_recursive" => $tf->bool()
-					)
-				)
-			);
+		);
 	}
 
 	protected function fetchData(callable $callback){
