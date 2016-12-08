@@ -1,5 +1,5 @@
-<!DOCTYPE>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<!-- tpl.sahs_pres_frameset_js_one_page.html -->
 	<title>ilias CoursePlayer (SCORM 1.2)</title>
@@ -8,14 +8,28 @@
 	<script type="text/javascript" src="{API_LINK}"></script>
 	
 	<meta name="viewport" content="width=device-width, maximum-scale=1" />
+	
 </head>
 
-<body>
-        <div style="margin: 0; position: fixed; right: 0; top: 0; left: 0; bottom: 0; -webkit-overflow-scrolling: touch; overflow-y: scroll">
-                <iframe id="sahs_content" name="sahs_content" style="height: 100%; width: 100%;" src="./Modules/ScormAicc/templates/default/dummy.html">
-                        <p>Your browser does not support iFrames.</p>
-                </iframe>
-        </div>
-</body>
+<script type="text/javascript">
+    if(navigator.userAgent.match(/iPad/i)) {
+    	var tpl = new Array(
+ 			'<frameset rows="*, 20" frameborder="0" framespacing="0" border="0">'
+			,'	<frame src="./Modules/ScormAicc/templates/default/dummy.html" name="sahs_content" marginwidth="0" marginheight="0" scrolling="auto" />'
+			,'	<frame />'
+			,'</frameset>'
+    	).join("\n");
+    	
+    } else {
+    	var tpl = new Array(
+ 			'<frameset rows="*" frameborder="0" framespacing="0" border="0">'
+			,'	<frame src="./Modules/ScormAicc/templates/default/dummy.html" name="sahs_content" marginwidth="0" marginheight="0" scrolling="auto" />'
+			,'</frameset>'
+	   	).join("\n");
+    }
+	document.open();
+	document.write(tpl);
+	document.close();    
+</script>
 
 </html>
