@@ -15,6 +15,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 	protected static $participated = array('teilgenommen');
 	protected static $columns_to_sum = array('book_book' => 'book_book','part_book' => 'part_book','wp_part' => 'wp_part');
 	protected static $wbd_relevant = array('OKZ1','OKZ2','OKZ3');
+	protected $sql_builder = ["select" => "", "from" => "", "join" => "", "where" => "", "having" => "", "group" => "", "order" => ""];
 	protected $types;
 	protected $filter_orgus = array();
 	protected $sql_filter_orgus = null;
@@ -40,7 +41,6 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 	protected function getFilterSettings() {
 		$filter = $this->filter();
 		if($this->filter_settings) {
-			var_dump($this->filter_settings);exit;
 			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
 		}
 		return $settings;
@@ -52,14 +52,18 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 	}
 
 	protected function prepareQueryComponents($query) {
+		$filter_orgus = 0;
 		// this will be used later to invoke other query objects. A cloning of a "virgin" query object would be more formal, 
 		// but since right now __clone is not defined for queries...
 		$this->query_class = get_class($query);
 
-		$set = $this->getFilterSettings();
+		$this->settings = $this->getFilterSettings();
 
+		if(!empty($set[0]['org_unit_short'])) {
+			$filter_orgus = $this->settings[0]['org_unit_short'];
+		} 
 		// this is quite a hack, but once we have the new filter-api it can be fixed
-		$filter_orgus = $this->orgu_filter->getSelection();
+
 
 		if(count($filter_orgus) > 0) {
 			$this->sql_filter_orgus = 
@@ -185,7 +189,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 		require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
 
 		$db = $this->gIldb;
-		$crs_topics_filter = new courseTopicsFilter('crs_topics','hc.topic_set');
+		$this->crs_topics_filter = new courseTopicsFilter('crs_topics','hc.topic_set');
 		$pf = new \CaT\Filter\PredicateFactory();
 		$tf = new \CaT\Filter\TypeFactory();
 		$f = new \CaT\Filter\FilterFactory($pf, $tf);
@@ -195,17 +199,23 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 		$f->sequence
 		(
 
+			/* BEGINN BLOCK - NO TRAININGS FROM WBD */
 			$f->option
 			(
 				$txt("filter_no_wbd_imported")
 				, ""
 			),
+			/* END BLOCK - NO TRAININGS FROM WBD */
 
+
+			/* BEGINN BLOCK - RECURSIVE ORG UNITS? */
 			$f->option
 			(
 				$txt("org_unit_recursive")
 				, ""
 			),
+			/* END BLOCK - RECURSIVE ORG UNITS? */
+
 
 			$f->sequence
 			(
@@ -248,11 +258,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 					$txt("org_unit_short")
 					, ""
 					, $this->getAllOrguIds()
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->int())
-					),
+				),
 				/* END BLOCK - ORG UNIT */
 
 
@@ -262,11 +268,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 					$txt("crs_filter_topics")
 					, ""
 					, gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_TOPIC)
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - COURSE TOPICS */
 
 
@@ -276,11 +278,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 					$txt("edu_program")
 					, ""
 					, gevCourseUtils::getEduProgramsFromHisto()
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - EDU PROGRAMS */
 
 				/* BEGIN BLOCK - TEMPLATE TITLE */
@@ -289,11 +287,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 					$txt("template_title")
 					, ""
 					, gevCourseUtils::getTemplateTitleFromHisto()
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - TEMPLATE TITLE */
 
 				/* BEGIN BLOCK - COURSE TYPE */
@@ -307,11 +301,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 										=> $txt("dec_flexible")
 									,"hc.edu_program != ".$db->quote("dezentrales Training","text")
 										=> $txt("non_dec"))
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - COURSE TYPE */
 
 
@@ -324,11 +314,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 										=> $txt('yes')
 									,$db->in('hucs.okz',self::$wbd_relevant,true,'text')
 										=> $txt('no'))
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - WBD RELEVANT */
 
 				/* BEGIN BLOCK - WB POINTS */
@@ -341,25 +327,22 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 									=> $txt('trainings_w_points')
 								,$db->in("hc.max_credit_points ",array('0','-empty-') ,false,'text')." AND hc.crs_id > 0"
 									=> $txt('trainings_wo_points'))
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					)
+				)
 				/* END BLOCK - WB POINTS */
 
 			)->map
 				(
-					function($date_period_predicate, $start, $end, $org_unit_short, $edu_program, $template_title, $course_type, $wbd_relevant, $edupoints)
+					function($date_period_predicate, $start, $end, $org_unit_short, $crs_filter_topics, $edu_program, $template_title, $course_type, $wbd_relevant, $edupoints)
 					{
 						return array("period_pred" => $date_period_predicate
 									,"start" => $start
 									,"end" => $end
 									,"org_unit_short" => $org_unit_short
+							 		,"crs_filter_topics" => $crs_filter_topics
 									,"edu_program" => $edu_program
 									,"template_title" => $template_title
 									,"course_type" => $course_type
-									,"wbd_relevant" => $booking_over
+									,"wbd_relevant" => $wbd_relevant
 									,"edupoints" => $edupoints);
 					},
 					$tf->dict
@@ -367,9 +350,10 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 						array("period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
 							 ,"start" => $tf->cls("DateTime")
 							 ,"end" => $tf->cls("DateTime")
-							 ,"org_unit_short" => $tf->lst($tf->string())
-							 ,"edu_program" => $tf->lst($tf->string())
-							 ,"template_title" => $tf->lst($tf->string())
+							 ,"org_unit_short" => $tf->lst($tf->int())
+							 ,"crs_filter_topics" => $tf->lst($tf->string())
+							 ,"edu_program" => $tf->lst($tf->int())
+							 ,"template_title" => $tf->lst($tf->int())
 							 ,"course_type" => $tf->lst($tf->string())
 							 ,"wbd_relevant" => $tf->lst($tf->string())
 							 ,"edupoints" => $tf->lst($tf->string())
@@ -453,11 +437,11 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 		$query 		->from('hist_course hc')
 					->join('hist_usercoursestatus hucs')
 						->on($this->userCourseSelectorByStatus($has_participated));
-		if($this->sql_filter_orgus) {
-			$query	->raw_join(' JOIN ('.$this->sql_filter_orgus.') as orgu ON orgu.usr_id = hucs.usr_id ');
+		if($this->settings[2]) {
+			$query	->raw_join(' JOIN ('.$this->settings[2]['org_unit_short'].') as orgu ON orgu.usr_id = hucs.usr_id ');
 		}
 
-		$this->crs_topics_filter->addToQuery($query);
+		$this->addToQuery($query);
 
 		$query	->group_by('hc.type')
 				->compile();
@@ -476,13 +460,27 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 		return $return;
 	}
 
+	// protected function queryWhere() {
+	// 	$db = $this->gIldb;
+	// 	$set = $this->getFilterSettings();
+	// 	$where =  " WHERE TRUE ";
+
+	// 	$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
+	// 	$dt_query = $to_sql->interpret($set[2]["period_pred"]);
+
+	// 	$where .= "     AND " .$dt_query;
+
+
+	// 	return $where;
+	// }
+
 	protected function fetchPartialDataSet($a_query) {
 		$query = $a_query->sql()."\n "
 				. $this->queryWhere()."\n AND "
 				. $a_query->getSqlWhere()."\n"
 				. $a_query->sqlGroupBy()."\n"
 				. $this->queryHaving()."\n"
-				. $this->queryOrder();
+				. $this->queryOrder();//print_r($query);exit;
 		$res = $this->gIldb->query($query);
 		$return = array();
 		while($rec = $this->gIldb->fetchAssoc($res)) {
@@ -520,6 +518,23 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 			$return[$rec["obj_id"]] = $rec["title"];
 		}
 		return $return;
+	}
+
+	/**
+	 *	Add a where-statement to query objcet, that corresponds to filter selection
+	 */
+	public function addToQuery($query) {
+		$selection = $this->settings[0]['org_unit_short'];
+		if(count($selection) > 0 ) {
+			return $query
+				->raw_join(' JOIN (SELECT topic_set_id FROM hist_topicset2topic JOIN hist_topics '
+							.'			USING (topic_id) '
+							.'			WHERE '.$this->gIldb->in('topic_title', $selection, false, 'text')
+							.'			GROUP BY topic_set_id) as crs_topics'
+							.'	ON hc.topic_set = crs_topics.topic_set_id' )
+				->where('hc.topic_set != -1');
+		}
+		return $query;
 	}
 
 }
