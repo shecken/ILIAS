@@ -438,11 +438,10 @@ class ilObjReportCompanyGlobal extends ilObjReportBase {
 					->join('hist_usercoursestatus hucs')
 						->on($this->userCourseSelectorByStatus($has_participated));
 		if($this->settings[2]) {
-			$query	->raw_join(' JOIN ('.$this->settings[2]['org_unit_short'].') as orgu ON orgu.usr_id = hucs.usr_id ');
+			$query	->raw_join(' JOIN ('.$this->settings[2]['org_unit_short'][0].') as orgu ON orgu.usr_id = hucs.usr_id ');
 		}
 
 		$this->addToQuery($query);
-
 		$query	->group_by('hc.type')
 				->compile();
 

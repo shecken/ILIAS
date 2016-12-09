@@ -42,6 +42,7 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI {
 			$this->filter_settings = unserialize(base64_decode($_GET['filter']));
 		}
 		if($this->filter_settings) {
+			$this->object->addRelevantParameter('filter',base64_encode(serialize($this->filter_settings)));
 			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
 		}
 	}
@@ -59,10 +60,7 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI {
 	}
 
 	protected function renderTable() {
-		$this->gCtrl->setParameter($this, 'filter', base64_encode(serialize($this->filter_settings)));
-		$table = parent::renderTable();
-		$this->gCtrl->setParameter($this, 'filter', null);
-		return $sum_table.$table;
+		return $sum_table.parent::renderTable();
 	}
 
 	protected function prepareTitle($a_title) {
