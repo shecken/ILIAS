@@ -182,17 +182,17 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 						AND (ht.category != 'Training' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))
 						AND ht.deleted = 0";
 		if($this->filter_settings) {
-			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+			$this->settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
 			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
-			$dt_query = $to_sql->interpret($settings[0]["period_pred"]);
+			$dt_query = $to_sql->interpret($this->settings[0]["period_pred"]);
 
 			$query .= " AND " .$dt_query;
 
 			if(!empty($settings[0]['org_unit'][0])) {
-				$query .= " AND " .$db->in("ht.orgu_id", $settings[0]['org_unit'], false, "integer");
+				$query .= " AND " .$db->in("ht.orgu_id", $this->settings[0]['org_unit'], false, "integer");
 			}
 
-			$period_days_factor = $this->getPeriodDays($settings[0]['start'], $settings[0]['end'])/365;
+			$period_days_factor = $this->getPeriodDays($this->settings[0]['start'], $this->settings[0]['end'])/365;
 		} else {
 			$period_days_factor = $this->getPeriodDays(new DateTime(date("Y")."-01-01"), new DateTime(date("Y")."-12-31"))/365;
 		}
@@ -254,11 +254,13 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	}
 
 	protected function getPeriodDays(\DateTime $start, \DateTime $end) {
+		$a_dat["start"] = $start;
+		$a_dat["end"] = $end;
+
         foreach($a_dat as &$il_date_obj) {
             $il_date_obj = $il_date_obj->getTimestamp();
         }
-
-        return $period_days = ($send->getTimestamp - $a_dat["start"])/86400+1;
+        return $period_days = ($a_dat["end"] - $a_dat["start"])/86400+1;
 	}
 
 	static protected function identity ($rec) {
@@ -303,7 +305,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		while($rec = $this->gIldb->fetchAssoc($res)) {
 			$perm_check = unserialize($rec['ops_id']);
 			if(in_array($rec["chk"], $perm_check)) {
-				$relevant_orgus[$rec['obj_id']] = $rec['title'];
+				$relevant_orgus[] = $rec['title'];
 			}
 		}
 		return array_unique($relevant_orgus);
@@ -335,6 +337,14 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 				."			AND ore.obj_id = huo.orgu_id ";
 		$sql .= "	WHERE hur.hist_historic IS NULL"
 				."	AND ".$this->gIldb->in("huo.usr_id", $this->user_utils->getEmployees(), false, "integer");
+
+		// $org_units_filter = $this->settings[0]["org_unit"];
+		// if(count($org_units_filter)>0) {
+		// 	$sql .= " 	AND ".$this->orgu_filter->deliverQuery();
+		// }
+		// $sql .= "	WHERE hur.hist_historic IS NULL"
+		// 		."	AND ".$this->gIldb->in("huo.usr_id", $this->user_utils->getEmployees(), false, "integer");
+
 		$res = $this->gIldb->query($sql);
 		$relevant_users = array();
 
@@ -347,7 +357,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		return array_unique($relevant_users);
 	}
 
-	
+
 	public function getRelevantParameters() {
 		return $this->relevant_parameters;
 	}

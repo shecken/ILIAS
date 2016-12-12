@@ -246,7 +246,6 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 	}
 
 	public function buildQueryStatement() {
-		// TODO: neue Ausgabe generieren
 		return $this->query->sql()."\n "
 			   . $this->queryWhere()."\n "
 			   . $this->query->sqlGroupBy()."\n"

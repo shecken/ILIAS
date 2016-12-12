@@ -49,6 +49,7 @@ class ilObjReportTrainerWorkloadGUI extends ilObjReportBaseGUI {
 		}
 
 		if($this->filter_settings) {
+			$this->object->addRelevantParameter("filter", base64_encode(serialize($this->filter_settings)));
 			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
 		}
 	}
