@@ -5983,6 +5983,8 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_
 <?php
 require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 
+$a_start_ref = 56;
+
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Voll", array('visible', 'read', 'write'));
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-TA", array('visible', 'read'));
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", array('visible', 'read'));
