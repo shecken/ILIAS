@@ -14,7 +14,6 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 
 	protected $table_sums;
 	protected $relevant_parameters = array();
-
 	protected $norms;
 
 
@@ -28,6 +27,15 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 
 	public function initType() {
 		 $this->setType("xrtw");
+	}
+
+	protected function getFilterSettings() {
+		$filter = $this->filter();
+		if($this->filter_settings) {
+			$this->set = call_user_func_array(array($filter, "content"), $this->filter_settings);
+			return true;
+		}
+		return false;
 	}
 
 
@@ -73,6 +81,16 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	$txt = function($id) { return $this->plugin->txt($id); };
 
 	return $f->sequence(
+
+				/* BEGINN BLOCK - RECURSIVE ORG UNITS? */
+				$f->option
+				(
+					$txt("org_unit_recursive")
+					, ""
+				),
+				/* END BLOCK - RECURSIVE ORG UNITS? */
+
+
 				$f->sequence(
 					$f->dateperiod
 						( $txt("dateperiod")
@@ -181,18 +199,24 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 						AND ht.hist_historic = 0
 						AND (ht.category != 'Training' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))
 						AND ht.deleted = 0";
-		if($this->filter_settings) {
-			$this->settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+
+
+		if($this->getFilterSettings()) {
+			$this->set = call_user_func_array(array($filter, "content"), $this->filter_settings);
 			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
-			$dt_query = $to_sql->interpret($this->settings[0]["period_pred"]);
+			$dt_query = $to_sql->interpret($this->set[1]["period_pred"]);
 
 			$query .= " AND " .$dt_query;
 
-			if(!empty($settings[0]['org_unit'][0])) {
-				$query .= " AND " .$db->in("ht.orgu_id", $this->settings[0]['org_unit'], false, "integer");
+			if(!empty($this->set[1]['org_unit'])) {
+				// also get recursive org units
+				if($this->set[0]) {
+
+				}
+				$query .= " AND " .$db->in("ht.orgu_id", $this->set[1]['org_unit'], false, "integer");
 			}
 
-			$period_days_factor = $this->getPeriodDays($this->settings[0]['start'], $this->settings[0]['end'])/365;
+			$period_days_factor = $this->getPeriodDays($this->set[1]['start'], $this->set[1]['end'])/365;
 		} else {
 			$period_days_factor = $this->getPeriodDays(new DateTime(date("Y")."-01-01"), new DateTime(date("Y")."-12-31"))/365;
 		}
@@ -291,21 +315,21 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	protected function getRelevantOrgus() {
 
 		$sql = 	"SELECT DISTINCT oda.title, oda.obj_id, rpa.ops_id, rop.ops_id AS chk "
-				."	FROM rbac_pa rpa"
-				."	JOIN rbac_operations rop "
-				."		ON rop.operation = ".$this->gIldb->quote(self::OP_TUTOR_IN_ORGU,"text")
-				."			AND LOCATE( CONCAT( ':', rop.ops_id, ';' ) , rpa.ops_id ) >0 "
-				."	JOIN object_reference ore "
-				."		ON ore.ref_id = rpa.ref_id "
-				."	JOIN object_data oda"
-				."		ON oda.obj_id = ore.obj_id";
+				."	FROM rbac_pa rpa\n"
+				."	JOIN rbac_operations rop\n"
+				."		ON rop.operation = ".$this->gIldb->quote(self::OP_TUTOR_IN_ORGU,"text") ."\n"
+				."			AND LOCATE( CONCAT( ':', rop.ops_id, ';' ) , rpa.ops_id ) >0\n"
+				."	JOIN object_reference ore\n"
+				."		ON ore.ref_id = rpa.ref_id\n"
+				."	JOIN object_data oda\n"
+				."		ON oda.obj_id = ore.obj_id\n";
 
 		$res = $this->gIldb->query($sql);
 		$relevant_orgus = array();
 		while($rec = $this->gIldb->fetchAssoc($res)) {
 			$perm_check = unserialize($rec['ops_id']);
 			if(in_array($rec["chk"], $perm_check)) {
-				$relevant_orgus[] = $rec['title'];
+				$relevant_orgus[$rec['obj_id']] = $rec['title'];
 			}
 		}
 		return array_unique($relevant_orgus);
@@ -317,33 +341,31 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		foreach ($this->ignore_roles as $role_title) {
 			$ignore_roles_ids = array_merge($ignore_roles_ids,	ilObjRole::_getIdsForTitle($role_title,'role'));
 		}
-		$sql = 	"SELECT huo.usr_id, rpa.rol_id, rpa.ops_id, rop.ops_id AS chk "
-				."	FROM rbac_pa rpa"
-				."	JOIN rbac_operations rop "
-				."		ON rop.operation = ".$this->gIldb->quote(self::OP_TUTOR_IN_ORGU,"text")
-				."			AND LOCATE( CONCAT( ':', rop.ops_id, ';' ) , rpa.ops_id ) >0 "
-				."	JOIN object_reference ore "
-				."		ON ore.ref_id = rpa.ref_id "
-				."	JOIN rbac_ua rua "
-				."		ON rua.rol_id = rpa.rol_id "
-				."	LEFT JOIN hist_userrole hur "
-				."		ON hur.usr_id = rua.usr_id "
-				."			AND ".$this->gIldb->in('hur.rol_id',$ignore_roles_ids,false,'integer')
-				."			AND hur.hist_historic = 0 "
-				."			AND hur.action = 1 "
-				."	JOIN hist_userorgu huo "
-				."		ON huo.`action` >= 0 AND huo.hist_historic = 0 "
-				."			AND huo.usr_id = rua.usr_id "
-				."			AND ore.obj_id = huo.orgu_id ";
-		$sql .= "	WHERE hur.hist_historic IS NULL"
-				."	AND ".$this->gIldb->in("huo.usr_id", $this->user_utils->getEmployees(), false, "integer");
+		$sql = 	"SELECT huo.usr_id, rpa.rol_id, rpa.ops_id, rop.ops_id AS chk\n"
+				."	FROM rbac_pa rpa\n"
+				."	JOIN rbac_operations rop\n"
+				."		ON rop.operation = ".$this->gIldb->quote(self::OP_TUTOR_IN_ORGU,"text") ."\n"
+				."			AND LOCATE( CONCAT( ':', rop.ops_id, ';' ) , rpa.ops_id ) >0\n"
+				."	JOIN object_reference ore\n"
+				."		ON ore.ref_id = rpa.ref_id\n"
+				."	JOIN rbac_ua rua\n"
+				."		ON rua.rol_id = rpa.rol_id\n"
+				."	LEFT JOIN hist_userrole hur\n"
+				."		ON hur.usr_id = rua.usr_id\n"
+				."			AND ".$this->gIldb->in('hur.rol_id',$ignore_roles_ids,false,'integer'). "\n"
+				."			AND hur.hist_historic = 0\n"
+				."			AND hur.action = 1\n"
+				."	JOIN hist_userorgu huo\n"
+				."		ON huo.`action` >= 0 AND huo.hist_historic = 0\n"
+				."			AND huo.usr_id = rua.usr_id\n"
+				."			AND ore.obj_id = huo.orgu_id\n"
+				."	WHERE hur.hist_historic IS NULL\n"
+				."		AND ".$this->gIldb->in("huo.usr_id", $this->user_utils->getEmployees(), false, "integer") ."\n";
+		$this->getFilterSettings();
 
-		// $org_units_filter = $this->settings[0]["org_unit"];
-		// if(count($org_units_filter)>0) {
-		// 	$sql .= " 	AND ".$this->orgu_filter->deliverQuery();
-		// }
-		// $sql .= "	WHERE hur.hist_historic IS NULL"
-		// 		."	AND ".$this->gIldb->in("huo.usr_id", $this->user_utils->getEmployees(), false, "integer");
+		if(count($this->set[1]["org_unit"])>0) {
+			$sql .= $this->deliverQuery();
+		}
 
 		$res = $this->gIldb->query($sql);
 		$relevant_users = array();
@@ -412,5 +434,159 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		$tpl .= "\n</tr>";
 		fwrite($str,$tpl);
 		fclose($str);
+	}
+
+		/**
+	 * Define the filter options by directly providing an associative @param array(orgu_title => orgu_id)
+	 *
+	 * @param	int[]	$org_ids
+	 * @return	null
+	 */
+	public function setFilterOptionsByArray(array $org_ids) {
+		$options = array();
+
+		foreach ($org_ids as $obj_id) {
+			$options[$obj_id] =ilObject::_lookupTitle($obj_id);
+		}
+
+		$this->filter_options = $options;
+	}
+
+	/**
+	 * Define the filter options by directly providing a usr object @param gevUserUtils $user_utils.
+	 * The logic by which relevant orgus are extracted is defined later, but will be consistent for any report.
+	 *
+	 * @param	gevUserUtils	$user_utils
+	 * @return	null
+	 */
+	public function setFilterOptionsByUser(gevUserUtils $user_utils) {
+
+		$fn_extract_obj_id =
+			function ($obj_and_ref_id) {
+				return $obj_and_ref_id["obj_id"];
+			};
+
+		$never_skip = array_map($fn_extract_obj_id, $user_utils->getOrgUnitsWhereUserIsDirectSuperior());
+		$superior_orgunits = array_map($fn_extract_obj_id, $user_utils->getOrgUnitsWhereUserIsSuperior());
+
+		$skip_org_units_in_filter_below = array_map(
+			function($title) {
+				return $this->getChildrenOf(ilObjOrgUnit::_getIdsForTitle($title));
+			}, array('Nebenberufsagenturen')
+		);
+		$skip_org_units_in_filter = array();
+		foreach ($skip_org_units_in_filter_below as $org_units) {
+			$skip_org_units_in_filter = array_merge($skip_org_units_in_filter, $org_units);
+		}
+		array_unique($skip_org_units_in_filter);
+
+		$skip_org_units_in_filter = array_diff($skip_org_units_in_filter, $never_skip);
+		$org_units_filter_otions_ids = array_diff($superior_orgunits, $skip_org_units_in_filter);
+
+		$options = array();
+		foreach ($org_units_filter_otions_ids as $obj_id) {
+			$options[$obj_id] = ilObject::_lookupTitle($obj_id);
+		}
+		ksort($options);
+		$this->filter_options = $options;
+	}
+
+	/**
+	 * Any Orgu is used in Filter.
+	 *
+	 * @return	null
+	 */
+	public function setFilterOptionsAll() {
+		$this->setFilterOptionsByArray($this->getAllOrguIds());
+	}
+
+	/**
+	 * Get all orgu units that currently exist in ILIAS-instance
+	 *
+	 * @return	int[]	$return
+	 */
+	protected function getAllOrguIds() {
+		$query = "SELECT DISTINCT obj_id FROM object_data JOIN object_reference USING(obj_id)"
+				."	WHERE type = 'orgu' AND deleted IS NULL";
+		$res = $this->gIldb->query($query);
+		$return = array();
+		while($rec = $this->gIldb->fetchAssoc($res)) {
+			$return[] = $rec["obj_id"];
+		}
+		return $return;
+	}
+
+	/**
+	 * Retrive recursice  filter selection
+	 *
+	 * @return 	bool
+	 */
+	public function getRecursiveSelection() {
+		return $this->set[0];
+	}
+
+	/**
+	 * Retrive bulk orgu filter selection
+	 *
+	 * @return 	int[]	$top_orgu_ids
+	 */
+	public function getSelection() {
+		$top_orgu_ids = $this->set[1]['org_unit'];
+		return $top_orgu_ids;
+	}
+
+	/**
+	 * get orgus and children depending on recursive setting
+	 *
+	 * @return	int[]	$orgu_ids
+	 * @param	bool	$force_recursive
+	 */
+	public function getSelectionAndRecursive($force_recursive = false) {
+		$orgu_ids = $this->getSelection();
+		if(count($orgu_ids)>0 && ($this->getRecursiveSelection() || $force_recursive)) {
+			return array_unique(array_intersect(array_merge($this->getChildrenOf($orgu_ids),$orgu_ids),array_values($this->set[1]['org_unit'])));
+		}
+		return $orgu_ids;
+	}
+
+	/**
+	 * Get some children of given orgu ids.
+	 *
+	 * @return	int[]	$aux  all children of
+	 * @param	int[]	$orgu_ids
+	 */
+	protected function getChildrenOf($orgu_ids) {
+		require_once 'Services/GEV/Utils/classes/class.gevOrgUnitUtils.php';
+		$aux = array();
+		foreach($orgu_ids as $orgu_id) {
+			$ref_id = gevObjectUtils::getRefId($orgu_id);
+			foreach (gevOrgUnitUtils::getAllChildren(array($ref_id)) as $child) {
+				$aux[] = $child["obj_id"];
+			}
+		}
+		return $aux;
+	}
+
+	/**
+	 * get query filter part for report query acc. to filter selection
+	 *
+	 * @return	string	$sql
+	 */
+	public function deliverQuery() {
+		if(count($this->set[1]['org_unit']) > 0) {
+			$return = "";
+			$orgus = $this->getRecursiveSelection() ? $this->getSelectionAndRecursive() : $this->getSelection();
+			if(count($orgus) > 0) {
+				$return .= " AND " .$this->gIldb->in("huo.orgu_id", $orgus, false, 'integer');
+			}
+			$filter_options = array_values($this->set[1]['org_unit']);
+			if($this->getRecursiveSelection()) {
+				$filter_options = array_unique(array_merge($filter_options,$this->getChildrenOf($filter_options)));
+				$filter_options = array_map(function($var) { return (int)$var; }, $filter_options);
+				$return = " AND " .$this->gIldb->in("huo.orgu_id", $filter_options, false, 'integer');
+			}
+			return $return;
+		}
+		return ' FALSE ';
 	}
 }
