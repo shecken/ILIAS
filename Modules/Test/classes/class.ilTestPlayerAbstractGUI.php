@@ -165,7 +165,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	{
 		$this->tpl->setCurrentBlock( "next_bottom" );
 		$this->tpl->setVariable( "CMD_NEXT", 'nextQuestion' );
-		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "save_next" ) . " &gt;&gt;" );
+		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "save_next" ));
 		$this->tpl->parseCurrentBlock();
 	}
 
@@ -173,7 +173,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	{
 		$this->tpl->setCurrentBlock( "next" );
 		$this->tpl->setVariable( "CMD_NEXT", 'nextQuestion' );
-		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "save_next" ) . " &gt;&gt;" );
+		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "save_next" ));
 		$this->tpl->parseCurrentBlock();
 	}
 
@@ -187,7 +187,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	{
 		$this->tpl->setCurrentBlock( "next_bottom" );
 		$this->tpl->setVariable( "CMD_NEXT", 'nextQuestion' );
-		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "save_finish" ) . " &gt;&gt;" );
+		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "save_finish" ));
 		$this->tpl->parseCurrentBlock();
 	}
 
@@ -195,7 +195,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	{
 		$this->tpl->setCurrentBlock( "next" );
 		$this->tpl->setVariable( "CMD_NEXT", 'nextQuestion' );
-		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "save_finish" ) . " &gt;&gt;" );
+		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "save_finish" ));
 		$this->tpl->parseCurrentBlock();
 	}
 
@@ -209,7 +209,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	{
 		$this->tpl->setCurrentBlock( "next_bottom" );
 		$this->tpl->setVariable( "CMD_NEXT", 'nextQuestion' );
-		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "question_summary" ) . " &gt;&gt;" );
+		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "question_summary" ));
 		$this->tpl->parseCurrentBlock();
 	}
 
@@ -217,7 +217,7 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	{
 		$this->tpl->setCurrentBlock( "next" );
 		$this->tpl->setVariable( "CMD_NEXT", 'nextQuestion' );
-		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "question_summary" ) . " &gt;&gt;" );
+		$this->tpl->setVariable( "BTN_NEXT", $this->lng->txt( "question_summary" ));
 		$this->tpl->parseCurrentBlock();
 	}
 
@@ -308,20 +308,20 @@ abstract class ilTestPlayerAbstractGUI extends ilTestServiceGUI
 	protected function populatePreviousButtonsLeadingToQuestion()
 	{
 		$this->populateUpperPreviousButtonBlock(
-				'previousQuestion', "&lt;&lt; " . $this->lng->txt( "save_previous" )
+				'previousQuestion', $this->lng->txt( "save_previous" )
 		);
 		$this->populateLowerPreviousButtonBlock(
-				'previousQuestion', "&lt;&lt; " . $this->lng->txt( "save_previous" )
+				'previousQuestion', $this->lng->txt( "save_previous" )
 		);
 	}
 
 	protected function populatePreviousButtonsLeadingToIntroduction()
 	{
 		$this->populateUpperPreviousButtonBlock(
-				'previousQuestion', "&lt;&lt; " . $this->lng->txt( "save_introduction" )
+				'previousQuestion', $this->lng->txt( "save_introduction" )
 		);
 		$this->populateLowerPreviousButtonBlock(
-				'previousQuestion', "&lt;&lt; " . $this->lng->txt( "save_introduction" )
+				'previousQuestion', $this->lng->txt( "save_introduction" )
 		);
 	}
 

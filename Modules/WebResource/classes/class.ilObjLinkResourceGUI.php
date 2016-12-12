@@ -539,6 +539,7 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 			$links->setDisableCheckStatus((int) $data['che']);
 			$links->setLastCheckDate($orig['last_check']);
 			$links->setValidStatus((int) $data['vali']);
+			$links->setOpenSameWindow((int) $data['window']);
 			$links->update();
 			
 			if(strlen($data['nam']) and $data['val'])
@@ -586,7 +587,8 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 				'des'		=> $values['description'],
 				'act'		=> (int) $values['active'],
 				'che'		=> (int) $values['disable_check'],
-				'vali'		=> (int) $values['valid']
+				'vali'		=> (int) $values['valid'],
+				'window'	=> (int) $values['open_same_window']
 			)
 		);				
 	}
@@ -609,6 +611,10 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 		$this->link->setTitle($this->form->getInput('tit'));
 		$this->link->setDescription($this->form->getInput('des'));
 		$this->link->setDisableCheckStatus($this->form->getInput('che'));
+
+		//gev-patch start 2666
+		$this->link->setOpenSameWindow($this->form->getInput('window'));
+		//gev-patch end
 		
 		if($a_mode == self::LINK_MOD_CREATE)
 		{
@@ -761,7 +767,12 @@ class ilObjLinkResourceGUI extends ilObject2GUI implements ilLinkCheckerGUIRowHa
 		$des->setRows(3);
 		$des->setCols(40);
 		$this->form->addItem($des);
-		
+
+		//gev-patch 2666
+		$che = new ilCheckboxInputGUI($this->lng->txt('gev_open_same_window'),'window');
+		$che->setValue(1);
+		$this->form->addItem($che);
+		//gev-patch end
 		
 		if($a_mode != self::LINK_MOD_CREATE)
 		{
