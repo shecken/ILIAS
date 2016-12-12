@@ -207,14 +207,14 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 			$dt_query = $to_sql->interpret($this->set[1]["period_pred"]);
 
 			$query .= " AND " .$dt_query;
+			$query .= " AND " .$db->in('hu.org_unit', $this->getRelevantOrgus(), false, "integer");
+			// if(!empty($this->set[1]['org_unit'])) {
+			// 	// also get recursive org units
+			// 	if($this->set[0]) {
 
-			if(!empty($this->set[1]['org_unit'])) {
-				// also get recursive org units
-				if($this->set[0]) {
-
-				}
-				$query .= " AND " .$db->in("ht.orgu_id", $this->set[1]['org_unit'], false, "integer");
-			}
+			// 	}
+			// 	$query .= " AND " .$db->in("ht.orgu_id", $this->set[1]['org_unit'], false, "integer");
+			// }
 
 			$period_days_factor = $this->getPeriodDays($this->set[1]['start'], $this->set[1]['end'])/365;
 		} else {
@@ -328,6 +328,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		$relevant_orgus = array();
 		while($rec = $this->gIldb->fetchAssoc($res)) {
 			$perm_check = unserialize($rec['ops_id']);
+			//var_dump($perm_check);exit;
 			if(in_array($rec["chk"], $perm_check)) {
 				$relevant_orgus[$rec['obj_id']] = $rec['title'];
 			}
@@ -544,7 +545,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	public function getSelectionAndRecursive($force_recursive = false) {
 		$orgu_ids = $this->getSelection();
 		if(count($orgu_ids)>0 && ($this->getRecursiveSelection() || $force_recursive)) {
-			return array_unique(array_intersect(array_merge($this->getChildrenOf($orgu_ids),$orgu_ids),array_values($this->set[1]['org_unit'])));
+			return array_unique(array_merge($this->getChildrenOf($orgu_ids),$orgu_ids));
 		}
 		return $orgu_ids;
 	}
@@ -561,7 +562,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		foreach($orgu_ids as $orgu_id) {
 			$ref_id = gevObjectUtils::getRefId($orgu_id);
 			foreach (gevOrgUnitUtils::getAllChildren(array($ref_id)) as $child) {
-				$aux[] = $child["obj_id"];
+				$aux[] = (int)$child["obj_id"];
 			}
 		}
 		return $aux;
@@ -576,6 +577,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		if(count($this->set[1]['org_unit']) > 0) {
 			$return = "";
 			$orgus = $this->getRecursiveSelection() ? $this->getSelectionAndRecursive() : $this->getSelection();
+
 			if(count($orgus) > 0) {
 				$return .= " AND " .$this->gIldb->in("huo.orgu_id", $orgus, false, 'integer');
 			}
