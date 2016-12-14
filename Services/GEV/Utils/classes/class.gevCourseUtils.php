@@ -1468,6 +1468,7 @@ class gevCourseUtils {
 		$all = $lng->txt("gev_crs_srch_all");
 		require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
 		$arr = gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_TOPIC);
+		asort($arr);
 		return array_merge(array($all => $all), $arr);
 	}
 	
@@ -1476,6 +1477,7 @@ class gevCourseUtils {
 		$all = $lng->txt("gev_crs_srch_all");
 		require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
 		$arr = gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_TARGET_GROUP);
+		asort($arr);
 		return array_merge(array($all => $all), $arr);
 	}
 	
@@ -1484,7 +1486,7 @@ class gevCourseUtils {
 		$all = $lng->txt("gev_crs_srch_all");
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		$arr = gevOrgUnitUtils::getVenueNames();
-		
+
 		foreach($arr as $id => $name) {
 			if (!in_array($name, array( "Generali Akademie GmbH, Bernried"
 									  , "Generali Versicherung AG, München"
@@ -1494,7 +1496,7 @@ class gevCourseUtils {
 				unset($arr[$id]);
 			}
 		}
-		
+		asort($arr);
 		return array($all => $all) + $arr;
 	}
 	
