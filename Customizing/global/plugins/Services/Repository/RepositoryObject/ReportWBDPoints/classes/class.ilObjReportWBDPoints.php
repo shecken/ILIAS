@@ -137,9 +137,7 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 				  ."     ON usrcrs.crs_id = crs.crs_id\n"
 				  ."         AND crs.hist_historic = 0\n"
 				  ." WHERE usrcrs.hist_historic = 0\n"
-				  ."     AND usrcrs.wbd_booking_id IS NOT NULL\n"
-				  ."     AND usr.hist_historic = 0\n"
-				  ."     AND crs.hist_historic = 0\n";
+				  ."     AND usrcrs.wbd_booking_id IS NOT NULL\n";
 
 		$filter = $this->filter();
 		if($this->filter_settings) {
@@ -153,14 +151,10 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 			}
 
 			if(!empty($settings[0]['wbd_types'])) {
-
 				$query .= "    AND " .$db->in('usr.wbd_type', $settings[0]['wbd_types'], false, "text");
 			}
 		}
 
-		if ($query === null) {
-			throw new Exception("catBasicReportGUI::fetchData: query not defined.");
-		}
 		$res = $this->gIldb->query($query);
 		$data = array();
 
@@ -185,10 +179,10 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 		$where = "WHERE TRIM($a_field) NOT IN ('-empty-', '')"
 				." AND $a_field IS NOT NULL"
 				;
-		if ($a_showempty === true) {
+		if ($a_showempty) {
 			$where = 'WHERE 1';
 		}
-		if ($a_filter_historic === true) {
+		if ($a_filter_historic) {
 			$where .= ' AND hsit_historic=0';
 		}
 

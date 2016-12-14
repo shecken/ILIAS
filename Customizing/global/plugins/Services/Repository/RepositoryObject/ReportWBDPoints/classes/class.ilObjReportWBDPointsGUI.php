@@ -9,6 +9,7 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * @ilCtrl_Calls ilObjReportWBDPointsGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
+	const CMD_FILTER = "filter";
 	const CMD_SHOW_CONTENT = "showContent";
 
 	public function getType() {
@@ -75,6 +76,7 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
 			$this->filter_settings = unserialize(base64_decode($_GET['filter']));
 		}
 		if($this->filter_settings) {
+			$this->object->addRelevantParameter('filter', base64_encode(serialize($this->filter_settings)));
 			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
 		}
 	}
