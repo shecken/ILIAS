@@ -241,7 +241,7 @@ class ilObjStudyProgrammeIndividualPlanGUI {
 		$tpl->setVariable("USERNAME", ilObjUser::_lookupFullname($ass->getUserId()));
 		foreach (array("view", "manage") as $_tab) {
 			$tpl->setCurrentBlock("sub_tab");
-			$tpl->setVariable("CLASS", $_tab == $tab ? "active" : "");
+			$tpl->setVariable("CLASS", $_tab == $tab ? "subtabactive" : "subtabinactive");
 			$tpl->setVariable("LINK", $this->getLinkTargetForSubTab($_tab, $ass->getId()));
 			$tpl->setVariable("TITLE", $this->lng->txt("prg_$_tab"));
 			$tpl->parseCurrentBlock();

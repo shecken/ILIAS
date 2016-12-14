@@ -58,8 +58,8 @@ class ilStudyProgrammeIndividualPlanTableGUI extends ilTable2GUI {
 		$this->setMaxCount(count($plan));
 		$this->setData($plan);
 		
-		$this->possible_image = "<img src='".ilUtil::getImagePath("icon_ok.svg")."' alt='ok'>";
-		$this->not_possible_image = "<img src='".ilUtil::getImagePath("icon_not_ok.svg")."' alt='not ok'>";
+		$this->possible_image = "<img src='".ilUtil::getImagePath("icon_ok.png")."' alt='ok'>";
+		$this->not_possible_image = "<img src='".ilUtil::getImagePath("icon_not_ok.png")."' alt='not ok'>";
 	}
 	
 	protected function fillRow($a_set) {
