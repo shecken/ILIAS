@@ -148,8 +148,8 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 				   ."     , cmpl_obj.title completion_by"
 				   ."     , prgrs.assignment_id assignment_id"
 				   ."     , ass.root_prg_id root_prg_id"
-				   ."     , ass.last_change assign_date"
-				   ."     , ass_usr.login assigned_by"
+				   ."     , ass.last_change prg_assign_date"
+				   ."     , ass_usr.login prg_assigned_by"
 				   // for sorting
 				   ."     , CONCAT(pcp.firstname, pcp.lastname) name"
 				   ."     , (prgrs.last_change_by IS NOT NULL) custom_plan"
