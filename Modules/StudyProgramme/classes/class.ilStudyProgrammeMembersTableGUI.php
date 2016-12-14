@@ -98,12 +98,12 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 			switch($column) {
 				case "prg_assign_date":
 					$this->tpl->setCurrentBlock("assign_date");
-					$this->tpl->setVariable("ASSIGN_DATE", $a_set["assign_date"]);
+					$this->tpl->setVariable("ASSIGN_DATE", $a_set["prg_assign_date"]);
 					$this->tpl->parseCurrentBlock("assign_date");
 					break;
 				case "prg_assigned_by":
 					$this->tpl->setCurrentBlock("assigned_by");
-					$this->tpl->setVariable("ASSIGNED_BY", $a_set["assigned_by"]);
+					$this->tpl->setVariable("ASSIGNED_BY", $a_set["prg_assigned_by"]);
 					$this->tpl->parseCurrentBlock("assigned_by");
 					break;
 			}
