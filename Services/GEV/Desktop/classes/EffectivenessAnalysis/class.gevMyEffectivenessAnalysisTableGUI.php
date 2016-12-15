@@ -49,7 +49,7 @@ class gevMyEffectivenessAnalysisTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->gLng->txt("gev_eff_analysis_date"), "begin_date");
 		$this->addColumn($this->gLng->txt("gev_eff_analysis_lang"), "language");
 		$this->addColumn($this->gLng->txt("gev_eff_analysis_finished_at"), "finish_date");
-		$this->addColumn($this->gLng->txt("actions"), null);
+		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', null, "20px", false);
 
 		$this->eff_analysis_icon = $image_link;
 
