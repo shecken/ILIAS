@@ -563,15 +563,16 @@ class gevCourseBuildingBlockUtils {
 
 
 		$sql = "SELECT MIN(start_time) AS start_time, MAX(end_time) AS end_time FROM ".self::TABLE_NAME;
-		$res = $ilDB->query($sql.$where);
 
-		if($ilDB->numRows($res) > 0 ) {
-			$row = $ilDB->fetchAssoc($res);
+		$res = $ilDB->query($sql.$where);
+		$row = $ilDB->fetchAssoc($res);
+
+		if($row["start_time"] !== null && $row["end_time"] !== null) {
 			$date = $start->get(IL_CAL_DATE);
 
 			$block_start = new IlDateTime($date." ".$row["start_time"],IL_CAL_DATETIME);
 			$block_end = new IlDateTime($date." ".$row["end_time"],IL_CAL_DATETIME);
-		
+
 			if($start->get(IL_CAL_UNIX) > $block_start->get(IL_CAL_UNIX) || $end->get(IL_CAL_UNIX) < $block_end->get(IL_CAL_UNIX)) {
 				return true;
 			}
