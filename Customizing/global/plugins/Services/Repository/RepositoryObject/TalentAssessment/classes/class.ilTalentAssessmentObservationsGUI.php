@@ -19,12 +19,13 @@ class ilTalentAssessmentObservationsGUI {
 
 
 	public function __construct($parent_obj, $actions, Closure $txt, \CaT\Plugins\TalentAssessment\Settings\TalentAssessment $settings, $obj_id) {
-		global $tpl, $ilCtrl, $ilToolbar, $ilTabs;
+		global $tpl, $ilCtrl, $ilToolbar, $ilTabs, $ilAccess;
 
 		$this->gTpl = $tpl;
 		$this->gCtrl = $ilCtrl;
 		$this->gToolbar = $ilToolbar;
 		$this->gTabs = $ilTabs;
+		$this->gAccess = $ilAccess;
 		$this->parent_obj = $parent_obj;
 		$this->actions = $actions;
 		$this->txt = $txt;
@@ -33,6 +34,8 @@ class ilTalentAssessmentObservationsGUI {
 
 		$this->possible_cmd = array("CMD_OBSERVATION_SAVE_VALUES"=>self::CMD_OBSERVATION_SAVE_VALUES
 								  , "CMD_OBSERVATION_SAVE_REPORT"=>self::CMD_OBSERVATION_SAVE_REPORT);
+
+		$this->defineUserPermissions();
 	}
 
 	public function executeCommand() {
@@ -70,8 +73,21 @@ class ilTalentAssessmentObservationsGUI {
 	}
 
 	protected function showObservationsList() {
-		$gui = new TalentAssessment\Observations\ilObservationsListGUI($this);
-		$this->gTpl->setContent($gui->render());
+		if($this->edit_observations) {
+			$gui = new TalentAssessment\Observations\ilObservationsListGUI($this);
+			$this->gTpl->setContent($gui->render());
+			return;
+		}
+
+		if($this->view_observations) {
+			$this->showObservationsOverview();
+			return;
+		}
+
+		if($this->ta_manager) {
+			$this->showObservationsReport();
+			return;
+		}
 	}
 
 	protected function showObservationsOverview() {
@@ -120,7 +136,8 @@ class ilTalentAssessmentObservationsGUI {
 
 	protected function setToolbarObservations() {
 		$observator = $this->actions->getAssignedUser($this->getObjId());
-		if ($observator && count($observator) > 0) {
+
+		if ($observator && count($observator) > 0 && $this->ta_manager) {
 			$start_observation_link = $this->gCtrl->getLinkTarget($this->parent_obj, self::CMD_OBSERVATION_START);
 			$this->gToolbar->addButton( $this->txt("start_observation"), $start_observation_link);
 		}
@@ -168,18 +185,35 @@ class ilTalentAssessmentObservationsGUI {
 	}
 
 	protected function setSubtabs($activate) {
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_LIST, $this->txt("observation_list")
+		if($this->edit_observations) {
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_LIST, $this->txt("observation_list")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_LIST));
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_OVERVIEW, $this->txt("observation_overview")
+		}
+
+		if($this->view_observations) {
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_OVERVIEW, $this->txt("observation_overview")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_OVERVIEW));
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_CUMULATIVE, $this->txt("observation_cumultativ")
-				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_CUMULATIVE));
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_DIAGRAMM, $this->txt("observation_diagramm")
-				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_DIAGRAMM));
-		$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_REPORT, $this->txt("observation_report")
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_CUMULATIVE, $this->txt("observation_cumultativ")
+					,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_CUMULATIVE));
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_DIAGRAMM, $this->txt("observation_diagramm")
+					,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_DIAGRAMM));
+		}
+
+		if($this->ta_manager) {
+			$this->gTabs->addSubTab(self::CMD_OBSERVATIONS_REPORT, $this->txt("observation_report")
 				,$this->gCtrl->getLinkTarget($this, self::CMD_OBSERVATIONS_REPORT));
+		}
 
 		$this->gTabs->activateSubTab($activate);
+	}
+
+	/**
+	 * Define permissions of observations for ilUser
+	 */
+	protected function defineUserPermissions() {
+		$this->view_observations = $this->gAccess->checkAccess("view_observations", "", $this->parent_obj->object->getRefId());
+		$this->edit_observations = $this->gAccess->checkAccess("edit_observation", "", $this->parent_obj->object->getRefId());
+		$this->ta_manager = $this->gAccess->checkAccess("ta_manager", "", $this->parent_obj->object->getRefId());
 	}
 
 	/**
