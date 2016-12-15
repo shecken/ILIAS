@@ -495,5 +495,86 @@ class ilContainerObjectiveGUI extends ilContainerContentGUI
 			$ilCtrl->getLinkTarget($this->getContainerGUI(),$a_cmd),
 			$a_target);	
 	}
+
+	/**
+	 * Render progress bar(s)
+	 *
+	 * @param int $a_perc_result
+	 * @param int $a_perc_limit
+	 * @param string $a_css
+	 * @param string $a_caption
+	 * @param string $a_url
+	 * @param string $a_tt_id
+	 * @param string $a_tt_txt
+	 * @param string $a_next_step
+	 * @param string $a_sub (html)
+	 * @param int $a_sub_style
+	 * @return type
+	 */
+	public static function renderProgressBar($a_perc_result = null, $a_perc_limit = null, $a_css = null, $a_caption = null, $a_url = null, $a_tt_id = null, $a_tt_txt = null, $a_next_step = null, $a_sub = false, $a_sub_style = 30)
+	{
+		$tpl = new ilTemplate("tpl.objective_progressbar.html", true, true, "Services/Container");
+
+		if($a_perc_result !== null)
+		{
+			$tpl->setCurrentBlock("statusbar_bl");
+			$tpl->setVariable("PERC_STATUS", $a_perc_result);
+			$tpl->setVariable("PERC_WIDTH", $a_perc_result);
+			$tpl->setVariable("PERC_COLOR", $a_css);
+			if($a_perc_limit)
+			{
+				// :TODO: magic?
+				$limit_pos = (99-(int)$a_perc_limit)*-1;
+				$tpl->setVariable("LIMIT_POS", $limit_pos);
+			}
+			if($a_tt_txt && $a_tt_id)
+			{
+				$tpl->setVariable("TT_ID", $a_tt_id);
+			}
+			$tpl->parseCurrentBlock();
+		}
+
+		if($a_caption)
+		{
+			if($a_url)
+			{
+				include_once "Services/UIComponent/Button/classes/class.ilLinkButton.php";
+				$button = ilLinkButton::getInstance();
+				$button->setCaption($a_caption, false);
+				$button->setUrl($a_url);
+
+				$tpl->setCurrentBlock("statustxt_bl");
+				$tpl->setVariable("TXT_PROGRESS_STATUS", $button->render());
+				$tpl->parseCurrentBlock();
+			}
+			else
+			{
+				$tpl->setCurrentBlock("statustxt_no_link_bl");
+				$tpl->setVariable("TXT_PROGRESS_STATUS_NO_LINK", $a_caption);
+				$tpl->parseCurrentBlock();
+			}
+		}
+
+		if($a_next_step)
+		{
+			$tpl->setCurrentBlock("nstep_bl");
+			$tpl->setVariable("TXT_NEXT_STEP", $a_next_step);
+			$tpl->parseCurrentBlock();
+		}
+
+		if($a_tt_id && $a_tt_txt)
+		{
+			include_once("./Services/UIComponent/Tooltip/classes/class.ilTooltipGUI.php");
+			ilTooltipGUI::addTooltip($a_tt_id, $a_tt_txt);
+		}
+
+		if($a_sub)
+		{
+			$tpl->setVariable("SUB_STYLE", ' style="padding-left: '.$a_sub_style.'px;"');
+			$tpl->setVariable("SUB_INIT", $a_sub);
+		}
+
+		return $tpl->get();
+	}
 }
 ?>

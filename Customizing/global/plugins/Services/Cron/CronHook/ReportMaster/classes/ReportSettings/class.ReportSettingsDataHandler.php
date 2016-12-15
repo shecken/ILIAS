@@ -1,7 +1,7 @@
 <?php
-require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.reportSettingsException.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.ReportSettingsException.php';
 
-class reportSettingsDataHandler {
+class ReportSettingsDataHandler {
 	protected $db;
 	protected $settings_format;
 
@@ -16,7 +16,7 @@ class reportSettingsDataHandler {
 	 * 	@param	int	obj_id
 	 * 	@param	settingsValueContainer	settings_values
 	 */
-	public function createObjEntry($obj_id, reportSettings $settings) {
+	public function createObjEntry($obj_id, ReportSettings $settings) {
 		$fields = array("id");
 		$values = array($obj_id);
 		foreach($settings->settingIds() as $field_id) {
@@ -35,7 +35,7 @@ class reportSettingsDataHandler {
 	 * 	@param	int	obj_id 
 	 * 	@param	array	settings
 	 */
-	public function updateObjEntry($obj_id, reportSettings $settings, array $settings_data) {
+	public function updateObjEntry($obj_id, ReportSettings $settings, array $settings_data) {
 		$query_parts = array();
 		$fields = $settings->settingIds();
 		if(count($fields) > 0) {
@@ -56,7 +56,7 @@ class reportSettingsDataHandler {
 	 * 	@param	reportSettings	settings
 	 *	@return	mixed[] 
 	 */
-	public function readObjEntry($obj_id, reportSettings $settings) {
+	public function readObjEntry($obj_id, ReportSettings $settings) {
 		if(count($settings->settingIds()) > 0 ) {
 			$query = 'SELECT '.implode(', ' ,$settings->settingIds())
 					.'	FROM '.$settings->table()
@@ -72,7 +72,7 @@ class reportSettingsDataHandler {
 	 * 	@param	int	obj_id
 	 * 	@param	reportSettings	settings
 	 */
-	public function deleteObjEntry($obj_id, reportSettings $settings) {
+	public function deleteObjEntry($obj_id, ReportSettings $settings) {
 		$query = 'DELETE FROM '.$settings->table().' WHERE id = '.$obj_id;
 		$this->db->manipulate($query);
 	}
@@ -82,15 +82,15 @@ class reportSettingsDataHandler {
 	 * 	@param	mixed 	$value
 	 * 	@param	setting	$settings
 	 */
-	protected function quote($value, setting $setting) {
-		if($setting instanceof settingInt || $setting instanceof settingBool  || $setting instanceof settingHiddenInt) {
+	protected function quote($value, Setting $setting) {
+		if($setting instanceof SettingInt || $setting instanceof SettingBool  || $setting instanceof SettingHiddenInt) {
 			$quote_format = 'integer';
-		} elseif($setting instanceof settingFloat || $setting instanceof settingListInt) {
+		} elseif($setting instanceof SettingFloat || $setting instanceof SettingListInt) {
 			$quote_format = 'float';
-		} elseif($setting instanceof settingString || $setting instanceof settingText || $setting instanceof settingRichText || $setting instanceof settingHiddenString) {
+		} elseif($setting instanceof SettingString || $setting instanceof SettingText || $setting instanceof SettingRichText || $setting instanceof SettingHiddenString) {
 			$quote_format = 'text';
 		} else {
-			throw new reportSettingsException("unknown setting type".get_class($setting));
+			throw new ReportSettingsException("unknown setting type".get_class($setting));
 		}
 
 		return $this->db->quote($value, $quote_format);
@@ -103,9 +103,9 @@ class reportSettingsDataHandler {
 	 *
 	 *	@return	string|int[string]
 	 */
-	public function query(array $properties,reportSettings $settings) {
+	public function query(array $properties, ReportSettings $settings) {
 		if(count(array_intersect(array_keys($properties),$settings->settingIds())) === 0) {
-			throw new reportSettingsException('no known settings in query parameters');
+			throw new ReportSettingsException('no known settings in query parameters');
 		}
 		$table = $settings->table();
 		$sql = 'SELECT * FROM '.$table.' WHERE '.PHP_EOL;

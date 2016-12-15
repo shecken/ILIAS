@@ -50,6 +50,7 @@ class ilLinkResourceItems
 			$item['last_check']			= $row->last_check;
 			$item['valid']				= $row->valid;
 			$item['link_id']			= $row->link_id;
+			$item['open_same_window']	= $row->open_same_window;
 		}
 		return $item ? $item : array();
 			
@@ -72,7 +73,15 @@ class ilLinkResourceItems
 		return true;
 	}
 	
-	
+	//gev-patch start 2666
+	public function setOpenSameWindow($open_same_window) {
+		$this->open_same_window = $open_same_window;
+	}
+
+	public function getOpenSameWindow() {
+		return $this->open_same_window;
+	}
+	//gev-patch end
 
 	// SET GET
 	function setLinkResourceRefId($a_ref_id)
@@ -250,7 +259,8 @@ class ilLinkResourceItems
 			"valid = ".$ilDB->quote($this->getValidStatus() ,'integer').", ".
 			"disable_check = ".$ilDB->quote($this->getDisableCheckStatus() ,'integer').", ".
 			"last_update = ".$ilDB->quote($this->getLastUpdateDate() ,'integer').", ".
-			"last_check = ".$ilDB->quote($this->getLastCheckDate() ,'integer')." ".
+			"last_check = ".$ilDB->quote($this->getLastCheckDate() ,'integer').", ".
+			"open_same_window = ".$ilDB->quote($this->getOpenSameWindow() ,'integer')." ".
 			"WHERE link_id = ".$ilDB->quote($this->getLinkId() ,'integer')." ".
 			"AND webr_id = ".$ilDB->quote($this->getLinkResourceId() ,'integer');
 		$res = $ilDB->manipulate($query);
@@ -367,7 +377,7 @@ class ilLinkResourceItems
 
 		$next_id = $ilDB->nextId('webr_items');
 		$query = "INSERT INTO webr_items (link_id,title,description,target,active,disable_check,".
-			"last_update,create_date,webr_id,valid) ".
+			"last_update,create_date,webr_id,valid, open_same_window) ".
 			"VALUES( ". 
 			$ilDB->quote($next_id ,'integer').", ".
 			$ilDB->quote($this->getTitle() ,'text').", ".
@@ -378,7 +388,8 @@ class ilLinkResourceItems
 			$ilDB->quote($this->getLastUpdateDate() ,'integer').", ".
 			$ilDB->quote($this->getCreateDate() ,'integer').", ".
 			$ilDB->quote($this->getLinkResourceId() ,'integer').", ".
-			$ilDB->quote($this->getValidStatus(),'integer'). ' '.
+			$ilDB->quote($this->getValidStatus(),'integer'). ", ".
+			$ilDB->quote($this->getOpenSameWindow(),'integer'). " ".
 			")";
 		$res = $ilDB->manipulate($query);
 
@@ -414,6 +425,7 @@ class ilLinkResourceItems
 			$this->setLastCheckDate($row->last_check);
 			$this->setValidStatus($row->valid);
 			$this->setLinkId($row->link_id);
+			$this->setOpenSameWindow($row->open_same_window);
 		}
 		return true;
 	}
@@ -440,6 +452,7 @@ class ilLinkResourceItems
 			$item['last_check']			= $row->last_check;
 			$item['valid']				= $row->valid;
 			$item['link_id']			= $row->link_id;
+			$item['open_same_window']	= $row->open_same_window;
 		}
 		return $item ? $item : array();
 	}
@@ -483,6 +496,7 @@ class ilLinkResourceItems
 			$items[$row->link_id]['last_check']			= $row->last_check;
 			$items[$row->link_id]['valid']				= $row->valid;
 			$items[$row->link_id]['link_id']			= $row->link_id;
+			$items[$row->link_id]['open_same_window']	= $row->open_same_window;
 		}
 		return $items ? $items : array();
 	}

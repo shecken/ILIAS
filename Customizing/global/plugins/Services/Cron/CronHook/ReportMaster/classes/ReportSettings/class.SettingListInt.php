@@ -1,7 +1,7 @@
 <?php
-require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.setting.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.Setting.php';
 
-class settingListInt extends setting {
+class SettingListInt extends Setting {
 	protected $options = array();
 	/**
 	 * @inheritdoc

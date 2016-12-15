@@ -108,7 +108,6 @@ class ilObjReportWBDErrorsGUI extends ilObjReportBaseGUI {
 						( new \CaT\Filter\FilterGUIFactory
 						, new \CaT\Filter\TypeFactory
 						);
-						var_dump($_POST["filter"]);
 			$this->saveFilterSettings($_POST["filter"]);
 		}
 
