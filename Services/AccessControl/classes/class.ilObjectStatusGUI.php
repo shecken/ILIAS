@@ -330,14 +330,21 @@ class ilObjectStatusGUI
 		$icon_not_ok = "<img src=\"".ilUtil::getImagePath("icon_not_ok.png")."\" alt=\"".$lng->txt("info_not_assigned")."\" title=\"".$lng->txt("info_not_assigned")."\" border=\"0\" vspace=\"0\"/>";
 
 		$path = array_reverse($tree->getPathId($this->object->getRefId()));
-		
 		include_once ('./Services/AccessControl/classes/class.ilObjRole.php');
 		$counter = 0;
+
 		foreach ($this->valid_roles as $role)
 		{
 			$result_set[$counter][] = in_array($role['obj_id'],$this->user_roles) ? $icon_ok : $icon_not_ok;
-			$result_set[$counter][] = str_replace(" ","&nbsp;",ilObjRole::_getTranslation($role["title"]));
-			
+
+			//gev-patch start 2633
+			if(is_subclass_of($this->object->plugin, 'ilPlugin') && $role["parent"] == $rbacreview->getRoleFolderIdOfObject($this->object->getRefId())) {
+				$result_set[$counter][] = ilPlugin::lookupTxtById($this->object->getType(), ilObjRole::_removeObjectId($role["title"]));
+			} else {
+				$result_set[$counter][] = str_replace(" ","&nbsp;",ilObjRole::_getTranslation($role["title"]));
+			}
+			//gev-patch end
+
 			if ($role['role_type'] != "linked")
 			{
 				$result_set[$counter][] = "";
