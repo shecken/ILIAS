@@ -154,16 +154,14 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 				$query .= "    AND " .$db->in('usr.wbd_type', $settings[0]['wbd_types'], false, "text");
 			}
 		}
-
+		$query .= $this->queryOrder();
 		$res = $this->gIldb->query($query);
 		$data = array();
 
 		while($rec = $this->gIldb->fetchAssoc($res)) {
 			$data[] = call_user_func($callback,$rec);
 		}
-
 		return $data;
-
 	}
 
 	protected function buildFilter($filter) {

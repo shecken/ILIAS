@@ -9,8 +9,6 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * @ilCtrl_Calls ilObjReportWBDPointsGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
-	const CMD_FILTER = "filter";
-	const CMD_SHOW_CONTENT = "showContent";
 
 	public function getType() {
 		return 'xwbp';
@@ -37,7 +35,7 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
 	}
 
 	protected function render() {
-		$res = $this->renderFilter()."<br />";
+		$res = $this->renderFilter();
 		$res .= $this->renderTable();
 
 		return $res;
@@ -51,12 +49,8 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
 						, new \CaT\Filter\TypeFactory
 						);
 
-		if($this->filter_settings) {
-			$this->object->filter_settings = $display->buildFilterValues($filter, $this->filter_settings);
-		}
-
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
-		$filter_flat_view = new catFilterFlatViewGUI($this, $filter, $display, self::CMD_SHOW_CONTENT);
+		$filter_flat_view = new catFilterFlatViewGUI($this, $filter, $display, "showContent");
 
 		return $filter_flat_view->render($this->filter_settings);
 	}
