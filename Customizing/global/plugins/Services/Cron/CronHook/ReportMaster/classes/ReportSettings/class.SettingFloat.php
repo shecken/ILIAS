@@ -1,7 +1,7 @@
 <?php
-require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.setting.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.Setting.php';
 
-class settingFloat extends setting {
+class SettingFloat extends Setting {
 
 	/**
 	 * @inheritdoc

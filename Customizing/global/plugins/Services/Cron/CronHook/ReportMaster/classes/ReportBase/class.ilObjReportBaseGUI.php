@@ -8,8 +8,8 @@ require_once 'Services/CaTUIComponents/classes/class.catTitleGUI.php';
 require_once("Services/CaTUIComponents/classes/class.catTableGUI.php");
 require_once("Services/CaTUIComponents/classes/class.catHSpacerGUI.php");
 require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/interfaces/interface.ExcelWriter.php");
-require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.reportSettingsFormHandler.php");
-require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.settingFactory.php");
+require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.ReportSettingsFormHandler.php");
+require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingFactory.php");
 
 abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 
@@ -29,7 +29,7 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		$this->gLog = $ilLog;
 		$this->gAccess = $ilAccess;
 		$this->gTabs = $ilTabs;
-		$this->s_f = new settingFactory($this->gIldb);
+		$this->s_f = new SettingFactory($this->gIldb);
 		$this->settings_form_handler = $this->s_f->reportSettingsFormHandler();
 		// TODO: this is crapy. The root cause of this problem is, that the
 		// filter should no need to know about it's action. The _rendering_

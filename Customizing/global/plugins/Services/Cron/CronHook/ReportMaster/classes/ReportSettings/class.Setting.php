@@ -6,7 +6,7 @@
  *	are obligatory and may be not reset after instantiation. Other values 
  *	are supposed to have some default fallback values, may be overwritten though.	
  */
-abstract class setting {
+abstract class Setting {
 
 	protected $id;
 	protected $name;
