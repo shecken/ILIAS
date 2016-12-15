@@ -36,8 +36,7 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 		$this->sf = new settingFactory($this->gIldb);
 		$this->master_plugin = new ilReportMasterPlugin();
 		$this->settings = array();
-		$this->createLocalReportSettings();
-		$this->createGlobalReportSettings();
+
 		$this->settings_data_handler = $this->sf->reportSettingsDataHandler();
 
 		$this->validateUrl = new \CaT\Validate\ValidateUrl;
@@ -193,11 +192,15 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 	 * interaction with storage
 	 */
 	final public function doCreate() {
+		$this->createLocalReportSettings();
+		$this->createGlobalReportSettings();
 		$this->settings_data_handler->createObjEntry($this->getId(), $this->global_report_settings);
 		$this->settings_data_handler->createObjEntry($this->getId(), $this->local_report_settings);
 	}
 
 	final public function doRead() {
+		$this->createLocalReportSettings();
+		$this->createGlobalReportSettings();
 		$this->settings = array_merge($this->settings_data_handler->readObjEntry($this->getId(), $this->global_report_settings),
 							$this->settings_data_handler->readObjEntry($this->getId(), $this->local_report_settings));
 	}
