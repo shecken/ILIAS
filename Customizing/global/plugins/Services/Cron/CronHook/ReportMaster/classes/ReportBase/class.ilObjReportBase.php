@@ -263,6 +263,7 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 		if ($this->query === null) {
 			throw new Exception("catBasicReportGUI::fetchData: query not defined.");
 		}
+		$query = $this->buildQueryStatement();
 		$res = $this->gIldb->query($query);
 		$data = array();
 
