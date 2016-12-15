@@ -293,7 +293,7 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 			$this->tpl->setVariable('PERM_ROLE_ID',$role_id);
 			$this->tpl->setVariable('PERM_PERM_ID',$row['perm']['ops_id']);
 			
-			//patchen for plugins
+			// gev patch start 2661
 			if(substr($row['perm']['operation'],0,6) == 'create')
 			{
 				if ($objDefinition->isPlugin(substr($row['perm']['operation'],7)))
@@ -558,7 +558,7 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 			
 			$role['role_type'] = $rbacreview->isGlobalRole($role['obj_id']) ? 'global' : 'local';
 			
-			//patch plugin
+			// gev patch end 2661
 			// TODO check filter
 			$this->addColumn(
 				$this->createTitle($role),
