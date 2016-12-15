@@ -526,7 +526,7 @@ abstract class ilPlugin
 	 *
 	 * @return bool
 	 */
-	static function langExitsById($pluginId, $langVar) {
+	static function langExistsById($pluginId, $langVar) {
 		global $lng;
 
 		$pl = ilPlugin::getRepoPluginObjectByType($pluginId);
