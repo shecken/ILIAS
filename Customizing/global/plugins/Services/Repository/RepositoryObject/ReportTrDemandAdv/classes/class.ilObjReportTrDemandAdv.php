@@ -236,12 +236,14 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 		$query_object = $this->buildQuery(catReportQuery::create());
 		$select = $query_object->sql();
 
-		$where = " WHERE  (crs.end_date < " .$db->quote(date('Y-m-d'),"text") ."OR crs.is_cancelled = 'Ja' )\n"
+		$where = " WHERE  (crs.begin_date >= " .$db->quote(date('Y-m-d'),"text") .")\n"
+				."     AND (crs.is_cancelled != 'Ja' OR crs.is_cancelled IS NULL)\n"
 				."     AND crs.hist_historic = 0\n"
 				."     AND crs.is_template = 'Nein'\n"
 				."     AND crs.begin_date != '0000-00-00'\n"
+				."     AND crs.type IN ('Webinar','Präsenztraining','Virtuelles Training')\n"
 				."     AND tpl.hist_historic = 0\n"
-				."     AND tpl.is_template = 'Ja'";
+				."     AND tpl.is_template = 'Ja'\n";
 
 		$filter = $this->filter();
 		if($this->filter_settings) {
@@ -249,7 +251,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
 			$dt_query = $to_sql->interpret($settings[0]['period_pred']);
 			$where .= "    AND " .$dt_query;
-			$having = "HAVING TRUE ";
+			$having = " HAVING TRUE ";
 
 			if(!empty($settings[0]['filter_topics'])) {
 				$select .= " JOIN (SELECT topic_set_id FROM hist_topicset2topic JOIN hist_topics\n"
@@ -263,8 +265,6 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 
 			if(!empty($settings[0]['training_type'])) {
 				$where .= "    AND " .$db->in("crs.type", $settings[0]['training_type'], false, "text");
-			}else {
-				$where .= "    AND crs.type IN ('Webinar','Pr√§senztraining','Virtuelles Training')";
 			}
 
 			if(!empty($settings['is_local'])) {
@@ -290,10 +290,13 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 				$having .= "    AND (" .$settings[0]['booking_over'][0] .")";
 			}
 		}
+		if((string)$this->settings['is_local'] === "1") {
+			$where .= "     AND " .$db->in("crs.template_obj_id", array_unique($this->getSubtreeCourseTemplates()), false, "integer"); 
+		}
 
 		$group = " GROUP BY ('crs.crs_id') ";
 		$order = " ORDER BY `tpl_title` ASC, `title` ASC, `begin_date` ASC";
-
+		$order = $this->queryOrder();
 		$filter = $this->filter();
 
 		$query = $select . $where . $group .$having .$order;
