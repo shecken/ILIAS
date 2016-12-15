@@ -127,7 +127,7 @@ class gevEffectivenessAnalysisDB {
 				."    , hcrs.venue, hcrs.target_groups, hcrs.objectives_benefits, hcrs.training_topics, hcrs.crs_id\n"
 				."    , hcrs.reason_for_training\n"
 				.", CASE hcrs.type\n"
-				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (90 * 24 * 60 * 60)), '%Y-%b-%e')\n"
+				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (90 * 24 * 60 * 60)), '%Y-%m-%d')\n"
 				."      ELSE DATE_ADD(hcrs.end_date, INTERVAL 90 DAY)\n"
 				."  END AS scheduled\n"
 				.", effa.finish_date, effa.result\n";
@@ -153,8 +153,9 @@ class gevEffectivenessAnalysisDB {
 
 	public function getEffectivenessAnalysisOpen($employees, array $reason_for_eff_analysis, array $filter) {
 		$query = "SELECT hcrs.crs_id\n"
+				.", GROUP_CONCAT(DISTINCT husr.user_id SEPARATOR '|') AS user_ids\n"
 				.", CASE hcrs.type\n"
-				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (90 * 24 * 60 * 60)), '%Y-%b-%e')\n"
+				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (90 * 24 * 60 * 60)), '%Y-%m-%d')\n"
 				."      ELSE DATE_ADD(hcrs.end_date, INTERVAL 90 DAY)\n"
 				."  END AS scheduled\n";
 		$query .= $this->getSelectBase($employees, $reason_for_eff_analysis);
@@ -164,7 +165,7 @@ class gevEffectivenessAnalysisDB {
 
 		$res = $this->gDB->query($query);
 		while($row = $this->gDB->fetchAssoc($res)) {
-			$ret[] = $row["crs_id"];
+			$ret[$row["crs_id"]] = explode(",", $row["user_ids"]);
 		}
 
 		return $ret;

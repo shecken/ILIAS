@@ -44,53 +44,90 @@ class ilEffAnalysisActions {
 	}
 
 	/**
-	 * Should send first reminder
+	 * Get user ids first mail should be send
 	 *
 	 * @param int 		$crs_id
 	 * @param int 		$superior_id
+	 * @param int[] 	$user_ids
 	 *
-	 * @return bool
+	 * @return int[]
 	 */
-	public function shouldSendFirstReminder($crs_id, $superior_id) {
-		$row_count = $this->db->getNumRowsOfSentFirstReminder($crs_id, $superior_id, self::FIRST);
+	public function getUserIdsForFirstMail($crs_id, $superior_id, $user_ids) {
+		$all_sent_user_ids = $this->db->getUserIdsTypeIsSend($crs_id, $superior_id, self::FIRST);
 
-		if($row_count == 0) {
-			return true;
+		if(count($all_sent_user_ids) == 0) {
+			return $user_ids;
 		}
 
-		return false;
+		$to_send = array();
+		foreach($all_sent_user_ids as $date => $sent_user_ids) {
+			$to_send = array_merge($to_send, array_diff($user_ids, $sent_user_ids, $to_send));
+		}
+
+		return array_unique($to_send);
 	}
 
 	/**
-	 * Should send secon reminder
+	 * Get user ids reminder should be send
 	 *
 	 * @param int 		$crs_id
 	 * @param int 		$superior_id
 	 *
 	 * @return bool
 	 */
-	public function shouldSendSecondReminder($crs_id, $superior_id) {
-		$row = $this->db->getLastSendDates($crs_id, $superior_id, self::FIRST, self::SECOND);
+	public function getUserIdsForReminder($crs_id, $superior_id, $user_ids) {
+		$first_sent_user_ids = $this->db->getUserIdsTypeIsSend($crs_id, $superior_id, self::FIRST);
+		$reminder_sent_user_ids = $this->db->getUserIdsTypeIsSend($crs_id, $superior_id, self::SECOND);
 
-		if($row["first_send"] && !$row["second_send"]) {
-			$time = strtotime(date("Y-m-d"));
-			$time = $time - (15 * 24 * 60 * 60);
-			$next_send = date("Y-m-d", $time);
+		if(count($reminder_sent_user_ids) > 0) {
+			$first_sent_user_ids = $this->cleanFirstUserIds($first_sent_user_ids, $reminder_sent_user_ids);
+		}
 
-			if($row["first_send"] <= $next_send) {
-				return true;
-			}
-		} else {
-			$time = strtotime(date("Y-m-d"));
-			$time = $time - (2 * 24 * 60 * 60);
-			$next_send = date("Y-m-d", $time);
+		$to_send = array();
 
-			if($row["second_send"] <= $next_send) {
-				return true;
+		$next_send = $this->getNextSendDate(2);
+		foreach($reminder_sent_user_ids as $date => $sent_user_ids) {
+			if($date <= $next_send) {
+				$to_send = array_merge($to_send, array_diff($user_ids, $to_send));
 			}
 		}
 
-		return false;
+		$next_send = $this->getNextSendDate(15);
+		foreach($first_sent_user_ids as $date => $sent_user_ids) {
+			if($date <= $next_send) {
+				$to_send = array_merge($to_send, array_diff($sent_user_ids, $to_send));
+			}
+		}
+
+		return array_unique($to_send);
+	}
+
+	protected function getNextSendDate($days) {
+		$time = strtotime(date("Y-m-d"));
+		$time = $time - (2 * 24 * 60 * 60);
+		return date("Y-m-d", $time);
+	}
+
+	protected function cleanFirstUserIds($first_sent_user_ids, $reminder_sent_user_ids) {
+		foreach($first_sent_user_ids as $date_first => $user_ids_first) {
+			$new = array();
+			foreach($reminder_sent_user_ids as $user_ids_reminder) {
+				$new = array_merge($new, array_diff($user_ids_first, $user_ids_reminder, $new));
+			}
+			$first_sent_user_ids[$date_first] = $new;
+		}
+
+		return $first_sent_user_ids;
+	}
+
+	protected function filterToSendUser($to_send, $sent_user_ids, $user_ids, $next_send) {
+		foreach($sent_user_ids as $date => $sent_user_id) {
+			if($date <= $next_send) {
+				$to_send = array_merge($to_send, array_diff($user_ids, $sent_user_id, $to_send));
+			}
+		}
+
+		return $to_send;
 	}
 
 	/**
@@ -98,10 +135,11 @@ class ilEffAnalysisActions {
 	 *
 	 * @param int 		$crs_id
 	 * @param int[]		$superiors
+	 * @param int[]		$user_ids
 	 */
-	public function sendFirst($crs_id, array $superiors) {
+	public function sendFirst($crs_id, array $superiors, array $user_ids) {
 		$this->send($crs_id, $superiors, self::FIRST_KEY);
-		$this->db->reminderSend($crs_id, $superiors[0], self::FIRST);
+		$this->db->logMailSend($crs_id, $superiors[0], self::FIRST, $user_ids);
 	}
 
 	/**
@@ -109,10 +147,11 @@ class ilEffAnalysisActions {
 	 *
 	 * @param int 		$crs_id
 	 * @param int[]		$superiors
+	 * @param int[]		$user_ids
 	 */
-	public function sendSecond($crs_id, array $superiors) {
+	public function sendReminder($crs_id, array $superiors, array $user_ids) {
 		$this->send($crs_id, $superiors, self::SECOND_KEY);
-		$this->db->reminderSend($crs_id, $superiors[0], self::SECOND);
+		$this->db->logMailSend($crs_id, $superiors[0], self::SECOND, $user_ids);
 	}
 
 	/**

@@ -82,19 +82,18 @@ class ilEffectivenessAnalysisReminderJob extends ilCronJob {
 		$all_superiors = $actions->getAllSuperiors();
 
 		foreach($all_superiors as $superior_id) {
-			foreach($actions->getOpenEffectivenessAnalysis($superior_id) as $crs_id) {
-				$send_first = false;
-
-				if($actions->shouldSendFirstReminder($crs_id, $superior_id)) {
+			foreach($actions->getOpenEffectivenessAnalysis($superior_id) as $crs_id => $user_ids) {
+				$user_ids_for_first_mail = $actions->getUserIdsForFirstMail($crs_id, $superior_id, $user_ids);
+				if(count($user_ids_for_first_mail) > 0) {
 					$this->gLog->write("SEND FIRST REMINDER");
-					$actions->sendFirst($crs_id, array($superior_id));
-					$send_first = true;
+					$actions->sendFirst($crs_id, array($superior_id), $user_ids_for_first_mail);
 				}
 				ilCronManager::ping($this->getId());
 
-				if(!$send_first && $actions->shouldSendSecondReminder($crs_id, $superior_id)) {
+				$user_ids_for_reminder = $actions->getUserIdsForReminder($crs_id, $superior_id, $user_ids);
+				if(count($user_ids_for_reminder) > 0) {
 					$this->gLog->write("SEND SECOND REMINDER");
-					$actions->sendSecond($crs_id, array($superior_id));
+					$actions->sendReminder($crs_id, array($superior_id), $user_ids_for_reminder);
 				}
 				ilCronManager::ping($this->getId());
 			}
