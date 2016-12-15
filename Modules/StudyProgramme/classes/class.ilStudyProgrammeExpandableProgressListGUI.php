@@ -222,12 +222,12 @@ class ilStudyProgrammeExpandableProgressListGUI extends ilStudyProgrammeProgress
 	
 	protected function getExpandedImageURL() {
 		require_once("Services/Utilities/classes/class.ilUtil.php");
-		return ilUtil::getImagePath("tree_exp.svg");
+		return ilUtil::getImagePath("tree_exp.png");
 	}
 	
 	protected function getNotExpandedImageURL() {
 		require_once("Services/Utilities/classes/class.ilUtil.php");
-		return ilUtil::getImagePath("tree_col.svg");
+		return ilUtil::getImagePath("tree_col.png");
 	}
 	
 	protected function getTitleAndIconTarget(ilStudyProgrammeUserProgress $a_progress) {
