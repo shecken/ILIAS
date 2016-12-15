@@ -497,7 +497,7 @@ class ilObjRole extends ilObject
 
 		return implode('_',$role_title_parts);
 	}
-	//gev-patch end
+	//gev-patch end 2661
 	
 	function _updateAuthMode($a_roles)
 	{
