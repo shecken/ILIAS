@@ -131,7 +131,17 @@ class ilObjectAddNewItemGUI
 		$this->disabled_object_types[] = "rolf";						
 		
 		$parent_type = ilObject::_lookupType($this->parent_ref_id, true);
-		$subtypes = $objDefinition->getCreatableSubObjects($parent_type, $this->mode);		
+
+		//gev-patch szatz 2636
+		if($parent_type == "prg") {
+			$prg = ilObjectFactory::getInstanceByRefId($this->parent_ref_id);
+			$subtypes = $objDefinition->getCreatableSubObjects($parent_type, $this->mode);
+			$subtypes = $prg->filterCreatableSubtype($subtypes);
+		} else {
+			$subtypes = $objDefinition->getCreatableSubObjects($parent_type, $this->mode);
+		}
+		//gev-patch end
+		
 		if (count($subtypes) > 0)
 		{						
 			// grouping of object types
@@ -249,8 +259,8 @@ class ilObjectAddNewItemGUI
 						if ($subitem["plugin"])
 						{
 							include_once("./Services/Component/classes/class.ilPlugin.php");
-							$title = ilPlugin::lookupTxt("rep_robj", $type, "obj_".$type);
-						}					
+							$title = ilPlugin::lookupTxtById($type, "obj_".$type);
+						}	
 						else
 						{
 							// #13088
@@ -278,7 +288,11 @@ class ilObjectAddNewItemGUI
 		});
 
 		foreach ($plugins as $key => $value) {
-			$this->sub_objects[] = $value;
+			//plugin visible in repo object creation list
+			$plugin_object = ilPlugin::getRepoPluginObjectByType($value["value"]);
+			if($plugin_object->useInRepoCreation()) {
+				$this->sub_objects[] = $value;
+			}
 		}
 		// gev patch end
 		return (bool)sizeof($this->sub_objects);

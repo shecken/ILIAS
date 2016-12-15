@@ -3,6 +3,13 @@ namespace CaT\TableRelations\Tables;
 use CaT\TableRelations\Graphs as Graphs;
 use CaT\Filter\Predicates as Predicates;
 
+/**
+ * This is to be seen as a container carrying
+ * metadata information about tables, i.e.
+ * the identification and contained columns/fields.
+ * Also constraints may be added, to select only subsets
+ * of information contained in tables.
+ */
 class Table implements AbstractTable, Graphs\AbstractNode {
 
 	protected $id;
@@ -58,6 +65,12 @@ class Table implements AbstractTable, Graphs\AbstractNode {
 		return $this;
 	}
 
+	/**
+	 * Check wether a field is in this table.
+	 *
+	 * @param	AbstractTableField	$field
+	 * @return	bool
+	 */
 	public function fieldInTable(AbstractTableField $field) {
 		if(!isset($this->fields[$field->name_simple()])) {
 			return false;

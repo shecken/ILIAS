@@ -288,16 +288,17 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 
 		foreach((array) $row['roles'] as $role_id => $role_info)
 		{
+			$perm = "";
 			$this->tpl->setCurrentBlock('role_td');
 			$this->tpl->setVariable('PERM_ROLE_ID',$role_id);
 			$this->tpl->setVariable('PERM_PERM_ID',$row['perm']['ops_id']);
 			
-			
+			// gev patch start 2661
 			if(substr($row['perm']['operation'],0,6) == 'create')
 			{
 				if ($objDefinition->isPlugin(substr($row['perm']['operation'],7)))
 				{
-					$perm = ilPlugin::lookupTxt("rep_robj", substr($row['perm']['operation'],7),
+					$perm = ilPlugin::lookupTxtById(substr($row['perm']['operation'],7),
 						"obj_".substr($row['perm']['operation'],7));
 				}
 				else
@@ -307,13 +308,21 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 			}
 			else
 			{
-				if($this->lng->exists($this->getObjType().'_'.$row['perm']['operation'].'_short'))
-				{
-					$perm = $this->lng->txt($this->getObjType().'_'.$row['perm']['operation'].'_short');
+				if($objDefinition->isPlugin($this->getObjType())) {
+					if(ilPlugin::langExistsById($this->getObjType(), $row['perm']['operation'])) {
+						$perm = ilPlugin::lookupTxtById($this->getObjType(), $row['perm']['operation']);
+					}
 				}
-				else
-				{
-					$perm = $this->lng->txt($row['perm']['operation']);
+
+				if(!$perm) {
+					if($this->lng->exists($this->getObjType().'_'.$row['perm']['operation'].'_short'))
+					{
+						$perm = $this->lng->txt($this->getObjType().'_'.$row['perm']['operation'].'_short');
+					}
+					else
+					{
+						$perm = $this->lng->txt($row['perm']['operation']);
+					}
 				}
 			}
 			
@@ -321,7 +330,7 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 			
 			if ($objDefinition->isPlugin($this->getObjType()))
 			{
-				$this->tpl->setVariable('PERM_LONG',ilPlugin::lookupTxt("rep_robj", $this->getObjType(),
+				$this->tpl->setVariable('PERM_LONG',ilPlugin::lookupTxtById($this->getObjType(),
 						$this->getObjType()."_".$row['perm']['operation']));
 			}
 			elseif(substr($row['perm']['operation'],0,6) == 'create')
@@ -549,6 +558,7 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 			
 			$role['role_type'] = $rbacreview->isGlobalRole($role['obj_id']) ? 'global' : 'local';
 			
+			// gev patch end 2661
 			// TODO check filter
 			$this->addColumn(
 				$this->createTitle($role),
@@ -572,7 +582,7 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 	 */
 	protected function createTooltip($role)
 	{
-		global $rbacreview,$tree;
+		global $rbacreview,$tree,$objDefinition;
 		
 		#vd($role);
 		$protected_status = $rbacreview->isProtected($role['parent'], $role['obj_id']) ? 'protected_' : '';
@@ -598,9 +608,18 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 			$obj = $rbacreview->getObjectOfRole($role['obj_id']);
 			if($obj)
 			{
+				$type = ilObject::_lookupType($this->getRefId(), true);
+				if($objDefinition->isPlugin($type))
+				{
+					$type_text = ilPlugin::lookupTxtById($type, 'obj_'.$type);
+				} else {
+					$type_text = $this->lng->txt('obj_'.ilObject::_lookupType($obj));
+				}
+
 				$tp .= sprintf(
 					$this->lng->txt('perm_role_path_info_created'),
-					$this->lng->txt('obj_'.ilObject::_lookupType($obj)),ilObject::_lookupTitle($obj)
+					$type_text,
+					ilObject::_lookupTitle($obj)
 				);
 				$inheritance_seperator = ', ';
 			}
@@ -641,25 +660,32 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 	 */
 	protected function createTitle($role)
 	{
-		global $ilCtrl;
+		global $ilCtrl, $objDefinition;
 		
 		include_once './Services/AccessControl/classes/class.ilObjRole.php';
-		$role['title'] = ilObjRole::_getTranslation($role['title']);
+		$role_title = ilObjRole::_getTranslation($role['title']);
 		
 		// No local policies
 		if($role['parent'] != $this->getRoleFolderId())
 		{
-			return $role['title'];
+			return $role_title;
 		} 
 		$ilCtrl->setParameterByClass('ilobjrolegui', 'rolf_ref_id', $this->getRoleFolderId());
 		$ilCtrl->setParameterByClass('ilobjrolegui', 'obj_id', $role['obj_id']);
 		
-		// gev-patch start
-		if (ilObject::_lookupType($this->ref_id, true) == "crs") {
-			return $role['title'];
+		// gev-patch start 2661
+		$type = ilObject::_lookupType($this->ref_id, true);
+		if ($type == "crs") {
+			return $role_title;
 		}
 		else {
-			return '<a class="tblheader" href="'.$ilCtrl->getLinkTargetByClass('ilobjrolegui','').'" >'.$role['title'].'</a>';
+			if($objDefinition->isPlugin($type)) {
+				if (preg_match("/^il_./", $role["title"])) {
+					$role_title = ilPlugin::lookupTxtById($type, ilObjRole::_removeObjectId($role["title"]));
+				}
+			}
+
+			return '<a class="tblheader" href="'.$ilCtrl->getLinkTargetByClass('ilobjrolegui','').'" >'.$role_title.'</a>';
 		}
 		// gev-patch end
 	}

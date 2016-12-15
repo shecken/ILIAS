@@ -9,6 +9,15 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * @ilCtrl_Calls ilObjReportTrainerWorkloadGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportTrainerWorkloadGUI extends ilObjReportBaseGUI {
+	public function performCustomCommand($cmd) {
+		switch ($cmd) {
+			case "filter":
+				$this->showContent();
+				return true;
+			default:
+				return parent::performCustomCommand($cmd);
+		}
+	}
 
 	public function getType() {
 		return 'xrtw';
@@ -18,7 +27,43 @@ class ilObjReportTrainerWorkloadGUI extends ilObjReportBaseGUI {
 		parent::afterConstructor();
 		if($this->object->plugin) {
 			$this->tpl->addCSS($this->object->plugin->getStylesheetLocation('report.css'));
+			$this->filter = $this->object->filter();
+			$this->display = new \CaT\Filter\DisplayFilter
+						( new \CaT\Filter\FilterGUIFactory
+						, new \CaT\Filter\TypeFactory
+						);
 		}
+
+		$this->loadFilterSettings();
+	}
+
+	protected function loadFilterSettings() {
+		if(isset($_POST['filter'])) {
+			$this->filter_settings = $_POST['filter'];
+		}
+
+		if(isset($_GET['filter'])) {
+			$this->filter_settings = unserialize(base64_decode($_GET['filter']));
+		}
+
+		if($this->filter_settings) {
+			$this->object->addRelevantParameter("filter", base64_encode(serialize($this->filter_settings)));
+			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
+		}
+	}
+
+	protected function render() {
+		$res = $this->renderFilter()."<br />";
+		$res .= $this->renderTable();
+
+		return $res;
+	}
+
+	protected function renderFilter() {
+		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
+		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, "filter");
+
+		return $filter_flat_view->render($this->filter_settings);
 	}
 
 	protected function prepareTitle($a_title) {
@@ -29,8 +74,10 @@ class ilObjReportTrainerWorkloadGUI extends ilObjReportBaseGUI {
 
 
 	protected function renderTable() {
+		$this->gCtrl->setParameter($this, 'filter', base64_encode(serialize($this->filter_settings)));
 		$table = parent::renderTable();
 		$sum_table = $this->renderSumTable();
+		$this->gCtrl->setParameter($this, 'filter', null);
 		return $sum_table.$table;
 	}
 

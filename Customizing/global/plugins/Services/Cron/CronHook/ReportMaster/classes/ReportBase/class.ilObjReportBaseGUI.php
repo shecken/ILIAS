@@ -107,17 +107,21 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 				}
 				exit();
 			case "showContent":
-				if($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
-					$this->gTabs->activateTab("content");
-					$this->object->prepareRelevantParameters();
-					$this->setFilterAction($cmd);
-					return $this->renderReport();
-				}
+				$this->showContent();
 				break;
 			default:
 				if (!$this->performCustomCommand($cmd)) {
 					throw new ilException("Unknown Command '$cmd'.");
 				}
+		}
+	}
+
+	protected function showContent() {
+		if($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
+			$this->gTabs->activateTab("content");
+			$this->object->prepareRelevantParameters();
+			$this->setFilterAction($cmd);
+			return $this->renderReport();
 		}
 	}
 

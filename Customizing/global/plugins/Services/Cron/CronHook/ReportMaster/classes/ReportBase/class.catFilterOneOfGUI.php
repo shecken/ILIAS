@@ -76,6 +76,26 @@ class catFilterOneOfGUI extends catFilterGUI {
 					$option->addSubItem($multi_select);
 					$option->setValue($key);
 					break;
+
+				case "CaT\Filter\Filters\MultiselectSearch":
+					require_once("Services/Form/classes/class.ilMultiSelectSearchInputGUI.php");
+					$multi_select = new ilMultiSelectSearchInputGUI("", "filter[$this->path][".$key."]");
+					$opts = $sub_filter->options();
+					asort($opts,  SORT_NATURAL | SORT_FLAG_CASE);
+					$multi_select->setOptions($opts);
+
+					if($this->val && $key == $this->val["option"]) {
+						$multi_select->setValue($this->val[$this->val["option"]]);
+					} else {
+						$multi_select->setValue($sub_filter->default_choice());
+					}
+
+					$multi_select->setWidth("250px");
+					$option->addSubItem($multi_select);
+					$multi_select->setCssClass("js-example-basic-multiple");
+					$option->setValue($key);
+					break;
+
 				case "CaT\Filter\Filters\Singleselect":
 					require_once("Services/Form/classes/class.ilSelectInputGUI.php");
 					$select = new ilSelectInputGUI("", "filter[$this->path][".$key."]");

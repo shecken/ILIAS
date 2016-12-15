@@ -91,13 +91,13 @@ class ilObjReportTrainingAttendance extends ilObjReportBase {
 				, $f->one_of
 				( $txt("person_choice_label")
 				, $txt("person_choice_description")
-				, $f->multiselect
+				, $f->multiselectsearch
 					( $txt("orgu_choice_label")
 					, $txt("orgu_choice_description")
 					, $this->getOrguOptions()
 					)->map(function($id_s) {return $id_s;}
 						,$tf->lst($tf->int()))
-				, $f->multiselect
+				, $f->multiselectsearch
 					( $txt("role_choice_label")
 					, $txt("role_choice_description")
 					, $this->getRoleOptions()

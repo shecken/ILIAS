@@ -270,7 +270,8 @@ class ilObjSystemFolderGUI extends ilObjectGUI
 				{
 					if ($objDefinition->isPlugin($t))
 					{
-						$ts[$t] = ilPlugin::lookupTxt("rep_robj", $t, "obj_".$t);
+						$pl = ilPlugin::getRepoPluginObjectByType($t);
+						$ts[$t] = $pl->txt("obj_".$t);
 					}
 					else
 					{

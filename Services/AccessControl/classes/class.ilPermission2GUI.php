@@ -629,7 +629,7 @@ class ilPermission2GUI
 				if ($objDefinition->isPlugin($this->gui_obj->object->getType()))
 				{
 					$this->tpl->setVariable("PERM_TOOLTIP",
-						ilPlugin::lookupTxt("rep_robj", $this->gui_obj->object->getType(),
+						ilPlugin::lookupTxtById($this->gui_obj->object->getType(),
 						$this->gui_obj->object->getType()."_".$perm['name']));
 				}
 				else
@@ -676,7 +676,7 @@ class ilPermission2GUI
 					if ($objDefinition->isPlugin($this->gui_obj->object->getType()))
 					{
 						$this->tpl->setVariable("PERM_TOOLTIP",
-							ilPlugin::lookupTxt("rep_robj", $this->gui_obj->object->getType(),
+							ilPlugin::lookupTxtById($this->gui_obj->object->getType(),
 							$this->gui_obj->object->getType()."_".$perm['name']));
 					}
 					else
@@ -718,7 +718,7 @@ class ilPermission2GUI
 				if ($objDefinition->isPlugin($this->gui_obj->object->getType()))
 				{
 					$this->tpl->setVariable("PERM_TOOLTIP",
-						ilPlugin::lookupTxt("rep_robj", $this->gui_obj->object->getType(),
+						ilPlugin::lookupTxtById($this->gui_obj->object->getType(),
 						$this->gui_obj->object->getType()."_".$perm['name']));
 				}
 				else
@@ -828,10 +828,10 @@ class ilPermission2GUI
 					if ($objDefinition->isPlugin(substr($perm['name'],7)))
 					{
 						$this->tpl->setVariable("PERM_NAME",
-							ilPlugin::lookupTxt("rep_robj", substr($perm['name'],7),
+							ilPlugin::lookupTxtById(substr($perm['name'],7),
 							"obj_".substr($perm['name'],7)));
 						$this->tpl->setVariable("PERM_TOOLTIP",
-							ilPlugin::lookupTxt("rep_robj", substr($perm['name'],7),
+							ilPlugin::lookupTxtById(substr($perm['name'],7),
 							$this->gui_obj->object->getType()."_".$perm['name']));
 					}
 					else

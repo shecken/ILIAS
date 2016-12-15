@@ -133,6 +133,7 @@ class ilObjLinkResourceAccess extends ilObjectAccess
 			$item['last_check']			= $row->last_check;
 			$item['valid']				= $row->valid;
 			$item['link_id']			= $row->link_id;
+			$item['open_same_window']	= $row->open_same_window;
 			self::$item[$row->webr_id] = $item;
 		}
 		return $item ? $item : array();
@@ -167,6 +168,7 @@ class ilObjLinkResourceAccess extends ilObjectAccess
 			$item['last_check']			= $row->last_check;
 			$item['valid']				= $row->valid;
 			$item['link_id']			= $row->link_id;
+			$item['open_same_window']	= $row->open_same_window;
 			self::$item[$row->webr_id] = $item;
 		}
 	}

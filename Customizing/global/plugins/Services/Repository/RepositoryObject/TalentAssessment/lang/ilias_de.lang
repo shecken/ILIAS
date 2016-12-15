@@ -98,3 +98,17 @@ open#:#Beobachtungen bearbeiten
 no_observator_cant_start#:#Die Beobachtungen konnten nicht gestartet werden, da Sie keinen Beobachter hinzugefügt haben.
 no_observator_no_overview#:#Da keine Beobachter eingetragen sind ist keine Übersicht vorhanden.
 no_observator_no_cumulative#:#Da keine Beobachter eingetragen sind ist keine kumulierte Ansicht vorhanden.
+il_xtas_observator#:#Beobachter
+view_observations#:#Beobachtungen einsehen
+edit_observation#:#Beobachtung bearbeiten
+ta_manager#:#TA-Termin starten und abschließen
+edit_observator#:#Beobachter bearbeiten
+xtas_visible#:#Benutzer darf den TA Termin sehen.
+xtas_read#:#Benutzer darf die Infos zum TA Termin sehen.
+xtas_view_observations#:#Benutzer darf die Ergebnisse der Beobachtungen einsehen.
+xtas_edit_observations#:#Benutzer darf eine Beobachtung eingeben.
+xtas_ta_manager#:#Benutzer darf den TA Termin starten und abschließen.
+xtad_edit_observator#:#Benutzer darf die Beobachter bearbeiten.
+xtas_write#:#Benutzer darf die Einstellungen des TA Termin bearbeiten.
+xtas_delete#:#Benutzer darf den TA Termin löschen.
+xtas_edit_permission#:#Benutzer darf die Rechte verwalten.

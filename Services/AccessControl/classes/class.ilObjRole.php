@@ -471,27 +471,33 @@ class ilObjRole extends ilObject
 		return count($rbacreview->assignedUsers($this->getId()));
 	}
 
+	// gev-patch start 2661
 	function _getTranslation($a_role_title)
 	{
 		global $lng;
-		
-		$test_str = explode('_',$a_role_title);
 
-		if ($test_str[0] == 'il') 
+		$role_title = self::_removeObjectId($a_role_title);
+
+		if (preg_match("/^il./", $role_title))
 		{
-			$test2 = (int) $test_str[3];
-			if ($test2 > 0)
-			{
-				unset($test_str[3]);
-			}
-
-			return $lng->txt(implode('_',$test_str));
+			return $lng->txt($role_title);
 		}
 		
 		return $a_role_title;
 	}
 	
-	
+	public static function _removeObjectId($a_role_title) {
+		$role_title_parts = explode('_',$a_role_title);
+
+		$test2 = (int) $role_title_parts[3];
+		if ($test2 > 0)
+		{
+			unset($role_title_parts[3]);
+		}
+
+		return implode('_',$role_title_parts);
+	}
+	//gev-patch end 2661
 	
 	function _updateAuthMode($a_roles)
 	{
@@ -574,12 +580,12 @@ class ilObjRole extends ilObject
 			
 			// handle plugin permission texts
 			$txt = $objDefinition->isPlugin($info['type'])
-				? ilPlugin::lookupTxt("rep_robj", $info['type'], $info['type']."_".$info['operation'])
+				? ilPlugin::lookupTxtById($info['type'], $info['type']."_".$info['operation'])
 				: $lng->txt($info['type']."_".$info['operation']);
 			if (substr($info['operation'], 0, 7) == "create_" &&
 				$objDefinition->isPlugin(substr($info['operation'], 7)))
 			{
-				$txt = ilPlugin::lookupTxt("rep_robj", substr($info['operation'], 7), $info['type']."_".$info['operation']);
+				$txt = ilPlugin::lookupTxtById(substr($info['operation'], 7), $info['type']."_".$info['operation']);
 			}
 			$rbac_operations[$info['typ_id']][$info['ops_id']] = array(
 									   							"ops_id"	=> $info['ops_id'],

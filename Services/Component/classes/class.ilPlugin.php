@@ -509,9 +509,36 @@ abstract class ilPlugin
 	}
 	
 	/**
-	* Get template from plugin
-	*/
-	public final function getTemplate($a_template, $a_par1 = true, $a_par2 = true)
+	 * @param $pluginId
+	 * @param $langVar
+	 * @return string
+	 */
+	static function lookupTxtById($pluginId, $langVar) {
+		$pl = ilPlugin::getRepoPluginObjectByType($pluginId);
+		return $pl->txt($langVar);
+	}
+
+	/**
+	 * Is searched lang var available in plugin lang files
+	 *
+	 * @param $pluginId
+	 * @param $langVar
+	 *
+	 * @return bool
+	 */
+	static function langExistsById($pluginId, $langVar) {
+		global $lng;
+
+		$pl = ilPlugin::getRepoPluginObjectByType($pluginId);
+		$pl->loadLanguageModule();
+
+		return $lng->exists($pl->getPrefix()."_".$langVar);
+	}
+
+	/**
+	 * Get template from plugin
+	 */
+	public function getTemplate($a_template, $a_par1 = true, $a_par2 = true)
 	{
 		$tpl = new ilTemplate($this->getDirectory()."/templates/".$a_template, $a_par1, $a_par2);
 		
@@ -872,8 +899,22 @@ abstract class ilPlugin
 		
 		return null;
 	}
-	
-	
+
+	/**
+	 * Return either a repoObject plugin or a orgunit extension plugin or null if the type is not a plugin.
+	 * @param $type
+	 * @return null|ilPlugin
+	 */
+	public static function getRepoPluginObjectByType($type) {
+		$plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
+			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", $type));
+		if(!$plugin) {
+			$plugin = ilPlugin::getPluginObject(IL_COMP_MODULE, "OrgUnit", "orguext",
+				ilPlugin::lookupNameForId(IL_COMP_MODULE, "OrgUnit", "orguext", $type));
+		}
+		return $plugin;
+	}
+
 	/**
 	* Lookup information data in il_plugin
 	*/
@@ -895,19 +936,19 @@ abstract class ilPlugin
 	}
 	
 	/**
-	* Get all active plugins for a slot
-	*/
-	static final function getActivePluginsForSlot($a_ctype, $a_cname, $a_slot_id)
+	 * Get all active plugin names for a slot
+	 */
+	static function getActivePluginsForSlot($a_ctype, $a_cname, $a_slot_id)
 	{
 		global $ilDB, $ilPluginAdmin;
-		
+
+		$plugins = array();
 		$q = "SELECT * FROM il_plugin WHERE component_type = ".$ilDB->quote($a_ctype, "text").
 			" AND component_name = ".$ilDB->quote($a_cname, "text").
 			" AND slot_id = ".$ilDB->quote($a_slot_id, "text").
 			" AND active = ".$ilDB->quote(1, "integer");
-
 		$set = $ilDB->query($q);
-		$plugins = array();
+
 		while($rec = $ilDB->fetchAssoc($set))
 		{
 			if ($ilPluginAdmin->isActive($a_ctype, $a_cname, $a_slot_id, $rec["name"]))
@@ -920,9 +961,37 @@ abstract class ilPlugin
 	}
 	
 	/**
-	* Lookup name for id
-	*/
-	function lookupNameForId($a_ctype, $a_cname, $a_slot_id, $a_plugin_id)
+	 * Get All active plugin ids for a slot.
+	 * @param $a_ctype
+	 * @param $a_cname
+	 * @param $a_slot_id
+	 * @return array
+	 */
+	public static function getActivePluginIdsForSlot($a_ctype, $a_cname, $a_slot_id) {
+		global $ilPluginAdmin, $ilDB;
+
+		$plugins = array();
+		$q = "SELECT * FROM il_plugin WHERE component_type = ".$ilDB->quote($a_ctype, "text").
+			" AND component_name = ".$ilDB->quote($a_cname, "text").
+			" AND slot_id = ".$ilDB->quote($a_slot_id, "text").
+			" AND active = ".$ilDB->quote(1, "integer");
+		$set = $ilDB->query($q);
+
+		while($rec = $ilDB->fetchAssoc($set))
+		{
+			if ($ilPluginAdmin->isActive($a_ctype, $a_cname, $a_slot_id, $rec["name"]))
+			{
+				$plugins[] = $rec["plugin_id"];
+			}
+		}
+
+		return $plugins;
+	}
+
+	/**
+	 * Lookup name for id
+	 */
+	static function lookupNameForId($a_ctype, $a_cname, $a_slot_id, $a_plugin_id)
 	{
 		global $ilDB;
 		
@@ -931,7 +1000,6 @@ abstract class ilPlugin
 			" AND component_name = ".$ilDB->quote($a_cname, "text").
 			" AND slot_id = ".$ilDB->quote($a_slot_id, "text").
 			" AND plugin_id = ".$ilDB->quote($a_plugin_id, "text");
-
 		$set = $ilDB->query($q);
 		if ($rec = $ilDB->fetchAssoc($set))
 		{

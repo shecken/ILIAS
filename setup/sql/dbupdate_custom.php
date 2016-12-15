@@ -5281,3 +5281,621 @@ ilCustomInstaller::initPluginEnv();
 ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
 
 ?>
+
+<#230>
+<?php
+require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgramme.php");
+require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgrammeAssignment.php");
+require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgrammeProgress.php");
+
+//ilStudyProgramme::installDB();
+
+$fields = array(
+	'obj_id' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'last_change' => array(
+		'notnull' => '1',
+		'type' => 'timestamp',
+
+	),
+	'subtype_id' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'points' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'lp_mode' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '1',
+
+	),
+	'status' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '1',
+
+	),
+
+);
+/**
+ * @var $ilDB ilDB
+ */
+if (! $ilDB->tableExists('prg_settings')) {
+	$ilDB->createTable('prg_settings', $fields);
+	$ilDB->addPrimaryKey('prg_settings', array( 'obj_id' ));
+	if(!$ilDB->sequenceExists('prg_settings')) {
+		$ilDB->createSequence('prg_settings');
+	}
+}
+
+$fields = array(
+	'id' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'usr_id' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'root_prg_id' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'last_change' => array(
+		'notnull' => '1',
+		'type' => 'timestamp',
+
+	),
+	'last_change_by' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+
+);
+if (! $ilDB->tableExists('prg_usr_assignments')) {
+	$ilDB->createTable('prg_usr_assignments', $fields);
+	$ilDB->addPrimaryKey('prg_usr_assignments', array( 'id' ));
+
+	if (! $ilDB->sequenceExists('prg_usr_assignments')) {
+		$ilDB->createSequence('prg_usr_assignments');
+	}
+
+}
+
+
+$fields = array(
+	'id' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'assignment_id' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'prg_id' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'usr_id' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'points' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'points_cur' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'status' => array(
+		'notnull' => '1',
+		'type' => 'integer',
+		'length' => '1',
+
+	),
+	'completion_by' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'last_change' => array(
+		'notnull' => '1',
+		'type' => 'timestamp',
+
+	),
+	'last_change_by' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+
+);
+if (! $ilDB->tableExists('prg_usr_progress')) {
+	$ilDB->createTable('prg_usr_progress', $fields);
+	$ilDB->addPrimaryKey('prg_usr_progress', array( 'id' ));
+
+	if (! $ilDB->sequenceExists('prg_usr_progress')) {
+		$ilDB->createSequence('prg_usr_progress');
+	}
+
+}
+
+// Active Record does not support tuples as primary keys, so we have to
+// set those on our own.
+$ilDB->addUniqueConstraint( ilStudyProgrammeProgress::returnDbTableName()
+						  , array("assignment_id", "prg_id", "usr_id")
+						  );
+
+// ActiveRecord seems to not interpret con_is_null correctly, so we have to set
+// it manually.
+$ilDB->modifyTableColumn( ilStudyProgrammeProgress::returnDbTableName()
+						, "completion_by"
+						, array( "notnull" => false
+							   , "default" => null
+							   )
+						);
+$ilDB->modifyTableColumn( ilStudyProgrammeProgress::returnDbTableName()
+						, "last_change_by"
+						, array( "notnull" => false
+							   , "default" => null
+							   )
+						);
+
+require_once("./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php");
+$obj_type_id = ilDBUpdateNewObjectType::addNewType("prg", "StudyProgramme");
+$existing_ops = array("visible", "write", "copy", "delete", "edit_permission");
+foreach ($existing_ops as $op) {
+	$op_id = ilDBUpdateNewObjectType::getCustomRBACOperationId($op);
+	ilDBUpdateNewObjectType::addRBACOperation($obj_type_id, $op_id);		
+}
+
+require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgrammeAdvancedMetadataRecord.php");
+require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgrammeType.php");
+require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgrammeTypeTranslation.php");
+
+$fields = array(
+	'id' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'type_id' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'rec_id' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+
+);
+if (! $ilDB->tableExists('prg_type_adv_md_rec')) {
+	$ilDB->createTable('prg_type_adv_md_rec', $fields);
+	$ilDB->addPrimaryKey('prg_type_adv_md_rec', array( 'id' ));
+
+	if (! $ilDB->sequenceExists('prg_type_adv_md_rec')) {
+		$ilDB->createSequence('prg_type_adv_md_rec');
+	}
+
+}
+
+$fields = array(
+	'id' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'default_lang' => array(
+		'type' => 'text',
+		'length' => '4',
+
+	),
+	'owner' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'create_date' => array(
+		'notnull' => '1',
+		'type' => 'timestamp',
+
+	),
+	'last_update' => array(
+		'type' => 'timestamp',
+
+	),
+	'icon' => array(
+		'type' => 'text',
+		'length' => '255',
+
+	),
+
+);
+if (! $ilDB->tableExists('prg_type')) {
+	$ilDB->createTable('prg_type', $fields);
+	$ilDB->addPrimaryKey('prg_type', array( 'id' ));
+
+	if (! $ilDB->sequenceExists('prg_type')) {
+		$ilDB->createSequence('prg_type');
+	}
+
+}
+
+$fields = array(
+	'id' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'prg_type_id' => array(
+		'type' => 'integer',
+		'length' => '4',
+
+	),
+	'lang' => array(
+		'type' => 'text',
+		'length' => '4',
+
+	),
+	'member' => array(
+		'type' => 'text',
+		'length' => '32',
+
+	),
+	'value' => array(
+		'type' => 'text',
+		'length' => '3500',
+
+	),
+
+);
+if (! $ilDB->tableExists('prg_translations')) {
+	$ilDB->createTable('prg_translations', $fields);
+	$ilDB->addPrimaryKey('prg_translations', array( 'id' ));
+
+	if (! $ilDB->sequenceExists('prg_translations')) {
+		$ilDB->createSequence('prg_translations');
+	}
+
+}
+
+
+
+?>
+<#231>
+<?php
+
+include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+
+// workaround to avoid error when using addAdminNode. Bug?
+class EventHandler {
+	public function raise($a_component, $a_event, $a_parameter = "") {
+		// nothing to do...
+	}
+}
+$GLOBALS['ilAppEventHandler'] = new EventHandler();
+
+ilDBUpdateNewObjectType::addAdminNode('prgs', 'StudyProgrammeAdmin');
+
+?>
+
+<#232>
+<?php
+if(!$ilDB->sequenceExists('prg_settings')) {
+	$ilDB->createSequence('prg_settings');
+}
+if (! $ilDB->sequenceExists('prg_usr_assignments')) {
+	$ilDB->createSequence('prg_usr_assignments');
+}
+if (! $ilDB->sequenceExists('prg_usr_progress')) {
+	$ilDB->createSequence('prg_usr_progress');
+}
+if (! $ilDB->sequenceExists('prg_type_adv_md_rec')) {
+	$ilDB->createSequence('prg_type_adv_md_rec');
+}
+if (! $ilDB->sequenceExists('prg_type')) {
+	$ilDB->createSequence('prg_type');
+}
+if (! $ilDB->sequenceExists('prg_translations')) {
+	$ilDB->createSequence('prg_translations');
+}
+?>
+<#233>
+<?php
+include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+$parent_types = array('root', 'cat', 'prg');
+ilDBUpdateNewObjectType::addRBACCreate('create_prg', 'Create Study Programme', $parent_types);
+?>
+
+<#234>
+<?php
+	include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+	$obj_type_id = ilDBUpdateNewObjectType::getObjectTypeId("prg");
+	$existing_ops = array("read");
+	foreach ($existing_ops as $op) {
+		$op_id = ilDBUpdateNewObjectType::getCustomRBACOperationId($op);
+		ilDBUpdateNewObjectType::addRBACOperation($obj_type_id, $op_id);
+	}
+?>
+
+<#235>
+<?php
+include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+
+$type_id = ilDBUpdateNewObjectType::getObjectTypeId('prg');
+$new_ops_id = ilDBUpdateNewObjectType::addCustomRBACOperation('manage_members', 'Manage Members', 'object', 2400);
+
+if($type_id && $new_ops_id)
+{
+	ilDBUpdateNewObjectType::addRBACOperation($type_id, $new_ops_id);
+}
+?>
+
+<#236>
+<?php
+
+	$ilCtrlStructureReader->getStructure();
+?>
+
+<#237>
+<?php
+
+include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+
+$tgt_ops_id = ilDBUpdateNewObjectType::getCustomRBACOperationId("read_learning_progress");
+if(!$tgt_ops_id)
+{	
+	$tgt_ops_id = ilDBUpdateNewObjectType::addCustomRBACOperation('read_learning_progress', 'Read Learning Progress', 'object', 2300);
+}
+?>
+
+<#238>
+<?php
+include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+$obj_type_id = ilDBUpdateNewObjectType::addNewType("mass", "Manual Assessment");
+$existing_ops = array('visible', 'read', 'write', 'copy', 'delete'
+						, 'edit_permission', 'read_learning_progress', 'edit_learning_progress');
+foreach ($existing_ops as $op) {
+	$op_id = ilDBUpdateNewObjectType::getCustomRBACOperationId($op);
+	ilDBUpdateNewObjectType::addRBACOperation($obj_type_id, $op_id);
+}
+$parent_types = array('root', 'cat', 'crs', 'grp', 'fold');
+ilDBUpdateNewObjectType::addRBACCreate('create_mass', 'Create Manuall Assessment', $parent_types);
+
+if(!$ilDB->tableExists("mass_settings")) {
+	$fields =  array(
+		'obj_id' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		),
+		'content' => array(
+			'type' => 'text',
+			'length' => 1000,
+			'notnull' => false,
+			'default' => null
+		),
+		'record_template' => array(
+			'type' => 'text',
+			'length' => 1000,
+			'notnull' => false,
+			'default' => null
+		)
+	);
+	$ilDB->createTable('mass_settings',$fields);
+}
+
+if(!$ilDB->tableExists('mass_members')) {
+	$fields =  array(
+		'obj_id' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		),
+		'usr_id' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		),
+		'examiner_id' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => false,
+			'default' => 0
+		),
+		'record' => array(
+			'type' => 'text',
+			'length' => 1000,
+			'notnull' => false,
+			'default' =>  ''
+		),
+		'internal_note' => array(
+			'type' => 'text',
+			'length' => 1000,
+			'notnull' => false,
+			'default' => ''
+		),
+		'notify' => array(
+			'type' => 'integer',
+			'length' => 1,
+			'notnull' => true,
+			'default' => 0
+		),
+		'notification_ts' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => -1
+		),
+		'learning_progress' => array(
+			'type' => 'integer',
+			'length' => 1,
+			'notnull' => false,
+			'default' => 0
+		),
+		'finalized' => array(
+			'type' => 'integer',
+			'length' => 1,
+			'notnull' => true,
+			'default' => 0
+		)
+	);
+	$ilDB->createTable('mass_members',$fields);
+}
+
+$mass_type_id = ilDBUpdateNewObjectType::getObjectTypeId('mass');
+if($mass_type_id) {
+	$custom_ops = array('edit_members' => 'Manage members');
+	$counter = 1;
+	foreach ($custom_ops as $ops_id => $ops_description) {
+		$new_ops_id = ilDBUpdateNewObjectType::addCustomRBACOperation($ops_id, $ops_description, 
+							'object', 8000 + $counter*100);
+		$counter++;
+		if($new_ops_id) {
+			ilDBUpdateNewObjectType::addRBACOperation($mass_type_id, $new_ops_id);
+		}
+	}
+	require_once 'Modules/ManualAssessment/classes/AccessControl/class.ilManualAssessmentAccessHandler.php';
+	$rolt_title = ilManualAssessmentAccessHandler::DEFAULT_ROLE;
+	$rec = $ilDB->fetchAssoc(
+		$ilDB->query("SELECT obj_id FROM object_data "
+						."	WHERE type = 'rolt' AND title = ".$ilDB->quote($rolt_title,'text')));
+	if($rec) {
+		$mass_member_tpl_id  = $rec['obj_id'];
+	} else {
+		$mass_member_tpl_id = $ilDB->nextId('object_data');
+		$ilDB->manipulateF("
+			INSERT INTO object_data (obj_id, type, title, description, owner, create_date, last_update) ".
+			"VALUES (%s, %s, %s, %s, %s, %s, %s)",
+			array("integer", "text", "text", "text", "integer", "timestamp", "timestamp"),
+			array($mass_member_tpl_id, "rolt", $rolt_title, "Member of a manual assessment object", -1, ilUtil::now(), ilUtil::now()));
+	}
+	$ops = array();
+	$rec = $ilDB->fetchAssoc(
+		$ilDB->query("SELECT ops_id FROM rbac_operations WHERE operation = 'visible'"));
+	$ops[] = $rec['ops_id'];
+	$rec = $ilDB->fetchAssoc(
+		$ilDB->query("SELECT ops_id FROM rbac_operations WHERE operation = 'read'"));
+	$ops[] = $rec['ops_id'];
+	foreach ($ops as $op_id) {
+		if(!$ilDB->fetchAssoc(
+			$ilDB->query("SELECT * FROM rbac_templates "
+							."	WHERE ops_id = ".$ilDB->quote($op_id,'integer')
+							." 		AND rol_id = ".$ilDB->quote($mass_member_tpl_id,'integer')))) {
+			$query = "INSERT INTO rbac_templates
+				VALUES (".$ilDB->quote($mass_member_tpl_id).", 'mass', ".$ilDB->quote($op_id).", 8)";
+			$ilDB->manipulate($query);
+		}
+	}
+	$query = "INSERT INTO rbac_fa VALUES (".$ilDB->quote($mass_member_tpl_id).", 8, 'n', 'n')";
+	$ilDB->manipulate($query);
+}
+?>
+
+<#239>
+<?php
+if(!$ilDB->tableExists("mass_info_settings")) {
+	$fields =  array(
+		'obj_id' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		),
+		'contact' => array(
+			'type' => 'text',
+			'length' => 100,
+			'notnull' => false,
+			'default' => null
+		),
+		'responsibility' => array(
+			'type' => 'text',
+			'length' => 100,
+			'notnull' => false,
+			'default' => null
+		),
+		'phone' => array(
+			'type' => 'text',
+			'length' => 100,
+			'notnull' => false,
+			'default' => null
+		),
+		'mails' => array(
+			'type' => 'text',
+			'length' => 300,
+			'notnull' => false,
+			'default' => null
+		),
+		'consultation_hours' => array(
+			'type' => 'text',
+			'length' => 500,
+			'notnull' => false,
+			'default' => null
+		),
+	);
+	$ilDB->createTable('mass_info_settings',$fields);
+}
+?>
+<#240>
+<?php
+if(!$ilDB->indexExistsByFields('mass_settings', array('obj_id'))) {
+	$ilDB->addPrimaryKey('mass_settings', array('obj_id'));
+}
+if(!$ilDB->indexExistsByFields('mass_info_settings', array('obj_id'))) {
+	$ilDB->addPrimaryKey('mass_info_settings', array('obj_id'));
+}
+if(!$ilDB->indexExistsByFields('mass_members', array('obj_id','usr_id'))) {
+	$ilDB->addPrimaryKey('mass_members', array('obj_id','usr_id'));
+}
+?>
+
+<#241>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
+
+<#242>
+<?php
+$field = array('type' 		=> 'integer',
+			'length' 	=> 1,
+			'notnull' 	=> false
+			);
+
+if(!$ilDB->tableColumnExists("webr_items", "open_same_window")) {
+	$ilDB->addTableColumn("webr_items", "open_same_window", $field);
+}
+?>

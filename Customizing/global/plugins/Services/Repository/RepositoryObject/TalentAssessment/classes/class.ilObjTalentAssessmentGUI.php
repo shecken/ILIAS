@@ -22,6 +22,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	const CMD_PROPERTIES = "editProperties";
 	const CMD_SHOWCONTENT = "showContent";
 	const CMD_SUMMARY = "showSummary";
+	const CMD_AUTOCOMPLETE = "userfieldAutocomplete";
 
 	const TAB_SETTINGS = "tab_settings";
 	const TAB_OBSERVATIONS = "tab_observations";
@@ -99,6 +100,9 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 					case ilTalentAssessmentObservationsGUI::CMD_FINISH_TA:
 						$this->forwardObservations();
 						break;
+					case self::CMD_AUTOCOMPLETE:
+						$this->$cmd();
+						break;
 				}
 		}
 	}
@@ -123,8 +127,9 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 		$db = $this->plugin->getSettingsDB();
 		$career_goal_options = $db->getCareerGoalsOptions();
 		$venue_options = $db->getVenueOptions();
+		$autocomplete_link = $this->gCtrl->getLinkTarget($this, self::CMD_AUTOCOMPLETE, "", true);
 		$org_unit_options = $db->getOrgUnitOptions();
-		$this->addSettingsFormItems($form, $career_goal_options, $venue_options, $org_unit_options);
+		$this->addSettingsFormItems($form, $career_goal_options, $venue_options, $org_unit_options, $autocomplete_link);
 
 		return $form;
 	}
@@ -150,10 +155,10 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	protected function setTabs() {
 		$this->addInfoTab();
 
-		if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
-			$this->gTabs->addTab(self::TAB_SETTINGS, $this->txt("properties")
-				,$this->gCtrl->getLinkTarget($this, self::CMD_PROPERTIES));
-
+		$view_observations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
+		$edit_observations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
+		$finish_ta = $this->gAccess->checkAccess("ta_manager", "", $this->object->getRefId());
+		if ($view_observations || $edit_observations || $finish_ta) {
 			if(!$this->object->getActions()->observationStarted($this->object->getId())) {
 				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations")
 				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS));
@@ -161,9 +166,16 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations")
 				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS_LIST));
 			}
+		}
 
+		if ($this->gAccess->checkAccess("edit_observator", "", $this->object->getRefId())) {
 			$this->gTabs->addTab(self::TAB_OBSERVATOR, $this->txt("observator")
 				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservatorGUI::CMD_SHOW));
+		}
+
+		if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+			$this->gTabs->addTab(self::TAB_SETTINGS, $this->txt("properties")
+				,$this->gCtrl->getLinkTarget($this, self::CMD_PROPERTIES));
 		}
 
 		$this->addPermissionTab();
@@ -183,12 +195,23 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	}
 
 	protected function showContent() {
-		$_GET["cmd"] = ilTalentAssessmentSettingsGUI::CMD_SHOW;
-		$this->forwardSettings();
+		if ($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
+			$this->gCtrl->redirectByClass("ilinfoscreengui", "showSummary");
+		} elseif ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+			$_GET["cmd"] = ilTalentAssessmentSettingsGUI::CMD_SHOW;
+			$this->forwardSettings();
+		} else {
+			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
+			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
+		}
 	}
 
 	protected function forwardObservations() {
-		if(!$this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+		$view_observations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
+		$edit_observations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
+		$ta_manager = $this->gAccess->checkAccess("ta_manager", "", $this->object->getRefId());
+
+		if(!($view_observations || $edit_observations || $ta_manager)) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {
@@ -219,7 +242,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	}
 
 	protected function forwardObservator() {
-		if(!$this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+		if(!$this->gAccess->checkAccess("edit_observator", "", $this->object->getRefId())) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {
@@ -263,5 +286,18 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 		$info->addProperty($this->txt('end_time'), $end_time[1]);
 
 		return $info;
+	}
+
+	public function userfieldAutocomplete() {
+		include_once './Services/User/classes/class.ilUserAutoComplete.php';
+		$auto = new ilUserAutoComplete();
+		$auto->setSearchFields(array('login','firstname','lastname','email'));
+		$auto->enableFieldSearchableCheck(false);
+		if(($_REQUEST['fetchall']))
+		{
+			$auto->setLimit(ilUserAutoComplete::MAX_ENTRIES);
+		}
+		echo $auto->getList($_REQUEST['term']);
+		exit();
 	}
 }

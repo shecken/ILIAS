@@ -45,6 +45,7 @@ class gevDecentralTrainingGUI {
 	const LTPYE_WEBINAR = "Webinar";
 	const UVG_BASE_ORG_UNIT = "UVG";
 	const UPLOAD_ERROR_VALUE = 4;
+	const MINUTE_STEP_SIZE = 15;
 
 	protected $ltype;
 	
@@ -1314,6 +1315,7 @@ class gevDecentralTrainingGUI {
 		$form->addItem($date);
 
 		$time = new ilDateDurationInputGUI($this->lng->txt("gev_duration"), "time");
+		$time->setMinuteStepSize(self::MINUTE_STEP_SIZE);
 		$time->setShowDate(false);
 		$time->setShowTime(true);
 		if ($a_fill) {

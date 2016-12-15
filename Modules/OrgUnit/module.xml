@@ -22,7 +22,10 @@
 		<!--event type="listen" id="Modules/OrgUnit" /-->
 		<event type="listen" id="Services/Object" />
 	</events>
-    <pluginslots>
-        <pluginslot id="orgutypehk" name="OrgUnitTypeHook" />
-    </pluginslots>
+	<pluginslots>
+		<pluginslot id="orgutypehk" name="OrgUnitTypeHook" />
+	</pluginslots>
+	<pluginslots>
+		<pluginslot id="orguext" name="OrgUnitExtension" />
+	</pluginslots>
 </module>

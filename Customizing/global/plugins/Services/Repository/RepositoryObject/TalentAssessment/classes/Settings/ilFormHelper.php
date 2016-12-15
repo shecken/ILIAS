@@ -20,7 +20,7 @@ trait ilFormHelper {
 	 *
 	 * @return null
 	 */
-	public function addSettingsFormItems(\ilPropertyFormGUI $form, array $career_goal_options, array $venue_options, array $org_unit_options) {
+	public function addSettingsFormItems(\ilPropertyFormGUI $form, array $career_goal_options, array $venue_options, array $org_unit_options, $autocomplete_link) {
 		$si = new \ilSelectInputGUI($this->txt("career_goal"), ilActions::F_CAREER_GOAL);
 		$options = array(null=>$this->txt("pls_select")) + $career_goal_options;
 		$si->setRequired(true);
@@ -30,6 +30,7 @@ trait ilFormHelper {
 		$ti = new \ilTextInputGUI($this->txt("username"), ilActions::F_USERNAME);
 		$ti->setRequired(true);
 		$ti->setInfo($this->txt("username_info"));
+		$ti->setDataSource($autocomplete_link);
 		$form->addItem($ti);
 
 		require_once('Services/Form/classes/class.ilDateDurationInputGUI.php');
@@ -63,7 +64,7 @@ trait ilFormHelper {
 	 *
 	 * @return null
 	 */
-	public function addSettingsFormItemsUpdate(\ilPropertyFormGUI $form, array $career_goal_options, array $venue_options, array $org_unit_options, $edit) {
+	public function addSettingsFormItemsUpdate(\ilPropertyFormGUI $form, array $career_goal_options, array $venue_options, array $org_unit_options, $edit, $autocomplete_link) {
 		require_once('Services/Form/classes/class.ilDateDurationInputGUI.php');
 		require_once('Services/Form/classes/class.ilNonEditableValueGUI.php');
 
@@ -81,6 +82,7 @@ trait ilFormHelper {
 		$ti->setRequired(true);
 		$ti->setInfo($this->txt("username_info"));
 		$ti->setDisabled($edit);
+		$ti->setDataSource($autocomplete_link);
 		$form->addItem($ti);
 
 		$ne = new \ilNonEditableValueGUI($this->txt("firstname"), ilActions::F_FIRSTNAME);
