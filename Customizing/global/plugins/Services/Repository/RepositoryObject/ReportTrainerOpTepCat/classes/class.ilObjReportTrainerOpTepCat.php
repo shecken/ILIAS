@@ -9,7 +9,7 @@ set_time_limit(0);
 class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 	const MIN_ROW = "3991";
 	protected $categories;
-	protected $relevant_parameters = array();	
+	protected $relevant_parameters = array();
 
 	public function __construct($ref_id = 0) {
 		parent::__construct($ref_id);
@@ -48,12 +48,13 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 
 	protected function fetchData(callable $callback) {
 		$db = $this->gIldb;
-		$select = " SELECT `hu`.`user_id` ,CONCAT(hu.lastname, ', ', hu.firstname) as fullname ";
-		$from = " FROM `hist_tep` ht ";
+		$select = " SELECT `hu`.`user_id`\n"
+				." ,CONCAT(hu.lastname, ', ', hu.firstname) as fullname\n";
+		$from = " FROM `hist_tep` ht\n";
 
 		foreach($this->categories as $key => $category) {
-			$select .= $this->daysPerTEPCategory($category, 'cat_'.$key);
-			$select .= $this->hoursPerTEPCategory($category, 'cat_'.$key.'_h');
+			$select .= $this->daysPerTEPCategory($category, 'cat_'.$key) ."\n";
+			$select .= $this->hoursPerTEPCategory($category, 'cat_'.$key.'_h') ."\n";
 		}
 
 		$join .= "JOIN hist_user AS hu\n"
@@ -69,28 +70,33 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
 			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
 			$dt_query = $to_sql->interpret($settings[0]['period_pred']);
-			$where .= "    AND " .$dt_query;
+			$where .= "    AND " .$dt_query ."\n";
 
 			if(!empty($settings[0]['edu_program'])) {
-				$where .= "    AND " .$db->in('hc.edu_program', $settings[0]['edu_program'], false, 'text');
+				$where .= "    AND " .$db->in('hc.edu_program', $settings[0]['edu_program'], false, 'text') ."\n";
 			}
 
 			if(!empty($settings[0]['crs_title'])) {
-				$where .= "    AND " .$db->in('hc.title', $settings[0]['crs_title'], false, 'text');
+				$where .= "    AND " .$db->in('hc.title', $settings[0]['crs_title'], false, 'text') ."\n";
 			}
 
 			if(!empty($settings[0]['course_type'])) {
-				$where .= "    AND " .$db->in('hc.type', $settings[0]['course_type'], false, 'text');
+				$where .= "    AND " .$db->in('hc.type', $settings[0]['course_type'], false, 'text') ."\n";
+			}
+
+			if(!empty($settings[0]['orgu_unit'])) {
+				$where .= "    AND " .$db->in('hu.org_unit', $settings[0]['orgu_unit'], false, 'text') ."\n";
 			}
 
 			if(!empty($settings[0]['venue'])) {
-				$where .= "    AND " .$db->in('hc.venue', $settings[0]['venue'], false, 'text');
+				$where .= "    AND " .$db->in('hc.venue', $settings[0]['venue'], false, 'text') ."\n";
 			}
 		}
 
-		$group = "GROUP BY hu.user_id";
+		$group = " GROUP BY hu.user_id\n";
+		$order = " ORDER BY fullname\n";
+		$order = $this->queryOrder();
 		$query = $select . $from . $join . $where . $group .$having .$order;
-		// var_dump($query);exit;
 		$res = $db->query($query);
 		$data = [];
 
@@ -102,18 +108,18 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 
 	protected function daysPerTEPCategory($category,$name) {
 		$sql = ",SUM(IF(category = "
-				.$this->gIldb->quote($category,"text")." ,1,0)) AS ".$name . " ";
+				.$this->gIldb->quote($category,"text")." ,1,0)) AS ".$name . "\n";
 		return $sql;
 	}
 
 	protected function hoursPerTEPCategory($category, $name) {
 		$sql = 
-		",SUM(IF(category = ".$this->gIldb->quote($category,"text")." ,"
-		."		IF(htid.end_time IS NOT NULL AND htid.start_time IS NOT NULL,"
-		."			LEAST(CEIL( TIME_TO_SEC( TIMEDIFF( end_time, start_time ) )* weight /720000) *2,8),"
-		."			LEAST(CEIL( 28800* htid.weight /720000) *2,8)"
-		."		)"
-		."	,0)) AS ".$name . " ";
+		",SUM(IF(category = ".$this->gIldb->quote($category,"text")." ,\n"
+		."		IF(htid.end_time IS NOT NULL AND htid.start_time IS NOT NULL,\n"
+		."			LEAST(CEIL( TIME_TO_SEC( TIMEDIFF( end_time, start_time ) )* weight /720000) *2,8),\n"
+		."			LEAST(CEIL( 28800* htid.weight /720000) *2,8)\n"
+		."		)\n"
+		."	,0)) AS ".$name . "\n";
 		return $sql;
 	}
 
@@ -206,11 +212,25 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 					),
 				/* END BLOCK - TYPE */
 
+				/* BEGIN BLOCK - Orgu Filter */
+				$f->multiselectsearch
+				(
+					$txt("orgu_unit")
+					, ""
+					, $this->getOrgusFromTep()
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				/* END BLOCK - Orgu Filter */
+
 				/* BEGIN BLOCK - VENUE */
 				$f->multiselectsearch
 				(
 					$txt("venue")
 					, ""
+
 					, $this->changeArrKeys(gevOrgUnitUtils::getVenueNames())
 				)->map
 					(
@@ -221,7 +241,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 
 			)->map
 				(
-					function($date_period_predicate, $start, $end, $edu_program, $crs_title, $course_type, $venue)
+					function($date_period_predicate, $start, $end, $edu_program, $crs_title, $course_type, $orgu_unit, $venue)
 					{
 						return array("period_pred" => $date_period_predicate
 									,"start" => $start
@@ -229,6 +249,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 									,"edu_program" => $edu_program
 									,"crs_title" => $crs_title
 									,"course_type" => $course_type
+									,"orgu_unit" => $orgu_unit
 									,"venue" => $venue);
 					},
 					$tf->dict
@@ -239,6 +260,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 							 ,"edu_program" => $tf->lst($tf->string())
 							 ,"crs_title" => $tf->lst($tf->string())
 							 ,"course_type" => $tf->lst($tf->string())
+							 ,"orgu_unit" => $tf->lst($tf->string())
 							 ,"venue" => $tf->lst($tf->string())
 						)
 					)
@@ -248,10 +270,10 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 
 	protected function getOrgusFromTep() {
 		$orgus = array();
-		$sql = "SELECT DISTINCT orgu_id FROM hist_tep WHERE orgu_title != '-empty-'";
+		$sql = "SELECT DISTINCT orgu_title FROM hist_tep WHERE orgu_title != '-empty-'";
 		$res = $this->gIldb->query($sql);
 		while( $rec = $this->gIldb->fetchAssoc($res)) {
-			$orgus[] = $rec["orgu_title"];
+			$orgus[$rec["orgu_title"]] = $rec["orgu_title"];
 		}
 		return $orgus;
 	}
