@@ -51,6 +51,23 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI
 		}
 	}
 
+	/**
+	 * render query for debugging purposes
+	 * a filter is present and may be modified to observe the effects on query
+	 */
+	public function renderQueryView()
+	{
+		include_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
+		$this->object->prepareReport();
+		$content = $this->renderFilter('query_view');
+		$form = new ilNonEditableValueGUI($this->gLng->txt("report_query_text"));
+		$form->setValue($this->object->buildQueryStatement());
+		$settings_form = new ilPropertyFormGUI();
+		$settings_form->addItem($form);
+		$content .= $settings_form->getHTML();
+		$this->gTpl->setContent($content);
+	}
+
 	protected function render()
 	{
 		$res = $this->renderFilter()."<br />";
@@ -60,8 +77,9 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI
 
 	protected function renderFilter()
 	{
+		global $ilCtrl;
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
-		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, self::CMD_SHOW_CONTENT);
+		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, $ilCtrl->getCmd());
 		return $filter_flat_view->render($this->filter_settings);
 	}
 

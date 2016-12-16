@@ -12,7 +12,6 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 
 	protected $online;
 	protected $relevant_parameters = array();
-	protected $query_class;
 	protected static $participated = array('teilgenommen');
 	protected static $columns_to_sum = array('book_book' => 'book_book','part_book' => 'part_book','wp_part' => 'wp_part');
 	protected static $wbd_relevant = array('OKZ1','OKZ2','OKZ3');
@@ -57,15 +56,8 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 
 	protected function prepareQueryComponents($query)
 	{
-		$filter_orgus = 0;
-		// this will be used later to invoke other query objects. A cloning of a "virgin" query object would be more formal,
-		// but since right now __clone is not defined for queries...
-		$this->query_class = get_class($query);
 		$this->filter_selections = $this->getFilterSettings();
-		// this is quite a hack, but once we have the new filter-api it can be fixed
-
-
-		return null;
+		return $query;
 	}
 
 	/**
@@ -82,7 +74,6 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 		require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
 
 		$db = $this->gIldb;
-		$this->crs_topics_filter = new courseTopicsFilter('crs_topics', 'hc.topic_set');
 		$pf = new \CaT\Filter\PredicateFactory();
 		$tf = new \CaT\Filter\TypeFactory();
 		$f = new \CaT\Filter\FilterFactory($pf, $tf);
@@ -205,7 +196,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 									,"wbd_relevant" => $wbd_relevant
 									,"edupoints" => $edupoints);
 			},
-			$tf->dict(array("no_wbd" => $tf->bool()
+			$tf->dict(array(		"no_wbd" => $tf->bool()
 									,"recursive" => $tf->bool()
 									,"org_unit" => $tf->lst($tf->int())
 									,"period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
