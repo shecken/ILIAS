@@ -304,6 +304,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 		$query = $this->possiblyAddEduPointsFilter($query); //ok
 		$query = $this->possiblyAddWBDRelevantFilter($query); //ok
 		$query .= 	'	GROUP BY hc.type';
+		var_dump($query);
 		return $query;
 	}
 
@@ -363,7 +364,16 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 
 	private function addRecursiveOrgusToSelection(array $selection)
 	{
-		return $selection;
+		require_once 'Services/GEV/Utils/classes/class.gevOrgUnitUtils.php';
+		$aux = array();
+		foreach ($selection as $orgu_id) {
+			$ref_id = gevObjectUtils::getRefId($orgu_id);
+			$aux[] = $orgu_id;
+			foreach (gevOrgUnitUtils::getAllChildren(array($ref_id)) as $child) {
+				$aux[] = $child["obj_id"];
+			}
+		}
+		return $aux;
 	}
 
 	private function possiblyAddCourseTopicsFilterJoin($query)
