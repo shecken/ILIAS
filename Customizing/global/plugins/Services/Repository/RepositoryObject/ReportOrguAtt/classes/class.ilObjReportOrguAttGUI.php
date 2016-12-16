@@ -117,20 +117,20 @@ class ilObjReportOrguAttGUI extends ilObjReportBaseGUI
 			if (!self::$od_regexp || !self::$bd_regexp) {
 				require_once './Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/config/od_bd_strings.php';
 			}
-			$orgu_above1 =  $rec['org_unit_above1'];
-			$orgu_above2 =  $rec['org_unit_above2'];
-			if (preg_match(self::$od_regexp, $orgu_above1)) {
-				$od = $orgu_above1;
-			} elseif (preg_match(self::$od_regexp, $orgu_above2)) {
-				$od = $orgu_above2;
+			$orgu_above =  $rec['org_unit_above1'];
+			$orgu_above_above =  $rec['org_unit_above2'];
+			if (preg_match(self::$od_regexp, $orgu_above)) {
+				$od = $orgu_above;
+			} elseif (preg_match(self::$od_regexp, $orgu_above_above)) {
+				$od = $orgu_above_above;
 			} else {
 				$od = '-';
 			}
 
-			if (preg_match(self::$bd_regexp, $orgu_above1)) {
-				$bd = $orgu_above1;
-			} elseif (preg_match(self::$bd_regexp, $orgu_above2)) {
-				$bd = $orgu_above2;
+			if (preg_match(self::$bd_regexp, $orgu_above)) {
+				$bd = $orgu_above;
+			} elseif (preg_match(self::$bd_regexp, $orgu_above_above)) {
+				$bd = $orgu_above_above;
 			} else {
 				$bd = '-';
 			}
@@ -150,20 +150,20 @@ class ilObjReportOrguAttGUI extends ilObjReportBaseGUI
 			if (!self::$od_regexp || !self::$bd_regexp) {
 				require_once './Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/config/od_bd_strings.php';
 			}
-			$orgu_above1 =  $rec['org_unit_above1'];
-			$orgu_above2 =  $rec['org_unit_above2'];
-			if (preg_match(self::$od_regexp, $orgu_above1)) {
-				$od = $orgu_above1;
-			} elseif (preg_match(self::$od_regexp, $orgu_above2)) {
-				$od = $orgu_above2;
+			$orgu_above =  $rec['org_unit_above1'];
+			$orgu_above_above =  $rec['org_unit_above2'];
+			if (preg_match(self::$od_regexp, $orgu_above)) {
+				$od = $orgu_above;
+			} elseif (preg_match(self::$od_regexp, $orgu_above_above)) {
+				$od = $orgu_above_above;
 			} else {
 				$od = '-';
 			}
 
-			if (preg_match(self::$bd_regexp, $orgu_above1)) {
-				$bd = $orgu_above1;
-			} elseif (preg_match(self::$bd_regexp, $orgu_above2)) {
-				$bd = $orgu_above2;
+			if (preg_match(self::$bd_regexp, $orgu_above)) {
+				$bd = $orgu_above;
+			} elseif (preg_match(self::$bd_regexp, $orgu_above_above)) {
+				$bd = $orgu_above_above;
 			} else {
 				$bd = '-';
 			}
