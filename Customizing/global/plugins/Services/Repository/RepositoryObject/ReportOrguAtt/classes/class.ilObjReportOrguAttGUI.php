@@ -36,24 +36,41 @@ class ilObjReportOrguAttGUI extends ilObjReportBaseGUI
 		$this->loadFilterSettings();
 	}
 
+	protected function loadFilterSettings()
+	{
+		if (isset($_POST['filter'])) {
+			$this->filter_settings = $_POST['filter'];
+		}
+		if (isset($_GET['filter'])) {
+			$this->filter_settings = unserialize(base64_decode($_GET['filter']));
+		}
+		if ($this->filter_settings) {
+			$this->object->addRelevantParameter('filter', base64_encode(serialize($this->filter_settings)));
+			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
+		}
+	}
+
+	protected function render()
+	{
+		$res = $this->renderFilter()."<br />";
+		$res .= $this->renderTable();
+		return $res;
+	}
+
+	protected function renderFilter()
+	{
+		global $ilCtrl;
+		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
+		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, $ilCtrl->getCmd());
+		return $filter_flat_view->render($this->filter_settings);
+	}
+
 	protected function prepareTitle($a_title)
 	{
 		$a_title = parent::prepareTitle($a_title);
 		$a_title->image("GEV_img/ico-head-edubio.png");
 		return $a_title;
 	}
-
-	protected function render()
-	{
-		$this->gTpl->setTitle(null);
-		return 	($this->title !== null ? $this->title->render() : "")
-				. ($this->object->deliverFilter() !== null ? $this->object->deliverFilter()->render() : "")
-				. ($this->spacer !== null ? $this->spacer->render() : "")
-				. $this->renderSumTable()
-				. ($this->spacer !== null ? $this->spacer->render() : "")
-				. $this->renderTable();
-	}
-
 
 	private function renderSumTable()
 	{
