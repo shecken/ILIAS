@@ -9,111 +9,117 @@ require_once 'Services/Form/classes/class.ilCheckboxInputGUI.php';
 * @ilCtrl_Calls ilObjReportCompanyGlobalGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI,
 * @ilCtrl_Calls ilObjReportCompanyGlobalGUI: ilCommonActionDispatcherGUI
 */
-class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI {
+class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI
+{
 	const CMD_SHOW_CONTENT = "showContent";
-	static $rows = array("type", "part_book", "part_user", "wp_part", "book_book", "book_user");
+	static protected $rows = array("type", "part_book", "part_user", "wp_part", "book_book", "book_user");
 
-	protected function afterConstructor() {
+	protected function afterConstructor()
+	{
 		parent::afterConstructor();
-		if($this->object->plugin) {
+		if ($this->object->plugin) {
 			$this->tpl->addCSS($this->object->plugin->getStylesheetLocation('report.css'));
 		}
 
-		if($this->object) {
+		if ($this->object) {
 			$this->filter = $this->object->filter();
-			$this->display = new \CaT\Filter\DisplayFilter
-						( new \CaT\Filter\FilterGUIFactory
-						, new \CaT\Filter\TypeFactory
-						);
+			$this->display = new \CaT\Filter\DisplayFilter(
+				new \CaT\Filter\FilterGUIFactory,
+				new \CaT\Filter\TypeFactory
+			);
 		}
 
 		$this->loadFilterSettings();
 	}
 
-	public function getType() {
+	public function getType()
+	{
 		return 'xrcg';
 	}
 
-	protected function loadFilterSettings() {
-		if(isset($_POST['filter'])) {
+	protected function loadFilterSettings()
+	{
+		if (isset($_POST['filter'])) {
 			$this->filter_settings = $_POST['filter'];
 		}
-		if(isset($_GET['filter'])) {
+		if (isset($_GET['filter'])) {
 			$this->filter_settings = unserialize(base64_decode($_GET['filter']));
 		}
-		if($this->filter_settings) {
-			$this->object->addRelevantParameter('filter',base64_encode(serialize($this->filter_settings)));
+		if ($this->filter_settings) {
+			$this->object->addRelevantParameter('filter', base64_encode(serialize($this->filter_settings)));
 			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
 		}
 	}
 
-	protected function render() {
+	protected function render()
+	{
 		$res = $this->renderFilter()."<br />";
 		$res .= $this->renderTable();
 		return $res;
 	}
 
-	protected function renderFilter() {
+	protected function renderFilter()
+	{
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
 		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, self::CMD_SHOW_CONTENT);
 		return $filter_flat_view->render($this->filter_settings);
 	}
 
-	protected function renderTable() {
-		return $sum_table.parent::renderTable();
-	}
 
-	protected function prepareTitle($a_title) {
+	protected function prepareTitle($a_title)
+	{
 		$a_title = parent::prepareTitle($a_title);
 		$a_title->image("GEV_img/ico-head-rep-billing.png");
 		return $a_title;
 	}
 
-	protected function renderUngroupedTable($data) {
+	protected function renderUngroupedTable($data)
+	{
 		$this->gTpl->addCSS($this->object->master_plugin->getDirectory().'/templates/css/report.css');
-		$table = $this->object->deliverTable();	
-		$tpl_table = new ilTemplate("tpl.cat_global_company_report.html", true, true,  $this->object->plugin->getDirectory());
+		$table = $this->object->deliverTable();
+		$tpl_table = new ilTemplate("tpl.cat_global_company_report.html", true, true, $this->object->plugin->getDirectory());
 		$tpl_table->setCurrentBlock('row');
 			$tpl_header = new ilTemplate("tpl.cat_global_company_report_header_row.html", true, true, $this->object->plugin->getDirectory());
 			$tpl_header->setCurrentBlock('meta');
-			$tpl_header->setVariable('HEADER_BOOK',$this->object->plugin->txt('header_book'));
-			$tpl_header->setVariable('HEADER_PART',$this->object->plugin->txt('header_part'));
+			$tpl_header->setVariable('HEADER_BOOK', $this->object->plugin->txt('header_book'));
+			$tpl_header->setVariable('HEADER_PART', $this->object->plugin->txt('header_part'));
 			$tpl_header->parseCurrentBlock();
-		$tpl_table->setVariable('ROWCLASS','tblheader');	
-		$tpl_table->setVariable('ROW',$tpl_header->get());
+		$tpl_table->setVariable('ROWCLASS', 'tblheader');
+		$tpl_table->setVariable('ROW', $tpl_header->get());
 		$tpl_table->parseCurrentBlock();
 
 		$tpl_table->setCurrentBlock('row');
 			$tpl_header = new ilTemplate("tpl.cat_global_company_report_header_row.html", true, true, $this->object->plugin->getDirectory());
 			$tpl_header->setCurrentBlock('main');
-			foreach($table->columns as $column) {
-				$variable = strtoupper($column[0]);
-				$content = $column[1];
-				$tpl_header->setVariable($variable,$content);
-			}
+		foreach ($table->columns as $column) {
+			$variable = strtoupper($column[0]);
+			$content = $column[1];
+			$tpl_header->setVariable($variable, $content);
+		}
 			$tpl_header->parseCurrentBlock();
-		$tpl_table->setVariable('ROWCLASS','tblheader');	
-		$tpl_table->setVariable('ROW',$tpl_header->get());
+		$tpl_table->setVariable('ROWCLASS', 'tblheader');
+		$tpl_table->setVariable('ROW', $tpl_header->get());
 		$tpl_table->parseCurrentBlock();
 		$rowclass = array('tblrow1','tblrow2');
 		$i = 1;
-		foreach($data as $type => $row) {	
+		foreach ($data as $type => $row) {
 			$tpl_table->setCurrentBlock('row');
 			$tpl_row = new ilTemplate("tpl.cat_global_company_report_data_row.html", true, true, $this->object->plugin->getDirectory());
-			foreach($row as $column => $data) {
-				$tpl_row->setVariable(strtoupper($column),$data);
+			foreach ($row as $column => $data) {
+				$tpl_row->setVariable(strtoupper($column), $data);
 			}
-			$tpl_table->setVariable('ROW',$tpl_row->get());
-			$tpl_table->setVariable('ROWCLASS',$rowclass[$i % 2]);	
+			$tpl_table->setVariable('ROW', $tpl_row->get());
+			$tpl_table->setVariable('ROWCLASS', $rowclass[$i % 2]);
 			$tpl_table->parseCurrentBlock();
 			$i++;
 		}
 		return $tpl_table->get();
 	}
 
-	public static function transformResultRow($rec) {
-		foreach (self::$rows as $key ) {
-			if(!isset($rec[$key])) {
+	public static function transformResultRow($rec)
+	{
+		foreach (self::$rows as $key) {
+			if (!isset($rec[$key])) {
 				$rec[$key] = '0';
 			}
 		}
@@ -124,12 +130,13 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI {
 	/**
 	* the functionlaity of xls export must be extended someday. its not nice to replace the whole method just to add some metadata at the head of the export.
 	*/
-	protected function exportXLSX() {
+	protected function exportXLSX()
+	{
 		require_once "Services/Excel/classes/class.ilExcelUtils.php";
 		require_once "Services/Excel/classes/class.ilExcelWriterAdapter.php";
 		$this->object->prepareReport();
 
-		$adapter = new ilExcelWriterAdapter("Report.xls", true); 
+		$adapter = new ilExcelWriterAdapter("Report.xls", true);
 		$workbook = $adapter->getWorkbook();
 		$worksheet = $workbook->addWorksheet();
 		$worksheet->setLandscape();
@@ -149,8 +156,7 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI {
 			$worksheet->setColumn($colcount, $colcount, 30); //width
 			if (method_exists($this, "_process_xls_header") && $col[2]) {
 				$worksheet->writeString(1, $colcount, $this->_process_xls_header($col[1]), $format_bold);
-			}
-			else {
+			} else {
 				$worksheet->writeString(1, $colcount, $col[2] ? $col[1] : $this->plugin->txt($col[1]), $format_bold);
 			}
 			$colcount++;
