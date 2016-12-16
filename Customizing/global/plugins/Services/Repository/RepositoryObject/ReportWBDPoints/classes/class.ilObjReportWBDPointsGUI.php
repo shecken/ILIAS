@@ -55,12 +55,6 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
 		return $filter_flat_view->render($this->filter_settings);
 	}
 
-	protected function renderTable() {
-		$table = parent::renderTable();
-		$this->gCtrl->setParameter($this, 'filter', null);
-		return $table;
-	}
-
 	protected function loadFilterSettings() {
 		if(isset($_POST['filter'])) {
 			$this->filter_settings = $_POST['filter'];
