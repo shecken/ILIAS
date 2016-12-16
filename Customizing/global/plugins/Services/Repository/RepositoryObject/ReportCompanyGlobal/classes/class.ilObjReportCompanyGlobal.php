@@ -304,7 +304,6 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 		$query = $this->possiblyAddEduPointsFilter($query); //ok
 		$query = $this->possiblyAddWBDRelevantFilter($query); //ok
 		$query .= 	'	GROUP BY hc.type';
-		var_dump($query);
 		return $query;
 	}
 
