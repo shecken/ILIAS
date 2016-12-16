@@ -840,7 +840,13 @@ class ilTrQuery
 				include_once "Modules/Group/classes/class.ilGroupParticipants.php";
 				$member_obj = ilGroupParticipants::_getInstanceByObjId($obj_id);
 				return $member_obj->getMembers();
-			
+
+			case "mass":
+				include_once("Modules/ManualAssessment/classes/class.ilObjManualAssessment.php");
+				$mass = new ilObjManualAssessment($obj_id, false);
+				return $mass->loadMembers()->membersIds();
+				break;
+
 			default:				
 				// walk path to find course or group object and use members of that object
 				$path = $tree->getPathId($a_ref_id);
@@ -899,7 +905,13 @@ class ilTrQuery
 				$class = ilLPStatusFactory::_getClassById($obj_id, ilLPObjSettings::LP_MODE_TEST_FINISHED);
 				$a_users = $class::getParticipants($obj_id);
 				break;
-			
+
+			case "prg":
+				include_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
+				$prg = new ilObjStudyProgramme($obj_id, false);
+				$a_users = $prg->getIdsOfUsersWithRelevantProgress();
+				break;
+
 			default:
 				// no sensible data: return null
 				break;

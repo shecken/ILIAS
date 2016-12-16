@@ -46,20 +46,28 @@ class ilObjReportExamBio extends ilObjReportBase2 {
 	}
 
 	public static function queryReports(array $obj_properties, $db) {
-		$sf = new settingFactory($db);
+		$sf = new SettingFactory($db);
 		return $sf->reportSettingsDataHandler()->query($obj_properties,self::getNonvisualSettings($sf));
 	}
 
 	public static function readReportProperties($obj_id, $db) {
-		$sf = new settingFactory($db);
+		$sf = new SettingFactory($db);
 		return $sf->reportSettingsDataHandler()->readObjEntry($obj_id,self::getNonvisualSettings($sf));
 	}
 
 	protected function createLocalReportSettings() {
 		$this->local_report_settings =
-			$this->sf->reportSettings('rep_robj_rexbio')
-				->addSetting($this->sf
-							->settingBool('for_trainer',$this->plugin->txt('for_trainer')));
+			$this->sf->reportSettings('rep_robj_rexbio');
+		$target_training_id = null;
+		if($this->getRefId()) {
+			$target_training_id = $this->getParentObjectOfTypeIds('crs')['obj_id'];
+		}
+		if($target_training_id) {
+			$this->local_report_settings =
+				$this->local_report_settings
+					->addSetting($this->sf
+						->settingBool('for_trainer',$this->plugin->txt('for_trainer')));
+		}
 	}
 
 	public function forTrainerView() {

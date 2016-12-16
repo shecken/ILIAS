@@ -70,11 +70,14 @@ $(function(){
 });
 
 function selectSlide() {
-  if(getNumSlides() >= 6) {
-	return Math.floor(active_slide / 6);
-  } else {
-	return 0;
+  if(typeof(active_slide) != "undefined") {
+  	if(getNumSlideItems() >= 6) {
+		return Math.floor(active_slide / 6);
+  	} else {
+		return 0;
+  	}
   }
+  return 0;
 }
 
 function adjustWrapperWidth() {

@@ -681,6 +681,9 @@ abstract class ilTEPViewGridBased extends ilTEPView
 			$cur_user_id = $ilUser->getId();
 			$ref_id = $a_entry["course_ref_id"];
 			$crs_id = $a_entry["context_id"];
+			$cal_id = $a_entry["cal_id"];
+			$user_id = $a_entry["user_id"];
+			$starta = $a_entry["starta"];
 			$crs_utils = gevCourseUtils::getInstance($crs_id);
 			
 
@@ -694,7 +697,7 @@ abstract class ilTEPViewGridBased extends ilTEPView
 				}
 			}
 
-			$select_list = $this->buildDropdown($crs_id.'_'.$cur_user_id);
+			$select_list = $this->buildDropdown($cal_id."_".$user_id.'_'.$crs_id."_".$starta);
 			$sel_item_cnt = 0;
 
 			if ($crs_utils->userHasPermissionTo($cur_user_id,gevSettings::LOAD_MEMBER_LIST)) {
