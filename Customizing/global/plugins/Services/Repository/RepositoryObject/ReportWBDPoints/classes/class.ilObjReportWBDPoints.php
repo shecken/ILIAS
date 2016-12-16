@@ -27,32 +27,7 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 	}
 
 	protected function buildQuery($query) {
-		$query	->distinct()
-				->select("usr.firstname")
-				->select("usr.lastname")
-				->select("usr.birthday")
-				->select("usr.bwv_id")
-				->select("usr.wbd_type")
-				->select("crs.title")
-				->select_raw(" IF ( crs.custom_id <> '-empty-'"
-							."    , crs.custom_id "
-							."    , IF (usrcrs.gev_id IS NULL"
-							."         , '-'"
-							."         , usrcrs.gev_id"
-							."         )"
-							."    ) as custom_id")
-				->select("crs.type")
-				->select("usrcrs.begin_date")
-				->select("usrcrs.end_date")
-				->select("usrcrs.credit_points")
-				->select("usrcrs.wbd_booking_id")
-				->from("hist_usercoursestatus usrcrs")
-				->join("hist_user usr")
-					->on("usrcrs.usr_id = usr.user_id AND usr.hist_historic = 0")
-				->join("hist_course crs")
-					->on("usrcrs.crs_id = crs.crs_id AND crs.hist_historic = 0")
-				->compile();
-		return $query;
+		return null;
 	}
 
 	protected function buildTable($table) {
@@ -71,40 +46,152 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 		return parent::buildTable($table);
 	}
 
-	protected function buildFilter($filter) {
-		$filter ->dateperiod( "period"
-							, $this->plugin->txt("period")
-							, $this->plugin->txt("until")
-							, "usrcrs.begin_date"
-							, "usrcrs.end_date"
-							, date("Y")."-01-01"
-							, date("Y")."-12-31"
-							, false
-							, " OR usrcrs.hist_historic IS NULL"
+	public function filter() {
+		$pf = new \CaT\Filter\PredicateFactory();
+		$tf = new \CaT\Filter\TypeFactory();
+		$f = new \CaT\Filter\FilterFactory($pf, $tf);
+		$txt = function($id) { return $this->plugin->txt($id); };
+
+		return 
+		$f->sequence
+		(
+			$f->sequence
+			(
+				$f->dateperiod
+				(
+					$txt("period")
+					, ""
+				)->map
+					(
+						function($start,$end) use ($f) 
+						{
+							$pc = $f->dateperiod_overlaps_predicate
+							(
+								"usrcrs.begin_date"
+								,"usrcrs.begin_date"
+							);
+							return array ("date_period_predicate" => $pc($start,$end)
+										 ,"start" => $start
+										 ,"end" => $end);
+						},
+						$tf->dict
+						(
+							array
+							(
+								"date_period_predicate" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
+								,"start" => $tf->cls("DateTime")
+								,"end" => $tf->cls("DateTime")
 							)
-				->multiselect("wbd_type"
-							 , $this->plugin->txt("filter_wbd_type")
-							 , "wbd_type"
-							 , catFilter::getDistinctValues('wbd_type', 'hist_user')
-							 , array()
-							 , ""
-							 , 300
-							 , 160
-							 )
-				->textinput( "lastname"
-						   , $this->plugin->txt("lastname_filter")
-						   , "usr.lastname"
-						   )
-				->static_condition(" usrcrs.hist_historic = 0")
-				->static_condition(" usrcrs.wbd_booking_id IS NOT NULL")
-				->static_condition(" usr.hist_historic = 0")
-				->static_condition(" crs.hist_historic = 0")
-				->action($this->filter_action)
-				->compile();
-		return $filter;
+						)
+					),
+				$f->multiselectsearch
+				(
+					$txt("filter_wbd_type")
+					, ""
+					, $this->getDistinctValues('wbd_type', 'hist_user')
+				)->map
+					(
+						function($types) { return $types; }
+						,$tf->lst($tf->string())
+					),
+				$f->text
+				(
+					$txt("lastname")
+				)->map
+					(
+						function($name) { return $name; }
+						,$tf->string()
+					)
+			)->map
+				(
+					function($date_period_predicate, $start, $end, $wbd_types, $name)
+					{
+						return array("period_pred" => $date_period_predicate
+									,"start" => $start
+									,"end" => $end
+									,"wbd_types" => $wbd_types
+									,"name" => $name);
+					},
+					$tf->dict
+					(
+						array("period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
+							 ,"start" => $tf->cls("DateTime")
+							 ,"end" => $tf->cls("DateTime")
+							 ,"wbd_types" => $tf->lst($tf->string())
+							 ,"name" => $tf->string())
+					)
+				)
+		);
+	}
+
+	protected function fetchData(callable $callback) {
+		$db = $this->gIldb;
+		$query =   "SELECT DISTINCT `usr`.`firstname` ,`usr`.`lastname` ,`usr`.`birthday` ,`usr`.`bwv_id` ,`usr`.`wbd_type` ,`crs`.`title`\n"
+				  .", `crs`.`type` ,`usrcrs`.`begin_date` ,`usrcrs`.`end_date` ,`usrcrs`.`credit_points` ,`usrcrs`.`wbd_booking_id`\n"
+				  .", IF ( crs.custom_id <> '-empty-' , crs.custom_id , IF (usrcrs.gev_id IS NULL , '-' , usrcrs.gev_id ) ) as custom_id\n" 
+				  ." FROM `hist_usercoursestatus` usrcrs\n"
+				  ." JOIN `hist_user` usr\n"
+				  ."     ON usrcrs.usr_id = usr.user_id\n"
+				  ."         AND usr.hist_historic = 0\n"
+				  ." JOIN `hist_course` crs\n"
+				  ."     ON usrcrs.crs_id = crs.crs_id\n"
+				  ."         AND crs.hist_historic = 0\n"
+				  ." WHERE usrcrs.hist_historic = 0\n"
+				  ."     AND usrcrs.wbd_booking_id IS NOT NULL\n";
+
+		$filter = $this->filter();
+		if($this->filter_settings) {
+			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
+			$dt_query = $to_sql->interpret($settings[0]["period_pred"]);
+			$query .= "     AND ".$dt_query;
+
+			if(!empty($settings[0]['name'])) {
+				$query .= "    AND " .$db->like('usr.lastname', 'text', $settings[0]['name']);
+			}
+
+			if(!empty($settings[0]['wbd_types'])) {
+				$query .= "    AND " .$db->in('usr.wbd_type', $settings[0]['wbd_types'], false, "text");
+			}
+		}
+		$query .= $this->queryOrder();
+		$res = $this->gIldb->query($query);
+		$data = array();
+
+		while($rec = $this->gIldb->fetchAssoc($res)) {
+			$data[] = call_user_func($callback,$rec);
+		}
+		return $data;
+	}
+
+	protected function buildFilter($filter) {
+		return null;
 	}
 
 	protected function buildOrder($order) {
 		return $order;
+	}
+
+	public function getDistinctValues($a_field, $a_table, $a_order='ASC', $a_showempty=false, $a_filter_historic=false) {
+		global $ilDB;
+		$where = "WHERE TRIM($a_field) NOT IN ('-empty-', '')"
+				." AND $a_field IS NOT NULL"
+				;
+		if ($a_showempty) {
+			$where = 'WHERE 1';
+		}
+		if ($a_filter_historic) {
+			$where .= ' AND hsit_historic=0';
+		}
+
+
+		$sql = "SELECT DISTINCT $a_field FROM $a_table $where ORDER BY $a_field $a_order";
+		$res = $ilDB->query($sql);
+		$ret = array();
+		while ($rec = $ilDB->fetchAssoc($res)) {
+			$ret[$rec[$a_field]] = $rec[$a_field];
+		}
+
+		return $ret;
 	}
 }
