@@ -30,6 +30,7 @@ type#:#Typ
 period#:#Zeitraum
 until#:#bis
 org_unit_short#:#Org.-Einheit
+org_unit_recursive#:#Rekursiver Organisationseinheitenfilter
 edu_program#:#Bildungsprogramm
 template_title#:#Titel der Vorlage
 course_type#:#Trainingstyp
@@ -48,3 +49,4 @@ participations#:#Teilnahmen
 filter_no_wbd_imported#:#Keine Trainings aus der WBD
 crs_filter_topics#:#Trainingskategorien
 org_unit_recursive#:#Auch alle Mitarbeiter der darunterliegenden Organisationseinheiten anzeigen
+placeholder#:#Bitte wählen
