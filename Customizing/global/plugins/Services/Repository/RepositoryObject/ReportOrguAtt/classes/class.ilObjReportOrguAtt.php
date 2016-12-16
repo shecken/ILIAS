@@ -272,6 +272,157 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		return $filter;
 	}
 
+	public function filter()
+	{
+		$pf = new \CaT\Filter\PredicateFactory();
+		$tf = new \CaT\Filter\TypeFactory();
+		$f = new \CaT\Filter\FilterFactory($pf, $tf);
+
+		$txt = function ($id) {
+			return $this->plugin->txt($id);
+		};
+
+		return 	$f->sequence(
+			$f->option(
+				$txt("filter_no_wbd_imported"),
+				""
+			),
+			$f->option(
+				$txt("org_unit_recursive"),
+				""
+			),
+			$f->multiselectsearch(
+				$txt("org_unit_short"),
+				"",
+				$this->getRelevantOrguIds()
+			),
+			$f->sequence(
+				$f->dateperiod(
+					$txt("period"),
+					""
+				)
+							->map(
+								function ($start, $end) use ($f) {
+									return array(
+											"start" => $start
+											,"end" => $end);
+								},
+								$tf->dict(
+									array(
+											"start" => $tf->cls("DateTime")
+											,"end" => $tf->cls("DateTime"))
+								)
+							),
+				$f->multiselectsearch(
+					$txt('edu_program'),
+					$this->getDistinctRowEntriesFormTableForFilter('edu_program', 'hist_course'),
+					''
+				),
+				$f->multiselectsearch(
+					$txt('type'),
+					$this->getDistinctRowEntriesFormTableForFilter('type', 'hist_course'),
+					''
+				),
+				$f->multiselectsearch(
+					$txt('template_title'),
+					$this->getTemplateTitles(),
+					''
+				),
+				$f->multiselectsearch(
+					$txt('participation_status'),
+					array(	"teilgenommen"=>"teilgenommen"
+									,"fehlt ohne Absage"=>"fehlt ohne Absage"
+									,"fehlt entschuldigt"=>"fehlt entschuldigt"
+									,"nicht gesetzt"=>"gebucht, noch nicht abgeschlossen"),
+					''
+				),
+				$f->multiselectsearch(
+					$txt('booking_status'),
+					$this->getDistinctRowEntriesFormTableForFilter('booking_status', 'hist_usercoursestatus'),
+					''
+				),
+				$f->multiselectsearch(
+					$txt('gender'),
+					array('f'=>'f','m' => 'm'),
+					''
+				),
+				$f->multiselectsearch(
+					$txt('venue'),
+					$this->getDistinctRowEntriesFormTableForFilter('venue', 'hist_course'),
+					''
+				),
+				$f->multiselectsearch(
+					$txt('provider'),
+					$this->getDistinctRowEntriesFormTableForFilter('provider', 'hist_course'),
+					''
+				)
+			)->map(
+				function ($start, $end, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
+							return array(
+								'start' => $start
+								,'end' => $end
+								,'edu_program' => $edu_program
+								,'type' => $type
+								,'template_title' => $template_title
+								,'p_status' => $p_status
+								,'b_status' => $b_status
+								,'gender' => $gender
+								,'venue' => $venue
+								,'provider' => $provider
+								);
+				},
+				$tf-dict(
+					array(
+								'start' => $tf->cls("DateTime")
+								,'end' => $tf->cls("DateTime")
+								,'edu_program' => $tf->lst($tf->string())
+								,'type' => $tf->lst($tf->string())
+								,'template_title' => $tf->lst($tf->int())
+								,'p_status' => $tf->lst($tf->string())
+								,'b_status' => $tf->lst($tf->string())
+								,'gender' => $tf->lst($tf->string())
+								,'venue' => $tf->lst($tf->string())
+								,'provider' => $tf->lst($tf->string())
+								)
+				)
+			)
+		)->map(
+			function ($no_wbd, $recursive, $org_unit, $start, $end, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
+							return array(
+								'no_wbd' => $no_wbd
+								,'recursive' => $recursive
+								,'org_unit' => $org_unit
+								,'start' => $start
+								,'end' => $end
+								,'edu_program' => $edu_program
+								,'type' => $type
+								,'template_title' => $template_title
+								,'p_status' => $p_status
+								,'b_status' => $b_status
+								,'gender' => $gender
+								,'venue' => $venue
+								,'provider' => $provider
+								);
+			},
+			$tf-dict(
+				array(
+								'no_wbd' => $tf->bool()
+								,'recursive' => $tf->bool()
+								,'org_unit' => $tf->list($tf->int())
+								,'start' => $tf->cls("DateTime")
+								,'end' => $tf->cls("DateTime")
+								,'edu_program' => $tf->lst($tf->string())
+								,'type' => $tf->lst($tf->string())
+								,'template_title' => $tf->lst($tf->int())
+								,'p_status' => $tf->lst($tf->string())
+								,'b_status' => $tf->lst($tf->string())
+								,'gender' => $tf->lst($tf->string())
+								,'venue' => $tf->lst($tf->string())
+								,'provider' => $tf->lst($tf->string())
+								)
+			)
+		);
+	}
 
 	protected function getSubtreeCourseTemplates()
 	{
@@ -299,5 +450,33 @@ class ilObjReportOrguAtt extends ilObjReportBase
 	public function getRelevantParameters()
 	{
 		return $this->relevant_parameters;
+	}
+
+	private function getDistinctRowEntriesFormTableForFilter($column, $table)
+	{
+		$sql = 	'SELECT DISTINCT '.$column.' FROM '.$table
+				.'	WHERE hist_historic = 0'
+				.'		AND '.$column.' != '.$this->gIldb->quote('-empty-', 'text')
+				.'		AND '.$column.' IS NOT NULL';
+		$return = array();
+		$res = $this->gIldb->query($sql);
+		while ($rec = $this->gIldb->fetchAssoc($res)) {
+			$return[$rec[$column]] = $rec[$column];
+		}
+		return $return;
+	}
+
+	private function getTemplateTitles()
+	{
+		$sql = 	'SELECT crs_id, title'
+				.'	FROM hist_course '
+				.' 	WHERE hist_historic = 0'
+				.'		AND is_template = '.$this->gIldb->quote('Ja', 'text');
+		$return = array();
+		$res = $this->gIldb->query($sql);
+		while ($rec = $this->gIldb->fetchAssoc($res)) {
+			$return[$rec['crs_id']] = $rec['title'];
+		}
+		return $return;
 	}
 }
