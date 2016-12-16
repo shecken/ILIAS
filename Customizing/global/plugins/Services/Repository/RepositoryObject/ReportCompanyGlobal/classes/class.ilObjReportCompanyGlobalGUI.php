@@ -167,7 +167,6 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI {
 				}
 				$k = $col[0];
 				$v = $entry[$k];
-
 				$method_name = '_process_xls_' .$k;
 				if (method_exists($this, $method_name)) {
 					$v = $this->$method_name($v);
