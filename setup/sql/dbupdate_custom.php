@@ -3406,3 +3406,24 @@ $eff_analysis_db->createTable();
 <?php
 $ilCtrlStructureReader->getStructure();
 ?>
+
+<#108>
+<?php
+	if(!$ilDB->tableExists('eff_analysis_due_date')) {
+		$fields = array(
+			'crs_id' => array(
+				'type' => 'integer',
+				'length' => 4,
+				'notnull' => true),
+			'user_id' => array(
+				'type' => 'integer',
+				'length' => 4,
+				'notnull' => true),
+			'due_date' => array(
+				'type' => 'date',
+				'notnull' => true)
+		);
+		$ilDB->createTable('eff_analysis_due_date', $fields);
+		$ilDB->addPrimaryKey('eff_analysis_due_date', array('crs_id', 'user_id'));
+	}
+?>
