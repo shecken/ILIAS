@@ -131,7 +131,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					.'			'.$this->noWBDImportedFilter()
 					.'	LEFT JOIN hist_course crs'.PHP_EOL
 					.'		ON crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0'.PHP_EOL
-					.'			AND '.$this->tpl_filter
+					.'			'.$this->templateTitleFilter()
 					.$this->courseTopicsFilter()
 					.$this->queryWhere().PHP_EOL
 					.'	GROUP BY orgu.orgu_id'.PHP_EOL
@@ -201,7 +201,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		."					".$this->noWBDImportedFilter()
 		."			LEFT JOIN `hist_course` crs "
 		."				ON usrcrs.crs_id = crs.crs_id AND crs.hist_historic = 0 "
-		."					AND ".$this->tpl_filter;
+		."					".$this->templateTitleFilter();
 		$topics = $this->filter_selections['crs_topics'];
 		if (count($topics) > 0) {
 			$sum_sql .=
@@ -287,13 +287,13 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		return $query_where;
 	}
 
-	private function addTemplateTitleFilterToQueryWhere($query_where)
+	private function templateTitleFilter()
 	{
 		$selection = $this->filter_selections['template_title'];
 		if (count($selection)>0) {
-			return $query_where.$this->andFieldInSelection('crs.template_title', $selection);
+			return $this->andFieldInSelection('crs.template_title', $selection);
 		}
-		return $query_where;
+		return '';
 	}
 
 	private function addParticipationStatusFilterToQueryWhere($query_where)
@@ -355,7 +355,6 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		$query_where = $this->addOrguFilterToQueryWhere($query_where);
 		$query_where = $this->addEduProgrammFilterToQueryWhere($query_where);
 		$query_where = $this->addTypeFilterToQueryWhere($query_where);
-		$query_where = $this->addTemplateTitleFilterToqueryWhere($query_where);
 		$query_where = $this->addParticipationStatusFilterToQueryWhere($query_where);
 		$query_where = $this->addBookingStatusFilterToQueryWhere($query_where);
 		$query_where = $this->addGenderFilterToQueryWhere($query_where);
