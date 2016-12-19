@@ -140,20 +140,29 @@ class gevEffectivenessAnalysis {
 	}
 
 	/**
-	 * Get informations for reminder
+	 * Get user_ids for first Mail
 	 *
-	 * @param int 		$user_id
+	 * @param int 		$superior_id
 	 *
 	 * @return mixed[]
 	 */
-	public function getOpenEffectivenessAnalysis($user_id) {
-		$my_employees = $this->getMyEmployees($user_id, array(), "");
-		$filter = array();
+	public function getUserIdsForFirstMail($superior_id) {
+		$my_employees = $this->getMyEmployees($superior_id, array(), "");
 
-		$filter[self::F_FINISHED] = self::STATE_FILTER_OPEN;
-		$filter[self::F_SCHEDULED] = date("Y-m-d");
+		return $this->eff_analysis_db->getUserIdsForFirstMail($my_employees, $superior_id);
+	}
 
-		return $this->eff_analysis_db->getEffectivenessAnalysisOpen($my_employees, self::$reason_for_eff_analysis, $filter);
+	/**
+	 * Get user_ids for reminder
+	 *
+	 * @param int 		$superior_id
+	 *
+	 * @return mixed[]
+	 */
+	public function getUserIdsForReminder($superior_id) {
+		$my_employees = $this->getMyEmployees($superior_id, array(), "");
+
+		return $this->eff_analysis_db->getUserIdsForReminder($my_employees, $superior_id);
 	}
 
 	/**
