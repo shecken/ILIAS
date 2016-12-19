@@ -131,7 +131,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					.'			'.$this->noWBDImportedFilter()
 					.'	LEFT JOIN hist_course crs'.PHP_EOL
 					.'		ON crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0'.PHP_EOL
-					.'			'.$this->templateTitleFilter()
+					.'			'.$this->tpl_filter
 					.$this->courseTopicsFilter()
 					.$this->queryWhere().PHP_EOL
 					.'	GROUP BY orgu.orgu_id'.PHP_EOL
@@ -201,7 +201,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		."					".$this->noWBDImportedFilter()
 		."			LEFT JOIN `hist_course` crs "
 		."				ON usrcrs.crs_id = crs.crs_id AND crs.hist_historic = 0 "
-		."					".$this->templateTitleFilter();
+		."					".$this->tpl_filter;
 		$topics = $this->filter_selections['crs_topics'];
 		if (count($topics) > 0) {
 			$sum_sql .=
@@ -287,13 +287,13 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		return $query_where;
 	}
 
-	private function templateTitleFilter()
+	private function addTemplateTitleFilterToQueryWhere($query_where)
 	{
 		$selection = $this->filter_selections['template_title'];
 		if (count($selection)>0) {
-			return $this->andFieldInSelection('crs.template_title', $selection);
+			return $query_where.$this->andFieldInSelection('crs.template_title', $selection);
 		}
-		return '';
+		return $query_where;
 	}
 
 	private function addParticipationStatusFilterToQueryWhere($query_where)
@@ -352,6 +352,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			$query_where .=
 				'		AND '.$this->gIldb->in("orgu.usr_id", $this->user_utils->getEmployeesWhereUserCanViewEduBios(), false, "integer").PHP_EOL;
 		}
+		$query_where = $this->addTemplateTitleFilterToQueryWhere($query_where);
 		$query_where = $this->addOrguFilterToQueryWhere($query_where);
 		$query_where = $this->addEduProgrammFilterToQueryWhere($query_where);
 		$query_where = $this->addTypeFilterToQueryWhere($query_where);
@@ -368,6 +369,10 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		$pf = new \CaT\Filter\PredicateFactory();
 		$tf = new \CaT\Filter\TypeFactory();
 		$f = new \CaT\Filter\FilterFactory($pf, $tf);
+		$this->tpl_filter = '';
+		if ($this->settings['is_local']) {
+			return '	AND '.$this->gIldb->in('crs.template_title', $this->getSubtreeCourseTemplates(), false, 'text');
+		}
 
 		$txt = function ($id) {
 			return $this->plugin->txt($id);
