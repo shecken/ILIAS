@@ -295,15 +295,15 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			if ($this->filter_selections['recursive']) {
 				$selection = $this->addRecursiveOrgusToSelection($selection);
 			}
-			$query_where.$this->andFieldInSelection('orgu.orug_id', $selection);
+			$query_where.$this->andFieldInSelection('orgu.orgu_id', $selection);
 		}
-		return $query_where.$this->andFieldInSelection('orgu.orug_id', $this->getRelevantOrguIds());
+		return $query_where.$this->andFieldInSelection('orgu.orgu_id', $this->getRelevantOrguIds());
 	}
 
 	private function addRecursiveOrgusToSelection(array $selection)
 	{
 		require_once 'Services/GEV/Utils/classes/class.gevOrgUnitUtils.php';
-		$aux = array();
+		$aux = $selection;
 		foreach ($selection as $orgu_id) {
 			$ref_id = gevObjectUtils::getRefId($orgu_id);
 			$aux[] = $orgu_id;
@@ -311,7 +311,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 				$aux[] = $child["obj_id"];
 			}
 		}
-		return $aux;
+		return array_unique($aux);
 	}
 
 	private function addEduProgrammFilterToQueryWhere($query_where)
@@ -397,9 +397,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			$query_where .=
 				'		AND '.$this->gIldb->in("orgu.usr_id", $this->user_utils->getEmployeesWhereUserCanViewEduBios(), false, "integer").PHP_EOL;
 		}
-		if ((int)$this->settings['is_local'] === 1) {
-			$query_where .= '		AND '.$this->gIldb->in('crs.template_obj_id', $this->getSubtreeCourseTemplates(), false, 'integer');
-		}
+		$query_where = $this->addOrguFilterToQueryWhere($query_where);
 		$query_where = $this->addEduProgrammFilterToQueryWhere($query_where);
 		$query_where = $this->addTypeFilterToQueryWhere($query_where);
 		$query_where = $this->addTemplateTitleFilterToqueryWhere($query_where);
