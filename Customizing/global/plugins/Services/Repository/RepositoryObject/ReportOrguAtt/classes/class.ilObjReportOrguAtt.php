@@ -125,42 +125,55 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		return $query;
 	}
 
-	protected function buildQueryStatement()
+	public function buildQueryStatement()
 	{
 		$query =	'SELECT orgu.orgu_title '.PHP_EOL
-					.'	,orgu.org_unit_above_1'.PHP_EOL
+					.'	,orgu.org_unit_above1'.PHP_EOL
 					.'	,orgu.org_unit_above2'.PHP_EOL;
 		foreach ($this->sum_parts as $title => $query_term) {
 			$query .= '	,'.$query_term["regular"].PHP_EOL;
 		}
-		$query .= 	'	FROM hist_userorgu.orgu'.PHP_EOL
+		$query .= 	'	FROM hist_userorgu orgu'.PHP_EOL
 					.'	JOIN hist_user usr'.PHP_EOL
 					.'		ON usr.user_id = orgu.usr_id'.PHP_EOL
 					.'	LEFT JOIN hist_usercoursestatus usrcrs'.PHP_EOL
 					.'		ON usrcrs.usr_id = orgu.usr_id AND usrcrs.hist_historic = 0'.PHP_EOL
 					.'			AND usrcrs.booking_status != '.$this->gIldb->quote('-empty-', 'text').PHP_EOL
-					.'			AND '.$this->datePeriodFilter()
-					.'			AND '.$this->noWBDImportedFilter()
+					.'			'.$this->datePeriodFilter()
+					.'			'.$this->noWBDImportedFilter()
 					.'	LEFT JOIN hist_course crs'.PHP_EOL
 					.'		ON crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0'.PHP_EOL
 					.'			AND '.$this->tpl_filter
-					.'	WHERE orgu.hist_historic = 0 AND orgu.action >= 0'.PHP_EOL
-					.'	GROUP BY orgu.orgu_id';
+					.$this->queryWhere().PHP_EOL
+					.'	GROUP BY orgu.orgu_id'.PHP_EOL
+					.$this->queryOrder();
+		return $query;
 	}
 
 	private function datePeriodFilter($query)
 	{
-		return $query;
+		if ($this->filter_selections['start'] !== null) {
+			$start = $this->filter_selections['start']->format('Y-m-d');
+		} else {
+			$start = date('Y').'-01-01';
+		}
+		if ($this->filter_selections['end'] !== null) {
+			$end = $this->filter_selections['end']->format('Y-m-d');
+		} else {
+			$end = date('Y').'-12-31';
+		}
+		return '	AND (usrcrs.begin_date <= \''.$end.'\''
+			.'			 AND (usrcrs.end_date >= \''.$start.'\''
+			.'				OR `usrcrs`.`end_date` = \'0000-00-00\' OR `usrcrs`.`end_date` = \'-empty-\'))';
 	}
 
-	private function newWBDImportedFilter($query)
+	private function noWBDImportedFilter()
 	{
-		return $query;
-	}
-
-	private function possiblyJoinCourseRelatedFilters($query)
-	{
-		return $query;
+		$selection = $this->filter_selections['no_wbd'];
+		if ($no_wbd_imported) {
+			return ' AND usrcrs.crs_id > 0';
+		}
+		return '';
 	}
 
 	protected function deliverSumQuery()
@@ -182,10 +195,8 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		."			LEFT JOIN `hist_usercoursestatus` usrcrs "
 		."				ON usrcrs.usr_id = orgu.usr_id AND usrcrs.hist_historic = 0 "
 		."					AND usrcrs.booking_status != ".$this->gIldb->quote('-empty-', 'text')
-		."					AND (usrcrs.begin_date <= ".$this->gIldb->quote($this->date_end, 'date')
-		."						AND (usrcrs.end_date >= ".$this->gIldb->quote($this->date_start, 'date')
-		."							OR `usrcrs`.`end_date` = '0000-00-00' OR `usrcrs`.`end_date` = '-empty-'))"
-		."					".($no_wbd_imported ? ' AND usrcrs.crs_id > 0' : '')
+		."					".$this->datePeriodFilter()
+		."					".$this->noWBDImportedFilter()
 		."			LEFT JOIN `hist_course` crs "
 		."				ON usrcrs.crs_id = crs.crs_id AND crs.hist_historic = 0 "
 		."					AND ".$this->tpl_filter;
@@ -272,6 +283,134 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		return $filter;
 	}
 
+	private function andFieldInSelection($field, array $selection)
+	{
+		return '		AND '.$this->gIldb->in($field, $selection, false, 'text').PHP_EOL;
+	}
+
+	private function addOrguFilterToQueryWhere($query_where)
+	{
+		$selction = $this->filter_selections['org_unit'];
+		if (count($selection)>0) {
+			if ($this->filter_selections['recursive']) {
+				$selection = $this->addRecursiveOrgusToSelection($selection);
+			}
+			$query_where.$this->andFieldInSelection('orgu.orug_id', $selection);
+		}
+		return $query_where;
+	}
+
+	private function addRecursiveOrgusToSelection(array $selection)
+	{
+		require_once 'Services/GEV/Utils/classes/class.gevOrgUnitUtils.php';
+		$aux = array();
+		foreach ($selection as $orgu_id) {
+			$ref_id = gevObjectUtils::getRefId($orgu_id);
+			$aux[] = $orgu_id;
+			foreach (gevOrgUnitUtils::getAllChildren(array($ref_id)) as $child) {
+				$aux[] = $child["obj_id"];
+			}
+		}
+		return $aux;
+	}
+
+	private function addEduProgrammFilterToQueryWhere($query_where)
+	{
+		$selection = $this->filter_selections['edu_program'];
+		if (count($selection)>0) {
+			return $query_where.$this->andFieldInSelection('crs.edu_program', $selection);
+		}
+		return $query_where;
+	}
+
+	private function addTypeFilterToQueryWhere($query_where)
+	{
+		$selection = $this->filter_selections['type'];
+		if (count($selection)>0) {
+			return $query_where.$this->andFieldInSelection('crs.type', $selection);
+		}
+		return $query_where;
+	}
+
+	private function addTemplateTitleFilterToQueryWhere($query_where)
+	{
+		$selection = $this->filter_selections['template_title'];
+		if (count($selection)>0) {
+			return $query_where.$this->andFieldInSelection('crs.template_title', $selection);
+		}
+		return $query_where;
+	}
+
+	private function addParticipationStatusFilterToQueryWhere($query_where)
+	{
+		$selection = $this->filter_selections['p_status'];
+		if (count($selection)>0) {
+			return $query_where.$this->andFieldInSelection('usrcrs.participation_status', $selection);
+		}
+		return $query_where;
+	}
+
+	private function addBookingStatusFilterToQueryWhere($query_where)
+	{
+		$selection = $this->filter_selections['b_status'];
+		if (count($selection)>0) {
+			return $query_where.$this->andFieldInSelection('usrcrs.booking_status', $selection);
+		}
+		return $query_where;
+	}
+
+	private function addGenderFilterToQueryWhere($query_where)
+	{
+		$selection = $this->filter_selections['gender'];
+		if (count($selection)>0) {
+			return $query_where.$this->andFieldInSelection('usr.gender', $selection);
+		}
+		return $query_where;
+	}
+
+	private function addVenueFilterToQueryWhere($query_where)
+	{
+		$selection = $this->filter_selections['venue'];
+		if (count($selection)>0) {
+			return $query_where.$this->andFieldInSelection('crs.venue', $selection);
+		}
+		return $query_where;
+	}
+
+	private function addProviderFilterToQueryWhere($query_where)
+	{
+		$selection = $this->filter_selections['provider'];
+		if (count($selection)>0) {
+			return $query_where.$this->andFieldInSelection('crs.provider', $selection);
+		}
+		return $query_where;
+	}
+
+	protected function queryWhere()
+	{
+		$query_where =
+			'	WHERE usr.hist_historic = 0'.PHP_EOL
+			.'		AND orgu.hist_historic = 0'.PHP_EOL
+			.'		AND orgu.action >= 0'.PHP_EOL
+			.'		AND orgu.rol_title = \'Mitarbeiter\''.PHP_EOL;
+		if ("1" !== (string)$this->options['all_orgus_filter']) {
+			$query_where .=
+				'		AND '.$this->gIldb->in("orgu.usr_id", $this->user_utils->getEmployeesWhereUserCanViewEduBios(), false, "integer").PHP_EOL;
+		}
+		if ((int)$this->settings['is_local'] === 1) {
+			$query_where .= '		AND '.$this->gIldb->in('crs.template_obj_id', $this->getSubtreeCourseTemplates(), false, 'integer');
+		}
+		$query_where = $this->addEduProgrammFilterToQueryWhere($query_where);
+		$query_where = $this->addTypeFilterToQueryWhere($query_where);
+		$query_where = $this->addTemplateTitleFilterToqueryWhere($query_where);
+		$query_where = $this->addParticipationStatusFilterToQueryWhere($query_where);
+		$query_where = $this->addBookingStatusFilterToQueryWhere($query_where);
+		$query_where = $this->addGenderFilterToQueryWhere($query_where);
+		$query_where = $this->addVenueFilterToQueryWhere($query_where);
+		$query_where = $this->addProviderFilterToQueryWhere($query_where);
+		return $query_where;
+	}
+
 	public function filter()
 	{
 		$pf = new \CaT\Filter\PredicateFactory();
@@ -284,22 +423,22 @@ class ilObjReportOrguAtt extends ilObjReportBase
 
 		return 	$f->sequence(
 			$f->option(
-				$txt("filter_no_wbd_imported"),
-				""
+				$txt('filter_no_wbd_imported'),
+				''
 			),
 			$f->option(
-				$txt("org_unit_recursive"),
-				""
+				$txt('org_unit_recursive'),
+				''
 			),
 			$f->multiselectsearch(
 				$txt("org_unit_short"),
-				"",
-				$this->getRelevantOrguIds()
+				'',
+				$this->getRelevantOrgus()
 			),
 			$f->sequence(
 				$f->dateperiod(
 					$txt("period"),
-					""
+					''
 				)
 							->map(
 								function ($start, $end) use ($f) {
@@ -315,46 +454,46 @@ class ilObjReportOrguAtt extends ilObjReportBase
 							),
 				$f->multiselectsearch(
 					$txt('edu_program'),
-					$this->getDistinctRowEntriesFormTableForFilter('edu_program', 'hist_course'),
-					''
+					'',
+					$this->getDistinctRowEntriesFormTableForFilter('edu_program', 'hist_course')
 				),
 				$f->multiselectsearch(
 					$txt('type'),
-					$this->getDistinctRowEntriesFormTableForFilter('type', 'hist_course'),
-					''
+					'',
+					$this->getDistinctRowEntriesFormTableForFilter('type', 'hist_course')
 				),
 				$f->multiselectsearch(
 					$txt('template_title'),
-					$this->getTemplateTitles(),
-					''
+					'',
+					$this->getDistinctRowEntriesFormTableForFilter('template_title', 'hist_course')
 				),
 				$f->multiselectsearch(
 					$txt('participation_status'),
+					'',
 					array(	"teilgenommen"=>"teilgenommen"
 									,"fehlt ohne Absage"=>"fehlt ohne Absage"
 									,"fehlt entschuldigt"=>"fehlt entschuldigt"
-									,"nicht gesetzt"=>"gebucht, noch nicht abgeschlossen"),
-					''
+									,"nicht gesetzt"=>"gebucht, noch nicht abgeschlossen")
 				),
 				$f->multiselectsearch(
 					$txt('booking_status'),
-					$this->getDistinctRowEntriesFormTableForFilter('booking_status', 'hist_usercoursestatus'),
-					''
+					'',
+					$this->getDistinctRowEntriesFormTableForFilter('booking_status', 'hist_usercoursestatus')
 				),
 				$f->multiselectsearch(
 					$txt('gender'),
-					array('f'=>'f','m' => 'm'),
-					''
+					'',
+					array('f'=>'f','m' => 'm')
 				),
 				$f->multiselectsearch(
 					$txt('venue'),
-					$this->getDistinctRowEntriesFormTableForFilter('venue', 'hist_course'),
-					''
+					'',
+					$this->getDistinctRowEntriesFormTableForFilter('venue', 'hist_course')
 				),
 				$f->multiselectsearch(
 					$txt('provider'),
-					$this->getDistinctRowEntriesFormTableForFilter('provider', 'hist_course'),
-					''
+					'',
+					$this->getDistinctRowEntriesFormTableForFilter('provider', 'hist_course')
 				)
 			)->map(
 				function ($start, $end, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
@@ -371,7 +510,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 								,'provider' => $provider
 								);
 				},
-				$tf-dict(
+				$tf->dict(
 					array(
 								'start' => $tf->cls("DateTime")
 								,'end' => $tf->cls("DateTime")
@@ -404,11 +543,11 @@ class ilObjReportOrguAtt extends ilObjReportBase
 								,'provider' => $provider
 								);
 			},
-			$tf-dict(
+			$tf->dict(
 				array(
 								'no_wbd' => $tf->bool()
 								,'recursive' => $tf->bool()
-								,'org_unit' => $tf->list($tf->int())
+								,'org_unit' => $tf->lst($tf->int())
 								,'start' => $tf->cls("DateTime")
 								,'end' => $tf->cls("DateTime")
 								,'edu_program' => $tf->lst($tf->string())
@@ -466,16 +605,33 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		return $return;
 	}
 
-	private function getTemplateTitles()
+	private function getRelevantOrgus()
 	{
-		$sql = 	'SELECT crs_id, title'
-				.'	FROM hist_course '
-				.' 	WHERE hist_historic = 0'
-				.'		AND is_template = '.$this->gIldb->quote('Ja', 'text');
+		if ("1" === (string)$this->settings['all_orgus_filter']) {
+			$ids = $this->getAllOrguIds();
+		} else {
+			$ids = array_unique(array_map(
+				function ($ref_id) {
+						return ilObject::_lookupObjectId($ref_id);
+				},
+				$this->user_utils->getOrgUnitsWhereUserCanViewEduBios()
+			));
+		}
+		$options = array();
+		foreach ($ids as $id) {
+			$options[(int)$id] = ilObject::_lookupTitle($id);
+		}
+		return $options;
+	}
+
+	private function getAllOrguIds()
+	{
+		$query = 'SELECT DISTINCT obj_id FROM object_data JOIN object_reference USING(obj_id)'
+				.'	WHERE type = \'orgu\' AND deleted IS NULL';
+		$res = $this->gIldb->query($query);
 		$return = array();
-		$res = $this->gIldb->query($sql);
 		while ($rec = $this->gIldb->fetchAssoc($res)) {
-			$return[$rec['crs_id']] = $rec['title'];
+			$return[] = $rec["obj_id"];
 		}
 		return $return;
 	}
