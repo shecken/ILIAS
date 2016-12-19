@@ -101,6 +101,19 @@ class ilObjReportOrguAttGUI extends ilObjReportBaseGUI
 		return $return;
 	}
 
+	public function renderQueryView()
+	{
+		include_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
+		$this->object->prepareReport();
+		$content = $this->renderFilter('query_view');
+		$form = new ilNonEditableValueGUI($this->gLng->txt("report_query_text"));
+		$form->setValue($this->object->buildQueryStatement());
+		$settings_form = new ilPropertyFormGUI();
+		$settings_form->addItem($form);
+		$content .= $settings_form->getHTML();
+		$this->gTpl->setContent($content);
+	}
+
 	protected function getRowTemplateTitle()
 	{
 		return "tpl.gev_attendance_by_orgunit_row.html";
