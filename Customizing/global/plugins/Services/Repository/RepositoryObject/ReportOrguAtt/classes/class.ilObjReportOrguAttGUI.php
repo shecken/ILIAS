@@ -52,8 +52,9 @@ class ilObjReportOrguAttGUI extends ilObjReportBaseGUI
 
 	protected function render()
 	{
-		$res = $this->renderFilter()."<br />";
-		$res .= $this->renderTable();
+		$res = $this->renderFilter().'<br/>'
+				.$this->renderSumTable().'<br/>'
+				.$this->renderTable();
 		return $res;
 	}
 

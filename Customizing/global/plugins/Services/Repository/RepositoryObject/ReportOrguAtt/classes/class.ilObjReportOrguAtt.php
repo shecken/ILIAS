@@ -44,6 +44,17 @@ class ilObjReportOrguAtt extends ilObjReportBase
 	{
 		$this->sum_table = $this->buildSumTable(catReportTable::create());
 		parent::prepareReport();
+		return $query;
+	}
+
+
+	protected function getFilterSettings()
+	{
+		$filter = $this->filter();
+		if ($this->filter_settings) {
+			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+		}
+		return $settings;
 	}
 
 	protected function buildSumTable(catReportTable $table)
@@ -97,7 +108,9 @@ class ilObjReportOrguAtt extends ilObjReportBase
 	 */
 	protected function buildQuery($query)
 	{
-		$query	->select("orgu.orgu_title")
+
+		$this->filter_selections = $this->getFilterSettings();
+	/*	$query	->select("orgu.orgu_title")
 				->select("orgu.org_unit_above1")
 				->select("orgu.org_unit_above2");
 		foreach ($this->sum_parts as $title => $query_term) {
@@ -121,7 +134,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					->on("usrcrs.crs_id = crs.crs_id AND crs.hist_historic = 0"
 						."	AND ".$this->tpl_filter)
 				->group_by("orgu.orgu_id")
-				->compile();
+				->compile();*/
 		return $query;
 	}
 
@@ -290,12 +303,12 @@ class ilObjReportOrguAtt extends ilObjReportBase
 
 	private function addOrguFilterToQueryWhere($query_where)
 	{
-		$selction = $this->filter_selections['org_unit'];
+		$selection = $this->filter_selections['org_unit'];
 		if (count($selection)>0) {
 			if ($this->filter_selections['recursive']) {
 				$selection = $this->addRecursiveOrgusToSelection($selection);
 			}
-			$query_where.$this->andFieldInSelection('orgu.orgu_id', $selection);
+			return $query_where.$this->andFieldInSelection('orgu.orgu_id', $selection);
 		}
 		return $query_where.$this->andFieldInSelection('orgu.orgu_id', $this->getRelevantOrguIds());
 	}
