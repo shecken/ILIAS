@@ -371,13 +371,12 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		$f = new \CaT\Filter\FilterFactory($pf, $tf);
 		$this->tpl_filter = '';
 		if ($this->settings['is_local']) {
-			return '	AND '.$this->gIldb->in('crs.template_title', $this->getSubtreeCourseTemplates(), false, 'text');
+			$this->tpl_filter = '	AND '.$this->gIldb->in('crs.template_title', $this->getSubtreeCourseTemplates(), false, 'text');
 		}
 
 		$txt = function ($id) {
 			return $this->plugin->txt($id);
 		};
-
 		return 	$f->sequence(
 			$f->option(
 				$txt('filter_no_wbd_imported'),
@@ -614,5 +613,16 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			return $this->subtreeTemplateTitles();
 		}
 		return $this->getDistinctRowEntriesFormTableForFilter('template_title', 'hist_course');
+	}
+
+	private function subtreeTemplateTitles()
+	{
+		$template_ids = $this->getSubtreeCourseTemplates();
+		$return = array();
+		foreach ($template_ids as $template_id) {
+			$title = ilObject::_lookupTitle($template_id);
+			$return[$title] = $title;
+		}
+		return $return;
 	}
 }
