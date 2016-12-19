@@ -5915,7 +5915,7 @@ $all_crs_permissions = array('edit_permission', 'visible', 'read', 'write', 'del
 							, 'view_mailing', 'cancel_training', 'create_xrbi', 'create_xrds', 'create_xrcg', 'create_xatd', 'create_xrtw', 'create_xroa'
 							, 'create_xbbp', 'create_xrea', 'create_xttc', 'create_xrta', 'create_xtda', 'create_xtdr', 'create_xrbt', 'create_xeeb'
 							, 'create_xbbv', 'create_xrdv', 'create_xreb', 'create_xoto', 'create_xwbe', 'create_xwbp', 'create_xtas', 'create_xcgo'
-							, 'create_xrcn', 'create_xjil', 'create_xexb', 'create_xcsn', 'create_xsso')
+							, 'create_xrcn', 'create_xjil', 'create_xexb', 'create_xcsn', 'create_xsso');
 
 $central_training_category_ref_ids = array(1696, 1783, 1621, 1644, 1686, 47318 , 43277, 1699, 34937);
 
@@ -5958,7 +5958,6 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "Admin-Voll", array(
 							, 'create_xbbp', 'create_xrea', 'create_xttc', 'create_xrta', 'create_xtda', 'create_xtdr', 'create_xrbt', 'create_xeeb'
 							, 'create_xbbv', 'create_xrdv', 'create_xreb', 'create_xoto', 'create_xwbe', 'create_xwbp', 'create_xtas', 'create_xcgo'
 							, 'create_xrcn', 'create_xexb', 'create_xcsn', 'create_xsso'));
-							, 'set_own_accomodations', 'view_others_accomodations', 'set_others_accomodations', 'write_reduced_settings', 'view_material'
 gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Admin-Ansicht", array("visible","read","load_member_list","view_mailing", "view_bookings","view_schedule_pdf"));
 
 $flex_dec_training_category_ref_id = 49840;
@@ -5975,7 +5974,6 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "Admin-Voll", array(
 							, 'create_xbbp', 'create_xrea', 'create_xttc', 'create_xrta', 'create_xtda', 'create_xtdr', 'create_xrbt', 'create_xeeb'
 							, 'create_xbbv', 'create_xrdv', 'create_xreb', 'create_xoto', 'create_xwbe', 'create_xwbp', 'create_xtas', 'create_xcgo'
 							, 'create_xrcn', 'create_xexb', 'create_xcsn', 'create_xsso'));
-							, 'set_own_accomodations', 'view_others_accomodations', 'set_others_accomodations', 'write_reduced_settings', 'view_material'
 gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Admin-Ansicht", array("visible","read","load_member_list","view_mailing", "view_bookings","view_schedule_pdf"));
 ?>
 
