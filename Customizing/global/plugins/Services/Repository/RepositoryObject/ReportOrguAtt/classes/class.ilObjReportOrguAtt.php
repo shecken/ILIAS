@@ -236,53 +236,6 @@ class ilObjReportOrguAtt extends ilObjReportBase
 	 */
 	protected function buildFilter($filter)
 	{
-		$this->orgu_filter = new recursiveOrguFilter('org_unit', 'orgu.orgu_id', true, true);
-		if ("1" === (string)$this->settings['all_orgus_filter']) {
-			$this->orgu_filter->setFilterOptionsAll();
-		} else {
-			$this->orgu_filter->setFilterOptionsByArray(
-				array_unique(array_map(
-					function ($ref_id) {
-						return ilObject::_lookupObjectId($ref_id);
-					},
-					$this->user_utils->getOrgUnitsWhereUserCanViewEduBios()
-				))
-			);
-		}
-		$this->crs_topics_filter = new courseTopicsFilter('crs_topics', 'crs.topic_set');
-		$this->orgu_filter->addToFilter($filter);
-		$this->crs_topics_filter->addToFilter($filter);
-		$filter	->dateperiod("period", $this->plugin->txt("period"), $this->plugin->txt("until"), "usrcrs.begin_date", "usrcrs.end_date", date("Y")."-01-01", date("Y")."-12-31", false, " OR TRUE")
-				->multiselect("edu_program", $this->plugin->txt("edu_program"), "edu_program", gevCourseUtils::getEduProgramsFromHisto(), array(), "", 200, 160)
-				->multiselect("type", $this->plugin->txt("course_type"), "type", gevCourseUtils::getLearningTypesFromHisto(), array(), "", 200, 160)
-				->multiselect("template_title", $this->plugin->txt("crs_title"), "template_title", gevCourseUtils::getTemplateTitleFromHisto(), array(), "", 300, 160)
-				->multiselect("participation_status", $this->plugin->txt("participation_status"), "participation_status", array(	"teilgenommen"=>"teilgenommen"
-							 			,"fehlt ohne Absage"=>"fehlt ohne Absage"
-							 			,"fehlt entschuldigt"=>"fehlt entschuldigt"
-							 			,"nicht gesetzt"=>"gebucht, noch nicht abgeschlossen"), array(), "", 200, 160, "text", "asc", true)
-				->multiselect("booking_status", $this->plugin->txt("booking_status"), "booking_status", catFilter::getDistinctValues('booking_status', 'hist_usercoursestatus'), array(), "", 200, 160)
-				->multiselect("gender", $this->plugin->txt("gender"), "gender", array('f', 'm'), array(), "", 100, 160)
-				->multiselect("venue", $this->plugin->txt("venue"), "venue", catFilter::getDistinctValues('venue', 'hist_course'), array(), "", 300, 160)
-				->multiselect("provider", $this->plugin->txt("provider"), "provider", catFilter::getDistinctValues('provider', 'hist_course'), array(), "", 300, 160)
-				->checkbox('no_wbd_imported', $this->plugin->txt("filter_no_wbd_imported"), " TRUE ", " TRUE ");
-		if ("1" !== (string)$this->options['all_orgus_filter']) {
-			$filter
-			->static_condition($this->gIldb->in("orgu.usr_id", $this->user_utils->getEmployeesWhereUserCanViewEduBios(), false, "integer"));
-		}
-			$filter
-				->static_condition('usr.hist_historic = 0')
-				->static_condition("orgu.hist_historic = 0")
-				->static_condition("orgu.action >= 0")
-				->static_condition("orgu.rol_title = 'Mitarbeiter'")
-				->action($this->filter_action)
-				->compile();
-		$date_filter = $filter->get("period");
-		$this->date_start = $date_filter["start"]->get(IL_CAL_DATE);
-		$this->date_end = $date_filter["end"]->get(IL_CAL_DATE);
-		$this->tpl_filter
-			= (int)$this->settings['is_local'] === 1
-				? $this->gIldb->in('crs.template_obj_id', $this->getSubtreeCourseTemplates(), false, 'integer')
-				: "TRUE" ;
 		return $filter;
 	}
 
