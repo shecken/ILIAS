@@ -132,10 +132,25 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					.'	LEFT JOIN hist_course crs'.PHP_EOL
 					.'		ON crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0'.PHP_EOL
 					.'			AND '.$this->tpl_filter
+					.$this->courseTopicsFilter()
 					.$this->queryWhere().PHP_EOL
 					.'	GROUP BY orgu.orgu_id'.PHP_EOL
 					.$this->queryOrder();
 		return $query;
+	}
+
+	private function courseTopicsFilter()
+	{
+		$selection = $this->filter_selections['crs_topics'];
+		if (count($selection)>0) {
+			return
+				'	JOIN (SELECT topic_set_id'
+				.'			FROM hist_topicset2topic '
+				.'				JOIN hist_topics USING (topic_id)'
+				.'			WHERE '.$this->gIldb->in('topic_title', $selection, false, 'text')
+				.'			GROUP BY topic_set_id) as crs_topics ON crs.topic_set = crs_topics.topic_set_id';
+		}
+		return '';
 	}
 
 	private function datePeriodFilter($query)
@@ -506,7 +521,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					array(
 								'start' => $tf->cls("DateTime")
 								,'end' => $tf->cls("DateTime")
-								,'crs_topics' => $tf->lst($tf->int())
+								,'crs_topics' => $tf->lst($tf->string())
 								,'edu_program' => $tf->lst($tf->string())
 								,'type' => $tf->lst($tf->string())
 								,'template_title' => $tf->lst($tf->int())
@@ -544,7 +559,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 								,'org_unit' => $tf->lst($tf->int())
 								,'start' => $tf->cls("DateTime")
 								,'end' => $tf->cls("DateTime")
-								,'crs_topics' => $tf->lst($tf->int())
+								,'crs_topics' => $tf->lst($tf->string())
 								,'edu_program' => $tf->lst($tf->string())
 								,'type' => $tf->lst($tf->string())
 								,'template_title' => $tf->lst($tf->int())
