@@ -13,4 +13,7 @@
 		<cron id="gev_clean_waiting_list" class="gevCleanWaitingListJob" path="Services/GEV/Utils/classes/" />
 		<cron id="gev_crs_reminder" class="gevCrsReminderJob" path="Services/GEV/Utils/classes/" />
 	</crons>
+	<events>
+		<event type="listen" id="Services/ParticipationStatus" component="Services/GEV/Desktop/classes/EffectivenessAnalysis"/>
+	</events>
 </service>
