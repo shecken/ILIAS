@@ -427,7 +427,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 				$f->multiselectsearch(
 					$txt('crs_title'),
 					'',
-					$this->getDistinctRowEntriesFormTableForFilter('template_title', 'hist_course')
+					$this->getTemplateTitlesForFilter()
 				),
 				$f->multiselectsearch(
 					$txt('participation_status'),
@@ -606,5 +606,13 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			$return[] = $rec["obj_id"];
 		}
 		return $return;
+	}
+
+	private function getTemplateTitlesForFilter()
+	{
+		if ($this->settings['is_local']) {
+			return $this->subtreeTemplateTitles();
+		}
+		return $this->getDistinctRowEntriesFormTableForFilter('template_title', 'hist_course');
 	}
 }
