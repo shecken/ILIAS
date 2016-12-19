@@ -25,13 +25,13 @@ class ilEffectivenessAnalysisReminderDB {
 
 	public function updateTable() {
 		$field = array(
-					'type' => 'text',
-					'length' => 255,
+					'type' => 'integer',
+					'length' => 4,
 					'notnull' => true
 				);
 
-		if(!$this->db->tableColumnExists(self::TABLE_NAME, "user_ids")) {
-			$this->db->addTableColumn(self::TABLE_NAME, "user_ids", $field);
+		if(!$this->db->tableColumnExists(self::TABLE_NAME, "user_id")) {
+			$this->db->addTableColumn(self::TABLE_NAME, "user_id", $field);
 		}
 	}
 
@@ -81,42 +81,17 @@ class ilEffectivenessAnalysisReminderDB {
 	 * @param int[]		$user_ids
 	 */
 	public function logMailSend($crs_id, $superior_id, $type, $user_ids) {
-		$user_ids = base64_encode(serialize($user_ids));
-		$next_id = $this->db->nextId(self::TABLE_NAME);
+		$values = array("crs_id" => array("integer", $crs_id)
+						  , "superior_id" => array("integer", $superior_id)
+						  , "type" => array("text", $type)
+						  , "send" => array("text", date("Y-m-d"))
+				);
 
-		$values = array("id" => array("integer", $next_id)
-					  , "crs_id" => array("integer", $crs_id)
-					  , "superior_id" => array("integer", $superior_id)
-					  , "type" => array("text", $type)
-					  , "send" => array("text", date("Y-m-d"))
-					  , "user_ids" => array("text", $user_ids)
-			);
-
-		$this->db->insert(self::TABLE_NAME, $values);
-	}
-
-	/**
-	 * Get user_ids where $type mail is send
-	 *
-	 * @param int 		$crs_id
-	 * @param int 		$superior_id
-	 * @param string 	$type
-	 *
-	 * @return array<int[]>
-	 */
-	public function getUserIdsTypeIsSend($crs_id, $superior_id, $type) {
-		$query = "SELECT send, user_ids\n"
-				." FROM ".self::TABLE_NAME."\n"
-				." WHERE crs_id = ".$this->db->quote($crs_id, "integer")."\n"
-				."     AND type = ".$this->db->quote($type, "text")."\n"
-				."     AND superior_id = ".$this->db->quote($superior_id, "integer");
-
-		$result = $this->db->query($query);
-		$ret = array();
-		while($row = $this->db->fetchAssoc($result)) {
-			$ret[$row["send"]] = unserialize(base64_decode($row["user_ids"]));
+		foreach($user_ids as $key => $user_id) {
+			$next_id = $this->db->nextId(self::TABLE_NAME);
+			$values["id"] = array("integer", $next_id);
+			$values["user_id"] = array("text", $user_id);
+			$this->db->insert(self::TABLE_NAME, $values);
 		}
-
-		return $ret;
 	}
 }

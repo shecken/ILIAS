@@ -33,101 +33,25 @@ class ilEffAnalysisActions {
 	}
 
 	/**
-	 * Get open effective analysis
+	 * Get user_ids for first mail
 	 *
-	 * @param int 	$user_id
-	 *
-	 * @return mixed[]
-	 */
-	public function getOpenEffectivenessAnalysis($user_id) {
-		return $this->eff_analysis->getOpenEffectivenessAnalysis($user_id);
-	}
-
-	/**
-	 * Get user ids first mail should be send
-	 *
-	 * @param int 		$crs_id
-	 * @param int 		$superior_id
-	 * @param int[] 	$user_ids
+	 * @param int 	$superior_id
 	 *
 	 * @return int[]
 	 */
-	public function getUserIdsForFirstMail($crs_id, $superior_id, $user_ids) {
-		$all_sent_user_ids = $this->db->getUserIdsTypeIsSend($crs_id, $superior_id, self::FIRST);
-
-		if(count($all_sent_user_ids) == 0) {
-			return $user_ids;
-		}
-
-		$to_send = array();
-		foreach($all_sent_user_ids as $date => $sent_user_ids) {
-			$to_send = array_merge($to_send, array_diff($user_ids, $sent_user_ids, $to_send));
-		}
-
-		return array_unique($to_send);
+	public function getUserIdsForFirstMail($superior_id) {
+		return $this->eff_analysis->getUserIdsForFirstMail($superior_id);
 	}
 
 	/**
-	 * Get user ids reminder should be send
+	 * Get user_ids for reminder
 	 *
-	 * @param int 		$crs_id
-	 * @param int 		$superior_id
+	 * @param int 	$superior_id
 	 *
-	 * @return bool
+	 * @return int[]
 	 */
-	public function getUserIdsForReminder($crs_id, $superior_id, $user_ids) {
-		$first_sent_user_ids = $this->db->getUserIdsTypeIsSend($crs_id, $superior_id, self::FIRST);
-		$reminder_sent_user_ids = $this->db->getUserIdsTypeIsSend($crs_id, $superior_id, self::SECOND);
-
-		if(count($reminder_sent_user_ids) > 0) {
-			$first_sent_user_ids = $this->cleanFirstUserIds($first_sent_user_ids, $reminder_sent_user_ids);
-		}
-
-		$to_send = array();
-
-		$next_send = $this->getNextSendDate(2);
-		foreach($reminder_sent_user_ids as $date => $sent_user_ids) {
-			if($date <= $next_send) {
-				$to_send = array_merge($to_send, array_diff($user_ids, $to_send));
-			}
-		}
-
-		$next_send = $this->getNextSendDate(15);
-		foreach($first_sent_user_ids as $date => $sent_user_ids) {
-			if($date <= $next_send) {
-				$to_send = array_merge($to_send, array_diff($sent_user_ids, $to_send));
-			}
-		}
-
-		return array_unique($to_send);
-	}
-
-	protected function getNextSendDate($days) {
-		$time = strtotime(date("Y-m-d"));
-		$time = $time - (2 * 24 * 60 * 60);
-		return date("Y-m-d", $time);
-	}
-
-	protected function cleanFirstUserIds($first_sent_user_ids, $reminder_sent_user_ids) {
-		foreach($first_sent_user_ids as $date_first => $user_ids_first) {
-			$new = array();
-			foreach($reminder_sent_user_ids as $user_ids_reminder) {
-				$new = array_merge($new, array_diff($user_ids_first, $user_ids_reminder, $new));
-			}
-			$first_sent_user_ids[$date_first] = $new;
-		}
-
-		return $first_sent_user_ids;
-	}
-
-	protected function filterToSendUser($to_send, $sent_user_ids, $user_ids, $next_send) {
-		foreach($sent_user_ids as $date => $sent_user_id) {
-			if($date <= $next_send) {
-				$to_send = array_merge($to_send, array_diff($user_ids, $sent_user_id, $to_send));
-			}
-		}
-
-		return $to_send;
+	public function getUserIdsForReminder($superior_id) {
+		return $this->eff_analysis->getUserIdsForReminder($superior_id);
 	}
 
 	/**
