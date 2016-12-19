@@ -185,7 +185,6 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		foreach ($this->sum_parts as $title => $query_term) {
 			$sum_terms[] = $query_term["sum"];
 		}
-		$no_wbd_imported = $this->filter->get('no_wbd_imported');
 		$sum_sql =
 		"SELECT  "
 		."	".implode(', ', $sum_terms)
@@ -417,12 +416,12 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					$this->getDistinctRowEntriesFormTableForFilter('edu_program', 'hist_course')
 				),
 				$f->multiselectsearch(
-					$txt('type'),
+					$txt('course_type'),
 					'',
 					$this->getDistinctRowEntriesFormTableForFilter('type', 'hist_course')
 				),
 				$f->multiselectsearch(
-					$txt('template_title'),
+					$txt('crs_title'),
 					'',
 					$this->getDistinctRowEntriesFormTableForFilter('template_title', 'hist_course')
 				),
