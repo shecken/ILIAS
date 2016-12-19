@@ -203,7 +203,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		."			LEFT JOIN `hist_course` crs "
 		."				ON usrcrs.crs_id = crs.crs_id AND crs.hist_historic = 0 "
 		."					AND ".$this->tpl_filter;
-		$topics = $this->filter->get('crs_topics');
+		$topics = $this->filter_selections['crs_topics'];
 		if (count($topics) > 0) {
 			$sum_sql .=
 			"			JOIN hist_topicset2topic ts2t ON crs.topic_set = ts2t.topic_set_id"
