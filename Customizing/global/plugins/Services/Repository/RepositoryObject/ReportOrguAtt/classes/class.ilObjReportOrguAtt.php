@@ -110,31 +110,6 @@ class ilObjReportOrguAtt extends ilObjReportBase
 	{
 
 		$this->filter_selections = $this->getFilterSettings();
-	/*	$query	->select("orgu.orgu_title")
-				->select("orgu.org_unit_above1")
-				->select("orgu.org_unit_above2");
-		foreach ($this->sum_parts as $title => $query_term) {
-			$query
-				->select_raw($query_term["regular"]);
-		}
-		$this->orgu_filter->addToQuery($query);
-		$this->crs_topics_filter->addToQuery($query);
-		$no_wbd_imported = $this->filter->get('no_wbd_imported');
-		$query	->from("hist_userorgu orgu")
-				->join('hist_user usr')
-					->on('usr.user_id = orgu.usr_id')
-				->left_join("hist_usercoursestatus usrcrs")
-					->on("usrcrs.usr_id = orgu.usr_id AND usrcrs.hist_historic = 0 "
-						."	AND usrcrs.booking_status != ".$this->gIldb->quote('-empty-', 'text')
-						."	AND (usrcrs.begin_date <= ".$this->gIldb->quote($this->date_end, 'date')
-						."		AND (usrcrs.end_date >= ".$this->gIldb->quote($this->date_start, 'date')
-						."			OR `usrcrs`.`end_date` = '0000-00-00' OR `usrcrs`.`end_date` = '-empty-'))"
-						."	".($no_wbd_imported ? ' AND usrcrs.crs_id > 0' : ''))
-				->left_join("hist_course crs")
-					->on("usrcrs.crs_id = crs.crs_id AND crs.hist_historic = 0"
-						."	AND ".$this->tpl_filter)
-				->group_by("orgu.orgu_id")
-				->compile();*/
 		return $query;
 	}
 
@@ -175,9 +150,9 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		} else {
 			$end = date('Y').'-12-31';
 		}
-		return '	AND (usrcrs.begin_date <= \''.$end.'\''
-			.'			 AND (usrcrs.end_date >= \''.$start.'\''
-			.'				OR `usrcrs`.`end_date` = \'0000-00-00\' OR `usrcrs`.`end_date` = \'-empty-\'))';
+		return '	AND (usrcrs.begin_date <= \''.$end.'\''.PHP_EOL
+			.'			 AND (usrcrs.end_date >= \''.$start.'\''.PHP_EOL
+			.'				OR `usrcrs`.`end_date` = \'0000-00-00\' OR `usrcrs`.`end_date` = \'-empty-\'))'.PHP_EOL;
 	}
 
 	private function noWBDImportedFilter()
@@ -464,6 +439,11 @@ class ilObjReportOrguAtt extends ilObjReportBase
 								)
 							),
 				$f->multiselectsearch(
+					$txt("crs_filter_topics"),
+					"",
+					gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_TOPIC)
+				),
+				$f->multiselectsearch(
 					$txt('edu_program'),
 					'',
 					$this->getDistinctRowEntriesFormTableForFilter('edu_program', 'hist_course')
@@ -507,10 +487,11 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					$this->getDistinctRowEntriesFormTableForFilter('provider', 'hist_course')
 				)
 			)->map(
-				function ($start, $end, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
+				function ($start, $end, $crs_topics, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
 							return array(
 								'start' => $start
 								,'end' => $end
+								,'crs_topics' => $crs_topics
 								,'edu_program' => $edu_program
 								,'type' => $type
 								,'template_title' => $template_title
@@ -525,6 +506,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					array(
 								'start' => $tf->cls("DateTime")
 								,'end' => $tf->cls("DateTime")
+								,'crs_topics' => $tf->lst($tf->int())
 								,'edu_program' => $tf->lst($tf->string())
 								,'type' => $tf->lst($tf->string())
 								,'template_title' => $tf->lst($tf->int())
@@ -537,13 +519,14 @@ class ilObjReportOrguAtt extends ilObjReportBase
 				)
 			)
 		)->map(
-			function ($no_wbd, $recursive, $org_unit, $start, $end, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
+			function ($no_wbd, $recursive, $org_unit, $start, $end, $crs_topics, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
 							return array(
 								'no_wbd' => $no_wbd
 								,'recursive' => $recursive
 								,'org_unit' => $org_unit
 								,'start' => $start
 								,'end' => $end
+								,'crs_topics' => $crs_topics
 								,'edu_program' => $edu_program
 								,'type' => $type
 								,'template_title' => $template_title
@@ -561,6 +544,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 								,'org_unit' => $tf->lst($tf->int())
 								,'start' => $tf->cls("DateTime")
 								,'end' => $tf->cls("DateTime")
+								,'crs_topics' => $tf->lst($tf->int())
 								,'edu_program' => $tf->lst($tf->string())
 								,'type' => $tf->lst($tf->string())
 								,'template_title' => $tf->lst($tf->int())
