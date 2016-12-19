@@ -371,23 +371,24 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		$f = new \CaT\Filter\FilterFactory($pf, $tf);
 		$this->tpl_filter = '';
 		if ($this->settings['is_local']) {
-			$this->tpl_filter = '	AND '.$this->gIldb->in('crs.template_title', $this->getSubtreeCourseTemplates(), false, 'text');
+			$this->tpl_filter = '	AND '.$this->gIldb->in('crs.template_obj_id', $this->getSubtreeCourseTemplates(), false, 'integer');
 		}
 
 		$txt = function ($id) {
 			return $this->plugin->txt($id);
 		};
+		global $lng;
 		return 	$f->sequence(
 			$f->option(
 				$txt('filter_no_wbd_imported'),
 				''
 			),
 			$f->option(
-				$txt('org_unit_recursive'),
+				$lng->txt('gev_org_unit_recursive'),
 				''
 			),
 			$f->multiselectsearch(
-				$txt("org_unit_short"),
+				$lng->txt("gev_org_unit_short"),
 				'',
 				$this->getRelevantOrgus()
 			),
@@ -409,7 +410,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 								)
 							),
 				$f->multiselectsearch(
-					$txt("crs_filter_topics"),
+					$lng->txt("gev_filter_topics"),
 					"",
 					gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_TOPIC)
 				),
