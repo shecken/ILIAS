@@ -297,7 +297,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			}
 			$query_where.$this->andFieldInSelection('orgu.orug_id', $selection);
 		}
-		return $query_where;
+		return $query_where.$this->andFieldInSelection('orgu.orug_id', $this->getRelevantOrguIds());
 	}
 
 	private function addRecursiveOrgusToSelection(array $selection)
@@ -607,6 +607,16 @@ class ilObjReportOrguAtt extends ilObjReportBase
 
 	private function getRelevantOrgus()
 	{
+		$ids = $this->getRelevantOrguIds();
+		$options = array();
+		foreach ($ids as $id) {
+			$options[(int)$id] = ilObject::_lookupTitle($id);
+		}
+		return $options;
+	}
+
+	private function getRelevantOrguIds()
+	{
 		if ("1" === (string)$this->settings['all_orgus_filter']) {
 			$ids = $this->getAllOrguIds();
 		} else {
@@ -617,11 +627,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 				$this->user_utils->getOrgUnitsWhereUserCanViewEduBios()
 			));
 		}
-		$options = array();
-		foreach ($ids as $id) {
-			$options[(int)$id] = ilObject::_lookupTitle($id);
-		}
-		return $options;
+		return $ids;
 	}
 
 	private function getAllOrguIds()
