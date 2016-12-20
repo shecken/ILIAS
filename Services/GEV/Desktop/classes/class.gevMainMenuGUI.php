@@ -94,7 +94,7 @@ class gevMainMenuGUI extends ilMainMenuGUI {
 		
 		//permissions
 		$manage_courses = $this->gAccess->checkAccess("write", "", $repository);
-		$search_courses = $manage_courses || ($this->user_utils && $this->user_utils->hasRoleIn(array("Admin-Ansicht")));
+		$search_courses = $manage_courses || ($this->user_utils && $this->user_utils->hasRoleIn(array("Admin-Ansicht", "Admin-Voll")));
 		$manage_users = $this->gAccess->checkAccess("visible", "", $user_mgmt);
 		$manage_org_units = $this->gAccess->checkAccess("visible", "", $org_mgmt);
 		$manage_mails = $this->gAccess->checkAccess("visible", "", $mail_mgmt);
