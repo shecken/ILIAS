@@ -100,22 +100,6 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				$f->dateperiod(
 					$txt("period"),
 					""
-				)->map(
-					function ($start, $end) use ($f) {
-							$pc = $f->dateperiod_overlaps_predicate(
-								"hucs.begin_date",
-								"hucs.begin_date"
-							);
-							return array ("date_period_predicate" => $pc($start,$end)
-										 ,"start" => $start
-										 ,"end" => $end);
-					},
-					$tf->dict(
-						array(
-								"date_period_predicate" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
-								,"start" => $tf->cls("DateTime")
-								,"end" => $tf->cls("DateTime"))
-					)
 				),
 				$f->multiselectsearch(
 					$txt("crs_filter_topics"),
@@ -145,10 +129,11 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				$f->multiselectsearch(
 					$txt("wbd_relevant"),
 					"",
-					array($db->in('hucs.okz', self::$wbd_relevant, false, 'text')
+					array(	$db->in('hucs.okz', self::$wbd_relevant, false, 'text')
 								=> $txt('yes')
 							,$db->in('hucs.okz', self::$wbd_relevant, true, 'text')
-					=> $txt('no'))
+								=> $txt('no')
+					)
 				),
 				$f->multiselectsearch(
 					$txt("edupoints"),
@@ -158,35 +143,12 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 							,'('.$db->in("hc.max_credit_points ", array('0','-empty-'), false, 'text')." AND hc.crs_id > 0 )"
 					=> $txt('trainings_wo_points'))
 				)
-			)->map(
-				function ($date_period_predicate, $start, $end, $crs_filter_topics, $edu_program, $template_title, $course_type, $wbd_relevant, $edupoints) {
-						return array("period_pred" => $date_period_predicate
-									,"start" => $start
-									,"end" => $end
-									,"crs_topics_filter" => $crs_filter_topics
-									,"edu_program" => $edu_program
-									,"template_title" => $template_title
-									,"course_type" => $course_type
-									,"wbd_relevant" => $wbd_relevant
-									,"edupoints" => $edupoints);
-				},
-				$tf->dict(array("period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
-									,"start" => $tf->cls("DateTime")
-									,"end" => $tf->cls("DateTime")
-									,"crs_topics_filter" => $tf->lst($tf->string())
-									,"edu_program" => $tf->lst($tf->string())
-									,"template_title" => $tf->lst($tf->int())
-									,"course_type" => $tf->lst($tf->string())
-									,"wbd_relevant" => $tf->lst($tf->string())
-									,"edupoints" => $tf->lst($tf->string())
-						))
 			)
 		)->map(
-			function ($no_wbd, $recursive, $org_unit_short, $date_period_predicate, $start, $end, $crs_filter_topics, $edu_program, $template_title, $course_type, $wbd_relevant, $edupoints) {
+			function ($no_wbd, $recursive, $org_unit_short, $start, $end, $crs_filter_topics, $edu_program, $template_title, $course_type, $wbd_relevant, $edupoints) {
 						return array("no_wbd" => $no_wbd
 									,"recursive" => $recursive
 									,"org_unit" => $org_unit_short
-									,"period_pred" => $date_period_predicate
 									,"start" => $start
 									,"end" => $end
 									,"crs_topics_filter" => $crs_filter_topics
@@ -199,7 +161,6 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 			$tf->dict(array(		"no_wbd" => $tf->bool()
 									,"recursive" => $tf->bool()
 									,"org_unit" => $tf->lst($tf->int())
-									,"period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
 									,"start" => $tf->cls("DateTime")
 									,"end" => $tf->cls("DateTime")
 									,"crs_topics_filter" => $tf->lst($tf->string())
@@ -207,8 +168,8 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 									,"template_title" => $tf->lst($tf->int())
 									,"course_type" => $tf->lst($tf->string())
 									,"wbd_relevant" => $tf->lst($tf->string())
-			,
-			"edupoints" => $tf->lst($tf->string())))
+									,"edupoints" => $tf->lst($tf->string())
+						))
 		);
 	}
 
