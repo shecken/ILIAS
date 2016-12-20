@@ -108,7 +108,6 @@ class ilObjReportOrguAtt extends ilObjReportBase
 	 */
 	protected function buildQuery($query)
 	{
-
 		$this->filter_selections = $this->getFilterSettings();
 		return $query;
 	}
@@ -396,19 +395,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 				$f->dateperiod(
 					$txt("period"),
 					''
-				)
-							->map(
-								function ($start, $end) use ($f) {
-									return array(
-											"start" => $start
-											,"end" => $end);
-								},
-								$tf->dict(
-									array(
-											"start" => $tf->cls("DateTime")
-											,"end" => $tf->cls("DateTime"))
-								)
-							),
+				),
 				$f->multiselectsearch(
 					$lng->txt("gev_filter_topics"),
 					"",
@@ -456,37 +443,6 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					$txt('provider'),
 					'',
 					$this->getDistinctRowEntriesFormTableForFilter('provider', 'hist_course')
-				)
-			)->map(
-				function ($start, $end, $crs_topics, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
-							return array(
-								'start' => $start
-								,'end' => $end
-								,'crs_topics' => $crs_topics
-								,'edu_program' => $edu_program
-								,'type' => $type
-								,'template_title' => $template_title
-								,'p_status' => $p_status
-								,'b_status' => $b_status
-								,'gender' => $gender
-								,'venue' => $venue
-								,'provider' => $provider
-								);
-				},
-				$tf->dict(
-					array(
-								'start' => $tf->cls("DateTime")
-								,'end' => $tf->cls("DateTime")
-								,'crs_topics' => $tf->lst($tf->string())
-								,'edu_program' => $tf->lst($tf->string())
-								,'type' => $tf->lst($tf->string())
-								,'template_title' => $tf->lst($tf->string())
-								,'p_status' => $tf->lst($tf->string())
-								,'b_status' => $tf->lst($tf->string())
-								,'gender' => $tf->lst($tf->string())
-								,'venue' => $tf->lst($tf->string())
-								,'provider' => $tf->lst($tf->string())
-								)
 				)
 			)
 		)->map(
@@ -538,11 +494,12 @@ class ilObjReportOrguAtt extends ilObjReportBase
 						false,
 						'integer'
 					)
-					.'		AND field_id = '.$this->gIldb->quote(
-						gevSettings::getInstance()
-													->getAMDFieldId(gevSettings::CRS_AMD_IS_TEMPLATE),
-						'integer'
-					)
+					.'		AND field_id = '
+						.$this->gIldb->quote(
+							gevSettings::getInstance()
+								->getAMDFieldId(gevSettings::CRS_AMD_IS_TEMPLATE),
+							'integer'
+						)
 					.'		AND value = '.$this->gIldb->quote('Ja', 'text');
 		$return = array();
 		$res = $this->gIldb->query($query);
