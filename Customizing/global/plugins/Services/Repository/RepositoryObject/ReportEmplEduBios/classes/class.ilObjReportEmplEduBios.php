@@ -315,128 +315,13 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		} else {
 			$this->relevant_users = $this->visibleUsers();
 		}
-
-/*
-
-		$one_year_befone_now  = (new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d');
-		$points_in_current_period
-						  =
-
-		$points_total = "SUM( IF(usrcrs.credit_points > 0, usrcrs.credit_points, 0) )";
-
-
-
-		$earliest_possible_cert_period_begin = "2013-09-01";
-		$cert_year_sql = " YEAR( CURDATE( ) ) - YEAR( begin_of_certification ) "
-						."- ( DATE_FORMAT( CURDATE( ) , '%m%d' ) < DATE_FORMAT( begin_of_certification, '%m%d' ) )";
-		$no_wbd_imported = $this->filter->get('no_wbd_imported');
-		$query	->select("usr.user_id")
-				->select("usr.lastname")
-				->select("usr.firstname")
-				->select("usrd.login")
-				->select("usr.adp_number")
-				->select("usr.job_number")
-				->select_raw("orgu_all.org_unit")
-				->select("orgu_all.org_unit_above1")
-				->select("orgu_all.org_unit_above2")
-				->select("roles.roles")
-				->select("usr.begin_of_certification")
-				->select_raw($points_total." as points_total_goa ")
-				->select_raw("IF ( usr.begin_of_certification >= '$earliest_possible_cert_period_begin'"
-							."   , usr.begin_of_certification"
-							."   , '-')"
-							." as cert_period")
-				->select_raw("IF ( usr.begin_of_certification >= '$earliest_possible_cert_period_begin'"
-							."   , ".$this->points_in_cert_year_sql(1)
-							."   , '-')"
-							." as points_year1")
-				->select_raw("IF ( usr.begin_of_certification >= '$earliest_possible_cert_period_begin'"
-							."   , ".$this->points_in_cert_year_sql(2)
-							."   , '-')"
-							." as points_year2")
-				->select_raw("IF ( usr.begin_of_certification >= '$earliest_possible_cert_period_begin'"
-							."   , ".$this->points_in_cert_year_sql(3)
-							."   , '-')"
-							." as points_year3")
-				->select_raw("IF ( usr.begin_of_certification >= '$earliest_possible_cert_period_begin'"
-							."   , ".$this->points_in_cert_year_sql(4)
-							."   , '-')"
-							." as points_year4")
-				->select_raw("IF ( usr.begin_of_certification >= '$earliest_possible_cert_period_begin'"
-							."   , ".$this->points_in_cert_year_sql(5)
-							."   , '-')"
-							." as points_year5")
-				->select_raw($this->pointsInCurrentPeriod()." as points_sum")
-				->select_raw("CASE "
-							."		WHEN ".$no_tp_service_condition." THEN ''"
-							."		WHEN ".$tp_service_condition
-							."			 AND usr.begin_of_certification <= '$earliest_possible_cert_period_begin' THEN 'X'"
-							."		WHEN ".$cert_year_sql." = 1 AND ".$points_in_current_period." < 40 THEN 'X'"
-							."		WHEN ".$cert_year_sql." = 2 AND ".$points_in_current_period." < 80 THEN 'X'"
-							."		WHEN ".$cert_year_sql." = 3 AND ".$points_in_current_period." < 120 THEN 'X'"
-							."		WHEN ".$cert_year_sql." = 4 AND ".$points_in_current_period." < 160 THEN 'X'"
-							."		ELSE ''"
-							."END"
-							." as attention")
-				->from("hist_user usr")
-				->join("usr_data usrd")
-					->on(" usr.user_id = usrd.usr_id")
-				->raw_join("JOIN ( SELECT usr_id"
-							."	,SUM(IF(".$this->gIldb->in("rol_id", $this->getWbdRelevantRoleIds(), false, "integer")
-							."		,1,0)) AS num_wbd_roles"
-							."	,SUM(IF(".$this->gIldb->in("rol_id", $this->getTpServiceRoleIds(), false, "integer")
-							."		,1,0)) AS num_tp_service_roles"
-							."	,GROUP_CONCAT(DISTINCT rol_title ORDER BY rol_title ASC SEPARATOR ', ') AS roles "
-							."		FROM hist_userrole "
-							."		WHERE action >= 0 AND hist_historic = 0 "
-							."			AND ".$this->gIldb->in("usr_id", $this->allowed_user_ids, false, "integer")
-							."		GROUP BY usr_id "
-							."		) AS roles ON roles.usr_id = usr.user_id")
-				->raw_join($this->getAllOrgusForUsersJoin())
-				->left_join("hist_usercoursestatus usrcrs")
-					->on("     usr.user_id = usrcrs.usr_id"
-						." AND usrcrs.hist_historic = 0 "
-						." AND usrcrs.credit_points > 0"
-						." AND usrcrs.participation_status = 'teilgenommen'"
-						." AND usrcrs.booking_status = 'gebucht'"
-						.($no_wbd_imported ? ' AND usrcrs.crs_id > 0' : ''))
-				->group_by("user_id")
-				->compile();*/
-
-				return $query;
+		return $query;
 	}
 
 
 
 	protected function buildFilter($filter)
 	{
-		/*$earliest_possible_cert_period_begin = "2013-09-01";
-		$cert_year_sql = " YEAR( CURDATE( ) ) - YEAR( begin_of_certification ) "
-						."- ( DATE_FORMAT( CURDATE( ) , '%m%d' ) < DATE_FORMAT( begin_of_certification, '%m%d' ) )"
-						;
-		$wbd_relevant_condition =
-			" (roles.num_wbd_roles > 0 "
-			."		OR usr.okz != ".$this->gIldb->quote("-empty-", 'text').")";
-		$this->allowed_user_ids = $this->user_utils->getEmployeesWhereUserCanViewEduBios();
-
-		//add recursive ORguFilter
-		$this->orgu_filter = new recursiveOrguFilter("org_unit", "orgu_id", true, true);
-
-
-
-		$this->orgu_filter->addToFilter($filter);
-		//end
-
-		$filter	->checkbox("critical", $this->plugin->txt("show_critical_persons"), "attention = 'X'", "TRUE", true)
-				->checkbox("critical_year4", $this->plugin->txt("show_critical_persons_4th_year"), "begin_of_certification >= '$earliest_possible_cert_period_begin' AND ".
-						    $cert_year_sql." = 4 AND attention = 'X'", "TRUE", true)
-				->checkbox("possibly_wbd_relevant", $this->plugin->txt("wbd_relevant_only"), $wbd_relevant_condition, "TRUE");
-		$filter	->textinput("lastname", $this->plugin->txt("lastname_filter"), "usr.lastname")
-				->checkbox('no_wbd_imported', $this->plugin->txt("filter_no_wbd_imported"), " TRUE ", " TRUE ")
-				->static_condition($this->gIldb->in("usr.user_id", $this->allowed_user_ids, false, "integer"))
-				->static_condition(" usr.hist_historic = 0")
-				->action($this->filter_action)
-				->compile();*/
 		return $filter;
 	}
 
