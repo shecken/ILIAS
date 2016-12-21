@@ -91,8 +91,8 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 				$where .= "    AND " .$db->in('hc.type', $settings[0]['course_type'], false, 'text') ."\n";
 			}
 
-			if(!empty($settings[0]['orgu_unit'])) {
-				$where .= "    AND " .$db->in('hu.org_unit', $settings[0]['orgu_unit'], false, 'text') ."\n";
+			if(!empty($settings[0]['orgu_id'])) {
+				$where .= "    AND " .$db->in('ht.orgu_id', $settings[0]['orgu_id'], false, 'text') ."\n";
 			}
 
 			if(!empty($settings[0]['venue'])) {
@@ -255,7 +255,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 							 ,"edu_program" => $tf->lst($tf->string())
 							 ,"crs_title" => $tf->lst($tf->string())
 							 ,"course_type" => $tf->lst($tf->string())
-							 ,"orgu_unit" => $tf->lst($tf->string())
+							 ,"orgu_unit" => $tf->lst($tf->int())
 							 ,"venue" => $tf->lst($tf->string())
 						)
 					)
@@ -265,10 +265,10 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 
 	protected function getOrgusFromTep() {
 		$orgus = array();
-		$sql = "SELECT DISTINCT orgu_title FROM hist_tep WHERE orgu_title != '-empty-'";
+		$sql = "SELECT DISTINCT title, obj_id FROM object_data WHERE type = 'orgu'";
 		$res = $this->gIldb->query($sql);
 		while( $rec = $this->gIldb->fetchAssoc($res)) {
-			$orgus[$rec["orgu_title"]] = $rec["orgu_title"];
+			$orgus[$rec["obj_id"]] = $rec["title"];
 		}
 		return $orgus;
 	}

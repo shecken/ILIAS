@@ -44,7 +44,7 @@ class ilObjReportTrainerOpTepCatGUI extends ilObjReportBaseGUI {
 			$this->filter_settings = unserialize(base64_decode($_GET['filter']));
 		}
 		if($this->filter_settings) {
-			$this->object->addRelevantParameter('filter', base64_encode(serialize(filter_settings)));
+			$this->object->addRelevantParameter('filter', base64_encode(serialize($this->filter_settings)));
 			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
 		}
 	}
