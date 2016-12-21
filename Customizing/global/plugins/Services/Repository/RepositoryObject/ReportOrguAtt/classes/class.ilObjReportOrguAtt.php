@@ -385,7 +385,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			$f->option(
 				$lng->txt('gev_org_unit_recursive'),
 				''
-			),
+			)->clone_with_checked(true),
 			$f->multiselectsearch(
 				$lng->txt("gev_org_unit_short"),
 				'',

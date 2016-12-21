@@ -90,7 +90,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 			$f->option(
 				$txt("org_unit_recursive"),
 				""
-			),
+			)->clone_with_checked(true),
 			$f->multiselectsearch(
 				$txt("org_unit_short"),
 				"",

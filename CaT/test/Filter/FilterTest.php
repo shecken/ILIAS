@@ -2,25 +2,28 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-class FilterTest extends PHPUnit_Framework_TestCase {
-	protected $backupGlobals = FALSE;
+class FilterTest extends PHPUnit_Framework_TestCase
+{
+	protected $backupGlobals = false;
 
-	protected function setUp() {
+	protected function setUp()
+	{
 		error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-		PHPUnit_Framework_Error_Deprecated::$enabled = FALSE;
+		PHPUnit_Framework_Error_Deprecated::$enabled = false;
 
 		//include_once("./Services/PHPUnit/classes/class.ilUnitUtil.php");
 		//ilUnitUtil::performInitialisation();
 
 		$this->factory = new \CaT\Filter\FilterFactory(new \CaT\Filter\PredicateFactory(), new \CaT\Filter\TypeFactory());
-		
+
 		// to prevent warnings for unset system timezone
 		date_default_timezone_set("Europe/Berlin");
 	}
 
 	// DATEPERIOD
 
-	public function test_dateperiod_creation() {
+	public function test_dateperiod_creation()
+	{
 		$filter = $this->factory->dateperiod("label", "description");
 		$tf = $this->factory->type_factory();
 
@@ -31,7 +34,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $filter->input_type());
 	}
 
-	public function test_dateperiod_defaults() {
+	public function test_dateperiod_defaults()
+	{
 		$filter = $this->factory->dateperiod("label", "description");
 
 		$this->assertEquals(new \DateTime(date("Y")."-01-01"), $filter->default_begin());
@@ -41,7 +45,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		// $this->assertEquals(new \DateTime("2100-12-31"), $filter->period_max());
 	}
 
-	public function test_dateperiod_options() {
+	public function test_dateperiod_options()
+	{
 		$filter = $this->factory->dateperiod("label", "description")
 			->default_begin(new \DateTime("1990-05-04"))
 			->default_end(new \DateTime("2010-05-04"))
@@ -58,7 +63,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		// $this->assertEquals(new \DateTime("2015-05-04"), $filter->period_max());
 	}
 
-	public function test_dateperiod_overlaps_predicate() {
+	public function test_dateperiod_overlaps_predicate()
+	{
 		$filter = $this->factory->dateperiod("label", "description")
 			->map_to_predicate($this->factory->dateperiod_overlaps_predicate("start_field", "end_field"))
 			;
@@ -71,59 +77,62 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$predicate = $filter->content(new \DateTime("2000-01-01"), new \DateTime("2000-12-31"));
 
 		$this->assertInstanceOf("\\CaT\\Filter\\Predicates\\Predicate", $predicate);
-		
-		$fields = array_map
-			( function(\CaT\Filter\Predicates\Field $f) { return $f->name(); }
-			, $predicate->fields()
-			);
+
+		$fields = array_map(
+			function (\CaT\Filter\Predicates\Field $f) {
+					return $f->name();
+			},
+			$predicate->fields()
+		);
 		$this->assertEquals(array("start_field", "end_field"), $fields);
 
 		$interpreter = new \CaT\Filter\DictionaryPredicateInterpreter;
 
-		$this->assertTrue($interpreter->interpret
-				( $predicate
-				, array
+		$this->assertTrue($interpreter->interpret(
+			$predicate,
+			array
 					( "start_field"	=> new \DateTime("1999-05-04")
 					, "end_field"	=> new \DateTime("2000-05-04")
 					)
-				));
+		));
 
-		$this->assertTrue($interpreter->interpret
-				( $predicate
-				, array
+		$this->assertTrue($interpreter->interpret(
+			$predicate,
+			array
 					( "start_field"	=> new \DateTime("1999-05-04")
 					, "end_field"	=> new \DateTime("2001-05-04")
 					)
-				));
+		));
 
-		$this->assertTrue($interpreter->interpret
-				( $predicate
-				, array
+		$this->assertTrue($interpreter->interpret(
+			$predicate,
+			array
 					( "start_field"	=> new \DateTime("2000-05-04")
 					, "end_field"	=> new \DateTime("2001-05-04")
 					)
-				));
+		));
 
-		$this->assertFalse($interpreter->interpret
-				( $predicate
-				, array
+		$this->assertFalse($interpreter->interpret(
+			$predicate,
+			array
 					( "start_field"	=> new \DateTime("2001-05-04")
 					, "end_field"	=> new \DateTime("2002-05-04")
 					)
-				));
+		));
 
-		$this->assertFalse($interpreter->interpret
-				( $predicate
-				, array
+		$this->assertFalse($interpreter->interpret(
+			$predicate,
+			array
 					( "start_field"	=> new \DateTime("1998-05-04")
 					, "end_field"	=> new \DateTime("1999-05-04")
 					)
-				));
+		));
 	}
 
 	// OPTIONS
 
-	public function test_option_creation() {
+	public function test_option_creation()
+	{
 		$filter = $this->factory->option("label", "description");
 		$tf = $this->factory->type_factory();
 
@@ -134,14 +143,14 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($tf->bool(), $filter->input_type());
 	}
 
-	public function test_option_predicate() {
+	public function test_option_predicate()
+	{
 		$filter = $this->factory->option("label", "description")
-			->map_to_predicate(function($bool) {
+			->map_to_predicate(function ($bool) {
 				$f = $this->factory->predicate_factory();
 				if ($bool) {
 					return $f->field("foo")->LE()->int(3);
-				}
-				else {
+				} else {
 					return $f->field("foo")->EQ()->int(4);
 				}
 			});
@@ -161,9 +170,17 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($interpreter->interpret($pred_false, array("foo" => 4)));
 	}
 
+	public function test_option_checked()
+	{
+		$filter = $this->factory->option("label", "description");
+		$this->assertFalse($filter->clone_with_checked(false)->getChecked());
+		$this->assertTrue($filter->clone_with_checked(true)->getChecked());
+	}
+
 	// MULTISELECT
 
-	public function test_multiselection_creation() {
+	public function test_multiselection_creation()
+	{
 		$options = array
 			( 1 => "one"
 			, 2 => "two"
@@ -181,7 +198,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($options, $filter->options());
 	}
 
-	public function test_multiselect_content_type_string() {
+	public function test_multiselect_content_type_string()
+	{
 		$options = array
 			( "foo" => "bar"
 			);
@@ -204,7 +222,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		}
 	}*/
 
-	public function invalid_key_types_for_multiselect_provider() {
+	public function invalid_key_types_for_multiselect_provider()
+	{
 		//php casts float to ints and false or true to 0 or 1
 		//test running without throwing error
 		return array
@@ -213,7 +232,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 			);
 	}
 
-	public function test_multiselect_options() {
+	public function test_multiselect_options()
+	{
 		$options = array
 			( 1 => "one"
 			, 2 => "two"
@@ -227,7 +247,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(array(1,3), $filter->default_choice());
 	}
 
-	public function test_multiselect_predicate() {
+	public function test_multiselect_predicate()
+	{
 		$options = array
 			( 1 => "one"
 			, 2 => "two"
@@ -235,7 +256,7 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 			);
 
 		$filter = $this->factory->multiselect("label", "description", $options)
-			->map_to_predicate(function(array $options) {
+			->map_to_predicate(function (array $options) {
 				$f = $this->factory->predicate_factory();
 				return $f->field("foo")->IN(call_user_func_array(array($f, "list_int"), $options));
 			});
@@ -254,7 +275,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 	}
 
 	//SINGLESELECT
-	public function test_singleselection_creation() {
+	public function test_singleselection_creation()
+	{
 		$options = array
 			( 1 => "one"
 			, 2 => "two"
@@ -272,7 +294,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($options, $filter->options());
 	}
 
-	public function test_singleselect_content_type_string() {
+	public function test_singleselect_content_type_string()
+	{
 		$options = array
 			( "foo" => "bar"
 			);
@@ -283,7 +306,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($tf->string(), $filter->input_type());
 	}
 
-	public function test_singleselectselect_options() {
+	public function test_singleselectselect_options()
+	{
 		$options = array
 			( 1 => "one"
 			, 2 => "two"
@@ -299,7 +323,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 
 	// TEXT
 
-	public function test_text_creation() {
+	public function test_text_creation()
+	{
 		$filter = $this->factory->text("label", "description");
 		$tf = $this->factory->type_factory();
 
@@ -310,9 +335,10 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($tf->string(), $filter->input_type());
 	}
 
-	public function test_text_predicate() {
+	public function test_text_predicate()
+	{
 		$filter = $this->factory->text("label", "description")
-			->map_to_predicate(function($str) {
+			->map_to_predicate(function ($str) {
 				$f = $this->factory->predicate_factory();
 				return $f->field("foo")->EQ()->str($str);
 			});
@@ -331,7 +357,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 
 	// SEQUENCE
 
-	public function test_sequence_filters_creation() {
+	public function test_sequence_filters_creation()
+	{
 		$dt_f = $this->factory->dateperiod("label", "description");
 		$text1_f = $this->factory->text("label", "description");
 		$text2_f = $this->factory->text("label", "description");
@@ -345,7 +372,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($tf->tuple($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $tf->string(), $tf->string()), $filter->input_type());
 	}
 
-	public function test_sequence_filters_predicate() {
+	public function test_sequence_filters_predicate()
+	{
 		$dt_f = $this->factory->dateperiod("label", "description");
 		$text1_f = $this->factory->text("label", "description");
 		$text2_f = $this->factory->text("label", "description");
@@ -379,15 +407,19 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 							)));
 	}
 
-	public function test_sequence_and_filters_predicate() {
+	public function test_sequence_and_filters_predicate()
+	{
 		$f = $this->factory;
 
 		$dt_f = $f->dateperiod("label", "description")->map_to_predicate(
-						$f->dateperiod_overlaps_predicate("dt_l", "dt_r"));
+			$f->dateperiod_overlaps_predicate("dt_l", "dt_r")
+		);
 		$text1_f = $f->text("label", "description")->map_to_predicate(
-						$f->text_equals("text1"));
+			$f->text_equals("text1")
+		);
 		$text2_f = $f->text("label", "description")->map_to_predicate(
-						$f->text_equals("text2"));
+			$f->text_equals("text2")
+		);
 
 		$filter = $f->sequence_and($dt_f, $text1_f, $text2_f);
 
@@ -413,7 +445,8 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 
 	// OPTIONS
 
-	public function test_one_of_filter_creation() {
+	public function test_one_of_filter_creation()
+	{
 		$dt_f = $this->factory->dateperiod("label", "description");
 		$text_f = $this->factory->text("label", "description");
 		$filter = $this->factory->one_of("oolabel", "oodescription", $dt_f, $text_f);
@@ -426,11 +459,12 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($tf->option($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $tf->string()), $filter->input_type());
 	}
 
-	public function test_one_of_filter_predicate() {
+	public function test_one_of_filter_predicate()
+	{
 		$dt_f = $this->factory->dateperiod("label", "description");
 		$text_f = $this->factory->text("label", "description");
 		$filter = $this->factory->one_of("oolabel", "oodescription", $dt_f, $text_f)
-					->map_to_predicate(function($choice, $vals) {
+					->map_to_predicate(function ($choice, $vals) {
 						$f = $this->factory->predicate_factory();
 
 						$this->assertInternalType("int", $choice);
@@ -440,8 +474,7 @@ class FilterTest extends PHPUnit_Framework_TestCase {
 							list($dt_l, $dt_r) = $vals;
 							$this->assertInstanceOf("\\DateTime", $dt_l);
 							$this->assertInstanceOf("\\DateTime", $dt_r);
-						}
-						else {
+						} else {
 							list($text) = $vals;
 							$this->assertInternalType("string", $text);
 						}
