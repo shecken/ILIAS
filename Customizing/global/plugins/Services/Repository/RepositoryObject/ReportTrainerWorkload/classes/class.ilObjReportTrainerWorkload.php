@@ -85,7 +85,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 				(
 					$txt("org_unit_recursive")
 					, ""
-				),
+				)->clone_with_checked(true),
 				/* END BLOCK - RECURSIVE ORG UNITS? */
 
 
