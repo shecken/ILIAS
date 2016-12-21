@@ -151,7 +151,8 @@ class ilObjReportTrDemandRet extends ilObjReportBase
 			.'		ON usr.user_id = usrcrs.usr_id AND usr.hist_historic = 0'
 			.$this->possiblyJoinCourseTopicsFilter()
 			.$this->conditionsWhere()
-			.'	GROUP BY crs.crs_id';
+			.'	GROUP BY crs.crs_id'
+			.$this->queryOrder();
 		return $query;
 	}
 
