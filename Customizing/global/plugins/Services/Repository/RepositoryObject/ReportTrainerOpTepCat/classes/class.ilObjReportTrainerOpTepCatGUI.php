@@ -51,14 +51,16 @@ class ilObjReportTrainerOpTepCatGUI extends ilObjReportBaseGUI {
 	}
 
 	protected function render() {
-		$res = $this->renderFilter();
+		$this->gTpl->setTitle(null);
+		$res  = $this->title->render();
+		$res .= $this->renderFilter();
 		$res .= $this->renderTable();
 		return $res;
 	}
 
 	protected function renderFilter() {
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
-		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, "showContent");
+		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, $this->gCtrl->getCmd());
 		return $filter_flat_view->render($this->filter_settings);
 	}
 
@@ -68,4 +70,18 @@ class ilObjReportTrainerOpTepCatGUI extends ilObjReportBaseGUI {
 		$this->gCtrl->setParameter($this, 'filter', null);
 		return $sum_table.$table;
 	}
+
+	public function renderQueryView()
+	{
+		include_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
+		$this->object->prepareReport();
+		$content = $this->renderFilter();
+		$form = new ilNonEditableValueGUI($this->gLng->txt("report_query_text"));
+		$form->setValue($this->object->buildQueryStatement());
+		$settings_form = new ilPropertyFormGUI();
+		$settings_form->addItem($form);
+		$content .= $settings_form->getHTML();
+		$this->gTpl->setContent($content);
+	}
+
 }

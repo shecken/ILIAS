@@ -46,10 +46,10 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 		return null;
 	}
 
-	protected function fetchData(callable $callback) {
+	public function buildQueryStatement() {
 		$db = $this->gIldb;
 		$select = " SELECT `hu`.`user_id`\n"
-				." ,CONCAT(hu.lastname, ', ', hu.firstname) as fullname\n";
+				 ." ,CONCAT(hu.lastname, ', ', hu.firstname) as fullname\n";
 		$from = " FROM `hist_tep` ht\n";
 
 		foreach($this->categories as $key => $category) {
@@ -94,9 +94,17 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 		}
 
 		$group = " GROUP BY hu.user_id\n";
-		$order = " ORDER BY fullname\n";
-		$order = $this->queryOrder();
-		$query = $select . $from . $join . $where . $group .$having .$order;
+		$orderby = " ORDER BY fullname\n";
+		$orderby = $this->queryOrder();
+
+		$query = $select . $from . $join . $where . $group .$having .$orderby;
+		return $query;
+	}
+
+	protected function fetchData(callable $callback) {
+		$db = $this->gIldb;
+
+		$query = $this->buildQueryStatement();
 		$res = $db->query($query);
 		$data = [];
 
