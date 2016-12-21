@@ -62,42 +62,6 @@ class ilObjReportTrDemandRet extends ilObjReportBase
 	{
 		$this->filter_selections = $this->getFilterSettings();
 		return $query;
-		/*$query
-			->select('crs.crs_id')
-			->select('crs.title')
-			->select('crs.type')
-			->select('crs.begin_date')
-			->select('crs.end_date')
-			->select('crs.venue')
-			->select('crs.accomodation')
-			->select('crs.is_cancelled')
-			->select_raw('tpl.title as tpl_title')
-			->select_raw("SUM(IF(usrcrs.booking_status = 'gebucht'"
-						." ,1,0)) as bookings")
-			->select_raw("SUM(IF("
-				.$this->gIldb->in('usrcrs.booking_status',
-					array('kostenfrei storniert','kostenpflichtig storniert'),false,'text')
-						." ,1,0)) as cancellations")
-			->select_raw("SUM(IF(usrcrs.participation_status = 'teilgenommen'"
-						." AND usrcrs.booking_status = 'gebucht',1,0)) as succ_participations")
-			->select_raw("GROUP_CONCAT("
-						." IF(usrcrs.function = 'Trainer',CONCAT(usr.firstname,' ',usr.lastname) ,NULL)"
-						." SEPARATOR ', ') as trainers")
-			->select_raw("SUM(IF(usrcrs.overnights IS NOT NULL"
-						." AND usrcrs.overnights > 0 "
-						." ,usrcrs.overnights,0)) as overnights")
-			->from('hist_course tpl')
-			->join('hist_course crs')
-				->on('crs.template_obj_id = tpl.crs_id')
-			->left_join('hist_usercoursestatus usrcrs')
-				->on(' usrcrs.crs_id = crs.crs_id AND usrcrs.hist_historic = 0 ')
-			->left_join('hist_user usr')
-				->on('usr.user_id = usrcrs.usr_id '
-					.' AND usr.hist_historic = 0 ');
-		$this->crs_topics_filter->addToQuery($query)
-			->group_by('crs.crs_id')
-			->compile();
-		return $query;*/
 	}
 
 	protected function getFilterSettings()
@@ -246,52 +210,6 @@ class ilObjReportTrDemandRet extends ilObjReportBase
 
 	protected function buildFilter($filter)
 	{
-		/*$local_condition = (string)$this->settings['is_local'] === "1"
-            ? $this->gIldb->in('tpl.crs_id',array_unique($this->getSubtreeCourseTemplates()),false,'integer')
-			: 'TRUE';
-		$this->crs_topics_filter = new courseTopicsFilter('crs_topics','crs.topic_set');
-		$this->crs_topics_filter->addToFilter($filter);
-		$filter
-			->dateperiod( 	  "period"
-							, $this->plugin->txt("period")
-							, $this->plugin->txt("until")
-							, "crs.begin_date"
-							, "crs.begin_date"
-							, date("Y")."-01-01"
-							, date("Y")."-12-31"
-							, false
-							)
-            ->multiselect_custom( 'cancelled'
-								, $this->plugin->txt("filter_cancelled")
-                                , array("crs.is_cancelled  = 'Ja'"
-										=> $this->plugin->txt('crs_is_cancelled'),
-                                        "crs.is_cancelled  != 'Ja' OR crs.is_cancelled IS NULL"
-										=> $this->plugin->txt('crs_is_not_cancelled'))
-								, array()
-								, ''
-								, 200
-								, 160
-								)
-			->multiselect(	   "training_type"
-							 , $this->plugin->txt("training_type")
-							 , 'crs.type'
-							 , array('Webinar','Präsenztraining','Virtuelles Training')
-							 , array()
-							 , ""
-							 , 200
-                             , 160
-							)
-			->static_condition("(crs.end_date < ".$this->gIldb->quote(date('Y-m-d'),'text')
-								." OR crs.is_cancelled = 'Ja' )")
-			->static_condition('crs.hist_historic = 0')
-			->static_condition("crs.is_template = 'Nein'")
-			->static_condition("crs.begin_date != '0000-00-00'")
-			->static_condition($this->gIldb->in('crs.type',array('Webinar','Präsenztraining','Virtuelles Training'),false,'text'))
-			->static_condition($local_condition)
-			->static_condition('tpl.hist_historic = 0')
-			->static_condition('tpl.is_template = '.$this->gIldb->quote('Ja','text'))
-			->action($this->filter_action)
-			->compile();*/
 		return $filter;
 	}
 
