@@ -352,7 +352,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 					''
 				),
 				$f->option(
-					$txt('no_wbd_imported'),
+					$txt('filter_no_wbd_imported'),
 					''
 				),
 				$f->option(
