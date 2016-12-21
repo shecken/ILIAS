@@ -146,12 +146,12 @@ class ilObjReportTrDemandRet extends ilObjReportBase
 			.'	JOIN hist_course crs'
 			.'		ON crs.template_obj_id = tpl.crs_id'
 			.'	LEFT JOIN hist_usercoursestatus usrcrs'
-			.'		ON usrcrs.usr_id = crs.crs_id AND usrcrs.hist_historic = 0'
+			.'		ON usrcrs.crs_id = crs.crs_id AND usrcrs.hist_historic = 0'
 			.'	LEFT JOIN hist_user usr'
 			.'		ON usr.user_id = usrcrs.usr_id AND usr.hist_historic = 0'
 			.$this->possiblyJoinCourseTopicsFilter()
 			.$this->conditionsWhere()
-			.'	GROUP BY tpl.crs_id';
+			.'	GROUP BY crs.crs_id';
 		return $query;
 	}
 
@@ -181,7 +181,7 @@ class ilObjReportTrDemandRet extends ilObjReportBase
 
 	private function courseTypeFilter()
 	{
-		$selection = $this->filter_selections['crs_type'];
+		$selection = $this->filter_selections['training_type'];
 		if (count($selection) > 0) {
 			return '		AND '.$this->gIldb->in('crs.type', $selection, false, 'text');
 		}
@@ -192,7 +192,7 @@ class ilObjReportTrDemandRet extends ilObjReportBase
 	{
 		$selection = $this->filter_selections['cancelled'];
 		if (count($selection) > 0) {
-			return '('.implode(' OR ', $selection).')';
+			return '		AND ('.implode(' OR ', $selection).')';
 		}
 		return '';
 	}
@@ -334,7 +334,7 @@ class ilObjReportTrDemandRet extends ilObjReportBase
 									=> $this->plugin->txt('crs_is_not_cancelled'))
 					)
 				)
-			)->map(function ($start, $end, $topics, $training_type, $cancelled, $categories) {
+			)->map(function ($start, $end, $categories, $training_type, $cancelled) {
 						return array('start' => $start->format('Y-m-d'),
 									'end' => $end->format('Y-m-d'),
 									'categories' => $categories,
