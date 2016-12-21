@@ -1,8 +1,11 @@
 <?php
-class catFilterFlatViewGUI {
+class catFilterFlatViewGUI
+{
 	protected $sequence;
+	protected $filtered;
 
-	public function __construct($parent_obj, $sequence, $display_filter, $cmd_save) {
+	public function __construct($parent_obj, $sequence, $display_filter, $cmd_save)
+	{
 		global $ilCtrl, $lng;
 
 		$this->gCtrl = $ilCtrl;
@@ -13,15 +16,19 @@ class catFilterFlatViewGUI {
 		$this->sequence = $sequence;
 		$this->display_filter = $display_filter;
 		$this->cmd_save = $cmd_save;
+		$this->filtered = false;
 	}
 
-	public function render($post = null) {
+	public function render($post = null, $filtered = false)
+	{
+		$this->filtered = $filtered;
+
 		$form = $this->initForm();
 		$form_tpl = $form->getTemplate();
 
 		$result = array();
 
-		while($next_filter_gui = $this->display_filter->getNextFilterGUI($this->sequence, $result)) {
+		while ($next_filter_gui = $this->display_filter->getNextFilterGUI($this->sequence, $result)) {
 			//Just to enable walking through tree
 			$new_path = array($next_filter_gui->path() => "val");
 			$result = $new_path + $result;
@@ -36,7 +43,8 @@ class catFilterFlatViewGUI {
 		return $form->getHtml();
 	}
 
-	protected function initForm() {
+	protected function initForm()
+	{
 		require_once("Services/CaTUIComponents/classes/class.catPropertyFormTplGUI.php");
 		$form = new catPropertyFormTplGUI();
 		$form->setTemplate("tpl.cat_filter_flat_view.html", "Customizing/global/plugins/Services/Cron/CronHook/ReportMaster");
@@ -48,27 +56,29 @@ class catFilterFlatViewGUI {
 		return $form;
 	}
 
-	protected function createFilterTemplate($next_filter_gui, $filter_post) {
+	protected function createFilterTemplate($next_filter_gui, $filter_post)
+	{
 		//if sequence lvl > 2 is reached cry
-		if(substr_count($next_filter_gui->path(), "_") > 1) {
+		if (substr_count($next_filter_gui->path(), "_") > 1) {
 			throw new Exception("catFilterFlatViewGUI::createFilterTemplate: to many sequence level: ".substr_count($next_filter_gui->path(), "_")." > 1.");
 		}
-		
-		$tpl = new ilTemplate("tpl.cat_filter_flat_view_element.html", true, true, "Customizing/global/plugins/Services/Cron/CronHook/ReportMaster");
 
+		$tpl = new ilTemplate("tpl.cat_filter_flat_view_element.html", true, true, "Customizing/global/plugins/Services/Cron/CronHook/ReportMaster");
 		//sequences in main sequence render filter sidy by side
-		if(substr_count($next_filter_gui->path(), "_") == 1) {
+		if (substr_count($next_filter_gui->path(), "_") == 1) {
 			$tpl->setVariable("FLOAT", "ilFloatLeft");
 		} else {
 			$tpl->touchBlock("single");
 		}
 
-		if($filter_post !== null) {
+		if ($this->filtered && $filter_post === null && $next_filter_gui instanceof catFilterOptionGUI) {
+			$next_filter_gui->setValue(false);
+		} elseif ($filter_post !== null) {
 			$val = $filter_post;
 			$next_filter_gui->setValue($val);
 		}
 
-		if($next_filter_gui instanceof catFilterMultiselectGUI) {
+		if ($next_filter_gui instanceof catFilterMultiselectGUI) {
 			$tpl->touchBlock("checkbox");
 		}
 

@@ -125,7 +125,7 @@ class ilAsyncPropertyFormGUI extends ilPropertyFormGUI {
 		$tpl = new ilTemplate("tpl.property_form.html", true, true, "Services/Form");
 
 		$tpl->setCurrentBlock("alert");
-		$tpl->setVariable("IMG_ALERT", ilUtil::getImagePath("icon_alert.svg"));
+		$tpl->setVariable("IMG_ALERT", ilUtil::getImagePath("icon_alert_s.png"));
 		$tpl->setVariable("ALT_ALERT", $lng->txt("alert"));
 		$tpl->setVariable("TXT_ALERT", "[TXT_ALERT]");
 		$tpl->parseCurrentBlock();
