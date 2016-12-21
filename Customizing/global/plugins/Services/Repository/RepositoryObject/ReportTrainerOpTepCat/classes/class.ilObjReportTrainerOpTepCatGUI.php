@@ -53,7 +53,6 @@ class ilObjReportTrainerOpTepCatGUI extends ilObjReportBaseGUI {
 		$this->gTpl->setTitle(null);
 		$res  = $this->title->render();
 		$res .= $this->renderFilter();
-		$res .= $this->renderTable();
 		return $res;
 	}
 
@@ -61,13 +60,6 @@ class ilObjReportTrainerOpTepCatGUI extends ilObjReportBaseGUI {
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
 		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, $this->gCtrl->getCmd());
 		return $filter_flat_view->render($this->filter_settings);
-	}
-
-	protected function renderTable() {
-		$this->gCtrl->setParameter($this, 'filter', base64_encode(serialize($this->filter_settings)));
-		$table = parent::renderTable();
-		$this->gCtrl->setParameter($this, 'filter', null);
-		return $sum_table.$table;
 	}
 
 	public function renderQueryView()

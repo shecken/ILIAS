@@ -57,7 +57,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 			$select .= $this->hoursPerTEPCategory($category, 'cat_'.$key.'_h') ."\n";
 		}
 
-		$join .= "JOIN hist_user AS hu\n"
+		$join  = "JOIN hist_user AS hu\n"
 				."    ON ht.user_id = hu.user_id\n"
 				."JOIN hist_tep_individ_days AS htid\n"
 				."    ON individual_days = id\n"
