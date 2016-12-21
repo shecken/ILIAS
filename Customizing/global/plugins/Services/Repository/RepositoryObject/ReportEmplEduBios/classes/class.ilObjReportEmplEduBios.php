@@ -161,7 +161,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 
 	private function havingCriticalFourth()
 	{
-		$selection = $this->filter_selections['critical'];
+		$selection = $this->filter_selections['critical_4th'];
 		if ($selection) {
 			$cert_year_sql =
 				' YEAR( CURDATE( ) ) - YEAR( begin_of_certification ) '
@@ -483,10 +483,10 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 					$txt('lastname_filter'),
 					''
 				)
-			)->map(function ($critical, $critical_fourth, $wbd_relevant, $no_wbd_imp, $recursive, $orgu_recursive, $orgu_selection, $lastname) use ($self) {
+			)->map(function ($critical, $critical_fourth, $wbd_relevant, $no_wbd_imp, $recursive, $orgu_selection, $lastname) use ($self) {
 								return array(
 									'critical' => $critical
-									,'criticat_4th' => $critical_fourth
+									,'critical_4th' => $critical_fourth
 									,'wbd_relevant' => $wbd_relevant
 									,'no_wbd_imp' => $no_wbd_imp
 									,'recursive' => $recursive
@@ -495,7 +495,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			}, $tf->dict(
 				array(
 								'critical' => $tf->bool()
-								,'criticat_4th' => $tf->bool()
+								,'critical_4th' => $tf->bool()
 								,'wbd_relevant' => $tf->bool()
 								,'no_wbd_imp' => $tf->bool()
 								,'recursive' => $tf->bool()
@@ -550,7 +550,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		return $this->visibleUsers();
 	}
 
-	private function addSubOrgusToOrgus(array $orgu_ids)
+	private function addRecursiveOrgusToSelection(array $orgu_ids)
 	{
 		require_once 'Services/GEV/Utils/classes/class.gevOrgUnitUtils.php';
 		$aux = $orgu_ids;
@@ -561,7 +561,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 				$aux[] = $child["obj_id"];
 			}
 		}
-			return array_unique($aux);
+		return array_unique($aux);
 	}
 
 	private function visibleUsers()
