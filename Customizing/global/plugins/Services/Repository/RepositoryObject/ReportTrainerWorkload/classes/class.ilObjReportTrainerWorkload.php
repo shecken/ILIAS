@@ -85,7 +85,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 				(
 					$txt("org_unit_recursive")
 					, ""
-				)->clone_with_checked(true),
+				),
 				/* END BLOCK - RECURSIVE ORG UNITS? */
 
 
@@ -109,7 +109,9 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 					,$f->multiselectsearch
 							( $txt("org_unit_short")
 							, ""
-							, $this->getRelevantOrgus())
+							, $this->getRelevantOrgus()
+						)->map(function($id_s) {return $id_s;}
+						,$tf->lst($tf->int()))
 					)->map(function($date_period_predicate, $start, $end, $org_unit) {
 						return array("period_pred" => $date_period_predicate
 							, "start" => $start
@@ -178,7 +180,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		return $norms;
 	}
 
-	public function buildQueryStatement() {
+	protected function fetchData(callable $callback) {
 		$db = $this->gIldb;
 		$filter = $this->filter();
 
@@ -211,13 +213,6 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		}
 
 		$query .= " GROUP BY `hu`.`user_id`";
-		$query .= " " . $this->queryOrder();
-		return $query;
-	}
-
-	protected function fetchData(callable $callback) {
-		$db = $this->gIldb;
-		$query = $this->buildQueryStatement();
 		$res = $db->query($query);
 		while($rec = $db->fetchAssoc($res)) {
 			$data[] = $rec;

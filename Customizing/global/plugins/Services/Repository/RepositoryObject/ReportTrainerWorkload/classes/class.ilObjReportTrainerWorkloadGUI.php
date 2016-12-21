@@ -53,18 +53,17 @@ class ilObjReportTrainerWorkloadGUI extends ilObjReportBaseGUI {
 	}
 
 	protected function render() {
-		$this->gTpl->setTitle(null);
-		$res  = $this->title->render();
-		$res .= $this->renderFilter();
+		$res = $this->renderFilter()."<br />";
 		$res .= $this->renderTable();
+
 		return $res;
 	}
 
 	protected function renderFilter() {
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
-		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, $this->gCtrl->getCmd());
+		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, "filter");
 
-		return $filter_flat_view->render($this->filter_settings, (string)$_POST['filtered'] === '1');
+		return $filter_flat_view->render($this->filter_settings);
 	}
 
 	protected function prepareTitle($a_title) {
@@ -75,6 +74,7 @@ class ilObjReportTrainerWorkloadGUI extends ilObjReportBaseGUI {
 
 
 	protected function renderTable() {
+		$this->gCtrl->setParameter($this, 'filter', base64_encode(serialize($this->filter_settings)));
 		$table = parent::renderTable();
 		$sum_table = $this->renderSumTable();
 		$this->gCtrl->setParameter($this, 'filter', null);
@@ -132,18 +132,5 @@ class ilObjReportTrainerWorkloadGUI extends ilObjReportBaseGUI {
 
 	public static function transformResultRowXLSX($rec) {
 		return self::transformResultRow($rec);
-	}
-
-		public function renderQueryView()
-	{
-		include_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
-		$this->object->prepareReport();
-		$content = $this->renderFilter();
-		$form = new ilNonEditableValueGUI($this->gLng->txt("report_query_text"));
-		$form->setValue($this->object->buildQueryStatement());
-		$settings_form = new ilPropertyFormGUI();
-		$settings_form->addItem($form);
-		$content .= $settings_form->getHTML();
-		$this->gTpl->setContent($content);
 	}
 }
