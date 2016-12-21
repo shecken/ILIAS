@@ -55,12 +55,6 @@ class ilObjReportTrDemandAdvGUI extends ilObjReportBaseGUI {
 		return $filter_flat_view->render($this->filter_settings);
 	}
 
-	protected function renderTable() {
-		$table = parent::renderTable();
-		$this->gCtrl->setParameter($this, 'filter', null);
-		return $sum_table.$table;
-	}
-
 	public function renderQueryView()
 	{
 		include_once "Services/Form/classes/class.ilNonEditableValueGUI.php";

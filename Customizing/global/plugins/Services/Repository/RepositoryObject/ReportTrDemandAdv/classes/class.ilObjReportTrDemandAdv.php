@@ -277,8 +277,6 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 		$group = " GROUP BY ('crs.crs_id') ";
 		$order = " ORDER BY `tpl_title` ASC, `title` ASC, `begin_date` ASC";
 		$order = $this->queryOrder();
-		$filter = $this->filter();
-
 		$query = $select . $where . $group .$having .$order;
 
 		return $query;
