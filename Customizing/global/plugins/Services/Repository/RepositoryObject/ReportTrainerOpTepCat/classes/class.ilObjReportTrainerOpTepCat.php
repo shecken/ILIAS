@@ -185,11 +185,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 					$txt("edu_program")
 					, ""
 					, $this->changeArrKeys(gevCourseUtils::getEduProgramsFromHisto())
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - EDU PROGRAM */
 
 
@@ -199,11 +195,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 					$txt("crs_title")
 					, ""
 					, $this->changeArrKeys(gevCourseUtils::getTemplateTitleFromHisto())
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - TEMPLATE TITLE */
 
 
@@ -213,11 +205,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 					$txt("course_type")
 					, ""
 					, $this->changeArrKeys(gevCourseUtils::getLearningTypesFromHisto())
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - TYPE */
 
 				/* BEGIN BLOCK - Orgu Filter */
@@ -226,11 +214,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 					$txt("orgu_unit")
 					, ""
 					, $this->getOrgusFromTep()
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - Orgu Filter */
 
 				/* BEGIN BLOCK - VENUE */
@@ -240,11 +224,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 					, ""
 
 					, $this->changeArrKeys(gevOrgUnitUtils::getVenueNames())
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					)
+				)
 				/* END BLOCK - VENUE */
 
 			)->map

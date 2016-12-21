@@ -9,7 +9,6 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * @ilCtrl_Calls ilObjReportTrainerOpTepCatGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportTrainerOpTepCatGUI extends ilObjReportBaseGUI {
-	
 	public function getType() {
 		return 'xttc';
 	}
