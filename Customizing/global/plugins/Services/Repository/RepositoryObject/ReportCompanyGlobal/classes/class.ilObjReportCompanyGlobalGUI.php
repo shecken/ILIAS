@@ -70,9 +70,10 @@ class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI
 
 	protected function render()
 	{
-		$res = $this->renderFilter()."<br />";
-		$res .= $this->renderTable();
-		return $res;
+		$this->gTpl->setTitle(null);
+		return	$this->title->render()
+				.$this->renderFilter()."<br />"
+				.$this->renderTable();
 	}
 
 	protected function renderFilter()
