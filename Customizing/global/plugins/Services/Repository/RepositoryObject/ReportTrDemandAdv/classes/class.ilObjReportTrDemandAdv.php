@@ -140,11 +140,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 					$txt("filter_topics")
 					, ""
 					, $this->getTopics()
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - FILTER TOPICS */
 
 
@@ -154,11 +150,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 					$txt("training_type")
 					, ""
 					, array('Webinar' => 'Webinar','Präsenztraining' => 'Präsenztraining','Virtuelles Training' => 'Virtuelles Training')
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - TRAINING TYPE */
 
 
@@ -168,11 +160,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 					$txt("status")
 					, ""
 					, array('min_participants > bookings' => $txt('cancel_danger'), 'min_participants <= bookings' => $txt('no_cancel_danger'))
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - STATUS */
 
 				/* BEGIN BLOCK - WAITING LIST */
@@ -181,11 +169,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 					$txt("waiting_list")
 					, ""
 					, array("crs.waitinglist_active = 'Ja'" => $txt('waiting_list'), "crs.waitinglist_active = 'Nein'" => $txt('no_waiting_list'))
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
 				/* END BLOCK - WAITING LIST */
 
 				/* BEGIN BLOCK - BOOKING OVER */
@@ -195,11 +179,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 					, ""
 					, array($db->quote(date('Y-m-d'),'text')." > booking_dl " => $txt('book_dl_over'),
 							$db->quote(date('Y-m-d'),'text')." <= booking_dl " => $txt('book_dl_not_over'))
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					)
+				)
 				/* END BLOCK - BOOKING OVER */
 
 			)->map
@@ -231,7 +211,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 		);
 	}
 
-	protected function fetchData(callable $callback) {
+	public function buildQueryStatement() {
 		$db = $this->gIldb;
 		$query_object = $this->buildQuery(catReportQuery::create());
 		$select = $query_object->sql();
@@ -301,6 +281,13 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 
 		$query = $select . $where . $group .$having .$order;
 
+		return $query;
+	}
+
+	protected function fetchData(callable $callback) {
+		$db = $this->gIldb;
+
+		$query = $this->buildQueryStatement();
 		$res = $db->query($query);
 		$data = [];
 
