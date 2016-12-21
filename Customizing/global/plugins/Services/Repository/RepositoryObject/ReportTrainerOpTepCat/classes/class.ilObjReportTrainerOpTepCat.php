@@ -63,7 +63,14 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase {
 				."    ON individual_days = id\n"
 				."JOIN hist_course AS hc\n"
 				."    ON context_id = crs_id AND ht.category  = 'Training'\n";
-		$where = " WHERE TRUE ";
+		$where = " WHERE TRUE\n"
+				."     AND (hc.hist_historic = 0 OR hc.hist_historic IS NULL)\n"
+				."     AND ht.hist_historic = 0\n"
+				."     AND ht.deleted = 0\n"
+				."     AND hu.hist_historic = 0\n"
+				."     AND (ht.category != 'Training' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))\n"
+				."     AND " .$db->in('ht.category',$this->categories,false,'text') . "\n"
+				."     AND ht.row_id > " .self::MIN_ROW ."\n";
 
 		$filter = $this->filter();
 		if($this->filter_settings) {
