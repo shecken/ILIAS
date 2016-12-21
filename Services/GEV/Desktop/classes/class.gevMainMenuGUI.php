@@ -341,6 +341,8 @@ class gevMainMenuGUI extends ilMainMenuGUI
 			$this->gCtrl->setParameterByClass($plugin_config_gui, "ref_id", 31);
 
 			$link = $this->gCtrl->getLinkTargetByClass(array("ilAdministrationGUI", "ilobjcomponentsettingsgui", $plugin_config_gui), "configure");
+
+			$ret["gev_org_mgmt"] = array($main_menue_permissions["manage_org_units"], $link, $this->auto_user_admin_plugin->txt("manage_executions"));
 		}
 
 		$bb_pool = gevUserUtils::getBuildingBlockPoolsTitleUserHasPermissionsTo($this->gUser->getId(), array(gevSettings::USE_BUILDING_BLOCK, "visible"));
