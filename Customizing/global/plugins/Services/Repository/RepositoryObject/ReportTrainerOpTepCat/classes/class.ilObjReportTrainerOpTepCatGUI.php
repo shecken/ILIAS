@@ -53,6 +53,7 @@ class ilObjReportTrainerOpTepCatGUI extends ilObjReportBaseGUI {
 		$this->gTpl->setTitle(null);
 		$res  = $this->title->render();
 		$res .= $this->renderFilter();
+		$res .= $this->renderTable();
 		return $res;
 	}
 
