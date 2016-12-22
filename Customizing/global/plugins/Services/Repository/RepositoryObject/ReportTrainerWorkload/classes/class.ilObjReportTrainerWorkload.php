@@ -2,13 +2,14 @@
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
 
-ini_set("memory_limit","2048M"); 
+ini_set("memory_limit", "2048M");
 ini_set('max_execution_time', 0);
 set_time_limit(0);
 
 
 
-class ilObjReportTrainerWorkload extends ilObjReportBase {
+class ilObjReportTrainerWorkload extends ilObjReportBase
+{
 	const MIN_ROW = "3991";
 	const OP_TUTOR_IN_ORGU = 'tep_is_tutor';
 
@@ -17,7 +18,8 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	protected $norms;
 
 
-	public function __construct($ref_id = 0) {
+	public function __construct($ref_id = 0)
+	{
 		parent::__construct($ref_id);
 
 		$this->ou_ids = null;
@@ -25,20 +27,20 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		require_once $this->plugin->getDirectory().'/config/cfg.trainer_workload.php';
 	}
 
-	public function initType() {
+	public function initType()
+	{
 		 $this->setType("xrtw");
 	}
 
-	protected function getFilterSettings() {
-		$filter = $this->filter();
-		if($this->filter_settings) {
-			$this->set = call_user_func_array(array($filter, "content"), $this->filter_settings);
-			return true;
+	protected function getFilterSettings()
+	{
+		if ($this->filter_settings) {
+			return call_user_func_array(array($this->filter(), "content"), $this->filter_settings);
 		}
-		return false;
 	}
 
-	protected function createLocalReportSettings() {
+	protected function createLocalReportSettings()
+	{
 		$this->local_report_settings =
 			$this->s_f->reportSettings('rep_robj_rtw')
 				->addSetting($this->s_f
@@ -52,7 +54,8 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 								->setDefaultValue(1));
 	}
 
-	protected function hoursPerConditionRatioNorm($condition, $name, $function) {
+	protected function hoursPerConditionRatioNorm($condition, $name, $function)
+	{
 		$sql = 	"SUM(IF(".$condition
 				.",	".$function
 				.",	0)"
@@ -61,236 +64,243 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		return $sql;
 	}
 
-	protected function buildQuery($query) {
+	protected function buildQuery($query)
+	{
+		$this->set = $this->getFilterSettings();
+		if ($this->set['start'] === null) {
+			$this->set['start'] = new DateTime(date('Y').'-01-01');
+		}
+		if ($this->set['end'] === null) {
+			$this->set['end'] = new DateTime(date('Y').'-12-31');
+		}
 		return null;
 	}
 
-	protected function buildFilter($filter) {
+	protected function buildFilter($filter)
+	{
 
 		return null;
 	}
 
 
 
-	public function filter() {
-	$pf = new \CaT\Filter\PredicateFactory();
-	$tf = new \CaT\Filter\TypeFactory();
-	$f = new \CaT\Filter\FilterFactory($pf, $tf);
-	$txt = function($id) { return $this->plugin->txt($id); };
+	public function filter()
+	{
+		$pf = new \CaT\Filter\PredicateFactory();
+		$tf = new \CaT\Filter\TypeFactory();
+		$f = new \CaT\Filter\FilterFactory($pf, $tf);
+		$txt = function ($id) {
+			return $this->plugin->txt($id);
+		};
 
-	return $f->sequence(
-
-				/* BEGINN BLOCK - RECURSIVE ORG UNITS? */
-				$f->option
-				(
-					$txt("org_unit_recursive")
-					, ""
-				),
-				/* END BLOCK - RECURSIVE ORG UNITS? */
-
-
-				$f->sequence(
-					$f->dateperiod
-						( $txt("dateperiod")
-						, ""
-						)->map(function($start,$end) use ($f) {
-								$pc = $f->dateperiod_overlaps_predicate
-									( "ht.begin_date"
-									, "ht.begin_date"
-									);
-								return array("date_period_predicate" => $pc($start,$end)
-									,"start" => $start
-									,"end" => $end);
-								},$tf->dict(array(
-									"date_period_predicate" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
-									,"start" => $tf->cls("DateTime")
-									,"end" => $tf->cls("DateTime")
-								)))
-					,$f->multiselectsearch
-							( $txt("org_unit_short")
-							, ""
-							, $this->getRelevantOrgus()
-						)->map(function($id_s) {return $id_s;}
-						,$tf->lst($tf->int()))
-					)->map(function($date_period_predicate, $start, $end, $org_unit) {
-						return array("period_pred" => $date_period_predicate
+		return $f->sequence(
+			$f->dateperiod($txt("dateperiod"), ""),
+			$f->option(
+				$txt("org_unit_recursive"),
+				""
+			)->clone_with_checked(true),
+			$f->multiselectsearch($txt("org_unit_short"), "", $this->getRelevantOrgus())
+		)->map(function ($start, $end, $recursive, $org_unit) {
+						return array(
+							'recursive' => $recursive
+							, "org_unit" => $org_unit
 							, "start" => $start
 							, "end" => $end
-							, "org_unit" => $org_unit
-							);}
-						, $tf->dict(array("period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
-							,"start" => $tf->cls("DateTime")
-							,"end" => $tf->cls("DateTime")
-							,"org_unit" => $tf->lst($tf->int()))))
-			);
+							);
+		}, $tf->dict(array(
+							'recursive' => $tf->bool()
+							,"org_unit" => $tf->lst($tf->int())
+							,"start" => $tf->cls('DateTime')
+							,"end" => $tf->cls('DateTime'))));
 	}
 
-	protected function getRowTemplateTitle() {
+	protected function getRowTemplateTitle()
+	{
 		return "tpl.gev_trainer_workload_row.html";
 	}
 
-	protected function buildTable($table) {
+	protected function buildTable($table)
+	{
 		$norms = $this->getNorms();
-		$table->column("fullname", $this->plugin->txt("fullname"),true);
-		foreach($this->meta_cats as $meta_category => $categories) {
+		$table->column("fullname", $this->plugin->txt("fullname"), true);
+		foreach ($this->meta_cats as $meta_category => $categories) {
 			foreach ($categories as $category) {
-				$table->column($category,$this->plugin->txt($category),true);
+				$table->column($category, $this->plugin->txt($category), true);
 			}
-			if(count($categories)>1) {
-				$table->column($meta_category."_sum", $this->plugin->txt($meta_category."_sum"),true);
+			if (count($categories)>1) {
+				$table->column($meta_category."_sum", $this->plugin->txt($meta_category."_sum"), true);
 			}
-			if(isset($norms[$meta_category])) {
-				$table->column($meta_category."_workload", $this->plugin->txt($meta_category."_workload"),true);
+			if (isset($norms[$meta_category])) {
+				$table->column($meta_category."_workload", $this->plugin->txt($meta_category."_workload"), true);
 			}
 		}
 		$this->buildSumTable();
 		return parent::buildTable($table);
 	}
 
-	protected function buildSumTable() {
+	protected function buildSumTable()
+	{
 		$norms = $this->getNorms();
 		$this->table_sums = catReportTable::create();
-		foreach($this->meta_cats as $meta_category => $categories) {
+		foreach ($this->meta_cats as $meta_category => $categories) {
 			foreach ($categories as $category) {
-				$this->table_sums->column($category, $this->plugin->txt($category),true);
+				$this->table_sums->column($category, $this->plugin->txt($category), true);
 			}
-			if(count($categories)>1) {
-				$this->table_sums->column($meta_category."_sum", $this->plugin->txt($meta_category."_sum"),true);
+			if (count($categories)>1) {
+				$this->table_sums->column($meta_category."_sum", $this->plugin->txt($meta_category."_sum"), true);
 			}
-			if(isset($norms[$meta_category])) {
-				$this->table_sums->column($meta_category."_workload", $this->plugin->txt($meta_category."_workload"),true);
+			if (isset($norms[$meta_category])) {
+				$this->table_sums->column($meta_category."_workload", $this->plugin->txt($meta_category."_workload"), true);
 			}
 		}
 		$this->table_sums->template("tpl.gev_trainer_workload_sum_row.html", $this->plugin->getDirectory());
 	}
 
-	public function deliverSumTable() {
+	public function deliverSumTable()
+	{
 		return $this->table_sums;
 	}
 
-	protected function buildOrder($order) {
+	protected function buildOrder($order)
+	{
 		return null;
 	}
 
-	protected function getNorms() {
+	protected function getNorms()
+	{
 		$norms = array();
 		$norms['training']  = $this->settings['annual_norm_training'];
-		$norms['operation']  = $this->settings['annual_norm_operation'];		
+		$norms['operation']  = $this->settings['annual_norm_operation'];
 		$norms['office']  = $this->settings['annual_norm_office'];
 		return $norms;
 	}
 
-	protected function fetchData(callable $callback) {
-		$db = $this->gIldb;
+	protected function filterSettings()
+	{
+		if ($this->filter_settings) {
+			return call_user_func_array(array($filter, "content"), $this->filter_settings);
+		}
+	}
+
+	public function buildQueryStatement()
+	{
 		$filter = $this->filter();
+		$db = $this->gIldb;
+		$query = 'SELECT `hu`.`user_id` ,CONCAT(hu.lastname, \', \', hu.firstname) as fullname';
 
-		$query =   "SELECT `hu`.`user_id` ,CONCAT(hu.lastname, ', ', hu.firstname) as fullname\n";
-
-		foreach($this->cats as $condition => $cat_settings) {
-			$query .= ", " .$this->hoursPerConditionRatioNorm($cat_settings['condition'],$condition,$cat_settings['weight']);
+		foreach ($this->cats as $condition => $cat_settings) {
+			$query .= ", " .$this->hoursPerConditionRatioNorm($cat_settings['condition'], $condition, $cat_settings['weight']);
 		}
-		$query .= " FROM `hist_tep` ht
-					JOIN `hist_user` hu ON ht.user_id = hu.user_id";
-		$query .= " AND " .$db->in('hu.user_id',$this->getRelevantUsers(),false,'integer') . " ";
-		$query .= "	JOIN `hist_tep_individ_days` htid ON individual_days = id
-					LEFT JOIN `hist_course` hc ON context_id = crs_id AND ht.category = 'Training' AND hc.hist_historic = 0
-					WHERE true
-						AND hu.hist_historic = 0
-						AND ht.hist_historic = 0
-						AND (ht.category != 'Training' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))
-						AND ht.deleted = 0";
+		$query .= 	'	FROM `hist_tep` ht'
+					.'	JOIN `hist_user` hu ON ht.user_id = hu.user_id'
+					.'		AND '.$db->in('hu.user_id', $this->getRelevantUsers(), false, 'integer')
+					.'	JOIN `hist_tep_individ_days` htid ON individual_days = id'
+					.'	LEFT JOIN `hist_course` hc ON context_id = crs_id AND ht.category = \'Training\' AND hc.hist_historic = 0'
+					.'	WHERE'
+					.'		ht.row_id > '.$this->gIldb->quote(self::MIN_ROW, 'integer')
+					.'		AND hu.hist_historic = 0'
+					.'		AND ht.hist_historic = 0'
+					.'		AND (ht.category != \'Training\' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))'
+					.'		AND ht.deleted = 0'
+					.'		AND '.$this->getDatePeriodFilter();
 
-		if($this->getFilterSettings()) {
-			$this->set = call_user_func_array(array($filter, "content"), $this->filter_settings);
-			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
-			$dt_query = $to_sql->interpret($this->set[1]["period_pred"]);
 
-			$query .= " AND " .$dt_query;
 
-			$period_days_factor = $this->getPeriodDays($this->set[1]['start'], $this->set[1]['end'])/365;
-		} else {
-			$period_days_factor = $this->getPeriodDays(new DateTime(date("Y")."-01-01"), new DateTime(date("Y")."-12-31"))/365;
-		}
+		$query .= "	GROUP BY `hu`.`user_id`";
+		$query .= $this->queryOrder();
+		return $query;
+	}
 
-		$query .= " GROUP BY `hu`.`user_id`";
-		$res = $db->query($query);
-		while($rec = $db->fetchAssoc($res)) {
+	private function getDatePeriodFilter()
+	{
+		$start = $this->gIldb->quote($this->set['start']->format('Y-d-m'), 'date');
+		$end = $this->gIldb->quote($this->set['end']->format('Y-d-m'), 'date');
+		return '( (`ht`.`begin_date` >= '.$start
+				.' OR `ht`.`begin_date` = \'0000-00-00\''
+				.' OR `ht`.`begin_date` = \'-empty-\' )'
+				.'	AND `ht`.`begin_date` <= '.$end.' )';
+	}
+
+	protected function fetchData(callable $callback)
+	{
+		$db = $this->gIldb;
+		$res = $db->query($this->buildQueryStatement());
+		while ($rec = $db->fetchAssoc($res)) {
 			$data[] = $rec;
 		}
 
 		$norms = $this->getNorms();
+		var_dump($this->getNorms());
 		$count_rows = 0;
 		$this->sum_row = array();
 		foreach ($this->meta_cats as $meta_category => $categories) {
-			foreach($categories as $category) {
+			foreach ($categories as $category) {
 				$this->sum_row[$category] = 0;
 			}
-			if(count($categories)>1) {
+			if (count($categories)>1) {
 				$this->sum_row[$meta_category.'_sum'] = 0;
 			}
-			if(isset($norms[$meta_category])) {
+			if (isset($norms[$meta_category])) {
 				$this->sum_row[$meta_category.'_workload'] = 0;
 			}
 		}
-
-		foreach($data as &$trainer_data) {
+		$period_days_factor = $this->getPeriodDays($this->set['start'], $this->set['end'])/365;
+		foreach ($data as &$trainer_data) {
 			$count_rows++;
 			foreach ($this->meta_cats as $meta_category => $categories) {
-				if(count($categories)>1) {
+				if (count($categories)>1) {
 					$trainer_data[$meta_category.'_sum'] = 0;
 					foreach ($categories as $category) {
 						$this->sum_row[$category] += $trainer_data[$category];
 						$trainer_data[$meta_category.'_sum'] += $trainer_data[$category];
 					}
 					$this->sum_row[$meta_category.'_sum'] += $trainer_data[$meta_category.'_sum'];
-					if( isset($norms[$meta_category])) {
+					if (isset($norms[$meta_category])) {
 						$trainer_data[$meta_category.'_workload'] = 100*$trainer_data[$meta_category.'_sum']/($norms[$meta_category]*$period_days_factor);
+						var_dump($period_days_factor);
 						$this->sum_row[$meta_category.'_workload'] += $trainer_data[$meta_category.'_workload'];
 					}
 				} else {
 					$this->sum_row[$meta_category] += $trainer_data[$meta_category];
-					if( isset($this->norms[$meta_category])) {
+					if (isset($this->norms[$meta_category])) {
 						$meta_category_sum = count($categories)>1 ? $trainer_data[$meta_category.'_sum'] : $trainer_data[ $categories[0]];
 						$trainer_data[$meta_category.'_workload'] = 100*$meta_category_sum/($norms[$meta_category]*$period_days_factor);
 						$this->sum_row[$meta_category.'_workload'] += $trainer_data[$meta_category.'_workload'];
 					}
 				}
 			}
-			$trainer_data = call_user_func($callback,$trainer_data);
+			$trainer_data = call_user_func($callback, $trainer_data);
 		}
 		$count_rows = ($count_rows == 0) ? 1 : $count_rows;
-		foreach($norms as $meta_category => $norm) {
+		foreach ($norms as $meta_category => $norm) {
 			$this->sum_row[$meta_category.'_workload'] = $this->sum_row[$meta_category.'_workload']/$count_rows;
 		}
-		$this->sum_row = call_user_func($callback,$this->sum_row);
-
+		$this->sum_row = call_user_func($callback, $this->sum_row);
 		return $data;
 	}
 
-	protected function getPeriodDays(\DateTime $start, \DateTime $end) {
-		$a_dat["start"] = $start;
-		$a_dat["end"] = $end;
-
-        foreach($a_dat as &$il_date_obj) {
-            $il_date_obj = $il_date_obj->getTimestamp();
-        }
-        return $period_days = ($a_dat["end"] - $a_dat["start"])/86400+1;
+	protected function getPeriodDays(\DateTime $start, \DateTime $end)
+	{
+		return $period_days = ($end->getTimestamp() - $start->getTimestamp())/86400+1;
 	}
 
-	static protected function identity ($rec) {
+	protected static function identity($rec)
+	{
 		return $rec;
 	}
 
-	public function fetchSumData() {
+	public function fetchSumData()
+	{
 		return $this->sum_row;
 	}
 
-	protected function getRelevantOrgus() {
+	protected function getRelevantOrgus()
+	{
 
 		$sql = 	"SELECT DISTINCT oda.title, oda.obj_id, rpa.ops_id, rop.ops_id AS chk "
 				."	FROM rbac_pa rpa\n"
 				."	JOIN rbac_operations rop\n"
-				."		ON rop.operation = ".$this->gIldb->quote(self::OP_TUTOR_IN_ORGU,"text") ."\n"
+				."		ON rop.operation = ".$this->gIldb->quote(self::OP_TUTOR_IN_ORGU, "text") ."\n"
 				."			AND LOCATE( CONCAT( ':', rop.ops_id, ';' ) , rpa.ops_id ) >0\n"
 				."	JOIN object_reference ore\n"
 				."		ON ore.ref_id = rpa.ref_id\n"
@@ -300,26 +310,27 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 		$res = $this->gIldb->query($sql);
 		$relevant_orgus = array();
 
-		while($rec = $this->gIldb->fetchAssoc($res)) {
+		while ($rec = $this->gIldb->fetchAssoc($res)) {
 			$perm_check = unserialize($rec['ops_id']);
 
-			if(in_array($rec["chk"], $perm_check)) {
+			if (in_array($rec["chk"], $perm_check)) {
 				$relevant_orgus[$rec['obj_id']] = $rec['title'];
 			}
 		}
 		return array_unique($relevant_orgus);
 	}
 
-	protected function getRelevantUsers() {
+	protected function getRelevantUsers()
+	{
 		require_once './Services/AccessControl/classes/class.ilObjRole.php';
 		$ignore_roles_ids = array();
 		foreach ($this->ignore_roles as $role_title) {
-			$ignore_roles_ids = array_merge($ignore_roles_ids,	ilObjRole::_getIdsForTitle($role_title,'role'));
+			$ignore_roles_ids = array_merge($ignore_roles_ids, ilObjRole::_getIdsForTitle($role_title, 'role'));
 		}
 		$sql = 	"SELECT huo.usr_id, rpa.rol_id, rpa.ops_id, rop.ops_id AS chk\n"
 				."	FROM rbac_pa rpa\n"
 				."	JOIN rbac_operations rop\n"
-				."		ON rop.operation = ".$this->gIldb->quote(self::OP_TUTOR_IN_ORGU,"text") ."\n"
+				."		ON rop.operation = ".$this->gIldb->quote(self::OP_TUTOR_IN_ORGU, "text") ."\n"
 				."			AND LOCATE( CONCAT( ':', rop.ops_id, ';' ) , rpa.ops_id ) >0\n"
 				."	JOIN object_reference ore\n"
 				."		ON ore.ref_id = rpa.ref_id\n"
@@ -327,7 +338,7 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 				."		ON rua.rol_id = rpa.rol_id\n"
 				."	LEFT JOIN hist_userrole hur\n"
 				."		ON hur.usr_id = rua.usr_id\n"
-				."			AND ".$this->gIldb->in('hur.rol_id',$ignore_roles_ids,false,'integer'). "\n"
+				."			AND ".$this->gIldb->in('hur.rol_id', $ignore_roles_ids, false, 'integer'). "\n"
 				."			AND hur.hist_historic = 0\n"
 				."			AND hur.action = 1\n"
 				."	JOIN hist_userorgu huo\n"
@@ -335,19 +346,16 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 				."			AND huo.usr_id = rua.usr_id\n"
 				."			AND ore.obj_id = huo.orgu_id\n"
 				."	WHERE hur.hist_historic IS NULL\n"
-				."		AND ".$this->gIldb->in("huo.usr_id", $this->user_utils->getEmployees(), false, "integer") ."\n";
-		$this->getFilterSettings();
-
-
-		$sql .= $this->deliverQuery();
+				."		AND ".$this->gIldb->in("huo.usr_id", $this->user_utils->getEmployees(), false, "integer") ."\n"
+				.$this->orguCondition();
 
 
 		$res = $this->gIldb->query($sql);
 		$relevant_users = array();
 
-		while($rec = $this->gIldb->fetchAssoc($res)) {
+		while ($rec = $this->gIldb->fetchAssoc($res)) {
 			$perm_check = unserialize($rec['ops_id']);
-			if(in_array($rec["chk"], $perm_check)) {
+			if (in_array($rec["chk"], $perm_check)) {
 				$relevant_users[] = $rec['usr_id'];
 			}
 		}
@@ -355,59 +363,59 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	}
 
 
-	public function getRelevantParameters() {
+	public function getRelevantParameters()
+	{
 		return $this->relevant_parameters;
 	}
 
-	protected function createTemplateFile() {
+	protected function createTemplateFile()
+	{
 		$norms = $this->getNorms();
 		$str = fopen("Services/GEV/Reports/templates/default/"
-			."tpl.gev_trainer_workload_row.html","w"); 
+			."tpl.gev_trainer_workload_row.html", "w");
 
 		$tpl = '<tr class="{CSS_ROW}"><td></td>'."\n".'<td class = "bordered_right" >{VAL_FULLNAME}';
-		foreach($this->meta_cats as $meta_category => $categories) {
+		foreach ($this->meta_cats as $meta_category => $categories) {
 			foreach ($categories as $category) {
 				$tpl .= "</td>\n".'<td align = "right">{VAL_'.strtoupper($category).'}';
 			}
-			if(count($categories)>1) {
+			if (count($categories)>1) {
 				$class = "bold_content";
-				if(!isset($norms[$meta_category])) {
+				if (!isset($norms[$meta_category])) {
 					$class .= " bordered_right";
 				}
 				$tpl .= "</td>\n".'<td align = "right" class = "'.$class.'">{VAL_'.strtoupper($meta_category).'_SUM}';
 			}
-			if(isset($norms[$meta_category])) {
+			if (isset($norms[$meta_category])) {
 				$tpl.= "</td>\n".'<td align = "right" class = "bordered_right bold_content">{VAL_'.strtoupper($meta_category).'_WORKLOAD}';
 			}
-			
 		}
 		$tpl.= "</td>";
 		$tpl .= "\n</tr>";
-		fwrite($str,$tpl);
+		fwrite($str, $tpl);
 		fclose($str);
 
 		$str = fopen("Services/GEV/Reports/templates/default/"
-			."tpl.gev_trainer_workload_sum_row.html","w"); 
+			."tpl.gev_trainer_workload_sum_row.html", "w");
 		$tpl = '<tr class="{CSS_ROW}"><td>';
-		foreach($this->workload_meta as $meta_category => $categories) {
+		foreach ($this->workload_meta as $meta_category => $categories) {
 			foreach ($categories as $category) {
 				$tpl .= "</td>\n".'<td align = "right">{VAL_'.strtoupper($category).'}';
 			}
-			if(count($categories)>1) {
+			if (count($categories)>1) {
 				$class = "bold_content";
-				if(!isset($norms[$meta_category])) {
+				if (!isset($norms[$meta_category])) {
 					$class .= " bordered_right";
 				}
 				$tpl .= "</td>\n".'<td align = "right" class = "'.$class.'">{VAL_'.strtoupper($meta_category).'_SUM}';
 			}
-			if(isset($norms[$meta_category])) {
+			if (isset($norms[$meta_category])) {
 				$tpl.= "</td>\n".'<td align = "right" class = "bordered_right bold_content">{VAL_'.strtoupper($meta_category).'_WORKLOAD}';
 			}
-			
 		}
 		$tpl.= "</td>";
 		$tpl .= "\n</tr>";
-		fwrite($str,$tpl);
+		fwrite($str, $tpl);
 		fclose($str);
 	}
 
@@ -416,8 +424,9 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	 *
 	 * @return 	bool
 	 */
-	public function getRecursiveSelection() {
-		return $this->set[0];
+	public function getRecursiveSelection()
+	{
+		return $this->set['recursive'];
 	}
 
 	/**
@@ -425,8 +434,9 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	 *
 	 * @return 	int[]	$top_orgu_ids
 	 */
-	public function getSelection() {
-		$top_orgu_ids = $this->set[1]['org_unit'];
+	public function getSelection()
+	{
+		$top_orgu_ids = $this->set['org_unit'];
 		return $top_orgu_ids;
 	}
 
@@ -436,10 +446,11 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	 * @return	int[]	$orgu_ids
 	 * @param	bool	$force_recursive
 	 */
-	public function getSelectionAndRecursive($force_recursive = false) {
+	public function getSelectionAndRecursive($force_recursive = false)
+	{
 		$orgu_ids = $this->getSelection();
-		if(count($orgu_ids)>0 && ($this->getRecursiveSelection() || $force_recursive)) {
-			return array_unique(array_merge($this->getChildrenOf($orgu_ids),$orgu_ids));
+		if (count($orgu_ids)>0 && ($this->getRecursiveSelection() || $force_recursive)) {
+			return array_unique(array_merge($this->getChildrenOf($orgu_ids), $orgu_ids));
 		}
 		return $orgu_ids;
 	}
@@ -450,10 +461,11 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	 * @return	int[]	$aux  all children of
 	 * @param	int[]	$orgu_ids
 	 */
-	protected function getChildrenOf($orgu_ids) {
+	protected function getChildrenOf($orgu_ids)
+	{
 		require_once 'Services/GEV/Utils/classes/class.gevOrgUnitUtils.php';
 		$aux = array();
-		foreach($orgu_ids as $orgu_id) {
+		foreach ($orgu_ids as $orgu_id) {
 			$ref_id = gevObjectUtils::getRefId($orgu_id);
 			foreach (gevOrgUnitUtils::getAllChildren(array($ref_id)) as $child) {
 				$aux[] = (int)$child["obj_id"];
@@ -467,27 +479,18 @@ class ilObjReportTrainerWorkload extends ilObjReportBase {
 	 *
 	 * @return	string	$sql
 	 */
-	public function deliverQuery() {
-		if($this->set[1]['org_unit']) {
+	public function orguCondition()
+	{
+		if ($this->set['org_unit']) {
 			$return = "";
 			$orgus = $this->getRecursiveSelection() ? $this->getSelectionAndRecursive() : $this->getSelection();
 
-			if(count($orgus) > 0) {
-				$return .= " AND " .$this->gIldb->in("huo.orgu_id", $orgus, false, 'integer');
+			if (count($orgus) > 0) {
+				$return .= "	AND " .$this->gIldb->in("huo.orgu_id", $orgus, false, 'integer');
 			}
-			$filter_options = array_values($this->set[1]['org_unit']);
-
-			if($this->getRecursiveSelection()) {
-				$filter_options = array_unique(array_merge($filter_options,$this->getChildrenOf($filter_options)));
-				$filter_options = array_map(function($var) { return (int)$var; }, $filter_options);
-				$return = " AND " .$this->gIldb->in("huo.orgu_id", $filter_options, false, 'integer');
-			}
-
 			return $return;
 		} else {
 			return "";
 		}
-
-
 	}
 }
