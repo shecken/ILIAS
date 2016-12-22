@@ -182,7 +182,8 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 				)
 				/* END BLOCK - BOOKING OVER */
 
-			)->map
+			)
+		)->map
 				(
 					function($date_period_predicate, $start, $end, $filter_topics, $training_type, $status, $waiting_list, $booking_over)
 					{
@@ -207,8 +208,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 							 ,"booking_over" => $tf->lst($tf->string())
 						)
 					)
-				)
-		);
+				);
 	}
 
 	public function buildQueryStatement() {
@@ -229,56 +229,53 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 		if($this->filter_settings) {
 			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
 			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
-			$dt_query = $to_sql->interpret($settings[0]['period_pred']);
+			$dt_query = $to_sql->interpret($settings['period_pred']);
 			$where .= "    AND " .$dt_query;
-			$having = " HAVING TRUE ";
-
-			if(!empty($settings[0]['filter_topics'])) {
+			$having = "";
+			if(!empty($settings['filter_topics'])) {
 				$select .= " JOIN (SELECT topic_set_id FROM hist_topicset2topic JOIN hist_topics\n"
 						  ."         USING (topic_id)\n"
-						  ."         WHERE ".$db->in('topic_title', $settings[0]['filter_topics'], false, 'text') ."\n"
+						  ."         WHERE ".$db->in('topic_title', $settings['filter_topics'], false, 'text') ."\n"
 						  ."         GROUP BY topic_set_id) AS crs_topics\n"
 						  ." ON crs.topic_set = crs_topics.topic_set_id\n";
 
 				$where .= "     AND crs.topic_set != -1";
 			}
 
-			if(!empty($settings[0]['training_type'])) {
-				$where .= "    AND " .$db->in("crs.type", $settings[0]['training_type'], false, "text");
+			if(!empty($settings['training_type'])) {
+				$where .= "    AND " .$db->in("crs.type", $settings['training_type'], false, "text");
 			}
 
-			if(!empty($settings['is_local'])) {
-				if($settings['is_local'] === '1') {
-					$where .= "    AND " .$db->in("crs.template_obj_id", array_unique($this->getSubtreeCourseTemplates()),false,'integer');
-				}
+			if(!empty($settings['status'][0]) && !empty($settings['status'][1])) {
+				$having .= "    AND (" .$settings['status'][0]
+						.  "    OR " .$settings['status'][1] .")";
+			} else if (!empty($settings['status'][0])) {
+				$having .= "    AND (" .$settings['status'][0] .")";
+			} else if (!empty($settings['status'][1])) {
+				$having .= "    AND (" .$settings['status'][1] .")";
 			}
 
-			if(!empty($settings[0]['status'][0]) && !empty($settings[0]['status'][1])) {
-				$having .= "    AND (" .$settings[0]['status'][0]
-						.  "    OR " .$settings[0]['status'][1] .")";
-			} else if (!empty($settings[0]['status'][0])) {
-				$having .= "    AND (" .$settings[0]['status'][0] .")";
-			} else if (!empty($settings[0]['status'][1])) {
-				$having .= "    AND (" .$settings[0]['status'][1] .")";
+			if(!empty($settings['waiting_list'])) {
+				$where .= "    AND (" .implode(' OR ',$settings['waiting_list']).")";
 			}
 
-			if(!empty($settings[0]['waiting_list'])) {
-				$where .= "    AND (" .$settings[0]['waiting_list'][0] .")";
+			if(!empty($settings['booking_over'])) {
+				$having .= "    AND (" .$settings['booking_over'][0] .")";
 			}
-
-			if(!empty($settings[0]['booking_over'])) {
-				$having .= "    AND (" .$settings[0]['booking_over'][0] .")";
-			}
+		} else {
+			$where .= "     AND ((`crs`.`begin_date` < '" .date("Y") ."-12-31' ) OR (`crs`.`begin_date` = '".date("Y") ."-12-31' ) ) AND (('".date("Y") ."-01-01' < `crs`.`begin_date` ) OR ('" .date("Y") ."-01-01' = `crs`.`begin_date` ) )\n";
 		}
+
 		if((string)$this->settings['is_local'] === "1") {
-			$where .= "     AND " .$db->in("crs.template_obj_id", array_unique($this->getSubtreeCourseTemplates()), false, "integer"); 
+			$where .= "     AND " .$db->in("crs.template_obj_id", array_unique($this->getSubtreeCourseTemplates()), false, "integer");
 		}
-
 		$group = " GROUP BY ('crs.crs_id') ";
-		$order = " ORDER BY `tpl_title` ASC, `title` ASC, `begin_date` ASC";
 		$order = $this->queryOrder();
+		if($having !== "") {
+			$having = " HAVING TRUE\n"
+					 .$having;
+		}
 		$query = $select . $where . $group .$having .$order;
-
 		return $query;
 	}
 

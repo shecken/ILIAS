@@ -44,7 +44,9 @@ class ilObjReportTrDemandAdvGUI extends ilObjReportBaseGUI {
 	}
 
 	protected function render() {
-		$res = $this->renderFilter()."<br />";
+		$this->gTpl->setTitle(null);
+		$res = $this->title->render();
+		$res .= $this->renderFilter()."<br />";
 		$res .= $this->renderTable();
 		return $res;
 	}
