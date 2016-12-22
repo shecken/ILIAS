@@ -94,6 +94,7 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 				$f->text
 				(
 					$txt("lastname")
+					,""
 				)
 			)
 		)->map
