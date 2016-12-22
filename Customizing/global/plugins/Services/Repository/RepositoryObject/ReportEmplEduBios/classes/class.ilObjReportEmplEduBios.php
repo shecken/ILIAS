@@ -491,34 +491,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		return "tpl.gev_employee_edu_bios_row.html";
 	}
 
-	protected function getAllOrgusForUsersJoin()
-	{
-		$query = 	"JOIN ("
-					."	SELECT usr_id, GROUP_CONCAT(DISTINCT orgu_title SEPARATOR ', ') as org_unit".PHP_EOL
-					."		, GROUP_CONCAT(DISTINCT org_unit_above1 SEPARATOR ';;') as org_unit_above1".PHP_EOL
-					."		, GROUP_CONCAT(DISTINCT org_unit_above1 SEPARATOR ';;') as org_unit_above2".PHP_EOL
-					."	FROM hist_userorgu".PHP_EOL
-					."	WHERE ".$this->gIldb->in("usr_id", array_intersect($this->allowed_user_ids, $this->getUsersFilteredByOrguFilter()), false, "integer").PHP_EOL
-					."		AND action >= 0 AND hist_historic = 0".PHP_EOL
-					."	GROUP BY usr_id".PHP_EOL
-					.") as orgu_all ON orgu_all.usr_id = usr.user_id ".PHP_EOL;
-		die($query);
-		return $query;
-	}
-
-	protected function getUsersFilteredByOrguFilter()
-	{
-		$orgu_filter = "SELECT usr_id FROM hist_userorgu ".PHP_EOL
-						."		WHERE `action` >= 0 AND hist_historic = 0 ".PHP_EOL
-						."		AND ".$this->orgu_filter->deliverQuery().PHP_EOL
-						."		GROUP BY usr_id ".PHP_EOL;
-		$res = $this->gIldb->query($orgu_filter);
-		$return = array();
-		while ($rec = $this->gIldb->fetchAssoc($res)) {
-			$return[] = $rec['usr_id'];
-		}
-		return $return;
-	}
 
 	public function getRelevantParameters()
 	{
