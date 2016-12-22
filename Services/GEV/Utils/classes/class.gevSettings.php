@@ -808,7 +808,7 @@ class gevSettings
 	const CRS_NA_QUALI_REF_ID = "crs_na_quali_ref_id";
 	public function setNAQualiCourseRefId($ref_id)
 	{
-		$this->settings->set(self::CRS_NA_QUALI_REF_ID, $obj_id);
+		$this->settings->set(self::CRS_NA_QUALI_REF_ID, $ref_id);
 	}
 
 	public function getNAQualiCourseRefId()
