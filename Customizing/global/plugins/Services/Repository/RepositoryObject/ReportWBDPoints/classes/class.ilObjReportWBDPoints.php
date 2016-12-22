@@ -130,9 +130,10 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 				  ."     ON usrcrs.crs_id = crs.crs_id\n"
 				  ."         AND crs.hist_historic = 0\n"
 				  ." WHERE usrcrs.hist_historic = 0\n"
-				  ."     AND usrcrs.wbd_booking_id IS NOT NULL\n"
+				  ."     AND usrcrs.wbd_booking_id != '-empty-'\n"
 				  ."     AND usr.hist_historic = 0\n"
-				  ."     AND crs.hist_historic = 0\n";
+				  ."     AND crs.hist_historic = 0\n"
+				  ."     AND usrcrs.hist_historic = 0\n";
 
 		$filter = $this->filter();
 		if($this->filter_settings) {
@@ -149,7 +150,7 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 				$query .= "    AND " .$db->in('usr.wbd_type', $settings['wbd_types'], false, "text");
 			}
 		} else {
-			$query .= "     AND ((`crs`.`begin_date` < '" .date("Y") ."-12-31' ) OR (`crs`.`begin_date` = '".date("Y") ."-12-31' ) ) AND (('".date("Y") ."-01-01' < `crs`.`begin_date` ) OR ('" .date("Y") ."-01-01' = `crs`.`begin_date` ) )\n";
+			$query .= "     AND ((`usrcrs`.`begin_date` < '" .date("Y") ."-12-31' ) OR (`usrcrs`.`begin_date` = '".date("Y") ."-12-31' ) ) AND (('".date("Y") ."-01-01' < `usrcrs`.`begin_date` ) OR ('" .date("Y") ."-01-01' = `usrcrs`.`begin_date` ) )\n";
 		}
 		$query .= $this->queryOrder();
 
