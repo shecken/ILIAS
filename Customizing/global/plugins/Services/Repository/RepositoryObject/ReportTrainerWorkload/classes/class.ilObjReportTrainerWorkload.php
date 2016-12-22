@@ -230,7 +230,6 @@ class ilObjReportTrainerWorkload extends ilObjReportBase
 		}
 
 		$norms = $this->getNorms();
-		var_dump($this->getNorms());
 		$count_rows = 0;
 		$this->sum_row = array();
 		foreach ($this->meta_cats as $meta_category => $categories) {
@@ -257,7 +256,6 @@ class ilObjReportTrainerWorkload extends ilObjReportBase
 					$this->sum_row[$meta_category.'_sum'] += $trainer_data[$meta_category.'_sum'];
 					if (isset($norms[$meta_category])) {
 						$trainer_data[$meta_category.'_workload'] = 100*$trainer_data[$meta_category.'_sum']/($norms[$meta_category]*$period_days_factor);
-						var_dump($period_days_factor);
 						$this->sum_row[$meta_category.'_workload'] += $trainer_data[$meta_category.'_workload'];
 					}
 				} else {
