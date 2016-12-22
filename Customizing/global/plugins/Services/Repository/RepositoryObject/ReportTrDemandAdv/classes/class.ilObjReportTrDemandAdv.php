@@ -33,6 +33,12 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 								);
 	}
 
+	protected function getTopics() {
+		require_once 'Services/GEV/Utils/classes/class.gevAMDUtils.php';
+		require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
+		return	gevAMDUtils::getInstance()->getOptions(gevSettings::CRS_AMD_TOPIC);
+	}
+
 	protected function buildTable($table) {
 		$table	->column('tpl_title', $this->plugin->txt('tpl_title'), true)
 				->column('title', $this->plugin->txt('crs_title'), true)
@@ -75,87 +81,215 @@ class ilObjReportTrDemandAdv extends ilObjReportBase {
 				->on(' usrcrs.crs_id = crs.crs_id AND usrcrs.hist_historic = 0 ')
 			->left_join('hist_user usr')
 				->on('usr.user_id = usrcrs.usr_id '
-					.' AND usr.hist_historic = 0 ');
-		$this->crs_topics_filter->addToQuery($query)
-			->group_by('crs.crs_id')
+					.' AND usr.hist_historic = 0 ')
 			->compile();
 		return $query;
 	}
 
 	protected function buildFilter($filter) {
-		$local_condition = $this->settings['is_local'] === "1"
-			? $this->gIldb->in('crs.template_obj_id',array_unique($this->getSubtreeCourseTemplates()),false,'integer') 
-			: 'TRUE';
+		return null;
+	}
 
-		$this->crs_topics_filter = new courseTopicsFilter('crs_topics','crs.topic_set');
-		$this->crs_topics_filter->addToFilter($filter);
-		$filter
-			->dateperiod( 	  "period"
-							, $this->plugin->txt("period")
-							, $this->plugin->txt("until")
-							, "crs.begin_date"
-							, "crs.begin_date"
-							, date("Y")."-01-01"
-							, date("Y")."-12-31"
-							, false
+	public function filter() {
+		$db = $this->gIldb;
+		$pf = new \CaT\Filter\PredicateFactory();
+		$tf = new \CaT\Filter\TypeFactory();
+		$f = new \CaT\Filter\FilterFactory($pf, $tf);
+		$txt = function($id) { return $this->plugin->txt($id); };
+
+		return
+		$f->sequence
+		(
+			$f->sequence
+			(
+
+				/* BEGIN BLOCK - PERIOD */
+				$f->dateperiod
+				(
+					$txt("period")
+					, ""
+				)->map
+					(
+						function($start,$end) use ($f)
+						{
+							$pc = $f->dateperiod_overlaps_predicate
+							(
+								"crs.begin_date"
+								,"crs.begin_date"
+							);
+							return array ("date_period_predicate" => $pc($start,$end)
+										 ,"start" => $start
+										 ,"end" => $end);
+						},
+						$tf->dict
+						(
+							array
+							(
+								"date_period_predicate" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
+								,"start" => $tf->cls("DateTime")
+								,"end" => $tf->cls("DateTime")
 							)
-			->multiselect_custom( 'status' 
-								, $this->plugin->txt("status")
-								, array('min_participants > bookings' => $this->plugin->txt('cancel_danger'),
-										'min_participants <= bookings' => $this->plugin->txt('no_cancel_danger'))
-								, array()
-								, ' OR min_participants IS NULL '
-								, 200
-								, 160
-								, "text"
-								, "asc"
-								, true
-								)
-			->multiselect_custom( 'waiting_list' 
-								, $this->plugin->txt('waiting_list_filter')
-								, array("crs.waitinglist_active = 'Ja'" => $this->plugin->txt('waiting_list'),
-									"crs.waitinglist_active = 'Nein'" => $this->plugin->txt('no_waiting_list'))
-								, array()
-								, ' '
-								, 200
-								, 160
-								, "text"
-								)
-			->multiselect_custom( 'booking_over'
-								, $this->plugin->txt('booking_over')
-								, array($this->gIldb->quote(date('Y-m-d'),'text')." > booking_dl " 
-											=> $this->plugin->txt('book_dl_over'),
-										$this->gIldb->quote(date('Y-m-d'),'text')." <= booking_dl " 
-											=> $this->plugin->txt('book_dl_not_over'))
-								, array()
-								, ' '
-								, 200
-								, 160
-								, "text"
-								, "asc"
-								,	true
-								)
-			->multiselect(	   "training_type"
-							 , $this->plugin->txt("training_type")
-							 , 'crs.type'
-							 , array('Webinar','Präsenztraining','Virtuelles Training')
-							 , array()
-							 , ""
-							 , 200
-							 , 160					
-							)
-			->static_condition('crs.begin_date >= '.$this->gIldb->quote(date('Y-m-d'),'text'))
-			->static_condition("(crs.is_cancelled != 'Ja' OR crs.is_cancelled IS NULL)")
-			->static_condition('crs.hist_historic = 0')
-			->static_condition("crs.is_template = 'Nein'")
-			->static_condition("crs.begin_date != '0000-00-00'")
-			->static_condition($this->gIldb->in('crs.type',array('Webinar','Präsenztraining','Virtuelles Training'),false,'text'))
-			->static_condition($local_condition)
-			->static_condition('tpl.hist_historic = 0')
-			->static_condition('tpl.is_template = '.$this->gIldb->quote('Ja','text'))
-			->action($this->filter_action)
-			->compile();
-		return $filter;
+						)
+					),
+					/* END BLOCK - PERIOD */
+
+
+				/* BEGIN BLOCK - FILTER TOPICS */
+				$f->multiselectsearch
+				(
+					$txt("filter_topics")
+					, ""
+					, $this->getTopics()
+				),
+				/* END BLOCK - FILTER TOPICS */
+
+
+				/* BEGIN BLOCK - TRAINING TYPE */
+				$f->multiselectsearch
+				(
+					$txt("training_type")
+					, ""
+					, array('Webinar' => 'Webinar','Präsenztraining' => 'Präsenztraining','Virtuelles Training' => 'Virtuelles Training')
+				),
+				/* END BLOCK - TRAINING TYPE */
+
+
+				/* BEGIN BLOCK - STATUS */
+				$f->multiselectsearch
+				(
+					$txt("status")
+					, ""
+					, array('min_participants > bookings' => $txt('cancel_danger'), 'min_participants <= bookings' => $txt('no_cancel_danger'))
+				),
+				/* END BLOCK - STATUS */
+
+				/* BEGIN BLOCK - WAITING LIST */
+				$f->multiselectsearch
+				(
+					$txt("waiting_list")
+					, ""
+					, array("crs.waitinglist_active = 'Ja'" => $txt('waiting_list'), "crs.waitinglist_active = 'Nein'" => $txt('no_waiting_list'))
+				),
+				/* END BLOCK - WAITING LIST */
+
+				/* BEGIN BLOCK - BOOKING OVER */
+				$f->multiselectsearch
+				(
+					$txt("booking_over")
+					, ""
+					, array($db->quote(date('Y-m-d'),'text')." > booking_dl " => $txt('book_dl_over'),
+							$db->quote(date('Y-m-d'),'text')." <= booking_dl " => $txt('book_dl_not_over'))
+				)
+				/* END BLOCK - BOOKING OVER */
+
+			)
+		)->map
+				(
+					function($date_period_predicate, $start, $end, $filter_topics, $training_type, $status, $waiting_list, $booking_over)
+					{
+						return array("period_pred" => $date_period_predicate
+									,"start" => $start
+									,"end" => $end
+									,"filter_topics" => $filter_topics
+									,"training_type" => $training_type
+									,"status" => $status
+									,"waiting_list" => $waiting_list
+									,"booking_over" => $booking_over);
+					},
+					$tf->dict
+					(
+						array("period_pred" => $tf->cls("CaT\\Filter\\Predicates\\Predicate")
+							 ,"start" => $tf->cls("DateTime")
+							 ,"end" => $tf->cls("DateTime")
+							 ,"filter_topics" => $tf->lst($tf->string())
+							 ,"training_type" => $tf->lst($tf->string())
+							 ,"status" => $tf->lst($tf->string())
+							 ,"waiting_list" => $tf->lst($tf->string())
+							 ,"booking_over" => $tf->lst($tf->string())
+						)
+					)
+				);
+	}
+
+	public function buildQueryStatement() {
+		$db = $this->gIldb;
+		$query_object = $this->buildQuery(catReportQuery::create());
+		$select = $query_object->sql();
+
+		$where = " WHERE  (crs.begin_date >= " .$db->quote(date('Y-m-d'),"text") .")\n"
+				."     AND (crs.is_cancelled != 'Ja' OR crs.is_cancelled IS NULL)\n"
+				."     AND crs.hist_historic = 0\n"
+				."     AND crs.is_template = 'Nein'\n"
+				."     AND crs.begin_date != '0000-00-00'\n"
+				."     AND crs.type IN ('Webinar','Präsenztraining','Virtuelles Training')\n"
+				."     AND tpl.hist_historic = 0\n"
+				."     AND tpl.is_template = 'Ja'\n";
+
+		$filter = $this->filter();
+		if($this->filter_settings) {
+			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
+			$dt_query = $to_sql->interpret($settings['period_pred']);
+			$where .= "    AND " .$dt_query;
+			$having = "";
+			if(!empty($settings['filter_topics'])) {
+				$select .= " JOIN (SELECT topic_set_id FROM hist_topicset2topic JOIN hist_topics\n"
+						  ."         USING (topic_id)\n"
+						  ."         WHERE ".$db->in('topic_title', $settings['filter_topics'], false, 'text') ."\n"
+						  ."         GROUP BY topic_set_id) AS crs_topics\n"
+						  ." ON crs.topic_set = crs_topics.topic_set_id\n";
+
+				$where .= "     AND crs.topic_set != -1";
+			}
+
+			if(!empty($settings['training_type'])) {
+				$where .= "    AND " .$db->in("crs.type", $settings['training_type'], false, "text");
+			}
+
+			if(!empty($settings['status'][0]) && !empty($settings['status'][1])) {
+				$having .= "    AND (" .$settings['status'][0]
+						.  "    OR " .$settings['status'][1] .")";
+			} else if (!empty($settings['status'][0])) {
+				$having .= "    AND (" .$settings['status'][0] .")";
+			} else if (!empty($settings['status'][1])) {
+				$having .= "    AND (" .$settings['status'][1] .")";
+			}
+
+			if(!empty($settings['waiting_list'])) {
+				$where .= "    AND (" .implode(' OR ',$settings['waiting_list']).")";
+			}
+
+			if(!empty($settings['booking_over'])) {
+				$having .= "    AND (" .$settings['booking_over'][0] .")";
+			}
+		} else {
+			$where .= "     AND ((`crs`.`begin_date` < '" .date("Y") ."-12-31' ) OR (`crs`.`begin_date` = '".date("Y") ."-12-31' ) ) AND (('".date("Y") ."-01-01' < `crs`.`begin_date` ) OR ('" .date("Y") ."-01-01' = `crs`.`begin_date` ) )\n";
+		}
+
+		if((string)$this->settings['is_local'] === "1") {
+			$where .= "     AND " .$db->in("crs.template_obj_id", array_unique($this->getSubtreeCourseTemplates()), false, "integer");
+		}
+		$group = " GROUP BY ('crs.crs_id') ";
+		$order = $this->queryOrder();
+		if($having !== "") {
+			$having = " HAVING TRUE\n"
+					 .$having;
+		}
+		$query = $select . $where . $group .$having .$order;
+		return $query;
+	}
+
+	protected function fetchData(callable $callback) {
+		$db = $this->gIldb;
+
+		$query = $this->buildQueryStatement();
+		$res = $db->query($query);
+		$data = [];
+
+		while($rec = $db->fetchAssoc($res)) {
+			$data[] = call_user_func($callback, $rec);
+		}
+		return $data;
 	}
 
 	public function getRelevantParameters() {
