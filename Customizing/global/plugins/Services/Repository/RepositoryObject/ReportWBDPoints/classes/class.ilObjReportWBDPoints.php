@@ -89,20 +89,14 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 					$txt("filter_wbd_type")
 					, ""
 					, $this->getDistinctValues('wbd_type', 'hist_user')
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->string())
-					),
+				),
+
 				$f->text
 				(
 					$txt("lastname")
-				)->map
-					(
-						function($name) { return $name; }
-						,$tf->string()
-					)
-			)->map
+				)
+			)
+		)->map
 				(
 					function($date_period_predicate, $start, $end, $wbd_types, $name)
 					{
@@ -120,11 +114,10 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 							 ,"wbd_types" => $tf->lst($tf->string())
 							 ,"name" => $tf->string())
 					)
-				)
-		);
+				);
 	}
 
-	protected function fetchData(callable $callback) {
+	public function buildQueryStatement() {
 		$db = $this->gIldb;
 		$query =   "SELECT DISTINCT `usr`.`firstname` ,`usr`.`lastname` ,`usr`.`birthday` ,`usr`.`bwv_id` ,`usr`.`wbd_type` ,`crs`.`title`\n"
 				  .", `crs`.`type` ,`usrcrs`.`begin_date` ,`usrcrs`.`end_date` ,`usrcrs`.`credit_points` ,`usrcrs`.`wbd_booking_id`\n"
@@ -137,27 +130,37 @@ class ilObjReportWBDPoints extends ilObjReportBase {
 				  ."     ON usrcrs.crs_id = crs.crs_id\n"
 				  ."         AND crs.hist_historic = 0\n"
 				  ." WHERE usrcrs.hist_historic = 0\n"
-				  ."     AND usrcrs.wbd_booking_id IS NOT NULL\n";
+				  ."     AND usrcrs.wbd_booking_id IS NOT NULL\n"
+				  ."     AND usr.hist_historic = 0\n"
+				  ."     AND crs.hist_historic = 0\n";
 
 		$filter = $this->filter();
 		if($this->filter_settings) {
 			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
 			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
-			$dt_query = $to_sql->interpret($settings[0]["period_pred"]);
+			$dt_query = $to_sql->interpret($settings["period_pred"]);
 			$query .= "     AND ".$dt_query;
 
-			if(!empty($settings[0]['name'])) {
-				$query .= "    AND " .$db->like('usr.lastname', 'text', $settings[0]['name']);
+			if(!empty($settings['name'])) {
+				$query .= "    AND " .$db->like('usr.lastname', 'text', $settings['name']);
 			}
 
-			if(!empty($settings[0]['wbd_types'])) {
-				$query .= "    AND " .$db->in('usr.wbd_type', $settings[0]['wbd_types'], false, "text");
+			if(!empty($settings['wbd_types'])) {
+				$query .= "    AND " .$db->in('usr.wbd_type', $settings['wbd_types'], false, "text");
 			}
+		} else {
+			$query .= "     AND ((`crs`.`begin_date` < '" .date("Y") ."-12-31' ) OR (`crs`.`begin_date` = '".date("Y") ."-12-31' ) ) AND (('".date("Y") ."-01-01' < `crs`.`begin_date` ) OR ('" .date("Y") ."-01-01' = `crs`.`begin_date` ) )\n";
 		}
 		$query .= $this->queryOrder();
+
+		return $query;
+	}
+
+	protected function fetchData(callable $callback) {
+		$db = $this->gIldb;
+		$query = $this->buildQueryStatement();
 		$res = $this->gIldb->query($query);
 		$data = array();
-
 		while($rec = $this->gIldb->fetchAssoc($res)) {
 			$data[] = call_user_func($callback,$rec);
 		}

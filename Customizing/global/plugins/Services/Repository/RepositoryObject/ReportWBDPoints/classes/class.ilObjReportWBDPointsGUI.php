@@ -35,7 +35,9 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
 	}
 
 	protected function render() {
-		$res = $this->renderFilter();
+		$this->gTpl->setTitle(null);
+		$res = $this->title->render();
+		$res .= $this->renderFilter();
 		$res .= $this->renderTable();
 
 		return $res;
@@ -48,9 +50,9 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
 						( new \CaT\Filter\FilterGUIFactory
 						, new \CaT\Filter\TypeFactory
 						);
-
+		global $ilCtrl;
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
-		$filter_flat_view = new catFilterFlatViewGUI($this, $filter, $display, "showContent");
+		$filter_flat_view = new catFilterFlatViewGUI($this, $filter, $display, $ilCtrl->getCmd());
 
 		return $filter_flat_view->render($this->filter_settings);
 	}
@@ -66,5 +68,18 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI {
 			$this->object->addRelevantParameter('filter', base64_encode(serialize($this->filter_settings)));
 			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
 		}
+	}
+
+	public function renderQueryView()
+	{
+		include_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
+		$this->object->prepareReport();
+		$content = $this->renderFilter('query_view');
+		$form = new ilNonEditableValueGUI($this->gLng->txt("report_query_text"));
+		$form->setValue($this->object->buildQueryStatement());
+		$settings_form = new ilPropertyFormGUI();
+		$settings_form->addItem($form);
+		$content .= $settings_form->getHTML();
+		$this->gTpl->setContent($content);
 	}
 }
