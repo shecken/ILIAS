@@ -207,7 +207,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'		, GROUP_CONCAT(DISTINCT org_unit_above1 SEPARATOR \';;\') as org_unit_above1'.PHP_EOL
 			.'		, GROUP_CONCAT(DISTINCT org_unit_above1 SEPARATOR \';;\') as org_unit_above2'.PHP_EOL
 			.'	FROM hist_userorgu'.PHP_EOL
-			.'	WHERE '.$this->gIldb->in('usr_id', $this->relevant_users, false, 'integer').PHP_EOL
+			.'	WHERE '.$this->gIldb->in("usr_id", array_intersect($this->visibleUsers(), $this->getRelevantUsersByOrguSelection()), false, "integer").PHP_EOL
 			.'		AND action >= 0 AND hist_historic = 0'.PHP_EOL
 			.'	GROUP BY usr_id'.PHP_EOL;
 	}
@@ -502,6 +502,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 					."		AND action >= 0 AND hist_historic = 0".PHP_EOL
 					."	GROUP BY usr_id".PHP_EOL
 					.") as orgu_all ON orgu_all.usr_id = usr.user_id ".PHP_EOL;
+		die($query);
 		return $query;
 	}
 
