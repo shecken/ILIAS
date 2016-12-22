@@ -155,7 +155,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		} else {
 			$cancel_date = ilDatePresentation::formatDate($a_set["cancel_date"]);
 			$show_cancel_date = ilDateTime::_before($now, $a_set["cancel_date"]);
-			;
 		}
 
 		$show_absolute_cancel_date = true;
@@ -164,7 +163,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		} else {
 			$absolute_cancel_date = ilDatePresentation::formatDate($a_set["absolute_cancel_date"]);
 			$show_absolute_cancel_date = ilDateTime::_before($now, $a_set["absolute_cancel_date"]);
-			;
 		}
 
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
