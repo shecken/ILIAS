@@ -40,7 +40,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->setFormAction($ilCtrl->getFormAction($a_parent_obj, "view"));
 
 		$na_quali_ref_id = gevSettings::getInstance()->getNAQualiCourseRefId();
-		if ($ilAccess->checkAccess("visible", "", $na_quali_ref_id)) {
+		if ($na_quali_ref_id !== null && $ilAccess->checkAccess("visible", "", $na_quali_ref_id)) {
 			$link = "Link";
 			$this->setSpecialButton($link, $this->gLng->txt("jill_na_link_label"));
 		}
