@@ -9,7 +9,6 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * @ilCtrl_Calls ilObjReportTrainerOpTrainerOrguGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportTrainerOpTrainerOrguGUI extends ilObjReportBaseGUI {
-	const CMD_SHOW_CONTENT = "showContent";
 
 	public function getType() {
 		return 'xoto';
@@ -39,33 +38,42 @@ class ilObjReportTrainerOpTrainerOrguGUI extends ilObjReportBaseGUI {
 			$this->filter_settings = unserialize(base64_decode($_GET['filter']));
 		}
 		if($this->filter_settings) {
+			$this->object->addRelevantParameter('filter', base64_encode(serialize($this->filter_settings)));
 			$this->object->filter_settings = $this->display->buildFilterValues($this->filter, $this->filter_settings);
 		}
 	}
 
 	protected function render() {
-		$res = $this->renderFilter()."<br />";
+		$this->gTpl->setTitle(null);
+		$res = $this->title->render();
+		$res .= $this->renderFilter()."<br />";
 		$res .= $this->renderTable();
 		return $res;
 	}
 
 	protected function renderFilter() {
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
-		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, self::CMD_SHOW_CONTENT);
+		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, $this->gCtrl->getCmd());
 		return $filter_flat_view->render($this->filter_settings);
-	}
-
-	protected function renderTable() {
-		$this->gCtrl->setParameter($this, 'filter', base64_encode(serialize($this->filter_settings)));
-		$table = parent::renderTable();
-		$this->gCtrl->setParameter($this, 'filter', null);
-		return $sum_table.$table;
 	}
 
 	protected function prepareTitle($a_title) {
 		$a_title = parent::prepareTitle($a_title);
 		$a_title->image("GEV_img/ico-head-edubio.png");
 		return $a_title;
+	}
+
+	public function renderQueryView()
+	{
+		include_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
+		$this->object->prepareReport();
+		$content = $this->renderFilter();
+		$form = new ilNonEditableValueGUI($this->gLng->txt("report_query_text"));
+		$form->setValue($this->object->buildQueryStatement());
+		$settings_form = new ilPropertyFormGUI();
+		$settings_form->addItem($form);
+		$content .= $settings_form->getHTML();
+		$this->gTpl->setContent($content);
 	}
 
 	public static function transformResultRow($rec) {

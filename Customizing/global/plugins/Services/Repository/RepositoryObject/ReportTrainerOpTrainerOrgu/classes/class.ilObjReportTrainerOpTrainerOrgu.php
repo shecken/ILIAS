@@ -6,7 +6,7 @@ ini_set('max_execution_time', 0);
 set_time_limit(0);
 
 class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase {
-	const MIN_ROW = "0";
+	const MIN_ROW = "3991";
 	const shift = '<div class = "inline_block">&nbsp;&nbsp;</div>';
 	protected $categories;
 	protected $relevant_parameters = array();	
@@ -108,11 +108,7 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase {
 					$txt("crs_tutor")
 					, ""
 					, $this->getTEPTutors()
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->int())
-					),
+				),
 				/* END BLOCK - COURSE TUTOR */
 
 
@@ -122,14 +118,11 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase {
 					$txt("org_unit_short")
 					, ""
 					, $this->getOrgusForFilter($this->top_nodes)
-				)->map
-					(
-						function($types) { return $types; }
-						,$tf->lst($tf->int())
-					)
+				)
 				/* END BLOCK - ORG UNIT */
 
-			)->map
+			)
+		)->map
 				(
 					function($date_period_predicate, $start, $end, $crs_tutor, $org_unit_short)
 					{
@@ -148,8 +141,7 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase {
 							 ,"org_unit_short" => $tf->lst($tf->int())
 						)
 					)
-				)
-		);
+				);
 	}
 
 	protected function buildOrder($order) {
@@ -160,12 +152,18 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase {
 		return null;
 	}
 
-	protected function fetchData(callable $callback) {
+	public function buildQueryStatement() {
 		$db = $this->gIldb;
 		$select = " SELECT ht.orgu_id,\n"
 				 ." CONCAT(hu.lastname,', ',hu.firstname) as title";
 		$from = " FROM hist_tep ht";
-		$where = " WHERE TRUE";
+		$where = " WHERE hu.hist_historic = 0\n"
+				."      AND (ht.category != 'Training' OR (ht.context_id != 0 AND ht.context_id IS NOT NULL))\n"
+				."      AND ht.deleted = 0\n"
+				."      AND ht.user_id != 0\n"
+				."      AND ht.orgu_title != '-empty-'\n"
+				."      AND ht.row_id > ".self::MIN_ROW ."\n";
+
 		foreach($this->meta_categories as $meta_category => $categories) {
 			$select .= "," .$this->daysPerTEPMetaCategory($categories, $meta_category."_d");
 			$select .= "," .$this->hoursPerTEPMetaCategory($categories, $meta_category."_h");
@@ -178,50 +176,58 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase {
 			   ." JOIN hist_tep_individ_days AS htid\n"
 			   ."     ON ht.individual_days = htid.id\n";
 
-		$group = " GROUP BY ht.orgu_id, ht.user_id";
+		$group = " GROUP BY ht.orgu_id, ht.user_id\n";
 
 		$filter = $this->filter();
 		if($this->filter_settings) {
 			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
+			$this->orgu_filter = $settings['org_unit_short'];
 			$to_sql = new \CaT\Filter\SqlPredicateInterpreter($db);
-			$dt_query = $to_sql->interpret($settings[0]['period_pred']);
+			$dt_query = $to_sql->interpret($settings['period_pred']);
 			$where .= "    AND " .$dt_query;
 
-			$this->pre_data = array();
-			if(!empty($settings[0]['crs_tutor'])) {
-				$where .= "     AND " .$db->in('hu.user_id', $settings[0]['crs_tutor'], false, "integer");
+			if(!empty($settings['crs_tutor'])) {
+				$where .= "     AND " .$db->in('hu.user_id', $settings['crs_tutor'], false, "integer");
 			}
-
-			$query = $select . $from . $join . $where . $group .$having .$order;
-			$res = $db->query($query);
-
-			while ($rec = $db->fetchAssoc($res)) {
-				$this->pre_data[$rec["orgu_id"]][] = $rec;
-			}
-
-			$this->orgu_filter = $settings[0]['org_unit_short'];
-			if($this->orgu_filter) {
-				$top_nodes = array();
-
-				foreach ($this->orgu_filter as $orgu_id) {
-					$top_nodes[$orgu_id] = gevObjectUtils::getRefId($orgu_id);
-				}
-			} else {
-				$top_nodes = $this->top_nodes;
-			}
-
-			$top_sup_orgus = $this->getTopSuperiorNodesOfUser($top_nodes);
-			$tree_data = array();
-
-			foreach ($top_sup_orgus as $obj_id => $ref_id) {
-				$tree_data[] = $this->buildReportTree($obj_id,$ref_id);
-			}
-
-			foreach($tree_data as $branch) {
-				$this->fillData($branch, $callback);
-			}
-		return $this->report_data;
+		} else {
+			$where .= "     AND ((`ht`.`begin_date` < '" .date("Y") ."-12-31' ) OR (`ht`.`begin_date` = '".date("Y") ."-12-31' ) ) AND (('".date("Y") ."-01-01' < `ht`.`begin_date` ) OR ('" .date("Y") ."-01-01' = `ht`.`begin_date` ) )\n";
 		}
+
+		$query = $select . $from . $join . $where . $group .$having .$order;
+		return $query;
+	}
+
+	protected function fetchData(callable $callback) {
+		$db = $this->gIldb;
+		$query = $this->buildQueryStatement();
+		$res = $db->query($query);
+		$this->pre_data = array();
+		while ($rec = $db->fetchAssoc($res)) {
+			$this->pre_data[$rec["orgu_id"]][] = $rec;
+		}
+
+		if($this->orgu_filter) {
+			$top_nodes = array();
+
+			foreach ($this->orgu_filter as $orgu_id) {
+				$top_nodes[$orgu_id] = gevObjectUtils::getRefId($orgu_id);
+			}
+		} else {
+			$top_nodes = $this->top_nodes;
+		}
+
+		$top_sup_orgus = $this->getTopSuperiorNodesOfUser($top_nodes);
+		$tree_data = array();
+
+		foreach ($top_sup_orgus as $obj_id => $ref_id) {
+			$tree_data[] = $this->buildReportTree($obj_id,$ref_id);
+		}
+
+		foreach($tree_data as $branch) {
+			$this->fillData($branch, $callback);
+		}
+
+		return $this->report_data;
 	}
 
 	protected function daysPerTEPMetaCategory($categories, $name) {
