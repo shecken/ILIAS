@@ -13,7 +13,8 @@ require_once("Services/Table/classes/class.ilTable2GUI.php");
 require_once("Services/CaTUIComponents/classes/class.catTitleGUI.php");
 require_once("Services/CaTUIComponents/classes/class.catLegendGUI.php");
 
-class catTableGUI extends ilTable2GUI {
+class catTableGUI extends ilTable2GUI
+{
 	protected $_title_enabled = false;
 	protected $_title = null;
 	protected $_filter_enabled = false;
@@ -21,7 +22,8 @@ class catTableGUI extends ilTable2GUI {
 	protected $_filter_values = null;
 	protected $gCtrl;
 
-	public function __construct($a_parent_obj, $a_parent_cmd="", $a_template_context="") {
+	public function __construct($a_parent_obj, $a_parent_cmd = "", $a_template_context = "")
+	{
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 		parent::setEnableTitle(false);
 		global $ilCtrl;
@@ -29,83 +31,106 @@ class catTableGUI extends ilTable2GUI {
 		$this->_title = new catTitleGUI();
 	}
 
-	public function setEnableTitle($a_enable) {
+	public function setEnableTitle($a_enable)
+	{
 		$this->_title_enabled = $a_enable;
 		return $this;
 	}
 
-	public function getEnableTitle() {
+	public function getEnableTitle()
+	{
 		return $this->_title_enabled;
 	}
 
-	public function setTitle($a_title) {
+	public function setTitle($a_title)
+	{
 		$this->_title->setTitle($a_title);
 		return $this;
 	}
 
-	public function getTitle() {
+	public function getTitle()
+	{
 		return $this->_title->getTitle;
 	}
 
-	public function setSubtitle($a_subtitle) {
+	public function setSubtitle($a_subtitle)
+	{
 		$this->_title->setSubtitle($a_subtitle);
 		return $this;
 	}
 
-	public function getSubtitle() {
+	public function getSubtitle()
+	{
 		return $this->_title->getSubtitle();
 	}
 
-	public function setImage($a_img) {
+	public function setImage($a_img)
+	{
 		$this->_title->setImage($a_img);
 		return $this;
 	}
-	
-	public function getImage() {
+
+	public function getImage()
+	{
 		return $this->_title->getImage();
 	}
-	
-	public function setLegend(catLegendGUI $a_legend) {
+
+	public function setLegend(catLegendGUI $a_legend)
+	{
 		$this->_title->setLegend($a_legend);
 		return $this;
 	}
 
-	public function getLegend() {
+	public function getLegend()
+	{
 		return $this->_title->getLegend();
 	}
 
-	public function setCommand($a_lng_var, $a_target) {
+	public function setCommand($a_lng_var, $a_target)
+	{
 		$this->_title->setCommand($a_lng_var, $a_target);
 		return $this;
 	}
 
-	public function setClearSearch($a_lng_var, $a_target) {
+	public function setClearSearch($a_lng_var, $a_target)
+	{
 		$this->_title->setClearSearch($a_lng_var, $a_target);
 		return $this;
 	}
-	
-	public function removeCommand() {
+
+	public function removeCommand()
+	{
 		$this->_title->removeCommand();
 		return $this;
 	}
 
-	public function setEnableFilter($enable) {
+	public function setEnableFilter($enable)
+	{
 		$this->_filter_enabled = $enable;
 	}
 
-	public function getEnableFilter() {
+	public function getEnableFilter()
+	{
 		return $this->_filter_enabled;
 	}
 
-	public function setFilter(catFilterFlatViewGUI $filter) {
+	public function setFilter(catFilterFlatViewGUI $filter)
+	{
 		$this->_filter = $filter;
 	}
 
-	public function setFilterVals($values) {
+	public function setFilterVals($values)
+	{
 		$this->_filter_values = $values;
 	}
 
-	public function render() {
+	public function setSpecialButton($link, $label)
+	{
+		$this->_title->setSpecialButton($link, $label);
+	}
+
+	public function render()
+	{
 		$html = "";
 
 		if ($this->_title_enabled) {
@@ -118,7 +143,7 @@ class catTableGUI extends ilTable2GUI {
 
 		return $html.parent::render();
 	}
-	
+
 	protected function fillRow($a_set)
 	{
 		foreach ($a_set as $key => $value) {
@@ -127,15 +152,14 @@ class catTableGUI extends ilTable2GUI {
 	}
 
 	/**
-	 * we would like to avoid some parameters floating around secretly 
+	 * we would like to avoid some parameters floating around secretly
 	 * and being glued to some links without out knowledge. it turns
 	 * out the order parameter is newer unset, after applying it to
 	 * the table columns.
 	 */
-	public function setOrderLink($sort_field, $order_dir) {
-		parent::setOrderLink($sort_field,$order_dir);
-		$this->gCtrl->setParameter($this->parent_obj,$this->getNavParameter(),null);
+	public function setOrderLink($sort_field, $order_dir)
+	{
+		parent::setOrderLink($sort_field, $order_dir);
+		$this->gCtrl->setParameter($this->parent_obj, $this->getNavParameter(), null);
 	}
 }
-
-?>
