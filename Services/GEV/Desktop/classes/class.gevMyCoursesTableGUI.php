@@ -28,6 +28,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		global $ilCtrl, $lng, $ilAccess;
 
 		$this->gLng = $lng;
+		$this->gCtrl = $ilCtrl;
 
 		$user_util = gevUserUtils::getInstance($a_user_id);
 
@@ -41,7 +42,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 
 		$na_quali_ref_id = gevSettings::getInstance()->getNAQualiCourseRefId();
 		if ($na_quali_ref_id !== null && $ilAccess->checkAccess("visible", "", $na_quali_ref_id)) {
-			$link = "Link";
+			$link = $this->buildNAQualiLink($na_quali_ref_id);
 			$this->setSpecialButton($link, $this->gLng->txt("jill_na_link_label"));
 		}
 
@@ -204,5 +205,15 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 	function numericOrdering($a_field)
 	{
 		return $a_field == "fee";
+	}
+
+	protected function buildNAQualiLink($ref_id) {
+		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", $ref_id);
+		$link = $this->gCtrl->getLinkTargetByClass(
+						array("ilObjPluginDispatchGUI", "ilObjJillGUI"),
+						"xView"
+						);
+		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", null);
+		return $link;
 	}
 }
