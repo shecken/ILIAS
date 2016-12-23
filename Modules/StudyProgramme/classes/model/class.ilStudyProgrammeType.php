@@ -839,8 +839,8 @@ class ilStudyProgrammeType extends ActiveRecord {
 	 * @throws ilStudyProgrammeTypeException
 	 */
 	public function setIcon($icon) {
-		if ($icon AND !preg_match('/\.(svg)$/', $icon)) {
-			throw new ilStudyProgrammeTypeException('Icon must be set with file extension svg');
+		if ($icon AND !preg_match('/\.(png)$/', $icon)) {
+			throw new ilStudyProgrammeTypeException('Icon must be set with file extension png');
 		}
 		$this->icon = $icon;
 	}
