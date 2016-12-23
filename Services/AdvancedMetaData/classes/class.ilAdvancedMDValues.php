@@ -51,7 +51,7 @@ class ilAdvancedMDValues
 	 * @param string $a_obj_type
 	 * @return array
 	 */
-	public static function getInstancesForObjectId($a_obj_id, $a_obj_type = null)
+	public static function getInstancesForObjectId($a_obj_id, $a_obj_type = null, $a_sub_type = "-", $a_sub_id = 0)
 	{
 		global $ilDB;
 		
@@ -68,12 +68,13 @@ class ilAdvancedMDValues
 			" JOIN adv_md_record amr ON (amr.record_id = amro.record_id)".
 			" WHERE active = ".$ilDB->quote(1, "integer").
 			" AND obj_type = ".$ilDB->quote($a_obj_type, "text");
+
 		$set = $ilDB->query($query);
 		while($row = $ilDB->fetchAssoc($set))
 		{
-			$res[$row["record_id"]] = new self($row["record_id"], $a_obj_id);
+			$res[$row["record_id"]] = new self($row["record_id"], $a_obj_id, $a_sub_type, $a_sub_id);
 		}						
-		
+
 		return $res;
 	}
 	
