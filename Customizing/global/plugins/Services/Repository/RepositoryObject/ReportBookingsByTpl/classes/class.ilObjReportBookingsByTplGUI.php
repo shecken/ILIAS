@@ -87,7 +87,7 @@ class ilObjReportBookingsByTplGUI extends ilObjReportBaseGUI
 		global $ilCtrl;
 		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterFlatViewGUI.php");
 		$filter_flat_view = new catFilterFlatViewGUI($this, $this->filter, $this->display, $ilCtrl->getCmd());
-		return $filter_flat_view->render($this->filter_settings);
+		return $filter_flat_view->render($this->filter_settings, (string)$_POST['filtered'] === '1');
 	}
 
 	private function renderSumTable()
