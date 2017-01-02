@@ -322,7 +322,7 @@ class ilObjReportBookingsByTpl extends ilObjReportBase
 			if ($this->filter_selections['recursive']) {
 				$orgu_selection = $this->addRecursiveOrgusToSelection($orgu_selection);
 			}
-			return $this->gIldb->in('orgu.orgu_id', $orgu_selection, false, 'integer');
+			return $this->gIldb->in('orgu_id', $orgu_selection, false, 'integer');
 		}
 		return '';
 	}
