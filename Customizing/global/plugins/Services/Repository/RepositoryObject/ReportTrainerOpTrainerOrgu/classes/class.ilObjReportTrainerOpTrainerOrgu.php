@@ -68,7 +68,6 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase
 
 	public function filter()
 	{
-		$db = $this->gIldb;
 		$pf = new \CaT\Filter\PredicateFactory();
 		$tf = new \CaT\Filter\TypeFactory();
 		$f = new \CaT\Filter\FilterFactory($pf, $tf);
@@ -206,9 +205,7 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase
 
 	protected function fetchData(callable $callback)
 	{
-		$db = $this->gIldb;
-		$query = $this->buildQueryStatement();
-		$res = $db->query($query);
+		$res = $this->gIldb->query($this->buildQueryStatement());
 		$this->pre_data = array();
 		while ($rec = $db->fetchAssoc($res)) {
 			$this->pre_data[$rec["orgu_id"]][] = $rec;
