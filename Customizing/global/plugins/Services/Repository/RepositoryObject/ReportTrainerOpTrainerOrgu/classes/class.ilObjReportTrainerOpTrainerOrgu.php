@@ -154,8 +154,7 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase
 
 		$group = "	GROUP BY ht.orgu_id, ht.user_id\n";
 
-		$query = $select . $from . $join . $where . $group .$having .$order;
-		return $query;
+		return $select . $from . $join . $where . $group;
 	}
 
 	private function loadFilterSelections()
