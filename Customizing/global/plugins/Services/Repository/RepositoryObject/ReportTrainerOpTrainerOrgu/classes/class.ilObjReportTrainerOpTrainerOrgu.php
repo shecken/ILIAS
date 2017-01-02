@@ -149,7 +149,6 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase
 				."		AND ht.orgu_title != '-empty-'\n"
 				."		AND ht.row_id > ".self::MIN_ROW ."\n"
 				."		".$this->datePeriodFilter()
-				."		".$this->orguFilterCondition()
 				."		".$this->tutorFilterCondition();
 
 		$group = "	GROUP BY ht.orgu_id, ht.user_id\n";
@@ -184,15 +183,6 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase
 				.'	OR ht.hist_historic IS NULL)';
 	}
 
-	private function orguFilterCondition()
-	{
-		$selection = $this->filter_selections['org_unit'];
-		if ($selection) {
-			return '		AND '.$this->gIldb->in('ht.orgu_id', $selection, false, 'integer');
-		}
-		return '';
-	}
-
 	private function tutorFilterCondition()
 	{
 		$selection = $this->filter_selections['crs_tutor'];
@@ -206,7 +196,7 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase
 	{
 		$res = $this->gIldb->query($this->buildQueryStatement());
 		$this->pre_data = array();
-		while ($rec = $db->fetchAssoc($res)) {
+		while ($rec = $this->gIldb->fetchAssoc($res)) {
 			$this->pre_data[$rec["orgu_id"]][] = $rec;
 		}
 
