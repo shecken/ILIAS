@@ -5226,6 +5226,11 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "
 
 <#230>
 <?php
+
+?>
+
+<#231>
+<?php
 require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgramme.php");
 require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgrammeAssignment.php");
 require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgrammeProgress.php");
@@ -5522,7 +5527,7 @@ if (! $ilDB->tableExists('prg_translations')) {
 
 
 ?>
-<#231>
+<#232>
 <?php
 
 include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
@@ -5541,7 +5546,7 @@ ilDBUpdateNewObjectType::addAdminNode('prgs', 'StudyProgrammeAdmin');
 
 ?>
 
-<#232>
+<#233>
 <?php
 if (!$ilDB->sequenceExists('prg_settings')) {
 	$ilDB->createSequence('prg_settings');
@@ -5562,14 +5567,14 @@ if (! $ilDB->sequenceExists('prg_translations')) {
 	$ilDB->createSequence('prg_translations');
 }
 ?>
-<#233>
+<#234>
 <?php
 include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
 $parent_types = array('root', 'cat', 'prg');
 ilDBUpdateNewObjectType::addRBACCreate('create_prg', 'Create Study Programme', $parent_types);
 ?>
 
-<#234>
+<#235>
 <?php
 	include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
 	$obj_type_id = ilDBUpdateNewObjectType::getObjectTypeId("prg");
@@ -5580,7 +5585,7 @@ foreach ($existing_ops as $op) {
 }
 ?>
 
-<#235>
+<#236>
 <?php
 include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
 
@@ -5592,13 +5597,13 @@ if ($type_id && $new_ops_id) {
 }
 ?>
 
-<#236>
+<#237>
 <?php
 
 	$ilCtrlStructureReader->getStructure();
 ?>
 
-<#237>
+<#238>
 <?php
 
 include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
@@ -5609,7 +5614,7 @@ if (!$tgt_ops_id) {
 }
 ?>
 
-<#238>
+<#239>
 <?php
 include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
 $obj_type_id = ilDBUpdateNewObjectType::addNewType("mass", "Manual Assessment");
@@ -5765,7 +5770,7 @@ if ($mass_type_id) {
 }
 ?>
 
-<#239>
+<#240>
 <?php
 if (!$ilDB->tableExists("mass_info_settings")) {
 	$fields =  array(
@@ -5809,7 +5814,7 @@ if (!$ilDB->tableExists("mass_info_settings")) {
 	$ilDB->createTable('mass_info_settings', $fields);
 }
 ?>
-<#240>
+<#241>
 <?php
 if (!$ilDB->indexExistsByFields('mass_settings', array('obj_id'))) {
 	$ilDB->addPrimaryKey('mass_settings', array('obj_id'));
@@ -5822,12 +5827,12 @@ if (!$ilDB->indexExistsByFields('mass_members', array('obj_id','usr_id'))) {
 }
 ?>
 
-<#241>
+<#242>
 <?php
 	$ilCtrlStructureReader->getStructure();
 ?>
 
-<#242>
+<#243>
 <?php
 $field = array('type' 		=> 'integer',
 			'length' 	=> 1,
@@ -5839,7 +5844,7 @@ if (!$ilDB->tableColumnExists("webr_items", "open_same_window")) {
 }
 ?>
 
-<#243>
+<#244>
 <?php
 require_once "Customizing/class.ilCustomInstaller.php";
 
@@ -5928,7 +5933,7 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "Admin-Voll", array(
 gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Admin-Ansicht", array("visible","read","load_member_list","view_mailing", "view_bookings","view_schedule_pdf"));
 ?>
 
-<#244>
+<#245>
 <?php
 require_once "Customizing/class.ilCustomInstaller.php";
 
