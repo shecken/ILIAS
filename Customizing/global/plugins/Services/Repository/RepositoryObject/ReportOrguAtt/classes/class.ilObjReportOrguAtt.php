@@ -178,7 +178,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		return '';
 	}
 
-	protected function deliverSumQuery()
+	public function deliverSumQuery()
 	{
 		$sum_terms = array();
 		foreach ($this->sum_parts as $title => $query_term) {

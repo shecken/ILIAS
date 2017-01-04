@@ -111,7 +111,7 @@ class ilObjReportOrguAttGUI extends ilObjReportBaseGUI
 		$settings_form = new ilPropertyFormGUI();
 
 		$form = new ilNonEditableValueGUI($this->object->plugin->txt("report_query_text_sum"));
-		$form->setValue($this->object->buildQueryStatement());
+		$form->setValue($this->object->deliverSumQuery());
 		$settings_form->addItem($form);
 
 		$form = new ilNonEditableValueGUI($this->gLng->txt("report_query_text"));
