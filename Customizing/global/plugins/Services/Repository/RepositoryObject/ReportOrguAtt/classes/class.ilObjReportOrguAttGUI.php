@@ -107,10 +107,17 @@ class ilObjReportOrguAttGUI extends ilObjReportBaseGUI
 		include_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
 		$this->object->prepareReport();
 		$content = $this->renderFilter('query_view');
+
+		$settings_form = new ilPropertyFormGUI();
+
+		$form = new ilNonEditableValueGUI($this->object->plugin->txt("report_query_text_sum"));
+		$form->setValue($this->object->buildQueryStatement());
+		$settings_form->addItem($form);
+
 		$form = new ilNonEditableValueGUI($this->gLng->txt("report_query_text"));
 		$form->setValue($this->object->buildQueryStatement());
-		$settings_form = new ilPropertyFormGUI();
 		$settings_form->addItem($form);
+
 		$content .= $settings_form->getHTML();
 		$this->gTpl->setContent($content);
 	}
