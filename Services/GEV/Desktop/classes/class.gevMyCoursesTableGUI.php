@@ -208,12 +208,15 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 	}
 
 	protected function buildNAQualiLink($ref_id) {
+		$backlink = $this->gCtrl->getLinkTarget($this->parent_obj, $this->parent_cmd);
 		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", $ref_id);
+		$this->gCtrl->setParameterByClass("ilObjJillGUI", "referree", $backlink);
 		$link = $this->gCtrl->getLinkTargetByClass(
 						array("ilObjPluginDispatchGUI", "ilObjJillGUI"),
 						"xView"
 						);
 		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", null);
+		$this->gCtrl->setParameterByClass("ilObjJillGUI", "referree", $backlink);
 		return $link;
 	}
 }
