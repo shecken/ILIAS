@@ -91,15 +91,15 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				$txt("org_unit_recursive"),
 				""
 			)->clone_with_checked(true),
-			$f->multiselectsearch(
-				$txt("org_unit_short"),
-				"",
-				$this->getAllOrguIds()
-			),
 			$f->sequence(
 				$f->dateperiod(
 					$txt("period"),
 					""
+				),
+				$f->multiselectsearch(
+					$txt("org_unit_short"),
+					"",
+					$this->getAllOrguIds()
 				),
 				$f->multiselectsearch(
 					$txt("crs_filter_topics"),
@@ -145,7 +145,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				)
 			)
 		)->map(
-			function ($no_wbd, $recursive, $org_unit_short, $start, $end, $crs_filter_topics, $edu_program, $template_title, $course_type, $wbd_relevant, $edupoints) {
+			function ($no_wbd, $recursive, $start, $end, $org_unit_short, $crs_filter_topics, $edu_program, $template_title, $course_type, $wbd_relevant, $edupoints) {
 						return array("no_wbd" => $no_wbd
 									,"recursive" => $recursive
 									,"org_unit" => $org_unit_short
