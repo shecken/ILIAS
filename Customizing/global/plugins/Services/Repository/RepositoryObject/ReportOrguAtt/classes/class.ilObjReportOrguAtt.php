@@ -386,15 +386,15 @@ class ilObjReportOrguAtt extends ilObjReportBase
 				$lng->txt('gev_org_unit_recursive'),
 				''
 			)->clone_with_checked(true),
-			$f->multiselectsearch(
-				$lng->txt("gev_org_unit_short"),
-				'',
-				$this->getRelevantOrgus()
-			),
 			$f->sequence(
 				$f->dateperiod(
 					$txt("period"),
 					''
+				),
+				$f->multiselectsearch(
+					$lng->txt("gev_org_unit_short"),
+					'',
+					$this->getRelevantOrgus()
 				),
 				$f->multiselectsearch(
 					$lng->txt("gev_filter_topics"),
@@ -446,7 +446,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 				)
 			)
 		)->map(
-			function ($no_wbd, $recursive, $org_unit, $start, $end, $crs_topics, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
+			function ($no_wbd, $recursive, $start, $end, $org_unit, $crs_topics, $edu_program, $type, $template_title, $p_status, $b_status, $gender, $venue, $provider) {
 							return array(
 								'no_wbd' => $no_wbd
 								,'recursive' => $recursive
