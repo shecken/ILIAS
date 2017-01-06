@@ -10,6 +10,9 @@
 [submodule "Customizing/global/plugins/Services/Repository/RepositoryObject/ILIASSoapSSO"]
 	path = Customizing/global/plugins/Services/Repository/RepositoryObject/ILIASSoapSSO
 	url = https://github.com/conceptsandtraining/ILIASSoapSSO.git
+[submodule "Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/UserDataValidationPrompt"]
+	path = Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/UserDataValidationPrompt
+	url = https://github.com/conceptsandtraining/UserDataValidationPrompt.git
 [submodule "Customizing/global/plugins/Services/Cron/CronHook/AutomaticUserAdministration"]
 	path = Customizing/global/plugins/Services/Cron/CronHook/AutomaticUserAdministration
 	url = https://github.com/conceptsandtraining/AutomaticUserAdministration.git

@@ -14,18 +14,19 @@
 
 require_once("Services/Administration/classes/class.ilSetting.php");
 
-class gevSettings {
+class gevSettings
+{
 	static $instance = null;
 	static $amd_fields = null;
-	
+
 	const MODULE_NAME = "gev";
-	
+
 	const YES = "Ja";
 	const NO = "Nein";
-	
-	
+
+
 	// vgl. Konzept, Abschnitt Trainingsvorlagen
-	
+
 	// Block "Trainingsverwaltung"
 	// Nummer der Maßnahme
 	const CRS_AMD_CUSTOM_ID 		= "crs_amd_custom_id";
@@ -41,7 +42,7 @@ class gevSettings {
 	const CRS_AMD_IS_TEMPLATE		= "crs_amd_is_template";
 	// Abgesagt
 	const CRS_AMD_IS_CANCELLED		= "crs_amd_is_cancelled";
-	
+
 	// Trainingsbetreuer -> ILIAS Standard
 	//const CRS_AMD_MAINTAINER		= "crs_amd_maintainer";
 
@@ -54,7 +55,7 @@ class gevSettings {
 	const CRS_AMD_SCHEDULED_FOR		= "crs_amd_scheduled_for";
 	// Organisatorisches
 	const CRS_AMD_ORGA				= "crs_amd_orga";
-	
+
 	// Block Trainingsinhalte
 	// Trainingsthema
 	const CRS_AMD_TOPIC 			= "crs_amd_topic";
@@ -81,12 +82,12 @@ class gevSettings {
 	const CRS_AMD_CREDIT_POINTS		= "crs_amd_credit_points";
 	// GEV Lerninhalt
 	const CRS_AMD_GDV_TOPIC			= "crs_amd_gdv_topic";
-	
+
 	// Teilnahmegebühr
 	const CRS_AMD_FEE				= "crs_amd_fee";
 	// Mice-ID
 	const CRS_AMD_MICE_ID			= "crs_amd_mice_id";
-	
+
 	// Mindestteilnehmerzahl
 	const CRS_AMD_MIN_PARTICIPANTS	= "crs_amd_min_participants";
 	// Warteliste
@@ -105,7 +106,7 @@ class gevSettings {
 	const CRS_AMD_DBV_HOT_TOPIC = "crs_amd_dbv_hot_topic";
 	// maximale Teilnehmer auf der Warteliste
 	const CRS_AMD_MAX_WAITING_LIST_LENGTH = "crs_amd_max_waiting_list_length";
-	
+
 	// Anbieter
 	const CRS_AMD_PROVIDER			= "crs_amd_provider";
 	// Veranstaltungsort
@@ -163,11 +164,11 @@ class gevSettings {
 								 , gevSettings::TYPE_ID_ORG_UNIT_TYPE_BD
 								 );
 
-		static $dbv_hot_topics = array("3D Pflegevorsorge"
+	static $dbv_hot_topics = array("3D Pflegevorsorge"
 								 , "Rente Profil Plus"
 								 , "bAV"
 								 );
-	
+
 
 
 	// AMD für alle Org-Units (vgl. Konzept, Abschnitte Veranstaltungsorte, Anbieter)
@@ -213,12 +214,12 @@ class gevSettings {
 	const VENUE_AMD_COSTS_HOTEL		= "venue_amd_costs_hotel";
 	// Tagespauschale Hotel
 	const VENUE_AMD_ALL_INCLUSIVE_COSTS = "venue_amd_all_inclusive_costs";
-	
-	
+
+
 	// Standardorte und -veranstalter
 	const VENUE_BERNRIED			= "venue_bernried";
 	const PROVIDER_GENERALI			= "provider_generali";
-	
+
 	// zusätzliche Benutzerdaten
 	// adp-nummer
 	const USR_UDF_ADP_NUMBER			= "usr_udf_adp_number";  //deprecated
@@ -238,18 +239,18 @@ class gevSettings {
 	const USR_UDF_AD_TITLE			= "usr_udf_ad_title";
 	// Vermittlerschlüssel
 	const USR_UDF_AGENT_KEY			= "usr_udf_agent_key";
-	
+
 
 	//Stellungsschlüssel VFS
 	const USR_UDF_AGENT_KEY_VFS		= "usr_udf_agent_key_vfs";
-	//Stellung VFS	
+	//Stellung VFS
 	const USR_UDF_AGENT_POSITION_VFS= "usr_udf_agent_position_vfs";
-	
-	
+
+
 	// Firmenname
 	const USR_UDF_COMPANY_NAME		= "usr_udf_company_name";
-	
-	
+
+
 	// Gesellschaftstitel
 	const USR_UDF_COMPANY_TITLE		= "usr_udf_company_title"; //deprecated
 
@@ -257,30 +258,30 @@ class gevSettings {
 	const USR_UDF_PAISY_NUMBER 		= "usr_udf_paisy_number";
 	//Kostenstelle VFS
 	const USR_UDF_FINANCIAL_ACCOUNT	= "usr_udf_financial_account";
-	
 
 
-	
+
+
 	// private Kontaktdaten, für geschäftliche Kontaktdaten werden
 	// die Standard-ILIAS-Felder verwendet
 	const USR_UDF_PRIV_EMAIL		= "usr_udf_priv_email";		// NOT IN USE ANYMORE
 	const USR_UDF_PRIV_STREET		= "usr_udf_priv_street";
 	const USR_UDF_PRIV_CITY			= "usr_udf_priv_city";
 	const USR_UDF_PRIV_ZIPCODE		= "usr_udf_priv_zipcode";
-	
+
 	const USR_UDF_PRIV_STATE		= "usr_udf_priv_state"; //deprecated
 	const USR_UDF_PRIV_PHONE		= "usr_udf_priv_phone"; //mobile phone!
 	const USR_UDF_PRIV_FAX			= "usr_udf_priv_fax"; //deprecated
-	
+
 	// Eintritts- und Austrittsdatum
 	const USR_UDF_ENTRY_DATE		= "usr_udf_entry_date";
 	const USR_UDF_EXIT_DATE			= "usr_udf_exit_date";
-	
+
 	// Status (????)
 	const USR_UDF_STATUS			= "usr_udf_status"; //deprecated
 	// HPE
 	const USR_UDF_HPE				= "usr_udf_hpe"; //deprecated
-	
+
 	//basic templates for flexible decentral trainings
 	const DCT_TPL_FLEX_PRESENCE = "dct_tpl_flex_presence";
 	const DCT_TPL_FLEX_WEBINAR = "dct_tpl_flex_webinar";
@@ -311,23 +312,23 @@ class gevSettings {
 
 		,'ADP-Nummer VFS'
 		,'ADP-Nummer GEV'
-		
+
 		,'Vermittlernummer GEV'
 		,'Vermittlerschlüssel GEV'
 
 		,'Stellungsschlüssel VFS'
 		,'Stellung VFS'
-				
+
 		,'Paisy-Personalnummer VFS'
 		,'Kostenstelle VFS'
-		
+
 		,'AD-Titel'
 		,'Eintrittsdatum'
 		,'Austrittsdatum'
 		,'IHK Registernummer'
-		
+
 		,'Firmenname'
-		
+
 		,'Hat WBD-Registrierung durchgeführt'
 		,'TP-Typ'
 		,'Zuweisung WBD OKZ'
@@ -358,12 +359,12 @@ class gevSettings {
 		620 => array("DBV EVG",		"DBV"),
 		675 => array("DBV EVG",		"DBV"),
 		601 => array("DBV EVG",		"DBV"),
-		
+
 		603 => array("BA 84",		"Mitarbeiter"),
 		604 => array("BA 84",		"Mitarbeiter"),
 		606 => array("BA 84",		"Mitarbeiter"),
 		607 => array("BA 84",		"Mitarbeiter"),
-		
+
 		608 => array("VP",			"Mitarbeiter"),
 		650 => array("VP",			"Mitarbeiter"),
 		651 => array("VP",			"Mitarbeiter"),
@@ -376,29 +377,29 @@ class gevSettings {
 		661 => array("NA",			"Mitarbeiter"),
 		664 => array("NA",			"Mitarbeiter"),
 		693 => array("NA",			"Mitarbeiter"),
-				
+
 		694 => array("BA 84",		"Mitarbeiter"),
-		
+
 		634 => array("AVL",			"Mitarbeiter"),
-		
+
 		628 => array("HA 84",		"Mitarbeiter"),
 		630 => array("HA 84",		"Mitarbeiter"),
 		632 => array("HA 84",		"Mitarbeiter"),
 		633 => array("HA 84",		"Mitarbeiter"),
 		690 => array("HA 84",		"Mitarbeiter"),
-		
+
 		625 => array("OD/BD",		"Vorgesetzter"),
 		609 => array("OD/BD",		"Vorgesetzter"),
 		649 => array("OD/BD",		"Vorgesetzter"),
 		671 => array("FD",			"Vorgesetzter"),
 		674 => array("VP",			"Vorgesetzter"),
 		9100 => array("ID FK",		"Vorgesetzter")
-		
+
 	);
 
 
 
-	
+
 	// Names of roles where we should be tolerant in the email at the
 	// registration (#608)
 	static $EMAIL_TOLERANCE_ROLES = array(
@@ -438,8 +439,8 @@ class gevSettings {
 		, "DBV UVG"
 		, "DBV EVG"
 		);
-	
-	// Names of roles where users need to pay the 
+
+	// Names of roles where users need to pay the
 	static $NO_PREARRIVAL_PAYMENT_ROLES = array(
 		  "Administrator"
 		, "Admin-Voll"
@@ -476,7 +477,7 @@ class gevSettings {
 		, "TP Basis"
 		, "VFS"
 		);
-	
+
 	// Names of roles that count as admins
 	static $ADMIN_ROLES = array(
 		  "Administrator"
@@ -488,7 +489,7 @@ class gevSettings {
 	static $SYSTEM_ADMIN_ROLES = array(
 		  "Administrator"
 		);
-	
+
 	// Names of roles that count as superiors
 	static $SUPERIOR_ROLES = array(
 		  "il_orgu_superior_%"
@@ -513,28 +514,32 @@ class gevSettings {
 
 	// Will store the ref id of the orgu where the exited users should be put.
 	const ORG_UNIT_EXITED = "org_unit_exited";
-	
-	public function getOrgUnitExited() {
+
+	public function getOrgUnitExited()
+	{
 		return $this->settings->get(self::ORG_UNIT_EXITED);
 	}
-	
-	public function setOrgUnitExited($a_ref_id) {
+
+	public function setOrgUnitExited($a_ref_id)
+	{
 		return $this->settings->set(self::ORG_UNIT_EXITED, $a_ref_id);
 	}
 
 	//Will store the ref id of the orgu where unassign user should be put
 	const ORG_UNIT_UNASSIGNED_USER = "org_unit_unassigned_user";
-	
-	public function getOrgUnitUnassignedUser() {
+
+	public function getOrgUnitUnassignedUser()
+	{
 		return $this->settings->get(self::ORG_UNIT_UNASSIGNED_USER);
 	}
 
-	public function setOrgUnitUnassignedUser($a_ref_id) {
-		return $this->settings->set(self::ORG_UNIT_UNASSIGNED_USER,$a_ref_id);
+	public function setOrgUnitUnassignedUser($a_ref_id)
+	{
+		return $this->settings->set(self::ORG_UNIT_UNASSIGNED_USER, $a_ref_id);
 	}
 
 	//OrgUnit Mappings (Personal OrgUnits)
-	
+
 	// for DBVen, NA-Superiors and HAs
 	const DBV_POU_BASE_UNIT_KEY = "gev_dbv_pou_base_unit";
 	const DBV_POU_TEMPLATE_UNIT_KEY = "gev_dbv_pou_template_unit_key";
@@ -544,68 +549,84 @@ class gevSettings {
 	const NA_POU_NO_ADVISER_UNIT_KEY = "gev_na_pou_no_adviser_unit_key";
 	const HA_POU_BASE_UNIT_KEY = "gev_ha_pou_base_unit";
 	const HA_POU_TEMPLATE_UNIT_KEY = "gev_ha_pou_template_unit";
-	
-	public function getDBVPOUBaseUnitId() {
+
+	public function getDBVPOUBaseUnitId()
+	{
 		return $this->settings->get(self::DBV_POU_BASE_UNIT_KEY);
 	}
-	
-	public function setDBVPOUBaseUnitId($a_val) {
+
+	public function setDBVPOUBaseUnitId($a_val)
+	{
 		$this->settings->set(self::DBV_POU_BASE_UNIT_KEY, $a_val);
 	}
-	
-	public function getDBVPOUTemplateUnitId() {
+
+	public function getDBVPOUTemplateUnitId()
+	{
 		return $this->settings->get(self::DBV_POU_TEMPLATE_UNIT_KEY);
 	}
-	
-	public function setDBVPOUTemplateUnitId($a_val) {
+
+	public function setDBVPOUTemplateUnitId($a_val)
+	{
 		$this->settings->set(self::DBV_POU_TEMPLATE_UNIT_KEY, $a_val);
 	}
-	
-	public function getCPoolUnitId() {
+
+	public function getCPoolUnitId()
+	{
 		return $this->settings->get(self::CPOOL_UNIT_KEY);
 	}
-	
-	public function setCPoolUnitId($a_val) {
+
+	public function setCPoolUnitId($a_val)
+	{
 		$this->settings->set(self::CPOOL_UNIT_KEY, $a_val);
 	}
-	
-	public function getNAPOUBaseUnitId() {
+
+	public function getNAPOUBaseUnitId()
+	{
 		return $this->settings->get(self::NA_POU_BASE_UNIT_KEY);
 	}
-	
-	public function setNAPOUBaseUnitId($a_val) {
+
+	public function setNAPOUBaseUnitId($a_val)
+	{
 		$this->settings->set(self::NA_POU_BASE_UNIT_KEY, $a_val);
 	}
-	
-	public function getNAPOUTemplateUnitId() {
+
+	public function getNAPOUTemplateUnitId()
+	{
 		return $this->settings->get(self::NA_POU_TEMPLATE_UNIT_KEY);
 	}
-	
-	public function setNAPOUTemplateUnitId($a_val) {
+
+	public function setNAPOUTemplateUnitId($a_val)
+	{
 		$this->settings->set(self::NA_POU_TEMPLATE_UNIT_KEY, $a_val);
 	}
-	
-	public function getNAPOUNoAdviserUnitId() {
+
+	public function getNAPOUNoAdviserUnitId()
+	{
 		return $this->settings->get(self::NA_POU_NO_ADVISER_UNIT_KEY);
 	}
-	
-	public function setNAPOUNoAdviserUnitId($a_val) {
+
+	public function setNAPOUNoAdviserUnitId($a_val)
+	{
 		$this->settings->set(self::NA_POU_NO_ADVISER_UNIT_KEY, $a_val);
 	}
-	
-	public function getHAPOUBaseUnitId() {
+
+	public function getHAPOUBaseUnitId()
+	{
 		return $this->settings->get(self::HA_POU_BASE_UNIT_KEY);
 	}
-	
-	public function setHAPOUBaseUnitId($a_val) {
+
+	public function setHAPOUBaseUnitId($a_val)
+	{
 		$this->settings->set(self::HA_POU_BASE_UNIT_KEY, $a_val);
 	}
-	
-	public function getHAPOUTemplateUnitId() {
+
+	public function getHAPOUTemplateUnitId()
+	{
 		return $this->settings->get(self::HA_POU_TEMPLATE_UNIT_KEY);
 	}
-	
-	public function setHAPOUTemplateUnitId($a_val) {
+
+	public function setHAPOUTemplateUnitId($a_val)
+	{
 		$this->settings->set(self::HA_POU_TEMPLATE_UNIT_KEY, $a_val);
 	}
 
@@ -653,33 +674,33 @@ class gevSettings {
 
 	static $TEPTYPE_ORDER = array(
 		'Training',
-		
+
 		'Projekt',
 		'Veranstaltung / Tagung (Zentral)',
 		'Trainer- / DBV Klausur (Zentral)',
 		'Trainer Teammeeting',
 		'Arbeitsgespräch',
 		'Weiterbildungstage',
-		
+
 		'AD-Begleitung',
 		'Firmenkunden',
 		//'Aquise Pilotprojekt',
 		'Akquise Pilotprojekt',
 		'Individuelle Unterstützung SpV/FD',
 		'Büro',
-		
+
 		'Urlaub beantragt',
 		'Dezentraler Feiertag',
 		'Urlaub genehmigt',
 		'Ausgleichstag',
 		'Krankheit',
-		
+
 		'OD-FD Meeting',
 		'FD-Gespräch',
 		'OD-Gespräch',
 		'AKL-Gespräch',
 		'FD-MA Teammeeting',
-		
+
 		'Gewerbe-Arbeitskreis',
 		'bAV-Arbeitskreis',
 		'FDL-Arbeitskreis'
@@ -687,83 +708,111 @@ class gevSettings {
 
 	const AGENT_OFFER_USER_ID = "agent_offer_user_id";
 
-	public function getAgentOfferUserId() {
+	public function getAgentOfferUserId()
+	{
 		return $this->settings->get(self::AGENT_OFFER_USER_ID);
 	}
-	
-	private function __construct() {
+
+	private function __construct()
+	{
 		$this->settings = new ilSetting(self::MODULE_NAME);
 	}
-	
-	public static function getInstance() {
+
+	public static function getInstance()
+	{
 		if (self::$instance === null) {
 			self::$instance = new gevSettings();
 		}
-		
+
 		return self::$instance;
 	}
-	
-	public function get($a_field) {
+
+	public function get($a_field)
+	{
 		return $this->settings->get($a_field);
 	}
-	
-	public function set($a_field, $a_value) {
+
+	public function set($a_field, $a_value)
+	{
 		$this->settings->set($a_field, $a_value);
 	}
-	
-	public function getAMDFieldId($a_field) {
+
+	public function getAMDFieldId($a_field)
+	{
 		$field_id = explode(" ", $this->get($a_field));
 		return $field_id[1];
 	}
-	
-	public function getUDFFieldId($a_field) {
+
+	public function getUDFFieldId($a_field)
+	{
 		return $this->get($a_field);
 	}
 
-	//basic templates for flexible decentral trainings	
-	public function setDctTplFlexPresenceId($a_tpl_id) {
+	//basic templates for flexible decentral trainings
+	public function setDctTplFlexPresenceId($a_tpl_id)
+	{
 		$this->settings->set(self::DCT_TPL_FLEX_PRESENCE, $a_val);
 	}
 
-	public function getDctTplFlexPresenceId() {
+	public function getDctTplFlexPresenceId()
+	{
 		return $this->settings->get(self::DCT_TPL_FLEX_PRESENCE);
 	}
 
-	public function getDctTplFlexPresenceObjId() {
+	public function getDctTplFlexPresenceObjId()
+	{
 		$ref_id = $this->settings->get(self::DCT_TPL_FLEX_PRESENCE);
 		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 		return gevObjectUtils::getObjId($ref_id);
 	}
 
-	public function setDctTplFlexWebinarId($a_tpl_id) {
+	public function setDctTplFlexWebinarId($a_tpl_id)
+	{
 		$this->settings->set(self::DCT_TPL_FLEX_WEBINAR, $a_val);
 	}
 
-	public function getDctTplFlexWebinarId() {
+	public function getDctTplFlexWebinarId()
+	{
 		return $this->settings->get(self::DCT_TPL_FLEX_WEBINAR);
 	}
 
-	public function getDctTplFlexWebinarObjId() {
+	public function getDctTplFlexWebinarObjId()
+	{
 		$ref_id = $this->settings->get(self::DCT_TPL_FLEX_WEBINAR);
 		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 		return gevObjectUtils::getObjId($ref_id);
 	}
 
-	public function setTypeIDOrgUnitTypeDB($ref_id) {
+	public function setTypeIDOrgUnitTypeDB($ref_id)
+	{
 		$this->settings->set(self::TYPE_ID_ORG_UNIT_TYPE_BD, $ref_id);
 	}
 
-	public function getTypeIDOrgUnitTypeDB() {
+	public function getTypeIDOrgUnitTypeDB()
+	{
 		return $this->settings->get(self::TYPE_ID_ORG_UNIT_TYPE_BD);
 	}
 
 	//id of duplicate user orgunit
 	const DUPLICATE_USER_ORGUNIT_ID = "duplicate_user_orgunit_id";
-	public function getDuplicatedUserOrgUnitId() {
+	public function getDuplicatedUserOrgUnitId()
+	{
 		return $this->settings->get(self::DUPLICATE_USER_ORGUNIT_ID);
 	}
 
-	public function setDuplicatedUserOrgUnitId($obj_id) {
+	public function setDuplicatedUserOrgUnitId($obj_id)
+	{
 		$this->settings->set(self::DUPLICATE_USER_ORGUNIT_ID, $obj_id);
+	}
+
+	const CRS_NA_QUALI_REF_ID = "crs_na_quali_ref_id";
+	public function setNAQualiCourseRefId($ref_id)
+	{
+		$this->settings->set(self::CRS_NA_QUALI_REF_ID, $ref_id);
+	}
+
+	public function getNAQualiCourseRefId()
+	{
+		return $this->settings->get(self::CRS_NA_QUALI_REF_ID);
 	}
 }

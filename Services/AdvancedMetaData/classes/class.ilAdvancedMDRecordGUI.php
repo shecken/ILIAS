@@ -395,7 +395,7 @@ class ilAdvancedMDRecordGUI
 		$field_ids[] = $amd_utils->getFieldId(gevSettings::CRS_AMD_VC_LOGIN_TUTOR);
 		// gev patch end
 
-		foreach(ilAdvancedMDValues::getInstancesForObjectId($this->obj_id, $this->obj_type) as $record_id => $a_values)
+		foreach(ilAdvancedMDValues::getInstancesForObjectId($this->obj_id, $this->obj_type, $this->sub_type, $this->sub_id) as $record_id => $a_values)
 		{
 			// this correctly binds group and definitions
 			$a_values->read();

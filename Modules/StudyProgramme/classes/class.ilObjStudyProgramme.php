@@ -1295,9 +1295,9 @@ class ilObjStudyProgramme extends ilContainer {
 		$file_name = "";
 		if ($a_custom_icon != "")
 		{
-			$file_name = $cont_dir."/icon_custom.svg";
+			$file_name = $cont_dir."/icon_custom.png";
 
-			ilUtil::moveUploadedFile($a_custom_icon, "icon_custom.svg", $file_name, true, "copy");
+			ilUtil::moveUploadedFile($a_custom_icon, "icon_custom.png", $file_name, true, "copy");
 
 			if ($file_name != "" && is_file($file_name))
 			{
