@@ -113,15 +113,15 @@ class ilObjReportBookingsByTpl extends ilObjReportBase
 				$lng->txt('gev_org_unit_recursive'),
 				''
 			)->clone_with_checked(true),
-			$f->multiselectsearch(
-				$lng->txt("gev_org_unit_short"),
-				'',
-				$this->getRelevantOrgus()
-			),
 			$f->sequence(
 				$f->dateperiod(
 					$txt("period"),
 					''
+				),
+				$f->multiselectsearch(
+					$lng->txt("gev_org_unit_short"),
+					'',
+					$this->getRelevantOrgus()
 				),
 				$f->multiselectsearch(
 					$txt('edu_program'),
@@ -163,7 +163,7 @@ class ilObjReportBookingsByTpl extends ilObjReportBase
 				)
 			)
 		)->map(
-			function ($recursive, $org_unit, $start, $end, $edu_program, $type, $template_title, $p_status, $b_status, $venue, $provider) {
+			function ($recursive, $start, $end, $org_unit, $edu_program, $type, $template_title, $p_status, $b_status, $venue, $provider) {
 							return array(
 								'recursive' => $recursive
 								,'org_unit' => $org_unit
