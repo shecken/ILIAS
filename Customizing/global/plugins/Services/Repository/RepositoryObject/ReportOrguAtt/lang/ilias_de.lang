@@ -32,7 +32,7 @@ sum_attended_wbt#:#Selbstlernkurs, teilgenommen
 period#:#Zeitraum
 until#:#bis
 org_unit_short#:#Org.-Einheit
-edu_program#:#Bildungsprogram
+edu_program#:#Bildungsprogramm
 course_type#:#Trainingstyp
 crs_title#:#Trainingstitel
 participation_status#:#Teilnahmestatus
