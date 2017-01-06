@@ -28,7 +28,7 @@ class catFilterMultiselectSearchGUI extends catFilterGUI {
 			$multi_select->setValue($this->filter->default_choice());
 		}
 
-		$multi_select->setWidth("258px");
+		$multi_select->setWidth("330px");
 		$multi_select->setCssClass("js-example-basic-multiple");
 
 		return $multi_select;
