@@ -80,6 +80,9 @@ class catFilterFlatViewGUI
 
 		if ($next_filter_gui instanceof catFilterMultiselectGUI) {
 			$tpl->touchBlock("checkbox");
+			$tpl->setCurrentBlock("multiselect");
+			$tpl->setVariable("FILTER_PATH", $next_filter_gui->path());
+			$tpl->parseCurrentBlock();
 		}
 
 		$tpl->setVariable("FILTER_TITLE", $next_filter_gui->formElement()->getTitle());
