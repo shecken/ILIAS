@@ -2,12 +2,14 @@
 require_once("Services/Form/classes/class.ilTextInputGUI.php");
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterGUI.php';
 
-class catFilterTextGUI extends catFilterGUI {
+class catFilterTextGUI extends catFilterGUI
+{
 	protected $filter;
 	protected $path;
 	protected $val;
 
-	public function __construct($filter, $path) {
+	public function __construct($filter, $path)
+	{
 		$this->filter = $filter;
 		$this->path = $path;
 	}
@@ -15,18 +17,20 @@ class catFilterTextGUI extends catFilterGUI {
 	/**
 	 * @inheritdoc
 	 */
-	public function formElement() {
+	public function formElement()
+	{
 		$input = new ilTextInputGUI($this->filter->label(), "filter[$this->path]");
 		$input->setInfo($this->filter->description());
 
-		if($this->val) {
+		if ($this->val) {
 			$input->setValue($this->val);
 		}
 
 		return $input;
 	}
 
-	public function setValue($val) {
+	public function setValue($val)
+	{
 		$this->val = $val;
 	}
 }
