@@ -34,9 +34,18 @@ class gevMainMenuGUI extends ilMainMenuGUI
 	/**
 	 * @var ilCtrl
 	 */
-	protected $gCtrl = null;
+	protected $gCtrl;
+		/**
+	 * @var lng
+	 */
 	protected $gLng;
+		/**
+	 * @var ilAccess
+	 */
 	protected $gAccess;
+	/**
+	 * @var ilUser
+	 */
 	protected $gUser;
 
 	public function __construct()
@@ -45,10 +54,10 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 		global $lng, $ilCtrl, $ilAccess, $ilUser;
 
-		$this->gLng = &$lng;
-		$this->gCtrl = &$ilCtrl;
-		$this->gAccess = &$ilAccess;
-		$this->gUser = &$ilUser;
+		$this->gLng = $lng;
+		$this->gCtrl = $ilCtrl;
+		$this->gAccess = $ilAccess;
+		$this->gUser = $ilUser;
 
 		if ($this->gUser->getId() !== 0) {
 			$this->user_utils = gevUserUtils::getInstance($this->gUser->getId());
