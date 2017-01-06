@@ -94,13 +94,13 @@ class ilObjReportTrainerWorkload extends ilObjReportBase
 		};
 
 		return $f->sequence(
-			$f->dateperiod($txt("dateperiod"), ""),
 			$f->option(
 				$txt("org_unit_recursive"),
 				""
 			)->clone_with_checked(true),
+			$f->dateperiod($txt("dateperiod"), ""),
 			$f->multiselectsearch($txt("org_unit_short"), "", $this->getRelevantOrgus())
-		)->map(function ($start, $end, $recursive, $org_unit) {
+		)->map(function ($recursive, $start, $end, $org_unit) {
 						return array(
 							'recursive' => $recursive
 							, "org_unit" => $org_unit
