@@ -63,7 +63,11 @@ class catFilterFlatViewGUI
 			throw new Exception("catFilterFlatViewGUI::createFilterTemplate: to many sequence level: ".substr_count($next_filter_gui->path(), "_")." > 1.");
 		}
 
-		$tpl = new ilTemplate("tpl.cat_filter_flat_view_element.html", true, true, "Customizing/global/plugins/Services/Cron/CronHook/ReportMaster");
+		if ($next_filter_gui instanceof catFilterOptionGUI) {
+			$tpl = new ilTemplate("tpl.cat_filter_flat_view_option.html", true, true, "Customizing/global/plugins/Services/Cron/CronHook/ReportMaster");
+		} else {
+			$tpl = new ilTemplate("tpl.cat_filter_flat_view_element.html", true, true, "Customizing/global/plugins/Services/Cron/CronHook/ReportMaster");
+		}
 		//sequences in main sequence render filter sidy by side
 		if (substr_count($next_filter_gui->path(), "_") == 1) {
 			$tpl->setVariable("FLOAT", "ilFloatLeft");
@@ -85,9 +89,10 @@ class catFilterFlatViewGUI
 			$tpl->parseCurrentBlock();
 		}
 
-		$tpl->setVariable("FILTER_TITLE", $next_filter_gui->formElement()->getTitle());
-		$tpl->setVariable("FILTER_GUI", $next_filter_gui->formElement()->render());
-		$tpl->setVariable("FILTER_INFO", $next_filter_gui->formElement()->getInfo());
+		$form_element = $next_filter_gui->formElement();
+		$tpl->setVariable("FILTER_TITLE", $form_element->getTitle());
+		$tpl->setVariable("FILTER_GUI", $form_element->render());
+		$tpl->setVariable("FILTER_INFO", $form_element->getInfo());
 		$tpl->setVariable("FILTER_PATH", $next_filter_gui->path());
 
 		return $tpl;

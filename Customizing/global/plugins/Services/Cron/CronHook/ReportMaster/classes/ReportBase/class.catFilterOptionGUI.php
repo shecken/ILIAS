@@ -19,6 +19,7 @@ class catFilterOptionGUI extends catFilterGUI
 	public function formElement()
 	{
 		$checkbox = new ilCheckboxInputGUI($this->filter->label(), "filter[$this->path]");
+		$checkbox->setOptionTitle($this->filter->label());
 		$checkbox->setInfo($this->filter->description());
 		if ($this->val !== null) {
 			$checkbox->setChecked($this->val);
