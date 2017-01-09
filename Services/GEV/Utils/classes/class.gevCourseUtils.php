@@ -357,6 +357,10 @@ class gevCourseUtils {
 	public function isWebinar() {
 		return $this->getType() == gevSettings::WEBINAR;
 	}
+
+	public function isOnlineTraining() {
+		return $this->getType() == gevSettings::ONLINE_TRAINING;
+	}
 	
 	public function isDecentralTraining() {
 		return $this->getEduProgramm() == "dezentrales Training";

@@ -23,12 +23,29 @@ class ilEffectivenessAnalysisReminderDB {
 		$this->createTable();
 	}
 
+	public function updateTable() {
+		$field = array(
+					'type' => 'integer',
+					'length' => 4,
+					'notnull' => true
+				);
+
+		if(!$this->db->tableColumnExists(self::TABLE_NAME, "user_id")) {
+			$this->db->addTableColumn(self::TABLE_NAME, "user_id", $field);
+		}
+	}
+
 	/**
 	 * Create table for maillog
 	 */
 	protected function createTable() {
 		if(!$this->db->tableExists(self::TABLE_NAME)) {
 			$fields = array(
+				'id' => array(
+					'type' => 'integer',
+					'length' => 4,
+					'notnull' => true
+				),
 				'crs_id' => array(
 					'type' => 'integer',
 					'length' => 4,
@@ -50,6 +67,8 @@ class ilEffectivenessAnalysisReminderDB {
 			);
 
 			$this->db->createTable(self::TABLE_NAME, $fields);
+			$this->db->addPrimaryKey(self::TABLE_NAME, array('id'));
+			$this->db->createSequence(self::TABLE_NAME);
 		}
 	}
 
@@ -58,64 +77,21 @@ class ilEffectivenessAnalysisReminderDB {
 	 *
 	 * @param int 		$crs_id
 	 * @param int 		$superior_id
-	 * @param string 		$type
+	 * @param string 	$type
+	 * @param int[]		$user_ids
 	 */
-	public function reminderSend($crs_id, $superior_id, $type) {
+	public function logMailSend($crs_id, $superior_id, $type, $user_ids) {
 		$values = array("crs_id" => array("integer", $crs_id)
-					  , "superior_id" => array("integer", $superior_id)
-					  , "type" => array("text", $type)
-					  , "send" => array("text", date("Y-m-d"))
-			);
+						  , "superior_id" => array("integer", $superior_id)
+						  , "type" => array("text", $type)
+						  , "send" => array("text", date("Y-m-d"))
+				);
 
-		$this->db->insert(self::TABLE_NAME, $values);
-	}
-
-	/**
-	 * Should the first reminder be send
-	 *
-	 * @param int 		$crs_id
-	 * @param int 		$superior_id
-	 * @param string 	$type_first
-	 *
-	 * @return bool
-	 */
-	public function getNumRowsOfSentFirstReminder($crs_id, $superior_id, $type_first) {
-		$query = "SELECT send\n"
-				." FROM ".self::TABLE_NAME."\n"
-				." WHERE crs_id = ".$this->db->quote($crs_id, "integer")."\n"
-				."     AND type = ".$this->db->quote($type_first, "text")."\n"
-				."     AND superior_id = ".$this->db->quote($superior_id, "integer");
-
-		$result = $this->db->query($query);
-		return $this->db->numRows($result);
-
-		
-	}
-
-	/**
-	 * Should the second reminder be send
-	 *
-	 * @param int 		$crs_id
-	 * @param int 		$superior_id
-	 * @param string 	$type_first
-	 * @param string 	$type_second
-	 *
-	 * @return bool
-	 */
-	public function getLastSendDates($crs_id, $superior_id, $type_first, $type_second) {
-		$query = "SELECT MAX(first.send) AS first_send, MAX(second.send) AS second_send\n"
-				." FROM ".self::TABLE_NAME." first\n"
-				." LEFT JOIN ".self::TABLE_NAME." second\n"
-				."     ON second.crs_id = ".$this->db->quote($crs_id, "integer")."\n"
-				."         AND second.type = ".$this->db->quote($type_second, "text")."\n"
-				."         AND second.superior_id = ".$this->db->quote($superior_id, "integer")."\n"
-				." WHERE first.crs_id = ".$this->db->quote($crs_id, "integer")."\n"
-				."     AND first.type = ".$this->db->quote($type_first, "text")."\n"
-				."     AND first.superior_id = ".$this->db->quote($superior_id, "integer");
-
-		$result = $this->db->query($query);
-		$row = $this->db->fetchAssoc($result);
-
-		return $row;
+		foreach($user_ids as $key => $user_id) {
+			$next_id = $this->db->nextId(self::TABLE_NAME);
+			$values["id"] = array("integer", $next_id);
+			$values["user_id"] = array("text", $user_id);
+			$this->db->insert(self::TABLE_NAME, $values);
+		}
 	}
 }

@@ -7,6 +7,8 @@
  * @author Stefan Hecken <stefan.hecken@cocepts-and-training.de>
  */
 class gevEffectivenessAnalysisDB {
+	const TABLE_DUED_EFF_ANA = "eff_analysis_due_date";
+	const TABLE_FINISHED_EFF_ANA = "eff_analysis";
 
 	const EMPTY_TEXT = "-empty-";
 	const EMPTY_DATE = "0000-00-00";
@@ -19,8 +21,8 @@ class gevEffectivenessAnalysisDB {
 	 * Create the effectiveness analysis result table
 	 */
 	public function createTable() {
-		if( !$this->gDB->tableExists('eff_analysis') ) {
-			$this->gDB->createTable('eff_analysis', array(
+		if( !$this->gDB->tableExists(self::TABLE_FINISHED_EFF_ANA) ) {
+			$this->gDB->createTable(self::TABLE_FINISHED_EFF_ANA, array(
 				'crs_id' => array(
 					'type' => 'integer',
 					'length' => 4,
@@ -46,7 +48,7 @@ class gevEffectivenessAnalysisDB {
 				)
 			));
 
-			$this->gDB->addPrimaryKey('eff_analysis', array('crs_id', 'user_id'));
+			$this->gDB->addPrimaryKey(self::TABLE_FINISHED_EFF_ANA, array('crs_id', 'user_id'));
 		}
 	}
 
@@ -126,10 +128,7 @@ class gevEffectivenessAnalysisDB {
 				.", hcrs.title, hcrs.type, hcrs.begin_date, hcrs.end_date, hcrs.language, hcrs.training_number\n"
 				."    , hcrs.venue, hcrs.target_groups, hcrs.objectives_benefits, hcrs.training_topics, hcrs.crs_id\n"
 				."    , hcrs.reason_for_training\n"
-				.", CASE hcrs.type\n"
-				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (90 * 24 * 60 * 60)), '%Y-%b-%e')\n"
-				."      ELSE DATE_ADD(hcrs.end_date, INTERVAL 90 DAY)\n"
-				."  END AS scheduled\n"
+				.", dued_eff_ana.due_date AS scheduled\n"
 				.", effa.finish_date, effa.result\n";
 		$query .= $this->getSelectBase($employees, $reason_for_eff_analysis);
 		$query .= $this->getWhereByFilter($filter);
@@ -151,20 +150,75 @@ class gevEffectivenessAnalysisDB {
 		return $ret;
 	}
 
-	public function getEffectivenessAnalysisOpen($employees, array $reason_for_eff_analysis, array $filter) {
-		$query = "SELECT hcrs.crs_id\n"
-				.", CASE hcrs.type\n"
-				."      WHEN 'Online Training' THEN DATE_FORMAT(FROM_UNIXTIME(psusr.changed_on + (90 * 24 * 60 * 60)), '%Y-%b-%e')\n"
-				."      ELSE DATE_ADD(hcrs.end_date, INTERVAL 90 DAY)\n"
-				."  END AS scheduled\n";
-		$query .= $this->getSelectBase($employees, $reason_for_eff_analysis);
-		$query .= $this->getWhereByFilter($filter);
-		$query .= $this->getGroupBy();
-		$query .= " HAVING scheduled <= ".$this->gDB->quote($filter[gevEffectivenessAnalysis::F_SCHEDULED], "text")."\n";
+	/**
+	 * Get user id where superior should get first mail
+	 * 
+	 * @param int[] 	$employees
+	 * @param int 		$superior_id
+	 * 
+	 * @return int[]
+	 */
+	public function getUserIdsForFirstMail($employees, $superior_id) {
+		$query = "SELECT eff_analysis_due_date.crs_id AS send_for_crs, eff_analysis_due_date.user_id,\n"
+				." IF(ISNULL(MAX(eff_log_first.send)), true, false) AS send_first \n"
+				." ,eff_analysis.crs_id\n"
+				." FROM eff_analysis_due_date\n"
+				." LEFT JOIN eff_analysis\n"
+				."     ON eff_analysis.crs_id = eff_analysis_due_date.crs_id\n"
+				."         AND eff_analysis.user_id = eff_analysis_due_date.user_id\n"
+				." LEFT JOIN eff_analysis_maillog eff_log_first ON eff_log_first.user_id = eff_analysis_due_date.user_id\n"
+				."     AND eff_log_first.crs_id = eff_analysis_due_date.crs_id\n"
+				."     AND eff_log_first.superior_id = ".$this->gDB->quote($superior_id, "integer")."\n"
+				."     AND eff_log_first.type = 'first'\n"
+				." WHERE ".$this->gDB->in("eff_analysis_due_date.user_id", $employees, false, "integer")."\n"
+				."     AND eff_analysis_due_date.due_date <= DATE_SUB(CURDATE(), INTERVAL 15 DAY)\n"
+				." GROUP BY eff_analysis_due_date.user_id, eff_analysis_due_date.crs_id\n"
+				." HAVING send_first = true AND eff_analysis.crs_id IS NULL\n";
 
 		$res = $this->gDB->query($query);
 		while($row = $this->gDB->fetchAssoc($res)) {
-			$ret[] = $row["crs_id"];
+			$ret[$row["send_for_crs"]][] = $row["user_id"];
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Get user id where superior should get second reminder
+	 * 
+	 * @param int[] 	$employees
+	 * @param int 		$superior_id
+	 * 
+	 * @return int[]
+	 */
+	public function getUserIdsForReminder($employees, $superior_id) {
+		$query = "SELECT eff_analysis_due_date.crs_id as send_for_crs, eff_analysis_due_date.user_id,\n"
+				." IF(ISNULL(MAX(eff_log_first.send)), false,\n"
+				."     IF(ISNULL(MAX(eff_log_second.send)) AND MAX(eff_log_first.send) <= DATE_SUB(CURDATE(), INTERVAL 15 DAY), true,\n"
+				."         IF(MAX(eff_log_second.send) <= DATE_SUB(CURDATE(), INTERVAL 2 DAY), true, false)\n"
+				."     )\n"
+				." ) AS send_second \n"
+				." ,eff_analysis.crs_id\n"
+				." FROM eff_analysis_due_date\n"
+				." LEFT JOIN eff_analysis\n"
+				."     ON eff_analysis.crs_id = eff_analysis_due_date.crs_id\n"
+				."         AND eff_analysis.user_id = eff_analysis_due_date.user_id\n"
+				." LEFT JOIN eff_analysis_maillog eff_log_first ON eff_log_first.user_id = eff_analysis_due_date.user_id\n"
+				."     AND eff_log_first.crs_id = eff_analysis_due_date.crs_id\n"
+				."     AND eff_log_first.superior_id = ".$this->gDB->quote($superior_id, "integer")."\n"
+				."     AND eff_log_first.type = 'first'\n"
+				." LEFT JOIN eff_analysis_maillog eff_log_second ON eff_log_second.user_id = eff_analysis_due_date.user_id\n"
+				."     AND eff_log_second.crs_id = eff_analysis_due_date.crs_id\n"
+				."     AND eff_log_second.superior_id = ".$this->gDB->quote($superior_id, "integer")."\n"
+				."     AND eff_log_second.type = 'second'\n"
+				." WHERE ".$this->gDB->in("eff_analysis_due_date.user_id", $employees, false, "integer")."\n"
+				."     AND eff_analysis_due_date.due_date <= DATE_SUB(CURDATE(), INTERVAL 15 DAY)\n"
+				." GROUP BY eff_analysis_due_date.user_id, eff_analysis_due_date.crs_id\n"
+				." HAVING send_second = true AND eff_analysis.crs_id IS NULL\n";
+
+		$res = $this->gDB->query($query);
+		while($row = $this->gDB->fetchAssoc($res)) {
+			$ret[$row["send_for_crs"]][] = $row["user_id"];
 		}
 
 		return $ret;
@@ -186,7 +240,7 @@ class gevEffectivenessAnalysisDB {
 					  , "finish_date" => array("text", date('Y-m-d'))
 			);
 
-		$this->gDB->insert('eff_analysis', $values);
+		$this->gDB->insert(self::TABLE_FINISHED_EFF_ANA, $values);
 	}
 
 	/**
@@ -195,26 +249,19 @@ class gevEffectivenessAnalysisDB {
 	 * @return string
 	 */
 	protected function getSelectBase($employees, array $reason_for_eff_analysis) {
-		$today_ts = strtotime(date('Y-m-d'). '00:00:00');
-		$today_date = date('Y-m-d', strtotime(date('Y-m-d'). '00:00:00'));
+		$today_date = date('Y-m-d');
 
-		return " FROM hist_course hcrs\n"
-				." JOIN crs_book crsb\n"
-				."    ON crsb.crs_id = hcrs.crs_id\n"
-				."        AND ".$this->gDB->in("crsb.user_id", $employees, false, "integer")."\n"
-				."        AND status != ".$this->gDB->quote(4, "integer")."\n"
+		return " FROM ".self::TABLE_DUED_EFF_ANA." dued_eff_ana\n"
+				." JOIN hist_course hcrs\n"
+				."    ON hcrs.crs_id = dued_eff_ana.crs_id\n"
+				."        AND hcrs.hist_historic = 0\n"
 				." JOIN hist_user husr\n"
-				."    ON husr.user_id = crsb.user_id\n"
+				."    ON husr.user_id = dued_eff_ana.user_id\n"
 				."        AND husr.hist_historic = 0\n"
 				." JOIN hist_userorgu husrorgu\n"
 				."    ON husrorgu.usr_id = husr.user_id\n"
 				."        AND husrorgu.hist_historic = 0\n"
 				."        AND husrorgu.action = 1\n"
-				." JOIN hist_usercoursestatus husrcrs\n"
-				."    ON husrcrs.crs_id = hcrs.crs_id\n"
-				."        AND husrcrs.usr_id = husr.user_id\n"
-				."        AND husrcrs.participation_status = ".$this->gDB->quote('status_successful', 'text')."\n"
-				."        AND husrcrs.hist_historic = 0\n"
 				." LEFT JOIN hist_userorgu husrorgu2\n"
 				."    ON husrorgu2.orgu_id = husrorgu.orgu_id\n"
 				."        AND husrorgu2.hist_historic = 0\n"
@@ -222,22 +269,12 @@ class gevEffectivenessAnalysisDB {
 				."        AND husrorgu2.rol_title = ".$this->gDB->quote("Vorgesetzter", "text")."\n"
 				." LEFT JOIN hist_user husr2\n"
 				."    ON husrorgu2.usr_id = husr2.user_id\n"
-				." LEFT JOIN crs_pstatus_usr psusr\n"
-				."    ON psusr.crs_id = hcrs.crs_id\n"
-				."        AND psusr.user_id = husr.user_id\n"
-				." LEFT JOIN eff_analysis effa\n"
-				."    ON effa.crs_id = hcrs.crs_id\n"
-				."        AND effa.user_id = husr.user_id\n"
-				." WHERE hcrs.hist_historic = 0\n"
-				."     AND ".$this->gDB->in("hcrs.reason_for_training", $reason_for_eff_analysis, false, "text")."\n"
-				."     AND (\n"
-				."           (hcrs.type = ".$this->gDB->quote('Online Training', 'text')."\n"
-				."                AND psusr.status = ".$this->gDB->quote(3, "integer")."\n"
-				."                AND (psusr.changed_on + (90 * 24 * 60 * 60)) <= ".$this->gDB->quote($today_ts, "integer").")\n"
-				."         OR\n"
-				."           (".$this->gDB->in("hcrs.type", array('Live Training', 'Webinar'), false, "text")."\n"
-				."                AND DATE_ADD(hcrs.end_date, INTERVAL 90 DAY) <= ".$this->gDB->quote($today_date, "text").")\n"
-				."         )\n";
+				." LEFT JOIN ".self::TABLE_FINISHED_EFF_ANA." effa\n"
+				."    ON effa.crs_id = dued_eff_ana.crs_id\n"
+				."        AND effa.user_id = dued_eff_ana.user_id\n"
+				." WHERE dued_eff_ana.due_date <= ".$this->gDB->quote($today_date, "text")."\n"
+				."    AND ".$this->gDB->in("dued_eff_ana.user_id", $employees, false, "integer")."\n"
+				;
 	}
 
 	/**
@@ -314,7 +351,7 @@ class gevEffectivenessAnalysisDB {
 	 */
 	public function getResultData($crs_id, $user_id) {
 		$query = "SELECT result, info\n"
-				." FROM eff_analysis\n"
+				." FROM ".self::TABLE_FINISHED_EFF_ANA."\n"
 				." WHERE crs_id = ".$this->gDB->quote($crs_id, "integer")."\n"
 				."     AND user_id = ".$this->gDB->quote($user_id, "integer");
 
