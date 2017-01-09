@@ -14,7 +14,9 @@ interface DB {
 	/**
 	 * get obj id of role template
 	 *
+	 * @param string 	$tpl_title
+	 *
 	 * @return int
 	 */
-	public function getRoltId();
+	public function getRoltId($tpl_title);
 }

@@ -172,8 +172,8 @@ class ilActions {
 		$role_obj = $rolf_obj->createRole($this->getLocalRoleNameFor($newObj->getId()), self::OBSERVATOR_ROLE_DESCRIPTION.$newObj->getId());
 		$admin_id = $role_obj->getId();
 
-		$rolt_obj_id = $this->observator_db->getRoltId();
-		$this->gRbacadmin->copyRoleTemplatePermissions($rolt_obj_id,ROLE_FOLDER_ID,$rolf_obj->getRefId(),$role_obj->getId());
+		$rolt_obj_id = $this->observator_db->getRoltId(self::OBSERVATOR_ROLE_NAME);
+		$this->gRbacadmin->copyRoleTemplatePermissions($rolt_obj_id, ROLE_FOLDER_ID, $rolf_obj->getRefId(), $role_obj->getId());
 
 		// SET OBJECT PERMISSIONS OF COURSE OBJECT
 		$ops = $this->gRbacreview->getOperationsOfRole($role_obj->getId(),"xtas",$rolf_obj->getRefId());
