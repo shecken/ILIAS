@@ -125,8 +125,6 @@ class ilObjStudyProgrammeTreeGUI {
 	public function executeCommand() {
 		$cmd = $this->ctrl->getCmd();
 
-		$this->getToolbar();
-
 		if ($cmd == "") {
 			$cmd = "view";
 		}
@@ -165,11 +163,7 @@ class ilObjStudyProgrammeTreeGUI {
 	 * @return string
 	 */
 	protected function view() {
-
-		$output = $this->tree->getHTML();
-		//$output .= $this->initAsyncUIElements();
-
-		return $output;
+		return $this->tree->getHTML();
 	}
 
 
@@ -524,27 +518,6 @@ class ilObjStudyProgrammeTreeGUI {
 		$async_explorer->initJs();
 
 		return $content;
-	}
-
-
-	/**
-	 * Setup the toolbar
-	 */
-	protected function getToolbar() {
-		$save_order_btn = ilLinkButton::getInstance();
-		$save_order_btn->setId('save_order_button');
-		$save_order_btn->setUrl("javascript:void(0);");
-		$save_order_btn->setOnClick("$('body').trigger('study_programme-save_order');");
-		$save_order_btn->setCaption('prg_save_tree_order');
-
-		$cancel_order_btn = ilLinkButton::getInstance();
-		$cancel_order_btn->setId('cancel_order_button');
-		$cancel_order_btn->setUrl("javascript:void(0);");
-		$cancel_order_btn->setOnClick("$('body').trigger('study_programme-cancel_order');");
-		$cancel_order_btn->setCaption('prg_cancel_tree_order');
-
-		// $this->toolbar->addButtonInstance($save_order_btn);
-		// $this->toolbar->addButtonInstance($cancel_order_btn);
 	}
 
 
