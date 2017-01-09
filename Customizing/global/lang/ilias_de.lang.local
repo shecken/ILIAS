@@ -1600,7 +1600,7 @@ prg#:#prg_please_select_a_course_for_creating_a_leaf#:#Bitte wählen Sie einen K
 prg#:#prg_deleted_safely#:#Knoten wurde sicher entfernt.
 prg#:#prg_not_allowed_node_to_delete#:#Sie dürfen dieses Studienprogramm nicht entfernen.
 prg#:#prg_added_course_ref_successful#:#Neuer Kurslink erfolgreich hinzugefügt.
-prg#:#prg_manage#:#Baumansicht
+prg#:#prg_treeview#:#Baumansicht
 prg#:#prg_view#:#Anzeigen
 prg#:#prg_update_from_current_plan#:#Aus dem aktuellen Plan aktualisieren.
 prg#:#prg_update_successful#:#Änderungen erfolgreich gespeichert!

@@ -566,7 +566,7 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI
 				}
 
 				if ($this->checkAccess("write")) {
-					$this->tabs_gui->addSubTab(self::SUBTAB_VIEW_TREE, $this->lng->txt("prg_manage"), $this->getLinkTarget(self::SUBTAB_VIEW_TREE));
+					$this->tabs_gui->addSubTab(self::SUBTAB_VIEW_TREE, $this->lng->txt("prg_treeview"), $this->getLinkTarget(self::SUBTAB_VIEW_TREE));
 				}
 				break;
 			case 'settings':
