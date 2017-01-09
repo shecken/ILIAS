@@ -1600,7 +1600,7 @@ prg#:#prg_please_select_a_course_for_creating_a_leaf#:#Bitte wählen Sie einen K
 prg#:#prg_deleted_safely#:#Knoten wurde sicher entfernt.
 prg#:#prg_not_allowed_node_to_delete#:#Sie dürfen dieses Studienprogramm nicht entfernen.
 prg#:#prg_added_course_ref_successful#:#Neuer Kurslink erfolgreich hinzugefügt.
-prg#:#prg_manage#:#Verwalten
+prg#:#prg_treeview#:#Baumansicht
 prg#:#prg_view#:#Anzeigen
 prg#:#prg_update_from_current_plan#:#Aus dem aktuellen Plan aktualisieren.
 prg#:#prg_update_successful#:#Änderungen erfolgreich gespeichert!
@@ -1649,3 +1649,82 @@ prg#:#prg_assigned_by#:#Hinzugefügt von
 prg#:#prg_points_reachable#:#Erreichbare Punkte
 gev#:#gev_open_same_window#:#Im selben Fenster öffnen
 gev#:#jill_na_link_label#:#Zur Qualifizierung nach der EU-Vermittlerrichtlinie
+mass#:#general#:#Allgemein
+mass#:#mass_content#:#Inhalt
+mass#:#mass_record_template#:#Vorlage Prüfungsnotiz
+mass#:#mass_graded_by#:#Bewertet von
+mass#:#mass_usr_remove#:#Teilnehmer entfernen
+mass#:#mass_usr_edit#:#Teilnehmer bewerten und Lernfortschritt bearbeiten
+mass#:#mass_usr_view#:#Prüfungsdaten
+mass#:#mass_edit_record#:#Prüfungsdaten
+mass#:#mass_record#:#Prüfungsnotiz
+mass#:#mass_internal_note#:#Interne Anmerkungen zur Prüfung
+mass#:#mass_status_completed#:#Bestanden
+mass#:#mass_status_failed#:#Nicht bestanden
+mass#:#mass_status_pending#:#Noch nicht bewertet
+mass#:#mass_notify#:#Teilnehmer nach Finalisierung benachrichtigen
+mass#:#mass_finalize#:#Abschließen
+mass#:#il_mass_member#:#Teilnehmer
+mass#:#il_mass_members#:#Teilnehmer
+mass#:#edit_members#:#Teilnehmer bearbeiten
+mass#:#mass_edit_members#:#Teilnehmer bearbeiten
+mass#:#mass_visible#:#Anzeigen
+mass#:#mass_read#:#Lesezugriff
+mass#:#mass_copy#:#Individuelle Bewertung kopieren
+mass#:#mass_write#:#Bearbeiten
+mass#:#mass_delete#:#Löschen
+mass#:#mass_read_learning_progress#:#Lernfortschritt der Teilnehmer einsehen
+mass#:#mass_edit_permissions#:#Rechteeinstellungen ändern
+mass#:#mass_edit_learning_progress#:#Lernfortschritt bearbeiten
+mass#:#mass_may_not_finalize#:#Status kann nicht finalisiert werden.
+mass#:#mass_subj_notification_completed#:#%s: Individuelle Bewertung erfolgreich abgeschlossen.
+mass#:#mass_subj_notification_failed#:#%s: Individuelle Bewertung nicht erfolgreich.
+trac#:#trac_mode_manual_assessment#:#Individuelle Bewertung durch Tutor/Trainer
+common#:#obj_mass#:#Individuelle Bewertung
+common#:#objs_mass#:#Individuelle Bewertungen
+common#:#obj_mass_duplicate#:#Individuelle Bewertung kopieren
+common#:#obj_mass_select#:#-- Wählen Sie eine Individuelle Bewertung aus --
+trac#:#trac_mode_manual_assessment_info#:#Der Eintrag des Benutzers muss finalisiert werden, damit der Benutzer einen Lernfortschritt erhält.
+common#:#il_mass_member#:#Teilnehmer einer Individuellen Bewertung
+common#:#mass_new#:#Neue Individuelle Bewertung anlegen
+common#:#mass_import#:#Individuelle Bewertung importieren
+rbac#:#mass_visible#:#Manuele Bewertung sichtbar
+rbac#:#mass_read#:#Lesezugriff auf Individuelle Bewertung
+rbac#:#mass_read_learning_progress#:#Den Lernfortschritt einer Individuellen Bewertung einsehen
+rbac#:#mass_edit_learning_progress#:#Den Lernfortschritt einer Individuellen Bewertung bearbeiten
+rbac#:#mass_copy#:#Individuelle Bewertung kopieren
+rbac#:#mass_write#:#Individuelle Bewertung bearbeiten
+rbac#:#mass_delete#:#Individuelle Bewertung löschen
+rbac#:#mass_edit_members#:#Teilnehmer einer Individuellen Bewertung bearbeiten
+rbac#:#mass_edit_permission#:#Rechte einer Individuellen Bewertung bearbeiten
+mass#:#lp_inactive#:#Beachten Sie: die Lernfortschrittsbestimmung für dieses Objekt ist deaktiviert. Daher können Teilnahmen nicht finalisiert werden.
+mass#:#mass_edit#:#Einstellungen
+mass#:#mass_add#:#Individuelle Bewertung anlegen
+mass#:#mass_membership_finalized#:#Prüfungsdaten finalisiert
+mass#:#mass_membership_saved#:#Prüfungsdaten gespeichert, jedoch noch nicht finalisiert
+mass#:#mass_return#:#Zurück zur Übersicht
+mass#:#mass_remove_user_qst#:#Soll der Teilnehmer wirklich entfernt werden?
+mass#:#mass_finalize_user_qst#:#Sollen die Prüfungsdaten des Teilnehmers wirklich finalisiert werden? Änderungen an der Bewertung sind hinterher nicht mehr möglich.
+mass#:#mass_settings_saved#:#Einstellungen gespeichert.
+mass#:#mass_add_user_failure#:#Einer oder mehrere Benutzer konnten nicht hinzugefügt werden.
+mass#:#mass_add_user_success#:#Benutzer als Teilnehmer hinzugefügt.
+mass#:#grading#:#Bewertung
+mass#:#grading_info#:#Bewertungsinformationen
+mass#:#grading_record#:#Bewertungszusammenfassung
+mass#:#mass_content_explanation#:#Inhalte der Prüfung.
+mass#:#mass_record_template_explanation#:#Vorlage für die Prüfungsnotiz. Wird für jeden neuen Teilnehmer verwendet.
+mass#:#mass_notify_explanation#:#Der Teilnehmer wird nach der Finalisierung per E-Mail benachrichtigt und kann die Prüfungsnotiz auf der Info-Seite einsehen.
+mass#:#mass_contact#:#Name
+mass#:#mass_responsibility#:#Zuständigkeit
+mass#:#mass_phone#:#Telefon
+mass#:#mass_mails#:#E-Mail
+mass#:#mass_info_emails_expl#:#Sie können mehrere Adressen mit einem Komma getrennt angeben.
+mass#:#mass_consultation_hours#:#Sprechstunden
+mass#:#mass_edit_info#:#Einstellungen Kontakt
+mass#:#mass_mess_notification_completed#:#Sie haben die Prüfung %s bestanden. Beachten Sie auch die folgende Zusammenfassung für Details.
+mass#:#mass_mess_notification_failed#:#Sie haben die Prüfung %s nicht bestanden. Beachten Sie auch die folgende Zusammenfassung für Details.
+mass#:#mass_contact_info#:#Kontaktinformationen
+mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
+mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach finaler Bewertung vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
+mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
+mass#:#mass_edit_conditions#:#Vorbedingungen
