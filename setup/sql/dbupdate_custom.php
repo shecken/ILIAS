@@ -5902,7 +5902,7 @@ gevCourseUtils::revokePermissionsForAllCoursesBelow($fixed_dec_training_category
 gevCourseUtils::revokePermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Admin-TA", $all_crs_permissions);
 gevCourseUtils::revokePermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Admin-Ansicht", $all_crs_permissions);
 
-gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "Admin-Voll", array('edit_permission', 'visible', 'read', 'write', 'delete', 'join', 'leave', 'create_grp', 'create_frm', 'create_lm'
+gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Admin-Voll", array('edit_permission', 'visible', 'read', 'write', 'delete', 'join', 'leave', 'create_grp', 'create_frm', 'create_lm'
 							, 'create_sahs', 'create_glo', 'create_exc', 'create_file', 'create_fold', 'create_tst', 'create_qpl', 'create_mep'
 							, 'create_htlm', 'create_svy', 'create_spl', 'create_webr', 'edit_learning_progress', 'copy', 'create_feed', 'create_mcst'
 							, 'create_sess', 'create_wiki', 'edit_event', 'create_crsr', 'create_catr', 'create_book', 'create_chtr', 'create_blog'
@@ -5918,7 +5918,7 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_
 
 $flex_dec_training_category_ref_id = 49840;
 
-gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "Admin-Voll", array('edit_permission', 'visible', 'read', 'write', 'delete', 'join', 'leave', 'create_grp', 'create_frm', 'create_lm'
+gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Admin-Voll", array('edit_permission', 'visible', 'read', 'write', 'delete', 'join', 'leave', 'create_grp', 'create_frm', 'create_lm'
 							, 'create_sahs', 'create_glo', 'create_exc', 'create_file', 'create_fold', 'create_tst', 'create_qpl', 'create_mep'
 							, 'create_htlm', 'create_svy', 'create_spl', 'create_webr', 'edit_learning_progress', 'copy', 'create_feed', 'create_mcst'
 							, 'create_sess', 'create_wiki', 'edit_event', 'create_crsr', 'create_catr', 'create_book', 'create_chtr', 'create_blog'
