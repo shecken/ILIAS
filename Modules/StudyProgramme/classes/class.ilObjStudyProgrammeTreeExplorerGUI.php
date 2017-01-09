@@ -12,7 +12,8 @@ require_once("./Modules/StudyProgramme/classes/class.ilObjStudyProgrammeSettings
  * @author  Michael Herren <mh@studer-raimann.ch>
  * @version 1.0.0
  */
-class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
+class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI
+{
 	protected $js_study_programme_path = "./Modules/StudyProgramme/templates/js/ilStudyProgramme.js";
 	protected $css_study_programme_path = "./Modules/StudyProgramme/templates/css/ilStudyProgrammeTree.css";
 
@@ -82,7 +83,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 * @param $a_parent_cmd
 	 * @param $a_tree
 	 */
-	public function __construct($a_tree_root_id, $modal_id, $a_expl_id, $a_parent_obj, $a_parent_cmd) {
+	public function __construct($a_tree_root_id, $modal_id, $a_expl_id, $a_parent_obj, $a_parent_cmd)
+	{
 		global $ilAccess, $lng, $tpl, $ilToolbar, $ilCtrl;
 
 		parent::__construct($a_expl_id, $a_parent_obj, $a_parent_cmd);
@@ -108,7 +110,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return string
 	 */
-	public function getNodeContent($node) {
+	public function getNodeContent($node)
+	{
 		global $lng, $ilAccess;
 
 		$current_ref_id = (isset($_GET["ref_id"]))? $_GET["ref_id"] : -1;
@@ -138,14 +141,14 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 		$tpl->setVariable('NODE_TITLE_CLASSES', implode(' ', $this->getNodeTitleClasses($node_config)));
 		$tpl->setVariable('NODE_TITLE', $node->getTitle());
 
-		if($is_study_programme) {
+		if ($is_study_programme) {
 			$tpl->setVariable('NODE_POINT_CLASSES', $this->class_configuration['node']['node_point']);
 			$tpl->setVariable('NODE_POINTS', $this->formatPointValue($node->getPoints()));
 		}
 
 		// add the tree buttons
-		if($this->checkAccess('write', $node->getRefId())) {
-			if($is_study_programme) {
+		if ($this->checkAccess('write', $node->getRefId())) {
+			if ($is_study_programme) {
 				$info_button = $this->getNodeLink('ilObjStudyProgrammeSettingsGUI', 'view', array('ref_id'=>$node->getRefId(), 'currentNode'=>$node_config['is_current_node']), ilGlyphGUI::get(ilGlyphGUI::INFO));
 				$tpl->setVariable('LINK_HREF', $info_button);
 			} else {
@@ -168,9 +171,10 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return array
 	 */
-	protected function getNodeTitleClasses($node_config) {
+	protected function getNodeTitleClasses($node_config)
+	{
 		$node_title_classes = array($this->class_configuration['node']['node_title']);
-		if($node_config['is_study_programme']){
+		if ($node_config['is_study_programme']) {
 			if ($node_config['is_current_node']) {
 				array_push($node_title_classes, $this->class_configuration['node']['node_current']);
 			}
@@ -186,7 +190,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return ilTemplate
 	 */
-	protected function getNodeTemplateInstance() {
+	protected function getNodeTemplateInstance()
+	{
 		return new ilTemplate("tpl.tree_node_content.html", true, true, "Modules/StudyProgramme");
 	}
 
@@ -197,10 +202,11 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return string
 	 */
-	protected function formatPointValue($points) {
+	protected function formatPointValue($points)
+	{
 		return '('. $points ." ".$this->lng->txt('prg_points').')';
 	}
-	
+
 	/**
 	 * Generate link-element
 	 *
@@ -212,8 +218,9 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return string
 	 */
-	protected function getNodeLink($target_class, $cmd, $params, $content, $async = true) {
-		foreach($params as $param_name=>$param_value) {
+	protected function getNodeLink($target_class, $cmd, $params, $content, $async = true)
+	{
+		foreach ($params as $param_name => $param_value) {
 			$this->ctrl->setParameterByClass($target_class, $param_name, $param_value);
 		}
 
@@ -225,9 +232,10 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return mixed
 	 */
-	public function getRootNode() {
+	public function getRootNode()
+	{
 		$node = ilObjStudyProgramme::getInstanceByRefId($this->tree_root_id);
-		if($node->getRoot() != NULL) {
+		if ($node->getRoot() != null) {
 			return $node->getRoot();
 		}
 		return $node;
@@ -241,7 +249,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return string
 	 */
-	public function getNodeIcon($a_node) {
+	public function getNodeIcon($a_node)
+	{
 		global $ilias;
 
 		$obj_id = ilObject::_lookupObjId($a_node->getRefId());
@@ -260,7 +269,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return string
 	 */
-	public function getNodeHref($node) {
+	public function getNodeHref($node)
+	{
 		global $ilCtrl;
 
 		if ($ilCtrl->getCmd() == "performPaste") {
@@ -281,7 +291,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 * @internal param int $a_parent_id parent id
 	 * @return array childs
 	 */
-	public function getChildsOfNode($a_parent_node_id) {
+	public function getChildsOfNode($a_parent_node_id)
+	{
 		global $ilAccess;
 
 		$parent_obj = ilObjectFactoryWrapper::singleton()->getInstanceByRefId($a_parent_node_id);
@@ -289,12 +300,12 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 		$children_with_permission = array();
 
 		// its currently only possible to have children on StudyProgrammes
-		if($parent_obj instanceof ilObjStudyProgramme) {
+		if ($parent_obj instanceof ilObjStudyProgramme) {
 			$children = ($parent_obj->hasChildren())? $parent_obj->getChildren() : $parent_obj->getLPChildren();
 
-			if(is_array($children)) {
-				foreach($children as $node) {
-					if($this->checkAccess('visible', $node->getRefId())) {
+			if (is_array($children)) {
+				foreach ($children as $node) {
+					if ($this->checkAccess('visible', $node->getRefId())) {
 						$children_with_permission[] = $node;
 					}
 				}
@@ -312,7 +323,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 * @global ilAccessHandler $ilAccess
 	 * @return boolean node clickable true/false
 	 */
-	public function isNodeClickable($a_node) {
+	public function isNodeClickable($a_node)
+	{
 		return true;
 	}
 
@@ -324,8 +336,9 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return string id of node
 	 */
-	public function getNodeId($a_node) {
-		if(!is_null($a_node)) {
+	public function getNodeId($a_node)
+	{
+		if (!is_null($a_node)) {
 			return $a_node->getRefId();
 		}
 		return null;
@@ -350,37 +363,31 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return string
 	 */
-	public function getHTML() {
+	public function getHTML()
+	{
 		$this->tpl->addCss($this->css_study_programme_path);
 
 		$etpl = new ilTemplate("tpl.simple_tree_view.html", true, true, "Modules/StudyProgramme");
 		$root_node = $this->getRootNode();
 		if (!$this->getSkipRootNode() &&
-			$this->isNodeVisible($this->getRootNode()))
-		{
+			$this->isNodeVisible($this->getRootNode())) {
 			$this->listStart($etpl);
 			$this->renderNode($this->getRootNode(), $etpl);
 			$this->listEnd($etpl);
-		}
-		else
-		{		
+		} else {
 			$childs = $this->getChildsOfNode($this->getNodeId($root_node));
 			$childs = $this->sortChilds($childs, $this->getNodeId($root_node));
 			$any = false;
-			foreach ($childs as $child_node)
-			{
-				if ($this->isNodeVisible($child_node))
-				{
-					if (!$any)
-					{
+			foreach ($childs as $child_node) {
+				if ($this->isNodeVisible($child_node)) {
+					if (!$any) {
 						$this->listStart($etpl);
 						$any = true;
 					}
 					$this->renderNode($child_node, $etpl);
 				}
 			}
-			if ($any)
-			{
+			if ($any) {
 				$this->listEnd($etpl);
 			}
 		}
@@ -388,10 +395,10 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 		return $etpl->get();
 	}
 
-	function renderNode($a_node, $tpl) {
+	public function renderNode($a_node, $tpl)
+	{
 		$this->listItemStart($tpl, $a_node);
-		if ($this->getNodeIcon($a_node) != "")
-		{
+		if ($this->getNodeIcon($a_node) != "") {
 			$tpl->setVariable("ICON", ilUtil::img($this->getNodeIcon($a_node), $this->getNodeIconAlt($a_node))." ");
 		}
 		$tpl->setVariable("CONTENT", $this->getNodeContent($a_node));
@@ -408,9 +415,9 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @param int $node_id
 	 */
-	public function closeCertainNode($node_id) {
-		if (in_array($node_id, $this->open_nodes))
-		{
+	public function closeCertainNode($node_id)
+	{
+		if (in_array($node_id, $this->open_nodes)) {
 			$k = array_search($node_id, $this->open_nodes);
 			unset($this->open_nodes[$k]);
 		}
@@ -423,10 +430,10 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @param int $node_id
 	 */
-	public function openCertainNode($node_id) {
+	public function openCertainNode($node_id)
+	{
 		$id = $this->getNodeIdForDomNodeId($node_id);
-		if (!in_array($id, $this->open_nodes))
-		{
+		if (!in_array($id, $this->open_nodes)) {
 			$this->open_nodes[] = $id;
 		}
 		$this->store->set("on_".$this->id, serialize($this->open_nodes));
@@ -441,7 +448,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return bool
 	 */
-	protected function checkAccess($permission, $ref_id) {
+	protected function checkAccess($permission, $ref_id)
+	{
 		$checker = $this->access->checkAccess($permission, '', $ref_id);
 
 		return $checker;
@@ -456,8 +464,9 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @throws ilException
 	 */
-	protected function checkAccessOrFail($permission, $ref_id) {
-		if(!$this->checkAccess($permission, $ref_id)) {
+	protected function checkAccessOrFail($permission, $ref_id)
+	{
+		if (!$this->checkAccess($permission, $ref_id)) {
 			throw new ilException("You have no permission for ".$permission." Object with ref_id ".$ref_id."!");
 		}
 	}
@@ -467,7 +476,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @param array $js_conf
 	 */
-	public function addJsConf($key, $value) {
+	public function addJsConf($key, $value)
+	{
 		$this->js_conf[$key] = $value;
 	}
 
@@ -476,8 +486,8 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @param array $js_conf
 	 */
-	public function getJsConf($key) {
+	public function getJsConf($key)
+	{
 		return $this->js_conf[$key];
 	}
-
 }

@@ -17,7 +17,8 @@ require_once("./Modules/CourseReference/classes/class.ilObjCourseReference.php")
  * @author Michael Herren <mh@studer-raimann.ch>
  * @version 1.0.0
  */
-class ilObjStudyProgrammeTreeGUI {
+class ilObjStudyProgrammeTreeGUI
+{
 	/**
 	 * @var ilCtrl
 	 */
@@ -84,7 +85,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 */
 	public $toolbar;
 
-	public function __construct($a_ref_id) {
+	public function __construct($a_ref_id)
+	{
 		global $tpl, $ilCtrl, $ilAccess, $ilToolbar, $ilLocator, $tree, $lng, $ilLog, $ilias, $ilSetting;
 
 		$this->ref_id = $a_ref_id;
@@ -111,7 +113,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 * Initialize Tree
 	 * Creates tree instance and set tree configuration
 	 */
-	protected function initTree() {
+	protected function initTree()
+	{
 		$this->tree = new ilObjStudyProgrammeTreeExplorerGUI($this->ref_id, $this->modal_id, "prg_tree", $this, 'view');
 	}
 
@@ -122,7 +125,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @throws ilException
 	 */
-	public function executeCommand() {
+	public function executeCommand()
+	{
 		$cmd = $this->ctrl->getCmd();
 
 		if ($cmd == "") {
@@ -130,7 +134,7 @@ class ilObjStudyProgrammeTreeGUI {
 		}
 
 		// handles tree commands ("openNode", "closeNode", "getNodeAsync")
-		if($this->tree->handleCommand()) {
+		if ($this->tree->handleCommand()) {
 			exit();
 		}
 
@@ -145,7 +149,6 @@ class ilObjStudyProgrammeTreeGUI {
 			case "getContainerSelectionExplorer":
 			case "saveTreeOrder":
 			case "createNewLeaf":
-
 				$content = $this->$cmd();
 				break;
 			default:
@@ -162,7 +165,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @return string
 	 */
-	protected function view() {
+	protected function view()
+	{
 		return $this->tree->getHTML();
 	}
 
@@ -172,7 +176,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @return string
 	 */
-	protected function cancel() {
+	protected function cancel()
+	{
 		return ilAsyncOutputHandler::encodeAsyncResponse();
 	}
 
@@ -184,10 +189,11 @@ class ilObjStudyProgrammeTreeGUI {
 	 * @return string json string
 	 * @throws ilException
 	 */
-	protected function saveTreeOrder() {
+	protected function saveTreeOrder()
+	{
 		$this->checkAccessOrFail('write');
-		
-		if(!isset($_POST['tree']) || is_null(json_decode(stripslashes($_POST['tree'])))) {
+
+		if (!isset($_POST['tree']) || is_null(json_decode(stripslashes($_POST['tree'])))) {
 			throw new ilStudyProgrammeTreeException("There is no tree data to save!");
 		}
 
@@ -205,14 +211,15 @@ class ilObjStudyProgrammeTreeGUI {
 	 * @param ilContainerSorting|null       $container_sorting
 	 * @param int|null                      $parent_ref_id
 	 */
-	protected function storeTreeOrder($nodes, $container_sorting = null, $parent_ref_id = null) {
+	protected function storeTreeOrder($nodes, $container_sorting = null, $parent_ref_id = null)
+	{
 		$sorting_position = array();
 		$position_count = 10;
 
 		$parent_node = ($parent_ref_id === null)? ilObjectFactoryWrapper::getInstanceByRefId($this->ref_id) : ilObjectFactoryWrapper::getInstanceByRefId($parent_ref_id);
 		$container_sorting = ($container_sorting === null) ? ilContainerSorting::_getInstance(ilObject::_lookupObjectId($this->ref_id)) : $container_sorting;
 
-		foreach($nodes as $node) {
+		foreach ($nodes as $node) {
 			// get ref_id from json
 			$id = $node->attr->id;
 			$id = substr($id, strrpos($id, "_")+1);
@@ -221,7 +228,7 @@ class ilObjStudyProgrammeTreeGUI {
 			$position_count+= 10;
 
 			$node_obj = ilObjectFactoryWrapper::getInstanceByRefId($id);
-			if($node_obj instanceof ilObjStudyProgramme) {
+			if ($node_obj instanceof ilObjStudyProgramme) {
 				$node_obj->moveTo($parent_node);
 			} else {
 				// TODO: implement a method on ilObjStudyProgramme to move leafs
@@ -232,7 +239,7 @@ class ilObjStudyProgrammeTreeGUI {
 			}
 
 			// recursion if there are children
-			if(isset($node->children)) {
+			if (isset($node->children)) {
 				$this->storeTreeOrder($node->children, ilContainerSorting::_getInstance(ilObject::_lookupObjectId($id)), $id);
 			}
 		}
@@ -247,10 +254,11 @@ class ilObjStudyProgrammeTreeGUI {
 	 * @return string
 	 * @throws ilException
 	 */
-	protected function createNewLeaf() {
+	protected function createNewLeaf()
+	{
 		$this->checkAccessOrFail('create', (int) $_POST['parent_id']);
 
-		if(isset($_POST['target_id'], $_POST['type'], $_POST['parent_id'])) {
+		if (isset($_POST['target_id'], $_POST['type'], $_POST['parent_id'])) {
 			$target_id = (int) $_POST['target_id'];
 			$parent_id = (int) $_POST['parent_id'];
 
@@ -280,17 +288,18 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @return ilAsyncContainerSelectionExplorer|string
 	 */
-	protected function getContainerSelectionExplorer($convert_to_string = true) {
+	protected function getContainerSelectionExplorer($convert_to_string = true)
+	{
 		$create_leaf_form = new ilAsyncContainerSelectionExplorer(rawurldecode($this->ctrl->getLinkTarget($this, 'createNewLeaf', '', true, false)));
 		$create_leaf_form->setId("select_course_explorer");
 
 		$ref_expand = ROOT_FOLDER_ID;
-		if(isset($_GET['ref_repexpand'])) {
+		if (isset($_GET['ref_repexpand'])) {
 			$ref_expand = (int) $_GET['ref_repexpand'];
 		}
 
 		$create_leaf_form->setExpand($ref_expand);
-		$create_leaf_form->setExpandTarget($this->ctrl->getLinkTarget($this,'getContainerSelectionExplorer'));
+		$create_leaf_form->setExpandTarget($this->ctrl->getLinkTarget($this, 'getContainerSelectionExplorer'));
 		$create_leaf_form->setAsynchExpanding(true);
 		$create_leaf_form->setTargetGet('target_id');
 		$create_leaf_form->setFrameTarget("_self");
@@ -298,10 +307,11 @@ class ilObjStudyProgrammeTreeGUI {
 		$create_leaf_form->setTargetType('crs');
 		$create_leaf_form->setOutput(0);
 
-		if($convert_to_string)
+		if ($convert_to_string) {
 			return $create_leaf_form->getOutput();
-		else
+		} else {
 			return $create_leaf_form;
+		}
 	}
 
 
@@ -310,7 +320,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @return ilAsyncPropertyFormGUI
 	 */
-	protected function getCreationForm() {
+	protected function getCreationForm()
+	{
 		$tmp_obj = new ilObjStudyProgrammeGUI();
 
 		$create_node_form = $tmp_obj->getAsyncCreationForm();
@@ -328,7 +339,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @throws ilException
 	 */
-	protected function create() {
+	protected function create()
+	{
 		$parent_id = (isset($_GET['ref_id']))? (int) $_GET['ref_id'] : null;
 		$this->checkAccessOrFail('create', $parent_id);
 
@@ -336,9 +348,9 @@ class ilObjStudyProgrammeTreeGUI {
 		$accordion = new ilAccordionGUI();
 
 		$added_slides = 0;
-		if($parent instanceof ilObjStudyProgramme) {
+		if ($parent instanceof ilObjStudyProgramme) {
 			// only allow adding new StudyProgramme-Node if there are no lp-children
-			if(!$parent->hasLPChildren()) {
+			if (!$parent->hasLPChildren()) {
 				$content_new_node = $this->getCreationForm()->getHTML();
 				$accordion->addItem($this->lng->txt('prg_create_new_node'), $content_new_node);
 				$added_slides++;
@@ -347,7 +359,7 @@ class ilObjStudyProgrammeTreeGUI {
 			/* only allow adding new LP-Children if there are no other StudyProgrammes
 			 * AND creating crs references is activated in administration
 			 */
-			if(!$parent->hasChildren() && $this->ilSetting->get("obj_dis_creation_crsr") === "") {
+			if (!$parent->hasChildren() && $this->ilSetting->get("obj_dis_creation_crsr") === "") {
 				$content_new_leaf = $this->tpl->getMessageHTML($this->lng->txt('prg_please_select_a_course_for_creating_a_leaf'));
 				$content_new_leaf .= $this->getContainerSelectionExplorer();
 
@@ -355,7 +367,7 @@ class ilObjStudyProgrammeTreeGUI {
 				$added_slides++;
 			}
 
-			if($added_slides == 1) {
+			if ($added_slides == 1) {
 				$accordion->setBehaviour(ilAccordionGUI::FIRST_OPEN);
 			}
 
@@ -374,12 +386,13 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @throws ilException
 	 */
-	protected function delete() {
+	protected function delete()
+	{
 		global $ilSetting;
 
 		$this->checkAccessOrFail("delete");
 
-		if(!isset($_GET['ref_id'], $_GET['item_ref_id'])) {
+		if (!isset($_GET['ref_id'], $_GET['item_ref_id'])) {
 			throw new ilException("Nothing to delete!");
 		}
 
@@ -389,8 +402,7 @@ class ilObjStudyProgrammeTreeGUI {
 
 		$msg = $this->lng->txt("info_delete_sure");
 
-		if (!$ilSetting->get('enable_trash'))
-		{
+		if (!$ilSetting->get('enable_trash')) {
 			$msg .= "<br/>".$this->lng->txt("info_delete_warning_no_trash");
 		}
 		$cgui->setFormAction($this->ctrl->getFormAction($this, 'confirmedDelete', '', true));
@@ -400,12 +412,16 @@ class ilObjStudyProgrammeTreeGUI {
 
 		$obj_id = ilObject::_lookupObjectId($element_ref_id);
 		$type = ilObject::_lookupType($obj_id);
-		$title = call_user_func(array(ilObjectFactory::getClassByType($type),'_lookupTitle'),$obj_id);
+		$title = call_user_func(array(ilObjectFactory::getClassByType($type),'_lookupTitle'), $obj_id);
 		$alt = $this->lng->txt("icon")." ".$this->lng->txt("obj_".$type);
 
-		$cgui->addItem("id[]", $element_ref_id, $title,
+		$cgui->addItem(
+			"id[]",
+			$element_ref_id,
+			$title,
 			ilObject::_getIcon($obj_id, "small", $type),
-			$alt);
+			$alt
+		);
 		$cgui->addHiddenItem('item_ref_id', $_GET['item_ref_id']);
 
 		$content = $cgui->getHTML();
@@ -423,10 +439,11 @@ class ilObjStudyProgrammeTreeGUI {
 	 * @return string
 	 * @throws ilException
 	 */
-	protected function confirmedDelete() {
+	protected function confirmedDelete()
+	{
 		$this->checkAccessOrFail("delete");
 
-		if(!isset($_POST['id'], $_POST['item_ref_id']) && is_array($_POST['id'])) {
+		if (!isset($_POST['id'], $_POST['item_ref_id']) && is_array($_POST['id'])) {
 			throw new ilException("No item select for deletion!");
 		}
 
@@ -434,18 +451,19 @@ class ilObjStudyProgrammeTreeGUI {
 		$current_node = (int) $_POST['item_ref_id'];
 		$result = true;
 
-		foreach($ids as $id) {
+		foreach ($ids as $id) {
 			$obj = ilObjectFactoryWrapper::getInstanceByRefId($id);
 
 			$not_parent_of_current = true;
 			$not_root = true;
 
 			// do some additional validation if it is a StudyProgramme
-			if($obj instanceof ilObjStudyProgramme) {
-
+			if ($obj instanceof ilObjStudyProgramme) {
 				//check if you are not deleting a parent element of the current element
 				$children_of_node = ilObjStudyProgramme::getAllChildren($obj->getRefId());
-				$get_ref_ids = function ($obj) { return $obj->getRefId(); };
+				$get_ref_ids = function ($obj) {
+					return $obj->getRefId();
+				};
 
 				$children_ref_ids = array_map($get_ref_ids, $children_of_node);
 				$not_parent_of_current = (!in_array($current_node, $children_ref_ids));
@@ -453,20 +471,18 @@ class ilObjStudyProgrammeTreeGUI {
 				$not_root = ($obj->getRoot() != null);
 			}
 
-			if($current_node != $id && $not_root && $not_parent_of_current && $this->checkAccess('delete', $obj->getRefId())) {
-
+			if ($current_node != $id && $not_root && $not_parent_of_current && $this->checkAccess('delete', $obj->getRefId())) {
 				ilRepUtil::deleteObjects(null, $id);
 
 				// deletes the tree-open-node-session storage
-				if(isset($children_of_node)) {
+				if (isset($children_of_node)) {
 					$this->tree->closeCertainNode($id);
-					foreach($children_of_node as $child) {
+					foreach ($children_of_node as $child) {
 						$this->tree->closeCertainNode($child->getRefId());
 					}
 				}
 
 				$msg = $this->lng->txt("prg_deleted_safely");
-
 			} else {
 				$msg = $this->lng->txt("prg_not_allowed_node_to_delete");
 				$result = false;
@@ -483,7 +499,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @return string
 	 */
-	protected function cancelDelete() {
+	protected function cancelDelete()
+	{
 		return ilAsyncOutputHandler::encodeAsyncResponse();
 	}
 
@@ -494,7 +511,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @return string
 	 */
-	protected function initAsyncUIElements() {
+	protected function initAsyncUIElements()
+	{
 		// add  js files
 		ilAccordionGUI::addJavaScript();
 		ilAsyncPropertyFormGUI::addJavaScript(true);
@@ -529,7 +547,8 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @return bool
 	 */
-	protected function checkAccess($permission, $ref_id = null) {
+	protected function checkAccess($permission, $ref_id = null)
+	{
 		$ref_id = ($ref_id === null)? $this->ref_id : $ref_id;
 		$checker = $this->access->checkAccess($permission, '', $ref_id);
 
@@ -545,10 +564,10 @@ class ilObjStudyProgrammeTreeGUI {
 	 *
 	 * @throws ilException
 	 */
-	protected function checkAccessOrFail($permission, $ref_id = null) {
-		if(!$this->checkAccess($permission, $ref_id)) {
+	protected function checkAccessOrFail($permission, $ref_id = null)
+	{
+		if (!$this->checkAccess($permission, $ref_id)) {
 			throw new ilException("You have no permission for ".$permission." Object with ref_id ".$ref_id."!");
 		}
 	}
-
 }
