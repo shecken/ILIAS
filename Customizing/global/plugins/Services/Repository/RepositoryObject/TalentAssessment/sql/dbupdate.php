@@ -61,3 +61,21 @@ foreach ($new_rbac_options as $value) {
 	ilDBUpdateNewObjectType::addRBACOperation($type_id, $new_ops_id);
 }
 ?>
+
+<#7>
+<?php
+global $ilUser;
+
+require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes/Observator/ilDB.php");
+$settings_db = new \CaT\Plugins\TalentAssessment\Observator\ilDB($ilDB, $ilUser);
+$settings_db->setRoleFolder(\CaT\Plugins\TalentAssessment\ilActions::OBSERVATOR_ROLE_NAME, 8);
+?>
+
+<#8>
+<?php
+global $ilUser;
+
+require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes/Observator/ilDB.php");
+$settings_db = new \CaT\Plugins\TalentAssessment\Observator\ilDB($ilDB, $ilUser);
+$settings_db->setDefaultPermissions(\CaT\Plugins\TalentAssessment\ilActions::OBSERVATOR_ROLE_NAME, 8, array("visible", "read", "edit_observation"));
+?>
