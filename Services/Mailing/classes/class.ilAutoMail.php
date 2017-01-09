@@ -160,12 +160,7 @@ abstract class ilAutoMail {
 	 * 					   otherwise.
 	 */
 	public function send($a_recipients = null, $a_occasion = null) {
-		// I really don't like that dependency...
-		require_once ("./Services/MailTemplates/lib/phpmailer/class.phpmailer.php");
-
 		global $ilUser, $ilLog;
-
-
 
 		if ($a_recipients === null) {
 			$a_recipients = $this->getUsersOnly()
