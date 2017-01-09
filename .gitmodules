@@ -4,3 +4,6 @@
 [submodule "Customizing/global/plugins/Services/Cron/CronHook/ExitedUserCleanup"]
 	path = Customizing/global/plugins/Services/Cron/CronHook/ExitedUserCleanup
 	url = https://github.com/conceptsandtraining/ExitedUserCleanup.git
+[submodule "Services/MailTemplates/lib/phpmailer"]
+	path = Services/MailTemplates/lib/phpmailer
+	url = https://github.com/PHPMailer/PHPMailer.git
