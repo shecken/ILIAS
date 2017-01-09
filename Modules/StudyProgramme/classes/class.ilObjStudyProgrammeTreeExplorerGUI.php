@@ -98,12 +98,6 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 		$this->js_conf = array();
 
 		$lng->loadLanguageModule("prg");
-
-		$this->setAjax(true);
-
-		if($this->checkAccess('write', $a_tree_root_id)) {
-			//$this->setEnableDnd(true);
-		}
 	}
 
 
@@ -152,15 +146,13 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 		// add the tree buttons
 		if($this->checkAccess('write', $node->getRefId())) {
 			if($is_study_programme) {
-				$info_button = $this->getNodeButtonActionLink('ilObjStudyProgrammeSettingsGUI', 'view', array('ref_id'=>$node->getRefId(), 'currentNode'=>$node_config['is_current_node']), ilGlyphGUI::get(ilGlyphGUI::INFO));
+				$info_button = $this->getNodeLink('ilObjStudyProgrammeSettingsGUI', 'view', array('ref_id'=>$node->getRefId(), 'currentNode'=>$node_config['is_current_node']), ilGlyphGUI::get(ilGlyphGUI::INFO));
 				$tpl->setVariable('LINK_HREF', $info_button);
-				//$this->parseStudyProgrammeNodeButtons($node, $node_config, $tpl);
 			} else {
 				$wrapper = \ilObjectFactoryWrapper::singleton();
 				$crs_ref = $wrapper->getInstanceByRefId($node->getRefId());
-				$info_button = $this->getNodeButtonActionLink('ilRepositoryGUI', 'edit', array('ref_id'=>$crs_ref->getTargetRefId()), ilGlyphGUI::get(ilGlyphGUI::INFO));
+				$info_button = $this->getNodeLink('ilRepositoryGUI', 'edit', array('ref_id'=>$crs_ref->getTargetRefId()), ilGlyphGUI::get(ilGlyphGUI::INFO));
 				$tpl->setVariable('LINK_HREF', $info_button);
-				//$this->parseLeafNodeButtons($node, $node_config, $tpl);
 			}
 		}
 
@@ -187,57 +179,6 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 		}
 
 		return $node_title_classes;
-	}
-
-
-	/**
-	 * Generates the buttons for a study-programme node
-	 *
-	 * @param ilObjStudyProgramme $node parsed node
-	 * @param array $node_config configuration of current node
-	 * @param ilTemplate $tpl current node template
-	 */
-	protected function parseStudyProgrammeNodeButtons($node, $node_config, $tpl) {
-		$tpl->setCurrentBlock('enable-tree-buttons');
-		$tpl->touchBlock('enable-tree-buttons');
-
-		// show info button only when it not the current node		
-		$info_button = $this->getNodeButtonActionLink('ilObjStudyProgrammeSettingsGUI', 'view', array('ref_id'=>$node->getRefId(), 'currentNode'=>$node_config['is_current_node']), ilGlyphGUI::get(ilGlyphGUI::INFO));
-		$tpl->setVariable('NODE_INFO_BUTTON', $info_button);
-
-		// only show add button when create permission is set
-		if($node_config['is_creation_enabled']) {
-			$create_button = $this->getNodeButtonActionLink('ilObjStudyProgrammeTreeGUI', 'create', array('ref_id'=>$node->getRefId()), ilGlyphGUI::get(ilGlyphGUI::ADD));
-			$tpl->setVariable('NODE_CREATE_BUTTON', $create_button);
-		}
-
-		// only show delete button when its not the current node, not the root-node and delete permissions are set
-		if($node_config['is_delete_enabled']) {
-			$delete_button = $this->getNodeButtonActionLink('ilObjStudyProgrammeTreeGUI', 'delete', array('ref_id'=>$node->getRefId(), 'item_ref_id'=>$node_config['current_ref_id']), ilGlyphGUI::get(ilGlyphGUI::REMOVE));
-			$tpl->setVariable('NODE_DELETE_BUTTON', $delete_button);
-		}
-
-		$tpl->parseCurrentBlock('enable-tree-buttons');
-	}
-
-	/**
-	 * Generates the buttons for a study programme leaf
-	 *
-	 * @param ilObject $node parsed node
-	 * @param array $node_config configuration of current node
-	 * @param ilTemplate $tpl current node template
-	 */
-	protected function parseLeafNodeButtons($node, $node_config, $tpl) {
-		$tpl->setCurrentBlock('enable-tree-buttons');
-		$tpl->touchBlock('enable-tree-buttons');
-
-		// only show delete button when its not the current node
-		if($node_config['is_delete_enabled']) {
-			$delete_button = $this->getNodeButtonActionLink('ilObjStudyProgrammeTreeGUI', 'delete', array('ref_id'=>$node->getRefId(), 'item_ref_id'=>$node_config['current_ref_id']), ilGlyphGUI::get(ilGlyphGUI::REMOVE));
-			$tpl->setVariable('NODE_DELETE_BUTTON', $delete_button);
-		}
-
-		$tpl->parseCurrentBlock('enable-tree-buttons');
 	}
 
 	/**
@@ -271,33 +212,12 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 *
 	 * @return string
 	 */
-	protected function getNodeButtonActionLink($target_class, $cmd, $params, $content, $async = true) {
+	protected function getNodeLink($target_class, $cmd, $params, $content, $async = true) {
 		foreach($params as $param_name=>$param_value) {
 			$this->ctrl->setParameterByClass($target_class, $param_name, $param_value);
 		}
 
 		return $this->ctrl->getLinkTargetByClass($target_class, $cmd, '', false, false);
-
-		$tpl = $this->getNodeTemplateInstance();
-		//$tpl->free();
-		$tpl->setCurrentBlock('tree-button-block');
-
-		$classes = array($this->class_configuration['node']['node_buttons']);
-		$classes[] = 'cmd_'.$cmd;
-
-		$tpl->setVariable('LINK_HREF', $this->ctrl->getLinkTargetByClass($target_class, $cmd, '', true, false));
-		$tpl->setVariable('LINK_CLASSES', implode(' ', $classes));
-
-		if($async) {
-			$tpl->touchBlock('enable-async-link');
-			$tpl->setVariable('LINK_DATA_TARGET', '#'.$this->modal_id);
-		}
-
-		$tpl->setVariable('LINK_CONTENT', $content);
-
-		//$tpl->parseCurrentBlock('tree-button-block');
-
-		return $tpl->get();
 	}
 
 	/**
@@ -419,18 +339,6 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 */
 	public function listItemStart($tpl, $a_node)
 	{
-		// $tpl->setCurrentBlock("list_item_start");
-
-		// if ($this->getAjax() && $this->nodeHasVisibleChilds($a_node) || ($a_node instanceof ilStudyProgramme && $a_node->getParent() === null))
-		// {
-		// 	$tpl->touchBlock("li_closed");
-		// }
-		// $tpl->setVariable("DOM_NODE_ID",
-		// 	$this->getDomNodeIdForNodeId($this->getNodeId($a_node)));
-		// $tpl->parseCurrentBlock();
-
-		// $tpl->touchBlock("tag");
-
 		$tpl->touchBlock("list_item_start");
 		$tpl->touchBlock("tag");
 	}
@@ -443,12 +351,7 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	 * @return string
 	 */
 	public function getHTML() {
-		// $this->tpl->addJavascript($this->js_study_programme_path);
 		$this->tpl->addCss($this->css_study_programme_path);
-
-		// $this->tpl->addOnLoadCode('$("#'.$this->getContainerId().'").study_programme_tree('.json_encode($this->js_conf).');');
-
-		// return parent::getHTML();
 
 		$etpl = new ilTemplate("tpl.simple_tree_view.html", true, true, "Modules/StudyProgramme");
 		$root_node = $this->getRootNode();
@@ -578,5 +481,3 @@ class ilObjStudyProgrammeTreeExplorerGUI extends ilExplorerBaseGUI {
 	}
 
 }
-
-?>

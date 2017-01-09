@@ -113,11 +113,6 @@ class ilObjStudyProgrammeTreeGUI {
 	 */
 	protected function initTree() {
 		$this->tree = new ilObjStudyProgrammeTreeExplorerGUI($this->ref_id, $this->modal_id, "prg_tree", $this, 'view');
-
-		// $js_url = rawurldecode($this->ctrl->getLinkTarget($this, 'saveTreeOrder', '', true, false));
-		// $this->tree->addJsConf('save_tree_url', $js_url);
-		// $this->tree->addJsConf('save_button_id', 'save_order_button');
-		// $this->tree->addJsConf('cancel_button_id', 'cancel_order_button');
 	}
 
 
