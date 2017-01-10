@@ -196,8 +196,6 @@ class ilMailTemplateManagementAPI
 		
 		
 		// transport
-		
-		require_once './Services/MailTemplates/lib/phpmailer/class.phpmailer.php';
 		$mail = new PHPMailer();
 
 		// SETTINGS MACHEN!

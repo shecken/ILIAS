@@ -6,7 +6,8 @@
 	"require": {
 		"filp/whoops": "^2.1.2",
 		"eluceo/ical": "^0.9.0",
-		"box/spout": "^2.4"
+		"box/spout": "^2.4",
+		"phpmailer/phpmailer": "^5.2.22"
 	},
 	"autoload" : {
 		"psr-4" : {
@@ -38,6 +39,14 @@
 			"wrapped_by" : null,
 			"added_by" : "Denis Klöpfer <denis.kloepfer@concepts-and-training.de>",
 			"last_update" : "2016-03-17",
+			"last_update_by" : "Denis Klöpfer <denis.kloepfer@concepts-and-training.de>"
+		},
+		"phpmailer" : {
+			"source" : "https://github.com/PHPMailer/PHPMailer",
+			"used_version" : "v5.2.22",
+			"wrapped_by" : null,
+			"added_by" : "Denis Klöpfer <denis.kloepfer@concepts-and-training.de>",
+			"last_update" : "2017-01-17",
 			"last_update_by" : "Denis Klöpfer <denis.kloepfer@concepts-and-training.de>"
 		}
 	}
