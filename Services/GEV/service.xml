@@ -15,5 +15,6 @@
 	</crons>
 	<events>
 		<event type="listen" id="Services/ParticipationStatus" component="Services/GEV/Desktop/classes/EffectivenessAnalysis"/>
+		<event type="listen" id="Services/Object" component="Services/GEV/Desktop/classes/EffectivenessAnalysis"/>
 	</events>
 </service>

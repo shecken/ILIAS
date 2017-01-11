@@ -35,6 +35,12 @@ class ilEffectivenessAnalysisAppEventListener implements ilAppEventListener {
 
 			self::writeLog(__METHOD__, "Finished");
 		}
+
+		if($a_event == "delete") {
+			if($a_parameter["type"] == 'crs') {
+				self::deleteEffAnalysisForCrsId($a_parameter["obj_id"]);
+			}
+		}
 	}
 
 	protected static function deleteEffAnalysis($user_id, $crs_id) {
@@ -43,6 +49,15 @@ class ilEffectivenessAnalysisAppEventListener implements ilAppEventListener {
 		$query = "DELETE FROM eff_analysis_due_date\n"
 				." WHERE crs_id = ".$ilDB->quote($crs_id, "integer")."\n"
 				."     AND user_id = ".$ilDB->quote($user_id, "integer");
+
+		$ilDB->manipulate($query);
+	}
+
+	protected static function deleteEffAnalysisForCrsId($crs_id) {
+		global $ilDB;
+
+		$query = "DELETE FROM eff_analysis_due_date\n"
+				." WHERE crs_id = ".$ilDB->quote($crs_id, "integer");
 
 		$ilDB->manipulate($query);
 	}
