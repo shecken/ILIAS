@@ -147,7 +147,7 @@ class gevEffectivenessAnalysis {
 	 * @return mixed[]
 	 */
 	public function getUserIdsForFirstMail($superior_id) {
-		$my_employees = $this->getMyEmployees($superior_id, array(), "");
+		$my_employees = $this->getEmployeesOf($superior_id);
 
 		return $this->eff_analysis_db->getUserIdsForFirstMail($my_employees, $superior_id);
 	}
@@ -160,7 +160,7 @@ class gevEffectivenessAnalysis {
 	 * @return mixed[]
 	 */
 	public function getUserIdsForReminder($superior_id) {
-		$my_employees = $this->getMyEmployees($superior_id, array(), "");
+		$my_employees = $this->getEmployeesOf($superior_id);
 
 		return $this->eff_analysis_db->getUserIdsForReminder($my_employees, $superior_id);
 	}
@@ -187,16 +187,7 @@ class gevEffectivenessAnalysis {
 		if($user_utils->isAdmin() && empty($filter_orgunit)) {
 			$my_employees = $this->getAllPeopleIn(array(ilObjOrgUnit::getRootOrgRefId()), $login_id);
 		} else {
-			$orgus = $this->getOrgunitsOf($user_id, $filter_orgunit);
-			if(empty($orgus) || (count($orgus) == 1 && !$orgus[0])) {
-				return array();
-			}
-
-			$my_employees = $this->getEmployees($orgus, $login_id);
-
-			if(empty($my_employees) || (count($my_employees) == 1 && !$my_employees[0])) {
-				return array();
-			}
+			$my_employees = $this->getEmployeesOf($user_id, $filter_orgunit, $login_id);
 		}
 
 		return $my_employees;
@@ -255,21 +246,31 @@ class gevEffectivenessAnalysis {
 	}
 
 	/**
-	 * Get employees of user filtered by searched user if needed
+	 * Get employees of user filtered by login id org unit
 	 *
-	 * @param int[] 		$orgus
-	 * @param int 			$login_id
+	 * @param int 		$user_id
+	 * @param string[] 	$filter_orgunit 	values from org unit filter
+	 * @param int 		$login_id			login id of filtered user
 	 *
 	 * @return int[]
 	 */
-	protected function getEmployees($orgus, $login_id) {
+	protected function getEmployeesOf($user_id, $filter_orgunit = array(), $login_id = -1) {
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
+
+		$orgus = $this->getOrgunitsOf($user_id, $filter_orgunit);
+		if(empty($orgus) || (count($orgus) == 1 && !$orgus[0])) {
+			return array();
+		}
 
 		$empl = gevOrgUnitUtils::getEmployeesIn($orgus);
 
 		if($login_id != -1) {
 			$empl = $this->reduceToFilteredUser($empl, $login_id);
+		}
+
+		if(empty($empl) || (count($empl) == 1 && !$empl[0])) {
+			return array();
 		}
 
 		return $empl;
