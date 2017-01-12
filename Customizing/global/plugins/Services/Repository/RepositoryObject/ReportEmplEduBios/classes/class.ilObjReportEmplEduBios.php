@@ -366,7 +366,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 					$lng->txt('gev_org_unit_recursive'),
 					''
 				)->clone_with_checked(!(bool)$this->getSettingsDataFor("truncate_orgu_filter")),
-				$f->multiselectsearch(
+				$f->multiselect(
 					$lng->txt("gev_org_unit_short"),
 					'',
 					$this->getRelevantOrgus()

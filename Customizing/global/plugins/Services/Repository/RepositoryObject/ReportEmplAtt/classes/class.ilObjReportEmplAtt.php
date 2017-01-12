@@ -264,7 +264,11 @@ class ilObjReportEmplAtt extends ilObjReportBase
 					$lng->txt('gev_org_unit_recursive'),
 					''
 				)->clone_with_checked(true),
-				$f->multiselectsearch(
+				$f->option(
+						$txt('filter_no_wbd_imported'),
+						''
+					),
+				$f->multiselect(
 					$lng->txt("gev_org_unit_short"),
 					'',
 					$this->getRelevantOrgus()
@@ -274,16 +278,12 @@ class ilObjReportEmplAtt extends ilObjReportBase
 						$txt("period"),
 						''
 					),
-					$f->option(
-						$txt('filter_no_wbd_imported'),
-						''
-					),
-					$f->multiselectsearch(
+					$f->multiselect(
 						$txt("title"),
 						'',
 						$this->templateTitles()
 					),
-					$f->multiselectsearch(
+					$f->multiselect(
 						$txt("participation_status"),
 						'',
 						array(	"teilgenommen"=>"teilgenommen"
@@ -291,7 +291,7 @@ class ilObjReportEmplAtt extends ilObjReportBase
 								,"fehlt entschuldigt"=>"fehlt entschuldigt"
 								,"nicht gesetzt"=>"gebucht, noch nicht abgeschlossen")
 					),
-					$f->multiselectsearch(
+					$f->multiselect(
 						$lng->txt("gev_filter_topics"),
 						'',
 						$this->getTopics()
