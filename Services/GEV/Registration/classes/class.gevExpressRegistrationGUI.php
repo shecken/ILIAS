@@ -6,7 +6,7 @@ require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 /**
 * Command class for registration of an express user.
 *
-* @author	Stefan Hecken <richard.klees@concepts-and-training.de>
+* @author	Stefan Hecken <stefan.hecken@concepts-and-training.de>
 * @version	$Id$
 */
 class gevExpressRegistrationGUI
