@@ -2240,7 +2240,6 @@ class gevUserUtils
 		$usrcdp_plugin = $this->getUserValidationPromptPlugin();
 
 		if ($usrcdp_plugin !== null) {
-			var_dump($this->user_id);
 			$usrcdp_plugin->getActions((int)$this->user_id)->storeLastUpdate();
 		}
 	}
