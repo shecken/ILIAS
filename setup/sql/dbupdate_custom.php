@@ -5893,7 +5893,7 @@ foreach ($central_training_category_ref_ids as $ref_id) {
 							, 'create_xbbv', 'create_xrdv', 'create_xreb', 'create_xoto', 'create_xwbe', 'create_xwbp', 'create_xtas', 'create_xcgo'
 							, 'create_xrcn', 'create_xexb', 'create_xcsn', 'create_xsso'));
 	gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "Admin-TA", array("visible","read", "create_tst", "create_xcgo", "create_xtas"));
-	gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "Admin-Ansicht", array("load_member_list","view_mailing"));
+	gevCourseUtils::grantPermissionsForAllCoursesBelow($ref_id, "Admin-Ansicht", array("visible","read","load_member_list","view_mailing"));
 }
 
 $fixed_dec_training_category_ref_id = 49841;
@@ -5918,6 +5918,10 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_
 
 $flex_dec_training_category_ref_id = 49840;
 
+gevCourseUtils::revokePermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Admin-Voll", $all_crs_permissions);
+gevCourseUtils::revokePermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Admin-TA", $all_crs_permissions);
+gevCourseUtils::revokePermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Admin-Ansicht", $all_crs_permissions);
+
 gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Admin-Voll", array('edit_permission', 'visible', 'read', 'write', 'delete', 'join', 'leave', 'create_grp', 'create_frm', 'create_lm'
 							, 'create_sahs', 'create_glo', 'create_exc', 'create_file', 'create_fold', 'create_tst', 'create_qpl', 'create_mep'
 							, 'create_htlm', 'create_svy', 'create_spl', 'create_webr', 'edit_learning_progress', 'copy', 'create_feed', 'create_mcst'
@@ -5930,7 +5934,7 @@ gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_r
 							, 'create_xbbp', 'create_xrea', 'create_xttc', 'create_xrta', 'create_xtda', 'create_xtdr', 'create_xrbt', 'create_xeeb'
 							, 'create_xbbv', 'create_xrdv', 'create_xreb', 'create_xoto', 'create_xwbe', 'create_xwbp', 'create_xtas', 'create_xcgo'
 							, 'create_xrcn', 'create_xexb', 'create_xcsn', 'create_xsso'));
-gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Admin-Ansicht", array("visible","read","load_member_list","view_mailing", "view_bookings","view_schedule_pdf"));
+gevCourseUtils::grantPermissionsForAllCoursesBelow($flex_dec_training_category_ref_id, "Admin-Ansicht", array("visible","read","load_member_list","view_mailing", "view_bookings","view_schedule_pdf"));
 ?>
 
 <#245>
