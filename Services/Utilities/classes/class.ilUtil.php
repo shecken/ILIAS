@@ -2389,6 +2389,38 @@ class ilUtil
 		return @mkdir($a_dir,fileperms($path));
 	}
 
+	/**
+	 * cheacks a directory is existing in the filesystem
+	 * You may pass only the name of your new directory or with the entire path or relative path information.
+	 *
+	 * examples:
+	 * a_dir = /tmp/test/your_dir
+	 * a_dir = ../test/your_dir
+	 * a_dir = your_dir (--> creates your_dir in current directory)
+	 *
+	 * @access	public
+	 * @param	string	[path] + directory name
+	 * @return	boolean
+	 * @static
+	 */
+	public static function isDir($a_dir) {
+		$a_dir = trim($a_dir);
+
+		// remove trailing slash (bugfix for php 4.2.x)
+		if (substr($a_dir,-1) == "/")
+		{
+			$a_dir = substr($a_dir,0,-1);
+		}
+
+		// check if a_dir comes with a path
+		if (!($path = substr($a_dir,0, strrpos($a_dir,"/") - strlen($a_dir))))
+		{
+			$path = ".";
+		}
+
+		return is_dir($a_dir);
+	}
+
 
 	/**
 	* Create a new directory and all parent directories
