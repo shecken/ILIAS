@@ -4,11 +4,13 @@ use CaT\Plugins\TalentAssessment;
 
 include_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 
-class ilTalentAssessmentSettingsGUI {
+class ilTalentAssessmentSettingsGUI
+{
 	use TalentAssessment\Settings\ilFormHelper;
 
 	const CMD_SHOW = "showSettings";
 	const CMD_SAVE = "saveSettings";
+	const CMD_EDIT = "editProperties";
 	const CMD_AUTOCOMPLETE = "userfieldAutocomplete";
 
 	/**
@@ -21,7 +23,8 @@ class ilTalentAssessmentSettingsGUI {
 	 */
 	protected $actions;
 
-	public function __construct(TalentAssessment\ilActions $actions, \Closure $txt, $obj_id, $potential) {
+	public function __construct(TalentAssessment\ilActions $actions, \Closure $txt, $obj_id, $potential)
+	{
 		global $ilCtrl, $tpl;
 
 		$this->gCtrl = $ilCtrl;
@@ -33,12 +36,14 @@ class ilTalentAssessmentSettingsGUI {
 		$this->potential = $potential;
 	}
 
-	public function executeCommand() {
+	public function executeCommand()
+	{
 		$cmd = $this->gCtrl->getCmd();
-		switch($cmd) {
+		switch ($cmd) {
 			case self::CMD_SHOW:
 			case self::CMD_SAVE:
 			case self::CMD_AUTOCOMPLETE:
+			case self::CMD_EDIT:
 				$this->$cmd();
 				break;
 			default:
@@ -46,7 +51,13 @@ class ilTalentAssessmentSettingsGUI {
 		}
 	}
 
-	protected function showSettings() {
+	protected function editProperties()
+	{
+		$this->showSettings();
+	}
+
+	protected function showSettings()
+	{
 		$form = $this->initSettingsForm();
 		$this->fillSettingsForm($form);
 		$this->gTpl->setContent($form->getHTML());
@@ -56,14 +67,16 @@ class ilTalentAssessmentSettingsGUI {
 	 * @param 	string	$code
 	 * @return	string
 	 */
-	public function txt($code) {
+	public function txt($code)
+	{
 		assert('is_string($code)');
 		$txt = $this->txt;
 
 		return $txt($code);
 	}
 
-	protected function initSettingsForm() {
+	protected function initSettingsForm()
+	{
 		$form = new \ilPropertyFormGUI();
 		$form->setTitle($this->txt('obj_edit_settings'));
 
@@ -86,37 +99,38 @@ class ilTalentAssessmentSettingsGUI {
 		return $form;
 	}
 
-	protected function fillSettingsForm(\ilPropertyFormGUI $form) {
+	protected function fillSettingsForm(\ilPropertyFormGUI $form)
+	{
 		$values = $this->actions->read();
 		$values = $this->actions->setPotentialToValues($values, $this->txt($this->actions->potentialText()));
-		if($values[TalentAssessment\ilActions::F_FIRSTNAME] === "") {
+		if ($values[TalentAssessment\ilActions::F_FIRSTNAME] === "") {
 			\ilUtil::sendFailure($this->txt("no_valid_username"));
 		}
 		$form->setValuesByArray($values);
 	}
 
-	protected function saveSettings() {
+	protected function saveSettings()
+	{
 		$form = $this->initSettingsForm();
-		if($form->checkInput()) {
+		if ($form->checkInput()) {
 			$post = $_POST;
 			$this->actions->update($post);
 			\ilUtil::sendSuccess($this->txt("saved"), true);
 			$this->gCtrl->redirect($this, self::CMD_SHOW);
-		}
-		else {
+		} else {
 			$form->setValuesByPost();
 			\ilUtil::sendFailure($this->txt("not_saved"), true);
 			$this->gTpl->setContent($form->getHTML());
 		}
 	}
 
-	public function userfieldAutocomplete() {
+	public function userfieldAutocomplete()
+	{
 		include_once './Services/User/classes/class.ilUserAutoComplete.php';
 		$auto = new ilUserAutoComplete();
 		$auto->setSearchFields(array('login','firstname','lastname','email'));
 		$auto->enableFieldSearchableCheck(false);
-		if(($_REQUEST['fetchall']))
-		{
+		if (($_REQUEST['fetchall'])) {
 			$auto->setLimit(ilUserAutoComplete::MAX_ENTRIES);
 		}
 		echo $auto->getList($_REQUEST['term']);

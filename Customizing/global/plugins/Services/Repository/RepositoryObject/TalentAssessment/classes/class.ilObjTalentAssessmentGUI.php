@@ -14,12 +14,12 @@ require_once(__DIR__."/class.ilTalentAssessmentObservationsGUI.php");
  * @ilCtrl_Calls ilObjTalentAssessmentGUI: ilTalentAssessmentSettingsGUI, ilTalentAssessmentObservatorGUI, ilRepositorySearchGUI
  * @ilCtrl_Calls ilObjTalentAssessmentGUI: ilTalentAssessmentObservationsGUI
  *
- * @author 		Stefan Hecken <stefan.hecken@concepts-and-training.de> 
+ * @author 		Stefan Hecken <stefan.hecken@concepts-and-training.de>
  */
-class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
+class ilObjTalentAssessmentGUI extends ilObjectPluginGUI
+{
 	use TalentAssessment\Settings\ilFormHelper;
 
-	const CMD_PROPERTIES = "editProperties";
 	const CMD_SHOWCONTENT = "showContent";
 	const CMD_SUMMARY = "showSummary";
 	const CMD_AUTOCOMPLETE = "userfieldAutocomplete";
@@ -31,7 +31,8 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	/**
 	 * Initialisation
 	 */
-	protected function afterConstructor() {
+	protected function afterConstructor()
+	{
 		global $ilAccess, $ilTabs, $ilCtrl, $ilToolbar;
 
 		$this->gAccess = $ilAccess;
@@ -44,22 +45,25 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	/**
 	 * Get type.
 	 */
-	final function getType() {
+	final public function getType()
+	{
 		return "xtas";
 	}
 
 	/**
 	 * Handles all commmands of this class, centralizes permission checks
 	 */
-	function performCommand($cmd) {
+	public function performCommand($cmd)
+	{
 		$next_class = $this->gCtrl->getNextClass($this);
 
-		switch($next_class) {
+		switch ($next_class) {
 			case "ilrepositorysearchgui":
 				include_once "./Services/Search/classes/class.ilRepositorySearchGUI.php";
 				$rep_search = new ilRepositorySearchGUI();
 				$obj = new ilTalentAssessmentObservatorGUI($this, $this->object->getActions(), $this->plugin->txtClosure(), $this->object->getId());
-				$rep_search->setCallback($obj,
+				$rep_search->setCallback(
+					$obj,
 					"addObservator",
 					$status
 				);
@@ -72,6 +76,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 				switch ($cmd) {
 					case ilTalentAssessmentSettingsGUI::CMD_SHOW:
 					case ilTalentAssessmentSettingsGUI::CMD_SAVE:
+					case ilTalentAssessmentSettingsGUI::CMD_EDIT:
 						$this->forwardSettings();
 						break;
 					case ilTalentAssessmentObservatorGUI::CMD_SHOW:
@@ -83,7 +88,6 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 					case ilTalentAssessmentObservatorGUI::CMD_CONFIRMED_DELETE:
 						$this->forwardObservator();
 						break;
-					case self::CMD_PROPERTIES:
 					case self::CMD_SHOWCONTENT:
 						$this->showContent();
 						break;
@@ -110,18 +114,21 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	/**
 	 * After object has been created -> jump to this command
 	 */
-	function getAfterCreationCmd() {
+	public function getAfterCreationCmd()
+	{
 		return "editProperties";
 	}
 
 	/**
 	 * Get standard command
 	 */
-	function getStandardCmd() {
+	public function getStandardCmd()
+	{
 		return "showContent";
 	}
 
-	public function initCreateForm($a_new_type) {
+	public function initCreateForm($a_new_type)
+	{
 		$form = parent::initCreateForm($a_new_type);
 
 		$db = $this->plugin->getSettingsDB();
@@ -134,12 +141,11 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 		return $form;
 	}
 
-	public function afterSave(\ilObject $newObj) {
+	public function afterSave(\ilObject $newObj)
+	{
 		$post = $_POST;
 		$db = $this->plugin->getSettingsDB();
-		$settings = $db->create((int)$newObj->getId(), \CaT\Plugins\TalentAssessment\Settings\TalentAssessment::IN_PROGRESS, 0
-								, "text", "text", "text", "text", new \ilDateTime(date("Y-m-d H:i:s"), IL_CAL_DATETIME)
-								, new \ilDateTime(date("Y-m-d H:i:s"), IL_CAL_DATETIME), 0, 0, false, 0.0, 0.0, 0.0, "", "", "", "");
+		$settings = $db->create((int)$newObj->getId(), \CaT\Plugins\TalentAssessment\Settings\TalentAssessment::IN_PROGRESS, 0, "text", "text", "text", "text", new \ilDateTime(date("Y-m-d H:i:s"), IL_CAL_DATETIME), new \ilDateTime(date("Y-m-d H:i:s"), IL_CAL_DATETIME), 0, 0, false, 0.0, 0.0, 0.0, "", "", "", "");
 		$newObj->setSettings($settings);
 		$actions = $newObj->getActions();
 		$actions->update($post);
@@ -152,49 +158,47 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	/**
 	 * Set tabs
 	 */
-	protected function setTabs() {
+	protected function setTabs()
+	{
 		$this->addInfoTab();
 
 		$view_observations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
 		$edit_observations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
 		$finish_ta = $this->gAccess->checkAccess("ta_manager", "", $this->object->getRefId());
 		if ($view_observations || $edit_observations || $finish_ta) {
-			if(!$this->object->getActions()->observationStarted($this->object->getId())) {
-				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations")
-				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS));
+			if (!$this->object->getActions()->observationStarted($this->object->getId())) {
+				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations"), $this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS));
 			} else {
-				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations")
-				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS_LIST));
+				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations"), $this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservationsGUI::CMD_OBSERVATIONS_LIST));
 			}
 		}
 
 		if ($this->gAccess->checkAccess("edit_observator", "", $this->object->getRefId())) {
-			$this->gTabs->addTab(self::TAB_OBSERVATOR, $this->txt("observator")
-				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservatorGUI::CMD_SHOW));
+			$this->gTabs->addTab(self::TAB_OBSERVATOR, $this->txt("observator"), $this->gCtrl->getLinkTarget($this, ilTalentAssessmentObservatorGUI::CMD_SHOW));
 		}
 
 		if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
-			$this->gTabs->addTab(self::TAB_SETTINGS, $this->txt("properties")
-				,$this->gCtrl->getLinkTarget($this, self::CMD_PROPERTIES));
+			$this->gTabs->addTab(self::TAB_SETTINGS, $this->txt("properties"), $this->gCtrl->getLinkTarget($this, ilTalentAssessmentSettingsGUI::CMD_EDIT));
 		}
 
 		$this->addPermissionTab();
 	}
 
-	protected function forwardSettings() {
-		if(!$this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+	protected function forwardSettings()
+	{
+		if (!$this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {
 			$this->gTabs->setTabActive(self::TAB_SETTINGS);
 			$actions = $this->object->getActions();
-			$gui = new ilTalentAssessmentSettingsGUI($actions, $this->plugin->txtClosure(), $this->object->getId()
-					, $this->object->getSettings()->getPotential());
+			$gui = new ilTalentAssessmentSettingsGUI($actions, $this->plugin->txtClosure(), $this->object->getId(), $this->object->getSettings()->getPotential());
 			$this->gCtrl->forwardCommand($gui);
 		}
 	}
 
-	protected function showContent() {
+	protected function showContent()
+	{
 		if ($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
 			$this->gCtrl->redirectByClass("ilinfoscreengui", "showSummary");
 		} elseif ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
@@ -206,12 +210,13 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 		}
 	}
 
-	protected function forwardObservations() {
+	protected function forwardObservations()
+	{
 		$view_observations = $this->gAccess->checkAccess("view_observations", "", $this->object->getRefId());
 		$edit_observations = $this->gAccess->checkAccess("edit_observation", "", $this->object->getRefId());
 		$ta_manager = $this->gAccess->checkAccess("ta_manager", "", $this->object->getRefId());
 
-		if(!($view_observations || $edit_observations || $ta_manager)) {
+		if (!($view_observations || $edit_observations || $ta_manager)) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {
@@ -222,12 +227,14 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 		}
 	}
 
-	protected function showObservator() {
+	protected function showObservator()
+	{
 		$this->renderUserSearch();
 		$this->forwardObservator();
 	}
 
-	protected function renderUserSearch() {
+	protected function renderUserSearch()
+	{
 		include_once "./Services/Search/classes/class.ilRepositorySearchGUI.php";
 			ilRepositorySearchGUI::fillAutoCompleteToolbar(
 				$this,
@@ -241,8 +248,9 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 			);
 	}
 
-	protected function forwardObservator() {
-		if(!$this->gAccess->checkAccess("edit_observator", "", $this->object->getRefId())) {
+	protected function forwardObservator()
+	{
+		if (!$this->gAccess->checkAccess("edit_observator", "", $this->object->getRefId())) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {
@@ -253,18 +261,21 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 		}
 	}
 
-	function addInfoItems($info) {
+	public function addInfoItems($info)
+	{
 		$settings = $this->object->getSettings();
 		$actions = $this->object->getActions();
 		$career_goal_obj = \ilObjectFactory::getInstanceByObjId($settings->getCareerGoalId());
 		$observator = $actions->getAssignedUser($this->object->getId());
-		$obsv_names = array_map(function ($obsv) { return $obsv["firstname"]." ".$obsv["lastname"];}, $observator);
+		$obsv_names = array_map(function ($obsv) {
+			return $obsv["firstname"]." ".$obsv["lastname"];
+		}, $observator);
 
 		$info->addSection($this->txt('ta_info'));
 		$info->addProperty($this->txt('title'), $this->object->getTitle());
 		$info->addProperty($this->txt('description'), $this->object->getDescription());
 		$info->addProperty($this->txt('state'), $this->txt($actions->potentialText()));
-		
+
 
 		$info->addProperty($this->txt('career_goal'), $career_goal_obj->getTitle());
 		$info->addProperty($this->txt('venue'), $actions->getVenueName($settings->getVenue()));
@@ -272,7 +283,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 
 		$start_date = $settings->getStartDate()->get(IL_CAL_DATE);
 		$end_date = $settings->getEndDate()->get(IL_CAL_DATE);
-		if($start_date == $end_date) {
+		if ($start_date == $end_date) {
 			$date = $start_date;
 		} else {
 			$date = $start_date." ".$this->txt("to")." ".$end_date;
@@ -288,13 +299,13 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 		return $info;
 	}
 
-	public function userfieldAutocomplete() {
+	public function userfieldAutocomplete()
+	{
 		include_once './Services/User/classes/class.ilUserAutoComplete.php';
 		$auto = new ilUserAutoComplete();
 		$auto->setSearchFields(array('login','firstname','lastname','email'));
 		$auto->enableFieldSearchableCheck(false);
-		if(($_REQUEST['fetchall']))
-		{
+		if (($_REQUEST['fetchall'])) {
 			$auto->setLimit(ilUserAutoComplete::MAX_ENTRIES);
 		}
 		echo $auto->getList($_REQUEST['term']);
