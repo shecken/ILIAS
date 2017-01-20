@@ -19,7 +19,6 @@ require_once(__DIR__."/class.ilTalentAssessmentObservationsGUI.php");
 class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	use TalentAssessment\Settings\ilFormHelper;
 
-	const CMD_PROPERTIES = "editProperties";
 	const CMD_SHOWCONTENT = "showContent";
 	const CMD_SUMMARY = "showSummary";
 	const CMD_AUTOCOMPLETE = "userfieldAutocomplete";
@@ -31,7 +30,8 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 	/**
 	 * Initialisation
 	 */
-	protected function afterConstructor() {
+	protected function afterConstructor() 
+	{
 		global $ilAccess, $ilTabs, $ilCtrl, $ilToolbar;
 
 		$this->gAccess = $ilAccess;
@@ -72,6 +72,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 				switch ($cmd) {
 					case ilTalentAssessmentSettingsGUI::CMD_SHOW:
 					case ilTalentAssessmentSettingsGUI::CMD_SAVE:
+					case ilTalentAssessmentSettingsGUI::CMD_EDIT:
 						$this->forwardSettings();
 						break;
 					case ilTalentAssessmentObservatorGUI::CMD_SHOW:
@@ -83,7 +84,6 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 					case ilTalentAssessmentObservatorGUI::CMD_CONFIRMED_DELETE:
 						$this->forwardObservator();
 						break;
-					case self::CMD_PROPERTIES:
 					case self::CMD_SHOWCONTENT:
 						$this->showContent();
 						break;
@@ -157,7 +157,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI {
 
 		if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
 			$this->gTabs->addTab(self::TAB_SETTINGS, $this->txt("properties")
-				,$this->gCtrl->getLinkTarget($this, self::CMD_PROPERTIES));
+				,$this->gCtrl->getLinkTarget($this, ilTalentAssessmentSettingsGUI::CMD_EDIT));
 
 			if(!$this->object->getActions()->observationStarted($this->object->getId())) {
 				$this->gTabs->addTab(self::TAB_OBSERVATIONS, $this->txt("observations")

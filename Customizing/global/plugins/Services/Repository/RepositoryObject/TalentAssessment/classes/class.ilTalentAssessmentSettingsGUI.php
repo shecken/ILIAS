@@ -9,6 +9,7 @@ class ilTalentAssessmentSettingsGUI {
 
 	const CMD_SHOW = "showSettings";
 	const CMD_SAVE = "saveSettings";
+	const CMD_EDIT = "editProperties";
 	const CMD_AUTOCOMPLETE = "userfieldAutocomplete";
 
 	/**
@@ -39,6 +40,7 @@ class ilTalentAssessmentSettingsGUI {
 			case self::CMD_SHOW:
 			case self::CMD_SAVE:
 			case self::CMD_AUTOCOMPLETE:
+			case self::CMD_EDIT:
 				$this->$cmd();
 				break;
 			default:
@@ -46,7 +48,13 @@ class ilTalentAssessmentSettingsGUI {
 		}
 	}
 
-	protected function showSettings() {
+	protected function editProperties()
+	{
+		$this->showSettings();
+	}
+
+	protected function showSettings() 
+	{
 		$form = $this->initSettingsForm();
 		$this->fillSettingsForm($form);
 		$this->gTpl->setContent($form->getHTML());
