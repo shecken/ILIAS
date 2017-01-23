@@ -18050,8 +18050,8 @@ $ilDB->createTable("exc_data", $fields);
 $pk_fields = array("obj_id");
 $ilDB->addPrimaryKey("exc_data", $pk_fields);
 
-$in_fields = array("instruction");
-$ilDB->addIndex("exc_data", $in_fields, "i1", true);
+// $in_fields = array("instruction");
+// $ilDB->addIndex("exc_data", $in_fields, "i1", true);
 
 
 //
