@@ -964,3 +964,21 @@ gevAMDUtils::addAMDField( "Zeitraum"
 						);
 
 ?>
+
+<#31>
+<?php
+require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+
+$amdutils = gevAMDUtils::getInstance();
+
+$options = array("Präsenztraining"
+				, "Webinar"
+				, "Selbstlernkurs"
+				, "Virtuelles Training"
+				, "Coaching"
+				);
+
+$amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_TYPE, $options);
+?>
