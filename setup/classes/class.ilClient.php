@@ -836,58 +836,58 @@ class ilClient
 	{
 		//var_dump($this->getDataDir());exit;
 		// create base data dir
-		if (!ilUtil::isDir($this->getDataDir())) && !ilUtil::makeDir($this->getDataDir()))
+		if (!ilUtil::isDir($this->getDataDir()) && !ilUtil::makeDir($this->getDataDir()))
 		{
 			$this->error = "could_not_create_base_data_dir :".$this->getDataDir();
 			return false;
 		}
 
 		// create sub dirs in base data dir
-		if (!ilUtil::isDir($this->getDataDir()."/mail")) && !ilUtil::makeDir($this->getDataDir()."/mail"))
+		if (!ilUtil::isDir($this->getDataDir()."/mail") && !ilUtil::makeDir($this->getDataDir()."/mail"))
 		{
 			$this->error = "could_not_create_mail_data_dir :".$this->getDataDir()."/mail";
 			return false;
 		}
 
-		if (!ilUtil::isDir($this->getDataDir()."/lm_data")) && !ilUtil::makeDir($this->getDataDir()."/lm_data"))
+		if (!ilUtil::isDir($this->getDataDir()."/lm_data") && !ilUtil::makeDir($this->getDataDir()."/lm_data"))
 		{
 			$this->error = "could_not_create_lm_data_dir :".$this->getDataDir()."/lm_data";
 			return false;
 		}
 
-		if (!ilUtil::isDir($this->getDataDir()."/forum")) && !ilUtil::makeDir($this->getDataDir()."/forum"))
+		if (!ilUtil::isDir($this->getDataDir()."/forum") && !ilUtil::makeDir($this->getDataDir()."/forum"))
 		{
 			$this->error = "could_not_create_forum_data_dir :".$this->getDataDir()."/forum";
 			return false;
 		}
 
-		if (!ilUtil::isDir($this->getDataDir()."/files")) && !ilUtil::makeDir($this->getDataDir()."/files"))
+		if (!ilUtil::isDir($this->getDataDir()."/files") && !ilUtil::makeDir($this->getDataDir()."/files"))
 		{
 			$this->error = "could_not_create_files_data_dir :".$this->getDataDir()."/files";
 			return false;
 		}
 
 		// create base webspace dir
-		if (!ilUtil::isDir($this->getWebspaceDir())) && !ilUtil::makeDir($this->getWebspaceDir()))
+		if (!ilUtil::isDir($this->getWebspaceDir()) && !ilUtil::makeDir($this->getWebspaceDir()))
 		{
 			$this->error = "could_not_create_base_webspace_dir :".$this->getWebspaceDir();
 			return false;
 		}
 
 		// create sub dirs in base webspace dir
-		if (!ilUtil::isDir($this->getWebspaceDir()."/lm_data")) && !ilUtil::makeDir($this->getWebspaceDir()."/lm_data"))
+		if (!ilUtil::isDir($this->getWebspaceDir()."/lm_data") && !ilUtil::makeDir($this->getWebspaceDir()."/lm_data"))
 		{
 			$this->error = "could_not_create_lm_webspace_dir :".$this->getWebspaceDir()."/lm_data";
 			return false;
 		}
 
-		if (!ilUtil::isDir($this->getWebspaceDir()."/usr_images")) && !ilUtil::makeDir($this->getWebspaceDir()."/usr_images"))
+		if (!ilUtil::isDir($this->getWebspaceDir()."/usr_images") && !ilUtil::makeDir($this->getWebspaceDir()."/usr_images"))
 		{
 			$this->error = "could_not_create_usr_images_webspace_dir :".$this->getWebspaceDir()."/usr_images";
 			return false;
 		}
 
-		if (!ilUtil::isDir($this->getWebspaceDir()."/mobs")) && !ilUtil::makeDir($this->getWebspaceDir()."/mobs"))
+		if (!ilUtil::isDir($this->getWebspaceDir()."/mobs") && !ilUtil::makeDir($this->getWebspaceDir()."/mobs"))
 		{
 			$this->error = "could_not_create_mobs_webspace_dir :".$this->getWebspaceDir()."/mobs";
 			return false;
