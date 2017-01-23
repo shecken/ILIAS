@@ -7282,7 +7282,6 @@ ALTER TABLE `frm_threads` ADD FULLTEXT `thr_subject` (`thr_subject`);
 <#461>
 ALTER TABLE `glossary_term` ADD FULLTEXT `term` (`term`);
 <#462>
-ALTER TABLE `exc_data` ADD FULLTEXT `instruction` (`instruction`);
 <#463>
 ALTER TABLE `survey_question` ADD FULLTEXT `title_desc` (`title` ,`description`);
 <#464>
