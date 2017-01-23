@@ -3,7 +3,7 @@
 
 /**
  * Class ilUserCourseStatusHistorizingHelper
- * 
+ *
  * @author Maximilian Becker <mbecker@databay.de>
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  * @version $Id$
@@ -13,30 +13,33 @@ require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 require_once("Services/GEV/Utils/classes/class.gevBillingUtils.php");
 
-class ilUserCourseStatusHistorizingHelper 
+class ilUserCourseStatusHistorizingHelper
 {
 	#region Singleton
 
 	/** Defunct member for singleton */
-	private function __clone() {}
+	private function __clone()
+	{
+	}
 
 	/** Defunct member for singleton */
-	private function __construct() {}
+	private function __construct()
+	{
+	}
 
 	/** @var ilUserCourseStatusHistorizingHelper $instance */
 	private static $instance;
 
 	/**
 	 * Singleton accessor
-	 * 
+	 *
 	 * @static
-	 * 
+	 *
 	 * @return ilUserHistorizingHelper
 	 */
 	public static function getInstance()
 	{
-		if(!self::$instance)
-		{
+		if (!self::$instance) {
 			self::$instance = new self;
 		}
 
@@ -121,8 +124,8 @@ class ilUserCourseStatusHistorizingHelper
 								,$lng->txt("crs_admin")
 								,$lng->txt("gev_dev_training_creator"));
 
-		while($function = current($av_functions)) {
-			if(in_array($function, $functions)) {
+		while ($function = current($av_functions)) {
+			if (in_array($function, $functions)) {
 				return $function;
 			}
 			next($av_functions);
@@ -132,9 +135,9 @@ class ilUserCourseStatusHistorizingHelper
 
 	/**
 	 * Returns the bill id of the given user-course-relation.
-	 * 
+	 *
 	 * Use of method "hasBillId" and definition of a meaningful "no-value" should be done here.
-	 * 
+	 *
 	 * @param integer|ilObjUser   $user
 	 * @param integer|ilObjCourse $course
 	 *
@@ -144,15 +147,13 @@ class ilUserCourseStatusHistorizingHelper
 	{
 
 		//getBillNumberOf
-		
+
 		$bills = gevBillingUtils::getInstance()
-							   ->getBillsForCourseAndUser( self::getId($user)
-							   							 , self::getId($course)
-							   							 );
+							   ->getBillsForCourseAndUser(self::getId($user), self::getId($course));
 		if (count($bills) == 0) {
 			return null;
 		}
-		
+
 		// search for latest bill, that is the one with the highest id.
 		$id = $bills[0];
 		$nr = null;
@@ -167,28 +168,29 @@ class ilUserCourseStatusHistorizingHelper
 
 
 
-	
-	protected static function getId($obj) {
+
+	protected static function getId($obj)
+	{
 		if (is_int($obj) || is_numeric($obj)) {
 			return (int)$obj;
-		}
-		else {
+		} else {
 			return $obj->getId();
 		}
 	}
-	
+
 	/**
 	 * Returns true when the start and end of the course should be tracked individually per user.
-	 * 
+	 *
 	 * @param integer|ilObjUser   $user
 	 * @param integer|ilObjCourse $course
 	 *
 	 * @return bool
 	 */
-	public function courseHasIndividualStartAndEnd($course) {
-		return gevCourseUtils::getInstanceByObjOrId($course)->getType() == "Selbstlernkurs";
+	public function courseHasIndividualStartAndEnd($course)
+	{
+		return in_array(gevCourseUtils::getInstanceByObjOrId($course)->getType(), array("Selbstlernkurs", "Coaching"));
 	}
-	
+
 	/**
 	 * Sets the individual start and end date based on the booking and participation status.
 	 *
@@ -196,7 +198,8 @@ class ilUserCourseStatusHistorizingHelper
 	 *
 	 * @return null
 	 */
-	public function setIndividualStartAndEnd($user_id, $course_id, &$payload) {
+	public function setIndividualStartAndEnd($user_id, $course_id, &$payload)
+	{
 		require_once("Services/UserCourseStatusHistorizing/classes/class.ilUserCourseStatusHistorizing.php");
 		require_once("Services/Calendar/classes/class.ilDateTime.php");
 
@@ -213,8 +216,7 @@ class ilUserCourseStatusHistorizingHelper
 		$states_checks = array("kostenpflichtig storniert", "kostenfrei storniert");
 		if (ilUserCourseStatusHistorizing::caseExists($case_id)
 			&& in_array($payload["booking_status"], $states_checks)
-			&& $payload["event"] == "addParticipant")
-		{
+			&& $payload["event"] == "addParticipant") {
 			$payload["begin_date"] = date("Y-m-d");
 		}
 
