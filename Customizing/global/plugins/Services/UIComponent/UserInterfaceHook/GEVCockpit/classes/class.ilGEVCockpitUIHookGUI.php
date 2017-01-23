@@ -14,11 +14,13 @@ use \CaT\Plugins\TalentAssessment;
 /**
  * Creates a submenu for the Cockpit of the GEV.
  */
-class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
+class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
+{
 	const ADMIN_TRAININGS_CHECK_INTERVAL = "300";
 	const ASSESSMENT_CHECK_INTERVAL = "300";
 
-	public function __construct() {
+	public function __construct()
+	{
 		global $ilUser, $lng, $ilCtrl, $ilDB, $ilAccess, $rbacreview;
 		$this->gLng = $lng;
 		$this->gUser = $ilUser;
@@ -31,8 +33,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 	/**
 	 * @inheritdoc
 	 */
-	function getHTML($a_comp, $a_part, $a_par = array()) {
-		if ( 	$a_part != "template_get"
+	public function getHTML($a_comp, $a_part, $a_par = array())
+	{
+		if ($a_part != "template_get"
 			|| 	$a_par["tpl_id"] != "Services/MainMenu/tpl.main_menu.html"
 			|| 	(!$this->isCockpit() && !$this->isSearch())
 		   ) {
@@ -53,13 +56,14 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			);
 	}
 
-	protected function isCockpit() {
+	protected function isCockpit()
+	{
 		$base_class = strtolower($_GET["baseClass"]);
 		$cmd_class = strtolower($_GET["cmdClass"]);
 		$cmd = strtolower($_GET["cmd"]);
 
 		return
-			( $base_class == "gevdesktopgui" 
+			( $base_class == "gevdesktopgui"
 				|| ($cmd_class == "ilobjreportedubiogui"
 					&& $_GET["target_user_id"] == $this->gUser->getId())
 				|| ($cmd_class == "ilobjreportexambiogui"
@@ -75,13 +79,15 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			;
 	}
 
-	protected function isSearch() {
+	protected function isSearch()
+	{
 		return $_GET["baseClass"] == "gevDesktopGUI"
 			&& $_GET["cmdClass"] == "gevcoursesearchgui"
 			;
 	}
 
-	protected function getActiveItem() {
+	protected function getActiveItem()
+	{
 		if ($this->isCockpit()) {
 			if ($_GET["cmdClass"] == "gevmycoursesgui") {
 				return "bookings";
@@ -107,6 +113,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			if ($_GET["cmd"] == "toMyAssessments") {
 				return "my_assessments";
 			}
+			if ($_GET["cmd"] == "toMyStudyProgramme") {
+				return "my_study_proramme";
+			}
 		}
 		if ($this->isSearch()) {
 			$this->target_user_id = $_POST["target_user_id"]
@@ -126,28 +135,27 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		return null;
 	}
 
-	protected function getItems() {
+	protected function getItems()
+	{
 		if ($this->isCockpit()) {
 			return $this->getCockpitItems();
-		}
-		else if ($this->isSearch()) {
+		} elseif ($this->isSearch()) {
 			return $this->getSearchItems();
-		}
-		else {
+		} else {
 			throw new \LogicException("Should not get here...");
 		}
 	}
 
-	protected function getCockpitItems() {
+	protected function getCockpitItems()
+	{
 		if ($this->gUser->getId() !== 0) {
 			$user_utils = gevUserUtils::getInstanceByObj($this->gUser);
-		}
-		else {
+		} else {
 			$user_utils = null;
 		}
 
 		$items = array();
-		
+
 		$items["bookings"]
 			= array($this->gLng->txt("gev_bookings"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
 
@@ -156,13 +164,19 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 				= array($this->gLng->txt("gev_edu_bio"), $user_utils->getEduBioLink());
 		}
 
-		$ass_bio_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
-							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xexb"));
-		if($ass_bio_plugin && $ass_bio_plugin->active) {
+		$items["my_va_plan"] = array($this->gLng->txt("gev_my_va_plan"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyVAPlan");
+
+		$ass_bio_plugin = ilPlugin::getPluginObject(
+			IL_COMP_SERVICE,
+			"Repository",
+			"robj",
+			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xexb")
+		);
+		if ($ass_bio_plugin && $ass_bio_plugin->active) {
 			if ($user_utils && ($ref_id = ilObjReportExamBioGUI::examBiographyReferenceForUsers($this->gIldb))) {
-				if($this->gAccess->checkAccessOfUser($this->gUser->getId(),'read','',$ref_id) || $user_utils->isAdmin()) {
+				if ($this->gAccess->checkAccessOfUser($this->gUser->getId(), 'read', '', $ref_id) || $user_utils->isAdmin()) {
 					$items["exambio"]
-						= array($this->gLng->txt("gev_exam_bio"), ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id,$this->gCtrl));
+						= array($this->gLng->txt("gev_exam_bio"), ilObjReportExamBioGUI::examBiographyLinkByRefId($ref_id, $this->gCtrl));
 				}
 			}
 		}
@@ -187,9 +201,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		$has_admin_trainings = ilSession::get("gev_has_admin_trainings");
 		$last_admin_trainings_calculation = ilSession::get("gev_has_admin_trainings_calculation_ts");
 
-		if ( $has_admin_trainings === null
-				||   $last_admin_trainings_calculation + self::ADMIN_TRAININGS_CHECK_INTERVAL < time()) 
-		{
+		if ($has_admin_trainings === null
+				||   $last_admin_trainings_calculation + self::ADMIN_TRAININGS_CHECK_INTERVAL < time()) {
 			$my_training_admin_utils = new gevMyTrainingsAdmin($this->gUser->getId());
 			$has_admin_trainings = $my_training_admin_utils->hasAdminCourse(gevSettings::$CRS_MANAGER_ROLES);
 
@@ -197,28 +210,31 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 			ilSession::set("gev_has_admin_trainings_calculation_ts", time());
 		}
 
-		if($has_admin_trainings) {
+		if ($has_admin_trainings) {
 			$items["training_admin"]
 				= array($this->gLng->txt("gev_my_trainings_admin"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyTrainingsAdmin");
 		}
 
-		$ta_plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
-							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
+		$ta_plugin = ilPlugin::getPluginObject(
+			IL_COMP_SERVICE,
+			"Repository",
+			"robj",
+			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas")
+		);
 
-		if($ta_plugin->active) {
+		if ($ta_plugin->active) {
 			$has_assessments = ilSession::get("gev_has_assessments");
 			$last_assessments_calculation = ilSession::get("gev_has_assessments_calculation_ts");
 
-			if($has_assessments === null
-					||   $last_assessments_calculation + self::ASSESSMENT_CHECK_INTERVAL < time())
-			{
+			if ($has_assessments === null
+					||   $last_assessments_calculation + self::ASSESSMENT_CHECK_INTERVAL < time()) {
 				$assessments = $ta_plugin->getObservationsDB()->getAssessmentsData(array());
 
 				foreach ($assessments as $key => $assessment) {
 					$role_id = $this->gRbacreview->roleExists(TalentAssessment\ilActions::OBSERVATOR_ROLE_NAME."_".$assessment["obj_id"]);
 					$usr_ids = $this->gRbacreview->assignedUsers($role_id);
 
-					if(!in_array($this->gUser->getId(), $usr_ids)) {
+					if (!in_array($this->gUser->getId(), $usr_ids)) {
 						unset($assessments[$key]);
 					}
 				}
@@ -229,7 +245,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 				ilSession::set("gev_has_assessments_calculation_ts", time());
 			}
 
-			if($has_assessments) {
+			if ($has_assessments) {
 				$items["my_assessments"]
 					= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
 			}
@@ -238,7 +254,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		return $items;
 	}
 
-	protected function getSearchItems() {
+	protected function getSearchItems()
+	{
 		$items = array
 			( "search"
 				=> array("Suche")
@@ -256,7 +273,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		return $items;
 	}
 
-	protected function getSubMenuHTML($current_skin) {
+	protected function getSubMenuHTML($current_skin)
+	{
 		assert('is_string($current_skin)');
 		$tpl = $this->getTemplate($current_skin, true, true);
 		$count = 1;
@@ -276,7 +294,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		$tpl->addCss("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.css");
 		$tpl->setCurrentBlock("js");
 
-		if($this->getCurrentSlide()) {
+		if ($this->getCurrentSlide()) {
 			$tpl->setVariable("ACTIVE_SLIDE", "<script>var active_slide = " . $this->getCurrentSlide() . ";</script>");
 		}
 
@@ -285,60 +303,64 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI {
 		return $tpl->get();
 	}
 
-	protected function addJS() {
+	protected function addJS()
+	{
 		require_once("./Services/jQuery/classes/class.iljQueryUtil.php");
 		iljQueryUtil::initjQuery();
 		global $tpl;
 		$tpl->addJavaScript("./Customizing/global/plugins/Services/UIComponent/UserInterfaceHook/GEVCockpit/templates/jquery.bxslider.js");
 	}
 
-	protected function addCss($current_skin) {
+	protected function addCss($current_skin)
+	{
 		assert('is_string($current_skin)');
 		global $tpl;
 		$loc = $this->getStyleSheetLocation($current_skin);
 		$tpl->addCss($loc);
 	}
 
-	protected function getTemplate($current_skin, $remove_unknown_vars, $remove_empty_blocks) {
+	protected function getTemplate($current_skin, $remove_unknown_vars, $remove_empty_blocks)
+	{
 		assert('is_string($current_skin)');
 		$skin_folder = $this->getSkinFolder($current_skin);
 		$tpl_file = "tpl.submenu.html";
 		$tpl_path = $skin_folder."/Plugins/GEVCockpit/$tpl_file";
 		if (is_file($tpl_path)) {
 			return new ilTemplate($tpl_path, $remove_unknown_vars, $remove_empty_blocks);
-		}
-		else {
+		} else {
 			return $this->plugin_object->getTemplate("tpl.submenu.html", $remove_unknown_vars, $remove_empty_blocks);
 		}
 	}
 
-	protected function getStyleSheetLocation($current_skin) {
+	protected function getStyleSheetLocation($current_skin)
+	{
 		assert('is_string($current_skin)');
 		$skin_folder = $this->getSkinFolder($current_skin);
 		$css_file = "submenu.css";
 		$css_path = $skin_folder."/Plugins/GEVCockpit/$css_file";
 		if (is_file($css_path)) {
 			return $css_path;
-		}
-		else {
+		} else {
 			return $this->plugin_object->getStyleSheetLocation("submenu.css");
 		}
 	}
 
-	protected function getSkinFolder($current_skin) {
+	protected function getSkinFolder($current_skin)
+	{
 		assert('is_string($current_skin)');
 		return "./Customizing/global/skin/$current_skin";
 	}
 
-	protected function getCurrentSlide() {
-	  $items = $this->getItems();
-	  $i = 1;
-	  foreach ($items as $key => $value) {
-		if($key == $this->getActiveItem()) {
-		  return $i;
+	protected function getCurrentSlide()
+	{
+		$items = $this->getItems();
+		$i = 1;
+		foreach ($items as $key => $value) {
+			if ($key == $this->getActiveItem()) {
+				return $i;
+			}
+			$i++;
 		}
-		$i++;
-	  }
-	  return null;
+		return null;
 	}
 }
