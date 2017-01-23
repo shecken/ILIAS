@@ -94,13 +94,14 @@ class gevExpressRegistrationGUI
 		$this->crs_utils->bookUser($this->user_id);
 
 		$isSelfLearning = $this->crs_utils->getType() == "Selbstlernkurs";
+		$isCoaching = $this->crs_utils->getType() == "Coaching";
 
 		$status = $this->crs_utils->getBookingStatusOf($this->user_id);
 
 		if ($status != ilCourseBooking::STATUS_BOOKED && $status != ilCourseBooking::STATUS_WAITING) {
 			$this->failAtFinalize("Status was neither booked nor waiting.");
 		}
-		$this->finalizedBookingRedirect($status, $isSelfLearning);
+		$this->finalizedBookingRedirect($status, $isSelfLearning, $isCoaching);
 	}
 
 	/**
@@ -132,13 +133,13 @@ class gevExpressRegistrationGUI
 	 *
 	 * @return null
 	 */
-	protected function finalizedBookingRedirect($a_status, $a_isSelfLerning)
+	protected function finalizedBookingRedirect($a_status, $a_isSelfLerning, $isCoaching)
 	{
 		require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
 		$booked = $a_status == ilCourseBooking::STATUS_BOOKED;
 		$automails = new gevCrsAutoMails($this->crs_id);
 
-		if (!$a_isSelfLearning) {
+		if (!$a_isSelfLearning && !$isCoaching) {
 			if ($booked) {
 				$automails->send("self_booking_to_booked", array($this->user_id));
 				$automails->send("invitation", array($this->user_id));
