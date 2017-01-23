@@ -56,6 +56,7 @@ class ilTalentAssessmentSettingsGUI
 		$this->showSettings();
 	}
 
+
 	protected function showSettings()
 	{
 		$form = $this->initSettingsForm();
