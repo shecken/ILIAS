@@ -48,7 +48,7 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI
 		$this->setFormAction($ilCtrl->getFormAction($a_parent_obj, "view"));
 
 		$this->addColumn("", "", "1", true);
-		$this->setSelectAllCheckbox("id[]");
+		$this->setSelectAllCheckbox("prgs_ids[]");
 		$this->setEnableAllCommand(true);
 		$this->addMultiCommands();
 
