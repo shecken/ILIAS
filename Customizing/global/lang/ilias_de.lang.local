@@ -1728,3 +1728,9 @@ mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
 mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach finaler Bewertung vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
 mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
 mass#:#mass_edit_conditions#:#Vorbedingungen
+prg#:#prg_multi_mark_accredited#:#Akkredieren
+prg#:#prg_multi_unmark_accredited#:#Akkreditierung entfernen
+prg#:#prg_multi_remove_user#:#Benutzer entfernen
+prg#:#prg_multi_mark_relevant#:#Als relevant markieren
+prg#:#prg_mulit_unmark_relevant#:#Als unrelevant markieren
+prg#:#prg_mulit_update_from_current_plan#:#Aus dem aktuellen Plan aktualisieren.
