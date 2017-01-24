@@ -305,7 +305,7 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI
 		return array(
 				'accredit' => $this->lng->txt('prg_multi_mark_accredited'),
 				'deaccredit' => $this->lng->txt('prg_multi_unmark_accredited'),
-				'removeUsers' => $this->lng->txt('prg_mugit sove_user'),
+				'removeUsers' => $this->lng->txt('prg_multi_remove_user'),
 				'markRelevant' => $this->lng->txt('prg_multi_mark_relevant'),
 				'unmarkRelevant' => $this->lng->txt('prg_mulit_unmark_relevant'),
 				'updateFromPlan' => $this->lng->txt('prg_mulit_update_from_current_plan')
