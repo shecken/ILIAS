@@ -5960,3 +5960,20 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-TA", array(
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", array('visible', 'read'));
 
 ?>
+
+<#246>
+<?php
+$fields = array("superior_examinate" => array("type" => "integer",
+										"length" => 1,
+										"default" => 0)
+				,"superior_view" => array("type" => "integer",
+										  "length" => 1,
+										  "default" => 0)
+		);
+
+foreach ($fields as $field_name => $field_config) {
+	if (!$ilDB->tableColumnExists('mass_settings', $field_name)) {
+		$ilDB->addTableColumn('mass_settings', $field_name, $field_config);
+	}
+}
+?>
