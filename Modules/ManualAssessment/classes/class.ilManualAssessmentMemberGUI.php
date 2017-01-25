@@ -16,87 +16,99 @@ require_once 'Modules/ManualAssessment/classes/class.ilManualAssessmentLP.php';
  *
  * @author Denis Klöpfer <denis.kloepfer@concepts-and-training.de>
  */
-class ilManualAssessmentMemberGUI {
-		protected $notificator;
+class ilManualAssessmentMemberGUI
+{
+	protected $notificator;
 
-		public function __construct($members_gui ,$a_parent_gui, $a_ref_id) {
-			$this->notificator = new ilManualAssessmentPrimitiveInternalNotificator();
-			global $ilCtrl, $tpl, $lng, $ilUser, $ilTabs;
-			$this->ctrl = $ilCtrl;
-			$this->members_gui = $members_gui;
-			$this->parent_gui = $a_parent_gui;
-			$this->object = $a_parent_gui->object;
-			$this->ref_id = $a_ref_id;
-			$this->tpl =  $tpl;
-			$this->lng = $lng;
-			$this->ctrl->saveParameter($this,'usr_id');
-			$this->examinee = new ilObjUser($_GET['usr_id']);
-			$this->examiner = $ilUser;
-			$this->setTabs($ilTabs);
-			$this->member = $this->object->membersStorage()
-								->loadMember($this->object, $this->examinee);
+	public function __construct($members_gui, $a_parent_gui, $a_ref_id)
+	{
+		$this->notificator = new ilManualAssessmentPrimitiveInternalNotificator();
+		global $ilCtrl, $tpl, $lng, $ilUser, $ilTabs;
+		$this->ctrl = $ilCtrl;
+		$this->members_gui = $members_gui;
+		$this->parent_gui = $a_parent_gui;
+		$this->object = $a_parent_gui->object;
+		$this->ref_id = $a_ref_id;
+		$this->tpl =  $tpl;
+		$this->lng = $lng;
+		$this->ctrl->saveParameter($this, 'usr_id');
+		$this->examinee = new ilObjUser($_GET['usr_id']);
+		$this->examiner = $ilUser;
+		$this->setTabs($ilTabs);
+		$this->member = $this->object->membersStorage()
+						->loadMember($this->object, $this->examinee);
+		$this->superior_examinate = $a_parent_gui->object->getSettings()->superiorExaminate();
+		$this->superior_view = $a_parent_gui->object->getSettings()->superiorView();
 	}
 
-	public function executeCommand() {
+	public function executeCommand()
+	{
 		$edited_by_other = $this->targetWasEditedByOtherUser($this->member);
-		$read_permission = $this->object->accessHandler()->checkAccessToObj($this->object,'read_learning_progress');
-		$edit_permission = $this->object->accessHandler()->checkAccessToObj($this->object,'edit_learning_progress');
-		if(!$read_permission && !$edit_permission) {
-			$a_parent_gui->handleAccessViolation();
+		$read_permission = $this->userMayViewGrades();
+		$edit_permission = $this->userMayEditGrades();
+		if (!$read_permission && !$edit_permission) {
+			$this->parent_gui->handleAccessViolation();
 		}
 		$cmd = $this->ctrl->getCmd();
-		switch($cmd) {
+		switch ($cmd) {
 			case 'edit':
 			case 'save':
 			case 'finalize':
 			case 'finalizeConfirmation':
-				if($edited_by_other || !$edit_permission) {
-					$a_parent_gui->handleAccessViolation();
+				if ($edited_by_other || !$edit_permission) {
+					$this->parent_gui->handleAccessViolation();
 				}
 				break;
 			case 'view':
-				if(($edited_by_other || !$edit_permission) && !$read_permission) {
-					$a_parent_gui->handleAccessViolation();
+				if (($edited_by_other || !$edit_permission) && !$read_permission) {
+					$this->parent_gui->handleAccessViolation();
 				}
 				break;
 			case 'cancel':
 				break;
 			default:
-				$a_parent_gui->handleAccessViolation();
+				$this->parent_gui->handleAccessViolation();
 		}
 		$this->$cmd();
 	}
 
-	protected function setTabs(ilTabsGUI $tabs) {
+	protected function setTabs(ilTabsGUI $tabs)
+	{
 		$tabs->clearTargets();
-		$tabs->setBackTarget($this->lng->txt('back'),
-			$this->getBackLink());
+		$tabs->setBackTarget(
+			$this->lng->txt('back'),
+			$this->getBackLink()
+		);
 	}
 
-	protected function getBackLink() {
+	protected function getBackLink()
+	{
 		return $this->ctrl->getLinkTargetByClass(
-				array(get_class($this->parent_gui)
-					,get_class($this->members_gui))
-				,'view');
+			array(get_class($this->parent_gui)
+					,get_class($this->members_gui)),
+			'view'
+		);
 	}
 
-	protected function cancel() {
+	protected function cancel()
+	{
 		$this->ctrl->redirect($this->members_gui);
 	}
 
-	protected function finalizeConfirmation() {
-		if($this->mayBeEdited()) {
+	protected function finalizeConfirmation()
+	{
+		if ($this->mayBeEdited()) {
 			$form = $this->initGradingForm();
 			$form->setValuesByArray($_POST);
-			if($form->checkInput()) {
-				$member = $this->updateDataInMemberByArray($this->member,$_POST);
-				if($member->mayBeFinalized()) {
+			if ($form->checkInput()) {
+				$member = $this->updateDataInMemberByArray($this->member, $_POST);
+				if ($member->mayBeFinalized()) {
 					include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
 					$confirm = new ilConfirmationGUI();
 					$confirm->addHiddenItem('record', $_POST['record']);
 					$confirm->addHiddenItem('internal_note', $_POST['internal_note']);
 					$confirm->addHiddenItem('notify', $_POST['notify']);
-					$confirm->addHiddenItem('learning_progress',$_POST['learning_progress']);
+					$confirm->addHiddenItem('learning_progress', $_POST['learning_progress']);
 					$confirm->setHeaderText($this->lng->txt('mass_finalize_user_qst'));
 					$confirm->setFormAction($this->ctrl->getFormAction($this));
 					$confirm->setConfirm($this->lng->txt('mass_finalize'), 'finalize');
@@ -114,17 +126,18 @@ class ilManualAssessmentMemberGUI {
 		}
 	}
 
-	protected function finalize() {
-		if($this->mayBeEdited()) {
+	protected function finalize()
+	{
+		if ($this->mayBeEdited()) {
 			$form = $this->initGradingForm();
 			$form->setValuesByArray($_POST);
-			if($form->checkInput()) {
-				$member = $this->updateDataInMemberByArray($this->member,$_POST);
-				if($member->mayBeFinalized()) {
+			if ($form->checkInput()) {
+				$member = $this->updateDataInMemberByArray($this->member, $_POST);
+				if ($member->mayBeFinalized()) {
 					$this->member = $member->withFinalized()->maybeSendNotification($this->notificator);
 					$this->object->membersStorage()->updateMember($this->member);
 					ilUtil::sendSuccess($this->lng->txt('mass_membership_finalized'));
-					if($this->object->isActiveLP()) {
+					if ($this->object->isActiveLP()) {
 						ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
 					}
 					$this->view();
@@ -140,37 +153,42 @@ class ilManualAssessmentMemberGUI {
 		}
 	}
 
-	protected function mayBeEdited() {
+	protected function mayBeEdited()
+	{
 		return !$this->member->finalized() && !$this->targetWasEditedByOtherUser($this->member);
 	}
 
-	protected function  edit() {
-		if($this->mayBeEdited()) {
-			$form = $this->fillForm($this->initGradingForm(),$this->member);
+	protected function edit()
+	{
+		if ($this->mayBeEdited()) {
+			$form = $this->fillForm($this->initGradingForm(), $this->member);
 			$this->renderForm($form);
 		} else {
 			$this->view();
 		}
 	}
 
-	protected function renderForm(ilPropertyFormGUI $a_form) {
+	protected function renderForm(ilPropertyFormGUI $a_form)
+	{
 		$this->tpl->setContent($a_form->getHTML());
 	}
 
-	protected function view() {
-		$form = $this->fillForm($this->initGradingForm(false),$this->member);
+	protected function view()
+	{
+		$form = $this->fillForm($this->initGradingForm(false), $this->member);
 		$this->renderForm($form);
 	}
 
-	protected function save() {
-		if($this->mayBeEdited()) {
+	protected function save()
+	{
+		if ($this->mayBeEdited()) {
 			$form = $this->initGradingForm();
 			$form->setValuesByArray($_POST);
-			if($form->checkInput()) {
-				$this->member = $this->updateDataInMemberByArray($this->member,$_POST);
+			if ($form->checkInput()) {
+				$this->member = $this->updateDataInMemberByArray($this->member, $_POST);
 				$this->object->membersStorage()->updateMember($this->member);
 				ilUtil::sendSuccess($this->lng->txt('mass_membership_saved'));
-				if($this->object->isActiveLP()) {
+				if ($this->object->isActiveLP()) {
 					ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
 				}
 			}
@@ -180,7 +198,8 @@ class ilManualAssessmentMemberGUI {
 		}
 	}
 
-	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data) {
+	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data)
+	{
 		$member = $member->withRecord($data['record'])
 					->withInternalNote($data['internal_note'])
 					->withLPStatus($data['learning_progress'])
@@ -189,7 +208,8 @@ class ilManualAssessmentMemberGUI {
 		return $member;
 	}
 
-	protected function initGradingForm($may_be_edited = true) {
+	protected function initGradingForm($may_be_edited = true)
+	{
 		require_once 'Services/Form/classes/class.ilPropertyFormGUI.php';
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->ctrl->getFormAction($this));
@@ -197,7 +217,7 @@ class ilManualAssessmentMemberGUI {
 
 		$examinee_name = $this->examinee->getLastname().', '.$this->examinee->getFirstname();
 
-		$usr_name = new ilNonEditableValueGUI($this->lng->txt('name'),'name');
+		$usr_name = new ilNonEditableValueGUI($this->lng->txt('name'), 'name');
 		$form->addItem($usr_name);
 		// record
 		$ti = new ilTextAreaInputGUI($this->lng->txt('mass_record'), 'record');
@@ -215,11 +235,13 @@ class ilManualAssessmentMemberGUI {
 		$ta->setDisabled(!$may_be_edited);
 		$form->addItem($ta);
 
-		$learning_progress = new ilSelectInputGUI($this->lng->txt('grading'),'learning_progress');
+		$learning_progress = new ilSelectInputGUI($this->lng->txt('grading'), 'learning_progress');
 		$learning_progress->setOptions(
 			array(ilManualAssessmentMembers::LP_IN_PROGRESS => $this->lng->txt('mass_status_pending')
 				, ilManualAssessmentMembers::LP_COMPLETED => $this->lng->txt('mass_status_completed')
-				, ilManualAssessmentMembers::LP_FAILED => $this->lng->txt('mass_status_failed')));
+			,
+			ilManualAssessmentMembers::LP_FAILED => $this->lng->txt('mass_status_failed'))
+		);
 		$learning_progress->setDisabled(!$may_be_edited);
 		$form->addItem($learning_progress);
 
@@ -229,15 +251,16 @@ class ilManualAssessmentMemberGUI {
 		$notify->setDisabled(!$may_be_edited);
 		$form->addItem($notify);
 
-		if($may_be_edited) {
+		if ($may_be_edited) {
 			$form->addCommandButton('save', $this->lng->txt('save'));
-			$form->addCommandButton('finalizeConfirmation',$this->lng->txt('mass_finalize'));
+			$form->addCommandButton('finalizeConfirmation', $this->lng->txt('mass_finalize'));
 		}
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		return $form;
 	}
 
-	protected function fillForm(ilPropertyFormGUI $a_form, ilManualAssessmentMember $member) {
+	protected function fillForm(ilPropertyFormGUI $a_form, ilManualAssessmentMember $member)
+	{
 		$a_form->setValuesByArray(array(
 			  'name' => $member->name()
 			, 'record' => $member->record()
@@ -248,8 +271,28 @@ class ilManualAssessmentMemberGUI {
 		return $a_form;
 	}
 
-	protected function targetWasEditedByOtherUser(ilManualAssessmentMember $member) {
+	protected function targetWasEditedByOtherUser(ilManualAssessmentMember $member)
+	{
 		return (int)$member->examinerId() !== (int)$this->examiner->getId()
 				&& 0 !== (int)$member->examinerId();
+	}
+
+	protected function isSuperior($user_id)
+	{
+		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		$user_utils = gevUserUtils::getInstance((int)$user_id);
+		return $user_utils->isSuperior();
+	}
+
+	protected function userMayEditGrades()
+	{
+		return (($this->isSuperior($this->examiner->getId()) && $this->superior_examinate)
+			|| $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress'));
+	}
+
+	public function userMayViewGrades()
+	{
+		return (($this->isSuperior($this->examiner->getId()) && $this->superior_view)
+			|| $this->object->accessHandler()->checkAccessToObj($this->object, 'read_learning_progress'));
 	}
 }
