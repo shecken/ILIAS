@@ -6,6 +6,7 @@
 class ilManualAssessmentSettings {
 	const DEF_CONTENT = "";
 	const DEF_RECORD_TEMPLATE = "";
+	const DEF_EVENT_TIME_PLACE_REQUIRED = "";
 
 	/**
 	 * @var	string
@@ -17,10 +18,11 @@ class ilManualAssessmentSettings {
 	 */
 	protected $record_template;
 
-	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null) {
+	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $event_time_place_required = null) {
 		$this->id = $mass->getId();
 		$this->content = $content !== null ? $content : self::DEF_CONTENT;
 		$this->record_template = $record_template !== null ? $record_template : self::DEF_RECORD_TEMPLATE;
+		$this->event_time_place_required = $event_time_place_required !== null ? $event_time_place_required : self::DEF_EVENT_TIME_PLACE_REQUIRED;
 	}
 
 	/**
@@ -52,6 +54,15 @@ class ilManualAssessmentSettings {
 	}
 
 	/**
+	 * Get the value of the checkbox event_time_place_require
+	 *
+	 * @return	integer
+	 */
+	public function eventTimePlaceRequired() {
+		return $this->event_time_place_required;
+	}
+
+	/**
 	 * Set the content of this assessment, e.g. corresponding topics...
 	 *
 	 * @param	string	$content
@@ -73,6 +84,18 @@ class ilManualAssessmentSettings {
 	public function setRecordTemplate($record_template) {
 		assert('is_string($record_template)');
 		$this->record_template = $record_template;
+		return $this;
+	}
+
+	/**
+	 * Set the value of the checkbox event_time_place_require
+	 *
+	 * @param	integer	$event_time_place_require
+	 * @return	ilManualAssessment	$this
+	 */
+	public function setEventTimePlaceRequired($event_time_place_required) {
+		assert('is_integer($event_time_place_required)');
+		$this->event_time_place_required = $event_time_place_required;
 		return $this;
 	}
 }

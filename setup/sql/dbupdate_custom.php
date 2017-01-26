@@ -5960,3 +5960,31 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-TA", array(
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", array('visible', 'read'));
 
 ?>
+
+<#246>
+<?php
+
+if (!$ilDB->tableColumnExists('mass_settings', 'event_time_place_required')) {
+	$ilDB->addTableColumn('mass_settings', 'event_time_place_required', array(
+	"type" => "integer",
+	"length" => 1,
+	"notnull" => true,
+	"default" => 0
+	));
+}
+
+if (!$ilDB->tableColumnExists('mass_members', 'place')) {
+	$ilDB->addTableColumn('mass_members', 'place', array(
+	"type" => "text",
+	"length" => 255
+	));
+}
+
+if (!$ilDB->tableColumnExists('mass_members', 'event_time')) {
+	$ilDB->addTableColumn('mass_members', 'event_time', array(
+	"type" => "integer",
+	"length" => 11
+	));
+}
+
+?>

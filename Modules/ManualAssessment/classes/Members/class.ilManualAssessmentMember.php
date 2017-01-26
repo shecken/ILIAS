@@ -3,6 +3,7 @@ require_once 'Modules/ManualAssessment/classes/class.ilObjManualAssessment.php';
 require_once 'Services/User/classes/class.ilObjUser.php';
 require_once 'Modules/ManualAssessment/exceptions/class.ilManualAssessmentException.php';
 require_once 'Modules/ManualAssessment/classes/Members/class.ilManualAssessmentMembers.php';
+require_once "Services/Calendar/classes/class.ilDateTime.php";
 /**
  * Edit the record of a user, set LP.
  * @author	Denis Klöpfer <denis.kloepfer@concepts-and-training.de>
@@ -18,6 +19,8 @@ class ilManualAssessmentMember {
 	protected $finalized;
 	protected $notification_ts;
 	protected $lp_status;
+	protected $place;
+	protected $event_time;
 
 	public function __construct(ilObjManualAssessment $mass, ilObjUser $usr, array $data) {
 
@@ -28,6 +31,8 @@ class ilManualAssessmentMember {
 		$this->finalized = $data[ilManualAssessmentMembers::FIELD_FINALIZED] ? true : false;
 		$this->lp_status = $data[ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS];
 		$this->notification_ts = $data[ilManualAssessmentMembers::FIELD_NOTIFICATION_TS];
+		$this->place = $data[ilManualAssessmentMembers::FIELD_PLACE];
+		$this->event_time = new ilDateTime($data[ilManualAssessmentMembers::FIELD_EVENTTIME], IL_CAL_UNIX);
 		$this->mass = $mass;
 		$this->usr = $usr;
 	}
@@ -165,6 +170,38 @@ class ilManualAssessmentMember {
 	}
 
 	/**
+	 * Clone this object and set an internal note
+	 *
+	 * @param	string	$place
+	 * @return	ilManualAssessmentMember
+	 */
+	public function withPlace($place) {
+		assert('is_string($place) || $place === null');
+		if(!$this->finalized()) {
+			$clone = clone $this;
+			$clone->place = $place;
+			return $clone;
+		}
+		throw new ilManualAssessmentException('user allready finalized');
+	}
+
+	/**
+	 * Clone this object and set an internal note
+	 *
+	 * @param	ilDateTime | null	$internal_note
+	 * @return	ilManualAssessmentMember
+	 */
+	public function withEventTime( $event_time) {
+		assert('$event_time instanceof ilDateTime || $event_time === null');
+		if(!$this->finalized()) {
+			$clone = clone $this;
+			$clone->event_time = $event_time;
+			return $clone;
+		}
+		throw new ilManualAssessmentException('user allready finalized');
+	}
+
+	/**
 	 * Clone this object and set an examiner_id
 	 *
 	 * @param	int|string	$examiner_id
@@ -285,5 +322,13 @@ class ilManualAssessmentMember {
 	 */
 	public function notificationTS() {
 		return $this->notification_ts;
+	}
+
+	public function place() {
+		return $this->place;
+	}
+
+	public function eventTime() {
+		return $this->event_time;
 	}
 }

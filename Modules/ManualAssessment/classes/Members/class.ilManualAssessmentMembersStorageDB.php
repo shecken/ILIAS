@@ -59,6 +59,8 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 				.'	,'.ilManualAssessmentMembers::FIELD_EXAMINER_ID.' = '.$this->db->quote($member->examinerId(),'integer')
 				.'	,'.ilManualAssessmentMembers::FIELD_RECORD.' = '.$this->db->quote($member->record(),'text')
 				.'	,'.ilManualAssessmentMembers::FIELD_INTERNAL_NOTE.' = '.$this->db->quote($member->internalNote(),'text')
+				.'	,'.ilManualAssessmentMembers::FIELD_PLACE.' = '.$this->db->quote($member->place(),'text')
+				.'	,'.ilManualAssessmentMembers::FIELD_EVENTTIME.' = '.$this->db->quote($member->eventTime()->get(IL_CAL_UNIX),'integer')
 				.'	,'.ilManualAssessmentMembers::FIELD_NOTIFY.' = '.$this->db->quote($member->notify() ? 1 : 0,'integer')
 				.'	,'.ilManualAssessmentMembers::FIELD_FINALIZED.' = '.$this->db->quote($member->finalized() ? 1 : 0,'integer')
 				.'	,'.ilManualAssessmentMembers::FIELD_NOTIFICATION_TS.' = '.$this->db->quote($member->notificationTS(),'integer')
@@ -95,13 +97,15 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 	 * @inheritdoc
 	 */
 	public function insertMembersRecord(ilObjManualAssessment $mass, array $record) {
-		$sql = 'INSERT INTO mass_members (obj_id,usr_id,record,learning_progress,notify) '
+		$sql = 'INSERT INTO mass_members (obj_id,usr_id,record,learning_progress,notify,place,event_time) '
 				.'	VALUES ('
 				.'		'.$this->db->quote($mass->getId(),'integer')
 				.'		,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_USR_ID],'integer')
 				.'		,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_RECORD],'text')
 				.'		,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS],'integer')
 				.'		,'.$this->db->quote(0,'integer')
+				.'      ,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_PLACE], 'text')
+				.'      ,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_EVENTTIME], 'integer')
 				.'	)';
 		$this->db->manipulate($sql);
 	}

@@ -18,8 +18,9 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 	 * @inheritdoc
 	 */
 	public function createSettings(ilManualAssessmentSettings $settings) {
-		$sql = "INSERT INTO mass_settings (content,record_template,obj_id) VALUES (%s,%s,%s)";
-		$this->db->manipulateF($sql,array("text","text","integer"),array($settings->content(),$settings->recordTemplate(),$settings->getId()));
+		$sql = "INSERT INTO mass_settings (content,record_template,obj_id,event_time_place_required) VALUES (%s,%s,%s,%s)";
+		$this->db->manipulateF($sql,array("text","text","integer","integer"),
+			array($settings->content(),$settings->recordTemplate(),$settings->getId(), $settings->eventTimePlaceRequired()));
 		$sql = "INSERT INTO mass_info_settings (obj_id) VALUES (%s)";
 		$this->db->manipulateF($sql,array("integer"),array($settings->getId()));
 	}
@@ -31,13 +32,14 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 		if(ilObjManualAssessment::_exists($obj->getId(), false, 'mass')) {
 			$obj_id = $obj->getId();
 			assert('is_numeric($obj_id)');
-			$sql = 'SELECT content, record_template FROM mass_settings WHERE obj_id = '.$this->db->quote($obj_id,'integer');
+			$sql = 'SELECT content, record_template, event_time_place_required FROM mass_settings WHERE obj_id = '.$this->db->quote($obj_id,'integer');
 			if($res = $this->db->fetchAssoc($this->db->query($sql))) {
-				return new ilManualAssessmentSettings($obj, $res["content"],$res["record_template"]);
+				return new ilManualAssessmentSettings($obj, $res["content"],$res["record_template"],$res["event_time_place_required"]);
 			}
 			throw new ilManualAssessmentException("$obj_id not in database");
 		} else {
-			return new ilManualAssessmentSettings($obj, ilManualAssessmentSettings::DEF_CONTENT, ilManualAssessmentSettings::DEF_RECORD_TEMPLATE);
+			return new ilManualAssessmentSettings($obj, ilManualAssessmentSettings::DEF_CONTENT, ilManualAssessmentSettings::DEF_RECORD_TEMPLATE,
+												  ilManualAssessmentSettings::DEF_EVENT_TIME_PLACE_REQUIRED);
 		}
 	}
 
@@ -45,8 +47,9 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 	 * @inheritdoc
 	 */
 	public function updateSettings(ilManualAssessmentSettings $settings) {
-		$sql = 'UPDATE mass_settings SET content = %s,record_template = %s WHERE obj_id = %s';
-		$this->db->manipulateF($sql,array("text","text","integer"),array($settings->content(),$settings->recordTemplate(),$settings->getId()));
+		$sql = 'UPDATE mass_settings SET content = %s,record_template = %s, event_time_place_required = %s WHERE obj_id = %s';
+		$this->db->manipulateF($sql,array("text","text","integer","integer"),
+			array($settings->content(),$settings->recordTemplate(),$settings->eventTimePlaceRequired(), $settings->getId()));
 	}
 
 

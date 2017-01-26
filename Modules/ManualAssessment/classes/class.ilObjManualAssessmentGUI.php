@@ -11,7 +11,7 @@
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilInfoScreenGUI
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilObjectCopyGUI
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilCommonActionDispatcherGUI
- * @ilCtrl_Calls ilObjManualAssessmentGUI: ilManualAssessmentSettingsGUI
+ * @ilCtrl_Calls ilObjManualAssessmentGUI: ilManualAssessmentSettingsGUIilOject::_lookupObjId()
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilManualAssessmentMembersGUI
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilLearningProgressGUI
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilExportGUI
@@ -184,31 +184,31 @@ class ilObjManualAssessmentGUI extends ilObjectGUI {
 		return $info;
 	}
 
-protected function shouldShowContactInfo(ilManualAssessmentInfoSettings $info_settings) {
-	$val = $info_settings->contact();
-	if($val !== null && $val !== '') {
-		return true;
+	protected function shouldShowContactInfo(ilManualAssessmentInfoSettings $info_settings) {
+		$val = $info_settings->contact();
+		if($val !== null && $val !== '') {
+			return true;
+		}
+		$val = $info_settings->responsibility();
+		if($val !== null && $val !== '') {
+			return true;
+		}
+		$val = $info_settings->phone();
+		if($val !== null && $val !== '') {
+			return true;
+		}
+		$val = $info_settings->mails();
+		if($val !== null && $val !== '') {
+			return true;
+		}
+		$val = $info_settings->consultationHours();
+		if($val !== null && $val !== '') {
+			return true;
+		}
+		return false;
 	}
-	$val = $info_settings->responsibility();
-	if($val !== null && $val !== '') {
-		return true;
-	}
-	$val = $info_settings->phone();
-	if($val !== null && $val !== '') {
-		return true;
-	}
-	$val = $info_settings->mails();
-	if($val !== null && $val !== '') {
-		return true;
-	}
-	$val = $info_settings->consultationHours();
-	if($val !== null && $val !== '') {
-		return true;
-	}
-	return false;
-}
 
-public function getTabs() {
+	public function getTabs() {
 		$access_handler = $this->object->accessHandler();
 		if($access_handler->checkAccessToObj($this->object,'read')) {
 			$this->tabs_gui->addTab( self::TAB_INFO
