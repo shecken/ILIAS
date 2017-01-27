@@ -1650,6 +1650,9 @@ prg#:#prg_points_reachable#:#Erreichbare Punkte
 gev#:#gev_open_same_window#:#Im selben Fenster öffnen
 gev#:#jill_na_link_label#:#Zur Qualifizierung nach der EU-Vermittlerrichtlinie
 mass#:#general#:#Allgemein
+mass#:#mass_place#:#Ort
+mass#:#mass_event_time#:#Veranstaltungs Zeitpunkt
+mass#:#mass_event_time_place_required#:#Datum und Ort sind Pflichtfelder
 mass#:#mass_content#:#Inhalt
 mass#:#mass_record_template#:#Vorlage Prüfungsnotiz
 mass#:#mass_graded_by#:#Bewertet von
