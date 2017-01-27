@@ -26,6 +26,7 @@ class gevCourseUtils
 	const CREATOR_ROLE_TITLE = "Pool Trainingsersteller";
 	const RECIPIENT_MEMBER = "Mitglied";
 	const RECIPIENT_STANDARD = "standard";
+	const CRS_TYPE_COACHING = "Praxisbegleitung";
 
 	protected function __construct($a_crs_id)
 	{
@@ -462,7 +463,7 @@ class gevCourseUtils
 
 	public function isCoaching()
 	{
-		return $this->getType() == "Praxisbegleitung";
+		return $this->getType() == self::CRS_TYPE_COACHING;
 	}
 
 	public function isWebinar()
@@ -669,7 +670,7 @@ class gevCourseUtils
 	{
 		$type = $this->getType();
 		if ($type === null
-		  || in_array($type, array("POT-Termin", "Selbstlernkurs", "Praxisbegleitung"))) {
+		  || in_array($type, array("POT-Termin", "Selbstlernkurs", self::CRS_TYPE_COACHING))) {
 			return null;
 		}
 		$schedule = $this->getSchedule();
@@ -1602,7 +1603,7 @@ class gevCourseUtils
 		$wb = "Webinar";
 		$vt = "Virtuelles Training";
 		$sk = "Selbstlernkurs";
-		$ch = "Praxisbegleitung";
+		$ch = self::CRS_TYPE_COACHING;
 		return array( $all => $all
 					, $pt => $pt
 					, $wb => $wb
