@@ -2017,6 +2017,7 @@ class gevUserUtils
 					." AND histucs.hist_historic = 0"
 					." AND ".$this->db->in("histu.user_id", $to_search, false, "integer").""
 					." AND histucs.creator_user_id != ".$this->db->quote(gevWBD::WBD_IMPORT_CREATOR_ID, "integer").""
+					." AND histc.type != ".$this->db->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")
 					." ORDER BY histucs.booking_status, histu.lastname, histu.firstname, histucs.created_ts";
 
 			$res_emp = $this->db->query($sql_emp);
