@@ -3963,17 +3963,27 @@ class gevCourseUtils
 	/**
 	* gets all crs with amd field Template = "ja"
 	*
+	* @param boolean 	$filter_coaching_templates
+	*
 	* @return array(obj_id => title)
 	*/
-	public static function getAllTemplates()
+	public static function getAllTemplates($filter_coaching_templates = false)
 	{
 		global $ilDB;
 		$template_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_IS_TEMPLATE);
 		$query = "SELECT od.obj_id, od.title\n"
 				." FROM object_data od\n"
 				." JOIN adv_md_values_text admt ON admt.obj_id = od.obj_id\n"
-				."    AND admt.field_id = ".$ilDB->quote($template_field_id, "integer")."\n"
-				." WHERE od.type = ".$ilDB->quote("crs", "text")."\n"
+				."    AND admt.field_id = ".$ilDB->quote($template_field_id, "integer")."\n";
+
+		if ($filter_coaching_templates) {
+			$type_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_TYPE);
+			$quer .= " JOIN adv_md_values_text adm_type ON adm_type.obj_id = od.obj_id\n"
+				."    AND adm_type.field_id = ".$ilDB->quote($type_field_id, "integer")."\n"
+				."    AND adm_type.value = ".$ilDB->quote(self::CRS_TYPE_COACHING, "text")."\n";
+		}
+
+		$where = " WHERE od.type = ".$ilDB->quote("crs", "text")."\n"
 				."    AND admt.value = ".$ilDB->quote("Ja", "text")."\n";
 
 		$res = $ilDB->query($query);
