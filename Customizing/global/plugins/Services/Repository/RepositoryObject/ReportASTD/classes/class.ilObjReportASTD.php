@@ -2,6 +2,7 @@
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
 require_once 'Services/GEV/Utils/classes/class.gevRoleUtils.php';
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 
 class ilObjReportASTD extends ilObjReportBase
 {
@@ -73,7 +74,8 @@ class ilObjReportASTD extends ilObjReportBase
 				->static_condition(" u.hist_historic = 0 ")
 				->static_condition(" ucs.booking_status != ".$this->gIldb->quote('-empty-', 'text'))
 				->static_condition(" ur2.hist_version IS NULL ")
-				->static_condition("(template.hist_historic = 0 OR template.hist_historic IS NULL)");
+				->static_condition("(template.hist_historic = 0 OR template.hist_historic IS NULL)")
+				->static_condition(" c.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING));
 		$filter	->action($this->filter_action);
 		return $filter->compile();
 	}
