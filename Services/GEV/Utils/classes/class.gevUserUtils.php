@@ -307,6 +307,8 @@ class gevUserUtils
 				 , gevSettings::CRS_AMD_CONTENTS 			=> "content"
 			);
 
+		$additional_where = " AND (amd6.value != 'Praxisbegleitung' OR amd6.value IS NULL)";
+
 		require_once("Services/ParticipationStatus/classes/class.ilParticipationStatus.php");
 		$booked = array_diff(
 			$this->filter_for_online_courses($this->getBookedCourses()),
@@ -315,7 +317,7 @@ class gevUserUtils
 												,ilParticipationStatus::STATUS_ABSENT_NOT_EXCUSED))
 		);
 
-		$booked_amd = gevAMDUtils::getInstance()->getTable($booked, $crs_amd);
+		$booked_amd = gevAMDUtils::getInstance()->getTable($booked, $crs_amd, array(), array(), $additional_where);
 		foreach ($booked_amd as $key => $value) {
 			$booked_amd[$key]["status"] = ilCourseBooking::STATUS_BOOKED;
 			$booked_amd[$key]["cancel_date"] = gevCourseUtils::mkDeadlineDate($value["start_date"], $value["cancel_date"]);
