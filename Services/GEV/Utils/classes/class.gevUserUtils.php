@@ -502,7 +502,9 @@ class gevUserUtils
 				// finalized
 				array(" LEFT JOIN crs_pstatus_crs pstatus ON pstatus.crs_id = od.obj_id "),
 				" AND ( pstatus.state != ".$this->db->quote(ilParticipationStatus::STATE_FINALIZED, "integer").
-			    "       OR pstatus.state IS NULL) ".$order_sql
+				"       OR pstatus.state IS NULL) ".
+				" AND (amd3.value != ".$this->db->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")." OR amd3.value IS NULL)"
+				.$order_sql
 			);
 
 			$ret = array();
