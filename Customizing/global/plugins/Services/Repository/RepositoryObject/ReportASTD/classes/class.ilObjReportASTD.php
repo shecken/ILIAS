@@ -45,7 +45,7 @@ class ilObjReportASTD extends ilObjReportBase
 																			."IF(chours IS NOT NULL AND chours != 0, chours, "
 																				."IF(thours IS NOT NULL AND chours != 0, thours, "
 																					."4*GREATEST(credit_points,0)/3)), 0)) "
-									,'astd_hours_self_learn' 		=>	" SUM( IF((type = 'Selbstlernkurs' OR type = 'Coaching') AND credit_points IS NOT NULL, 4*GREATEST(credit_points,0)/3, 0)) "
+									,'astd_hours_self_learn' 		=>	" SUM( IF(type = 'Selbstlernkurs' AND credit_points IS NOT NULL, 4*GREATEST(credit_points,0)/3, 0)) "
 									,'astd_hours_language_course'	=>	' 0 '
 									,'astd_participators'			=>	' COUNT(DISTINCT usr_id)'
 									,'astd_accomodation_cost'		=>	" SUM( IF( type = ".$this->gIldb->quote('Präsenztraining', 'text')." AND begin_date IS NOT NULL AND end_date IS NOT NULL, (DATEDIFF(end_date,begin_date)+1)*"

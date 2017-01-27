@@ -207,9 +207,9 @@ class ilObjReportEduBio extends ilObjReportBase
 				."		AND ( usrcrs.end_date >= ".$this->gIldb->quote($start->get(IL_CAL_DATE), "date")
 				."			OR usrcrs.end_date = '0000-00-00')"
 				."		AND usrcrs.begin_date <= ".$this->gIldb->quote($end->get(IL_CAL_DATE), "date")
-				."		AND ((".$this->gIldb->in("crs.type", array('Selbstlernkurs', 'Coaching'), false, 'text')
+				."		AND ((".$this->gIldb->in("crs.type", array('Selbstlernkurs'), false, 'text')
 				."				AND usrcrs.begin_date > ".$this->gIldb->quote('2013-01-01', 'date').")"
-				."			OR (".$this->gIlDb->in("crs.type", array('Selbstlernkurs', 'Coaching'), true, 'text')
+				."			OR (".$this->gIlDb->in("crs.type", array('Selbstlernkurs'), true, 'text')
 				."				AND usrcrs.end_date > ".$this->gIldb->quote('2013-01-01', 'date')."))"
 				."		AND (usrcrs.wbd_booking_id IS ".($transferred ? "NOT" : "")." NULL "
 				." 			".($transferred ? "AND" : "OR")." usrcrs.wbd_booking_id ".($transferred ? "!=" : "=")." '-empty-')"

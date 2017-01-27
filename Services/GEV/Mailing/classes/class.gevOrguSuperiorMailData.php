@@ -217,12 +217,12 @@ class gevOrguSuperiorMailData extends ilMailData
 					}
 				}
 
-				if ($end_date !== null && $begin_date !== null && !in_array($entry_data["type"], array("Selbstlernkurs", "Coaching"))) {
+				if ($end_date !== null && $begin_date !== null && !in_array($entry_data["type"], array("Selbstlernkurs"))) {
 					$date = ilDatePresentation::formatPeriod($begin_date, $end_date);
 					$tpl->setVariable("CRS_DATE", ", $date");
 				}
 
-				if ((!in_array($entry_data["type"], array("Selbstlernkurs", "Webinar", "Virtuelles Training", "Coaching"))) && $key == "gebucht") {
+				if ((!in_array($entry_data["type"], array("Selbstlernkurs", "Webinar", "Virtuelles Training"))) && $key == "gebucht") {
 					$tpl->setCurrentBlock("overnights");
 					$tpl->setVariable("OVERNIGHTS_CAPTION", "Übernachtungen");
 					$tpl->setVariable("USR_OVERNIGHTS_AMOUNT", $entry_data["overnights"]);

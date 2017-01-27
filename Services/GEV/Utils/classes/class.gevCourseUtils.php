@@ -462,7 +462,7 @@ class gevCourseUtils
 
 	public function isCoaching()
 	{
-		return $this->getType() == "Coaching";
+		return $this->getType() == "Praxisbegleitung";
 	}
 
 	public function isWebinar()
@@ -669,7 +669,7 @@ class gevCourseUtils
 	{
 		$type = $this->getType();
 		if ($type === null
-		  || in_array($type, array("POT-Termin", "Selbstlernkurs", "Coaching"))) {
+		  || in_array($type, array("POT-Termin", "Selbstlernkurs", "Praxisbegleitung"))) {
 			return null;
 		}
 		$schedule = $this->getSchedule();
@@ -1602,7 +1602,7 @@ class gevCourseUtils
 		$wb = "Webinar";
 		$vt = "Virtuelles Training";
 		$sk = "Selbstlernkurs";
-		$ch = "Coaching";
+		$ch = "Praxisbegleitung";
 		return array( $all => $all
 					, $pt => $pt
 					, $wb => $wb

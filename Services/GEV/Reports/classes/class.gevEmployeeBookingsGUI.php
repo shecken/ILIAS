@@ -151,7 +151,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 		$this->ctrl->setParameter($this, "crs_id", $rec["crs_id"]);
 		$now = @date("Y-m-d");
 		if (($rec["absolute_cancel_deadline_date"] === null
-			|| (!in_array($rec["type"], array("Selbstlernkurs", "Coaching")) && $rec["absolute_cancel_deadline_date"] > $now))
+			|| (!in_array($rec["type"], array("Selbstlernkurs")) && $rec["absolute_cancel_deadline_date"] > $now))
 		&& in_array($rec["user_id"], $this->employee_ids_for_booking_cancellation)) {
 			// Code starts here!
 			$rec["action"] = "<a href='".$this->ctrl->getLinkTarget($this, "confirmCancelBooking")."'>"

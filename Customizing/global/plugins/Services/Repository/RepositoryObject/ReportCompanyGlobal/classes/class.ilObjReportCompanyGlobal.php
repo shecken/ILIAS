@@ -275,7 +275,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 					'		OR hucs.end_date = \'0000-00-00\''.PHP_EOL.
 					'		OR hucs.end_date = \'-empty-\')'.PHP_EOL.
 					' AND hucs.end_date <= '.$this->gIldb->quote($end, "date").PHP_EOL.
-					' AND ( hc.type NOT IN (\'Selbstlernkurs\', \'Coaching\')'.PHP_EOL.
+					' AND ( hc.type NOT IN (\'Selbstlernkurs\')'.PHP_EOL.
 					'      OR ( (hucs.end_date = \'0000-00-00\' OR hucs.end_date = \'-empty-\')'.PHP_EOL.
 					'           AND hucs.begin_date >= '.$this->gIldb->quote($start, "date").PHP_EOL.
 					'           AND hucs.begin_date <= '.$this->gIldb->quote($end, "date").PHP_EOL.
