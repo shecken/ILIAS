@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 
 ini_set("memory_limit", "2048M");
 ini_set('max_execution_time', 0);
@@ -197,7 +198,11 @@ class ilObjReportTrainerWorkload extends ilObjReportBase
 					.'	JOIN `hist_user` hu ON ht.user_id = hu.user_id'
 					.'		AND '.$db->in('hu.user_id', $this->getRelevantUsers(), false, 'integer')
 					.'	JOIN `hist_tep_individ_days` htid ON individual_days = id'
-					.'	LEFT JOIN `hist_course` hc ON context_id = crs_id AND ht.category = \'Training\' AND hc.hist_historic = 0'
+					.'	LEFT JOIN `hist_course` hc'
+					.'		ON context_id = crs_id'
+					.'			AND ht.category = \'Training\''
+					.'			AND hc.hist_historic = 0'
+					.'			AND hc.type != '.$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")
 					.'	WHERE'
 					.'		ht.row_id > '.$this->gIldb->quote(self::MIN_ROW, 'integer')
 					.'		AND hu.hist_historic = 0'
