@@ -5960,3 +5960,14 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-TA", array(
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", array('visible', 'read'));
 
 ?>
+
+<#246>
+<?php
+if (!$ilDB->tableColumnExists('mass_settings', 'file_required')) {
+	$ilDB->addTableColumn('mass_settings', 'file_required', array(
+	"type" => "integer",
+	"length" => 1,
+	"default" => 0
+	));
+}
+?>

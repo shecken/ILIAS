@@ -3,7 +3,8 @@
  * An object carrying settings of an Manual Assessment obj
  * beyond the standart information
  */
-class ilManualAssessmentSettings {
+class ilManualAssessmentSettings
+{
 	const DEF_CONTENT = "";
 	const DEF_RECORD_TEMPLATE = "";
 
@@ -17,10 +18,17 @@ class ilManualAssessmentSettings {
 	 */
 	protected $record_template;
 
-	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null) {
+	/**
+	 * @var $boolean
+	 */
+	protected $file_required;
+
+	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $file_required = false)
+	{
 		$this->id = $mass->getId();
 		$this->content = $content !== null ? $content : self::DEF_CONTENT;
 		$this->record_template = $record_template !== null ? $record_template : self::DEF_RECORD_TEMPLATE;
+		$this->file_required = $file_required;
 	}
 
 	/**
@@ -28,7 +36,8 @@ class ilManualAssessmentSettings {
 	 *
 	 * @return	int|string
 	 */
-	public function getId() {
+	public function getId()
+	{
 		return $this->id;
 	}
 
@@ -37,7 +46,8 @@ class ilManualAssessmentSettings {
 	 *
 	 * @return	string
 	 */
-	public function content() {
+	public function content()
+	{
 		return $this->content;
 	}
 
@@ -47,8 +57,19 @@ class ilManualAssessmentSettings {
 	 *
 	 * @return	string
 	 */
-	public function recordTemplate() {
+	public function recordTemplate()
+	{
 		return $this->record_template;
+	}
+
+	/**
+	 * Uploading a file in participant record is required
+	 *
+	 * @return boolean
+	 */
+	public function fileRequired()
+	{
+		return $this->file_required;
 	}
 
 	/**
@@ -57,7 +78,8 @@ class ilManualAssessmentSettings {
 	 * @param	string	$content
 	 * @return	ilManualAssessment	$this
 	 */
-	public function setContent($content) {
+	public function setContent($content)
+	{
 		assert('is_string($content)');
 		$this->content = $content;
 		return $this;
@@ -70,9 +92,21 @@ class ilManualAssessmentSettings {
 	 * @param	string	$record_template
 	 * @return	ilManualAssessment	$this
 	 */
-	public function setRecordTemplate($record_template) {
+	public function setRecordTemplate($record_template)
+	{
 		assert('is_string($record_template)');
 		$this->record_template = $record_template;
 		return $this;
+	}
+
+	/**
+	 * Set a fileupload in participant record is required
+	 *
+	 * @param boolean 	$file_required
+	 */
+	public function setFileRequired($file_required)
+	{
+		assert('is_bool($file_required)');
+		$this->file_required = $file_required;
 	}
 }
