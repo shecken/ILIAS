@@ -90,7 +90,7 @@ class ilObjReportEduBio extends ilObjReportBase
 				->static_condition($this->gIldb
 										->in("usrcrs.booking_status", array( "gebucht", "kostenpflichtig storniert"), false, "text"))
 				->static_condition("(crs.crs_id < 0 OR oref.deleted IS NULL)")
-				->static_condition("crs.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING))
+				->static_condition("crs.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text"))
 				->action($this->filter_action)
 				->compile();
 		return $filter;

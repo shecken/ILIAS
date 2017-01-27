@@ -75,7 +75,7 @@ class ilObjReportASTD extends ilObjReportBase
 				->static_condition(" ucs.booking_status != ".$this->gIldb->quote('-empty-', 'text'))
 				->static_condition(" ur2.hist_version IS NULL ")
 				->static_condition("(template.hist_historic = 0 OR template.hist_historic IS NULL)")
-				->static_condition(" c.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING));
+				->static_condition(" c.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text"));
 		$filter	->action($this->filter_action);
 		return $filter->compile();
 	}
