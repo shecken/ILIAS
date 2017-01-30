@@ -23,12 +23,13 @@ class ilManualAssessmentSettings
 	 */
 	protected $file_required;
 
-	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $file_required = false)
+	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $file_required = false, $event_time_place_required = false)
 	{
 		$this->id = $mass->getId();
 		$this->content = $content !== null ? $content : self::DEF_CONTENT;
 		$this->record_template = $record_template !== null ? $record_template : self::DEF_RECORD_TEMPLATE;
 		$this->file_required = $file_required;
+		$this->event_time_place_required = $event_time_place_required;
 	}
 
 	/**
@@ -73,6 +74,16 @@ class ilManualAssessmentSettings
 	}
 
 	/**
+	 * Get the value of the checkbox event_time_place_require
+	 *
+	 * @return	integer
+	 */
+	public function eventTimePlaceRequired()
+	{
+		return $this->event_time_place_required;
+	}
+
+	/**
 	 * Set the content of this assessment, e.g. corresponding topics...
 	 *
 	 * @param	string	$content
@@ -108,5 +119,18 @@ class ilManualAssessmentSettings
 	{
 		assert('is_bool($file_required)');
 		$this->file_required = $file_required;
+	}
+
+	/**
+	 * Set the value of the checkbox event_time_place_require
+	 *
+	 * @param	integer	$event_time_place_require
+	 * @return	ilManualAssessment	$this
+	 */
+	public function setEventTimePlaceRequired($event_time_place_required)
+	{
+		assert('is_integer($event_time_place_required)');
+		$this->event_time_place_required = $event_time_place_required;
+		return $this;
 	}
 }

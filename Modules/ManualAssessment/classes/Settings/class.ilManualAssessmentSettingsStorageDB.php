@@ -29,6 +29,7 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 				, "content" => array("text", $settings->content())
 				, "record_template" => array("text", $settings->recordTemplate())
 				, "file_required" => array("integer", $settings->fileRequired())
+				, "event_time_place_required" => array("integer", $settings->eventTimePlaceRequired())
 				);
 		$this->db->insert(self::MASS_SETTINGS_TABLE, $values);
 
@@ -44,9 +45,10 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 		if (ilObjManualAssessment::_exists($obj->getId(), false, 'mass')) {
 			$obj_id = $obj->getId();
 			assert('is_numeric($obj_id)');
-			$sql = 'SELECT content, record_template, file_required FROM mass_settings WHERE obj_id = '.$this->db->quote($obj_id, 'integer');
+
+			$sql = 'SELECT content, record_template, file_required, event_time_place_required FROM mass_settings WHERE obj_id = '.$this->db->quote($obj_id, 'integer');
 			if ($res = $this->db->fetchAssoc($this->db->query($sql))) {
-				return new ilManualAssessmentSettings($obj, $res["content"], $res["record_template"], (bool)$res["file_required"]);
+				return new ilManualAssessmentSettings($obj, $res["content"], $res["record_template"], (bool)$res["file_required"], $res["event_time_place_required"]);
 			}
 			throw new ilManualAssessmentException("$obj_id not in database");
 		} else {
@@ -65,6 +67,7 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 				( "content" => array("text", $settings->content())
 				, "record_template" => array("text", $settings->recordTemplate())
 				, "file_required" => array("integer", $settings->fileRequired())
+				, "record_template" => array("integer", $settings->eventTimePlaceRequired())
 				);
 
 		$this->db->update(self::MASS_SETTINGS_TABLE, $values, $where);
