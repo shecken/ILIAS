@@ -59,18 +59,18 @@ class ilManualAssessmentMemberGUI
 			case 'finalizeConfirmation':
 			case 'cancelFinalize':
 				if ($edited_by_other || !$edit_permission) {
-					$a_parent_gui->handleAccessViolation();
+					$this->parent_gui->handleAccessViolation();
 				}
 				break;
 			case 'view':
 				if (($edited_by_other || !$edit_permission) && !$read_permission) {
-					$a_parent_gui->handleAccessViolation();
+					$this->parent_gui->handleAccessViolation();
 				}
 				break;
 			case 'cancel':
 				break;
 			default:
-				$a_parent_gui->handleAccessViolation();
+				$this->parent_gui->handleAccessViolation();
 		}
 		$this->$cmd();
 	}
@@ -98,61 +98,64 @@ class ilManualAssessmentMemberGUI
 		$this->ctrl->redirect($this->members_gui);
 	}
 
+	protected function redirect($user_id)
+	{
+		$this->ctrl->setParameter($this, "usr_id", $user_id);
+		$this->ctrl->redirect($this, "edit");
+	}
+
 	protected function cancelFinalize()
 	{
-		$this->ctrl->setParameter($this, "usr_id", $_POST['usr_id']);
-		$this->ctrl->redirect($this, "edit");
+		$this->redirect($_POST['usr_id']);
 	}
 
 	protected function finalizeConfirmation()
 	{
 		if ($this->mayBeEdited()) {
 			$form = $this->initGradingForm();
-			$post = $_POST;
-			$post['event_time'] = $this->formDateTimePost($post['event_time']['date'], $post['event_time']['time']);
-			$form->setValuesByArray($post);
-			if ($form->checkInput()) {
-				$member = $this->updateDataInMemberByArray($this->member, $post);
-				$this->object->membersStorage()->updateMember($member);
-				if ($member->mayBeFinalized()) {
-					include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
-					$confirm = new ilConfirmationGUI();
-					$confirm->addHiddenItem('usr_id', $_GET['usr_id']);
-					$confirm->setHeaderText($this->lng->txt('mass_finalize_user_qst'));
-					$confirm->setFormAction($this->ctrl->getFormAction($this));
-					$confirm->setConfirm($this->lng->txt('mass_finalize'), 'finalize');
-					$confirm->setCancel($this->lng->txt('cancel'), 'cancelFinalize');
-					$this->tpl->setContent($confirm->getHTML());
-				} else {
-					ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'));
-					$this->edit();
-				}
-			} else {
-				$this->edit();
+
+			if (!$form->checkInput()) {
+				$form->setValuesByPost();
+				$this->renderForm($form);
+				return;
 			}
-		} else {
-			$this->view();
+
+			$member = $this->updateDataInMemberByArray($this->member, $_POST);
+			$this->object->membersStorage()->updateMember($member);
+
+			if ($member->mayBeFinalized()) {
+				include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
+				$confirm = new ilConfirmationGUI();
+				$confirm->addHiddenItem('usr_id', $_GET['usr_id']);
+				$confirm->setHeaderText($this->lng->txt('mass_finalize_user_qst'));
+				$confirm->setFormAction($this->ctrl->getFormAction($this));
+				$confirm->setConfirm($this->lng->txt('mass_finalize'), 'finalize');
+				$confirm->setCancel($this->lng->txt('cancel'), 'cancelFinalize');
+				$this->tpl->setContent($confirm->getHTML());
+			} else {
+				ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
+			}
 		}
+
+		$this->redirect($this->member->id());
 	}
 
 	protected function finalize()
 	{
-		if ($this->mayBeEdited()) {
-			if ($this->member->mayBeFinalized()) {
-				$this->member = $this->member->withFinalized()->maybeSendNotification($this->notificator);
-				$this->object->membersStorage()->updateMember($this->member);
-				ilUtil::sendSuccess($this->lng->txt('mass_membership_finalized'));
-				if ($this->object->isActiveLP()) {
-					ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
-				}
-				$this->view();
-			} else {
-				ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'));
-				$this->edit();
+		if ($this->mayBeEdited() && $this->member->mayBeFinalized()) {
+			$this->member = $this->member->withFinalized()->maybeSendNotification($this->notificator);
+			$this->object->membersStorage()->updateMember($this->member);
+
+			if ($this->object->isActiveLP()) {
+				ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
 			}
+
+			ilUtil::sendSuccess($this->lng->txt('mass_membership_finalized'), true);
 		} else {
-			$this->view();
+			ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
 		}
+
+		$this->redirect($this->member->id());
 	}
 
 	protected function mayBeEdited()
@@ -185,21 +188,24 @@ class ilManualAssessmentMemberGUI
 	{
 		if ($this->mayBeEdited()) {
 			$form = $this->initGradingForm();
-			$post = $_POST;
-			$post['event_time'] = $this->formDateTimePost($post['event_time']['date'], $post['event_time']['time']);
-			$form->setValuesByArray($post);
-			if ($form->checkInput()) {
-				$this->member = $this->updateDataInMemberByArray($this->member, $post);
-				$this->object->membersStorage()->updateMember($this->member);
-				ilUtil::sendSuccess($this->lng->txt('mass_membership_saved'));
-				if ($this->object->isActiveLP()) {
-					ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
-				}
+
+			if (!$form->checkInput()) {
+				$form->setValuesByPost();
+				$this->renderForm($form);
+				return;
 			}
-			$this->renderForm($form);
-		} else {
-			$this->view();
+
+			$this->member = $this->updateDataInMemberByArray($this->member, $_POST);
+			$this->object->membersStorage()->updateMember($this->member);
+
+			if ($this->object->isActiveLP()) {
+				ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
+			}
+
+			ilUtil::sendSuccess($this->lng->txt('mass_membership_saved'), true);
 		}
+
+		$this->redirect($this->member->id());
 	}
 
 	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data)
@@ -262,16 +268,16 @@ class ilManualAssessmentMemberGUI
 		$learning_progress->setDisabled(!$may_be_edited);
 		$form->addItem($learning_progress);
 
+		require_once("Services/Form/classes/class.ilFileInputGUI.php");
+		$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
+		$file->setRequired($this->object->getSettings()->fileRequired());
+		$form->addItem($file);
+
 		// notify examinee
 		$notify = new ilCheckboxInputGUI($this->lng->txt('mass_notify'), 'notify');
 		$notify->setInfo($this->lng->txt('mass_notify_explanation'));
 		$notify->setDisabled(!$may_be_edited);
 		$form->addItem($notify);
-
-		require_once("Services/Form/classes/class.ilFileInputGUI.php");
-		$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
-		$file->setRequired($this->object->getSettings()->fileRequired());
-		$form->addItem($file);
 
 		if ($may_be_edited) {
 			$form->addCommandButton('save', $this->lng->txt('save'));
@@ -305,21 +311,8 @@ class ilManualAssessmentMemberGUI
 				&& 0 !== (int)$member->examinerId();
 	}
 
-	private function formDateTimePost(array $date, array $time)
-	{
-		$date['d'] = str_pad($date['d'], 2, '0', STR_PAD_LEFT);
-		$date['m'] = str_pad($date['m'], 2, '0', STR_PAD_LEFT);
-		$time['h'] = str_pad($time['h'], 2, '0', STR_PAD_LEFT);
-		$time['m'] = str_pad($time['m'], 2, '0', STR_PAD_LEFT);
-		return array("date" => $date['y'] . "-" . $date['m'] . "-" . $date['d']
-			, "time" => $time['h'] . ":" . $time['m'] .":00");
-	}
-
 	private function createDatetime(array $datetime)
 	{
-		$date = $datetime["date"];
-		$time = $datetime["time"];
-
-		return new ilDateTime($date . " " . $time, IL_CAL_DATETIME);
+		return new ilDateTime($datetime["date"]." ".$datetime["time"], IL_CAL_DATETIME);
 	}
 }
