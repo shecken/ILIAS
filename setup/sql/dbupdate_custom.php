@@ -5998,3 +5998,13 @@ if (!$ilDB->tableColumnExists('mass_members', 'event_time')) {
 }
 
 ?>
+
+<#248>
+<?php
+if (!$ilDB->tableColumnExists('mass_members', 'file_name')) {
+	$ilDB->addTableColumn('mass_members', 'file_name', array(
+	"type" => "text",
+	"length" => 255
+	));
+}
+?>

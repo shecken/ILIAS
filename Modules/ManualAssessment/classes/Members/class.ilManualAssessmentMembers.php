@@ -30,6 +30,7 @@ class ilManualAssessmentMembers implements Iterator, Countable
 	const FIELD_NOTIFICATION_TS = 'notification_ts';
 	const FIELD_PLACE = "place";
 	const FIELD_EVENTTIME = "event_time";
+	const FIELD_FILE_NAME = "file_name";
 
 	const LP_NOT_ATTEMPTED = ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
 	const LP_IN_PROGRESS = ilLPStatus::LP_STATUS_IN_PROGRESS_NUM;
@@ -190,6 +191,7 @@ class ilManualAssessmentMembers implements Iterator, Countable
 			, self::FIELD_FINALIZED				=> 0
 			, self::FIELD_PLACE					=> null
 			, self::FIELD_EVENTTIME				=> time()
+			, self::FIELD_FILE_NAME 			=> ""
 			);
 	}
 

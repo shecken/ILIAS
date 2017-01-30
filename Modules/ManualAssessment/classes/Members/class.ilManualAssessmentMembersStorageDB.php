@@ -9,6 +9,7 @@ require_once 'Modules/ManualAssessment/classes/class.ilObjManualAssessment.php';
  */
 class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersStorage
 {
+	const MEMBERS_TABLE = "mass_members";
 
 	protected $db;
 
@@ -59,19 +60,23 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 	 */
 	public function updateMember(ilManualAssessmentMember $member)
 	{
-		$sql = 'UPDATE mass_members SET '
-				.'	'.ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS.' = '.$this->db->quote($member->LPStatus(), 'text')
-				.'	,'.ilManualAssessmentMembers::FIELD_EXAMINER_ID.' = '.$this->db->quote($member->examinerId(), 'integer')
-				.'	,'.ilManualAssessmentMembers::FIELD_RECORD.' = '.$this->db->quote($member->record(), 'text')
-				.'	,'.ilManualAssessmentMembers::FIELD_INTERNAL_NOTE.' = '.$this->db->quote($member->internalNote(), 'text')
-				.'	,'.ilManualAssessmentMembers::FIELD_PLACE.' = '.$this->db->quote($member->place(), 'text')
-				.'	,'.ilManualAssessmentMembers::FIELD_EVENTTIME.' = '.$this->db->quote($member->eventTime()->get(IL_CAL_UNIX), 'integer')
-				.'	,'.ilManualAssessmentMembers::FIELD_NOTIFY.' = '.$this->db->quote($member->notify() ? 1 : 0, 'integer')
-				.'	,'.ilManualAssessmentMembers::FIELD_FINALIZED.' = '.$this->db->quote($member->finalized() ? 1 : 0, 'integer')
-				.'	,'.ilManualAssessmentMembers::FIELD_NOTIFICATION_TS.' = '.$this->db->quote($member->notificationTS(), 'integer')
-				.'	WHERE obj_id = '.$this->db->quote($member->assessmentId(), 'integer')
-				.'		AND usr_id = '.$this->db->quote($member->id(), 'integer');
-		$this->db->manipulate($sql);
+		$where = array("obj_id" => array("integer", $member->assessmentId())
+					 , "usr_id" => array("integer", $member->id())
+				);
+
+		$values = array(ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS => array("text", $member->LPStatus())
+					  , ilManualAssessmentMembers::FIELD_EXAMINER_ID => array("integer", $member->examinerId())
+					  , ilManualAssessmentMembers::FIELD_RECORD => array("text", $member->record())
+					  , ilManualAssessmentMembers::FIELD_INTERNAL_NOTE => array("text", $member->internalNote())
+					  , ilManualAssessmentMembers::FIELD_PLACE => array("text", $member->place())
+					  , ilManualAssessmentMembers::FIELD_EVENTTIME => array("integer", $member->eventTime()->get(IL_CAL_UNIX))
+					  , ilManualAssessmentMembers::FIELD_NOTIFY => array("integer", $member->notify() ? 1 : 0)
+					  , ilManualAssessmentMembers::FIELD_FINALIZED => array("integer", $member->finalized() ? 1 : 0)
+					  , ilManualAssessmentMembers::FIELD_NOTIFICATION_TS => array("integer", $member->notificationTS())
+					  , ilManualAssessmentMembers::FIELD_FILE_NAME => array("text", $member->fileName())
+				);
+
+		$this->db->update(self::MEMBERS_TABLE, $values, $where);
 	}
 
 	/**
@@ -105,17 +110,21 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 	 */
 	public function insertMembersRecord(ilObjManualAssessment $mass, array $record)
 	{
-		$sql = 'INSERT INTO mass_members (obj_id,usr_id,record,learning_progress,notify,place,event_time) '
-				.'	VALUES ('
-				.'		'.$this->db->quote($mass->getId(), 'integer')
-				.'		,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_USR_ID], 'integer')
-				.'		,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_RECORD], 'text')
-				.'		,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS], 'integer')
-				.'		,'.$this->db->quote(0, 'integer')
-				.'      ,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_PLACE], 'text')
-				.'      ,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_EVENTTIME], 'integer')
-				.'	)';
-		$this->db->manipulate($sql);
+		$values = array("obj_id" => array("integer", $mass->getId())
+					  , "usr_id" => array("integer", $record[ilManualAssessmentMembers::FIELD_USR_ID])
+					  , ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS => array("text", $record[ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS])
+					  , ilManualAssessmentMembers::FIELD_EXAMINER_ID => array("integer", $member->examinerId())
+					  , ilManualAssessmentMembers::FIELD_RECORD => array("text", $record[ilManualAssessmentMembers::FIELD_RECORD])
+					  , ilManualAssessmentMembers::FIELD_INTERNAL_NOTE => array("text", $member->internalNote())
+					  , ilManualAssessmentMembers::FIELD_PLACE => array("text", $record[ilManualAssessmentMembers::FIELD_PLACE])
+					  , ilManualAssessmentMembers::FIELD_EVENTTIME => array("integer", $record[ilManualAssessmentMembers::FIELD_EVENTTIME])
+					  , ilManualAssessmentMembers::FIELD_NOTIFY => array("integer", 0)
+					  , ilManualAssessmentMembers::FIELD_FINALIZED => array("integer", 0)
+					  , ilManualAssessmentMembers::FIELD_NOTIFICATION_TS => array("integer", -1)
+					  , ilManualAssessmentMembers::FIELD_FILE_NAME => array("text", $member->fileName())
+				);
+
+		$this->db->insert(self::MEMBERS_TABLE, $values);
 	}
 
 	/**

@@ -216,7 +216,8 @@ class ilManualAssessmentMemberGUI
 					->withEventTime($this->createDatetime($data['event_time']))
 					->withLPStatus($data['learning_progress'])
 					->withExaminerId($this->examiner->getId())
-					->withNotify(($data['notify']  == 1 ? true : false));
+					->withNotify(($data['notify']  == 1 ? true : false))
+					->withFileName($data['file']['name']);
 		return $member;
 	}
 
@@ -301,6 +302,7 @@ class ilManualAssessmentMemberGUI
 			, 'event_time' => $event_time
 			, 'notify' => $member->notify()
 			, 'learning_progress' => (int)$member->LPStatus()
+			, 'file' => $member->fileName()
 			));
 		return $a_form;
 	}

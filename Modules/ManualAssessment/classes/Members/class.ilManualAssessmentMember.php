@@ -23,6 +23,11 @@ class ilManualAssessmentMember
 	protected $place;
 	protected $event_time;
 
+	/**
+	 * @var string
+	 */
+	protected $file_name;
+
 	public function __construct(ilObjManualAssessment $mass, ilObjUser $usr, array $data)
 	{
 
@@ -35,6 +40,7 @@ class ilManualAssessmentMember
 		$this->notification_ts = $data[ilManualAssessmentMembers::FIELD_NOTIFICATION_TS];
 		$this->place = $data[ilManualAssessmentMembers::FIELD_PLACE];
 		$this->event_time = new ilDateTime($data[ilManualAssessmentMembers::FIELD_EVENTTIME], IL_CAL_UNIX);
+		$this->file_name = $data[ilManualAssessmentMembers::FIELD_FILE_NAME];
 		$this->mass = $mass;
 		$this->usr = $usr;
 	}
@@ -359,5 +365,30 @@ class ilManualAssessmentMember
 	public function eventTime()
 	{
 		return $this->event_time;
+	}
+
+	/**
+	 * Get the name of the uploaded file
+	 *
+	 * @return string
+	 */
+	public function fileName()
+	{
+		return $this->file_name;
+	}
+
+	/**
+	 * Set the name of the file
+	 *
+	 * @param string 	$file_name
+	 *
+	 * @return ilManualAssessmentMember
+	 */
+	public function withFileName($file_name)
+	{
+		assert('is_string($file_name)');
+		$clone = clone $this;
+		$clone->file_name = $file_name;
+		return $clone;
 	}
 }
