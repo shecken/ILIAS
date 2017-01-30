@@ -6007,4 +6007,11 @@ if (!$ilDB->tableColumnExists('mass_members', 'file_name')) {
 	"length" => 255
 	));
 }
+
+if (!$ilDB->tableColumnExists('mass_members', 'user_view_file')) {
+	$ilDB->addTableColumn('mass_members', 'user_view_file', array(
+	"type" => "integer",
+	"length" => 1
+	));
+}
 ?>

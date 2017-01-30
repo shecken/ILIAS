@@ -28,6 +28,11 @@ class ilManualAssessmentMember
 	 */
 	protected $file_name;
 
+	/**
+	 * @var boolean
+	 */
+	protected $view_file;
+
 	public function __construct(ilObjManualAssessment $mass, ilObjUser $usr, array $data)
 	{
 
@@ -41,6 +46,7 @@ class ilManualAssessmentMember
 		$this->place = $data[ilManualAssessmentMembers::FIELD_PLACE];
 		$this->event_time = new ilDateTime($data[ilManualAssessmentMembers::FIELD_EVENTTIME], IL_CAL_UNIX);
 		$this->file_name = $data[ilManualAssessmentMembers::FIELD_FILE_NAME];
+		$this->view_file = $data[ilManualAssessmentMembers::FIELD_USER_VIEW_FILE];
 		$this->mass = $mass;
 		$this->usr = $usr;
 	}
@@ -389,6 +395,31 @@ class ilManualAssessmentMember
 		assert('is_string($file_name)');
 		$clone = clone $this;
 		$clone->file_name = $file_name;
+		return $clone;
+	}
+
+	/**
+	 * Can user see the uploaded file
+	 *
+	 * @return boolean
+	 */
+	public function viewFile()
+	{
+		return $this->view_file;
+	}
+
+	/**
+	 * Set user can view uploaded file
+	 *
+	 * @param boolean 	$view_file
+	 *
+	 * @return ilManualAssessmentMember
+	 */
+	public function withViewFile($view_file)
+	{
+		assert('is_bool($view_file)');
+		$clone = clone $this;
+		$clone->view_file = $view_file;
 		return $clone;
 	}
 }

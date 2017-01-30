@@ -31,6 +31,7 @@ class ilManualAssessmentMembers implements Iterator, Countable
 	const FIELD_PLACE = "place";
 	const FIELD_EVENTTIME = "event_time";
 	const FIELD_FILE_NAME = "file_name";
+	const FIELD_USER_VIEW_FILE = "user_view_file";
 
 	const LP_NOT_ATTEMPTED = ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
 	const LP_IN_PROGRESS = ilLPStatus::LP_STATUS_IN_PROGRESS_NUM;

@@ -1733,3 +1733,5 @@ mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die 
 mass#:#mass_edit_conditions#:#Vorbedingungen
 mass#:#mass_file_required#:#Dateiupload verpflichtend
 mass#:#mass_file_required_info#:#In der Beurteilung zu einem Teilnehmer, muss eine Datei hoch geladen werden.
+mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer
+mass#:#mass_user_view_file_info#:#Der Teilnehmer kann die Datei auf der Info-Seite einsehen.

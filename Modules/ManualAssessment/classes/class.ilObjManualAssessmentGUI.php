@@ -169,7 +169,21 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 		if ($member->notify() && $member->finalized()) {
 			$info->addProperty($this->lng->txt('grading_record'), nl2br($member->record()));
 		}
+		if ($member->viewFile() && $member->fileName() && $member->fileName() != "") {
+			$tpl = new ilTemplate("tpl.mass_user_file_download.html", true, true, "Modules/ManualAssessment");
+			$tpl->setVariable("FILE_NAME", $member->fileName());
+			$tpl->setVariable("HREF", $this->ctrl->getLinkTarget($this, "downloadFile"));
+			$info->addProperty($this->lng->txt('file'), $tpl->get());
+		}
 		return $info;
+	}
+
+	protected function downloadFileObject()
+	{
+		$member = $this->object->membersStorage()->loadMember($this->object, $this->usr);
+		$file_storage = $this->object->getFileStorage();
+		$file_storage->setUserId($this->usr->getId());
+		ilUtil::deliverFile($file_storage->getFilePath(), $member->fileName());
 	}
 
 	protected function addGeneralDataToInfo(ilInfoScreenGUI $info)

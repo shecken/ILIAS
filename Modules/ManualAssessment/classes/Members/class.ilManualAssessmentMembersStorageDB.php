@@ -74,6 +74,7 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 					  , ilManualAssessmentMembers::FIELD_FINALIZED => array("integer", $member->finalized() ? 1 : 0)
 					  , ilManualAssessmentMembers::FIELD_NOTIFICATION_TS => array("integer", $member->notificationTS())
 					  , ilManualAssessmentMembers::FIELD_FILE_NAME => array("text", $member->fileName())
+					  , ilManualAssessmentMembers::FIELD_USER_VIEW_FILE => array("integer", $member->viewFile())
 				);
 
 		$this->db->update(self::MEMBERS_TABLE, $values, $where);
@@ -122,6 +123,7 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 					  , ilManualAssessmentMembers::FIELD_FINALIZED => array("integer", 0)
 					  , ilManualAssessmentMembers::FIELD_NOTIFICATION_TS => array("integer", -1)
 					  , ilManualAssessmentMembers::FIELD_FILE_NAME => array("text", $member->fileName())
+					  , ilManualAssessmentMembers::FIELD_USER_VIEW_FILE => array("integer", $member->viewFile())
 				);
 
 		$this->db->insert(self::MEMBERS_TABLE, $values);

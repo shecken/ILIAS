@@ -41,7 +41,7 @@ class ilManualAssessmentMemberGUI
 		$this->member = $this->object->membersStorage()
 						->loadMember($this->object, $this->examinee);
 		$this->settings = $this->object->getSettings();
-		$this->file_storage = new ilManualAssessmentFileStorage($this->object->getId());
+		$this->file_storage = $this->object->getFileStorage();
 	}
 
 	public function executeCommand()
@@ -133,6 +133,7 @@ class ilManualAssessmentMemberGUI
 				$confirm->setConfirm($this->lng->txt('mass_finalize'), 'finalize');
 				$confirm->setCancel($this->lng->txt('cancel'), 'cancelFinalize');
 				$this->tpl->setContent($confirm->getHTML());
+				return;
 			} else {
 				ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
 			}
@@ -222,7 +223,8 @@ class ilManualAssessmentMemberGUI
 					->withPlace($data['place'])
 					->withEventTime($this->createDatetime($data['event_time']))
 					->withLPStatus($data['learning_progress'])
-					->withExaminerId($this->examiner->getId());
+					->withExaminerId($this->examiner->getId())
+					->withViewFile((bool)$data['user_view_file']);
 
 		if ($data['notify']  == 1) {
 			$member = $member->withNotify(true);
@@ -312,6 +314,11 @@ class ilManualAssessmentMemberGUI
 		$file->setAllowDeletion(true);
 		$form->addItem($file);
 
+		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_user_view_file'), 'user_view_file');
+		$cb->setInfo($this->lng->txt('mass_user_view_file_info'));
+		$cb->setDisabled(!$may_be_edited);
+		$form->addItem($cb);
+
 		// notify examinee
 		$notify = new ilCheckboxInputGUI($this->lng->txt('mass_notify'), 'notify');
 		$notify->setInfo($this->lng->txt('mass_notify_explanation'));
@@ -341,6 +348,7 @@ class ilManualAssessmentMemberGUI
 			, 'notify' => $member->notify()
 			, 'learning_progress' => (int)$member->LPStatus()
 			, 'file' => $member->fileName()
+			, 'user_view_file' => $member->viewFile()
 			));
 		return $a_form;
 	}
