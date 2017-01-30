@@ -10,6 +10,7 @@ require_once 'Modules/ManualAssessment/classes/Notification/class.ilManualAssess
 require_once 'Modules/ManualAssessment/classes/class.ilManualAssessmentLP.php';
 require_once "Services/Calendar/classes/class.ilDateTime.php";
 require_once 'Modules/ManualAssessment/classes/class.ilObjManualAssessment.php';
+require_once 'Modules/ManualAssessment/classes/FileStorage/class.ilManualAssessmentFileStorage.php';
 
 /**
  * For the purpose of streamlining the grading and learning-process status definition
@@ -40,6 +41,7 @@ class ilManualAssessmentMemberGUI
 		$this->member = $this->object->membersStorage()
 						->loadMember($this->object, $this->examinee);
 		$this->settings = $this->object->getSettings();
+		$this->file_storage = new ilManualAssessmentFileStorage($this->object->getId());
 	}
 
 	public function executeCommand()
@@ -120,10 +122,9 @@ class ilManualAssessmentMemberGUI
 				return;
 			}
 
-			$member = $this->updateDataInMemberByArray($this->member, $_POST);
-			$this->object->membersStorage()->updateMember($member);
+			$this->saveMember($_POST);
 
-			if ($member->mayBeFinalized()) {
+			if ($this->member->mayBeFinalized()) {
 				include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
 				$confirm = new ilConfirmationGUI();
 				$confirm->addHiddenItem('usr_id', $_GET['usr_id']);
@@ -195,8 +196,7 @@ class ilManualAssessmentMemberGUI
 				return;
 			}
 
-			$this->member = $this->updateDataInMemberByArray($this->member, $_POST);
-			$this->object->membersStorage()->updateMember($this->member);
+			$this->saveMember($_POST);
 
 			if ($this->object->isActiveLP()) {
 				ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
@@ -208,17 +208,54 @@ class ilManualAssessmentMemberGUI
 		$this->redirect($this->member->id());
 	}
 
-	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data)
+	protected function saveMember($post)
+	{
+		$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
+		$this->member = $this->updateDataInMemberByArray($this->member, $post, $new_file);
+		$this->object->membersStorage()->updateMember($this->member);
+	}
+
+	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data, $new_file)
 	{
 		$member = $member->withRecord($data['record'])
 					->withInternalNote($data['internal_note'])
 					->withPlace($data['place'])
 					->withEventTime($this->createDatetime($data['event_time']))
 					->withLPStatus($data['learning_progress'])
-					->withExaminerId($this->examiner->getId())
-					->withNotify(($data['notify']  == 1 ? true : false))
-					->withFileName($data['file']['name']);
+					->withExaminerId($this->examiner->getId());
+
+		if ($data['notify']  == 1) {
+			$member = $member->withNotify(true);
+		} else {
+			$member = $member->withNotify(false);
+		}
+
+		if ($new_file) {
+			$member = $member->withFileName($data['file']['name']);
+		}
+
 		return $member;
+	}
+
+	protected function uploadFile($file, $file_delete)
+	{
+		$new_file = false;
+
+		$this->file_storage->setUserId($this->member->id());
+		$this->file_storage->create();
+
+		if (!$file["name"] == "" || $file_delete) {
+			$this->file_storage->deleteCurrentFile();
+			$this->file_storage->uploadFile($file);
+			$new_file = true;
+		}
+
+		if (!$file["name"] == "") {
+			$this->file_storage->uploadFile($file);
+			$new_file = true;
+		}
+
+		return $new_file;
 	}
 
 	protected function initGradingForm($may_be_edited = true)
@@ -272,6 +309,7 @@ class ilManualAssessmentMemberGUI
 		require_once("Services/Form/classes/class.ilFileInputGUI.php");
 		$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
 		$file->setRequired($this->object->getSettings()->fileRequired());
+		$file->setAllowDeletion(true);
 		$form->addItem($file);
 
 		// notify examinee

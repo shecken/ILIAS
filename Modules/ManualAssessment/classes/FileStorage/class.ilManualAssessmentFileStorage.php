@@ -15,7 +15,7 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 
 	protected function getPathPostfix()
 	{
-		return 'mass_';
+		return 'mass';
 	}
 
 	protected function getPathPrefix()
@@ -33,6 +33,14 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 	public function setUserId($user_id)
 	{
 		$this->user_id = $user_id;
+	}
+
+	public function create()
+	{
+		if (!file_exists($this->getAbsolutePath())) {
+			ilUtil::makeDirParents($this->getAbsolutePath());
+		}
+		return true;
 	}
 
 	public function getAbsolutePath()
