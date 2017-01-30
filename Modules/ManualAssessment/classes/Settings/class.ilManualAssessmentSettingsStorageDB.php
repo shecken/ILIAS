@@ -67,7 +67,7 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 				( "content" => array("text", $settings->content())
 				, "record_template" => array("text", $settings->recordTemplate())
 				, "file_required" => array("integer", $settings->fileRequired())
-				, "record_template" => array("integer", $settings->eventTimePlaceRequired())
+				, "event_time_place_required" => array("integer", $settings->eventTimePlaceRequired())
 				);
 
 		$this->db->update(self::MASS_SETTINGS_TABLE, $values, $where);

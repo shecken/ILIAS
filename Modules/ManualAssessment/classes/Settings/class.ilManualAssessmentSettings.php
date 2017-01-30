@@ -119,6 +119,7 @@ class ilManualAssessmentSettings
 	{
 		assert('is_bool($file_required)');
 		$this->file_required = $file_required;
+		return $this;
 	}
 
 	/**
