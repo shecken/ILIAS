@@ -5993,7 +5993,7 @@ if (!$ilDB->tableColumnExists('mass_members', 'place')) {
 if (!$ilDB->tableColumnExists('mass_members', 'event_time')) {
 	$ilDB->addTableColumn('mass_members', 'event_time', array(
 	"type" => "integer",
-	"length" => 11
+	"length" => 8
 	));
 }
 
