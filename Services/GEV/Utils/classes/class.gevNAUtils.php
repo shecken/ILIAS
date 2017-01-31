@@ -107,7 +107,7 @@ class gevNAUtils {
 	
 	static $ADVISER_ROLES = array(
 		  "Administrator"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		, "Admin-eingeschraenkt"
 		, "OD/BD"
 		, "OD"
