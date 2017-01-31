@@ -411,7 +411,7 @@ class gevSettings
 	// Names of roles where users do not need to pay fees
 	static $NO_PAYMENT_ROLES = array(
 		  "Administrator"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		, "Admin-eingeschraenkt"
 		, "Admin-Ansicht"
 		, "OD/BD"
@@ -443,7 +443,7 @@ class gevSettings
 	// Names of roles where users need to pay the
 	static $NO_PREARRIVAL_PAYMENT_ROLES = array(
 		  "Administrator"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		, "Admin-eingeschraenkt"
 		, "Admin-Ansicht"
 		, "OD/BD"
@@ -482,7 +482,7 @@ class gevSettings
 	static $ADMIN_ROLES = array(
 		  "Administrator"
 		, "Admin-eingeschraenkt"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		);
 
 	// Names of roles that count as system admins
@@ -633,7 +633,7 @@ class gevSettings
 	// Role to "Status" mapping
 	static $IDHGBAAD_STATUS_MAPPING = array(
 		  "Administrator"			=> "ID"
-		, "Admin-Voll"				=> "ID"
+		, "Admin-Orga"				=> "ID"
 		, "Admin-eingeschraenkt"	=> "ID"
 		, "Admin-Ansicht"			=> "ID"
 		, "OD/BD"					=> "AAD"

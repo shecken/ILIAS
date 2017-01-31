@@ -16,7 +16,7 @@ class gevUserImportMatching {
 
 	static $GOA2ROLES = array(
 		 'Administrator' 		//	Gesamt Admin
-		,'Admin-Voll' 			//	Admin exkl. Reiter Administration
+		,'Admin-Orga' 			//	Admin exkl. Reiter Administration
 		,'Admin-eingeschraenkt' //	Seminaranlage / Orgeinheiten
 		,'Admin-Ansicht'		//	Alles ansehen / kein Änderungsrecht
 		,'OD/BD'				//	Organisationsdirektor / Bereichsdirektor
@@ -105,7 +105,7 @@ class gevUserImportMatching {
 		//'GEV' => array(
 
 			,'Administrator' => 'Administrator'
-			,'Administrator-Voll' => 'Admin-Voll'
+			,'Administrator-Orga' => 'Admin-Orga'
 			,'Administrator-Eingeschränkt' => 'Admin-eingeschraenkt'
 			,'Administrator-eingeschränkt' => 'Admin-eingeschraenkt'
 			,'OD/LD/BD/VD/VTWL' => '#FROMKEY'

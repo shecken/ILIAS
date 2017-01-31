@@ -2053,7 +2053,7 @@ class gevUserUtils
 	public function seeBiproAgent()
 	{
 		$roles = array("Administrator"
-					   ,"Admin-Voll"
+					   ,"Admin-Orga"
 					   ,"Admin-eingeschraenkt"
 					   ,"Admin-Ansicht"
 					   ,"OD/BD"
@@ -2088,7 +2088,7 @@ class gevUserUtils
 	public function seeBiproSuperior()
 	{
 		$roles = array("Administrator"
-					   ,"Admin-Voll"
+					   ,"Admin-Orga"
 					   ,"Admin-eingeschraenkt"
 					   ,"Admin-Ansicht"
 					   ,"OD/BD"
