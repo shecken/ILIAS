@@ -294,7 +294,8 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 	public function handleAccessViolation()
 	{
 		global $ilias, $lng;
-		$ilias->raiseError($lng->txt("msg_no_perm_read"), $ilias->error_obj->WARNING);
+		ilUtil::sendFailure($lng->txt("msg_no_perm_read"), true);
+		$this->ctrl->redirect($this);
 	}
 
 	public static function _goto($a_target, $a_add = '')
