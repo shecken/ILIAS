@@ -97,9 +97,11 @@ class ilObjReportBillGUI extends ilObjReportBaseGUI {
 		if (!preg_match("/\d{6}-\d{5}/", $billnumber)) {
 			throw Exception("gevBillingReportGUI::deliverBillPDF: This is no billnumber: '".$billnumber."'");
 		}
-		require_once("Services/Utilities/classes/class.ilUtil.php");
+		require_once 'Services/Billing/classes/class.ilBill.php';
+		$year = ilBill::getInstanceByBillNumber($billnumber)->getBillYear();
 		require_once("Services/GEV/Utils/classes/class.gevBillStorage.php");
-		$filename = gevBillStorage::getInstance()->getPathByBillNumber($billnumber);
+		$filename = gevBillStorage::getInstance($year)->getPathByBillNumber($billnumber);
+		require_once("Services/Utilities/classes/class.ilUtil.php");
 		ilUtil::deliverFile($filename, $billnumber.".pdf", "application/pdf");
 	}
 }
