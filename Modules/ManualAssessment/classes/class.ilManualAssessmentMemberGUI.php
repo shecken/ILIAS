@@ -60,15 +60,7 @@ class ilManualAssessmentMemberGUI
 			case 'finalize':
 			case 'finalizeConfirmation':
 			case 'cancelFinalize':
-				if ($edited_by_other || !$edit_permission) {
-					$this->parent_gui->handleAccessViolation();
-				}
-				break;
 			case 'view':
-				if (($edited_by_other || !$edit_permission) && !$read_permission) {
-					$this->parent_gui->handleAccessViolation();
-				}
-				break;
 			case 'cancel':
 				break;
 			default:
@@ -77,22 +69,100 @@ class ilManualAssessmentMemberGUI
 		$this->$cmd();
 	}
 
-	protected function setTabs(ilTabsGUI $tabs)
+	protected function view()
 	{
-		$tabs->clearTargets();
-		$tabs->setBackTarget(
-			$this->lng->txt('back'),
-			$this->getBackLink()
-		);
+		if (!$this->mayBeViewed()) {
+			$this->parent_gui->handleAccessViolation();
+		}
+		$form = $this->fillForm($this->initGradingForm(false), $this->member);
+		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
+		$this->renderForm($form);
 	}
 
-	protected function getBackLink()
+	protected function edit($form = null)
 	{
-		return $this->ctrl->getLinkTargetByClass(
-			array(get_class($this->parent_gui)
-					,get_class($this->members_gui)),
-			'view'
-		);
+		if (!$this->mayBeEdited()) {
+			$this->parent_gui->handleAccessViolation();
+		}
+		if ($form === null) {
+			$form = $this->fillForm($this->initGradingForm(), $this->member);
+		}
+		$form->addCommandButton('save', $this->lng->txt('save'));
+		$form->addCommandButton('finalizeConfirmation', $this->lng->txt('mass_finalize'));
+		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
+		$this->renderForm($form);
+	}
+
+	protected function save()
+	{
+		if (!$this->mayBeEdited()) {
+			$this->parent_gui->handleAccessViolation();
+		}
+
+		$form = $this->initGradingForm();
+		if (!$form->checkInput()) {
+			$form->setValuesByPost();
+			$this->edit($form);
+			return;
+		}
+
+		$this->saveMember($_POST);
+
+		if ($this->object->isActiveLP()) {
+			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
+		}
+
+		ilUtil::sendSuccess($this->lng->txt('mass_membership_saved'), true);
+		$this->redirect('edit');
+	}
+
+	protected function finalizeConfirmation()
+	{
+		if (!$this->mayBeEdited()) {
+			$this->parent_gui->handleAccessViolation();
+		}
+
+		$form = $this->initGradingForm();
+		if (!$form->checkInput()) {
+			$form->setValuesByPost();
+			$this->edit($form);
+			return;
+		}
+
+		$this->saveMember($_POST);
+
+		if ($this->member->mayBeFinalized()) {
+			include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
+			$confirm = new ilConfirmationGUI();
+			$confirm->addHiddenItem('usr_id', $_GET['usr_id']);
+			$confirm->setHeaderText($this->lng->txt('mass_finalize_user_qst'));
+			$confirm->setFormAction($this->ctrl->getFormAction($this));
+			$confirm->setConfirm($this->lng->txt('mass_finalize'), 'finalize');
+			$confirm->setCancel($this->lng->txt('cancel'), 'cancelFinalize');
+			$this->tpl->setContent($confirm->getHTML());
+		} else {
+			ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
+			$this->edit($form);
+		}
+	}
+
+	protected function finalize()
+	{
+		if (!$this->mayBeEdited()) {
+			$this->parent_gui->handleAccessViolation();
+		}
+		if (!$this->member->mayBeFinalized()) {
+			ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
+			$this->redirect('edit');
+			return;
+		}
+		$this->member = $this->member->withFinalized()->maybeSendNotification($this->notificator);
+		$this->object->membersStorage()->updateMember($this->member);
+		if ($this->object->isActiveLP()) {
+			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
+		}
+		ilUtil::sendSuccess($this->lng->txt('mass_membership_finalized'), true);
+		$this->redirect('view');
 	}
 
 	protected function cancel()
@@ -100,120 +170,19 @@ class ilManualAssessmentMemberGUI
 		$this->ctrl->redirect($this->members_gui);
 	}
 
-	protected function redirect($user_id)
-	{
-		$this->ctrl->setParameter($this, "usr_id", $user_id);
-		$this->ctrl->redirect($this, "edit");
-	}
-
 	protected function cancelFinalize()
 	{
-		$this->redirect($_POST['usr_id']);
+		$this->redirect('edit');
 	}
 
-	protected function finalizeConfirmation()
+	protected function redirect($cmd)
 	{
-		if ($this->mayBeEdited()) {
-			$form = $this->initGradingForm();
-
-			if (!$form->checkInput()) {
-				$form->setValuesByPost();
-				$this->renderForm($form);
-				return;
-			}
-
-			$this->saveMember($_POST);
-
-			if ($this->member->mayBeFinalized()) {
-				include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
-				$confirm = new ilConfirmationGUI();
-				$confirm->addHiddenItem('usr_id', $_GET['usr_id']);
-				$confirm->setHeaderText($this->lng->txt('mass_finalize_user_qst'));
-				$confirm->setFormAction($this->ctrl->getFormAction($this));
-				$confirm->setConfirm($this->lng->txt('mass_finalize'), 'finalize');
-				$confirm->setCancel($this->lng->txt('cancel'), 'cancelFinalize');
-				$this->tpl->setContent($confirm->getHTML());
-				return;
-			} else {
-				ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
-			}
-		}
-
-		$this->redirect($this->member->id());
-	}
-
-	protected function finalize()
-	{
-		if ($this->mayBeEdited() && $this->member->mayBeFinalized()) {
-			$this->member = $this->member->withFinalized()->maybeSendNotification($this->notificator);
-			$this->object->membersStorage()->updateMember($this->member);
-
-			if ($this->object->isActiveLP()) {
-				ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
-			}
-
-			ilUtil::sendSuccess($this->lng->txt('mass_membership_finalized'), true);
-		} else {
-			ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
-		}
-
-		$this->redirect($this->member->id());
-	}
-
-	protected function mayBeEdited()
-	{
-		return !$this->member->finalized() && !$this->targetWasEditedByOtherUser($this->member);
-	}
-
-	protected function edit()
-	{
-		if ($this->mayBeEdited()) {
-			$form = $this->fillForm($this->initGradingForm(), $this->member);
-			$this->renderForm($form);
-		} else {
-			$this->view();
-		}
+		$this->ctrl->redirect($this, $cmd);
 	}
 
 	protected function renderForm(ilPropertyFormGUI $a_form)
 	{
 		$this->tpl->setContent($a_form->getHTML());
-	}
-
-	protected function view()
-	{
-		$form = $this->fillForm($this->initGradingForm(false), $this->member);
-		$this->renderForm($form);
-	}
-
-	protected function save()
-	{
-		if ($this->mayBeEdited()) {
-			$form = $this->initGradingForm();
-
-			if (!$form->checkInput()) {
-				$form->setValuesByPost();
-				$this->renderForm($form);
-				return;
-			}
-
-			$this->saveMember($_POST);
-
-			if ($this->object->isActiveLP()) {
-				ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
-			}
-
-			ilUtil::sendSuccess($this->lng->txt('mass_membership_saved'), true);
-		}
-
-		$this->redirect($this->member->id());
-	}
-
-	protected function saveMember($post)
-	{
-		$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
-		$this->member = $this->updateDataInMemberByArray($this->member, $post, $new_file);
-		$this->object->membersStorage()->updateMember($this->member);
 	}
 
 	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data, $new_file)
@@ -239,25 +208,22 @@ class ilManualAssessmentMemberGUI
 		return $member;
 	}
 
-	protected function uploadFile($file, $file_delete)
+	protected function setTabs(ilTabsGUI $tabs)
 	{
-		$new_file = false;
+		$tabs->clearTargets();
+		$tabs->setBackTarget(
+			$this->lng->txt('back'),
+			$this->getBackLink()
+		);
+	}
 
-		$this->file_storage->setUserId($this->member->id());
-		$this->file_storage->create();
-
-		if (!$file["name"] == "" || $file_delete) {
-			$this->file_storage->deleteCurrentFile();
-			$this->file_storage->uploadFile($file);
-			$new_file = true;
-		}
-
-		if (!$file["name"] == "") {
-			$this->file_storage->uploadFile($file);
-			$new_file = true;
-		}
-
-		return $new_file;
+	protected function getBackLink()
+	{
+		return $this->ctrl->getLinkTargetByClass(
+			array(get_class($this->parent_gui)
+					,get_class($this->members_gui)),
+			'view'
+		);
 	}
 
 	protected function initGradingForm($may_be_edited = true)
@@ -325,11 +291,6 @@ class ilManualAssessmentMemberGUI
 		$notify->setDisabled(!$may_be_edited);
 		$form->addItem($notify);
 
-		if ($may_be_edited) {
-			$form->addCommandButton('save', $this->lng->txt('save'));
-			$form->addCommandButton('finalizeConfirmation', $this->lng->txt('mass_finalize'));
-		}
-		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		return $form;
 	}
 
@@ -351,6 +312,64 @@ class ilManualAssessmentMemberGUI
 			, 'user_view_file' => $member->viewFile()
 			));
 		return $a_form;
+	}
+
+	protected function mayBeEdited()
+	{
+		if (!$this->isFinalized()
+			&& !$this->targetWasEditedByOtherUser($this->member)
+			&& $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress')) {
+			return true;
+		}
+		return false;
+	}
+
+	protected function mayBeViewed()
+	{
+		if ($this->isFinalized()
+			&& (
+					(!$this->targetWasEditedByOtherUser($this->member)
+						&& $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress')
+					)
+					|| $this->object->accessHandler()->checkAccessToObj($this->object, 'read_learning_progress')
+				)
+			) {
+			return true;
+		}
+		return false;
+	}
+
+	protected function isFinalized()
+	{
+		return $this->member->finalized();
+	}
+
+	protected function saveMember($post)
+	{
+		$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
+		$this->member = $this->updateDataInMemberByArray($this->member, $post, $new_file);
+		$this->object->membersStorage()->updateMember($this->member);
+	}
+
+	protected function uploadFile($file, $file_delete)
+	{
+		$new_file = false;
+
+		$this->file_storage->setUserId($this->member->id());
+		$this->file_storage->create();
+
+		if (!$file["name"] == "" || $file_delete) {
+			$this->file_storage->deleteCurrentFile();
+			$this->file_storage->uploadFile($file);
+			$new_file = true;
+		}
+
+		if (!$file["name"] == "") {
+			$this->file_storage->uploadFile($file);
+			$new_file = true;
+		}
+
+		return $new_file;
 	}
 
 	protected function targetWasEditedByOtherUser(ilManualAssessmentMember $member)
