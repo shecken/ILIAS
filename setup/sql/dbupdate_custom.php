@@ -5960,3 +5960,21 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-TA", array(
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", array('visible', 'read'));
 
 ?>
+
+<#246>
+<?php
+include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+$mass_type_id = ilDBUpdateNewObjectType::getObjectTypeId('mass');
+if ($mass_type_id) {
+	$new_ops_id = ilDBUpdateNewObjectType::addCustomRBACOperation(
+		'amend_grading',
+		'Amend grading',
+		'object',
+		8200
+	);
+
+	if ($new_ops_id) {
+		ilDBUpdateNewObjectType::addRBACOperation($mass_type_id, $new_ops_id);
+	}
+}
+?>
