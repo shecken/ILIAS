@@ -7,7 +7,8 @@ require_once 'Modules/ManualAssessment/classes/Members/class.ilManualAssessmentM
  * Edit the record of a user, set LP.
  * @author	Denis Klöpfer <denis.kloepfer@concepts-and-training.de>
  */
-class ilManualAssessmentMember {
+class ilManualAssessmentMember
+{
 	protected $mass;
 	protected $usr;
 
@@ -19,7 +20,8 @@ class ilManualAssessmentMember {
 	protected $notification_ts;
 	protected $lp_status;
 
-	public function __construct(ilObjManualAssessment $mass, ilObjUser $usr, array $data) {
+	public function __construct(ilObjManualAssessment $mass, ilObjUser $usr, array $data)
+	{
 
 		$this->record = $data[ilManualAssessmentMembers::FIELD_RECORD];
 		$this->internal_note = $data[ilManualAssessmentMembers::FIELD_INTERNAL_NOTE];
@@ -35,14 +37,16 @@ class ilManualAssessmentMember {
 	/**
 	 * @return	string
 	 */
-	public function record() {
+	public function record()
+	{
 		return $this->record;
 	}
 
 	/**
 	 * @return	string
 	 */
-	public function internalNote() {
+	public function internalNote()
+	{
 		return $this->internal_note;
 	}
 
@@ -51,7 +55,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	int|string
 	 */
-	public function examinerId() {
+	public function examinerId()
+	{
 		return $this->examiner_id;
 	}
 
@@ -60,7 +65,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	bool
 	 */
-	public function notify() {
+	public function notify()
+	{
 		return $this->notify;
 	}
 
@@ -71,14 +77,15 @@ class ilManualAssessmentMember {
 	 * @param	ilManualAssessmentNotificator	$notificator
 	 * @return	ilManualAssessmentMember	$this
 	 */
-	public function maybeSendNotification(ilManualAssessmentNotificator $notificator) {
-		if(!$this->finalized()) {
-			throw new ilManualAssessmentException('must finalize before notification');
-		}
-		if($this->notify) {
-			$notificator = (string)$this->lp_status === (string)ilManualAssessmentMembers::LP_COMPLETED ?
-				$notificator->withOccasionCompleted() :
-				$notificator->withOccasionFailed();
+	public function maybeSendNotification(ilManualAssessmentNotificator $notificator)
+	{
+		if ($this->notify && !$this->finalized()) {
+			$notificator = $notificator->withOccasionFailed();
+
+			if ((string)$this->lp_status === (string)ilManualAssessmentMembers::LP_COMPLETED) {
+				$notificator = $notificator->withOccasionCompleted();
+			}
+
 			$notificator->withReciever($this)->send();
 			$this->notification_ts = time();
 		}
@@ -90,7 +97,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	int|string
 	 */
-	public function id() {
+	public function id()
+	{
 		return $this->usr->getId();
 	}
 
@@ -99,7 +107,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	int|string
 	 */
-	public function assessmentId() {
+	public function assessmentId()
+	{
 		return $this->mass->getId();
 	}
 
@@ -108,7 +117,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	ilObjManualAssessment
 	 */
-	public function assessment() {
+	public function assessment()
+	{
 		return $this->mass;
 	}
 
@@ -117,7 +127,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	bool
 	 */
-	public function finalized() {
+	public function finalized()
+	{
 		return (string)$this->finalized === "1" ? true : false;
 	}
 
@@ -126,7 +137,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	bool
 	 */
-	public function mayBeFinalized() {
+	public function mayBeFinalized()
+	{
 		return ((string)$this->lp_status === (string)ilManualAssessmentMembers::LP_COMPLETED
 				||(string)$this->lp_status === (string)ilManualAssessmentMembers::LP_FAILED)
 				&& !$this->finalized();
@@ -138,14 +150,12 @@ class ilManualAssessmentMember {
 	 * @param	string	$record
 	 * @return	ilManualAssessmentMember
 	 */
-	public function withRecord($record) {
+	public function withRecord($record)
+	{
 		assert('is_string($record) || $record === null');
-		if(!$this->finalized()) {
-			$clone = clone $this;
-			$clone->record = $record;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		$clone = clone $this;
+		$clone->record = $record;
+		return $clone;
 	}
 
 	/**
@@ -154,14 +164,12 @@ class ilManualAssessmentMember {
 	 * @param	string	$internal_note
 	 * @return	ilManualAssessmentMember
 	 */
-	public function withInternalNote($internal_note) {
+	public function withInternalNote($internal_note)
+	{
 		assert('is_string($internal_note) || $internal_note === null');
-		if(!$this->finalized()) {
-			$clone = clone $this;
-			$clone->internal_note = $internal_note;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		$clone = clone $this;
+		$clone->internal_note = $internal_note;
+		return $clone;
 	}
 
 	/**
@@ -170,15 +178,13 @@ class ilManualAssessmentMember {
 	 * @param	int|string	$examiner_id
 	 * @return	ilManualAssessmentMember
 	 */
-	public function withExaminerId($examiner_id) {
+	public function withExaminerId($examiner_id)
+	{
 		assert('is_numeric($examiner_id)');
-		if(!$this->finalized()) {
-			assert('ilObjUser::_exists($examiner_id)');
-			$clone = clone $this;
-			$clone->examiner_id = $examiner_id;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		assert('ilObjUser::_exists($examiner_id)');
+		$clone = clone $this;
+		$clone->examiner_id = $examiner_id;
+		return $clone;
 	}
 
 	/**
@@ -187,17 +193,16 @@ class ilManualAssessmentMember {
 	 * @param	bool	$notify
 	 * @return	ilManualAssessmentMember
 	 */
-	public function withNotify($notify) {
+	public function withNotify($notify)
+	{
 		assert('is_bool($notify)');
-		if(!$this->finalized()) {
-			$clone = clone $this;
-			$clone->notify = (bool)$notify;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		$clone = clone $this;
+		$clone->notify = (bool)$notify;
+		return $clone;
 	}
 
-	protected function LPStatusValid($lp_status) {
+	protected function LPStatusValid($lp_status)
+	{
 		return  (string)$lp_status === (string)ilManualAssessmentMembers::LP_NOT_ATTEMPTED
 				||(string)$lp_status === (string)ilManualAssessmentMembers::LP_IN_PROGRESS
 				||(string)$lp_status === (string)ilManualAssessmentMembers::LP_COMPLETED
@@ -210,13 +215,14 @@ class ilManualAssessmentMember {
 	 * @param	string	$lp_status
 	 * @return	ilManualAssessmentMember
 	 */
-	public function withLPStatus($lp_status) {
-		if(!$this->finalized() && $this->LPStatusValid($lp_status)) {
+	public function withLPStatus($lp_status)
+	{
+		if ($this->LPStatusValid($lp_status)) {
 			$clone = clone $this;
 			$clone->lp_status = $lp_status;
 			return $clone;
 		}
-		throw new ilManualAssessmentException('user allready finalized or invalid learning progress status');
+		throw new ilManualAssessmentException('invalid learning progress status');
 	}
 
 	/**
@@ -224,7 +230,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	int|string
 	 */
-	public function lastname() {
+	public function lastname()
+	{
 		return $this->usr->getLastname();
 	}
 
@@ -233,7 +240,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	int|string
 	 */
-	public function firstname() {
+	public function firstname()
+	{
 		return $this->usr->getFirstname();
 	}
 
@@ -242,7 +250,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	int|string
 	 */
-	public function login() {
+	public function login()
+	{
 		return $this->usr->getLogin();
 	}
 
@@ -251,7 +260,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	int|string
 	 */
-	public function name() {
+	public function name()
+	{
 		return $this->usr->getFullname();
 	}
 
@@ -260,7 +270,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	int|string
 	 */
-	public function LPStatus() {
+	public function LPStatus()
+	{
 		return $this->lp_status;
 	}
 
@@ -269,8 +280,9 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	ilManualAssessmentMember
 	 */
-	public function withFinalized() {
-		if($this->mayBeFinalized()) {
+	public function withFinalized()
+	{
+		if ($this->mayBeFinalized()) {
 			$clone = clone $this;
 			$clone->finalized = 1;
 			return $clone;
@@ -283,7 +295,8 @@ class ilManualAssessmentMember {
 	 *
 	 * @return	int|string
 	 */
-	public function notificationTS() {
+	public function notificationTS()
+	{
 		return $this->notification_ts;
 	}
 }
