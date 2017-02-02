@@ -22,10 +22,11 @@ objs_xova_duplicate#:#Report über Ausbildungsstand zum Vertriebsassistenten kop
 xova_add#:#Report über Ausbildungsstand zum Vertriebsassistenten hinzufügen
 period#:#Zeitraum
 xova_content#:#Inhalt
-xova_properties#:#Einstellungen
+xova_properties#:#Eigenschaften
 objs_xova#:#Report Ausbildungsstand zum Vertriebsassistenten
 xova_visible#:#sichtbar
 xova_read#:#Lesezugriff auf Report über Ausbildungsstand zum Vertriebsassistenten
 xova_write#:#Report über Ausbildungsstand zum Vertriebsassistenten bearbeiten
 xova_delete#:#Report über Ausbildungsstand zum Vertriebsassistenten löschen
 xova_edit_permission#:#Rechte zu Report über Ausbildungsstand zum Vertriebsassistenten bearbeiten
+selected_study_prg#:#Id des Studienprogramms

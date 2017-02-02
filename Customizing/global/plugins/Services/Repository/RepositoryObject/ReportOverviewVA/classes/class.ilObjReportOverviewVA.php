@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
+require_once "Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php";
 
 ini_set("memory_limit","2048M"); 
 ini_set('max_execution_time', 0);
@@ -15,13 +16,16 @@ class ilObjReportOverviewVA extends ilObjReportBase {
 
 
 	protected function createLocalReportSettings() {
-		global $tree;
-		echo("<pre>");var_dump($tree);exit;
 		$this->local_report_settings =
 			$this->s_f->reportSettings('rep_robj_ova')
 			->addSetting($this->s_f
-								->settingSelectBox('selected_study_prg', $this->plugin->txt('selected_study_prg'))
-									->setOptions(["test", "noch", "einer"]));
+								->settingString('selected_study_prg', $this->plugin->txt('selected_study_prg')));
+	}
+
+	protected function getStudyId() {
+		if ((string)$this->getSettingsDataFor("selected_study_prg") !== "") {
+			return (string)$this->getSettingsDataFor("selected_study_prg");
+		}
 	}
 
 	protected function getRowTemplateTitle() {
@@ -140,6 +144,7 @@ class ilObjReportOverviewVA extends ilObjReportBase {
 	public function buildQueryStatement() {
 		$db = $this->gIldb;
 
+$this->getStudyChildren();
 		$query = "SELECT DISTINCT usr.firstname, usr.lastname\n"
 				."FROM usr_data AS usr\n"
 				."JOIN prg_usr_progress USING(usr_id)";
@@ -179,6 +184,42 @@ class ilObjReportOverviewVA extends ilObjReportBase {
 		// $query .= $this->queryOrder();
 
 		return $query;
+	}
+
+	/**
+	 * Description
+	 * @param type $study_ref_id 
+	 * @return array
+	 */
+	protected function getStudyChildren() {
+		$prog_per_uid = array();
+		$osp = new ilObjStudyProgramme($this->getStudyId());
+		$assignments = $osp->getAssignments();
+		foreach($assignments as $assignment) {
+			$usr_id = $assignment->getUserId();
+			$arr = array();
+			foreach($osp->getChildren() as $child) {
+				$arr[$child->getTitle()] = $child->getProgressesOf($usr_id);
+			}
+			$prog_per_uid[$usr_id] = $arr;
+		}
+
+		var_dump($prog_per_uid);exit;
+		// alle benutzer holen assignments
+
+	}
+
+	protected function getAssignetUsers($study_ref_id) {
+		$db = $this->gIldb;
+
+		$query = "SELECT DISTINCT usr.firstname, usr.lastname\n"
+				."FROM usr_data AS usr\n"
+				."JOIN prg_usr_progress AS pup\n"
+				."	USING(usr_id)\n"
+				."JOIN object_reference AS ore\n"
+				."ON ore.obj_id = pup.prg_id\n"
+				."WHERE ore.ref_id = 93\n";
+
 	}
 
 	protected function fetchData(callable $callback) {
