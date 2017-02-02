@@ -12,10 +12,16 @@ class ilObjReportOverviewVA extends ilObjReportBase {
 	public function initType() {
 		$this->setType("xova");
 	}
-	
+
+
 	protected function createLocalReportSettings() {
+		global $tree;
+		echo("<pre>");var_dump($tree);exit;
 		$this->local_report_settings =
-			$this->s_f->reportSettings('rep_robj_ova');
+			$this->s_f->reportSettings('rep_robj_ova')
+			->addSetting($this->s_f
+								->settingSelectBox('selected_study_prg', $this->plugin->txt('selected_study_prg'))
+									->setOptions(["test", "noch", "einer"]));
 	}
 
 	protected function getRowTemplateTitle() {
@@ -182,7 +188,7 @@ class ilObjReportOverviewVA extends ilObjReportBase {
 		$data = array();
 		while($rec = $this->gIldb->fetchAssoc($res)) {
 			$data[] = call_user_func($callback,$rec);
-		}var_dump($data);exit();
+		}
 		return $data;
 	}
 
@@ -193,29 +199,6 @@ class ilObjReportOverviewVA extends ilObjReportBase {
 	protected function buildOrder($order) {
 		return $order;
 	}
-
-	// public function getDistinctValues($a_field, $a_table, $a_order='ASC', $a_showempty=false, $a_filter_historic=false) {
-	// 	global $ilDB;
-	// 	$where = "WHERE TRIM($a_field) NOT IN ('-empty-', '')"
-	// 			." AND $a_field IS NOT NULL"
-	// 			;
-	// 	if ($a_showempty) {
-	// 		$where = 'WHERE 1';
-	// 	}
-	// 	if ($a_filter_historic) {
-	// 		$where .= ' AND hsit_historic=0';
-	// 	}
-
-
-	// 	$sql = "SELECT DISTINCT $a_field FROM $a_table $where ORDER BY $a_field $a_order";
-	// 	$res = $ilDB->query($sql);
-	// 	$ret = array();
-	// 	while ($rec = $ilDB->fetchAssoc($res)) {
-	// 		$ret[$rec[$a_field]] = $rec[$a_field];
-	// 	}
-
-	// 	return $ret;
-	// }
 
 	private function getRelevantOrgus()
 	{
