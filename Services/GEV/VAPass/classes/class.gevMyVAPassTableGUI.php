@@ -20,7 +20,7 @@ class gevMyVAPassTableGUI extends catTableGUI
 	 */
 	protected $g_ctrl;
 
-	public function __construct($a_parent_obj, $sp_base_node_id, $user_id, $a_parent_cmd = "", $a_template_context = "")
+	public function __construct($a_parent_obj, $sp_base_node_id, $user_id, $assignment_id, $a_parent_cmd = "", $a_template_context = "")
 	{
 		$this->setID("va_pass_member");
 
@@ -31,6 +31,7 @@ class gevMyVAPassTableGUI extends catTableGUI
 		$this->g_lng = $lng;
 		$this->g_ctrl = $ilCtrl;
 		$this->user_id = $user_id;
+		$this->assignment_id = $assignment_id;
 
 		$this->success = '<img src="'.ilUtil::getImagePath("gev_va_pass_success_icon.png").'" />';
 		$this->in_progress = '<img src="'.ilUtil::getImagePath("gev_va_pass_progress_icon.png").'" />';
@@ -43,9 +44,6 @@ class gevMyVAPassTableGUI extends catTableGUI
 		require_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
 		require_once("Modules/StudyProgramme/classes/class.ilStudyProgrammeUserProgress.php");
 		$root_sp = new ilObjStudyProgramme($sp_base_node_id);
-		$assignments = $root_sp->getAssignmentsOf($this->user_id);
-		$assignment = $assignments[0];
-		$ass_id = $assignment->getId();
 
 		$this->setTitle($root_sp->getTitle());
 		$this->setSubtitle($root_sp->getDescription());
@@ -53,7 +51,7 @@ class gevMyVAPassTableGUI extends catTableGUI
 		$entries = array();
 		$children = $root_sp->getChildren();
 		foreach ($children as $current_child_key => $child) {
-			if (!$this->isRelevant($ass_id, $child->getId(), $this->user_id)) {
+			if (!$this->isRelevant($assignment_id, $child->getId(), $this->user_id)) {
 				continue;
 			}
 
@@ -69,7 +67,7 @@ class gevMyVAPassTableGUI extends catTableGUI
 			$entry->setStatus($lp_status["status"]);
 			$entry->setFinished($lp_status["finished"]);
 
-			$finish_unitl = $this->getCourseStartNextSP($children, $current_child_key + 1, $ass_id);
+			$finish_unitl = $this->getCourseStartNextSP($children, $current_child_key + 1, $assignment_id);
 			if ($finish_unitl) {
 				$entry->setFinishUntil($finish_unitl);
 			}
@@ -89,9 +87,11 @@ class gevMyVAPassTableGUI extends catTableGUI
 		if ($a_set->getHasChildren()) {
 			$this->g_ctrl->setParameter($this->parent_obj, "nodeRefId", $a_set->getRefId());
 			$this->g_ctrl->setParameter($this->parent_obj, "user_id", $this->user_id);
+			$this->g_ctrl->setParameter($this->parent_obj, "assignment_id", $this->assignment_id);
 			$link = $this->g_ctrl->getLinkTarget($this->parent_obj, "view");
 			$this->g_ctrl->setParameter($this->parent_obj, "nodeRefId", null);
 			$this->g_ctrl->setParameter($this->parent_obj, "user_id", null);
+			$this->g_ctrl->setParameter($this->parent_obj, "assignment_id", null);
 		}
 
 		if ($link) {
@@ -125,6 +125,7 @@ class gevMyVAPassTableGUI extends catTableGUI
 		$this->setFormAction($this->g_ctrl->getFormAction($this->parent_obj, "view"));
 		$this->setLegend($this->createLegend());
 		$this->setRowTemplate("tpl.gev_my_va_pass_row.html", "Services/GEV/VAPass");
+		$this->useLngInTitle(false);
 	}
 
 	/**
