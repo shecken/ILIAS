@@ -31,12 +31,15 @@
 * @ilCtrl_Calls gevDesktopGUI: gevMyTrainingsAdminGUI
 * @ilCtrl_Calls gevDesktopGUI: ilInfoScreenGUI
 * @ilCtrl_Calls gevDesktopGUI: WBTLocatorGUI
+* @ilCtrl_Calls gevDesktopGUI: gevMyVAPassGUI
 */
 
-class gevDesktopGUI {
-	public function __construct() {
+class gevDesktopGUI
+{
+	public function __construct()
+	{
 		global $lng, $ilCtrl, $tpl;
-		
+
 		$this->lng = &$lng;
 		$this->ctrl = &$ilCtrl;
 		$this->tpl = &$tpl;
@@ -44,8 +47,9 @@ class gevDesktopGUI {
 		$this->lng->loadLanguageModule("gev");
 		$this->tpl->getStandardTemplate();
 	}
-	
-	public function executeCommand() {
+
+	public function executeCommand()
+	{
 		global $ilLog;
 		$next_class = $this->ctrl->getNextClass();
 		$cmd = $this->ctrl->getCmd();
@@ -54,12 +58,12 @@ class gevDesktopGUI {
 		if ($next_class != "gevuserprofilegui" && $cmd != "toMyProfile") {
 			$this->checkNeedsWBDRegistration($cmd, $next_class);
 		}
-			
-		if($cmd == "") {
+
+		if ($cmd == "") {
 			$cmd = "toMyCourses";
 		}
 		global $ilMainMenu;
-		switch($next_class) {
+		switch ($next_class) {
 			case "gevmycoursesgui":
 				$ilMainMenu->setActive("gev_me_menu");
 				require_once("Services/GEV/Desktop/classes/class.gevMyCoursesGUI.php");
@@ -84,7 +88,7 @@ class gevDesktopGUI {
 				$gui = new gevBookingGUI();
 				$ret = $this->ctrl->forwardCommand($gui);
 				break;
-			case "gevstaticpagesgui":			
+			case "gevstaticpagesgui":
 				require_once("Services/GEV/Desktop/classes/class.gevStaticPagesGUI.php");
 				$gui = new gevStaticpagesGUI();
 				$ret = $this->ctrl->forwardCommand($gui);
@@ -136,21 +140,21 @@ class gevDesktopGUI {
 				$ilMainMenu->setActive("gev_admin_menu");
 				require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCourseCreatingBuildingBlock2GUI.php");
 				$crs_obj_id = null;
-				
-				if(isset($_GET["crs_obj_id"])){
+
+				if (isset($_GET["crs_obj_id"])) {
 					$crs_obj_id = (int)$_GET["crs_obj_id"];
 				}
 
-				if(isset($_POST["crs_obj_id"])){
+				if (isset($_POST["crs_obj_id"])) {
 					$crs_obj_id = (int)$_POST["crs_obj_id"];
 				}
-				
-				if(isset($_GET["crs_ref_id"])){
+
+				if (isset($_GET["crs_ref_id"])) {
 					require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 					$crs_obj_id = (int)gevObjectUtils::getObjId((int)$_GET["crs_ref_id"]);
 				}
 
-				if(isset($_POST["crs_ref_id"])){
+				if (isset($_POST["crs_ref_id"])) {
 					require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 					$crs_obj_id = (int)gevObjectUtils::getObjId((int)$_POST["crs_ref_id"]);
 				}
@@ -192,10 +196,14 @@ class gevDesktopGUI {
 				$ret = $this->ctrl->forwardCommand($gui);
 				break;
 			case "ilmyobservationsgui":
-				$this->plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
-							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
+				$this->plugin = ilPlugin::getPluginObject(
+					IL_COMP_SERVICE,
+					"Repository",
+					"robj",
+					ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas")
+				);
 
-				if(!$this->plugin->active) {
+				if (!$this->plugin->active) {
 					throw new Exception("Plugin Talent Assessment is not active");
 				}
 				require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes/Observations/class.ilMyObservationsGUI.php");
@@ -207,20 +215,27 @@ class gevDesktopGUI {
 				$locator_gui = new WBTLocatorGUI();
 				$ret = $this->ctrl->forwardCommand($locator_gui);
 				break;
+			case "gevmyvapassgui":
+				$ilMainMenu->setActive("gev_me_menu");
+				require_once("Services/GEV/VAPass/classes/class.gevMyVAPassGUI.php");
+				$gui = new gevMyVAPassGUI();
+				$ret = $this->ctrl->forwardCommand($gui);
+				break;
 			default:
 				$this->dispatchCmd($cmd);
 				break;
 		}
-		
+
 		if (isset($ret)) {
 			$this->tpl->setContent($ret);
 		}
-		
+
 		$this->tpl->show();
 	}
-	
-	public function dispatchCmd($a_cmd) {
-		switch($a_cmd) {
+
+	public function dispatchCmd($a_cmd)
+	{
+		switch ($a_cmd) {
 			case "toCourseSearch":
 			case "toAdmCourseSearch":
 			case "toMyCourses":
@@ -244,7 +259,9 @@ class gevDesktopGUI {
 			case "toMyAssessments":
 			case "toAllAssessments":
 			case 'redirectToViwis':
+			case "toMyVAPass":
 				$this->$a_cmd();
+				break;
 			case "handleExplorerCommand":
 				break;
 			default:
@@ -252,48 +269,59 @@ class gevDesktopGUI {
 		}
 	}
 
-	protected function redirectToViwis() {
-		$this->ctrl->saveParameterByClass('WBTLocatorGUI','q_ref',$_GET['q_ref']);
-		$this->ctrl->redirectByClass('WBTLocatorGUI','redirect_viwis');
+	protected function redirectToViwis()
+	{
+		$this->ctrl->saveParameterByClass('WBTLocatorGUI', 'q_ref', $_GET['q_ref']);
+		$this->ctrl->redirectByClass('WBTLocatorGUI', 'redirect_viwis');
 	}
 
-	protected function toDctBuildingBlockAdm() {
+	protected function toDctBuildingBlockAdm()
+	{
 		$this->ctrl->redirectByClass("gevDecentralTrainingBuildingBlockAdminGUI");
 	}
 
-	protected function toCourseSearch() {
+	protected function toCourseSearch()
+	{
 		$this->ctrl->redirectByClass("gevCourseSearchGUI");
 	}
-	
-	protected function toAdmCourseSearch() {
+
+	protected function toAdmCourseSearch()
+	{
 		$this->ctrl->redirectByClass("ilAdminSearchGUI");
 	}
-	
-	protected function toMyCourses() {
-		$this->ctrl->redirectByClass("gevMyCoursesGUI");
-	}	
 
-	protected function toStaticPages() {
+	protected function toMyCourses()
+	{
+		$this->ctrl->redirectByClass("gevMyCoursesGUI");
+	}
+
+	protected function toStaticPages()
+	{
 		$this->ctrl->redirectByClass("gevStaticPagesGUI", $_REQUEST['ctpl_file']);
 	}
-	
-	protected function toMyProfile() {
+
+	protected function toMyProfile()
+	{
 		$this->ctrl->redirectByClass("gevUserProfileGUI");
 	}
 
-	protected function toMyTrainingsAp() {
+	protected function toMyTrainingsAp()
+	{
 		$this->ctrl->redirectByClass("gevMyTrainingsApGUI");
 	}
 
-	protected function toMyTrainingsAdmin() {
+	protected function toMyTrainingsAdmin()
+	{
 		$this->ctrl->redirectByClass("gevMyTrainingsAdminGUI");
 	}
-	
-	protected function toEmployeeBookings() {
+
+	protected function toEmployeeBookings()
+	{
 		$this->ctrl->redirectByClass("gevEmployeeBookingsGUI");
 	}
 
-	protected function toSaveTrainingSettings() {
+	protected function toSaveTrainingSettings()
+	{
 		$crs_request_id = (isset($_POST["crs_request_id"])) ? $_POST["crs_request_id"] : null;
 		$crs_ref_id = (isset($_POST["crs_ref_id"])) ? $_POST["crs_ref_id"] : null;
 
@@ -302,16 +330,8 @@ class gevDesktopGUI {
 		$ret = $this->ctrl->forwardCommand($gui);
 	}
 
-	protected function toAddCrsBuildingBlock() {
-		$crs_request_id = (isset($_POST["crs_request_id"])) ? $_POST["crs_request_id"] : null;
-		$crs_ref_id = (isset($_POST["crs_ref_id"])) ? $_POST["crs_ref_id"] : null;
-		
-		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCourseCreatingBuildingBlock2GUI.php");
-		$gui = new gevDecentralTrainingCourseCreatingBuildingBlock2GUI($crs_ref_id, $crs_request_id);
-		$ret = $this->ctrl->forwardCommand($gui);
-	}
-
-	protected function toDeleteCrsBuildingBlock() {
+	protected function toAddCrsBuildingBlock()
+	{
 		$crs_request_id = (isset($_POST["crs_request_id"])) ? $_POST["crs_request_id"] : null;
 		$crs_ref_id = (isset($_POST["crs_ref_id"])) ? $_POST["crs_ref_id"] : null;
 
@@ -320,7 +340,8 @@ class gevDesktopGUI {
 		$ret = $this->ctrl->forwardCommand($gui);
 	}
 
-	protected function toUpdateBuildingBlock() {
+	protected function toDeleteCrsBuildingBlock()
+	{
 		$crs_request_id = (isset($_POST["crs_request_id"])) ? $_POST["crs_request_id"] : null;
 		$crs_ref_id = (isset($_POST["crs_ref_id"])) ? $_POST["crs_ref_id"] : null;
 
@@ -329,54 +350,75 @@ class gevDesktopGUI {
 		$ret = $this->ctrl->forwardCommand($gui);
 	}
 
-	protected function toCancleCreation() {
+	protected function toUpdateBuildingBlock()
+	{
+		$crs_request_id = (isset($_POST["crs_request_id"])) ? $_POST["crs_request_id"] : null;
+		$crs_ref_id = (isset($_POST["crs_ref_id"])) ? $_POST["crs_ref_id"] : null;
+
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCourseCreatingBuildingBlock2GUI.php");
-		$gui = new gevDecentralTrainingCourseCreatingBuildingBlock2GUI(null,null);
+		$gui = new gevDecentralTrainingCourseCreatingBuildingBlock2GUI($crs_ref_id, $crs_request_id);
 		$ret = $this->ctrl->forwardCommand($gui);
 	}
 
-	protected function toSaveRequest() {
+	protected function toCancleCreation()
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCourseCreatingBuildingBlock2GUI.php");
-		$gui = new gevDecentralTrainingCourseCreatingBuildingBlock2GUI(null,null);
+		$gui = new gevDecentralTrainingCourseCreatingBuildingBlock2GUI(null, null);
 		$ret = $this->ctrl->forwardCommand($gui);
 	}
 
-	protected function toChangeCourseData() {
+	protected function toSaveRequest()
+	{
+		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCourseCreatingBuildingBlock2GUI.php");
+		$gui = new gevDecentralTrainingCourseCreatingBuildingBlock2GUI(null, null);
+		$ret = $this->ctrl->forwardCommand($gui);
+	}
+
+	protected function toChangeCourseData()
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingGUI.php");
 		$gui = new gevDecentralTrainingGUI();
 		$ret = $this->ctrl->forwardCommand($gui);
 	}
 
-	protected function showOpenRequests() {
+	protected function showOpenRequests()
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCourseCreatingBuildingBlock2GUI.php");
-		$gui = new gevDecentralTrainingCourseCreatingBuildingBlock2GUI(null,null);
+		$gui = new gevDecentralTrainingCourseCreatingBuildingBlock2GUI(null, null);
 		$ret = $this->ctrl->forwardCommand($gui);
 	}
 
-	protected function toBooking() {
+	protected function toBooking()
+	{
 		if (!$_GET["crs_id"]) {
 			ilUtil::redirect("");
 		}
-		
+
 		global $ilUser;
-		
+
 		$crs_id = intval($_GET["crs_id"]);
 		$usr_id = $ilUser->getId();
-		
+
 		$this->ctrl->setParameterByClass("gevBookingGUI", "user_id", $usr_id);
 		$this->ctrl->setParameterByClass("gevBookingGUI", "crs_id", $crs_id);
 		$this->ctrl->redirectByClass("gevBookingGUI", "book");
 	}
 
-	protected function toWBDRegistration() {
+	protected function toWBDRegistration()
+	{
 		$this->ctrl->redirectByClass("gevWBDTPServiceRegistrationGUI");
 	}
 
-	protected function toMyAssessments() {
-		$this->plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
-							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
+	protected function toMyAssessments()
+	{
+		$this->plugin = ilPlugin::getPluginObject(
+			IL_COMP_SERVICE,
+			"Repository",
+			"robj",
+			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas")
+		);
 
-		if(!$this->plugin->active) {
+		if (!$this->plugin->active) {
 			throw new Exception("Plugin Talent Assessment is not active");
 		}
 
@@ -385,11 +427,16 @@ class gevDesktopGUI {
 		$ret = $this->ctrl->forwardCommand($gui);
 	}
 
-	protected function toAllAssessments() {
-		$this->plugin = ilPlugin::getPluginObject(IL_COMP_SERVICE, "Repository", "robj",
-							ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas"));
+	protected function toAllAssessments()
+	{
+		$this->plugin = ilPlugin::getPluginObject(
+			IL_COMP_SERVICE,
+			"Repository",
+			"robj",
+			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xtas")
+		);
 
-		if(!$this->plugin->active) {
+		if (!$this->plugin->active) {
 			throw new Exception("Plugin Talent Assessment is not active");
 		}
 
@@ -397,12 +444,18 @@ class gevDesktopGUI {
 		$gui = new \ilMyObservationsGUI($this, ilMyObservationsGUI::MODE_ALL);
 		$ret = $this->ctrl->forwardCommand($gui);
 	}
-	
-	protected function handleExplorerCommand() {
-		
+
+	protected function toMyVAPass()
+	{
+		$this->ctrl->redirectByClass("gevMyVAPassGUI");
 	}
-	
-	protected function checkProfileComplete($cmd, $next_class) {
+
+	protected function handleExplorerCommand()
+	{
+	}
+
+	protected function checkProfileComplete($cmd, $next_class)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		global $ilUser;
 		$utils = gevUserUtils::getInstanceByObj($ilUser);
@@ -411,13 +464,13 @@ class gevDesktopGUI {
 			$this->ctrl->redirect($this, "toMyProfile");
 		}
 	}
-	
-	protected function checkNeedsWBDRegistration($cmd, $next_class) {
+
+	protected function checkNeedsWBDRegistration($cmd, $next_class)
+	{
 		require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 		global $ilUser;
 		$wbd = gevWBD::getInstanceByObj($ilUser);
 		if ($wbd->hasWBDRelevantRole() && !$wbd->hasDoneWBDRegistration()) {
-
 			//two ways: GEV is TP or  TPBasic
 			if ($wbd->canBeRegisteredAsTPService()) {
 				if ($next_class != "gevwbdtpserviceregistrationgui") {
@@ -431,21 +484,22 @@ class gevDesktopGUI {
 		}
 	}
 
-	protected function createHAUnit() {
+	protected function createHAUnit()
+	{
 		require_once("Services/GEV/Utils/classes/class.gevHAUtils.php");
 		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 		$ha_utils = gevHAUtils::getInstance();
-		
+
 		global $ilUser;
-		
+
 		if ($ha_utils->hasHAUnit($ilUser->getId())) {
 			throw new Exception("User ".$ilUser->getId()." already has an HA-Unit.");
 		}
-		
+
 		$org_id = $ha_utils->createHAUnit($ilUser->getId());
-		
+
 		ilUtil::sendSuccess($this->lng->txt("gev_ha_org_unit_created"), true);
-		
+
 		$ref_id = gevObjectUtils::getRefId($org_id);
 		$this->ctrl->setParameterByClass("ilLocalUserGUI", "ref_id", $ref_id);
 		$this->ctrl->redirectByClass(array("ilAdministrationGUI","ilObjOrgUnitGUI","ilLocalUserGUI"), "index");
