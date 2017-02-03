@@ -5960,3 +5960,8 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-TA", array(
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", array('visible', 'read'));
 
 ?>
+
+<#246>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
