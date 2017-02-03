@@ -48,6 +48,11 @@ class catTableGUI extends ilTable2GUI
 		return $this;
 	}
 
+	public function useLngInTitle($use_it)
+	{
+		$this->_title->useLng($use_it);
+	}
+
 	public function getTitle()
 	{
 		return $this->_title->getTitle;
