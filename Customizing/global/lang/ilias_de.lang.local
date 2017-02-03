@@ -1728,3 +1728,13 @@ mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
 mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach finaler Bewertung vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
 mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
 mass#:#mass_edit_conditions#:#Vorbedingungen
+gev#:#gev_va_pass_success#:#teilgenommen
+gev#:#gev_va_pass_progress#:#in Bearbeitung
+gev#:#gev_va_pass_failed#:#nicht teilgenommen
+gev#:#gev_va_pass_not_attemped#:#noch nicht teilgenommen
+gev#:#gev_my_va_pass_title#:#Mein Ausbildungspass für Vertriebsassistenten (VA)
+gev#:#gev_my_va_pass_title_desc#:#Hier sehen Sie die Übersicht der Ausbildungsmodule und den jeweiligen Bearbeitungsstatus. Mit einem Klick auf das jeweilige Modul, gelangen Sie zu den Inhalten des jeweiligen Ausbildungsmoduls.
+gev#:#gev_va_pass_modul#:#Ausbildungsmodul
+gev#:#gev_va_pass_state#:#Status
+gev#:#gev_va_pass_finish_unitl#:#zu erledigen bis
+gev#:#gev_va_pass_finished#:#erledigt am
