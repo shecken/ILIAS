@@ -67,9 +67,9 @@ class gevMyVAPassTableGUI extends catTableGUI
 			$entry->setStatus($lp_status["status"]);
 			$entry->setFinished($lp_status["finished"]);
 
-			$finish_unitl = $this->getCourseStartNextSP($children, $current_child_key + 1, $assignment_id);
-			if ($finish_unitl) {
-				$entry->setFinishUntil($finish_unitl);
+			$finish_until = $this->getCourseStartNextSP($children, $current_child_key + 1, $assignment_id);
+			if ($finish_until) {
+				$entry->setFinishUntil($finish_until);
 			}
 
 			$entries[] = $entry;
@@ -102,9 +102,9 @@ class gevMyVAPassTableGUI extends catTableGUI
 		$this->tpl->setVariable("STATUS", $this->getStatusIcon($a_set->getStatus()));
 		$this->tpl->setVariable("FINISHED", $a_set->getFinished());
 
-		$finish_unitl = $a_set->getFinishUntil();
-		if ($finish_unitl) {
-			$this->tpl->setVariable("FINISH_UNTIL", $finish_unitl->get(IL_CAL_FKT_DATE, "d.m.Y"));
+		$finish_until = $a_set->getFinishUntil();
+		if ($finish_until) {
+			$this->tpl->setVariable("FINISH_UNTIL", $finish_until->get(IL_CAL_FKT_DATE, "d.m.Y"));
 		}
 
 		$this->g_ctrl->setParameter($this->parent_obj, "selectedRefId", null);
@@ -137,7 +137,7 @@ class gevMyVAPassTableGUI extends catTableGUI
 	{
 		$this->addColumn($this->g_lng->txt("gev_va_pass_modul"));
 		$this->addColumn($this->g_lng->txt("gev_va_pass_state"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_finish_unitl"));
+		$this->addColumn($this->g_lng->txt("gev_va_pass_finish_until"));
 		$this->addColumn($this->g_lng->txt("gev_va_pass_finished"));
 	}
 
@@ -189,26 +189,23 @@ class gevMyVAPassTableGUI extends catTableGUI
 		}
 	}
 
-	protected function getCourseStartNextSP($children, $next_child_key, $ass_id, $finish_unitl = null)
+	protected function getCourseStartNextSP($children, $next_child_key, $ass_id, $finish_until = null)
 	{
-		$counter = 0;
 		$next_children = array_slice($children, $next_child_key);
 
 		foreach ($next_children as $next_sp) {
 			if ($this->isRelevant($ass_id, $next_sp->getId(), $this->user_id)) {
 				if ($next_sp->hasChildren()) {
-					$finish_unitl =  $this->getCourseStartNextSP($next_sp->getChildren(), 0, $ass_id, $finish_unitl);
+					$finish_until =  $this->getCourseStartNextSP($next_sp->getChildren(), 0, $ass_id, $finish_until);
 				}
 
 				if ($next_sp->hasLPChildren()) {
-					$finish_unitl = $this->getMinimumStartDate($next_sp->getLPChildren(), $finish_unitl);
+					$finish_until = $this->getMinimumStartDate($next_sp->getLPChildren(), $finish_until);
 				}
 			}
-
-			$counter++;
 		}
 
-		return $finish_unitl;
+		return $finish_until;
 	}
 
 	protected function isRelevant($ass_id, $sp_id, $user_id)
@@ -217,23 +214,47 @@ class gevMyVAPassTableGUI extends catTableGUI
 		return $progress->isRelevant();
 	}
 
-	protected function getMinimumStartDate($lp_children, $finish_unitl)
+	protected function getMinimumStartDate($lp_children, $finish_until)
 	{
 		foreach ($lp_children as $key => $value) {
 			$is_member = ilParticipants::_isParticipant($value->getTargetRefId(), $this->user_id);
 			if ($is_member) {
-				$crs_utils = gevCourseUtils::getInstance($value->getTargetId());
-				$startdate = $crs_utils->getStartDate();
-				if ($finish_unitl === null) {
-					$finish_unitl = $startdate;
-				} else {
-					if ($finish_unitl->get(IL_CAL_UNIX) > $startdate->get(IL_CAL_UNIX)) {
-						$finish_unitl = $startdate;
+				$crs_id = $value->getTargetId();
+
+				if (!$this->targetIsSelflearning($crs_id)) {
+					$startdate = $this->getStatDateOfTarget($crs_id);
+
+					if ($finish_until === null) {
+						$finish_until = $startdate;
+					} else {
+						if ($this->currentFinishUntilIsLater($finish_until, $startdate)) {
+							$finish_until = $startdate;
+						}
 					}
 				}
 			}
 		}
 
-		return $finish_unitl;
+		return $finish_until;
+	}
+
+	protected function getCrsUtils($crs_id)
+	{
+		return gevCourseUtils::getInstance($crs_id);
+	}
+
+	protected function targetIsSelflearning($crs_id)
+	{
+		return $this->getCrsUtils($crs_id)->isSelflearning();
+	}
+
+	protected function getStatDateOfTarget($crs_id)
+	{
+		return $this->getCrsUtils($crs_id)->getStartDate();
+	}
+
+	protected function currentFinishUntilIsLater($finish_until, $startdate)
+	{
+		return $finish_until->get(IL_CAL_UNIX) > $startdate->get(IL_CAL_UNIX);
 	}
 }
