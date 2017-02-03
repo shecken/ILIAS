@@ -49,7 +49,7 @@ class gevMyVAPassGUI
 	protected function view()
 	{
 		require_once("Services/GEV/VAPass/classes/class.gevMyVAPassTableGUI.php");
-		$tbl = new gevMyVAPassTableGUI($this, $this->getNodeRefId(), $this->getUserId(), "view");
+		$tbl = new gevMyVAPassTableGUI($this, $this->getNodeRefId(), $this->getUserId(), $this->getAssignmentId(), "view");
 
 		$this->g_tpl->setContent($tbl->getHtml());
 	}
@@ -74,6 +74,17 @@ class gevMyVAPassGUI
 		}
 		global $ilUser;
 		return $ilUser->getId();
-		throw new Exception("No studyprogramme node id given");
+		throw new Exception("No user id given");
+	}
+
+	protected function getAssignmentId()
+	{
+		$get = $_GET;
+
+		if ($get["assignment_id"] && $get["assignment_id"] !== null && is_integer((int)$post["assignment_id"])) {
+			return (int)$_GET["assignment_id"];
+		}
+		return 128;
+		throw new Exception("No assignment id given");
 	}
 }
