@@ -1738,3 +1738,9 @@ gev#:#gev_va_pass_modul#:#Ausbildungsmodul
 gev#:#gev_va_pass_state#:#Status
 gev#:#gev_va_pass_finish_unitl#:#zu erledigen bis
 gev#:#gev_va_pass_finished#:#erledigt am
+gev#:#gev_va_pass_step#:#Ausbildungsschritt
+gev#:#gev_va_pass_accountable#:#Verantwortlich
+gev#:#gev_va_pass_date#:#Datum
+gev#:#gev_va_pass_result#:#Ergebnis
+gev#:#gev_va_pass_crs_type#:#Art des bestehens
+gev#:#gev_va_pass_status#:#Status
