@@ -531,6 +531,7 @@ gev#:#gev_excel_member_row_title#:#Mitgliederliste
 gev#:#gev_excel_member_title#:#Mitgliederliste
 gev#:#gev_exit_date#:#Austrittsdatum
 gev#:#gev_failed#:#nicht teilgenommen
+gev#:#gev_not_yet_started#:#noch nicht begonnen
 gev#:#gev_fee_bill_item#:#Teilnahmegebühr Training "%s"
 gev#:#gev_bill_covered_skip_coupons#:#Die Rechnung ist schon gedeckt. Keine weiteren Gutscheine nötig.
 gev#:#gev_cupon_has_no_value#:#Der Gutschein hat keinen Restwert.

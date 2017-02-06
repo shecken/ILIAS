@@ -1,6 +1,8 @@
 <?php
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseGUI.php';
+require_once "Customizing/global/plugins/Services/Repository/RepositoryObject/ReportOverviewVA/classes/class.ilObjReportOverviewVATableGUI.php";
+require_once("Services/CaTUIComponents/classes/class.catTableGUI.php");
 /**
 * User Interface class for example repository object.
 * ...
@@ -9,6 +11,10 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/cla
 * @ilCtrl_Calls ilObjReportOverviewVAGUI: ilCommonActionDispatcherGUI
 */
 class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI {
+	protected static $success_img;
+	protected static $in_progress_img;
+	protected static $failed_img;
+	protected static $not_yet_started_img;
 
 	public function getType() {
 		return 'xova';
@@ -17,6 +23,12 @@ class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI {
 	protected function prepareTitle($a_title) {
 		$a_title = parent::prepareTitle($a_title);
 		$a_title->image("GEV_img/ico-head-edubio.png");
+		$a_title->legend(catLegendGUI::create()
+					->item(self::$success_img, "gev_passed")
+					->item(self::$in_progress_img, "gev_in_progress")
+					->item(self::$failed_img, "gev_failed")
+					->item(self::$not_yet_started_img, "gev_not_yet_started")
+					);;
 		return $a_title;
 	}
 
@@ -35,12 +47,28 @@ class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI {
 	}
 
 	protected function render() {
+
 		$this->gTpl->setTitle(null);
 		$res = $this->title->render();
 		$res .= $this->renderFilter();
 		$res .= $this->renderTable();
 
 		return $res;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function renderReport() {
+		self::$success_img  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
+		self::$in_progress_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
+		self::$failed_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-red.png").'" />';
+		self::$not_yet_started_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
+		$this->object->prepareReport();
+		$this->title = $this->prepareTitle(catTitleGUI::create());
+		$this->spacer = $this->prepareSpacer(new catHSpacerGUI());
+		$this->table = $this->prepareTable(new ilObjReportOverviewVATableGUI($this, "showContent"));
+		$this->gTpl->setContent($this->render());
 	}
 
 	protected function renderFilter() {
