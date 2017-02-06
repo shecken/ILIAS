@@ -26,6 +26,11 @@ class gevMyVAPassGUI
 
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tpl = $tpl;
+
+		$this->success = '<img src="'.ilUtil::getImagePath("gev_va_pass_success_icon.png").'" />';
+		$this->in_progress = '<img src="'.ilUtil::getImagePath("gev_va_pass_progress_icon.png").'" />';
+		$this->faild = '<img src="'.ilUtil::getImagePath("gev_va_pass_failed_icon.png").'" />';
+		$this->not_attemped = '<img src="'.ilUtil::getImagePath("gev_va_pass_not_attemped_icon.png").'" />';
 	}
 
 	public function executeCommand()
@@ -48,18 +53,128 @@ class gevMyVAPassGUI
 
 	protected function view()
 	{
-		require_once("Services/GEV/VAPass/classes/class.gevMyVAPassTableGUI.php");
-		$tbl = new gevMyVAPassTableGUI($this, $this->getNodeRefId(), $this->getUserId(), $this->getAssignmentId(), "view");
+		$relevant_children = $this->getRelevantChildren();
+		$with_children = $this->getSPWithChildrenBelow($relevant_children);
+		$with_lp_children = $this->getSPWithLPChildren($relevant_children);
 
-		$this->g_tpl->setContent($tbl->getHtml());
+		$html = "";
+		if (count($with_children) > 0) {
+			require_once("Services/GEV/VAPass/classes/class.gevMyVAPassTableGUI.php");
+			$tbl_children = new gevMyVAPassTableGUI($this, $with_children, $this->getAssignmentId(), $this->getUserId(), "view");
+			$tbl_children->setTitle($this->getStudyProgramme()->getTitle());
+			$tbl_children->setSubtitle($this->getStudyProgramme()->getDescription());
+			$tbl_children->setLegend($this->createLegend());
+
+			$html = $tbl_children->getHtml();
+		}
+
+		if (count($with_lp_children) > 0) {
+			require_once("Services/GEV/VAPass/classes/class.gevMyVAPassCourseTableGUI.php");
+			$tbl_lp_children = new gevMyVAPassCourseTableGUI($this, $with_lp_children, $this->getAssignmentId(), $this->getUserId(), "view");
+
+			if ($html == "") {
+				$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle());
+				$tbl_lp_children->setSubtitle($this->getStudyProgramme()->getDescription());
+				$tbl_lp_children->setLegend($this->createLegend());
+				$html = $tbl_lp_children->getHtml();
+			} else {
+				$html .= "<br />".$tbl_lp_children->getHtml();
+			}
+		}
+
+		$this->g_tpl->setContent($html);
 	}
 
-	protected function getNodeRefId()
+	protected function getStudyProgramme()
+	{
+		$sp_ref_id = $this->getSPRefId();
+
+		if (!array_key_exists($sp_ref_id, $this->studyprogramme)) {
+			require_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
+			$this->studyprogramme[$sp_ref_id] = new ilObjStudyProgramme($sp_ref_id);
+		}
+
+		return $this->studyprogramme[$sp_ref_id];
+	}
+
+	protected function getRelevantChildren($children)
+	{
+		$sp = $this->getStudyProgramme();
+		$ret = array();
+
+		foreach ($sp->getChildren() as $child) {
+			if ($this->isRelevant($this->getAssignmentId(), $child->getId(), $this->getUserId())) {
+				$ret[] = $child;
+			}
+		}
+
+		return $ret;
+	}
+
+	protected function getSPWithChildrenBelow($children)
+	{
+		return array_filter($children, function ($child) {
+			if ($child->hasChildren()) {
+				return $child;
+			}
+		});
+	}
+
+	protected function getSPWithLPChildren($children)
+	{
+		return array_filter($children, function ($child) {
+			if ($child->hasLPChildren()) {
+				return $child;
+			}
+		});
+	}
+
+	/**
+	 * Creates the legend for title
+	 *
+	 * @return catLegendGUI
+	 */
+	public function createLegend()
+	{
+		$legend = new catLegendGUI();
+		$legend->addItem($this->success, "gev_va_pass_success")
+			   ->addItem($this->in_progress, "gev_va_pass_progress")
+			   ->addItem($this->faild, "gev_va_pass_failed")
+			   ->addItem($this->not_attemped, "gev_va_pass_not_attemped");
+
+		return $legend;
+	}
+
+	public function getStatusIcon($status)
+	{
+		switch ($status) {
+			case ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM:
+				return $this->not_attemped;
+			case ilLPStatus::LP_STATUS_IN_PROGRESS_NUM:
+				return $this->in_progress;
+			case ilLPStatus::LP_STATUS_COMPLETED_NUM:
+				return $this->success;
+			case ilLPStatus::LP_STATUS_FAILED_NUM:
+				return $this->faild;
+			default:
+				return "";
+		}
+	}
+
+	public function isRelevant($ass_id, $sp_id, $user_id)
+	{
+		require_once("Modules/StudyProgramme/classes/class.ilStudyProgrammeUserProgress.php");
+		$progress = ilStudyProgrammeUserProgress::getInstance($ass_id, $sp_id, $user_id);
+
+		return $progress->isRelevant();
+	}
+
+	protected function getSPRefId()
 	{
 		$get = $_GET;
 
-		if ($get["nodeRefId"] && $get["nodeRefId"] !== null && is_integer((int)$post["nodeRefId"])) {
-			return (int)$_GET["nodeRefId"];
+		if ($get["spRefId"] && $get["spRefId"] !== null && is_integer((int)$post["spRefId"])) {
+			return (int)$_GET["spRefId"];
 		}
 		return 2167;
 		throw new Exception("No studyprogramme node id given");
