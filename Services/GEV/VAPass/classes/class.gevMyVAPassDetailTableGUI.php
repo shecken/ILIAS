@@ -67,7 +67,7 @@ class gevMyVAPassCourseTableGUI extends catTableGUI
 		$this->setTopCommands(false);
 		$this->setEnableHeader(true);
 		$this->setFormAction($this->g_ctrl->getFormAction($this->parent_obj, "view"));
-		$this->setRowTemplate("tpl.gev_my_va_pass_courses_row.html", "Services/GEV/VAPass");
+		$this->setRowTemplate("tpl.gev_my_va_pass_detail_row.html", "Services/GEV/VAPass");
 		$this->useLngInTitle(false);
 	}
 
@@ -80,9 +80,9 @@ class gevMyVAPassCourseTableGUI extends catTableGUI
 	{
 		$this->addColumn($this->g_lng->txt("gev_va_pass_step"));
 		$this->addColumn($this->g_lng->txt("gev_va_pass_accountable"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_date"));
+		$this->addColumn($this->g_lng->txt("gev_va_pass_finished"));
 		$this->addColumn($this->g_lng->txt("gev_va_pass_result"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_crs_type"));
+		$this->addColumn($this->g_lng->txt("gev_va_pass_type_of_passed"));
 		$this->addColumn($this->g_lng->txt("gev_va_pass_status"));
 		$this->addColumn($this->g_lng->txt("actions"));
 	}
