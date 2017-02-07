@@ -115,7 +115,8 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 		//permissions
 		$manage_courses = $this->gAccess->checkAccess("write", "", $repository);
-		$search_courses = $manage_courses || ($this->user_utils && $this->user_utils->hasRoleIn(array("Admin-Ansicht", "Admin-Voll")));
+		$search_courses = ($manage_courses && !$this->user_utils->hasRoleIn(array("Admin-TA")))
+							|| ($this->user_utils && $this->user_utils->hasRoleIn(array("Admin-Ansicht", "Admin-Orga")));
 		$manage_users = $this->gAccess->checkAccess("visible", "", $user_mgmt);
 		$manage_org_units = $this->gAccess->checkAccess("visible", "", $org_mgmt);
 		$manage_mails = $this->gAccess->checkAccess("visible", "", $mail_mgmt);
@@ -351,7 +352,7 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 			$link = $this->gCtrl->getLinkTargetByClass(array("ilAdministrationGUI", "ilobjcomponentsettingsgui", $plugin_config_gui), "configure");
 
-			$ret["gev_org_mgmt"] = array($main_menue_permissions["manage_org_units"], $link, $this->auto_user_admin_plugin->txt("manage_executions"));
+			$ret["gev_aua_mgmt"] = array($main_menue_permissions["manage_auto_user_admin_plugin"], $link, $this->auto_user_admin_plugin->txt("manage_executions"));
 		}
 
 		$bb_pool = gevUserUtils::getBuildingBlockPoolsTitleUserHasPermissionsTo($this->gUser->getId(), array(gevSettings::USE_BUILDING_BLOCK, "visible"));

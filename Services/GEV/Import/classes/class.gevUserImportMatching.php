@@ -3,20 +3,21 @@
 /* Copyright (c) 1998-2014 ILIAS open source, Extended GPL, see docs/LICENSE */#
 
 /**
-* 
+*
 *
 * @author   Nils Haagen <nhaagen@concepts-and-training.de>
 * @version	$Id$
 */
 
 
-class gevUserImportMatching {
+class gevUserImportMatching
+{
 
 
 
-	static $GOA2ROLES = array(
+	public static $GOA2ROLES = array(
 		 'Administrator' 		//	Gesamt Admin
-		,'Admin-Voll' 			//	Admin exkl. Reiter Administration
+		,'Admin-Orga' 			//	Admin exkl. Reiter Administration
 		,'Admin-eingeschraenkt' //	Seminaranlage / Orgeinheiten
 		,'Admin-Ansicht'		//	Alles ansehen / kein Änderungsrecht
 		,'OD/BD'				//	Organisationsdirektor / Bereichsdirektor
@@ -55,10 +56,10 @@ class gevUserImportMatching {
 
 
 
-	static $ROLEMAPPINGS = array(
+	public static $ROLEMAPPINGS = array(
 
 		'Administrator' => 'Administrator'
-		,'User' => 'User' 
+		,'User' => 'User'
 		,'Guest' =>'Guest'
 		,'Anonymous' =>'Anonymous'
 
@@ -68,8 +69,8 @@ class gevUserImportMatching {
 			,'BD' => '#FROMKEY'
 			,'HGB 84/1'	=> '#FROMKEY'
 			,'HGB84er 1' => '#FROMKEY'
-			,'HGB 84/2'	=> '#FROMKEY' 
-			,'HGB84er 2' => '#FROMKEY' 
+			,'HGB 84/2'	=> '#FROMKEY'
+			,'HGB84er 2' => '#FROMKEY'
 			,'Org PV' => '#FROMKEY'
 			,'PV 1'	=> '#FROMKEY'
 			,'PV1'	=> '#FROMKEY'
@@ -99,13 +100,13 @@ class gevUserImportMatching {
 			,'Admin eingeschränkt' => 'Admin-eingeschraenkt'
 			,'EinMan' => '#DROP' //entfällt
 			,'Go Live' => '#DROP' //entfällt
-			,'VFS' => 'VFS' 
-			
+			,'VFS' => 'VFS'
+
 		//),
 		//'GEV' => array(
 
 			,'Administrator' => 'Administrator'
-			,'Administrator-Voll' => 'Admin-Voll'
+			,'Administrator-Orga' => 'Admin-Orga'
 			,'Administrator-Eingeschränkt' => 'Admin-eingeschraenkt'
 			,'Administrator-eingeschränkt' => 'Admin-eingeschraenkt'
 			,'OD/LD/BD/VD/VTWL' => '#FROMKEY'
@@ -117,7 +118,7 @@ class gevUserImportMatching {
 			,'HA' => '#FROMKEY'
 			,'BA' => '#FROMKEY'
 			,'NA' => '#FROMKEY'
-			
+
 			,'AD-ID' => 'AD ID'
 			,'Azubi' => 'Azubi'
 			,'VP' => 'VP'
@@ -138,9 +139,4 @@ class gevUserImportMatching {
 		//)
 
 	);
-
-
-
-
-
 }

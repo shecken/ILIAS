@@ -1207,6 +1207,11 @@ class gevUserUtils
 		return $this->hasRoleIn(gevSettings::$ADMIN_ROLES);
 	}
 
+	public function isAdminTA()
+	{
+		return $this->hasRoleIn(array("Admin-TA"));
+	}
+
 	public function isSystemAdmin()
 	{
 		return $this->hasRoleIn(gevSettings::$SYSTEM_ADMIN_ROLES);
@@ -2053,7 +2058,7 @@ class gevUserUtils
 	public function seeBiproAgent()
 	{
 		$roles = array("Administrator"
-					   ,"Admin-Voll"
+					   ,"Admin-Orga"
 					   ,"Admin-eingeschraenkt"
 					   ,"Admin-Ansicht"
 					   ,"OD/BD"
@@ -2088,7 +2093,7 @@ class gevUserUtils
 	public function seeBiproSuperior()
 	{
 		$roles = array("Administrator"
-					   ,"Admin-Voll"
+					   ,"Admin-Orga"
 					   ,"Admin-eingeschraenkt"
 					   ,"Admin-Ansicht"
 					   ,"OD/BD"

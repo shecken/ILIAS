@@ -17,7 +17,7 @@ require_once("Services/Administration/classes/class.ilSetting.php");
 class gevSettings
 {
 	protected static $instance = null;
-	protected static $amd_fields = null;
+	public static $amd_fields = null;
 
 	const MODULE_NAME = "gev";
 
@@ -411,7 +411,7 @@ class gevSettings
 	// Names of roles where users do not need to pay fees
 	public static $NO_PAYMENT_ROLES = array(
 		  "Administrator"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		, "Admin-eingeschraenkt"
 		, "Admin-Ansicht"
 		, "OD/BD"
@@ -438,12 +438,13 @@ class gevSettings
 		, "OD-Betreuer"
 		, "DBV UVG"
 		, "DBV EVG"
+		, "Agt-ID"
 		);
 
 	// Names of roles where users need to pay the
 	public static $NO_PREARRIVAL_PAYMENT_ROLES = array(
 		  "Administrator"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		, "Admin-eingeschraenkt"
 		, "Admin-Ansicht"
 		, "OD/BD"
@@ -476,13 +477,14 @@ class gevSettings
 		, "TP Service"
 		, "TP Basis"
 		, "VFS"
+		, "Agt-ID"
 		);
 
 	// Names of roles that count as admins
 	public static $ADMIN_ROLES = array(
 		  "Administrator"
 		, "Admin-eingeschraenkt"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		);
 
 	// Names of roles that count as system admins
@@ -633,7 +635,7 @@ class gevSettings
 	// Role to "Status" mapping
 	public static $IDHGBAAD_STATUS_MAPPING = array(
 		  "Administrator"			=> "ID"
-		, "Admin-Voll"				=> "ID"
+		, "Admin-Orga"				=> "ID"
 		, "Admin-eingeschraenkt"	=> "ID"
 		, "Admin-Ansicht"			=> "ID"
 		, "OD/BD"					=> "AAD"
