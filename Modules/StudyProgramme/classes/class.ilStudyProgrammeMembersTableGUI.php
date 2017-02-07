@@ -17,11 +17,13 @@ require_once("Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvance
  *
  */
 
-class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
+class ilStudyProgrammeMembersTableGUI extends ilTable2GUI
+{
 	protected $prg_obj_id;
 	protected $prg_ref_id;
 
-	public function __construct($a_prg_obj_id, $a_prg_ref_id, $a_parent_obj, $a_parent_cmd="", $a_template_context="") {
+	public function __construct($a_prg_obj_id, $a_prg_ref_id, $a_parent_obj, $a_parent_cmd = "", $a_template_context = "")
+	{
 		$this->setId("sp_member_list");
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
@@ -45,8 +47,12 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 
 		$this->setFormAction($ilCtrl->getFormAction($a_parent_obj, "view"));
 
+		$this->addColumn("", "", "1", true);
+		$this->setSelectAllCheckbox("prgs_ids[]");
+		$this->setEnableAllCommand(true);
+		$this->addMultiCommands();
 
-		if($this->prg_has_lp_children) {
+		if ($this->prg_has_lp_children) {
 			$columns = $this->getColumnsLPChildren();
 		} else {
 			$columns = $this->getColumnsChildren();
@@ -72,7 +78,12 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 		$this->setData($members_list);
 	}
 
-	protected function fillRow($a_set) {
+	protected function fillRow($a_set)
+	{
+		$this->tpl->setCurrentBlock("checkb");
+		$this->tpl->setVariable("ID", $a_set["prgrs_id"]);
+		$this->tpl->parseCurrentBlock();
+
 		$this->tpl->setVariable("FIRSTNAME", $a_set["firstname"]);
 		$this->tpl->setVariable("LASTNAME", $a_set["lastname"]);
 		$this->tpl->setVariable("LOGIN", $a_set["login"]);
@@ -80,22 +91,20 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 		$this->tpl->setVariable("COMPLETION_BY", $a_set["completion_by"]);
 		$this->tpl->setVariable("POINTS_REQUIRED", $a_set["points"]);
 
-		if(!$this->prg_has_lp_children) {
+		if (!$this->prg_has_lp_children) {
 			$this->tpl->setCurrentBlock("points_current");
 			$this->tpl->setVariable("POINTS_CURRENT", $a_set["points_current"]);
 			$this->tpl->parseCurrentBlock();
 		}
 
-		$this->tpl->setVariable("CUSTOM_PLAN", $a_set["last_change_by"] 
+		$this->tpl->setVariable("CUSTOM_PLAN", $a_set["last_change_by"]
 												? $this->lng->txt("yes")
 												: $this->lng->txt("no"));
 		$this->tpl->setVariable("BELONGS_TO", $a_set["belongs_to"]);
-		$this->tpl->setVariable("ACTIONS", $this->buildActionDropDown( $a_set["actions"]
-																	 , $a_set["prgrs_id"]
-																	 , $a_set["assignment_id"]));
+		$this->tpl->setVariable("ACTIONS", $this->buildActionDropDown($a_set["actions"], $a_set["prgrs_id"], $a_set["assignment_id"]));
 
 		foreach ($this->getSelectedColumns() as $column) {
-			switch($column) {
+			switch ($column) {
 				case "prg_assign_date":
 					$this->tpl->setCurrentBlock("assign_date");
 					$this->tpl->setVariable("ASSIGN_DATE", $a_set["prg_assign_date"]);
@@ -110,21 +119,24 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 		}
 	}
 
-	protected function buildActionDropDown($a_actions, $a_prgrs_id, $a_ass_id) {
+	protected function buildActionDropDown($a_actions, $a_prgrs_id, $a_ass_id)
+	{
 		$current_selection_list = new ilAdvancedSelectionListGUI();
 		$current_selection_list->setId($a_prgrs_id);
-		foreach($a_actions as $action) {
+		foreach ($a_actions as $action) {
 			$target = $this->getLinkTargetForAction($action, $a_prgrs_id, $a_ass_id);
 			$current_selection_list->addItem($this->lng->txt("prg_$action"), $action, $target);
 		}
 		return $current_selection_list->getHTML();
 	}
 
-	protected function getLinkTargetForAction($a_action, $a_prgrs_id, $a_ass_id) {
+	protected function getLinkTargetForAction($a_action, $a_prgrs_id, $a_ass_id)
+	{
 		return $this->getParentObject()->getLinkTargetForAction($a_action, $a_prgrs_id, $a_ass_id);
 	}
 
-	protected function fetchData($a_prg_id, $limit = null, $offset = null, $order_coloumn = null, $order_direction = null) {
+	protected function fetchData($a_prg_id, $limit = null, $offset = null, $order_coloumn = null, $order_direction = null)
+	{
 		// TODO: Reimplement this in terms of ActiveRecord when innerjoin
 		// supports the required rename functionality
 		$query = "SELECT prgrs.id prgrs_id"
@@ -156,33 +168,36 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 				   ."     , CONCAT(pcp.firstname, pcp.lastname) name"
 				   ."     , (prgrs.last_change_by IS NOT NULL) custom_plan"
 				   ;
-		
+
 		$query .= $this->getFrom();
 		$query .= $this->getWhere($a_prg_id);
 
-		if($order_coloumn !== null) {
+		if ($order_coloumn !== null) {
 			$query .= " ORDER BY $order_coloumn";
 
-			if($order_direction !== null) {
+			if ($order_direction !== null) {
 				$query .= " $order_direction";
 			}
 		}
 
 
-		if($limit !== null) {
+		if ($limit !== null) {
 			$this->db->setLimit($limit, $offset !== null ? $offset : 0);
 		}
 		$res = $this->db->query($query);
 
 		$members_list = array();
-		while($rec = $this->db->fetchAssoc($res)) {
+		while ($rec = $this->db->fetchAssoc($res)) {
 			$rec["actions"] = ilStudyProgrammeUserProgress::getPossibleActions(
-										$a_prg_id, $rec["root_prg_id"], $rec["status"]);
+				$a_prg_id,
+				$rec["root_prg_id"],
+				$rec["status"]
+			);
 			$rec['points_current'] = number_format($rec['points_current']);
 			if ($rec["status"] == ilStudyProgrammeProgress::STATUS_COMPLETED) {
 				//If the status completet is set by crs reference
 				//use crs title
-				if($rec["completion_by_type"] == "crsr") {
+				if ($rec["completion_by_type"] == "crsr") {
 					$rec["completion_by"] = ilContainerReference::_lookupTitle($rec["completion_by_id"]);
 				}
 
@@ -191,12 +206,10 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 				// the program tree.
 				if (!$rec["completion_by"]) {
 					require_once("Modules/StudyProgramme/classes/class.ilStudyProgrammeUserProgress.php");
-					$prgrs = ilStudyProgrammeUserProgress::getInstanceForAssignment( $this->prg_obj_id
-																					  , $rec["assignment_id"]);
+					$prgrs = ilStudyProgrammeUserProgress::getInstanceForAssignment($this->prg_obj_id, $rec["assignment_id"]);
 					$rec["completion_by"] = implode(", ", $prgrs->getNamesOfCompletedOrAccreditedChildren());
 				}
-			}
-			else if($rec["status"] == ilStudyProgrammeProgress::STATUS_ACCREDITED) {
+			} elseif ($rec["status"] == ilStudyProgrammeProgress::STATUS_ACCREDITED) {
 				$rec["completion_by"] = $rec["accredited_by"];
 			}
 
@@ -205,7 +218,8 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 		return $members_list;
 	}
 
-	protected function countFetchData($a_prg_id) {
+	protected function countFetchData($a_prg_id)
+	{
 		// TODO: Reimplement this in terms of ActiveRecord when innerjoin
 		// supports the required rename functionality
 		$query = "SELECT count(prgrs.id) as cnt";
@@ -218,7 +232,8 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 		return $rec["cnt"];
 	}
 
-	protected function getFrom() {
+	protected function getFrom()
+	{
 		return "  FROM ".ilStudyProgrammeProgress::returnDbTableName()." prgrs"
 				."  JOIN usr_data pcp ON pcp.usr_id = prgrs.usr_id"
 				."  JOIN ".ilStudyProgrammeAssignment::returnDbTableName()." ass"
@@ -229,7 +244,8 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 				."  LEFT JOIN object_data cmpl_obj ON cmpl_obj.obj_id = prgrs.completion_by";
 	}
 
-	protected function getWhere($a_prg_id) {
+	protected function getWhere($a_prg_id)
+	{
 		return " WHERE prgrs.prg_id = ".$this->db->quote($a_prg_id, "integer");
 	}
 
@@ -238,7 +254,8 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 	 *
 	 * @return array[] 	$cols
 	 */
-	function getSelectableColumns() {
+	public function getSelectableColumns()
+	{
 		// default fields
 		$cols = array();
 
@@ -251,7 +268,8 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 		return $cols;
 	}
 
-	protected function getColumnsChildren() {
+	protected function getColumnsChildren()
+	{
 		return array( "name" 				=> array("name")
 						, "login" 				=> array("login")
 						, "prg_status" 			=> array("status")
@@ -263,7 +281,8 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 						);
 	}
 
-	protected function getColumnsLPChildren() {
+	protected function getColumnsLPChildren()
+	{
 		return array( "name" 				=> array("name")
 						, "login" 				=> array("login")
 						, "prg_status" 			=> array("status")
@@ -273,6 +292,23 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI {
 						, "prg_belongs_to"		=> array("belongs_to")
 						);
 	}
-}
 
-?>
+	protected function addMultiCommands()
+	{
+		foreach ($this->getMultiCommands() as $cmd => $caption) {
+			$this->addMultiCommand($cmd, $caption);
+		}
+	}
+
+	protected function getMultiCommands()
+	{
+		return array(
+				'markAccreditedMulti' => $this->lng->txt('prg_multi_mark_accredited'),
+				'unmarkAccreditedMulti' => $this->lng->txt('prg_multi_unmark_accredited'),
+				'removeUserMulti' => $this->lng->txt('prg_multi_remove_user'),
+				'markRelevantMulti' => $this->lng->txt('prg_multi_mark_relevant'),
+				'markNotRelevantMulti' => $this->lng->txt('prg_multi_unmark_relevant'),
+				'updateFromCurrentPlanMulti' => $this->lng->txt('prg_multi_update_from_current_plan')
+				);
+	}
+}
