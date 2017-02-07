@@ -1729,3 +1729,16 @@ mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach finaler Bewertung vom Tei
 mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
 mass#:#mass_edit_conditions#:#Vorbedingungen
 gev#:#gev_my_va_plan#:#VA-Ausbildungsplan
+prg#:#prg_multi_mark_accredited#:#Akkredieren
+prg#:#prg_multi_unmark_accredited#:#Akkreditierung entfernen
+prg#:#prg_multi_remove_user#:#Benutzer entfernen
+prg#:#prg_multi_mark_relevant#:#Als relevant markieren
+prg#:#prg_multi_unmark_relevant#:#Als irrelevant markieren
+prg#:#prg_multi_update_from_current_plan#:#Aus dem aktuellen Plan aktualisieren.
+prg#:#prg_remove_users_success#:#Die Benutzer wurden entfernt.
+prg#:#prg_remove_users_not_possible#:#Die Benutzer konnten nicht entfernt werden, da sie nicht an diesem Studienprogramm hinzugefügt wurden.
+prg#:#prg_remove_users_partitial_success#:#Die Benutzer wurden teilweise entfernt. Einige konnten nicht entfernt werden, da sie nicht an diesem Studienprogramm hinzugefügt wurden.
+prg#:#prg_mark_accredited_multi_success#:#Das Programm wurde für die Benutzer erfolgreich akkreditiert.
+prg#:#prg_mark_relevant_multi_success#:#Das Programm wurde für die Benutzer als relevant markiert.
+prg#:#prg_mark_not_relevant_multi_success#:#Das Programm wurde für die Benutzer als nicht relevant markiert.
+

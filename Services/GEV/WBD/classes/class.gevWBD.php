@@ -129,7 +129,7 @@ class gevWBD {
 		//6 - Sonstiges
 		self::WBD_AGENTSTATUS6 => array(
 			'Administrator'
-			,'Admin-Voll'
+			,'Admin-Orga'
 			,'Admin-eingeschraenkt'
 			,'Admin-Ansicht'
 			,'ID FK'
