@@ -14,10 +14,12 @@ require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
  * @version $Id$
  */
 
-class gevOrguSuperiorMailData extends ilMailData {
+class gevOrguSuperiorMailData extends ilMailData
+{
 	protected $cache;
-	
-	public function __construct($a_recipient,$a_rec_name,$a_gender) {
+
+	public function __construct($a_recipient, $a_rec_name, $a_gender)
+	{
 		$this->usr_utils = gevUserUtils::getInstance($a_recipient);
 		$this->start_timestamp = null;
 		$this->end_timestamp = null;
@@ -26,17 +28,20 @@ class gevOrguSuperiorMailData extends ilMailData {
 		$this->lastname = $a_rec_name["lastname"];
 		$this->gender = $a_gender;
 	}
-	
-	function getRecipientMailAddress() {
+
+	public function getRecipientMailAddress()
+	{
 		return null;
 	}
-	function getRecipientFullName() {
+	public function getRecipientFullName()
+	{
 		return null;
 	}
 
-	function getStartTimestamp() {
-		if($this->start_timestamp === null) {
-			if($this->end_date_str == "") {
+	public function getStartTimestamp()
+	{
+		if ($this->start_timestamp === null) {
+			if ($this->end_date_str == "") {
 				$this->createEndTimestamp();
 			}
 
@@ -48,56 +53,62 @@ class gevOrguSuperiorMailData extends ilMailData {
 		return $this->start_timestamp;
 	}
 
-	function getEndTimestamp() {
-		if($this->end_timestamp === null) {
+	public function getEndTimestamp()
+	{
+		if ($this->end_timestamp === null) {
 			$this->createEndTimestamp();
 		}
 
 		return $this->end_timestamp;
 	}
 
-	function createEndTimestamp() {
+	public function createEndTimestamp()
+	{
 		$timestamp_today = time();
 		$this->end_date_str = date("Y-m-d", $timestamp_today);
 		$end_date = new DateTime($this->end_date_str." 23:59:59");
 
-		if(date("l",$timestamp_today) == "Monday") {
+		if (date("l", $timestamp_today) == "Monday") {
 			$end_date->sub(date_interval_create_from_date_string('1 Day'));
 			$this->end_date_str = $end_date->format("Y-m-d");
 		}
 
 		$this->end_timestamp = $end_date->getTimestamp();
 	}
-	
-	function hasCarbonCopyRecipients() {
+
+	public function hasCarbonCopyRecipients()
+	{
 		return false;
 	}
-	
-	function getCarbonCopyRecipients() {
+
+	public function getCarbonCopyRecipients()
+	{
 		return array();
 	}
-	
-	function hasBlindCarbonCopyRecipients() {
+
+	public function hasBlindCarbonCopyRecipients()
+	{
 		return false;
 	}
-	
-	function getBlindCarbonCopyRecipients() {
+
+	public function getBlindCarbonCopyRecipients()
+	{
 		return array();
 	}
-	
-	function getPlaceholderLocalized($a_placeholder_code, $a_lng, $a_markup = false) {
+
+	public function getPlaceholderLocalized($a_placeholder_code, $a_lng, $a_markup = false)
+	{
 		if (array_key_exists($a_placeholder_code, $this->cache)) {
 			return $this->cache[$a_placeholder_code];
 		}
-		
+
 		$val = null;
-		
+
 		switch ($a_placeholder_code) {
 			case "SALUTATION":
 				if ($this->gender == "m") {
 					$val = "Sehr geehrter Herr";
-				}
-				else {
+				} else {
 					$val = "Sehr geehrte Frau";
 				}
 				break;
@@ -114,44 +125,49 @@ class gevOrguSuperiorMailData extends ilMailData {
 				$val = $this->getReportDataString();
 				break;
 		}
-		
+
 		if ($val === null) {
 			$val = $a_placeholder_code;
 		}
-		
+
 		$this->cache[$a_placeholder_code] = $val;
-		
-		if(!$a_markup) {
+
+		if (!$a_markup) {
 			$val = strip_tags($val);
 		}
-		
+
 		return $val;
 	}
 
-	function hasAttachments() {
+	public function hasAttachments()
+	{
 		return false;
 	}
-	function getAttachments($a_lng) {
+	public function getAttachments($a_lng)
+	{
 		return array();
 	}
-	
-	function getRecipientUserId() {
+
+	public function getRecipientUserId()
+	{
 		return null;
 	}
-	
-	function deliversStandardPlaceholders() {
+
+	public function deliversStandardPlaceholders()
+	{
 		return true;
 	}
 
-	function getReportDataString() {
+	public function getReportDataString()
+	{
 		require_once("Services/Calendar/classes/class.ilDate.php");
 		require_once("Services/Calendar/classes/class.ilDatePresentation.php");
 		require_once("Services/UICore/classes/class.ilTemplateHTMLITX.php");
 		require_once("Services/PEAR/lib/HTML/Template/ITX.php");
 		require_once("Services/PEAR/lib/HTML/Template/IT.php");
-		
+
 		$user_data = $this->getReportData();
-		
+
 		$show_sections = array
 			( "gebucht" => "Buchungen"
 			, "kostenfrei_storniert" => "Kostenfreie Stornierungen"
@@ -165,12 +181,11 @@ class gevOrguSuperiorMailData extends ilMailData {
 		$has_entries = false;
 
 		foreach ($show_sections as $key => $title) {
-			
 			$section_data = $user_data[$key];
 			if (count($section_data) <= 0) {
 				continue;
 			}
-			
+
 			$tpl = $this->getTemplate();
 			$tpl->setCurrentBlock("header");
 			$tpl->setVariable("TITLE", $title);
@@ -185,26 +200,23 @@ class gevOrguSuperiorMailData extends ilMailData {
 				$tpl->setVariable("USR_LASTNAME", $entry_data["lastname"]);
 				$tpl->setVariable("CRS_TITLE", $entry_data["title"]);
 				$tpl->setVariable("CRS_TYPE", $this->mergeEduProgramAndType($entry_data["edu_program"], $entry_data["type"]));
-				
+
 				if ($begin_date != "0000-00-00") {
 					$begin_date = new ilDate($entry_data["begin_date"], IL_CAL_DATE);
-				}
-				else {
+				} else {
 					$begin_date = null;
 				}
 
 				if ($end_date != "0000-00-00") {
 					$end_date = new ilDate($entry_data["end_date"], IL_CAL_DATE);
-				}
-				else {
+				} else {
 					if ($begin_date !== null) {
 						$end_date = $begin_date;
-					}
-					else {
+					} else {
 						$end_date = null;
 					}
 				}
-				
+
 				if ($end_date !== null && $begin_date !== null && $entry_data["type"] !== "Selbstlernkurs") {
 					$date = ilDatePresentation::formatPeriod($begin_date, $end_date);
 					$tpl->setVariable("CRS_DATE", ", $date");
@@ -224,7 +236,7 @@ class gevOrguSuperiorMailData extends ilMailData {
 				$ret .= $tpl->get();
 			}
 		}
-		
+
 		if (!$has_entries) {
 			throw new Exception("There is no content in the weekly report for the superior.");
 		}
@@ -234,12 +246,13 @@ class gevOrguSuperiorMailData extends ilMailData {
 
 	// This implements the requirement to output the type of the program and
 	// the edu program together (#1689), e.g. "Präsenztraining" from "zentrales
-	// Training" should be displayed as "zentrales Präsenztraining" 
-	function mergeEduProgramAndType($a_edu_program, $a_type) {
+	// Training" should be displayed as "zentrales Präsenztraining"
+	public function mergeEduProgramAndType($a_edu_program, $a_type)
+	{
 		if (!in_array($a_type, array("Webinar", "Präsenztraining"))) {
 			return $a_type;
 		}
-		
+
 		switch ($a_edu_program) {
 			case "zentrales Training":
 				return "zentrales $a_type";
@@ -254,13 +267,14 @@ class gevOrguSuperiorMailData extends ilMailData {
 		}
 	}
 
-	function getReportData() {
+	public function getReportData()
+	{
 		return $this->usr_utils->getUserDataForSuperiorWeeklyReport($this->getStartTimestamp(), $this->getEndTimestamp());
 	}
-	
-	function getTemplate() {
+
+	public function getTemplate()
+	{
 		require_once("Services/UICore/classes/class.ilTemplate.php");
 		return new ilTemplate("tpl.superior_mail.html", true, true, "Services/GEV/Mailing");
 	}
 }
-?>

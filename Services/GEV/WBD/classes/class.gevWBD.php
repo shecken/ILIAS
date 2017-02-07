@@ -13,7 +13,8 @@ require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
 
-class gevWBD {
+class gevWBD
+{
 	protected $udf_utils;
 	protected $instance = array();
 
@@ -23,13 +24,13 @@ class gevWBD {
 	const WBD_EDU_PROVIDER		= "1 - Bildungsdienstleister";
 	const WBD_TP_BASIS			= "2 - TP-Basis";
 	const WBD_TP_SERVICE		= "3 - TP-Service";
-	
+
 	const WBD_OKZ_FROM_POSITION	= "0 - aus Rolle";
 	const WBD_OKZ1				= "1 - OKZ1";
 	const WBD_OKZ2				= "2 - OKZ2";
 	const WBD_OKZ3				= "3 - OKZ3";
 	const WBD_NO_OKZ			= "4 - keine Zuordnung";
-	
+
 	const WBD_AGENTSTATUS0	= "0 - aus Rolle";
 	const WBD_AGENTSTATUS1	= "1 - Angestellter Außendienst";
 	const WBD_AGENTSTATUS2	= "2 - Ausschließlichkeitsvermittler";
@@ -39,9 +40,9 @@ class gevWBD {
 	const WBD_AGENTSTATUS6	= "6 - Sonstiges";
 	const WBD_AGENTSTATUS7	= "7 - keine Zuordnung";
 
-	const WBD_ERROR_WRONG_USERDATA 		= 'WRONG_USERDATA'; 
-	const WBD_ERROR_USER_SERVICETYPE 	= 'USER_SERVICETYPE'; 
-	const WBD_ERROR_USER_DIFFERENT_TP 	= 'USER_DIFFERENT_TP'; 
+	const WBD_ERROR_WRONG_USERDATA 		= 'WRONG_USERDATA';
+	const WBD_ERROR_USER_SERVICETYPE 	= 'USER_SERVICETYPE';
+	const WBD_ERROR_USER_DIFFERENT_TP 	= 'USER_DIFFERENT_TP';
 	const WBD_ERROR_USER_UNKNOWN 		= 'USER_UNKNOWN';
 	const WBD_ERROR_USER_DEACTIVATED 	= 'USER_DEACTIVATED';
 	const WBD_ERROR_NO_RELEASE			= 'NO_RELEASE';
@@ -77,9 +78,9 @@ class gevWBD {
 	const WBD_IMPORT_CREATOR_ID = -666;
 
 	//Statics
-	static protected $instances = array(); 
+	static protected $instances = array();
 
-	static $wbd_agent_status_mapping = array(
+	public static $wbd_agent_status_mapping = array(
 		//1 - Angestellter Außendienst
 		self::WBD_AGENTSTATUS1 => array(
 			/* GOA V1:
@@ -115,7 +116,7 @@ class gevWBD {
 			,"HA 84"
 			,"BA 84"
 			,"NA"
-			,"AVL" 
+			,"AVL"
 		),
 		//3 - Makler
 		self::WBD_AGENTSTATUS3 => array(
@@ -129,7 +130,7 @@ class gevWBD {
 		//6 - Sonstiges
 		self::WBD_AGENTSTATUS6 => array(
 			'Administrator'
-			,'Admin-Voll'
+			,'Admin-Orga'
 			,'Admin-eingeschraenkt'
 			,'Admin-Ansicht'
 			,'ID FK'
@@ -151,7 +152,7 @@ class gevWBD {
 
 	);
 
-	static $wbd_tp_service_roles = array(
+	public static $wbd_tp_service_roles = array(
 		"UA"
 		,"HA 84"
 		,"BA 84"
@@ -162,8 +163,8 @@ class gevWBD {
 		,"DBV EVG"
 		,"TP Service"
 	);
-	
-	static $wbd_relevant_roles = array(
+
+	public static $wbd_relevant_roles = array(
 		"UA"
 		,"HA 84"
 		,"BA 84"
@@ -178,7 +179,8 @@ class gevWBD {
 	);
 
 
-	protected function __construct($a_user_id) {
+	protected function __construct($a_user_id)
+	{
 		global $ilDB, $ilLog, $ilAppEventHandler;
 
 		$this->gDB = $ilDB;
@@ -189,13 +191,14 @@ class gevWBD {
 		$this->udf_utils = gevUDFUtils::getInstance();
 	}
 
-	static public function getInstance($a_user_id) {
-		if($a_user_id === null) {
+	public static function getInstance($a_user_id)
+	{
+		if ($a_user_id === null) {
 			throw new Exception("gevWBD::getInstance: ".
 								"No User-ID given.");
 		}
 
-		if(!self::userIdExists($a_user_id)) {
+		if (!self::userIdExists($a_user_id)) {
 			throw new Exception("gevWBD::getInstance: ".
 									"User with ID '".$a_user_id."' does not exist.");
 		}
@@ -208,35 +211,38 @@ class gevWBD {
 		return self::$instances[$a_user_id];
 	}
 
-	static public function userIdExists($a_user_id) {
+	public static function userIdExists($a_user_id)
+	{
 		global $ilDB;
 
 		$sql = "SELECT usr_id FROM usr_data WHERE usr_id = ".$ilDB->quote($a_user_id, "integer");
 		$res = $ilDB->query($sql);
 
-		if($ilDB->numRows($res) == 0) {
+		if ($ilDB->numRows($res) == 0) {
 			return false;
 		}
 
 		return true;
 	}
 
-	static public function getInstanceByObj(ilObjUser $a_user_obj) {
+	public static function getInstanceByObj(ilObjUser $a_user_obj)
+	{
 		$inst = self::getInstance($a_user_obj->getId());
 		$inst->user_obj = $a_user_obj;
 		return $inst;
 	}
-	
-	static public function getInstanceByObjOrId($a_user) {
+
+	public static function getInstanceByObjOrId($a_user)
+	{
 		if (is_int($a_user) || is_numeric($a_user)) {
 			return self::getInstance((int)$a_user);
-		}
-		else {
+		} else {
 			return self::getInstanceByObj($a_user);
 		}
 	}
 
-	public function forceWBDUserProfileFields() {
+	public function forceWBDUserProfileFields()
+	{
 		return $this->hasWBDRelevantRole()
 			&& $this->hasDoneWBDRegistration()
 			&& (  ($this->getNextWBDAction() == self::USR_WBD_NEXT_ACTION_NEW_TP_SERVICE
@@ -248,11 +254,13 @@ class gevWBD {
 				);
 	}
 
-	public function getWBDTPType() {
+	public function getWBDTPType()
+	{
 		return $this->udf_utils->getField($this->user_id, self::USR_TP_TYPE);
 	}
-	
-	public function setWBDTPType($a_type) {
+
+	public function setWBDTPType($a_type)
+	{
 		if (!in_array($a_type, array( self::WBD_NO_SERVICE, self::WBD_EDU_PROVIDER
 									, self::WBD_TP_BASIS, self::WBD_TP_SERVICE))
 			) {
@@ -262,107 +270,119 @@ class gevWBD {
 		$this->udf_utils->setField($this->user_id, self::USR_TP_TYPE, $a_type);
 	}
 
-	public function getNextWBDAction() {
+	public function getNextWBDAction()
+	{
 		return $this->udf_utils->getField($this->user_id, self::USR_WBD_NEXT_ACTION);
 	}
 
-	public function setNextWBDAction($action) {
+	public function setNextWBDAction($action)
+	{
 		$this->udf_utils->setField($this->user_id, self::USR_WBD_NEXT_ACTION, $action);
 	}
-	
-	public function getWBDBWVId() {
+
+	public function getWBDBWVId()
+	{
 		return $this->udf_utils->getField($this->user_id, self::USR_BWV_ID);
 	}
-	
-	public function setWBDBWVId($a_id) {
+
+	public function setWBDBWVId($a_id)
+	{
 		$this->udf_utils->setField($this->user_id, self::USR_BWV_ID, $a_id);
 	}
-	
-	public function setTPServiceOld($tp_service_old) {
+
+	public function setTPServiceOld($tp_service_old)
+	{
 		$this->udf_utils->setField($this->user_id, self::USR_WBD_TP_SERVICE_OLD, $tp_service_old);
 	}
 
-	public function getTPServiceOld() {
+	public function getTPServiceOld()
+	{
 		return $this->udf_utils->getField($this->user_id, self::USR_WBD_TP_SERVICE_OLD);
 	}
 
-	public function getReportPointsFrom() {
+	public function getReportPointsFrom()
+	{
 		return $this->udf_utils->getField($this->user_id, self::USR_WBD_REPORT_POINTS_FROM);
 	}
 
-	protected function getRawWBDOKZ() {
+	protected function getRawWBDOKZ()
+	{
 		return $this->udf_utils->getField($this->user_id, self::USR_WBD_OKZ);
 	}
-	
-	public function setRawWBDOKZ($a_okz) {
+
+	public function setRawWBDOKZ($a_okz)
+	{
 		if (!in_array($a_okz, array( self::WBD_OKZ_FROM_POSITION, self::WBD_NO_OKZ
 								   , self::WBD_OKZ1, self::WBD_OKZ2, self::WBD_OKZ3))
 		   ) {
 			throw new Exception("gevWBD::setRawWBDOKZ: ".$a_okz." is no valid okz.");
 		}
-		
+
 		return $this->udf_utils->getField($this->user_id, self::USR_WBD_OKZ, $a_okz);
 	}
-	
-	public function getWBDOKZ() {
+
+	public function getWBDOKZ()
+	{
 		$okz = $this->getRawWBDOKZ();
-		
+
 		if ($okz == WBD_NO_OKZ) {
 			return null;
 		}
-		
+
 		if (in_array($okz, array(self::WBD_OKZ1, self::WBD_OKZ2, self::WBD_OKZ3))) {
 			$spl = explode("-", $okz);
 			return trim($spl[1]);
 		}
-		
-		
+
+
 		// Everyone who has a wbd relevant role also has okz1
 		if ($this->hasWBDRelevantRole()) {
 			return "OKZ1";
 		}
-		
+
 		return;
 	}
 
-	public function getRawWBDAgentStatus() {
+	public function getRawWBDAgentStatus()
+	{
 		return $this->udf_utils->getField($this->user_id, self::USR_WBD_STATUS);
 	}
 
-	public function getWBDAgentStatus() {
+	public function getWBDAgentStatus()
+	{
 		$agent_status_user =  $this->getRawWBDAgentStatus();
 
-		if(  $agent_status_user == self::WBD_AGENTSTATUS0
+		if ($agent_status_user == self::WBD_AGENTSTATUS0
 		  // When user gets created and nobody clicked "save" on his profile, the
 		  // udf-field will not contain a value, thus getRawWBDAgentStatus returned null.
 		  // The default for the agent status is to determine it based on the role of
 		  // a user.
-		  || $agent_status_user === null)
-		{
+		  || $agent_status_user === null) {
 			//0 - aus Stellung	//0 - aus Rolle
 			require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
 			$roles = $this->user_utils->getGlobalRoles();
-			foreach($roles as $key => $value) {
+			foreach ($roles as $key => $value) {
 				$roles[$key] = ilObject::_lookupTitle($value);
 			}
-		
+
 			foreach (self::$wbd_agent_status_mapping as $agent_status => $relevant_roles) {
 				foreach ($roles as $role) {
-					if(in_array($role, $relevant_roles)){
+					if (in_array($role, $relevant_roles)) {
 						$ret = explode("-", $agent_status);
 						return trim($ret[1]);
 					}
 				}
 			}
-			
+
 			return null;
 		}
 		$ret = explode("-", $agent_status_user);
 		return trim($ret[1]);
 	}
-	
-	public function setRawWBDAgentStatus($a_state) {
-	
+
+	public function setRawWBDAgentStatus($a_state)
+	{
+
 		if (!in_array($a_state, array( self::WBD_AGENTSTATUS0,
 									   self::WBD_AGENTSTATUS1,
 									   self::WBD_AGENTSTATUS2,
@@ -371,55 +391,70 @@ class gevWBD {
 									   self::WBD_AGENTSTATUS5,
 									   self::WBD_AGENTSTATUS6,
 									   self::WBD_AGENTSTATUS7,
-									   )
-				)
+									   ))
 			) {
 			throw new Exception("gevWBD::setWBDAgentStatus: ".$a_state." is no valid agent status.");
 		}
-		
+
 		return $this->udf_utils->setField($this->user_id, self::USR_WBD_STATUS, $a_state);
 	}
-	
-	static public function isValidBWVId($a_id) {
+
+	public static function isValidBWVId($a_id)
+	{
 		return 1 == preg_match("/\d{8}-.{6}-../", $a_id);
 	}
-	
-	public function transferPointsToWBD() {
-		return (   in_array($this->getWBDOKZ(), 
-							array("OKZ1", "OKZ2", "OKZ3"))
-				&& in_array($this->getWBDTPType(), 
-							array(self::WBD_EDU_PROVIDER, self::WBD_TP_BASIS, self::WBD_TP_SERVICE))
+
+	public function transferPointsToWBD()
+	{
+		return (   in_array(
+			$this->getWBDOKZ(),
+			array("OKZ1", "OKZ2", "OKZ3")
+		)
+				&& in_array(
+					$this->getWBDTPType(),
+					array(self::WBD_EDU_PROVIDER, self::WBD_TP_BASIS, self::WBD_TP_SERVICE)
+				)
 				&& $this->getWBDBWVId()
 				);
 	}
-	
-	public function transferPointsFromWBD() {
-		return (   in_array($this->getWBDOKZ(), 
-							array("OKZ1", "OKZ2", "OKZ3"))
+
+	public function transferPointsFromWBD()
+	{
+		return (   in_array(
+			$this->getWBDOKZ(),
+			array("OKZ1", "OKZ2", "OKZ3")
+		)
 				&& $this->getWBDTPType() == self::WBD_TP_SERVICE
 				&& $this->getWBDBWVId()
 				);
 	}
-	
-	public function wbdRegistrationIsPending() {
-		return (   in_array($this->getWBDOKZ(), 
-							array("OKZ1", "OKZ2", "OKZ3"))
-				&& in_array($this->getNextWBDAction(),
-							array(self::USR_WBD_NEXT_ACTION_NEW_TP_SERVICE, self::USR_WBD_NEXT_ACTION_NEW_TP_BASIS)
-							)
-				);	
+
+	public function wbdRegistrationIsPending()
+	{
+		return (   in_array(
+			$this->getWBDOKZ(),
+			array("OKZ1", "OKZ2", "OKZ3")
+		)
+				&& in_array(
+					$this->getNextWBDAction(),
+					array(self::USR_WBD_NEXT_ACTION_NEW_TP_SERVICE, self::USR_WBD_NEXT_ACTION_NEW_TP_BASIS)
+				)
+				);
 	}
-	
-	public function getWBDFirstCertificationPeriodBegin() {
+
+	public function getWBDFirstCertificationPeriodBegin()
+	{
 		$date = $this->udf_utils->getField($this->user_id, self::USR_WBD_CERT_PERIOD_BEGIN);
 		return new ilDate($date, IL_CAL_DATE);
 	}
-	
-	public function setWBDFirstCertificationPeriodBegin(ilDate $a_start) {
+
+	public function setWBDFirstCertificationPeriodBegin(ilDate $a_start)
+	{
 		$this->udf_utils->setField($this->user_id, self::USR_WBD_CERT_PERIOD_BEGIN, $a_start->get(IL_CAL_DATE));
 	}
 
-	public function hasWBDRelevantRole() {
+	public function hasWBDRelevantRole()
+	{
 		$query = "SELECT COUNT(*) cnt "
 				."  FROM rbac_ua ua "
 				."  JOIN object_data od ON od.obj_id = ua.rol_id "
@@ -435,18 +470,22 @@ class gevWBD {
 		return false;
 	}
 
-	public function hasDoneWBDRegistration() {
+	public function hasDoneWBDRegistration()
+	{
 		return ($this->udf_utils->getField($this->user_id, self::USR_WBD_DID_REGISTRATION) == "1 - Ja");
 	}
-	
-	public function setWBDRegistrationDone() {
+
+	public function setWBDRegistrationDone()
+	{
 		$this->udf_utils->setField($this->user_id, self::USR_WBD_DID_REGISTRATION, "1 - Ja");
 	}
-	public function setWBDRegistrationNotDone() {
+	public function setWBDRegistrationNotDone()
+	{
 		$this->udf_utils->setField($this->user_id, self::USR_WBD_DID_REGISTRATION, "0 - Nein");
 	}
-	
-	public function canBeRegisteredAsTPService() {
+
+	public function canBeRegisteredAsTPService()
+	{
 		$query = "SELECT COUNT(*) cnt "
 				."  FROM rbac_ua ua "
 				."  JOIN object_data od ON od.obj_id = ua.rol_id "
@@ -462,15 +501,18 @@ class gevWBD {
 		return false;
 	}
 
-	public function getWBDCommunicationEmail() {
+	public function getWBDCommunicationEmail()
+	{
 		return $this->udf_utils->getField($this->user_id, self::USR_WBD_COM_EMAIL);
 	}
-	
-	public function setWBDCommunicationEmail($a_email) {
+
+	public function setWBDCommunicationEmail($a_email)
+	{
 		$this->udf_utils->setField($this->user_id, self::USR_WBD_COM_EMAIL, $a_email);
 	}
-	
-	public function getExitDateWBD() {
+
+	public function getExitDateWBD()
+	{
 		$date = $this->udf_utils->getField($this->user_id, self::USR_WBD_EXIT_DATE);
 		if (!trim($date)) {
 			return null;
@@ -493,7 +535,8 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function shouldBeRegisteredAsNewTPServiceChecks() {
+	public function shouldBeRegisteredAsNewTPServiceChecks()
+	{
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryHasDoneWBDRegistration.php");
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryHasWBDRelevantRole.php");
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryUserExists.php");
@@ -535,7 +578,8 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function shouldBeRegisteredAsNewTPBasis() {
+	public function shouldBeRegisteredAsNewTPBasis()
+	{
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryHasDoneWBDRegistration.php");
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryHasWBDRelevantRole.php");
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryUserExists.php");
@@ -561,7 +605,7 @@ class gevWBD {
 					, new WBDPreliminaryHasNoOpenWBDError($wbd_errors)
 					);
 	}
-	
+
 	/**
 	* Checks requirements user must have to get in pool for affiliate as TP-Service
 	*
@@ -577,7 +621,8 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function shouldBeAffiliateAsTPServiceChecks() {
+	public function shouldBeAffiliateAsTPServiceChecks()
+	{
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryHasDoneWBDRegistration.php");
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryHasWBDRelevantRole.php");
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryUserExists.php");
@@ -622,7 +667,8 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function shouldBeReleasedChecks() {
+	public function shouldBeReleasedChecks()
+	{
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryUserExists.php");
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryHandleUser.php");
 		require_once("Services/GEV/WBD/classes/Checks/WBDPreliminaryExitDatePassed.php");
@@ -654,7 +700,8 @@ class gevWBD {
 	 *
 	 *
 	 */
-	public function exitDatePassed() {
+	public function exitDatePassed()
+	{
 		return $this->user_utils->isExitDatePassed();
 	}
 
@@ -663,7 +710,8 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function isWBDBWVIdEmpty() {
+	public function isWBDBWVIdEmpty()
+	{
 		return $this->getWBDBWVId() === null;
 	}
 
@@ -672,7 +720,8 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function isActive() {
+	public function isActive()
+	{
 		return $this->user_utils->getUser()->getActive();
 	}
 
@@ -682,17 +731,19 @@ class gevWBD {
 	* @param array
 	* @return boolen
 	*/
-	public function hasOneWBDTypeOf(array $wbd_types) {
+	public function hasOneWBDTypeOf(array $wbd_types)
+	{
 		return in_array($this->getWBDTPType(), $wbd_types);
 	}
 
 	/**
 	* checks user has specified wbd tp type
-	* 
+	*
 	* @param string
 	* @return boolean
 	*/
-	public function hasWBDType($wbd_type) {
+	public function hasWBDType($wbd_type)
+	{
 		return $this->getWBDTPType() == $wbd_type;
 	}
 
@@ -701,12 +752,14 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function entryDatePassed() {
-		
-		$now = date("Y-m-d");
-		$entry_date = $this->user_utils->getEntryDate();;
+	public function entryDatePassed()
+	{
 
-		if(!$entry_date) {
+		$now = date("Y-m-d");
+		$entry_date = $this->user_utils->getEntryDate();
+		;
+
+		if (!$entry_date) {
 			return false;
 		}
 		return $entry_date->get(IL_CAL_DATE) <= $now;
@@ -717,7 +770,8 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function userExists() {
+	public function userExists()
+	{
 		return ilObjUser::_lookupLogin($this->user_id) !== false;
 	}
 
@@ -728,7 +782,8 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function userIdIn(array $special_user_ids) {
+	public function userIdIn(array $special_user_ids)
+	{
 		return in_array($this->user_id, $special_user_ids);
 	}
 
@@ -738,16 +793,17 @@ class gevWBD {
 	* @param array
 	* @return boolean
 	*/
-	public function hasOpenWBDErrors(array $wbd_errors) {
-		
+	public function hasOpenWBDErrors(array $wbd_errors)
+	{
+
 		$sql = "SELECT DISTINCT count(usr_id) as cnt\n"
 				." FROM wbd_errors\n"
 				." WHERE resolved=0\n"
 				."   AND ".$this->gDB->in("reason", $wbd_errors, false, "text")."\n"
-				."   AND usr_id = ".$this->gDB->quote($this->user_id,"integer")."\n";
+				."   AND usr_id = ".$this->gDB->quote($this->user_id, "integer")."\n";
 
 		$res = $this->gDB->query($sql);
-		while($row = $this->gDB->fetchAssoc($res)) {
+		while ($row = $this->gDB->fetchAssoc($res)) {
 			return $row["cnt"] > 0;
 		}
 
@@ -759,7 +815,8 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function hasExitDateWBD() {
+	public function hasExitDateWBD()
+	{
 		return $this->getExitDateWBD() !== null;
 	}
 
@@ -770,42 +827,48 @@ class gevWBD {
 	*
 	* @return boolean
 	*/
-	public function nextWBDActionIs($next_wbd_action) {
+	public function nextWBDActionIs($next_wbd_action)
+	{
 		return $this->getNextWBDAction() == $next_wbd_action;
 	}
 
-	public function getStartOfCurrentCertificationPeriod() {
+	public function getStartOfCurrentCertificationPeriod()
+	{
 		return $this->getStartOfCurrentCertificationX(self::WBD_YEARS_FOR_A_PERIOD);
 	}
-	
-	public function getStartOfCurrentCertificationYear() {
+
+	public function getStartOfCurrentCertificationYear()
+	{
 		return $this->getStartOfCurrentCertificationX(self::WBD_YEARS_FOR_A_YEAR);
 	}
-	
-	protected function getStartOfCurrentCertificationX($a_year_step) {
+
+	protected function getStartOfCurrentCertificationX($a_year_step)
+	{
 		require_once("Services/Calendar/classes/class.ilDateTime.php");
-		
+
 		$now = new ilDate(date("Y-m-d"), IL_CAL_DATE);
 		$start = $this->getWBDFirstCertificationPeriodBegin();
-		while(   ilDateTime::_before($start, $now)
+		while (ilDateTime::_before($start, $now)
 			  && !ilDateTime::_equals($start, $now)) {
 			$start->increment(ilDateTime::YEAR, $a_year_step);
 		}
 		if (!ilDateTime::_equals($start, $now)) {
 			$start->increment(ilDateTime::YEAR, -1 * $a_year_step);
 		}
-		
+
 		return $start;
 	}
 
-	public function setWbdExitUserData($exit_date) {
+	public function setWbdExitUserData($exit_date)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevUDFUtils.php");
 		$udf_utils = gevUDFUtils::getInstance();
-		$udf_utils->setField($this->user_id,self::USR_WBD_EXIT_DATE, $exit_date);
-		$udf_utils->setField($this->user_id,self::USR_TP_TYPE, "1 - Bildungsdienstleister");
+		$udf_utils->setField($this->user_id, self::USR_WBD_EXIT_DATE, $exit_date);
+		$udf_utils->setField($this->user_id, self::USR_TP_TYPE, "1 - Bildungsdienstleister");
 	}
 
-	public function updateHistUserCourseRows($report_after, $creator_id) {
+	public function updateHistUserCourseRows($report_after, $creator_id)
+	{
 		$select = "SELECT crs_id\n"
 				 ." FROM hist_usercoursestatus\n"
 				 ." WHERE usr_id = ".$this->gDB->quote($this->user_id, "integer")."\n"
@@ -818,7 +881,7 @@ class gevWBD {
 
 		$res = $this->gDB->query($select);
 
-		while($row = $this->gDB->fetchAssoc($res)) {
+		while ($row = $this->gDB->fetchAssoc($res)) {
 			$this->gLog->write("Update crs: ".$row["crs_id"]);
 			$this->gAppEventHandler->raise("Modules/Course", "setWBDRelevant", array("obj_id" => $row["crs_id"], "user_id" => $this->user_id, "creator_id" => $creator_id));
 		}
@@ -829,7 +892,8 @@ class gevWBD {
 	 *
 	 * @return bool
 	 */
-	public function userTPStatusOK() {
+	public function userTPStatusOK()
+	{
 		return !($this->getWBDTPType() === gevWBD::WBD_NO_SERVICE && $this->hasWBDRelevantRole());
 	}
 
@@ -840,14 +904,15 @@ class gevWBD {
 	 *
 	 * @return int
 	 */
-	public function getCrsIdByRowId($row_id) {
+	public function getCrsIdByRowId($row_id)
+	{
 		$select = "SELECT DISTINCT crs_id\n"
 				 ." FROM hist_usercoursestatus\n"
 				 ." WHERE row_id = ".$this->gDB->quote($row_id, "integer")."\n";
 
 		$res = $this->gDB->query($select);
 
-		if($this->gDB->numRows($res) == 0) {
+		if ($this->gDB->numRows($res) == 0) {
 			throw new Exception("no crs id found for user: ".$this->user_id." AND row id: ".$row_id);
 		}
 
@@ -860,7 +925,8 @@ class gevWBD {
 	const STATUS_UNABLE_RESOLVE = "unable_resolve";
 	const STATUS_FEEDBACK = "feedback";
 
-	public static function resolveWBDErrorById($id) {
+	public static function resolveWBDErrorById($id)
+	{
 		global $ilDB;
 
 		$sql = "UPDATE wbd_errors\n"
@@ -870,7 +936,8 @@ class gevWBD {
 		$ilDB->manipulate($sql);
 	}
 
-	public static function setWBDErrorStatusById($id, $status) {
+	public static function setWBDErrorStatusById($id, $status)
+	{
 		global $ilDB;
 
 		$sql = "UPDATE wbd_errors\n"
