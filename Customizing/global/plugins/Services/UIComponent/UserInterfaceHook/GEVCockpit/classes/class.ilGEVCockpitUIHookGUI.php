@@ -184,7 +184,29 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 				= array($this->gLng->txt("gev_edu_bio"), $user_utils->getEduBioLink());
 		}
 
-		$items["my_va_plan"] = array($this->gLng->txt("gev_my_va_plan"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyVAPlan");
+		$va_pass_plugin = ilPlugin::getPluginObject(
+			IL_COMP_SERVICE,
+			"Repository",
+			"robj",
+			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xvap")
+		);
+
+		if ($va_pass_plugin && $va_pass_plugin->active) {
+			$va_pass_object_ids = ilObject::_getObjectsByType("xvap");
+			$gui = $va_pass_plugin->getGUIClass();
+
+			foreach ($va_pass_object_ids as $obj_id => $obj_values) {
+				$object = ilObjectFactory::getgetInstanceByObjId($obj_id);
+				$ref_id = $object->getRefId();
+
+				if ($this->gAccess->checkAccessOfUser($this->gUser->getId(), "visible", "", $ref_id)) {
+					$this->gCtrl->setParameterByClass($gui, "ref_id", $ref_id);
+					$link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", $gui));
+					$this->gCtrl->setParameterByClass($gui, "ref_id", null);
+					$items["va_plan_".$obj_id] = array($object->getTitle(), $link);
+				}
+			}
+		}
 
 		$ass_bio_plugin = ilPlugin::getPluginObject(
 			IL_COMP_SERVICE,
