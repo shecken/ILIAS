@@ -58,25 +58,45 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 
 	protected function isCockpit()
 	{
-		$base_class = strtolower($_GET["baseClass"]);
-		$cmd_class = strtolower($_GET["cmdClass"]);
-		$cmd = strtolower($_GET["cmd"]);
+		$get = $_GET;
+		$base_class = strtolower($get["baseClass"]);
+		$cmd_class = strtolower($get["cmdClass"]);
+		$cmd = strtolower($get["cmd"]);
 
-		return
-			( $base_class == "gevdesktopgui"
-				|| ($cmd_class == "ilobjreportedubiogui"
-					&& $_GET["target_user_id"] == $this->gUser->getId())
-				|| ($cmd_class == "ilobjreportexambiogui"
-					&& $_GET["target_user_id"] == $this->gUser->getId())
-				|| $base_class == "iltepgui"
-			)
-			&& $cmd_class != "gevcoursesearchgui"
-			&& $cmd_class != "iladminsearchgui"
-			&& $cmd_class != "gevemployeebookingsgui"
-			&& $cmd_class != "gevdecentraltraininggui"
-			&& $cmd_class != "gevdecentraltrainingcoursecreatingbuildingblock2gui"
-			&& $cmd != "toallassessments"
+		return $this->isBaseClassDesktopGUI($base_class, $cmd_class, $get)
+				&& $this->cmdClassNotIn($cmd_class)
+				&& $this->cmdNotIn($cmd)
 			;
+	}
+
+	protected function isBaseClassDesktopGUI($base_class, $cmd_class, $get)
+	{
+		return ( $base_class == "gevdesktopgui"
+				|| ($cmd_class == "ilobjreportedubiogui"
+					&& $get["target_user_id"] == $this->gUser->getId())
+				|| ($cmd_class == "ilobjreportexambiogui"
+					&& $get["target_user_id"] == $this->gUser->getId())
+				|| $base_class == "iltepgui"
+			);
+	}
+
+	protected function cmdClassNotIn($cmd_class)
+	{
+		$cmd_classes = array("gevcoursesearchgui"
+							, "iladminsearchgui"
+							, "gevemployeebookingsgui"
+							, "gevdecentraltraininggui"
+							, "gevdecentraltrainingcoursecreatingbuildingblock2gui"
+						);
+
+		return !in_array($cmd_class, $cmd_classes);
+	}
+
+	protected function cmdNotIn($cmd)
+	{
+		$cmds = array("toallassessments");
+
+		return !in_array($cmd, $cmds);
 	}
 
 	protected function isSearch()
@@ -354,13 +374,14 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 	protected function getCurrentSlide()
 	{
 		$items = $this->getItems();
-		$i = 1;
-		foreach ($items as $key => $value) {
-			if ($key == $this->getActiveItem()) {
-				return $i;
-			}
-			$i++;
+
+		$item_keys = array_keys($items);
+		$searched_item_key = array_search($this->active, $item_keys);
+
+		if ($searched_item_key) {
+			return ($searched_item_key + 1);
 		}
+
 		return null;
 	}
 }
