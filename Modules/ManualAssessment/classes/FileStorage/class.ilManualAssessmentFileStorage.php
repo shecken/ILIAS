@@ -2,6 +2,7 @@
 require_once("Modules/ManualAssessment/interfaces/FileStorage/interface.ManualAssessmentFileStorage.php");
 include_once('Services/FileSystem/classes/class.ilFileSystemStorage.php');
 /**
+* Handles the fileupload and folder creation for files uploaded in grading form
 *
 * @author Stefan Hecken <stefan.hecken@concepts-and-training.de>
 *
@@ -13,16 +14,31 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 		parent::__construct(self::STORAGE_WEB, true, $a_container_id);
 	}
 
+	/**
+	 * part of the folder structure in ILIAS webdir.
+	 *
+	 * @return string
+	 */
 	protected function getPathPostfix()
 	{
 		return 'mass';
 	}
 
+	/**
+	 * part of the folder structure in ILIAS webdir.
+	 *
+	 * @return string
+	 */
 	protected function getPathPrefix()
 	{
 		return 'MASS';
 	}
 
+	/**
+	 * Is the webdir folder for this IA empty
+	 *
+	 * @return boolean
+	 */
 	public function isEmpty()
 	{
 		$files = $this->readDir();
@@ -30,11 +46,21 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 		return (count($files) == 0) ? true : false;
 	}
 
+	/**
+	 * Set the user id for an extra folder of each participant in the IA
+	 *
+	 * @param int 	$user_id
+	 */
 	public function setUserId($user_id)
 	{
 		$this->user_id = $user_id;
 	}
 
+	/**
+	 * creates the folder structure
+	 *
+	 * @return boolen
+	 */
 	public function create()
 	{
 		if (!file_exists($this->getAbsolutePath())) {
@@ -43,6 +69,11 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 		return true;
 	}
 
+	/**
+	 * Get the absolute path for files
+	 *
+	 * @return string
+	 */
 	public function getAbsolutePath()
 	{
 		$path = parent::getAbsolutePath();
@@ -51,6 +82,11 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 		return $path;
 	}
 
+	/**
+	 * Read the dir
+	 *
+	 * @return string[]
+	 */
 	public function readDir()
 	{
 		if (!is_dir($this->getAbsolutePath())) {
@@ -69,6 +105,13 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 		return $files;
 	}
 
+	/**
+	 * Upload the file
+	 *
+	 * @param string[]
+	 *
+	 * @return boolen
+	 */
 	public function uploadFile($file)
 	{
 		$path = $this->getAbsolutePath();
@@ -84,12 +127,20 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 		return false;
 	}
 
+	/**
+	 * Delete the existing file
+	 */
 	public function deleteCurrentFile()
 	{
 		$files = $this->readDir();
 		$this->deleteFile($this->getAbsolutePath()."/".$files[0]);
 	}
 
+	/**
+	 * Get the path of file
+	 *
+	 * @return sgtring
+	 */
 	public function getFilePath()
 	{
 		$files = $this->readDir();
