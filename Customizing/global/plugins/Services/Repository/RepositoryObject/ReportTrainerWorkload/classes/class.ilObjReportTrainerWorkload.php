@@ -7,8 +7,6 @@ ini_set("memory_limit", "2048M");
 ini_set('max_execution_time', 0);
 set_time_limit(0);
 
-
-
 class ilObjReportTrainerWorkload extends ilObjReportBase
 {
 	const MIN_ROW = "3991";

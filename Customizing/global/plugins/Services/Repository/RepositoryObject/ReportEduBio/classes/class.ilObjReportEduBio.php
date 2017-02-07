@@ -98,7 +98,6 @@ class ilObjReportEduBio extends ilObjReportBase
 
 	protected function buildQuery($query)
 	{
-		$crs_type_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_TYPE);
 		$one_year_befone_now  = (new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d');
 		$query ->select("crs.title")
 				->select("crs.type")

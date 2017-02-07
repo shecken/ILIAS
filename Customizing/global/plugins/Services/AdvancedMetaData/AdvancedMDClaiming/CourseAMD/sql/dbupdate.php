@@ -806,7 +806,10 @@ $options = array(
 	, "Bausparen und Finanzieren"
 	);
 
-$amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_TOPIC, $options);
+$amdutils->updateOptionsOfAMDField(
+	gevSettings::CRS_AMD_TOPIC,
+	$options
+);
 ?>
 
 <#28>

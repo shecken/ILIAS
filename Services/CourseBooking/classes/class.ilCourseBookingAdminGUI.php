@@ -854,6 +854,7 @@ class ilCourseBookingAdminGUI
 						$days_before_course_start = $addMailSettings->getInvitationMailingDate();
 						$date = $crs_utils->getStartDate();
 						$now = new ilDate(date("Y-m-d"), IL_CAL_DATE);
+
 						if ($date && !$crs_utils->isSelflearning() && !$crs_utils->isCoaching()) {
 							$date_d = $date->get(IL_CAL_DATE);
 							$now_d = $now->get(IL_CAL_DATE);
@@ -1021,6 +1022,7 @@ class ilCourseBookingAdminGUI
 				$automails = new gevCrsAutoMails($this->getCourse()->getId());
 				require_once "Services/GEV/Utils/classes/class.gevCourseUtils.php";
 				$crs_utils = gevCourseUtils::getInstance($this->getCourse()->getId());
+
 				if (!$crs_utils->isDecentralTraining() && !$crs_utils->isSelflearning() && !$crs_utils->isCoaching()) {
 					$automails->send("admin_booking_to_booked", array($user_id));
 					$automails->send("invitation", array($user_id));

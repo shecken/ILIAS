@@ -212,14 +212,14 @@ class gevAMDUtils
 				} else {
 					return null;
 				}
-				//value will be returned
+				//return in the if statement
 			case ilAdvancedMDFieldDefinition::TYPE_DATETIME:
 				if ($a_value) {
 					return new ilDateTime($a_value, IL_CAL_DATE);
 				} else {
 					return null;
 				}
-				//value will be returned
+				//return in the if statement
 			case ilAdvancedMDFieldDefinition::TYPE_INTEGER:
 				// TODO: do a check similar to TYPE_DATETIME here?
 				return intval($a_value);

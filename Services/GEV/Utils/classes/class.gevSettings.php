@@ -16,8 +16,8 @@ require_once("Services/Administration/classes/class.ilSetting.php");
 
 class gevSettings
 {
-	static $instance = null;
-	static $amd_fields = null;
+	protected static $instance = null;
+	public static $amd_fields = null;
 
 	const MODULE_NAME = "gev";
 
@@ -158,13 +158,13 @@ class gevSettings
 	//Ref ID für OorgUnit Type BD
 	const TYPE_ID_ORG_UNIT_TYPE_BD = "type_id_org_unit_type_bd";
 
-	static $all_org_types = array( gevSettings::ORG_TYPE_VENUE
+	public static $all_org_types = array( gevSettings::ORG_TYPE_VENUE
 								 , gevSettings::ORG_TYPE_PROVIDER
 								 , gevSettings::ORG_TYPE_DEFAULT
 								 , gevSettings::TYPE_ID_ORG_UNIT_TYPE_BD
 								 );
 
-	static $dbv_hot_topics = array("3D Pflegevorsorge"
+	public static $dbv_hot_topics = array("3D Pflegevorsorge"
 								 , "Rente Profil Plus"
 								 , "bAV"
 								 );
@@ -302,7 +302,7 @@ class gevSettings
 	const USE_BUILDING_BLOCK = "use_building_block";
 	const EDIT_BUILDING_BLOCKS = "edit_building_blocks";
 
-	static $UDF_FIELD_ORDER = array(
+	public static $UDF_FIELD_ORDER = array(
 		'Emailadresse (privat)'
 		,'Geburtsname'
 		,'Geburtsort'
@@ -342,13 +342,13 @@ class gevSettings
 		,'WBD Punkte nachmelden ab'
 	);
 
-	static $LOCAL_USER_MANDATORY_UDF_FIELDS = array(
+	public static $LOCAL_USER_MANDATORY_UDF_FIELDS = array(
 		'Eintrittsdatum'
 	);
 
 
 	// Role mapping
-	static $VMS_ROLE_MAPPING = array(
+	public static $VMS_ROLE_MAPPING = array(
 		610 => array("HA 84",		"DBV"),
 		613 => array("DBV UVG",		"DBV"),
 		614 => array("DBV EVG",		"DBV"),
@@ -402,16 +402,16 @@ class gevSettings
 
 	// Names of roles where we should be tolerant in the email at the
 	// registration (#608)
-	static $EMAIL_TOLERANCE_ROLES = array(
+	public static $EMAIL_TOLERANCE_ROLES = array(
 		  "DBV/VL-EVG"
 		, "DBV-UVG"
 		, "OD/LD/BD/VD/VTWL"
 		);
 
 	// Names of roles where users do not need to pay fees
-	static $NO_PAYMENT_ROLES = array(
+	public static $NO_PAYMENT_ROLES = array(
 		  "Administrator"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		, "Admin-eingeschraenkt"
 		, "Admin-Ansicht"
 		, "OD/BD"
@@ -438,12 +438,13 @@ class gevSettings
 		, "OD-Betreuer"
 		, "DBV UVG"
 		, "DBV EVG"
+		, "Agt-ID"
 		);
 
 	// Names of roles where users need to pay the
-	static $NO_PREARRIVAL_PAYMENT_ROLES = array(
+	public static $NO_PREARRIVAL_PAYMENT_ROLES = array(
 		  "Administrator"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		, "Admin-eingeschraenkt"
 		, "Admin-Ansicht"
 		, "OD/BD"
@@ -476,38 +477,39 @@ class gevSettings
 		, "TP Service"
 		, "TP Basis"
 		, "VFS"
+		, "Agt-ID"
 		);
 
 	// Names of roles that count as admins
-	static $ADMIN_ROLES = array(
+	public static $ADMIN_ROLES = array(
 		  "Administrator"
 		, "Admin-eingeschraenkt"
-		, "Admin-Voll"
+		, "Admin-Orga"
 		);
 
 	// Names of roles that count as system admins
-	static $SYSTEM_ADMIN_ROLES = array(
+	public static $SYSTEM_ADMIN_ROLES = array(
 		  "Administrator"
 		);
 
 	// Names of roles that count as superiors
-	static $SUPERIOR_ROLES = array(
+	public static $SUPERIOR_ROLES = array(
 		  "il_orgu_superior_%"
 		, "DBV"
 		);
 
 	// Names of roles that count as tutors
-	static $TUTOR_ROLES = array(
+	public static $TUTOR_ROLES = array(
 		  "il_crs_tutor_%"
 		);
 
 	// Names of roles that count as employees
-	static $EMPLOYEE_ROLES = array(
+	public static $EMPLOYEE_ROLES = array(
 		  "il_orgu_employee_%"
 		);
 
 	// Names of roles that count as crs manager
-	static $CRS_MANAGER_ROLES = array(
+	public static $CRS_MANAGER_ROLES = array(
 		  "il_crs_admin_%"
 		  ,"Pool Trainingsersteller"
 		);
@@ -631,9 +633,9 @@ class gevSettings
 	}
 
 	// Role to "Status" mapping
-	static $IDHGBAAD_STATUS_MAPPING = array(
+	public static $IDHGBAAD_STATUS_MAPPING = array(
 		  "Administrator"			=> "ID"
-		, "Admin-Voll"				=> "ID"
+		, "Admin-Orga"				=> "ID"
 		, "Admin-eingeschraenkt"	=> "ID"
 		, "Admin-Ansicht"			=> "ID"
 		, "OD/BD"					=> "AAD"
@@ -672,7 +674,7 @@ class gevSettings
 		//, "VFS"					=> "nicht relevant"
 		);
 
-	static $TEPTYPE_ORDER = array(
+	public static $TEPTYPE_ORDER = array(
 		'Training',
 
 		'Projekt',

@@ -3,9 +3,9 @@
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
 require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 
+
 class ilObjReportTrainingAttendance extends ilObjReportBase
 {
-
 	protected $online;
 	protected $relevant_parameters = array();
 

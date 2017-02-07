@@ -18,7 +18,6 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 {
 	public function __construct()
 	{
-
 		parent::__construct();
 
 		$this->title = catTitleGUI::create()

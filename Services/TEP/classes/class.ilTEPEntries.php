@@ -9,8 +9,6 @@
  */
 class ilTEPEntries
 {
-
-
 	protected $user_ids; // [array]
 	protected $catgory_ids; // [array]
 	protected $start; // [ilDate]
