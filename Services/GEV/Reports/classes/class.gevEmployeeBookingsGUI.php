@@ -12,6 +12,7 @@
 require_once("Services/GEV/Reports/classes/class.catBasicReportGUI.php");
 require_once("Services/CaTUIComponents/classes/class.catTitleGUI.php");
 require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 
 class gevEmployeeBookingsGUI extends catBasicReportGUI
 {
@@ -92,6 +93,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 						->static_condition("usrcrs.hist_historic = 0")
 						->static_condition("usrcrs.booking_status IN ('gebucht', 'auf Warteliste')")
 						->static_condition("crs.begin_date > CURDATE()")
+						->static_condition("crs.type != ".$this->db->quote(gevCourseUtils::CRS_TYPE_COACHING, "text"))
 						->action($this->ctrl->getLinkTarget($this, "view"))
 						->compile()
 						;
@@ -220,8 +222,6 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 
 	protected function loadCourseAndTargetUserId()
 	{
-		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
-
 		$this->crs_id = intval($_GET["crs_id"]);
 		$this->target_user_id = intval($_GET["usr_id"]);
 		$this->crs_utils = gevCourseUtils::getInstance($this->crs_id);
