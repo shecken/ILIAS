@@ -5963,6 +5963,24 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", a
 
 <#246>
 <?php
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::maybeInitClientIni();
+ilCustomInstaller::maybeInitPluginAdmin();
+ilCustomInstaller::maybeInitObjDefinition();
+ilCustomInstaller::maybeInitAppEventHandler();
+ilCustomInstaller::maybeInitTree();
+ilCustomInstaller::maybeInitRBAC();
+ilCustomInstaller::maybeInitObjDataCache();
+ilCustomInstaller::maybeInitUserToRoot();
+ilCustomInstaller::maybeInitSettings();
+require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+$a_start_ref = 56;
+gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-TA", array('visible', 'read', 'write'));
+gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", array('visible', 'read', 'write'));
+?>
+
+<#247>
+<?php
 if (!$ilDB->tableColumnExists('mass_settings', 'file_required')) {
 	$ilDB->addTableColumn('mass_settings', 'file_required', array(
 	"type" => "integer",
@@ -5982,21 +6000,18 @@ if (!$ilDB->tableColumnExists('mass_settings', 'event_time_place_required')) {
 	"default" => 0
 	));
 }
-
 if (!$ilDB->tableColumnExists('mass_members', 'place')) {
 	$ilDB->addTableColumn('mass_members', 'place', array(
 	"type" => "text",
 	"length" => 255
 	));
 }
-
 if (!$ilDB->tableColumnExists('mass_members', 'event_time')) {
 	$ilDB->addTableColumn('mass_members', 'event_time', array(
 	"type" => "integer",
 	"length" => 8
 	));
 }
-
 ?>
 
 <#248>
@@ -6007,7 +6022,6 @@ if (!$ilDB->tableColumnExists('mass_members', 'file_name')) {
 	"length" => 255
 	));
 }
-
 if (!$ilDB->tableColumnExists('mass_members', 'user_view_file')) {
 	$ilDB->addTableColumn('mass_members', 'user_view_file', array(
 	"type" => "integer",

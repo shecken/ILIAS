@@ -10,26 +10,30 @@ require_once 'Services/Form/classes/class.ilSelectInputGUI.php';
 * @ilCtrl_Calls ilObjReportBillGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI,
 * @ilCtrl_Calls ilObjReportBillGUI: ilCommonActionDispatcherGUI
 */
-class ilObjReportBillGUI extends ilObjReportBaseGUI {
+class ilObjReportBillGUI extends ilObjReportBaseGUI
+{
 
 	static protected $bill_link_icon;
 
-	protected function afterConstructor() {
+	protected function afterConstructor()
+	{
 		parent::afterConstructor();
 		self::$bill_link_icon = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-get_bill.png").'" />';
 	}
 
-	public function getType() {
+	public function getType()
+	{
 		return 'xrbi';
 	}
 
 
-	public function performCommand() {
+	public function performCommand()
+	{
 		$cmd = $this->gCtrl->getCmd();
-			        
+
 		switch ($cmd) {
 			case "deliverBillPDF":
-				if($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
+				if ($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
 					return $this->deliverBillPDF();
 				}
 				break;
@@ -38,33 +42,34 @@ class ilObjReportBillGUI extends ilObjReportBaseGUI {
 		}
 	}
 
-	protected function prepareTitle($a_title) {
+	protected function prepareTitle($a_title)
+	{
 		$a_title = parent::prepareTitle($a_title);
 		$a_title->image("GEV_img/ico-head-rep-billing.png");
 		return $a_title;
 	}
 
-	public static function transformResultRow($rec) {
+	public static function transformResultRow($rec)
+	{
 		global $ilCtrl;
 		foreach ($rec as $key => $value) {
-				
 			if ($value == '-empty-' || $value == -1) {
 				$rec[$key] = "";
 				continue;
 			}
-			if($rec["is_vfs"] == 0) {
+			if ($rec["is_vfs"] == 0) {
 				$rec["assigment"] = "GEV";
 			} else {
 				$rec["assigment"] = "VFS";
 			}
 
 			//date
-			if( $rec["begin_date"] && $rec["end_date"] 
+			if ($rec["begin_date"] && $rec["end_date"]
 				&& ($rec["begin_date"] != '0000-00-00' && $rec["end_date"] != '0000-00-00' )
-				){
+				) {
 				$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
 				$end = new ilDate($rec["end_date"], IL_CAL_DATE);
-				$date = '<nobr>' .ilDatePresentation::formatPeriod($start,$end) .'</nobr>';
+				$date = '<nobr>' .ilDatePresentation::formatPeriod($start, $end) .'</nobr>';
 				//$date = ilDatePresentation::formatPeriod($start,$end);
 			} else {
 				$date = '-';
@@ -88,11 +93,12 @@ class ilObjReportBillGUI extends ilObjReportBaseGUI {
 		//$this->ctrl->clearParameters();
 		$ilCtrl->setParameterByClass("ilObjReportBillGUI", "billnumber", null);
 		$rec["bill_link"] = "<a href=\"".$target."\">".self::$bill_link_icon."</a>";
-			
+
 		return $rec;
 	}
 
-	protected function deliverBillPDF() {
+	protected function deliverBillPDF()
+	{
 		$billnumber = $_GET["billnumber"];
 		if (!preg_match("/\d{6}-\d{5}/", $billnumber)) {
 			throw Exception("gevBillingReportGUI::deliverBillPDF: This is no billnumber: '".$billnumber."'");
