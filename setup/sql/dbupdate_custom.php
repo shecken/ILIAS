@@ -6047,3 +6047,19 @@ $field_definition->save();
 $field_id = $field_definition->getFieldId();
 $gev_settings->setVAPassPassingTypeFieldId($field_id);
 ?>
+  
+<#248>
+<?php
+$fields = array("superior_examinate" => array("type" => "integer",
+										"length" => 1,
+										"default" => 0)
+				,"superior_view" => array("type" => "integer",
+										  "length" => 1,
+										  "default" => 0)
+		);
+
+foreach ($fields as $field_name => $field_config) {
+	if (!$ilDB->tableColumnExists('mass_settings', $field_name)) {
+		$ilDB->addTableColumn('mass_settings', $field_name, $field_config);
+	}
+}
