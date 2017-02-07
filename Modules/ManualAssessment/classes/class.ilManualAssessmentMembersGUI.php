@@ -94,10 +94,10 @@ class ilManualAssessmentMembersGUI
 					$this,
 					$this->toolbar,
 					array(
-					'auto_complete_name'	=> $this->lng->txt('user'),
-					'submit_name'			=> $this->lng->txt('add'),
-					'add_search'			=> true,
-					'add_from_container'		=> $container_id
+						'auto_complete_name'	=> $this->lng->txt('user'),
+						'submit_name'			=> $this->lng->txt('add'),
+						'add_search'			=> true,
+						'add_from_container'		=> $container_id
 					)
 				);
 			} else {
@@ -105,9 +105,9 @@ class ilManualAssessmentMembersGUI
 					$this,
 					$this->toolbar,
 					array(
-					'auto_complete_name'	=> $this->lng->txt('user'),
-					'submit_name'			=> $this->lng->txt('add'),
-					'add_search'			=> true
+						'auto_complete_name'	=> $this->lng->txt('user'),
+						'submit_name'			=> $this->lng->txt('add'),
+						'add_search'			=> true
 					)
 				);
 			}
