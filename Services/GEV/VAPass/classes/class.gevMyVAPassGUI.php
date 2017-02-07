@@ -199,7 +199,7 @@ class gevMyVAPassGUI
 		if ($get["assignment_id"] && $get["assignment_id"] !== null && is_integer((int)$post["assignment_id"])) {
 			return (int)$_GET["assignment_id"];
 		}
-		return 128;
+		return 130;
 		throw new Exception("No assignment id given");
 	}
 }
