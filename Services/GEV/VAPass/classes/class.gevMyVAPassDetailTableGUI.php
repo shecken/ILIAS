@@ -41,8 +41,11 @@ class gevMyVAPassCourseTableGUI extends catTableGUI
 		$this->confugireTable();
 		$this->addColums();
 
+		require_once("Services/GEV/VAPass/classes/class.gevMyVAPassDetailEntry.php");
 		foreach ($lp_children as $key => $value) {
-			# code...
+			$entry = new gevMyVAPassDetailEntry();
+			$entry->setTitle($value->getTitle());
+			$entry->setResult($this->getResultInfo($value));
 		}
 
 		$entries = array();
@@ -119,6 +122,13 @@ class gevMyVAPassCourseTableGUI extends catTableGUI
 		}
 	}
 
+	protected function getResultInfo($child)
+	{
+		foreach ($child->getLPChildren() as $key => $crs_ref) {
+			$crs = ilObjectFactory::getInstanceByObjId($crs_ref->getTargetId());
+			$sub_items = $crs->getSubItems();
+		}
+	}
 
 	protected function getCrsUtils($crs_id)
 	{
