@@ -265,9 +265,9 @@ class ilObjReportEmplAtt extends ilObjReportBase
 					''
 				)->clone_with_checked(true),
 				$f->option(
-						$txt('filter_no_wbd_imported'),
-						''
-					),
+					$txt('filter_no_wbd_imported'),
+					''
+				),
 				$f->multiselect(
 					$lng->txt("gev_org_unit_short"),
 					'',

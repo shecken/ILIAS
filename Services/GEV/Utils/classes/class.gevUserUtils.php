@@ -1207,6 +1207,11 @@ class gevUserUtils
 		return $this->hasRoleIn(gevSettings::$ADMIN_ROLES);
 	}
 
+	public function isAdminTA()
+	{
+		return $this->hasRoleIn(array("Admin-TA"));
+	}
+
 	public function isSystemAdmin()
 	{
 		return $this->hasRoleIn(gevSettings::$SYSTEM_ADMIN_ROLES);
