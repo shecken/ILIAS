@@ -5964,6 +5964,7 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", a
 <#246>
 <?php
 require_once "Customizing/class.ilCustomInstaller.php";
+
 ilCustomInstaller::maybeInitClientIni();
 ilCustomInstaller::maybeInitPluginAdmin();
 ilCustomInstaller::maybeInitObjDefinition();
@@ -5973,10 +5974,14 @@ ilCustomInstaller::maybeInitRBAC();
 ilCustomInstaller::maybeInitObjDataCache();
 ilCustomInstaller::maybeInitUserToRoot();
 ilCustomInstaller::maybeInitSettings();
+
 require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+
 $a_start_ref = 56;
+
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-TA", array('visible', 'read', 'write'));
 gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", array('visible', 'read', 'write'));
+
 ?>
 
 <#247>
@@ -6104,4 +6109,32 @@ if (!$ilDB->tableColumnExists('mass_members', 'user_view_file')) {
 	"length" => 1
 	));
 }
+?>
+
+
+<#252>
+<?php
+include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+$mass_type_id = ilDBUpdateNewObjectType::getObjectTypeId('mass');
+if ($mass_type_id) {
+	$new_ops_id = ilDBUpdateNewObjectType::addCustomRBACOperation(
+		'amend_grading',
+		'Amend grading',
+		'object',
+		8200
+	);
+	if ($new_ops_id) {
+		ilDBUpdateNewObjectType::addRBACOperation($mass_type_id, $new_ops_id);
+	}
+}
+?>
+
+<#253>
+<?php
+// init helper class
+require_once "Customizing/class.ilCustomInstaller.php";
+
+ilCustomInstaller::initPluginEnv();
+ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
+
 ?>
