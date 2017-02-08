@@ -6,9 +6,25 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit11150372d74a3adf24d87c6ecc1870a7
 {
+	public static $prefixLengthsPsr4 = array (
+		'C' =>
+		array (
+			'CaT\\Plugins\\ReportVAPass\\' => 25,
+		),
+	);
+
+	public static $prefixDirsPsr4 = array (
+		'CaT\\Plugins\\ReportVAPass\\' =>
+		array (
+			0 => __DIR__ . '/../..' . '/classes',
+		),
+	);
+
 	public static function getInitializer(ClassLoader $loader)
 	{
 		return \Closure::bind(function () use ($loader) {
+			$loader->prefixLengthsPsr4 = ComposerStaticInit11150372d74a3adf24d87c6ecc1870a7::$prefixLengthsPsr4;
+			$loader->prefixDirsPsr4 = ComposerStaticInit11150372d74a3adf24d87c6ecc1870a7::$prefixDirsPsr4;
 		}, null, ClassLoader::class);
 	}
 }

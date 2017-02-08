@@ -6,4 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+	'CaT\\Plugins\\ReportVAPass\\' => array($baseDir . '/classes'),
 );
