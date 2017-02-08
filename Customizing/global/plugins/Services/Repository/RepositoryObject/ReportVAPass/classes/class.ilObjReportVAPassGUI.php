@@ -1,12 +1,25 @@
 <?php
-
+require_once(__DIR__."/../vendor/autoload.php");
 include_once("./Services/Repository/classes/class.ilObjectPluginGUI.php");
+require_once(__DIR__."/Settings/class.ilVAPassSettingsGUI.php");
+
+use \CaT\Plugins\ReportVAPass;
+
 /**
- *
+ * @ilCtrl_isCalledBy ilObjReportVAPassGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
+ * @ilCtrl_Calls ilObjReportVAPassGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI
+ * @ilCtrl_Calls ilObjReportVAPassGUI: ilVAPassSettingsGUI
  * @author 		Stefan Hecken <stefan.hecken@concepts-and-training.de>
  */
-class ilObjTalentAssessmentGUI extends ilObjectPluginGUI
+class ilObjReportVAPassGUI extends ilObjectPluginGUI
 {
+	use ReportVAPass\Settings\ilFormHelper;
+
+	/**
+	 * @var CaT\Plugins\ReportVAPass\ilActions
+	 */
+	protected $plugin_actions;
+
 	/**
 	 * Initialisation
 	 */
@@ -14,8 +27,8 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI
 	{
 		global $ilAccess, $ilCtrl;
 
-		$this->gAccess = $ilAccess;
-		$this->gCtrl = $ilCtrl;
+		$this->g_access = $ilAccess;
+		$this->g_ctrl = $ilCtrl;
 	}
 
 	/**
@@ -31,10 +44,20 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI
 	 */
 	public function performCommand($cmd)
 	{
-		switch ($cmd) {
-			case "view":
-				$this->view();
+		$this->plugin_actions = $this->object->getActions();
+		$next_class = $this->g_ctrl->getNextClass();
+
+		switch ($next_class) {
+			case "ilvapasssettingsgui":
+				$this->forwardSettings();
 				break;
+			default:
+				switch ($cmd) {
+					case ilVAPassSettingsGUI::EDIT_SETTINGS:
+					case ilVAPassSettingsGUI::SAVE_SETTINGS:
+						$this->forwardSettings();
+						break;
+				}
 		}
 	}
 
@@ -43,7 +66,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI
 	 */
 	public function getAfterCreationCmd()
 	{
-		return "view";
+		return ilVAPassSettingsGUI::EDIT_SETTINGS;
 	}
 
 	/**
@@ -57,24 +80,27 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI
 	public function initCreateForm($a_new_type)
 	{
 		$form = parent::initCreateForm($a_new_type);
+		$this->addSettingsFormItems($form);
 
 		return $form;
 	}
 
 	protected function forwardSettings()
 	{
-		if (!$this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+		if (!$this->g_access->checkAccess("write", "", $this->object->getRefId())) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
-			$this->gCtrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
+			$this->g_ctrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {
-			$this->gTabs->setTabActive(self::TAB_SETTINGS);
+			// $this->gTabs->setTabActive(self::TAB_SETTINGS);
 			$actions = $this->object->getActions();
-			$gui = new ilTalentAssessmentSettingsGUI($actions, $this->plugin->txtClosure(), $this->object->getId(), $this->object->getSettings()->getPotential());
-			$this->gCtrl->forwardCommand($gui);
+			require_once(__DIR__."/Settings/class.ilVAPassSettingsGUI.php");
+			$gui = new \ilVAPassSettingsGUI($actions, $this->plugin->txtClosure());
+			$this->g_ctrl->forwardCommand($gui);
 		}
 	}
 
-	protected function view()
+	public function view()
 	{
+		$this->forwardSettings();
 	}
 }
