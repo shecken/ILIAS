@@ -7,7 +7,7 @@ require_once 'Services/Tracking/classes/class.ilLearningProgressBaseGUI.php';
 require_once 'Services/Tracking/classes/class.ilLPStatus.php';
 class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 {
-	public function __construct($a_parent_obj, $a_parent_cmd = "", $a_template_context = "")
+	public function __construct($a_parent_obj, array $employees = null, $a_parent_cmd = "", $a_template_context = "")
 	{
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 		global $ilCtrl, $lng, $ilUser;
@@ -30,7 +30,17 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 		foreach ($this->columns as $lng_var => $params) {
 			$this->addColumn($this->lng->txt($lng_var), $params[0]);
 		}
-		$this->setData(iterator_to_array($a_parent_obj->object->loadMembers()));
+
+		$members = iterator_to_array($a_parent_obj->object->loadMembers());
+		if ($employees !== null) {
+			$members = array_filter($members, function ($member) use ($employees) {
+				if (in_array($member[ilManualAssessmentMembers::FIELD_USR_ID], $employees)) {
+					return $member;
+				}
+			});
+		}
+
+		$this->setData($members);
 	}
 
 	protected function visibleColumns()
@@ -145,25 +155,21 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 
 	protected function userMayEditGrades()
 	{
-		return $this->parent_obj->object->accessHandler()
-			->checkAccessToObj($this->parent_obj->object, 'edit_learning_progress');
-	}
-
-	protected function userMayViewGrades()
-	{
-		return $this->parent_obj->object->accessHandler()
-			->checkAccessToObj($this->parent_obj->object, 'read_learning_progress');
+		return $this->parent_obj->userMayEditGrades();
 	}
 
 	protected function userMayAmendGrades()
 	{
-		return $this->parent_obj->object->accessHandler()
-			->checkAccessToObj($this->parent_obj->object, 'amend_grading');
+		return $this->parent_obj->object->accessHandler()->checkAccessToObj($this->parent_obj->object, 'amend_grading');
+	}
+
+	protected function userMayViewGrades()
+	{
+		return $this->parent_obj->userMayViewGrades();
 	}
 
 	protected function userMayEditMembers()
 	{
-		return $this->parent_obj->object->accessHandler()
-			->checkAccessToObj($this->parent_obj->object, 'edit_members');
+		return $this->parent_obj->userMayEditMembers();
 	}
 }

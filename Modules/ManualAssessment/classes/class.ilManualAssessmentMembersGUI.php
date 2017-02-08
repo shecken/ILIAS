@@ -20,9 +20,15 @@ class ilManualAssessmentMembersGUI
 	protected $tpl;
 	protected $lng;
 
+	/**
+	 * @var ilUser
+	 */
+	protected $user;
+
 	public function __construct($a_parent_gui, $a_ref_id)
 	{
-		global $ilCtrl, $tpl, $lng, $ilToolbar;
+		global $ilCtrl, $tpl, $lng, $ilToolbar, $ilUser;
+
 		$this->ctrl = $ilCtrl;
 		$this->parent_gui = $a_parent_gui;
 		$this->object = $a_parent_gui->object;
@@ -31,15 +37,20 @@ class ilManualAssessmentMembersGUI
 		$this->lng = $lng;
 		$this->toolbar = $ilToolbar;
 		$this->access_handler = $this->object->accessHandler();
+		$this->user = $ilUser;
+
+		$this->superior_examinate = $a_parent_gui->object->getSettings()->superiorExaminate();
+		$this->superior_view = $a_parent_gui->object->getSettings()->superiorView();
 	}
 
 	public function executeCommand()
 	{
-		if (!$this->access_handler->checkAccessToObj($this->object, 'edit_members')
-			&& !$this->access_handler->checkAccessToObj($this->object, 'edit_learning_progress')
-			&& !$this->access_handler->checkAccessToObj($this->object, 'read_learning_progress') ) {
+		if (!$this->userMayEditMembers()
+			&& !$this->userMayEditGrades()
+			&& !$this->userMayViewGrades()) {
 			$this->parent_gui->handleAccessViolation();
 		}
+
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass();
 		switch ($next_class) {
@@ -75,7 +86,7 @@ class ilManualAssessmentMembersGUI
 
 	protected function view()
 	{
-		if ($this->access_handler->checkAccessToObj($this->object, 'edit_members')) {
+		if ($this->userMayEditMembers()) {
 			require_once './Services/Search/classes/class.ilRepositorySearchGUI.php';
 
 			$search_params = ['crs', 'grp'];
@@ -85,10 +96,10 @@ class ilManualAssessmentMembersGUI
 					$this,
 					$this->toolbar,
 					array(
-					'auto_complete_name'	=> $this->lng->txt('user'),
-					'submit_name'			=> $this->lng->txt('add'),
-					'add_search'			=> true,
-					'add_from_container'		=> $container_id
+						'auto_complete_name'	=> $this->lng->txt('user'),
+						'submit_name'			=> $this->lng->txt('add'),
+						'add_search'			=> true,
+						'add_from_container'		=> $container_id
 					)
 				);
 			} else {
@@ -96,14 +107,31 @@ class ilManualAssessmentMembersGUI
 					$this,
 					$this->toolbar,
 					array(
-					'auto_complete_name'	=> $this->lng->txt('user'),
-					'submit_name'			=> $this->lng->txt('add'),
-					'add_search'			=> true
+						'auto_complete_name'	=> $this->lng->txt('user'),
+						'submit_name'			=> $this->lng->txt('add'),
+						'add_search'			=> true
 					)
 				);
 			}
 		}
-		$table = new ilManualAssessmentMembersTableGUI($this);
+
+		$employees = null;
+		if ($this->isSuperior($this->user->getId())
+			&& ($this->superior_examinate || $this->superior_view)
+			&& (!$this->access_handler->checkAccessToObj($this->object, 'edit_learning_progress')
+				&& !$this->access_handler->checkAccessToObj($this->object, 'read_learning_progress'))
+		) {
+			$employees = $this->getEmployeesOf($this->user->getId());
+		} elseif ($this->isSuperior($this->user->getId())
+			&& !$this->superior_examinate
+			&& !$this->superior_view
+			&& !$this->access_handler->checkAccessToObj($this->object, 'edit_learning_progress')
+			&& !$this->access_handler->checkAccessToObj($this->object, 'read_learning_progress')
+		) {
+			$employees = array();
+		}
+
+		$table = new ilManualAssessmentMembersTableGUI($this, $employees);
 		$this->tpl->setContent($table->getHTML());
 	}
 
@@ -124,10 +152,10 @@ class ilManualAssessmentMembersGUI
 	 */
 	public function addUsers(array $user_ids)
 	{
-
-		if (!$this->object->accessHandler()->checkAccessToObj($this->object, 'edit_members')) {
+		if (!$this->userMayEditMembers()) {
 			$this->parent_gui->handleAccessViolation();
 		}
+
 		$mass = $this->object;
 		$members = $mass->loadMembers();
 		$failure = null;
@@ -150,9 +178,10 @@ class ilManualAssessmentMembersGUI
 
 	protected function removeUserConfirmation()
 	{
-		if (!$this->object->accessHandler()->checkAccessToObj($this->object, 'edit_members')) {
+		if (!$this->userMayEditMembers()) {
 			$this->parent_gui->handleAccessViolation();
 		}
+
 		include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
 		$confirm = new ilConfirmationGUI();
 		$confirm->addItem('usr_id', $_GET['usr_id'], ilObjUser::_lookupFullname($_GET['usr_id']));
@@ -170,9 +199,10 @@ class ilManualAssessmentMembersGUI
 	 */
 	public function removeUser()
 	{
-		if (!$this->object->accessHandler()->checkAccessToObj($this->object, 'edit_members')) {
+		if (!$this->userMayEditMembers()) {
 			$this->parent_gui->handleAccessViolation();
 		}
+
 		$usr_id = $_POST['usr_id'];
 		$mass = $this->object;
 		$mass->loadMembers()
@@ -180,5 +210,36 @@ class ilManualAssessmentMembersGUI
 			->updateStorageAndRBAC($mass->membersStorage(), $mass->accessHandler());
 		ilManualAssessmentLPInterface::updateLPStatusByIds($mass->getId(), array($usr_id));
 		$this->ctrl->redirectByClass(array(get_class($this->parent_gui),get_class($this)), 'view');
+	}
+
+	protected function isSuperior($user_id)
+	{
+		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		$user_utils = gevUserUtils::getInstance((int)$user_id);
+		return $user_utils->isSuperior();
+	}
+
+	protected function getEmployeesOf($user_id)
+	{
+		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		$user_utils = gevUserUtils::getInstance((int)$user_id);
+		return $user_utils->getDirectEmployees();
+	}
+
+	public function userMayEditGrades()
+	{
+		return (($this->isSuperior($this->user->getId()) && $this->superior_examinate)
+			|| $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress'));
+	}
+
+	public function userMayViewGrades()
+	{
+		return (($this->isSuperior($this->user->getId()) && $this->superior_view)
+			|| $this->object->accessHandler()->checkAccessToObj($this->object, 'read_learning_progress'));
+	}
+
+	public function userMayEditMembers()
+	{
+		return $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_members');
 	}
 }

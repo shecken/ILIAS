@@ -9,7 +9,8 @@ require_once 'Services/User/classes/class.ilObjUser.php';
 require_once 'Modules/ManualAssessment/classes/class.ilObjManualAssessment.php';
 require_once 'Services/Tracking/classes/class.ilLPStatus.php';
 
-class ilManualAssessmentMembers implements Iterator, Countable {
+class ilManualAssessmentMembers implements Iterator, Countable
+{
 	protected $member_records = array();
 	protected $position = 0;
 	protected $mass;
@@ -27,45 +28,56 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 	const FIELD_NOTIFY = 'notify';
 	const FIELD_FINALIZED = 'finalized';
 	const FIELD_NOTIFICATION_TS = 'notification_ts';
+	const FIELD_PLACE = "place";
+	const FIELD_EVENTTIME = "event_time";
+	const FIELD_FILE_NAME = "file_name";
+	const FIELD_USER_VIEW_FILE = "user_view_file";
 
 	const LP_NOT_ATTEMPTED = ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
 	const LP_IN_PROGRESS = ilLPStatus::LP_STATUS_IN_PROGRESS_NUM;
 	const LP_COMPLETED = ilLPStatus::LP_STATUS_COMPLETED_NUM;
 	const LP_FAILED = ilLPStatus::LP_STATUS_FAILED_NUM;
 
-	public function __construct(ilObjManualAssessment $mass) {
+	public function __construct(ilObjManualAssessment $mass)
+	{
 		$this->mass = $mass;
 	}
 
 	/**
-	 * Countable Methods 
+	 * Countable Methods
 	 */
-	public function count() {
+	public function count()
+	{
 		return count($this->member_records);
 	}
 
 	/**
 	 * Iterator Methods
 	 */
-	public function current() {
+	public function current()
+	{
 		return current($this->member_records);
 	}
 
-	public function key() {
+	public function key()
+	{
 		return key($this->member_records);
 	}
 
-	public function next() {
+	public function next()
+	{
 		$this->position++;
 		next($this->member_records);
 	}
 
-	public function rewind() {
+	public function rewind()
+	{
 		$this->position = 0;
 		reset($this->member_records);
 	}
 
-	public function valid() {
+	public function valid()
+	{
 		return $this->position < count($this->member_records);
 	}
 
@@ -74,7 +86,8 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 	 *
 	 * @return	ilObjManualAssessment
 	 */
-	public function referencedObject() {
+	public function referencedObject()
+	{
 		return $this->mass;
 	}
 
@@ -84,15 +97,18 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 	 * @param int|string|null[]	$record
 	 * @return	bool
 	 */
-	public function recordOK(array $record) {
-		if(isset($record[self::FIELD_USR_ID])) {
-			if(!$this->userExists($record[self::FIELD_USR_ID])
+	public function recordOK(array $record)
+	{
+		if (isset($record[self::FIELD_USR_ID])) {
+			if (!$this->userExists($record[self::FIELD_USR_ID])
 				|| $this->userAllreadyMemberByUsrId($record[self::FIELD_USR_ID])) {
 				return false;
 			}
 		}
-		if(!in_array($record[self::FIELD_LEARNING_PROGRESS],
-			array(self::LP_NOT_ATTEMPTED, self::LP_FAILED, self::LP_COMPLETED, self::LP_IN_PROGRESS))) {
+		if (!in_array(
+			$record[self::FIELD_LEARNING_PROGRESS],
+			array(self::LP_NOT_ATTEMPTED, self::LP_FAILED, self::LP_COMPLETED, self::LP_IN_PROGRESS)
+		)) {
 			return false;
 		}
 		return true;
@@ -104,7 +120,8 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 	 * @param int|string	$usr_id
 	 * @return	bool
 	 */
-	public function userAllreadyMemberByUsrId($usr_id) {
+	public function userAllreadyMemberByUsrId($usr_id)
+	{
 		return isset($this->member_records[$usr_id]);
 	}
 
@@ -114,12 +131,14 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 	 * @param ilObjUser	$usr
 	 * @return	bool
 	 */
-	public function userAllreadyMember(ilObjUser $usr) {
+	public function userAllreadyMember(ilObjUser $usr)
+	{
 		return $this->userAllreadyMemberByUsrId($usr->getId());
 	}
 
-	protected function userExists($usr_id) {
-		return ilObjUser::_exists($usr_id,false,'usr');
+	protected function userExists($usr_id)
+	{
+		return ilObjUser::_exists($usr_id, false, 'usr');
 	}
 
 	/**
@@ -129,8 +148,9 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 	 * @return	ilManualAssessmentMembers
 	 * @throws	ilManualAssessmentException
 	 */
-	public function withAdditionalRecord(array $record) {
-		if($this->recordOK($record)) {
+	public function withAdditionalRecord(array $record)
+	{
+		if ($this->recordOK($record)) {
 			$clone = clone $this;
 			$clone->member_records[$record[self::FIELD_USR_ID]] = $record;
 			return $clone;
@@ -145,8 +165,9 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 	 * @return	ilManualAssessmentMembers
 	 * @throws	ilManualAssessmentException
 	 */
-	public function withAdditionalUser(ilObjUser $usr) {
-		if(!$this->userAllreadyMember($usr)) {
+	public function withAdditionalUser(ilObjUser $usr)
+	{
+		if (!$this->userAllreadyMember($usr)) {
 			$clone = clone $this;
 			$clone->member_records[$usr->getId()] = $this->buildNewRecordOfUser($usr);
 			return $clone;
@@ -154,7 +175,8 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 		throw new ilManualAssessmentException('User allready member');
 	}
 
-	protected function buildNewRecordOfUser(ilObjUser $usr) {
+	protected function buildNewRecordOfUser(ilObjUser $usr)
+	{
 		return array(
 			  self::FIELD_USR_ID				=> $usr->getId()
 			, self::FIELD_RECORD				=> $this->mass->getSettings()->recordTemplate()
@@ -168,6 +190,9 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 			, self::FIELD_EXAMINER_LASTNAME		=> null
 			, self::FIELD_INTERNAL_NOTE			=> null
 			, self::FIELD_FINALIZED				=> 0
+			, self::FIELD_PLACE					=> null
+			, self::FIELD_EVENTTIME				=> time()
+			, self::FIELD_FILE_NAME 			=> ""
 			);
 	}
 
@@ -178,9 +203,10 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 	 * @return	ilManualAssessmentMembers
 	 * @throws	ilManualAssessmentException
 	 */
-	public function withoutPresentUser(ilObjUser $usr) {
+	public function withoutPresentUser(ilObjUser $usr)
+	{
 		$usr_id = $usr->getId();
-		if(isset($this->member_records[$usr_id]) && (string)$this->member_records[$usr_id][self::FIELD_FINALIZED] !== "1") {
+		if (isset($this->member_records[$usr_id]) && (string)$this->member_records[$usr_id][self::FIELD_FINALIZED] !== "1") {
 			$clone = clone $this;
 			unset($clone->member_records[$usr->getId()]);
 			return $clone;
@@ -194,29 +220,31 @@ class ilManualAssessmentMembers implements Iterator, Countable {
 	 *
 	 * @return	int|string[]
 	 */
-	public function membersIds() {
+	public function membersIds()
+	{
 		return array_keys($this->member_records);
 	}
-	
+
 	/**
-	 * Store the data to a persistent medium 
+	 * Store the data to a persistent medium
 	 *
 	 * @param	ilManualAssessmentMembersStorage	$storage
 	 * @param	ManualAssessmentAccessHandler	$access_handler
 	 */
-	public function updateStorageAndRBAC(ilManualAssessmentMembersStorage $storage, ManualAssessmentAccessHandler $access_handler) {
+	public function updateStorageAndRBAC(ilManualAssessmentMembersStorage $storage, ManualAssessmentAccessHandler $access_handler)
+	{
 		$current = $storage->loadMembers($this->referencedObject());
 		$mass = $this->referencedObject();
-		foreach($this as $usr_id => $record) {
-			if(!$current->userAllreadyMemberByUsrId($usr_id)) {
-				$storage->insertMembersRecord($this->referencedObject(),$record);
-				$access_handler->assignUserToMemberRole(new ilObjUser($usr_id),$mass);
+		foreach ($this as $usr_id => $record) {
+			if (!$current->userAllreadyMemberByUsrId($usr_id)) {
+				$storage->insertMembersRecord($this->referencedObject(), $record);
+				$access_handler->assignUserToMemberRole(new ilObjUser($usr_id), $mass);
 			}
 		}
-		foreach($current as $usr_id => $record) {
-			if(!$this->userAllreadyMemberByUsrId($usr_id)) {
-				$storage->removeMembersRecord($this->referencedObject(),$record);
-				$access_handler->deassignUserFromMemberRole(new ilObjUser($usr_id),$mass);
+		foreach ($current as $usr_id => $record) {
+			if (!$this->userAllreadyMemberByUsrId($usr_id)) {
+				$storage->removeMembersRecord($this->referencedObject(), $record);
+				$access_handler->deassignUserFromMemberRole(new ilObjUser($usr_id), $mass);
 			}
 		}
 	}

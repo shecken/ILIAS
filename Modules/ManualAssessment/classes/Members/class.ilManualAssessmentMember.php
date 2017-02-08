@@ -3,6 +3,7 @@ require_once 'Modules/ManualAssessment/classes/class.ilObjManualAssessment.php';
 require_once 'Services/User/classes/class.ilObjUser.php';
 require_once 'Modules/ManualAssessment/exceptions/class.ilManualAssessmentException.php';
 require_once 'Modules/ManualAssessment/classes/Members/class.ilManualAssessmentMembers.php';
+require_once "Services/Calendar/classes/class.ilDateTime.php";
 /**
  * Edit the record of a user, set LP.
  * @author	Denis Klöpfer <denis.kloepfer@concepts-and-training.de>
@@ -19,6 +20,18 @@ class ilManualAssessmentMember
 	protected $finalized;
 	protected $notification_ts;
 	protected $lp_status;
+	protected $place;
+	protected $event_time;
+
+	/**
+	 * @var string
+	 */
+	protected $file_name;
+
+	/**
+	 * @var boolean
+	 */
+	protected $view_file;
 
 	public function __construct(ilObjManualAssessment $mass, ilObjUser $usr, array $data)
 	{
@@ -30,6 +43,10 @@ class ilManualAssessmentMember
 		$this->finalized = $data[ilManualAssessmentMembers::FIELD_FINALIZED] ? true : false;
 		$this->lp_status = $data[ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS];
 		$this->notification_ts = $data[ilManualAssessmentMembers::FIELD_NOTIFICATION_TS];
+		$this->place = $data[ilManualAssessmentMembers::FIELD_PLACE];
+		$this->event_time = new ilDateTime($data[ilManualAssessmentMembers::FIELD_EVENTTIME], IL_CAL_UNIX);
+		$this->file_name = $data[ilManualAssessmentMembers::FIELD_FILE_NAME];
+		$this->view_file = $data[ilManualAssessmentMembers::FIELD_USER_VIEW_FILE];
 		$this->mass = $mass;
 		$this->usr = $usr;
 	}
@@ -173,6 +190,40 @@ class ilManualAssessmentMember
 	}
 
 	/**
+	 * Clone this object and set an internal note
+	 *
+	 * @param	string	$place
+	 * @return	ilManualAssessmentMember
+	 */
+	public function withPlace($place)
+	{
+		assert('is_string($place) || $place === null');
+		if (!$this->finalized()) {
+			$clone = clone $this;
+			$clone->place = $place;
+			return $clone;
+		}
+		throw new ilManualAssessmentException('user allready finalized');
+	}
+
+	/**
+	 * Clone this object and set an internal note
+	 *
+	 * @param	ilDateTime | null	$internal_note
+	 * @return	ilManualAssessmentMember
+	 */
+	public function withEventTime($event_time)
+	{
+		assert('$event_time instanceof ilDateTime || $event_time === null');
+		if (!$this->finalized()) {
+			$clone = clone $this;
+			$clone->event_time = $event_time;
+			return $clone;
+		}
+		throw new ilManualAssessmentException('user allready finalized');
+	}
+
+	/**
 	 * Clone this object and set an examiner_id
 	 *
 	 * @param	int|string	$examiner_id
@@ -298,5 +349,65 @@ class ilManualAssessmentMember
 	public function notificationTS()
 	{
 		return $this->notification_ts;
+	}
+
+	public function place()
+	{
+		return $this->place;
+	}
+
+	public function eventTime()
+	{
+		return $this->event_time;
+	}
+
+	/**
+	 * Get the name of the uploaded file
+	 *
+	 * @return string
+	 */
+	public function fileName()
+	{
+		return $this->file_name;
+	}
+
+	/**
+	 * Set the name of the file
+	 *
+	 * @param string 	$file_name
+	 *
+	 * @return ilManualAssessmentMember
+	 */
+	public function withFileName($file_name)
+	{
+		assert('is_string($file_name)');
+		$clone = clone $this;
+		$clone->file_name = $file_name;
+		return $clone;
+	}
+
+	/**
+	 * Can user see the uploaded file
+	 *
+	 * @return boolean
+	 */
+	public function viewFile()
+	{
+		return $this->view_file;
+	}
+
+	/**
+	 * Set user can view uploaded file
+	 *
+	 * @param boolean 	$view_file
+	 *
+	 * @return ilManualAssessmentMember
+	 */
+	public function withViewFile($view_file)
+	{
+		assert('is_bool($view_file)');
+		$clone = clone $this;
+		$clone->view_file = $view_file;
+		return $clone;
 	}
 }

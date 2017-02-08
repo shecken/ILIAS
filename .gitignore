@@ -29,6 +29,9 @@ db_template_writer.php
 
 !/Customizing/global/plugins/
 
+#/Customizing/global but not lang
+!/Customizing/global/lang
+
 # /Modules/BookingManager/js/
 
 # /Modules/Chatroom/classes/admintasks/
