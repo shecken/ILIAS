@@ -15,10 +15,10 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 {
 	use ReportVAPass\Settings\ilFormHelper;
 
-	const TAB_VIEW = "tab_view";
+	const TAB_SHOW_CONTENT = "tab_show_content";
 	const TAB_SETTINGS = "tab_settings";
 
-	const VIEW = "view";
+	const SHOW_CONTENT = "showContent";
 
 	/**
 	 * @var CaT\Plugins\ReportVAPass\ilActions
@@ -63,6 +63,9 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 					case ilVAPassSettingsGUI::SAVE_SETTINGS:
 						$this->forwardSettings();
 						break;
+					case self::SHOW_CONTENT:
+						$this->showContent();
+						break;
 				}
 		}
 	}
@@ -97,7 +100,7 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->g_ctrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {
-			// $this->gTabs->setTabActive(self::TAB_SETTINGS);
+			$this->g_tabs->setTabActive(self::TAB_SETTINGS);
 			$actions = $this->object->getActions();
 			require_once(__DIR__."/Settings/class.ilVAPassSettingsGUI.php");
 			$gui = new \ilVAPassSettingsGUI($actions, $this->plugin->txtClosure());
@@ -105,8 +108,9 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 		}
 	}
 
-	public function view()
+	public function showContent()
 	{
+		$this->g_tabs->setTabActive(self::TAB_SHOW_CONTENT);
 	}
 
 		/**
@@ -115,7 +119,7 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 	protected function setTabs()
 	{
 		if ($this->g_access->checkAccess("visible", "", $this->object->getRefId())) {
-			$this->g_tabs->addTab(self::TAB_VIEW, $this->txt("view"), $this->g_ctrl->getLinkTarget($this, self::VIEW));
+			$this->g_tabs->addTab(self::TAB_SHOW_CONTENT, $this->txt("view"), $this->g_ctrl->getLinkTarget($this, self::SHOW_CONTENT));
 		}
 
 		if ($this->g_access->checkAccess("write", "", $this->object->getRefId())) {
