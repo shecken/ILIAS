@@ -30,4 +30,16 @@ class ilReportVAPassPlugin extends ilRepositoryObjectPlugin
 		}
 		return $this->settings_db;
 	}
+
+	/**
+	 * Get a closure to get txts from plugin.
+	 *
+	 * @return \Closure
+	 */
+	public function txtClosure()
+	{
+		return function ($code) {
+			return $this->txt($code);
+		};
+	}
 }
