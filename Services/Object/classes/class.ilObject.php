@@ -35,7 +35,7 @@ class ilObject
 
 	/**
 	* object id
-	* @public		integer object id of object itself
+	* @var		integer object id of object itself
 	* @access	private
 	*/
 	public $id;	// true object_id!!!!
@@ -75,13 +75,13 @@ class ilObject
 
 	/**
 	* max description length
-	* @public integer
+	* @var integer
 	*/
 	public $max_desc;
 
 	/**
 	* add dots to shortened titles and descriptions
-	* @finish_until boolean
+	* @var boolean
 	*/
 	public $add_dots;
 
