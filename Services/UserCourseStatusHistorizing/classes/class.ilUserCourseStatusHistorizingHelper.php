@@ -188,7 +188,7 @@ class ilUserCourseStatusHistorizingHelper
 	 */
 	public function courseHasIndividualStartAndEnd($course)
 	{
-		return gevCourseUtils::getInstanceByObjOrId($course)->getType() == "Selbstlernkurs";
+		return in_array(gevCourseUtils::getInstanceByObjOrId($course)->getType(), array("Selbstlernkurs", "Praxisbegleitung"));
 	}
 
 	/**

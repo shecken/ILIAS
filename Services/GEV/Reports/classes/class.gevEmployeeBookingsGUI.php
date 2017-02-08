@@ -12,12 +12,12 @@
 require_once("Services/GEV/Reports/classes/class.catBasicReportGUI.php");
 require_once("Services/CaTUIComponents/classes/class.catTitleGUI.php");
 require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 
 class gevEmployeeBookingsGUI extends catBasicReportGUI
 {
 	public function __construct()
 	{
-
 		parent::__construct();
 
 		$this->title = catTitleGUI::create()
@@ -92,6 +92,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 						->static_condition("usrcrs.hist_historic = 0")
 						->static_condition("usrcrs.booking_status IN ('gebucht', 'auf Warteliste')")
 						->static_condition("crs.begin_date > CURDATE()")
+						->static_condition("crs.type != ".$this->db->quote(gevCourseUtils::CRS_TYPE_COACHING, "text"))
 						->action($this->ctrl->getLinkTarget($this, "view"))
 						->compile()
 						;
@@ -151,7 +152,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 		$this->ctrl->setParameter($this, "crs_id", $rec["crs_id"]);
 		$now = @date("Y-m-d");
 		if (($rec["absolute_cancel_deadline_date"] === null
-			|| ($rec["type"] != "Selbstlernkurs" && $rec["absolute_cancel_deadline_date"] > $now))
+			|| (!in_array($rec["type"], array("Selbstlernkurs")) && $rec["absolute_cancel_deadline_date"] > $now))
 		&& in_array($rec["user_id"], $this->employee_ids_for_booking_cancellation)) {
 			// Code starts here!
 			$rec["action"] = "<a href='".$this->ctrl->getLinkTarget($this, "confirmCancelBooking")."'>"
@@ -220,8 +221,6 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 
 	protected function loadCourseAndTargetUserId()
 	{
-		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
-
 		$this->crs_id = intval($_GET["crs_id"]);
 		$this->target_user_id = intval($_GET["usr_id"]);
 		$this->crs_utils = gevCourseUtils::getInstance($this->crs_id);

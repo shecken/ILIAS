@@ -129,7 +129,9 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					.'			'.$this->datePeriodFilter()
 					.'			'.$this->noWBDImportedFilter()
 					.'	LEFT JOIN hist_course crs'.PHP_EOL
-					.'		ON crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0'.PHP_EOL
+					.'		ON crs.crs_id = usrcrs.crs_id'.PHP_EOL
+					.'			AND crs.hist_historic = 0'.PHP_EOL
+					.'			AND crs.type != '.$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text").PHP_EOL
 					.'			'.$this->tpl_filter
 					.$this->courseTopicsFilter()
 					.$this->queryWhere().PHP_EOL

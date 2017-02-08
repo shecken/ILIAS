@@ -3,6 +3,7 @@
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
 require_once 'Services/GEV/Utils/classes/class.gevUserUtils.php';
 require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 require_once 'Services/UserCourseStatusHistorizing/classes/class.ilCertificateStorage.php';
 
 ini_set("memory_limit", "2048M");
@@ -89,6 +90,7 @@ class ilObjReportEduBio extends ilObjReportBase
 				->static_condition($this->gIldb
 										->in("usrcrs.booking_status", array( "gebucht", "kostenpflichtig storniert"), false, "text"))
 				->static_condition("(crs.crs_id < 0 OR oref.deleted IS NULL)")
+				->static_condition("crs.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text"))
 				->action($this->filter_action)
 				->compile();
 		return $filter;
@@ -207,9 +209,9 @@ class ilObjReportEduBio extends ilObjReportBase
 				."		AND ( usrcrs.end_date >= ".$this->gIldb->quote($start->get(IL_CAL_DATE), "date")
 				."			OR usrcrs.end_date = '0000-00-00')"
 				."		AND usrcrs.begin_date <= ".$this->gIldb->quote($end->get(IL_CAL_DATE), "date")
-				."		AND ((crs.type = ".$this->gIldb->quote('Selbstlernkurs', 'text')
+				."		AND ((".$this->gIldb->in("crs.type", array('Selbstlernkurs'), false, 'text')
 				."				AND usrcrs.begin_date > ".$this->gIldb->quote('2013-01-01', 'date').")"
-				."			OR (crs.type != ".$this->gIldb->quote('Selbstlernkurs', 'text')
+				."			OR (".$this->gIldb->in("crs.type", array('Selbstlernkurs'), true, 'text')
 				."				AND usrcrs.end_date > ".$this->gIldb->quote('2013-01-01', 'date')."))"
 				."		AND (usrcrs.wbd_booking_id IS ".($transferred ? "NOT" : "")." NULL "
 				." 			".($transferred ? "AND" : "OR")." usrcrs.wbd_booking_id ".($transferred ? "!=" : "=")." '-empty-')"

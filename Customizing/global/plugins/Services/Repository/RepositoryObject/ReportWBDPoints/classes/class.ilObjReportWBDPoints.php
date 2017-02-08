@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
+require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 
 ini_set("memory_limit", "2048M");
 ini_set('max_execution_time', 0);
@@ -132,6 +133,7 @@ class ilObjReportWBDPoints extends ilObjReportBase
 				  ."     AND usrcrs.wbd_booking_id != '-empty-'\n"
 				  ."     AND usr.hist_historic = 0\n"
 				  ."     AND crs.hist_historic = 0\n"
+				  ."     AND crs.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")."\n"
 				  ."     AND usrcrs.hist_historic = 0\n";
 
 		$filter = $this->filter();

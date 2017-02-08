@@ -6,6 +6,7 @@ require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
 require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 
 class ilObjReportCompanyGlobal extends ilObjReportBase
 {
@@ -25,7 +26,11 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 	{
 		 $this->setType("xrcg");
 		 $amd_utils = gevAMDUtils::getInstance();
-		 $this->types = $amd_utils->getOptions(gevSettings::CRS_AMD_TYPE);
+		 $this->types = array_filter($amd_utils->getOptions(gevSettings::CRS_AMD_TYPE), function ($type) {
+		 	if ($type != gevCourseUtils::CRS_TYPE_COACHING) {
+		 		return $type;
+		 	}
+		 });
 	}
 
 	/**
@@ -196,6 +201,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 		$sum_data['part_user'] = '--';
 		$sum_data['book_user'] = '--';
 		$data['sum'] = $sum_data;
+
 		return $data;
 	}
 
@@ -275,7 +281,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 					'		OR hucs.end_date = \'0000-00-00\''.PHP_EOL.
 					'		OR hucs.end_date = \'-empty-\')'.PHP_EOL.
 					' AND hucs.end_date <= '.$this->gIldb->quote($end, "date").PHP_EOL.
-					' AND ( hc.type <> \'Selbstlernkurs\''.PHP_EOL.
+					' AND ( hc.type NOT IN (\'Selbstlernkurs\')'.PHP_EOL.
 					'      OR ( (hucs.end_date = \'0000-00-00\' OR hucs.end_date = \'-empty-\')'.PHP_EOL.
 					'           AND hucs.begin_date >= '.$this->gIldb->quote($start, "date").PHP_EOL.
 					'           AND hucs.begin_date <= '.$this->gIldb->quote($end, "date").PHP_EOL.

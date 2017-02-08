@@ -39,6 +39,7 @@ class gevWBDDataCollector implements WBDDataCollector
 		require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 		require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 		require_once("Services/UserCourseStatusHistorizing/classes/class.ilUserCourseStatusHistorizing.php");
 
 
@@ -560,6 +561,7 @@ class gevWBDDataCollector implements WBDDataCollector
 						." AND wbd_errors.resolved = 0\n"
 				." WHERE hist_usercoursestatus.hist_historic = 0\n"
 					." AND hist_course.hist_historic = 0\n"
+					." AND hist_course.type != ".$this->gDB->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")."\n"
 					." AND hist_user.hist_historic = 0\n"
 					." AND hist_user.bwv_id != '-empty-'\n"
 					." AND hist_usercoursestatus.function IN ('Mitglied', 'Teilnehmer')\n"

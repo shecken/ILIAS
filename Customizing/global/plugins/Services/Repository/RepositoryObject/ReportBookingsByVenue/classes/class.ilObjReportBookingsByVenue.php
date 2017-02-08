@@ -2,6 +2,7 @@
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
 require_once 'Services/GEV/Utils/classes/class.gevOrgUnitUtils.php';
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 
 ini_set('max_execution_time', 0);
 set_time_limit(0);
@@ -82,6 +83,7 @@ class ilObjReportBookingsByVenue extends ilObjReportBase
 				->static_condition("crs.venue NOT LIKE 'Online%'")
 				->static_condition("oref.deleted IS NULL")
 				->static_condition("cs.activation_type = 1")
+				->static_condition("crs.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text"))
 				->static_condition($this->gIldb->in("venue", $venue_names, false, "text"))
 				->action($this->filter_action)
 				->compile()

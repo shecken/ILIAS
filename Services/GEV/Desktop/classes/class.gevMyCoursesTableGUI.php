@@ -123,7 +123,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 				   )
 			   )
 			)
-			&& $a_set["type"] != "Selbstlernkurs"
+			&& !in_array($a_set["type"], array("Selbstlernkurs"))
 			;
 
 		if ($show_cancel_link) {

@@ -1,10 +1,11 @@
 <?php
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
+
 
 class ilObjReportTrainingAttendance extends ilObjReportBase
 {
-
 	protected $online;
 	protected $relevant_parameters = array();
 
@@ -58,7 +59,7 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 		// TODO: implement this properly
 		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 
-		return $this->settings['is_local'] ? $this->getSubtreeCourseTemplates() : gevCourseUtils::getAllTemplates();
+		return $this->settings['is_local'] ? $this->getSubtreeCourseTemplates() : gevCourseUtils::getAllTemplates(true);
 	}
 
 	public function getOrguOptions()
@@ -120,7 +121,7 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 					$txt("role_choice_description"),
 					$this->getRoleOptions()
 				)->map(function ($id_s) {
-						return $id_s;
+					return $id_s;
 				}, $tf->lst($tf->int()))
 			)->map(function ($choice, $id_s) {
 					return array($choice,$id_s);
