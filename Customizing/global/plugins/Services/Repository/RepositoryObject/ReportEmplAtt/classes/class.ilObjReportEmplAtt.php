@@ -69,7 +69,7 @@ class ilObjReportEmplAtt extends ilObjReportBase
 			->join("hist_usercoursestatus usrcrs")
 				->on("usr.user_id = usrcrs.usr_id AND usrcrs.hist_historic = 0")
 			->join("hist_course crs")
-				->on("crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0")
+				->on("crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0 AND crs.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text"))
 			->left_join("hist_userorgu orgu_all")
 				->on("orgu_all.usr_id = usr.user_id")
 			->left_join("hist_userrole role")

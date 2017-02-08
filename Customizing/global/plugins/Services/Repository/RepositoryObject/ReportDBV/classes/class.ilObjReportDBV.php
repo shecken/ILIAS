@@ -3,6 +3,7 @@
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
 require_once 'Services/GEV/Utils/classes/class.gevUserUtils.php';
 require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 
 ini_set("memory_limit", "2048M");
 ini_set('max_execution_time', 0);
@@ -110,6 +111,7 @@ class ilObjReportDBV extends ilObjReportBase
 				->static_condition("hucs.hist_historic = 0")
 				->static_condition("hucs.booking_status != ".$this->gIldb->quote('-empty-', 'text'))
 				->static_condition("hc.hist_historic = 0")
+				->static_condition("hc.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text"))
 				->static_condition("huo_out_aux.hist_version IS NULL")
 				->static_condition($this->gIldb->in("hc.dbv_hot_topic", gevSettings::$dbv_hot_topics, false, "text"))
 				->action($this->filter_action)

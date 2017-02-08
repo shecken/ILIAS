@@ -153,7 +153,7 @@ class ilManualAssessmentMembersGUI
 	public function addUsers(array $user_ids)
 	{
 		if (!$this->userMayEditMembers()) {
-			$a_parent_gui->handleAccessViolation();
+			$this->parent_gui->handleAccessViolation();
 		}
 
 		$mass = $this->object;
@@ -179,7 +179,7 @@ class ilManualAssessmentMembersGUI
 	protected function removeUserConfirmation()
 	{
 		if (!$this->userMayEditMembers()) {
-			$a_parent_gui->handleAccessViolation();
+			$this->parent_gui->handleAccessViolation();
 		}
 
 		include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
@@ -200,7 +200,7 @@ class ilManualAssessmentMembersGUI
 	public function removeUser()
 	{
 		if (!$this->userMayEditMembers()) {
-			$a_parent_gui->handleAccessViolation();
+			$this->parent_gui->handleAccessViolation();
 		}
 
 		$usr_id = $_POST['usr_id'];

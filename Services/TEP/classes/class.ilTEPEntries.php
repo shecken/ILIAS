@@ -9,7 +9,6 @@
  */
 class ilTEPEntries
 {
-
 	protected $user_ids; // [array]
 	protected $catgory_ids; // [array]
 	protected $start; // [ilDate]
@@ -485,6 +484,13 @@ class ilTEPEntries
 				// don't show cancelled trainings w/o trainers
 				if ((int)$user_id === 0 && isset($entry['course_ref_id'])) {
 					if (gevCourseUtils::getInstanceByObj(new ilObjCourse($entry['course_ref_id']))->getIsCancelled()) {
+						continue;
+					}
+				}
+
+				//dont't show trainings of type 'Praxisbegleitung'
+				if (isset($entry['course_ref_id'])) {
+					if (gevCourseUtils::getInstanceByObj(new ilObjCourse($entry['course_ref_id']))->isCoaching()) {
 						continue;
 					}
 				}

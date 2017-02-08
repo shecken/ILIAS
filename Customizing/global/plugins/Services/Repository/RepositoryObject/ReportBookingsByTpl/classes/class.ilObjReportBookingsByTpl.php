@@ -131,7 +131,11 @@ class ilObjReportBookingsByTpl extends ilObjReportBase
 				$f->multiselectsearch(
 					$txt('course_type'),
 					'',
-					$this->getDistinctRowEntriesFormTableForFilter('type', 'hist_course')
+					array_filter($this->getDistinctRowEntriesFormTableForFilter('type', 'hist_course'), function ($item) {
+						if ($item != gevCourseUtils::CRS_TYPE_COACHING) {
+							return $item;
+						}
+					})
 				),
 				$f->multiselectsearch(
 					$txt('crs_title'),
@@ -375,7 +379,7 @@ class ilObjReportBookingsByTpl extends ilObjReportBase
 		if (count($selection)>0) {
 			return '	AND '.$this->gIldb->in('crs.type', $selection, false, 'text');
 		}
-		return '';
+		return '	AND '.$this->gIldb->in('crs.type', array(gevCourseUtils::CRS_TYPE_COACHING), true, 'text');
 	}
 
 	private function templateTitleFilterCondition()

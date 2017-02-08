@@ -24,6 +24,7 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 		$this->may_edit = $this->userMayEditGrades();
 		$this->may_view = $this->userMayViewGrades();
 		$this->may_book = $this->userMayEditMembers();
+		$this->may_amend = $this->userMayAmendGrades();
 		$this->columns = $this->visibleColumns();
 		$this->viewer_id = $ilUser->getId();
 		foreach ($this->columns as $lng_var => $params) {
@@ -123,7 +124,7 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 		$this->ctrl->setParameterByClass('ilManualAssessmentMemberGUI', 'usr_id', $a_set['usr_id']);
 		$edited_by_other = $this->setWasEditedByOtherUser($a_set);
 
-		if (($a_set['finalized'] && $this->may_edit && !$edited_by_other) || $this->may_view) {
+		if ($a_set['finalized'] && (($this->may_edit && !$edited_by_other) || $this->may_view)) {
 			$target = $this->ctrl->getLinkTargetByClass('ilManualAssessmentMemberGUI', 'view');
 			$l->addItem($this->lng->txt('mass_usr_view'), 'view', $target);
 		}
@@ -136,6 +137,11 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 			$target = $this->ctrl->getLinkTarget($this->parent_obj, 'removeUserConfirmation');
 			$this->ctrl->setParameter($this->parent_obj, 'usr_id', null);
 			$l->addItem($this->lng->txt('mass_usr_remove'), 'removeUser', $target);
+		}
+
+		if ($a_set['finalized'] && $this->may_amend) {
+			$target = $this->ctrl->getLinkTargetByClass('ilManualAssessmentMemberGUI', 'amend');
+			$l->addItem($this->lng->txt('mass_usr_amend'), 'amend', $target);
 		}
 		$this->ctrl->setParameterByClass('ilManualAssessmentMemberGUI', 'usr_id', null);
 		return $l->getHTML();
@@ -150,6 +156,11 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 	protected function userMayEditGrades()
 	{
 		return $this->parent_obj->userMayEditGrades();
+	}
+
+	protected function userMayAmendGrades()
+	{
+		return $this->parent_obj->object->accessHandler()->checkAccessToObj($this->parent_obj->object, 'amend_grading');
 	}
 
 	protected function userMayViewGrades()

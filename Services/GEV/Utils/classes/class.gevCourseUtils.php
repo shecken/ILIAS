@@ -26,6 +26,7 @@ class gevCourseUtils
 	const CREATOR_ROLE_TITLE = "Pool Trainingsersteller";
 	const RECIPIENT_MEMBER = "Mitglied";
 	const RECIPIENT_STANDARD = "standard";
+	const CRS_TYPE_COACHING = "Praxisbegleitung";
 
 	protected function __construct($a_crs_id)
 	{
@@ -460,6 +461,11 @@ class gevCourseUtils
 		return $this->getType() == "Selbstlernkurs";
 	}
 
+	public function isCoaching()
+	{
+		return $this->getType() == self::CRS_TYPE_COACHING;
+	}
+
 	public function isWebinar()
 	{
 		return $this->getType() == "Webinar";
@@ -664,7 +670,7 @@ class gevCourseUtils
 	{
 		$type = $this->getType();
 		if ($type === null
-		  || in_array($type, array("POT-Termin", "Selbstlernkurs"))) {
+		  || in_array($type, array("POT-Termin", "Selbstlernkurs", self::CRS_TYPE_COACHING))) {
 			return null;
 		}
 		$schedule = $this->getSchedule();
@@ -1597,11 +1603,13 @@ class gevCourseUtils
 		$wb = "Webinar";
 		$vt = "Virtuelles Training";
 		$sk = "Selbstlernkurs";
+		$ch = self::CRS_TYPE_COACHING;
 		return array( $all => $all
 					, $pt => $pt
 					, $wb => $wb
 					, $vt => $vt
 					, $sk => $sk
+					, $ch => $ch
 					);
 	}
 
@@ -3955,20 +3963,30 @@ class gevCourseUtils
 	/**
 	* gets all crs with amd field Template = "ja"
 	*
+	* @param boolean 	$remove_coaching_templates
+	*
 	* @return array(obj_id => title)
 	*/
-	public static function getAllTemplates()
+	public static function getAllTemplates($remove_coaching_templates = false)
 	{
 		global $ilDB;
 		$template_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_IS_TEMPLATE);
 		$query = "SELECT od.obj_id, od.title\n"
 				." FROM object_data od\n"
 				." JOIN adv_md_values_text admt ON admt.obj_id = od.obj_id\n"
-				."    AND admt.field_id = ".$ilDB->quote($template_field_id, "integer")."\n"
-				." WHERE od.type = ".$ilDB->quote("crs", "text")."\n"
+				."    AND admt.field_id = ".$ilDB->quote($template_field_id, "integer")."\n";
+
+		if ($remove_coaching_templates) {
+			$type_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_TYPE);
+			$quer .= " JOIN adv_md_values_text adm_type ON adm_type.obj_id = od.obj_id\n"
+				."    AND adm_type.field_id = ".$ilDB->quote($type_field_id, "integer")."\n"
+				."    AND adm_type.value = ".$ilDB->quote(self::CRS_TYPE_COACHING, "text")."\n";
+		}
+
+		$where = " WHERE od.type = ".$ilDB->quote("crs", "text")."\n"
 				."    AND admt.value = ".$ilDB->quote("Ja", "text")."\n";
 
-		$res = $ilDB->query($query);
+		$res = $ilDB->query($query.$where);
 		$ret = array();
 
 		while ($row = $ilDB->fetchAssoc($res)) {

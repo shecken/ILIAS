@@ -531,6 +531,7 @@ gev#:#gev_excel_member_row_title#:#Mitgliederliste
 gev#:#gev_excel_member_title#:#Mitgliederliste
 gev#:#gev_exit_date#:#Austrittsdatum
 gev#:#gev_failed#:#nicht teilgenommen
+gev#:#gev_not_yet_started#:#noch nicht begonnen
 gev#:#gev_fee_bill_item#:#Teilnahmegebühr Training "%s"
 gev#:#gev_bill_covered_skip_coupons#:#Die Rechnung ist schon gedeckt. Keine weiteren Gutscheine nötig.
 gev#:#gev_cupon_has_no_value#:#Der Gutschein hat keinen Restwert.
@@ -1731,6 +1732,10 @@ mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
 mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach finaler Bewertung vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
 mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
 mass#:#mass_edit_conditions#:#Vorbedingungen
+rbac#:#amend_grading#:#Beurteilung ändern
+mass#:#mass_usr_amend#:#Beurteilung ändern
+mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.
+rbac#:mass_amend_grading#:#Benutzer darf die Prüfungsdaten nachträglich ändern.
 mass#:#mass_file_required#:#Dateiupload verpflichtend
 mass#:#mass_file_required_info#:#In der Beurteilung zu einem Teilnehmer muss eine Datei hochgeladen werden.
 mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer

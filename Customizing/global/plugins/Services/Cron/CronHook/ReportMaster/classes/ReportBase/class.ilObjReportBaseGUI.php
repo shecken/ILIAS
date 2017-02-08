@@ -11,7 +11,8 @@ require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/int
 require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.ReportSettingsFormHandler.php");
 require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportSettings/class.SettingFactory.php");
 
-abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
+abstract class ilObjReportBaseGUI extends ilObjectPluginGUI
+{
 
 	protected $gLng;
 	protected $gCtrl;
@@ -20,8 +21,9 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 	protected $gLog;
 	protected $gAccess;
 
-	protected function afterConstructor() {
-		global $lng, $ilCtrl, $tpl, $ilUser, $ilLog, $ilAccess, $ilTabs;	
+	protected function afterConstructor()
+	{
+		global $lng, $ilCtrl, $tpl, $ilUser, $ilLog, $ilAccess, $ilTabs;
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gTpl = $tpl;
@@ -38,21 +40,27 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		$this->title = null;
 	}
 
-	public function setTabs() {
-		if($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
-			
+	public function setTabs()
+	{
+		if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
 			// tab for the "show content" command
 			if ($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
-				$this->gTabs->addTab("content", $this->object->plugin->txt($this->getType()."_content"),
-				$this->gCtrl->getLinkTarget($this, "showContent"));
+				$this->gTabs->addTab(
+					"content",
+					$this->object->plugin->txt($this->getType()."_content"),
+					$this->gCtrl->getLinkTarget($this, "showContent")
+				);
 			}
 
 			// standard info screen tab
 			$this->addInfoTab();
 
 			// a "properties" tab
-			$this->gTabs->addTab("properties", $this->object->plugin->txt($this->getType()."_properties"),
-			$this->gCtrl->getLinkTarget($this, "settings"));			
+			$this->gTabs->addTab(
+				"properties",
+				$this->object->plugin->txt($this->getType()."_properties"),
+				$this->gCtrl->getLinkTarget($this, "settings")
+			);
 
 			// standard epermission tab
 			$this->addPermissionTab();
@@ -62,36 +70,29 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 	/**
 	* Besides usual report commands (exportXLS, view, ...) showMenu goes here
 	*/
-	public function performCommand() {
+	public function performCommand()
+	{
 		$cmd = $this->gCtrl->getCmd("showContent");
 		switch ($cmd) {
 			case "saveSettings":
-				if($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+				if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
 					$this->gTabs->activateTab("properties");
 					return $this->saveSettings();
 				}
 				break;
 			case "settings":
-				if($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
-					$this->gTabs->addSubTabTarget("edit_settings",
-												 $this->gCtrl->getLinkTarget($this,'settings'),
-												 "write", get_class($this));
-					$this->gTabs->addSubTabTarget("report_query_view",
-												 $this->gCtrl->getLinkTarget($this,'query_view'),
-												 "write", get_class($this));
+				if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+					$this->setSubTab("edit_settings", "settings");
+					$this->setSubTab("report_query_view", "query_view");
 					$this->gTabs->activateTab("properties");
 					$this->gTabs->activateSubTab("edit_settings");
 					return $this->renderSettings();
 				}
 				break;
 			case "query_view":
-				if($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
-					$this->gTabs->addSubTabTarget("edit_settings",
-												 $this->gCtrl->getLinkTarget($this,'settings'),
-												 "write", get_class($this));
-					$this->gTabs->addSubTabTarget("report_query_view",
-												 $this->gCtrl->getLinkTarget($this,'settings'),
-												 "write", get_class($this));
+				if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+					$this->setSubTab("edit_settings", "settings");
+					$this->setSubTab("report_query_view", "query_view");
 					$this->gTabs->activateTab("properties");
 					$this->gTabs->activateSubTab("report_query_view");
 					$this->object->prepareRelevantParameters();
@@ -100,7 +101,7 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 				}
 				break;
 			case "exportexcel":
-				if($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
+				if ($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
 					$this->object->prepareRelevantParameters();
 					$this->setFilterAction($cmd);
 					$this->exportExcel();
@@ -116,8 +117,19 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		}
 	}
 
-	protected function showContent() {
-		if($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
+	protected function setSubTab($name, $link_target)
+	{
+		$this->gTabs->addSubTabTarget(
+			$name,
+			$this->gCtrl->getLinkTarget($this, $link_target),
+			"write",
+			get_class($this)
+		);
+	}
+
+	protected function showContent()
+	{
+		if ($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
 			$this->gTabs->activateTab("content");
 			$this->object->prepareRelevantParameters();
 			$this->setFilterAction($cmd);
@@ -125,15 +137,18 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		}
 	}
 
-	public function performCustomCommand($cmd) {
+	public function performCustomCommand($cmd)
+	{
 		return false;
 	}
 
-	public function getAfterCreationCmd() {
+	public function getAfterCreationCmd()
+	{
 		return "settings";
 	}
 
-	public function getStandardCmd() {
+	public function getStandardCmd()
+	{
 		return "showContent";
 	}
 
@@ -141,7 +156,8 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 	 * render query for debugging purposes
 	 * a filter is present and may be modified to observe the effects on query
 	 */
-	public function renderQueryView() {
+	public function renderQueryView()
+	{
 		include_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
 		$this->object->prepareReport();
 		$content = $this->object->deliverFilter() !== null ? $this->object->deliverFilter()->render() : "";
@@ -156,23 +172,26 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 	/**
 	 * render report.
 	 */
-	public function renderReport() {
+	public function renderReport()
+	{
 		$this->object->prepareReport();
 		$this->title = $this->prepareTitle(catTitleGUI::create());
 		$this->spacer = $this->prepareSpacer(new catHSpacerGUI());
 		$this->table = $this->prepareTable(new catTableGUI($this, "showContent"));
 		$this->gTpl->setContent($this->render());
 	}
-		
-	protected function render() {
+
+	protected function render()
+	{
 		$this->gTpl->setTitle(null);
 		return 	($this->title !== null ? $this->title->render() : "")
 				. ($this->object->deliverFilter() !== null ? $this->object->deliverFilter()->render() : "")
 				. ($this->spacer !== null ? $this->spacer->render() : "")
 				. $this->renderTable();
 	}
-	
-	protected function renderTable() {
+
+	protected function renderTable()
+	{
 		$callback = get_class($this).'::transformResultRow';
 		if ($this->object->deliverTable()->_group_by !== null) {
 			$data = $this->object->deliverGroupedData($callback);
@@ -191,8 +210,9 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 				.$content
 				.$export_btn;
 	}
-	
-	protected function renderExportButton() {
+
+	protected function renderExportButton()
+	{
 		$this->enableRelevantParametersCtrl();
 		$export_btn = '<a class="submit exportXlsBtn"'
 						. 'href="'
@@ -204,14 +224,16 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		return $export_btn;
 	}
 
-	protected function prepareTable($a_table) {
+	protected function prepareTable($a_table)
+	{
 		$a_table->setEnableTitle(false);
 		$a_table->setTopCommands(false);
 		$a_table->setEnableHeader(true);
 		return $a_table;
 	}
 
-	protected function prepareTitle($a_title) {
+	protected function prepareTitle($a_title)
+	{
 		$a_title->title($this->object->getTitle())
 				->subTitle($this->object->getDescription())
 				->setVideoLink($this->object->settings['video_link'])
@@ -223,44 +245,45 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		return $a_title;
 	}
 
-	protected function prepareSpacer($a_spacer) {
+	protected function prepareSpacer($a_spacer)
+	{
 		return $a_spacer;
 	}
 
-	protected function renderUngroupedTable($data) {
-		if(!$this->object->deliverTable()->row_template_filename) {
+	protected function renderUngroupedTable($data)
+	{
+		if (!$this->object->deliverTable()->row_template_filename) {
 			throw new Exception("No template defined for table ".get_class($this));
 		}
 		$this->table->setRowTemplate(
-			$this->object->deliverTable()->row_template_filename, 
+			$this->object->deliverTable()->row_template_filename,
 			$this->object->deliverTable()->row_template_module
 		);
 
 		$this->table->addColumn("", "blank", "0px", false);
 		foreach ($this->object->deliverTable()->columns as $col) {
-			$this->table->addColumn( $col[2] ? $col[1] : $this->lng->txt($col[1])
-							 , $col[5] ? $col[0] : ""
-							 , $col[3]
-							 );
+			$this->table->addColumn($col[2] ? $col[1] : $this->lng->txt($col[1]), $col[5] ? $col[0] : "", $col[3]);
 		}
-		
+
 		if ($this->object->deliverOrder() !== null) {
 			$this->table->setOrderField($this->object->deliverOrder()->getOrderField());
 			$this->table->setOrderDirection($this->object->deliverOrder()->getOrderDirection());
 		}
-		
+
 		$cnt = count($data);
 		$this->table->setLimit($cnt);
 		$this->table->setMaxCount($cnt);
 		$external_sorting = true;
 
-		if($this->object->deliverOrder() === null || 
-			in_array($this->object->deliverOrder()->getOrderField(), 
-				$this->internal_sorting_fields ? $this->internal_sorting_fields : array())
+		if ($this->object->deliverOrder() === null ||
+			in_array(
+				$this->object->deliverOrder()->getOrderField(),
+				$this->internal_sorting_fields ? $this->internal_sorting_fields : array()
+			)
 			) {
-				$external_sorting = false;	
+				$external_sorting = false;
 		}
-		
+
 		$this->table->setExternalSorting($external_sorting);
 		if ($this->internal_sorting_numeric) {
 			foreach ($this->internal_sorting_numeric as $col) {
@@ -275,7 +298,8 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		return $return;
 	}
 
-	protected function renderGroupedTable($data) {
+	protected function renderGroupedTable($data)
+	{
 		$content = "";
 		foreach ($data as $key => $rows) {
 			// We know for sure there is at least one entry in the rows
@@ -286,21 +310,19 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		return $content;
 	}
 
-	protected function renderGroupHeader($data) {
-		$tpl = new ilTemplate( $this->object->deliverTable()->group_head_template_filename
-							 , true, true
-							 , $this->object->deliverTable()->group_head_template_module
-							 );
+	protected function renderGroupHeader($data)
+	{
+		$tpl = new ilTemplate($this->object->deliverTable()->group_head_template_filename, true, true, $this->object->deliverTable()->group_head_template_module);
 
 		foreach ($this->object->deliverTable()->_group_by as $key => $conf) {
 			$tpl->setVariable("VAL_".strtoupper($key), $data[$key]);
-			$tpl->setVariable("TITLE_".strtoupper($key)
-							 , $conf[2] ? $conf[1] : $this->lng->txt($conf[1]));
+			$tpl->setVariable("TITLE_".strtoupper($key), $conf[2] ? $conf[1] : $this->lng->txt($conf[1]));
 		}
 		return $tpl->get();
 	}
 
-	protected function getExcelWriter() {
+	protected function getExcelWriter()
+	{
 		require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.spoutXLSXWriter.php';
 		$workbook = new spoutXLSXWriter();
 		return $workbook;
@@ -309,7 +331,8 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 	/**
 	 * provide xlsx version of report for download.
 	 */
-	protected function exportExcel() {
+	protected function exportExcel()
+	{
 		$this->object->prepareReport();
 
 		$workbook = $this->getExcelWriter();
@@ -348,17 +371,20 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 	/**
 	* to be used in ilObjReport<>::getData
 	*/
-	public static function transformResultRow($a_rec) {
+	public static function transformResultRow($a_rec)
+	{
 		$a_rec = self::replaceEmpty($a_rec);
 		return $a_rec;
 	}
 
-	public static function transformResultRowXLSX($a_rec) {
+	public static function transformResultRowXLSX($a_rec)
+	{
 		$a_rec = self::replaceEmpty($a_rec);
 		return $a_rec;
 	}
 
-	final protected static function replaceEmpty($a_rec) {
+	final protected static function replaceEmpty($a_rec)
+	{
 		global $lng;
 		foreach ($a_rec as $key => $value) {
 			if ($a_rec[$key] == "-empty-" || $a_rec[$key] == "0000-00-00" || $a_rec[$key] === null) {
@@ -371,21 +397,24 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 	/**
 	* housekeeping the get parameters passed to ctrl
 	*/
-	final protected function enableRelevantParametersCtrl() {
+	final protected function enableRelevantParametersCtrl()
+	{
 		foreach ($this->object->getRelevantParameters() as $get_parameter => $get_value) {
 			$this->gCtrl->setParameter($this, $get_parameter, $get_value);
 		}
 	}
 
-	final protected function disableRelevantParametersCtrl() {
+	final protected function disableRelevantParametersCtrl()
+	{
 		foreach ($this->object->getRelevantParameters() as $get_parameter => $get_value) {
 			$this->gCtrl->setParameter($this, $get_parameter, null);
 		}
 	}
 
-	protected function setFilterAction($cmd) {
+	protected function setFilterAction($cmd)
+	{
 		$this->enableRelevantParametersCtrl();
-		$this->object->setFilterAction($this->gCtrl->getLinkTarget($this,$cmd));
+		$this->object->setFilterAction($this->gCtrl->getLinkTarget($this, $cmd));
 		$this->disableRelevantParametersCtrl();
 	}
 
@@ -394,12 +423,14 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 	* Settings menu of the report. Note that any setting query will be performed inside ilObjBaseReport.
 	* Allways call parent methods in final plugin-classmethod static::settingFrom, static::getSettingsData and static::saveSettingsData.
 	*/
-	protected function renderSettings() {
+	protected function renderSettings()
+	{
 		$settings_form = $this->fillSettingsFormFromDatabase($this->settingsForm());
 		$this->gTpl->setContent($settings_form->getHtml());
 	}
 
-	protected function fillSettingsFormFromDatabase($settings_form) {
+	protected function fillSettingsFormFromDatabase($settings_form)
+	{
 		$data = $this->object->settings;
 		$title = $this->object->getTitle();
 		$desc = $this->object->getDescription();
@@ -412,10 +443,11 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		return $settings_form;
 	}
 
-	protected function saveSettings() {
+	protected function saveSettings()
+	{
 		$settings_form = $this->settingsForm();
 		$settings_form->setValuesByPost();
-		if($settings_form->checkInput()) {
+		if ($settings_form->checkInput()) {
 			$this->saveSettingsData($settings_form);
 			$red = $this->gCtrl->getLinkTarget($this, "settings", "", false, false);
 			ilUtil::redirect($red);
@@ -423,28 +455,29 @@ abstract class ilObjReportBaseGUI extends ilObjectPluginGUI {
 		$this->gTpl->setContent($settings_form->getHtml());
 	}
 
-	protected function saveSettingsData($settings_form) {
+	protected function saveSettingsData($settings_form)
+	{
 		$this->object->setTitle($settings_form->getItemByPostVar('title')->getValue());
 		$this->object->setDescription($settings_form->getItemByPostVar('description')->getValue());
 
-		$settings = array_merge($this->settings_form_handler->extractValues($settings_form,$this->object->global_report_settings)
-								,$this->settings_form_handler->extractValues($settings_form,$this->object->local_report_settings));
+		$settings = array_merge($this->settings_form_handler->extractValues($settings_form, $this->object->global_report_settings), $this->settings_form_handler->extractValues($settings_form, $this->object->local_report_settings));
 		$this->object->setSettingsData($settings);
 
 		$this->object->doUpdate();
 		$this->object->update();
 	}
 
-	protected function settingsForm() {
+	protected function settingsForm()
+	{
 		$settings_form = new ilPropertyFormGUI();
 		$settings_form->setFormAction($this->gCtrl->getFormAction($this));
 		$settings_form->addCommandButton("saveSettings", $this->gLng->txt("save"));
 
-		$title = new ilTextInputGUI($this->gLng->txt('title'),'title');
+		$title = new ilTextInputGUI($this->gLng->txt('title'), 'title');
 		$title->setRequired(true);
 		$settings_form->addItem($title);
 
-		$description = new ilTextAreaInputGUI($this->gLng->txt('description'),'description');
+		$description = new ilTextAreaInputGUI($this->gLng->txt('description'), 'description');
 		$settings_form->addItem($description);
 
 		$this->settings_form_handler->addToForm($settings_form, $this->object->global_report_settings);

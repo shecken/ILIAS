@@ -4862,7 +4862,7 @@ class ilObjCourseGUI extends ilContainerGUI
 				if (!$cmd) {
 					//gev-patch start 2423
 					$crs_utils = gevCourseUtils::getInstanceByObj($this->object);
-					if ($crs_utils->isSelflearning()) {
+					if ($crs_utils->isSelflearning() || $crs_utils->isCoaching()) {
 						$cmd = 'view';
 					} else {
 						$cmd = 'infoScreen';
