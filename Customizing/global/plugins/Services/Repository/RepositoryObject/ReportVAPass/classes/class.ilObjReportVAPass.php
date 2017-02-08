@@ -1,6 +1,9 @@
 <?php
 
-include_once("./Services/Repository/classes/class.ilObjectPlugin.php");
+require_once("./Services/Repository/classes/class.ilObjectPlugin.php");
+require_once("./vendor/autoload.php");
+
+use \CaT\Plugins\ReportVAPass;
 
 class ilObjReportVAPass extends ilObjectPlugin
 {

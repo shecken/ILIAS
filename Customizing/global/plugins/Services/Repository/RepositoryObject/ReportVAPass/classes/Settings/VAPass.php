@@ -1,4 +1,5 @@
 <?php
+namespace \CaT\Plugins\ReportVAPass\Settings;
 
 /**
  * Class for the VA Pass Settings

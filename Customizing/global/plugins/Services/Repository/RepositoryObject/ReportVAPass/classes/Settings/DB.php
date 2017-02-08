@@ -1,5 +1,7 @@
 <?php
 
+namespace \CaT\Plugins\ReportVAPass\Settings;
+
 interface DB
 {
 	/**

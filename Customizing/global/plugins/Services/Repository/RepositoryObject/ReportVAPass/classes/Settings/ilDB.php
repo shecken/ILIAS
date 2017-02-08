@@ -1,5 +1,7 @@
 <?php
 
+namespace \CaT\Plugins\ReportVAPass\Settings;
+
 class ilDB extends DB
 {
 	const VA_PASS_TABLE = "va_pass";
