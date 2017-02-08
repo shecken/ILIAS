@@ -17,6 +17,22 @@ class ilObjReportVAPassListGUI extends ilObjectPluginListGUI
 	}
 
 	/**
+	 * Get commands
+	 */
+	public function initCommands()
+	{
+		return array(
+				array("permission" => "read",
+					  "cmd" => "showContent",
+					  "default" => true)
+			  , array("permission" => "write",
+					  "cmd" => "editProperties",
+					  "txt" => $this->txt("edit"),
+					  "default" => false)
+				);
+	}
+
+	/**
 	 * Get item properties
 	 *
 	 * @return 	array 	array of property arrays:
