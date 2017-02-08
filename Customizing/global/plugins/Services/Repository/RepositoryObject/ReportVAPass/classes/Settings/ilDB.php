@@ -1,8 +1,11 @@
 <?php
 
-namespace \CaT\Plugins\ReportVAPass\Settings;
+namespace CaT\Plugins\ReportVAPass\Settings;
 
-class ilDB extends DB
+/**
+ * Implementation of Db abstraction for ILIAS
+ */
+class ilDB implements DB
 {
 	const VA_PASS_TABLE = "va_pass";
 
@@ -11,7 +14,7 @@ class ilDB extends DB
 	 */
 	protected $db;
 
-	public function __construct(ilDB $db)
+	public function __construct(\ilDB $db)
 	{
 		$this->db = $db;
 	}
@@ -30,19 +33,19 @@ class ilDB extends DB
 	public function read($obj_id)
 	{
 		assert('is_int($obj_id)');
-		$query = "SELECT obj_id, sp_node_ref_id, online\n"
+		$query = "SELECT obj_id, sp_node_ref_id, is_online\n"
 				." FROM ".self::VA_PASS_TABLE."\n"
 				." WHERE obj_id = ".$this->db->quote($obj_id, "integer");
 
 		$res = $this->db->query($query);
 
 		if ($this->db->numRows($res) == 0) {
-			throw new Exception("No settings data for obj_id: $obj_id found");
+			throw new \Exception("No settings data for obj_id: $obj_id found");
 		}
 
 		$row = $this->db->fetchAssoc($res);
 
-		return new VAPass($obj_id, $row["online"], $row["sp_node_ref_id"]);
+		return new VAPass($obj_id, $row["sp_node_ref_id"], (bool)$row["is_online"]);
 	}
 
 	/**
@@ -52,7 +55,7 @@ class ilDB extends DB
 	{
 		$values = array("obj_id" => array("integer", $va_pass->getObjId())
 					   ," sp_node_ref_id" => array("integer", $va_pass->getSPNodeRefId())
-					   ," online" => array("integer", $va_pass->getOnline())
+					   ," is_online" => array("integer", $va_pass->getOnline())
 			);
 
 		$this->db->insert(self::VA_PASS_TABLE, $values);
@@ -66,7 +69,7 @@ class ilDB extends DB
 		$where = array("obj_id" => array("integer", $va_pass->getObjId()));
 
 		$values = array(" sp_node_ref_id" => array("integer", $va_pass->getSPNodeRefId())
-					   ," online" => array("integer", $va_pass->getOnline())
+					   ," is_online" => array("integer", $va_pass->getOnline())
 			);
 
 		$this->db->update(self::VA_PASS_TABLE, $values, $where);
@@ -100,14 +103,14 @@ class ilDB extends DB
 						'length'	=> 4,
 						'notnull' 	=> true
 					),
-					'online' => array(
+					'is_online' => array(
 						'type' 		=> 'integer',
 						'length'	=> 1,
 						'notnull' 	=> true
 					)
 				);
 
-			$this->getDB()->createTable(self::VA_PASS_TABLE, $fields);
+			$this->db->createTable(self::VA_PASS_TABLE, $fields);
 		}
 	}
 }

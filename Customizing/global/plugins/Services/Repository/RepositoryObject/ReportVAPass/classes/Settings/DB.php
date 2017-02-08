@@ -1,7 +1,10 @@
 <?php
 
-namespace \CaT\Plugins\ReportVAPass\Settings;
+namespace CaT\Plugins\ReportVAPass\Settings;
 
+/**
+ * Inteface for db abstraction
+ */
 interface DB
 {
 	/**
