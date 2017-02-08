@@ -1838,6 +1838,23 @@ class gevUserUtils
 		}
 	}
 
+	/**
+	 * Get employees where user is direct superior
+	 *
+	 * @return int[]
+	 */
+	public function getDirectEmployees()
+	{
+		$_ds_ous = $this->getOrgUnitsWhereUserIsDirectSuperior();
+		// ref_ids of ous where user is direct superior
+		$ds_ous = array();
+		foreach ($_ds_ous as $ou) {
+			$ds_ous[] = $ou["ref_id"];
+		}
+
+		return array_unique(gevOrgUnitUtils::getEmployeesIn($ds_ous));
+	}
+
 	public function getVenuesWhereUserIsMember()
 	{
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php");

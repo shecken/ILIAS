@@ -13,30 +13,36 @@ require_once 'Modules/ManualAssessment/classes/Settings/class.ilManualAssessment
 require_once 'Modules/ManualAssessment/classes/Settings/class.ilManualAssessmentSettingsStorageDB.php';
 require_once 'Modules/ManualAssessment/classes/Members/class.ilManualAssessmentMembersStorageDB.php';
 require_once 'Modules/ManualAssessment/classes/AccessControl/class.ilManualAssessmentAccessHandler.php';
-class ilObjManualAssessment extends ilObject {
+require_once 'Modules/ManualAssessment/classes/FileStorage/class.ilManualAssessmentFileStorage.php';
+class ilObjManualAssessment extends ilObject
+{
 
 	protected $lp_active = null;
 
-	public function __construct($a_id = 0, $a_call_by_reference = true) {
+	public function __construct($a_id = 0, $a_call_by_reference = true)
+	{
 		global $ilAccess, $ilDB, $rbacadmin, $rbacreview, $ilUser;
 		$this->type = 'mass';
 		parent::__construct($a_id, $a_call_by_reference);
 		$this->settings_storage = new ilManualAssessmentSettingsStorageDB($ilDB);
 		$this->members_storage =  new ilManualAssessmentMembersStorageDB($ilDB);
 		$this->access_handler = new ilManualAssessmentAccessHandler(
-				 $ilAccess
-				,$rbacadmin
-				,$rbacreview
-				,$ilUser
-				,$ilDB
-				,$rbacadmin);
+			$ilAccess,
+			$rbacadmin,
+			$rbacreview,
+			$ilUser,
+			$ilDB,
+			$rbacadmin
+		);
 
+		$this->file_storage = new ilManualAssessmentFileStorage($this->getId());
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function create() {
+	public function create()
+	{
 		parent::create();
 		$this->settings = new ilManualAssessmentSettings($this);
 		$this->settings_storage->createSettings($this->settings);
@@ -45,7 +51,8 @@ class ilObjManualAssessment extends ilObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function read() {
+	public function read()
+	{
 		parent::read();
 		global $ilDB;
 		$settings_storage = new ilManualAssessmentSettingsStorageDB($ilDB);
@@ -56,15 +63,17 @@ class ilObjManualAssessment extends ilObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function getSettings() {
-		if(!$this->settings) {
+	public function getSettings()
+	{
+		if (!$this->settings) {
 			$this->settings = $this->settings_storage->loadSettings($this);
 		}
 		return $this->settings;
 	}
 
-	public function getInfoSettings() {
-		if(!$this->info_settings) {
+	public function getInfoSettings()
+	{
+		if (!$this->info_settings) {
 			$this->info_settings = $this->settings_storage->loadInfoSettings($this);
 		}
 		return $this->info_settings;
@@ -75,7 +84,8 @@ class ilObjManualAssessment extends ilObject {
 	 *
 	 * @return	ilManualAssessmentMembers
 	 */
-	public function loadMembers() {
+	public function loadMembers()
+	{
 		return $this->members_storage->loadMembers($this);
 	}
 
@@ -84,14 +94,16 @@ class ilObjManualAssessment extends ilObject {
 	 *
 	 * @param	ilManualAssessmentMembers	$members
 	 */
-	public function updateMembers(ilManualAssessmentMembers $members) {
+	public function updateMembers(ilManualAssessmentMembers $members)
+	{
 		$members->updateStorageAndRBAC($this->members_storage, $this->access_handler);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function delete() {
+	public function delete()
+	{
 		$this->settings_storage->deleteSettings($this);
 		$this->members_storage->deleteMembers($this);
 		parent::delete();
@@ -100,12 +112,14 @@ class ilObjManualAssessment extends ilObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function update() {
+	public function update()
+	{
 		parent::update();
 		$this->settings_storage->updateSettings($this->settings);
 	}
 
-	public function updateInfo() {
+	public function updateInfo()
+	{
 		$this->settings_storage->updateInfoSettings($this->info_settings);
 	}
 
@@ -114,14 +128,16 @@ class ilObjManualAssessment extends ilObject {
 	 *
 	 * @return ilManualAssessmentMembersStorage
 	 */
-	public function membersStorage() {
+	public function membersStorage()
+	{
 		return $this->members_storage;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function initDefaultRoles() {
+	public function initDefaultRoles()
+	{
 		$this->access_handler->initDefaultRolesForObject($this);
 	}
 
@@ -130,28 +146,34 @@ class ilObjManualAssessment extends ilObject {
 	 *
 	 * @return	ManualAssessmentAccessHandler
 	 */
-	public function accessHandler() {
+	public function accessHandler()
+	{
 		return $this->access_handler;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function cloneObject($a_target_id,$a_copy_id = 0) {
-		$new_obj = parent::cloneObject($a_target_id,$a_copy_id);
+	public function cloneObject($a_target_id, $a_copy_id = 0)
+	{
+		$new_obj = parent::cloneObject($a_target_id, $a_copy_id);
 		$settings = $this->getSettings();
 		$info_settings = $this->getInfoSettings();
-		$new_settings = new ilManualAssessmentSettings($new_obj, 
-			$settings->content()
-			,$settings->recordTemplate());
+		$new_settings = new ilManualAssessmentSettings(
+			$new_obj,
+			$settings->content(),
+			$settings->recordTemplate()
+		);
 		$new_obj->settings = $new_settings;
 
-		$new_info_settings = new ilManualAssessmentInfoSettings($new_obj,
-			$info_settings->contact()
-			,$info_settings->responsibility()
-			,$info_settings->phone()
-			,$info_settings->mails()
-			,$info_settings->consultationHours());
+		$new_info_settings = new ilManualAssessmentInfoSettings(
+			$new_obj,
+			$info_settings->contact(),
+			$info_settings->responsibility(),
+			$info_settings->phone(),
+			$info_settings->mails(),
+			$info_settings->consultationHours()
+		);
 		$new_obj->settings = $new_settings;
 		$new_obj->info_settings = $new_info_settings;
 		$new_obj->settings_storage->updateSettings($new_settings);
@@ -164,8 +186,9 @@ class ilObjManualAssessment extends ilObject {
 	 *
 	 * @return bool
 	 */
-	public function isActiveLP() {
-		if($this->lp_active === null) {
+	public function isActiveLP()
+	{
+		if ($this->lp_active === null) {
 			require_once 'Modules/ManualAssessment/classes/LearningProgress/class.ilManualAssessmentLPInterface.php';
 			$this->lp_active = ilManualAssessmentLPInterface::isActiveLP($this->getId());
 		}
@@ -182,16 +205,27 @@ class ilObjManualAssessment extends ilObject {
 	 *
 	 * @return int the obj_id or 0 if root is reached
 	 */
-	public function getParentContainerIdByType($id, array $types) {
+	public function getParentContainerIdByType($id, array $types)
+	{
 		global $tree;
 		$node = $tree->getParentNodeData($id);
 
-		while($node['type'] !== "root") {
-			if(in_array($node['type'], $types)) {
+		while ($node['type'] !== "root") {
+			if (in_array($node['type'], $types)) {
 				return $node['ref_id'];
 			}
 			$node = $tree->getParentNodeData($node['ref_id']);
 		}
 		return 0;
+	}
+
+	/**
+	 * Get the file storage system
+	 *
+	 * @return ilManualAssessmentFileStorage
+	 */
+	public function getFileStorage()
+	{
+		return $this->file_storage;
 	}
 }
