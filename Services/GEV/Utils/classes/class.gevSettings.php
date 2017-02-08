@@ -817,4 +817,27 @@ class gevSettings
 	{
 		return $this->settings->get(self::CRS_NA_QUALI_REF_ID);
 	}
+
+	const VA_PASS_ACCOUNTABLE_FIELD_ID = "va_pass_accountable_field_id";
+	const VA_PASS_PASSING_TYPE_FIELD_ID = "va_pass_passing_type_field_id";
+
+	public function setVAPassAccountableFieldId($field_id)
+	{
+		$this->settings->set(self::VA_PASS_ACCOUNTABLE_FIELD_ID, $field_id);
+	}
+
+	public function getVAPassAccountableFieldId()
+	{
+		return $this->settings->get(self::VA_PASS_ACCOUNTABLE_FIELD_ID);
+	}
+
+	public function setVAPassPassingTypeFieldId($field_id)
+	{
+		$this->settings->set(self::VA_PASS_PASSING_TYPE_FIELD_ID, $field_id);
+	}
+
+	public function getVAPassPassingTypeFieldId()
+	{
+		return $this->settings->get(self::VA_PASS_PASSING_TYPE_FIELD_ID);
+	}
 }

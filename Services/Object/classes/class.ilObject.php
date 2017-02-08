@@ -1849,7 +1849,7 @@ class ilObject
 		}
 
 		if ($ilSetting->get("custom_icons") &&
-			in_array($a_type, array("cat","grp","crs", "root", "fold"))) {
+			in_array($a_type, array("cat","grp","crs", "root", "fold", "prg"))) {
 			require_once("./Services/Container/classes/class.ilContainer.php");
 			if (ilContainer::_lookupContainerSetting($a_obj_id, "icon_".$a_size)) {
 				$cont_dir = ilContainer::_getContainerDirectory($a_obj_id);

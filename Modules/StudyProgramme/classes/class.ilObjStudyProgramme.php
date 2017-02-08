@@ -1297,18 +1297,18 @@ class ilObjStudyProgramme extends ilContainer
 	*/
 	public function updateCustomIcon()
 	{
-		// $subtype = $this->getSubType();
+		$subtype = $this->getSubType();
 
-		// if($subtype) {
-		// 	if(is_file($subtype->getIconPath(true))) {
-		// 		$icon = $subtype->getIconPath(true);
-		// 		$this->saveIcons($icon);
-		// 	} else {
-		// 		$this->removeCustomIcon();
-		// 	}
-		// } else {
-		// 	$this->removeCustomIcon();
-		// }
+		if ($subtype) {
+			if (is_file($subtype->getIconPath(true))) {
+				$icon = $subtype->getIconPath(true);
+				$this->saveIcons($icon);
+			} else {
+				$this->removeCustomIcon();
+			}
+		} else {
+			$this->removeCustomIcon();
+		}
 	}
 
 	////////////////////////////////////
@@ -1367,14 +1367,14 @@ class ilObjStudyProgramme extends ilContainer
 		$cont_dir = $this->getContainerDirectory();
 		$file_name = "";
 		if ($a_custom_icon != "") {
-			$file_name = $cont_dir."/icon_custom.png";
+			$file_name = $cont_dir."/icon_small.png";
 
-			ilUtil::moveUploadedFile($a_custom_icon, "icon_custom.png", $file_name, true, "copy");
+			ilUtil::moveUploadedFile($a_custom_icon, "icon_small.png", $file_name, true, "copy");
 
 			if ($file_name != "" && is_file($file_name)) {
-				ilContainer::_writeContainerSetting($this->getId(), "icon_custom", 1);
+				ilContainer::_writeContainerSetting($this->getId(), "icon_small", 1);
 			} else {
-				ilContainer::_writeContainerSetting($this->getId(), "icon_custom", 0);
+				ilContainer::_writeContainerSetting($this->getId(), "icon_small", 0);
 			}
 		}
 	}
@@ -1399,5 +1399,16 @@ class ilObjStudyProgramme extends ilContainer
 		}
 
 		return $subtypes;
+	}
+
+	/**
+	* remove small icon
+	*/
+	public function removeCustomIcon()
+	{
+		$cont_dir = $this->getContainerDirectory();
+		$small_file_name = $cont_dir."/icon_custom.png";
+		@unlink($small_file_name);
+		ilContainer::_writeContainerSetting($this->getId(), "icon_custom", 0);
 	}
 }
