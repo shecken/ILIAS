@@ -15,6 +15,11 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 {
 	use ReportVAPass\Settings\ilFormHelper;
 
+	const TAB_VIEW = "tab_view";
+	const TAB_SETTINGS = "tab_settings";
+
+	const VIEW = "view";
+
 	/**
 	 * @var CaT\Plugins\ReportVAPass\ilActions
 	 */
@@ -25,10 +30,11 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 	 */
 	protected function afterConstructor()
 	{
-		global $ilAccess, $ilCtrl;
+		global $ilAccess, $ilCtrl, $ilTabs;
 
 		$this->g_access = $ilAccess;
 		$this->g_ctrl = $ilCtrl;
+		$this->g_tabs = $ilTabs;
 	}
 
 	/**
@@ -101,6 +107,21 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 
 	public function view()
 	{
-		$this->forwardSettings();
+	}
+
+		/**
+	 * Set tabs
+	 */
+	protected function setTabs()
+	{
+		if ($this->g_access->checkAccess("visible", "", $this->object->getRefId())) {
+			$this->g_tabs->addTab(self::TAB_VIEW, $this->txt("view"), $this->g_ctrl->getLinkTarget($this, self::VIEW));
+		}
+
+		if ($this->g_access->checkAccess("write", "", $this->object->getRefId())) {
+			$this->g_tabs->addTab(self::TAB_SETTINGS, $this->txt("properties"), $this->g_ctrl->getLinkTarget($this, ilVAPassSettingsGUI::EDIT_SETTINGS));
+		}
+
+		$this->addPermissionTab();
 	}
 }
