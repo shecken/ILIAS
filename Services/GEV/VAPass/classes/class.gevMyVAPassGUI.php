@@ -42,6 +42,7 @@ class gevMyVAPassGUI
 			default:
 				switch ($cmd) {
 					case "view":
+					case "showContent":
 						break;
 					default:
 						throw new Exception("command unkown: $cmd");
@@ -52,6 +53,13 @@ class gevMyVAPassGUI
 	}
 
 	protected function view()
+	{
+		//WERTE FÜR USER_ID, SP_REF_ID und ASSIGNMENT_ID ermitterln
+
+		$this->showContent();
+	}
+
+	protected function showContent()
 	{
 		$relevant_children = $this->getRelevantChildren();
 		$with_children = $this->getSPWithChildrenBelow($relevant_children);
@@ -171,35 +179,70 @@ class gevMyVAPassGUI
 
 	protected function getSPRefId()
 	{
-		$get = $_GET;
-
-		if ($get["spRefId"] && $get["spRefId"] !== null && is_integer((int)$post["spRefId"])) {
-			return (int)$_GET["spRefId"];
+		if ($this->sp_ref_id === null) {
+			throw new Exception("No studyprogramme node id given");
 		}
-		return 2167;
-		throw new Exception("No studyprogramme node id given");
+
+		return $this->sp_ref_id;
 	}
 
 	protected function getUserId()
 	{
-		$get = $_GET;
-
-		if ($get["user_id"] && $get["user_id"] !== null && is_integer((int)$post["user_id"])) {
-			return (int)$_GET["user_id"];
+		if ($this->user_id === null) {
+			throw new Exception("No user id given");
 		}
-		global $ilUser;
-		return $ilUser->getId();
-		throw new Exception("No user id given");
+
+		return $this->user_id;
 	}
 
 	protected function getAssignmentId()
 	{
+		if ($this->assignment_id === null) {
+			throw new Exception("No assignment id given");
+		}
+
+		return $this->assignment_id;
+	}
+
+	protected function findSPRefId()
+	{
+		$get = $_GET;
+
+		if ($get["spRefId"] && $get["spRefId"] !== null && is_integer((int)$post["spRefId"])) {
+			$this->sp_ref_id = (int)$_GET["spRefId"];
+		}
+	}
+
+	protected function findUserId()
+	{
+		$get = $_GET;
+
+		if ($get["user_id"] && $get["user_id"] !== null && is_integer((int)$post["user_id"])) {
+			$this->user_id = (int)$_GET["user_id"];
+		}
+	}
+
+	protected function findAssignmentId()
+	{
 		$get = $_GET;
 
 		if ($get["assignment_id"] && $get["assignment_id"] !== null && is_integer((int)$post["assignment_id"])) {
-			return (int)$_GET["assignment_id"];
+			$this->assignment_id =  (int)$_GET["assignment_id"];
 		}
-		return 130;
-		throw new Exception("No assignment id given");
+	}
+
+	public function setUserId($user_id)
+	{
+		$this->user_id = $user_id;
+	}
+
+	public function setAssignmentId($assignment_id)
+	{
+		$this->assignment_id = $assignment_id;
+	}
+
+	public function setSPRefId($sp_ref_id)
+	{
+		$this->sp_ref_id = $sp_ref_id;
 	}
 }

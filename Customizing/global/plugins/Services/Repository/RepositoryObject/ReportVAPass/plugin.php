@@ -2,7 +2,7 @@
 
 $id = "xvap";
 
-$version = "0.0.4";
+$version = "0.0.6";
 
 $ilias_min_version = "4.2.0";
 $ilias_max_version = "5.0.0";

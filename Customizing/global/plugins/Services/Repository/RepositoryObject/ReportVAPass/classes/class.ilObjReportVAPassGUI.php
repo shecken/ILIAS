@@ -8,7 +8,7 @@ use \CaT\Plugins\ReportVAPass;
 /**
  * @ilCtrl_isCalledBy ilObjReportVAPassGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
  * @ilCtrl_Calls ilObjReportVAPassGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI
- * @ilCtrl_Calls ilObjReportVAPassGUI: ilVAPassSettingsGUI
+ * @ilCtrl_Calls ilObjReportVAPassGUI: ilVAPassSettingsGUI, gevMyVAPassGUI
  * @author 		Stefan Hecken <stefan.hecken@concepts-and-training.de>
  */
 class ilObjReportVAPassGUI extends ilObjectPluginGUI
@@ -123,7 +123,7 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 			$assignments = $sp->getAssignmentsOf($this->g_user->getId());
 			$assignment = $assignments[0];
 
-			require_once("Services/GEV/VAPass/clasess/class.gevMyVAPassGUI.php");
+			require_once("Services/GEV/VAPass/classes/class.gevMyVAPassGUI.php");
 			$gui = new \gevMyVAPassGUI();
 			$gui->setUserId($this->g_user->getId());
 			$gui->setAssignmentId($assignment->getId());
