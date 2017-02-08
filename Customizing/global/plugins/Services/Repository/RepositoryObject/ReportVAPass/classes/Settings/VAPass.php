@@ -1,5 +1,5 @@
 <?php
-namespace \CaT\Plugins\ReportVAPass\Settings;
+namespace CaT\Plugins\ReportVAPass\Settings;
 
 /**
  * Class for the VA Pass Settings
@@ -21,7 +21,7 @@ class VAPass
 	 */
 	protected $sp_node_ref_id;
 
-	public function __construct($obj_id, $online, $sp_node_ref_id)
+	public function __construct($obj_id, $sp_node_ref_id, $online = false)
 	{
 		assert('is_int($obj_id)');
 		assert('is_bool($online)');
