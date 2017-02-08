@@ -96,13 +96,13 @@ class ilManualAssessmentMember
 	 */
 	public function maybeSendNotification(ilManualAssessmentNotificator $notificator)
 	{
-		if (!$this->finalized()) {
-			throw new ilManualAssessmentException('must finalize before notification');
-		}
-		if ($this->notify) {
-			$notificator = (string)$this->lp_status === (string)ilManualAssessmentMembers::LP_COMPLETED ?
-				$notificator->withOccasionCompleted() :
-				$notificator->withOccasionFailed();
+		if ($this->notify && !$this->finalized()) {
+			$notificator = $notificator->withOccasionFailed();
+
+			if ((string)$this->lp_status === (string)ilManualAssessmentMembers::LP_COMPLETED) {
+				$notificator = $notificator->withOccasionCompleted();
+			}
+
 			$notificator->withReciever($this)->send();
 			$this->notification_ts = time();
 		}
@@ -170,12 +170,9 @@ class ilManualAssessmentMember
 	public function withRecord($record)
 	{
 		assert('is_string($record) || $record === null');
-		if (!$this->finalized()) {
-			$clone = clone $this;
-			$clone->record = $record;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		$clone = clone $this;
+		$clone->record = $record;
+		return $clone;
 	}
 
 	/**
@@ -187,12 +184,9 @@ class ilManualAssessmentMember
 	public function withInternalNote($internal_note)
 	{
 		assert('is_string($internal_note) || $internal_note === null');
-		if (!$this->finalized()) {
-			$clone = clone $this;
-			$clone->internal_note = $internal_note;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		$clone = clone $this;
+		$clone->internal_note = $internal_note;
+		return $clone;
 	}
 
 	/**
@@ -238,13 +232,10 @@ class ilManualAssessmentMember
 	public function withExaminerId($examiner_id)
 	{
 		assert('is_numeric($examiner_id)');
-		if (!$this->finalized()) {
-			assert('ilObjUser::_exists($examiner_id)');
-			$clone = clone $this;
-			$clone->examiner_id = $examiner_id;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		assert('ilObjUser::_exists($examiner_id)');
+		$clone = clone $this;
+		$clone->examiner_id = $examiner_id;
+		return $clone;
 	}
 
 	/**
@@ -256,12 +247,9 @@ class ilManualAssessmentMember
 	public function withNotify($notify)
 	{
 		assert('is_bool($notify)');
-		if (!$this->finalized()) {
-			$clone = clone $this;
-			$clone->notify = (bool)$notify;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		$clone = clone $this;
+		$clone->notify = (bool)$notify;
+		return $clone;
 	}
 
 	protected function LPStatusValid($lp_status)
@@ -280,12 +268,12 @@ class ilManualAssessmentMember
 	 */
 	public function withLPStatus($lp_status)
 	{
-		if (!$this->finalized() && $this->LPStatusValid($lp_status)) {
+		if ($this->LPStatusValid($lp_status)) {
 			$clone = clone $this;
 			$clone->lp_status = $lp_status;
 			return $clone;
 		}
-		throw new ilManualAssessmentException('user allready finalized or invalid learning progress status');
+		throw new ilManualAssessmentException('invalid learning progress status');
 	}
 
 	/**

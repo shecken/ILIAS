@@ -5973,24 +5973,6 @@ ilCustomInstaller::maybeInitRBAC();
 ilCustomInstaller::maybeInitObjDataCache();
 ilCustomInstaller::maybeInitUserToRoot();
 ilCustomInstaller::maybeInitSettings();
-require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
-$a_start_ref = 56;
-gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-TA", array('visible', 'read', 'write'));
-gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", array('visible', 'read', 'write'));
-?>
-
-<#247>
-<?php
-require_once "Customizing/class.ilCustomInstaller.php";
-ilCustomInstaller::maybeInitClientIni();
-ilCustomInstaller::maybeInitPluginAdmin();
-ilCustomInstaller::maybeInitObjDefinition();
-ilCustomInstaller::maybeInitAppEventHandler();
-ilCustomInstaller::maybeInitTree();
-ilCustomInstaller::maybeInitRBAC();
-ilCustomInstaller::maybeInitObjDataCache();
-ilCustomInstaller::maybeInitUserToRoot();
-ilCustomInstaller::maybeInitSettings();
 ilCustomInstaller::maybeInitIliasObject();
 require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 $gev_settings = gevSettings::getInstance();
@@ -6039,7 +6021,7 @@ $field_id = $field_definition->getFieldId();
 $gev_settings->setVAPassPassingTypeFieldId($field_id);
 ?>
 
-<#248>
+<#247>
 <?php
 $fields = array("superior_examinate" => array("type" => "integer",
 										"length" => 1,
@@ -6055,7 +6037,7 @@ foreach ($fields as $field_name => $field_config) {
 }
 ?>
 
-<#249>
+<#248>
 <?php
 if (!$ilDB->tableColumnExists('mass_settings', 'file_required')) {
 	$ilDB->addTableColumn('mass_settings', 'file_required', array(
@@ -6066,7 +6048,7 @@ if (!$ilDB->tableColumnExists('mass_settings', 'file_required')) {
 }
 ?>
 
-<#250>
+<#249>
 <?php
 if (!$ilDB->tableColumnExists('mass_settings', 'event_time_place_required')) {
 	$ilDB->addTableColumn('mass_settings', 'event_time_place_required', array(
@@ -6090,7 +6072,7 @@ if (!$ilDB->tableColumnExists('mass_members', 'event_time')) {
 }
 ?>
 
-<#251>
+<#250>
 <?php
 if (!$ilDB->tableColumnExists('mass_members', 'file_name')) {
 	$ilDB->addTableColumn('mass_members', 'file_name', array(
@@ -6103,5 +6085,23 @@ if (!$ilDB->tableColumnExists('mass_members', 'user_view_file')) {
 	"type" => "integer",
 	"length" => 1
 	));
+}
+?>
+
+
+<#251>
+<?php
+include_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+$mass_type_id = ilDBUpdateNewObjectType::getObjectTypeId('mass');
+if ($mass_type_id) {
+	$new_ops_id = ilDBUpdateNewObjectType::addCustomRBACOperation(
+		'amend_grading',
+		'Amend grading',
+		'object',
+		8200
+	);
+	if ($new_ops_id) {
+		ilDBUpdateNewObjectType::addRBACOperation($mass_type_id, $new_ops_id);
+	}
 }
 ?>
