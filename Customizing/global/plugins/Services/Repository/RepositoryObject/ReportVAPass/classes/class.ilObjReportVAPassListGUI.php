@@ -30,8 +30,8 @@ class ilObjReportVAPassListGUI extends ilObjectPluginListGUI
 
 		$props = array();
 
-		$this->plugin->includeClass("class.ilObjTalentAssessmentAccess.php");
-		if (!\ilObjTalentAssessmentAccess::checkOnline($this->obj_id)) {
+		$this->plugin->includeClass("class.ilObjReportVAPassAccess.php");
+		if (!\ilObjReportVAPassAccess::checkOnline($this->obj_id)) {
 			$props[] = array("alert" => true, "property" => $this->txt("status"),
 			"value" => $this->txt("offline"));
 		}
