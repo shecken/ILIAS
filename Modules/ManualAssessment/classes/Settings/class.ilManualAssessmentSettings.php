@@ -18,7 +18,7 @@ class ilManualAssessmentSettings
 	 */
 	protected $record_template;
 
-	/**
+	/*
 	 * @var boolean
 	 */
 	protected $superior_examinate;
@@ -28,13 +28,20 @@ class ilManualAssessmentSettings
 	 */
 	protected $superior_view;
 
-	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $superior_examinate = false, $superior_view = false)
+	/**
+	 * @var $boolean
+	 */
+	protected $file_required;
+
+	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $file_required = false, $event_time_place_required = false, $superior_examinate = false, $superior_view = false)
 	{
 		assert('is_bool($superior_examinate)');
 		assert('is_bool($superior_view)');
 		$this->id = $mass->getId();
 		$this->content = $content !== null ? $content : self::DEF_CONTENT;
 		$this->record_template = $record_template !== null ? $record_template : self::DEF_RECORD_TEMPLATE;
+		$this->file_required = $file_required;
+		$this->event_time_place_required = $event_time_place_required;
 		$this->superior_examinate = $superior_examinate;
 		$this->superior_view = $superior_view;
 	}
@@ -71,6 +78,26 @@ class ilManualAssessmentSettings
 	}
 
 	/**
+	 * Uploading a file in participant record is required
+	 *
+	 * @return boolean
+	 */
+	public function fileRequired()
+	{
+		return $this->file_required;
+	}
+
+	/**
+	 * Get the value of the checkbox event_time_place_require
+	 *
+	 * @return	integer
+	 */
+	public function eventTimePlaceRequired()
+	{
+		return $this->event_time_place_required;
+	}
+
+	/*
 	 * Superiors are allowed to examinate their employees
 	 *
 	 * @return boolean
@@ -118,6 +145,17 @@ class ilManualAssessmentSettings
 	}
 
 	/**
+	 * Set a fileupload in participant record is required
+	 *
+	 * @param boolean 	$file_required
+	 */
+	public function setFileRequired($file_required)
+	{
+		assert('is_bool($file_required)');
+		$this->file_required = $file_required;
+	}
+
+	/*
 	 * Set superiors are allowed to examinate their employees
 	 *
 	 * @param boolean 	$superior_examinate
@@ -130,6 +168,18 @@ class ilManualAssessmentSettings
 	}
 
 	/**
+	 * Set the value of the checkbox event_time_place_require
+	 *
+	 * @param	integer	$event_time_place_require
+	 * @return	ilManualAssessment	$this
+	 */
+	public function setEventTimePlaceRequired($event_time_place_required)
+	{
+		assert('is_integer($event_time_place_required)');
+		$this->event_time_place_required = $event_time_place_required;
+	}
+
+	/*
 	 * Set superiors are allowed to view their employees results
 	 *
 	 * @param boolean 	$superior_view
@@ -138,6 +188,7 @@ class ilManualAssessmentSettings
 	{
 		assert('is_bool($superior_view)');
 		$this->superior_view = $superior_view;
+
 		return $this;
 	}
 }

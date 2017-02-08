@@ -9,7 +9,6 @@ require_once 'Modules/ManualAssessment/classes/Settings/class.ilManualAssessment
 require_once 'Modules/ManualAssessment/classes/class.ilObjManualAssessment.php';
 class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsStorage
 {
-
 	const MASS_SETTINGS_TABLE = "mass_settings";
 	const MASS_SETTINGS_INFO_TABLE = "mass_info_settings";
 
@@ -31,6 +30,8 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 				( "obj_id" => array("integer", $settings->getId())
 				, "content" => array("text", $settings->content())
 				, "record_template" => array("text", $settings->recordTemplate())
+				, "file_required" => array("integer", $settings->fileRequired())
+				, "event_time_place_required" => array("integer", $settings->eventTimePlaceRequired())
 				, "superior_examinate" => array("integer", $settings->superiorExaminate())
 				, "superior_view" => array("integer", $settings->superiorView())
 				);
@@ -49,12 +50,9 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 			$obj_id = $obj->getId();
 			assert('is_numeric($obj_id)');
 
-			$sql = "SELECT content, record_template, superior_examinate, superior_view\n"
-				  ." FROM ".self::MASS_SETTINGS_TABLE."\n"
-				  ." WHERE obj_id = ".$this->db->quote($obj_id, 'integer');
-
+			$sql = 'SELECT content, record_template, file_required, event_time_place_required, superior_examinate, superior_view FROM mass_settings WHERE obj_id = '.$this->db->quote($obj_id, 'integer');
 			if ($res = $this->db->fetchAssoc($this->db->query($sql))) {
-				return new ilManualAssessmentSettings($obj, $res["content"], $res["record_template"], (bool)$res["superior_examinate"], (bool)$res["superior_view"]);
+				return new ilManualAssessmentSettings($obj, $res["content"], $res["record_template"], (bool)$res["file_required"], $res["event_time_place_required"], (bool)$res["superior_examinate"], (bool)$res["superior_view"]);
 			}
 			throw new ilManualAssessmentException("$obj_id not in database");
 		} else {
@@ -72,6 +70,8 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 		$values = array
 				( "content" => array("text", $settings->content())
 				, "record_template" => array("text", $settings->recordTemplate())
+				, "file_required" => array("integer", $settings->fileRequired())
+				, "event_time_place_required" => array("integer", $settings->eventTimePlaceRequired())
 				, "superior_examinate" => array("integer", $settings->superiorExaminate())
 				, "superior_view" => array("integer", $settings->superiorView())
 				);

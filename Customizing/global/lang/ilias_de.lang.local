@@ -1650,6 +1650,9 @@ prg#:#prg_points_reachable#:#Erreichbare Punkte
 gev#:#gev_open_same_window#:#Im selben Fenster öffnen
 gev#:#jill_na_link_label#:#Zur Qualifizierung nach der EU-Vermittlerrichtlinie
 mass#:#general#:#Allgemein
+mass#:#mass_place#:#Ort
+mass#:#mass_event_time#:#Veranstaltungszeitpunkt
+mass#:#mass_event_time_place_required#:#Datum und Ort sind Pflichtfelder
 mass#:#mass_content#:#Inhalt
 mass#:#mass_record_template#:#Vorlage Prüfungsnotiz
 mass#:#mass_graded_by#:#Bewertet von
@@ -1728,6 +1731,10 @@ mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
 mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach finaler Bewertung vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
 mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
 mass#:#mass_edit_conditions#:#Vorbedingungen
+mass#:#mass_file_required#:#Dateiupload verpflichtend
+mass#:#mass_file_required_info#:#In der Beurteilung zu einem Teilnehmer muss eine Datei hochgeladen werden.
+mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer
+mass#:#mass_user_view_file_info#:#Der Teilnehmer kann die Datei auf der Info-Seite einsehen.
 mass#:#mass_superior_can_examinate#:#Vorgesetzte dürfen Teilnehmer bewerten
 mass#:#mass_superior_can_examinate_info#:#Die Vorgesetzten dürfen Mitarbeiter aus Ihrer Organisationseinheit bewerten.
 mass#:#mass_superior_view_assessments#:#Vorgesetzte dürfen Ergebnisse einsehen

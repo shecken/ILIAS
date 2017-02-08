@@ -28,6 +28,7 @@ class ilManualAssessmentMembersGUI
 	public function __construct($a_parent_gui, $a_ref_id)
 	{
 		global $ilCtrl, $tpl, $lng, $ilToolbar, $ilUser;
+
 		$this->ctrl = $ilCtrl;
 		$this->parent_gui = $a_parent_gui;
 		$this->object = $a_parent_gui->object;
@@ -49,6 +50,7 @@ class ilManualAssessmentMembersGUI
 			&& !$this->userMayViewGrades()) {
 			$this->parent_gui->handleAccessViolation();
 		}
+
 		$cmd = $this->ctrl->getCmd();
 		$next_class = $this->ctrl->getNextClass();
 		switch ($next_class) {
@@ -150,10 +152,10 @@ class ilManualAssessmentMembersGUI
 	 */
 	public function addUsers(array $user_ids)
 	{
-
 		if (!$this->userMayEditMembers()) {
 			$a_parent_gui->handleAccessViolation();
 		}
+
 		$mass = $this->object;
 		$members = $mass->loadMembers();
 		$failure = null;
@@ -179,6 +181,7 @@ class ilManualAssessmentMembersGUI
 		if (!$this->userMayEditMembers()) {
 			$a_parent_gui->handleAccessViolation();
 		}
+
 		include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
 		$confirm = new ilConfirmationGUI();
 		$confirm->addItem('usr_id', $_GET['usr_id'], ilObjUser::_lookupFullname($_GET['usr_id']));
@@ -199,6 +202,7 @@ class ilManualAssessmentMembersGUI
 		if (!$this->userMayEditMembers()) {
 			$a_parent_gui->handleAccessViolation();
 		}
+
 		$usr_id = $_POST['usr_id'];
 		$mass = $this->object;
 		$mass->loadMembers()
@@ -236,7 +240,6 @@ class ilManualAssessmentMembersGUI
 
 	public function userMayEditMembers()
 	{
-		return $this->object->accessHandler()
-			->checkAccessToObj($this->object, 'edit_members');
+		return $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_members');
 	}
 }

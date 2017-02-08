@@ -5982,7 +5982,6 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", a
 <#247>
 <?php
 require_once "Customizing/class.ilCustomInstaller.php";
-
 ilCustomInstaller::maybeInitClientIni();
 ilCustomInstaller::maybeInitPluginAdmin();
 ilCustomInstaller::maybeInitObjDefinition();
@@ -5993,17 +5992,14 @@ ilCustomInstaller::maybeInitObjDataCache();
 ilCustomInstaller::maybeInitUserToRoot();
 ilCustomInstaller::maybeInitSettings();
 ilCustomInstaller::maybeInitIliasObject();
-
 require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 $gev_settings = gevSettings::getInstance();
-
 require_once("Modules/StudyProgramme/classes/model/class.ilStudyProgrammeType.php");
 $type = new ilStudyProgrammeType();
 $type->setDefaultLang("de");
 $type->setTitle("VA-Ausbildung", "de");
 $type->setDescription("", "de");
 $type->save();
-
 global $ilClientIniFile;
 $client = $ilClientIniFile->readVariable("client", "name");
 $icon_path = ILIAS_WEB_DIR."/".$client."/".ilStudyProgrammeType::WEB_DATA_FOLDER."/type_".$type->getId();
@@ -6013,21 +6009,17 @@ if (!is_dir($icon_path)) {
 }
 copy("Customizing/global/skin/genv/images/icon_va-plan_b.png", $icon_path."/".$type->getIcon());
 $type->save();
-
 $record = ilAdvancedMDRecord::_getInstanceByRecordId(null);
 $record->setTitle("Ausbildungspass für VAs");
 $record->setActive(true);
 $record->setDescription("");
-
 $obj_type[] = array(
 			"obj_type" => "prg",
 			"sub_type" => "prg_type"
 			);
 $record->setAssignedObjectTypes($obj_type);
 $record->save();
-
 $type->assignAdvancedMDRecord($record->getRecordId());
-
 include_once('Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php');
 $field_definition = ilAdvancedMDFieldDefinition::getInstance(null, ilAdvancedMDFieldDefinition::TYPE_SELECT);
 $field_definition->setTitle("Verantwortlich");
@@ -6037,7 +6029,6 @@ $field_definition->setRecordId($record->getRecordId());
 $field_definition->save();
 $field_id = $field_definition->getFieldId();
 $gev_settings->setVAPassAccountableFieldId($field_id);
-
 $field_definition = ilAdvancedMDFieldDefinition::getInstance(null, ilAdvancedMDFieldDefinition::TYPE_SELECT);
 $field_definition->setTitle("Art des Bestehens");
 $options = array("Teilnahme an Training", "Manueller Eintrag");
@@ -6047,7 +6038,7 @@ $field_definition->save();
 $field_id = $field_definition->getFieldId();
 $gev_settings->setVAPassPassingTypeFieldId($field_id);
 ?>
-	
+
 <#248>
 <?php
 $fields = array("superior_examinate" => array("type" => "integer",
@@ -6057,9 +6048,60 @@ $fields = array("superior_examinate" => array("type" => "integer",
 										  "length" => 1,
 										  "default" => 0)
 		);
-
 foreach ($fields as $field_name => $field_config) {
 	if (!$ilDB->tableColumnExists('mass_settings', $field_name)) {
 		$ilDB->addTableColumn('mass_settings', $field_name, $field_config);
 	}
 }
+?>
+
+<#249>
+<?php
+if (!$ilDB->tableColumnExists('mass_settings', 'file_required')) {
+	$ilDB->addTableColumn('mass_settings', 'file_required', array(
+	"type" => "integer",
+	"length" => 1,
+	"default" => 0
+	));
+}
+?>
+
+<#250>
+<?php
+if (!$ilDB->tableColumnExists('mass_settings', 'event_time_place_required')) {
+	$ilDB->addTableColumn('mass_settings', 'event_time_place_required', array(
+	"type" => "integer",
+	"length" => 1,
+	"notnull" => true,
+	"default" => 0
+	));
+}
+if (!$ilDB->tableColumnExists('mass_members', 'place')) {
+	$ilDB->addTableColumn('mass_members', 'place', array(
+	"type" => "text",
+	"length" => 255
+	));
+}
+if (!$ilDB->tableColumnExists('mass_members', 'event_time')) {
+	$ilDB->addTableColumn('mass_members', 'event_time', array(
+	"type" => "integer",
+	"length" => 8
+	));
+}
+?>
+
+<#251>
+<?php
+if (!$ilDB->tableColumnExists('mass_members', 'file_name')) {
+	$ilDB->addTableColumn('mass_members', 'file_name', array(
+	"type" => "text",
+	"length" => 255
+	));
+}
+if (!$ilDB->tableColumnExists('mass_members', 'user_view_file')) {
+	$ilDB->addTableColumn('mass_members', 'user_view_file', array(
+	"type" => "integer",
+	"length" => 1
+	));
+}
+?>

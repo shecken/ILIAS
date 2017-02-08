@@ -9,12 +9,14 @@ class ilManualAssessmentSettingsGUI
 	const PROP_RECORD_TEMPLATE = "record_template";
 	const PROP_TITLE = "title";
 	const PROP_DESCRIPTION = "description";
+	const PROP_EVENT_TIME_PLACE_REQUIRED = "event_time_place_required";
 
 	const PROP_INFO_CONTACT = "contact";
 	const PROP_INFO_RESPONSIBILITY = "responsibility";
 	const PROP_INFO_PHONE = "phone";
 	const PROP_INFO_MAILS = "mails";
 	const PROP_INFO_CONSULTATION = "consultatilon";
+	const PROP_FILE_REQUIRED = "file_required";
 	const PROP_SUPERIOR_EXAMINATE = "superior_examinate";
 	const PROP_SUPERIOR_VIEW = "superior_view";
 
@@ -134,6 +136,9 @@ class ilManualAssessmentSettingsGUI
 			$this->object->setDescription($_POST[self::PROP_DESCRIPTION]);
 			$this->object->getSettings()->setContent($_POST[self::PROP_CONTENT])
 								->setRecordTemplate($_POST[self::PROP_RECORD_TEMPLATE])
+								->setFileRequired((bool)$_POST[self::PROP_FILE_REQUIRED])
+								->setRecordTemplate($_POST[self::PROP_RECORD_TEMPLATE])
+								->setEventTimePlaceRequired($_POST[self::PROP_EVENT_TIME_PLACE_REQUIRED])
 								->setSuperiorExaminate((bool)$_POST[self::PROP_SUPERIOR_EXAMINATE])
 								->setSuperiorView((bool)$_POST[self::PROP_SUPERIOR_VIEW]);
 			$this->object->update();
@@ -170,6 +175,14 @@ class ilManualAssessmentSettingsGUI
 		$item = new ilTextAreaInputGUI($this->lng->txt('mass_record_template'), self::PROP_RECORD_TEMPLATE);
 		$item->setInfo($this->lng->txt('mass_record_template_explanation'));
 		$form->addItem($item);
+
+
+		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_file_required'), self::PROP_FILE_REQUIRED);
+		$cb->setInfo($this->lng->txt('mass_file_required_info'));
+		$form->addItem($cb);
+
+		$option = new ilCheckboxInputGUI($this->lng->txt('mass_event_time_place_required'), self::PROP_EVENT_TIME_PLACE_REQUIRED);
+		$form->addItem($option);
 
 		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_superior_can_examinate'), self::PROP_SUPERIOR_EXAMINATE);
 		$cb->setInfo($this->lng->txt('mass_superior_can_examinate_info'));
@@ -235,6 +248,8 @@ class ilManualAssessmentSettingsGUI
 			, self::PROP_DESCRIPTION => $mass->getDescription()
 			, self::PROP_CONTENT => $settings->content()
 			, self::PROP_RECORD_TEMPLATE => $settings->recordTemplate()
+			, self::PROP_FILE_REQUIRED => $settings->fileRequired()
+			, self::PROP_EVENT_TIME_PLACE_REQUIRED => $settings->eventTimePlaceRequired()
 			, self::PROP_SUPERIOR_EXAMINATE => $settings->superiorExaminate()
 			, self::PROP_SUPERIOR_VIEW => $settings->superiorView()
 			));
