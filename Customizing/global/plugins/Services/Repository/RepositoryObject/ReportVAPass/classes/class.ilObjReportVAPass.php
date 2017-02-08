@@ -79,7 +79,7 @@ class ilObjReportVAPass extends ilObjectPlugin
 	public function getActions()
 	{
 		if ($this->actions === null) {
-			$this->actions = new ReportVAPass\ilActions($this->getId(), $this->getVAPassDB());
+			$this->actions = new ReportVAPass\ilActions($this, $this->getVAPassDB());
 		}
 		return $this->actions;
 	}
@@ -92,5 +92,10 @@ class ilObjReportVAPass extends ilObjectPlugin
 	public function setSettings(ReportVAPass\Settings\VAPass $va_pass)
 	{
 		$this->va_pass_settings = $va_pass;
+	}
+
+	public function getSettings()
+	{
+		return $this->va_pass_settings;
 	}
 }
