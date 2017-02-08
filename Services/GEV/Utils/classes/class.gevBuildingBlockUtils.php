@@ -8,7 +8,8 @@
 * @author	Richard Klees <richard.klees@concepts-and-training.de>
 * @version	$Id$
 */
-class gevBuildingBlockUtils {
+class gevBuildingBlockUtils
+{
 	static protected $instances = array();
 	const TABLE_NAME = "dct_building_block";
 
@@ -23,7 +24,7 @@ class gevBuildingBlockUtils {
 	protected $topic;
 	protected $pool_id;
 
-	static $possible_topics = array("Organisation" => "Organisation"
+	public static $possible_topics = array("Organisation" => "Organisation"
 						   ,"Alterssicherung" => "Alterssicherung"
 						   ,"Einkommenssicherung" => "Einkommenssicherung"
 						   ,"Vermögenssicherung" => "Vermögenssicherung"
@@ -39,145 +40,174 @@ class gevBuildingBlockUtils {
 						   ,"Heilwesen" => "Heilwesen"
 						   ,"KFZ-Versicherung" => "KFZ-Versicherung");
 
-	protected function __construct($a_building_block_id = null) {
+	protected function __construct($a_building_block_id = null)
+	{
 		global $ilDB, $ilUser;
 
 		$this->db = $ilDB;
 		$this->ilUser = $ilUser;
-		
-		if($a_building_block_id === null) {
+
+		if ($a_building_block_id === null) {
 			$a_building_block_id = $this->db->nextId("dct_building_block");
 		}
 
 		$this->building_block_id = $a_building_block_id;
-		
 	}
 
-	public function getInstance($a_building_block_id = null) {
+	public function getInstance($a_building_block_id = null)
+	{
 		if ($a_building_block_id !== null && array_key_exists($a_building_block_id, self::$instances)) {
 			return self::$instances[$a_building_block_id];
 		}
-		
+
 		self::$instances[$a_building_block_id] = new gevBuildingBlockUtils($a_building_block_id);
 		return self::$instances[$a_building_block_id];
 	}
 
-	public function getId() {
+	public function getId()
+	{
 		return $this->building_block_id;
 	}
 
-	public function getTitle() {
+	public function getTitle()
+	{
 		return $this->title;
 	}
 
-	public function setTitle($a_title) {
+	public function setTitle($a_title)
+	{
 		$this->title = $a_title;
 	}
 
-	public function getContent() {
+	public function getContent()
+	{
 		return $this->content;
 	}
 
-	public function setContent($a_content) {
+	public function setContent($a_content)
+	{
 		$this->content = $a_content;
 	}
 
-	public function getTarget() {
+	public function getTarget()
+	{
 		return $this->target;
 	}
 
-	public function setTarget($a_target) {
+	public function setTarget($a_target)
+	{
 		$this->target = $a_target;
 	}
 
-	public function isWPRelevant() {
+	public function isWPRelevant()
+	{
 		return $this->is_wp_relevant;
 	}
 
-	public function setIsWPRelevant($a_is_wp_relevant) {
+	public function setIsWPRelevant($a_is_wp_relevant)
+	{
 		$this->is_wp_relevant = $a_is_wp_relevant;
 	}
 
-	public function isActive() {
+	public function isActive()
+	{
 		return $this->is_active;
 	}
 
-	public function setIsActive($a_is_active) {
+	public function setIsActive($a_is_active)
+	{
 		$this->is_active = $a_is_active;
 	}
 
-	public function setGDVTopic($gdv_topic) {
+	public function setGDVTopic($gdv_topic)
+	{
 		$this->gdv_topic = $gdv_topic;
 	}
 
-	public function getGDVTopic() {
+	public function getGDVTopic()
+	{
 		return $this->gdv_topic;
 	}
 
-	public function setTrainingCategories(array $training_categories) {
+	public function setTrainingCategories(array $training_categories)
+	{
 		$this->training_categories = $training_categories;
 	}
 
-	public function getTrainingCategories() {
+	public function getTrainingCategories()
+	{
 		return $this->training_categories;
 	}
 
-	public function getTrainingCategoriesAsString() {
+	public function getTrainingCategoriesAsString()
+	{
 		return implode($this->training_categories);
 	}
 
-	public function getTopic() {
+	public function getTopic()
+	{
 		return $this->topic;
 	}
 
-	public function setTopic($topic) {
+	public function setTopic($topic)
+	{
 		$this->topic = $topic;
 	}
 
-	public function getDBVTopic() {
+	public function getDBVTopic()
+	{
 		return $this->dbv_topic;
 	}
 
-	public function setDBVTopic($dbv_topic) {
+	public function setDBVTopic($dbv_topic)
+	{
 		$this->dbv_topic = $dbv_topic;
 	}
 
-	public function setMoveToCourse($move_to_course) {
+	public function setMoveToCourse($move_to_course)
+	{
 		$this->move_to_course = $move_to_course;
 	}
 
-	public function getMoveToCourse() {
+	public function getMoveToCourse()
+	{
 		return $this->move_to_course;
 	}
 
-	public function getMoveToCourseText() {
+	public function getMoveToCourseText()
+	{
 		return ($this->move_to_course) ? "Ja" : "Nein";
 	}
 
-	public function getPoolId() {
+	public function getPoolId()
+	{
 		return $this->pool_id;
 	}
 
-	public function setPoolId($pool_id) {
+	public function setPoolId($pool_id)
+	{
 		$this->pool_id = $pool_id;
 	}
 
-	public function setIsBlank($blank) {
+	public function setIsBlank($blank)
+	{
 		$this->is_blank = $blank;
 	}
 
-	public function getIsBlank() {
+	public function getIsBlank()
+	{
 		return $this->is_blank;
 	}
 
-	public function loadData() {
+	public function loadData()
+	{
 		$sql = "SELECT obj_id, title, content, target, is_wp_relevant, is_active, gdv_topic, training_categories,topic, dbv_topic, move_to_course, is_blank\n".
 			   "  FROM ".self::TABLE_NAME.
 			   " WHERE obj_id = ".$this->db->quote($this->getId(), "integer");
 
 		$res = $this->db->query($sql);
-		
-		if($this->db->numRows($res) > 0) {
+
+		if ($this->db->numRows($res) > 0) {
 			$row = $this->db->fetchAssoc($res);
 
 			$this->title = $row["title"];
@@ -194,7 +224,8 @@ class gevBuildingBlockUtils {
 		}
 	}
 
-	public function update() {
+	public function update()
+	{
 		$sql = "UPDATE ".self::TABLE_NAME
 			  ."   SET title = ".$this->db->quote($this->getTitle(), "text")."\n"
 			  ."     , content = ".$this->db->quote($this->getContent(), "text")."\n"
@@ -217,7 +248,8 @@ class gevBuildingBlockUtils {
 		return;
 	}
 
-	public function save() {
+	public function save()
+	{
 		$isWPRelevant = (!$this->isWPRelevant()) ? "0" : "1";
 		$isActive = ($this->isActive() === "") ? "0" : "1";
 
@@ -242,17 +274,18 @@ class gevBuildingBlockUtils {
 			  ."        ,".$this->db->quote($this->getPoolId(), "integer")."\n"
 			  ."        ,".$this->db->quote($this->getIsBlank(), "integer")."\n"
 			  .")";
-		
+
 		$this->db->manipulate($sql);
 
 		return;
 	}
 
-	static public function getAllBuildingBlocks($a_search_opts,$a_order, $a_order_direction, $offset = null, $limit = null, $user_id = null) {
+	public static function getAllBuildingBlocks($a_search_opts, $a_order, $a_order_direction, $offset = null, $limit = null, $user_id = null)
+	{
 		global $ilDB;
 
 		$bb_pool_where = "";
-		if($user_id !== null && !gevUserUtils::getInstance($user_id)->isSystemAdmin()) {
+		if ($user_id !== null && !gevUserUtils::getInstance($user_id)->isSystemAdmin()) {
 			$bb_pools = $bb_pool = gevUserUtils::getBuildingBlockPoolsUserHasPermissionsTo($user_id, array("visible", gevSettings::EDIT_BUILDING_BLOCKS));
 			$bb_pool_where .= " AND ".$ilDB->in("bb.pool_id", $bb_pools, false, "integer");
 		}
@@ -263,25 +296,24 @@ class gevBuildingBlockUtils {
 			  ."     , usr.login, bb.last_change_date, bb.move_to_course, bb.is_blank\n"
 			  ."  FROM ".self::TABLE_NAME." bb\n"
 			  ."  JOIN usr_data usr ON usr_id = last_change_user\n"
-			  ."  WHERE is_deleted = ".$ilDB->quote(0,"integer")."\n";
+			  ."  WHERE is_deleted = ".$ilDB->quote(0, "integer")."\n";
 		$sql .= $bb_pool_where;
 		$sql .= $add_where;
-		$sql .= " ORDER BY title";
-		if($a_order !== null) {
+		if ($a_order !== null) {
 			$sql .= " ORDER BY ".$a_order." ".$a_order_direction;
 		}
 
-		if($limit !== null) {
+		if ($limit !== null) {
 			$sql .= " LIMIT ".$limit;
 		}
 
-		if($offset !== null) {
+		if ($offset !== null) {
 			$sql .= " OFFSET ".$offset;
 		}
 
 		$ret = array();
 		$res = $ilDB->query($sql);
-		while($row = $ilDB->fetchAssoc($res)) {
+		while ($row = $ilDB->fetchAssoc($res)) {
 			$row["training_categories"] = unserialize($row["training_categories"]);
 			$ret[] = $row;
 		}
@@ -289,31 +321,32 @@ class gevBuildingBlockUtils {
 		return $ret;
 	}
 
-	static public function getAllBuildingBlocksForCopy($pool_id,$a_order, $a_order_direction, $offset = null, $limit = null) {
+	public static function getAllBuildingBlocksForCopy($pool_id, $a_order, $a_order_direction, $offset = null, $limit = null)
+	{
 		global $ilDB;
 
 		$sql = "SELECT obj_id, title, content, target\n"
 			  ."     , is_wp_relevant, is_active, gdv_topic, training_categories, topic, dbv_topic\n"
 			  ."	 move_to_course, is_blank\n"
-			  ."  FROM ".self::TABLE_NAME."\n"  
-			  ."  WHERE is_deleted = ".$ilDB->quote(0,"integer")."\n"
+			  ."  FROM ".self::TABLE_NAME."\n"
+			  ."  WHERE is_deleted = ".$ilDB->quote(0, "integer")."\n"
 			  ."  AND pool_id != ".$ilDB->quote($pool_id, "integer");
 
-		if($a_order !== null) {
+		if ($a_order !== null) {
 			$sql .= " ORDER BY ".$a_order." ".$a_order_direction;
 		}
 
-		if($limit !== null) {
+		if ($limit !== null) {
 			$sql .= " LIMIT ".$limit;
 		}
 
-		if($offset !== null) {
+		if ($offset !== null) {
 			$sql .= " OFFSET ".$offset;
 		}
 
 		$ret = array();
 		$res = $ilDB->query($sql);
-		while($row = $ilDB->fetchAssoc($res)) {
+		while ($row = $ilDB->fetchAssoc($res)) {
 			$row["training_categories"] = unserialize($row["training_categories"]);
 			$ret[] = $row;
 		}
@@ -321,11 +354,12 @@ class gevBuildingBlockUtils {
 		return $ret;
 	}
 
-	static public function countAllBuildingBlocks($a_search_opts, $user_id = null) {
+	public static function countAllBuildingBlocks($a_search_opts, $user_id = null)
+	{
 		global $ilDB;
 
 		$bb_pool_where = "";
-		if($user_id !== null && !gevUserUtils::getInstance($user_id)->isSystemAdmin()) {
+		if ($user_id !== null && !gevUserUtils::getInstance($user_id)->isSystemAdmin()) {
 			$bb_pools = $bb_pool = gevUserUtils::getBuildingBlockPoolsUserHasPermissionsTo($user_id, array("visible", gevSettings::EDIT_BUILDING_BLOCKS));
 			$bb_pool_where .= " AND ".$ilDB->in("pool_id", $bb_pools, false, "integer");
 		}
@@ -333,7 +367,7 @@ class gevBuildingBlockUtils {
 		$add_where = self::createAdditionalWhere($a_search_opts);
 		$sql = "SELECT count(obj_id) as cnt\n"
 			  ."  FROM ".self::TABLE_NAME."\n"
-			  ."  WHERE is_deleted = ".$ilDB->quote(0,"integer")."\n";
+			  ."  WHERE is_deleted = ".$ilDB->quote(0, "integer")."\n";
 		$sql .= $bb_pool_where;
 		$sql .= $add_where;
 
@@ -344,13 +378,14 @@ class gevBuildingBlockUtils {
 		return $row["cnt"];
 	}
 
-	static public function countAllBuildingBlocksForCopy($pool_id) {
+	public static function countAllBuildingBlocksForCopy($pool_id)
+	{
 		global $ilDB;
 
 		$add_where = self::createAdditionalWhere($a_search_opts);
 		$sql = "SELECT count(obj_id) as cnt\n"
 			  ."  FROM ".self::TABLE_NAME."\n"
-			  ."  WHERE is_deleted = ".$ilDB->quote(0,"integer")."\n"
+			  ."  WHERE is_deleted = ".$ilDB->quote(0, "integer")."\n"
 			  ."  AND pool_id != ".$ilDB->quote($pool_id, "integer");
 		$sql .= $add_where;
 
@@ -361,12 +396,13 @@ class gevBuildingBlockUtils {
 		return $row["cnt"];
 	}
 
-	static private function createAdditionalWhere($a_search_opts) {
+	private static function createAdditionalWhere($a_search_opts)
+	{
 		global $ilDB;
 		$ret = "";
 
 		foreach ($a_search_opts as $key => $value) {
-			switch($key) {
+			switch ($key) {
 				case "title":
 				case "content":
 				case "target":
@@ -374,36 +410,37 @@ class gevBuildingBlockUtils {
 					break;
 				case "is_wp_relevant":
 				case "is_active":
-					if($value != -1) {
-						if($value == "ja") {
+					if ($value != -1) {
+						if ($value == "ja") {
 							$ret .= " AND ".$key." = 1";
-						} elseif($value == "nein"){
+						} elseif ($value == "nein") {
 							$ret .= " AND ".$key." = 0";
 						}
 					}
 					break;
 				case "pool_id":
-					$ret .= " AND pool_id = ".$ilDB->quote($value,"integer");
+					$ret .= " AND pool_id = ".$ilDB->quote($value, "integer");
 					break;
 				default:
 					throw new ilException("Unknown search option: $key");
 			}
-			
 		}
 
 		return $ret;
 	}
 
-	static public function deleteBuildingBlock($a_obj_id) {
+	public static function deleteBuildingBlock($a_obj_id)
+	{
 		global $ilDB;
 
-		$query = "UPDATE ".self::TABLE_NAME." SET is_deleted = 1 WHERE obj_id = ".$ilDB->quote($a_obj_id,"integer");
+		$query = "UPDATE ".self::TABLE_NAME." SET is_deleted = 1 WHERE obj_id = ".$ilDB->quote($a_obj_id, "integer");
 		$ilDB->manipulate($query);
 
 		return;
 	}
 
-	static public function getDeleteLink($a_obj_id) {
+	public static function getDeleteLink($a_obj_id)
+	{
 		global $ilCtrl,$ilUser;
 
 		$ilCtrl->setParameterByClass("gevDecentralTrainingBuildingBlockAdminGUI", "obj_id", $a_obj_id);
@@ -412,7 +449,8 @@ class gevBuildingBlockUtils {
 		return $lnk;
 	}
 
-	static public function getEditLink($a_obj_id) {
+	public static function getEditLink($a_obj_id)
+	{
 		global $ilCtrl,$ilUser;
 
 		$ilCtrl->setParameterByClass("gevDecentralTrainingBuildingBlockAdminGUI", "obj_id", $a_obj_id);
@@ -421,7 +459,8 @@ class gevBuildingBlockUtils {
 		return $lnk;
 	}
 
-	static function getPossibleBuildingBlocks() {
+	public static function getPossibleBuildingBlocks()
+	{
 		global $ilDB;
 
 		$sql = "SELECT obj_id, title FROM ".self::TABLE_NAME." WHERE is_deleted = 0 AND is_active = 1";
@@ -432,11 +471,12 @@ class gevBuildingBlockUtils {
 		while ($row = $ilDB->fetchAssoc($res)) {
 			$ret[$row["obj_id"]] = $row["title"];
 		}
-		
+
 		return $ret;
 	}
 
-	static function getPossibleBuildingBlocksGroupByTopic($user_id) {
+	public static function getPossibleBuildingBlocksGroupByTopic($user_id)
+	{
 		global $ilDB;
 
 		$bb_pool = gevUserUtils::getBuildingBlockPoolsUserHasPermissionsTo($user_id, array(gevSettings::USE_BUILDING_BLOCK, "visible"));
@@ -454,31 +494,33 @@ class gevBuildingBlockUtils {
 		$bla = array();
 
 		while ($row = $ilDB->fetchAssoc($res)) {
-			if($curr_topic != $row["topic"] && $curr_topic != "") {
+			if ($curr_topic != $row["topic"] && $curr_topic != "") {
 				$ret[$curr_topic] = $bla;
 				$bla = array();
 				$curr_topic = $row["topic"];
 			}
 
-			if($curr_topic == "") {
+			if ($curr_topic == "") {
 				$curr_topic = $row["topic"];
 			}
 
 			$bla[$row["obj_id"]] = $row["title"];
 		}
 
-		if(!empty($bla)) {
+		if (!empty($bla)) {
 			$ret[$curr_topic] = $bla;
 		}
-		
+
 		return $ret;
 	}
 
-	static function getAllPossibleTopics() {
+	public static function getAllPossibleTopics()
+	{
 		return self::$possible_topics;
 	}
 
-	static function getAllInBuildingBlocksSelectedTopics($user_id) {
+	public static function getAllInBuildingBlocksSelectedTopics($user_id)
+	{
 		global $ilDB;
 
 		$bb_pool = gevUserUtils::getBuildingBlockPoolsUserHasPermissionsTo($user_id, array(gevSettings::USE_BUILDING_BLOCK, "visible"));
@@ -491,11 +533,12 @@ class gevBuildingBlockUtils {
 		while ($row = $ilDB->fetchAssoc($res)) {
 			$ret[$row["topic"]] = $row["topic"];
 		}
-		
+
 		return $ret;
 	}
 
-	static function getPossibleBuildingBlocksByTopicName($topic, $user_id) {
+	public static function getPossibleBuildingBlocksByTopicName($topic, $user_id)
+	{
 		global $ilDB;
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		require_once("Services/GEV/Utils/classes/class.gevSettings.php");
@@ -507,8 +550,8 @@ class gevBuildingBlockUtils {
 			   ."    AND is_active = 1\n"
 			   ."    AND ".$ilDB->in("pool_id", $bb_pool, false, "integer")."\n";
 
-		if($topic != "0") {
-			$sql .= " AND topic = ".$ilDB->quote($topic,"text")."\n";
+		if ($topic != "0") {
+			$sql .= " AND topic = ".$ilDB->quote($topic, "text")."\n";
 			$sql .= " ORDER BY title";
 		} else {
 			$sql .= " ORDER BY topic, title";
@@ -521,27 +564,28 @@ class gevBuildingBlockUtils {
 		$bla = array();
 
 		while ($row = $ilDB->fetchAssoc($res)) {
-			if($curr_topic != $row["topic"] && $curr_topic != "") {
+			if ($curr_topic != $row["topic"] && $curr_topic != "") {
 				$ret[$curr_topic] = $bla;
 				$bla = array();
 				$curr_topic = $row["topic"];
 			}
 
-			if($curr_topic == "") {
+			if ($curr_topic == "") {
 				$curr_topic = $row["topic"];
 			}
 
 			$bla[$row["obj_id"]] = $row["title"];
 		}
 
-		if(!empty($bla)) {
+		if (!empty($bla)) {
 			$ret[$curr_topic] = $bla;
 		}
-		
+
 		return $ret;
 	}
 
-	static function getBuildingBlockInfosById($id) {
+	public static function getBuildingBlockInfosById($id)
+	{
 		global $ilDB;
 
 		$sql = "SELECT content, target, IF(is_wp_relevant,'Ja','Nein') AS wp, is_blank"
@@ -550,18 +594,20 @@ class gevBuildingBlockUtils {
 
 		$res = $ilDB->query($sql);
 
-		if($ilDB->numRows($res) > 0) {
+		if ($ilDB->numRows($res) > 0) {
 			return $ilDB->fetchAssoc($res);
 		}
 
 		return array("content" => "", "target" => "", "is_blank" => false);
 	}
 
-	static public function getMoveToCourseOptions() {
+	public static function getMoveToCourseOptions()
+	{
 		return array("Ja"=>"Ja","Nein"=>"Nein");
 	}
 
-	static public function copyBuildingBlocksTo($bb_ids, $target_pool_id) {
+	public static function copyBuildingBlocksTo($bb_ids, $target_pool_id)
+	{
 		foreach ($bb_ids as $bb_id) {
 			$bb_utils = gevBuildingBlockUtils::getInstance($bb_id);
 			$bb_utils->loadData();
@@ -569,7 +615,8 @@ class gevBuildingBlockUtils {
 		}
 	}
 
-	protected function copyTo($target_pool_id) {
+	protected function copyTo($target_pool_id)
+	{
 		$cpy_bb_utils = gevBuildingBlockUtils::getInstance();
 
 		$cpy_bb_utils->setTitle($this->getTitle());
@@ -588,14 +635,16 @@ class gevBuildingBlockUtils {
 		$cpy_bb_utils->save();
 	}
 
-	public static function deleteBuildingBlocksByPoolId($pool_id) {
+	public static function deleteBuildingBlocksByPoolId($pool_id)
+	{
 		global $ilDB;
 
 		$query = "UPDATE ".self::TABLE_NAME." SET is_deleted = 1 WHERE pool_id = ".$ilDB->quote($pool_id, "integer");
 		$ilDB->manipulate($query);
 	}
 
-	public static function cloneBuildingBlocksFromToByPoolIds($from_pool_id, $to_pool_id) {
+	public static function cloneBuildingBlocksFromToByPoolIds($from_pool_id, $to_pool_id)
+	{
 		global $ilDB;
 
 		$insert = "INSERT INTO ".self::TABLE_NAME."\n"
@@ -610,16 +659,15 @@ class gevBuildingBlockUtils {
 		$query = "SELECT title, content, target, is_wp_relevant, is_active, is_deleted, last_change_user
 					, last_change_date, gdv_topic, training_categories, topic, dbv_topic, move_to_course\n"
 					." FROM ".self::TABLE_NAME."\n"
-					." WHERE pool_id = ".$ilDB->quote($from_pool_id,"integer");
+					." WHERE pool_id = ".$ilDB->quote($from_pool_id, "integer");
 
 		$res = $ilDB->query($query);
 
-		while($row = $ilDB->fetchAssoc($res)) {
+		while ($row = $ilDB->fetchAssoc($res)) {
 			$next_id = $ilDB->nextId(self::TABLE_NAME);
 			array_unshift($row, $next_id);
-			array_push($row,$to_pool_id);
-			$ilDB->execute($statement,array_values($row));
+			array_push($row, $to_pool_id);
+			$ilDB->execute($statement, array_values($row));
 		}
 	}
 }
-?>
