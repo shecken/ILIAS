@@ -24,71 +24,71 @@ class ilObject
 	* @var		object ilias
 	* @access	private
 	*/
-	var $ilias;
+	public $ilias;
 
 	/**
 	* lng object
 	* @var		object language
 	* @access	private
 	*/
-	var $lng;
+	public $lng;
 
 	/**
 	* object id
 	* @var		integer object id of object itself
 	* @access	private
 	*/
-	var $id;	// true object_id!!!!
-	var $ref_id;// reference_id
-	var $type;
-	var $title;
+	public $id;	// true object_id!!!!
+	public $ref_id;// reference_id
+	public $type;
+	public $title;
 	// BEGIN WebDAV: WebDAV needs to access the untranslated title of an object
-	var $untranslatedTitle;
+	public $untranslatedTitle;
 	// END WebDAV: WebDAV needs to access the untranslated title of an object
-	var $desc;
-	var $long_desc;
-	var $owner;
-	var $create_date;
-	var $last_update;
-	var $import_id;
-	var $register = false;		// registering required for object? set to true to implement a subscription interface
+	public $desc;
+	public $long_desc;
+	public $owner;
+	public $create_date;
+	public $last_update;
+	public $import_id;
+	public $register = false;		// registering required for object? set to true to implement a subscription interface
 
 	/**
 	* indicates if object is a referenced object
 	* @var		boolean
 	* @access	private
 	*/
-	var $referenced;
+	public $referenced;
 
 	/**
 	* object list
 	* @var		array	contains all child objects of current object
 	* @access	private
 	*/
-	var $objectList;
+	public $objectList;
 
 	/**
 	* max title length
 	* @var integer
 	*/
-	var $max_title;
+	public $max_title;
 
 	/**
 	* max description length
 	* @var integer
 	*/
-	var $max_desc;
+	public $max_desc;
 
 	/**
 	* add dots to shortened titles and descriptions
 	* @var boolean
 	*/
-	var $add_dots;
+	public $add_dots;
 
 	/**
 	* object_data record
 	*/
-	var $obj_data_record;
+	public $obj_data_record;
 
 	/**
 	* Constructor
@@ -96,7 +96,7 @@ class ilObject
 	* @param	integer	reference_id or object_id
 	* @param	boolean	treat the id as reference_id (true) or object_id (false)
 	*/
-	function ilObject($a_id = 0, $a_reference = true)
+	public function ilObject($a_id = 0, $a_reference = true)
 	{
 		global $ilias, $lng, $ilBench;
 
@@ -136,7 +136,7 @@ class ilObject
 	/**
 	* determines wehter objects are referenced or not (got ref ids or not)
 	*/
-	function withReferences()
+	public function withReferences()
 	{
 		// both vars could differ. this method should always return true if one of them is true without changing their status
 		return ($this->call_by_reference) ? true : $this->referenced;
@@ -148,7 +148,7 @@ class ilObject
 	* @param	boolean
 	* @access	public
 	*/
-	function read($a_force_db = false)
+	public function read($a_force_db = false)
 	{
 		global $objDefinition, $ilBench, $ilDB, $log;
 
@@ -273,7 +273,7 @@ class ilObject
 	* @access	public
 	* @return	integer	object id
 	*/
-	function getId()
+	public function getId()
 	{
 		return $this->id;
 	}
@@ -283,7 +283,7 @@ class ilObject
 	* @access	public
 	* @param	integer	$a_id		object id
 	*/
-	function setId($a_id)
+	public function setId($a_id)
 	{
 		$this->id = $a_id;
 	}
@@ -293,7 +293,7 @@ class ilObject
 	* @access	public
 	* @param	integer	$a_id		reference id
 	*/
-	function setRefId($a_id)
+	public function setRefId($a_id)
 	{
 		$this->ref_id = $a_id;
 		$this->referenced = true;
@@ -304,7 +304,7 @@ class ilObject
 	* @access	public
 	* @return	integer	reference id
 	*/
-	function getRefId()
+	public function getRefId()
 	{
 		return $this->ref_id;
 	}
@@ -314,7 +314,7 @@ class ilObject
 	* @access	public
 	* @return	string		object type
 	*/
-	function getType()
+	public function getType()
 	{
 		return $this->type;
 	}
@@ -324,7 +324,7 @@ class ilObject
 	* @access	public
 	* @param	integer	$a_type		object type
 	*/
-	function setType($a_type)
+	public function setType($a_type)
 	{
 		$this->type = $a_type;
 	}
@@ -349,7 +349,7 @@ class ilObject
 	* @access	public
 	* @return	string		object title
 	*/
-	function getTitle()
+	public function getTitle()
 	{
 		return $this->title;
 	}
@@ -359,7 +359,7 @@ class ilObject
 	* @access	public
 	* @return	string		object title
 	*/
-	function getUntranslatedTitle()
+	public function getUntranslatedTitle()
 	{
 		return $this->untranslatedTitle;
 	}
@@ -371,7 +371,7 @@ class ilObject
 	* @access	public
 	* @param	string		$a_title		object title
 	*/
-	function setTitle($a_title)
+	public function setTitle($a_title)
 	{
 		$this->title = ilUtil::shortenText($a_title, $this->max_title, $this->add_dots);
 		// BEGIN WebDAV: WebDAV needs to access the untranslated title of an object
@@ -385,7 +385,7 @@ class ilObject
 	* @access	public
 	* @return	string		object description
 	*/
-	function getDescription()
+	public function getDescription()
 	{
 		return $this->desc;
 	}
@@ -396,7 +396,7 @@ class ilObject
 	* @access	public
 	* @param	string		$a_desc		object description
 	*/
-	function setDescription($a_desc)
+	public function setDescription($a_desc)
 	{
 		// Shortened form is storted in object_data. Long form is stored in object_description
 		$this->desc = ilUtil::shortenText($a_desc, $this->max_desc, $this->add_dots);
@@ -412,7 +412,7 @@ class ilObject
 	* @access	public
 	* @return	string		object description
 	*/
-	function getLongDescription()
+	public function getLongDescription()
 	{
 		return strlen($this->long_desc) ? $this->long_desc : $this->desc;
 	}
@@ -423,7 +423,7 @@ class ilObject
 	* @access	public
 	* @return	string	import id
 	*/
-	function getImportId()
+	public function getImportId()
 	{
 		return $this->import_id;
 	}
@@ -434,7 +434,7 @@ class ilObject
 	* @access	public
 	* @param	string		$a_import_id		import id
 	*/
-	function setImportId($a_import_id)
+	public function setImportId($a_import_id)
 	{
 		$this->import_id = $a_import_id;
 	}
@@ -459,7 +459,7 @@ class ilObject
 	* @access	public
 	* @return	integer	owner id
 	*/
-	function getOwner()
+	public function getOwner()
 	{
 		return $this->owner;
 	}
@@ -470,7 +470,7 @@ class ilObject
 	* @access	public
 	* @return	string	owner name or unknown
 	*/
-	function getOwnerName()
+	public function getOwnerName()
 	{
 		return ilObject::_lookupOwnerName($this->getOwner());
 	}
@@ -478,7 +478,7 @@ class ilObject
 	/**
 	* lookup owner name for owner id
 	*/
-	function _lookupOwnerName($a_owner_id)
+	public function _lookupOwnerName($a_owner_id)
 	{
 		global $lng;
 
@@ -503,7 +503,7 @@ class ilObject
 	* @access	public
 	* @param	integer	$a_owner	owner id
 	*/
-	function setOwner($a_owner)
+	public function setOwner($a_owner)
 	{
 		$this->owner = $a_owner;
 	}
@@ -515,7 +515,7 @@ class ilObject
 	* @access	public
 	* @return	string		creation date
 	*/
-	function getCreateDate()
+	public function getCreateDate()
 	{
 		return $this->create_date;
 	}
@@ -525,7 +525,7 @@ class ilObject
 	* @access	public
 	* @return	string		date of last update
 	*/
-	function getLastUpdateDate()
+	public function getLastUpdateDate()
 	{
 		return $this->last_update;
 	}
@@ -542,7 +542,7 @@ class ilObject
 	* @access	public
 	* @return	integer		the disk usage in bytes or null
 	*/
-	function getDiskUsage()
+	public function getDiskUsage()
 	{
 		return null;
 	}
@@ -555,7 +555,7 @@ class ilObject
 	* @access	public
 	* @return	integer	object id
 	*/
-	function setObjDataRecord($a_record)
+	public function setObjDataRecord($a_record)
 	{
 		$this->obj_data_record = $a_record;
 	}
@@ -568,7 +568,7 @@ class ilObject
 	* @access	public
 	* @return	integer		object id
 	*/
-	function create()
+	public function create()
 	{
 		global $ilDB, $log,$ilUser,$objDefinition;
 
@@ -652,7 +652,7 @@ class ilObject
 	* @access	public
 	* @return	boolean	true on success
 	*/
-	function update()
+	public function update()
 	{
 		global $objDefinition, $ilDB;
 
@@ -712,7 +712,7 @@ class ilObject
 	*
 	* @param	string		$a_element
 	*/
-	function MDUpdateListener($a_element)
+	public function MDUpdateListener($a_element)
 	{
 		include_once 'Services/MetaData/classes/class.ilMD.php';
 
@@ -750,7 +750,7 @@ class ilObject
 	/**
 	* create meta data entry
 	*/
-	function createMetaData()
+	public function createMetaData()
 	{
 		include_once 'Services/MetaData/classes/class.ilMDCreator.php';
 
@@ -771,7 +771,7 @@ class ilObject
 	/**
 	* update meta data entry
 	*/
-	function updateMetaData()
+	public function updateMetaData()
 	{
 		include_once("Services/MetaData/classes/class.ilMD.php");
 		include_once("Services/MetaData/classes/class.ilMDGeneral.php");
@@ -801,7 +801,7 @@ class ilObject
 	/**
 	* delete meta data entry
 	*/
-	function deleteMetaData()
+	public function deleteMetaData()
 	{
 		// Delete meta data
 		include_once('Services/MetaData/classes/class.ilMD.php');
@@ -815,7 +815,7 @@ class ilObject
 	 * @access   public
 	 * @return   boolean true on success
 	 */
-	function updateOwner()
+	public function updateOwner()
 	{
 		global $ilDB;
 
@@ -842,7 +842,7 @@ class ilObject
 	*
 	* @return	int		id
 	*/
-	function _getIdForImportId($a_import_id)
+	public function _getIdForImportId($a_import_id)
 	{
 		global $ilDB;
 
@@ -898,7 +898,7 @@ class ilObject
 	*
 	* @param	int		$a_id		object id
 	*/
-	function _lookupOwner($a_id)
+	public function _lookupOwner($a_id)
 	{
 		global $ilObjDataCache;
 
@@ -944,7 +944,7 @@ class ilObject
 	*
 	* @param	int		$a_id		object id
 	*/
-	function _lookupLastUpdate($a_id, $a_as_string = false)
+	public function _lookupLastUpdate($a_id, $a_as_string = false)
 	{
 		global $ilObjDataCache;
 
@@ -960,7 +960,7 @@ class ilObject
 	*
 	* @param	array
 	*/
-	function _getLastUpdateOfObjects($a_objs)
+	public function _getLastUpdateOfObjects($a_objs)
 	{
 		global $ilDB;
 
@@ -985,7 +985,7 @@ class ilObject
 	/**
 	* only called in ilTree::saveSubTree
 	*/
-	function _setDeletedDate($a_ref_id)
+	public function _setDeletedDate($a_ref_id)
 	{
 		global $ilDB;
 
@@ -1015,7 +1015,7 @@ class ilObject
 	/**
 	* only called in ilObjectGUI::insertSavedNodes
 	*/
-	function _resetDeletedDate($a_ref_id)
+	public function _resetDeletedDate($a_ref_id)
 	{
 		global $ilDB;
 
@@ -1027,7 +1027,7 @@ class ilObject
 	/**
 	* only called in ilObjectGUI::insertSavedNodes
 	*/
-	function _lookupDeletedDate($a_ref_id)
+	public function _lookupDeletedDate($a_ref_id)
 	{
 		global $ilDB;
 
@@ -1047,7 +1047,7 @@ class ilObject
 	* @param	string	$a_title		title
 	* @access	public
 	*/
-	function _writeTitle($a_obj_id, $a_title)
+	public function _writeTitle($a_obj_id, $a_title)
 	{
 		global $ilDB;
 
@@ -1067,7 +1067,7 @@ class ilObject
 	* @param	string	$a_desc			description
 	* @access	public
 	*/
-	function _writeDescription($a_obj_id, $a_desc)
+	public function _writeDescription($a_obj_id, $a_desc)
 	{
 		global $ilDB,$objDefinition;
 
@@ -1108,7 +1108,7 @@ class ilObject
 	* @param	string	$a_import_id		import id
 	* @access	public
 	*/
-	function _writeImportId($a_obj_id, $a_import_id)
+	public function _writeImportId($a_obj_id, $a_import_id)
 	{
 		global $ilDB;
 
@@ -1139,7 +1139,7 @@ class ilObject
 	/**
 	* checks wether object is in trash
 	*/
-	function _isInTrash($a_ref_id)
+	public function _isInTrash($a_ref_id)
 	{
 		global $tree;
 
@@ -1149,7 +1149,7 @@ class ilObject
 	/**
 	* checks wether an object has at least one reference that is not in trash
 	*/
-	function _hasUntrashedReference($a_obj_id)
+	public function _hasUntrashedReference($a_obj_id)
 	{
 		$ref_ids  = ilObject::_getAllReferences($a_obj_id);
 		foreach ($ref_ids as $ref_id) {
@@ -1183,7 +1183,7 @@ class ilObject
 	* @return	array		array of object data arrays ("id", "title", "type",
 	*						"description")
 	*/
-	function _getObjectsDataForType($a_type, $a_omit_trash = false)
+	public function _getObjectsDataForType($a_type, $a_omit_trash = false)
 	{
 		global $ilDB;
 
@@ -1207,7 +1207,7 @@ class ilObject
 	*
 	* @todo	role/rbac stuff
 	*/
-	function putInTree($a_parent_ref)
+	public function putInTree($a_parent_ref)
 	{
 		global $tree, $log;
 		$tree->insertNode($this->getRefId(), $a_parent_ref);
@@ -1223,7 +1223,7 @@ class ilObject
 	* @param	integer	reference_id of parent object
 	* @access	public
 	*/
-	function setPermissions($a_parent_ref)
+	public function setPermissions($a_parent_ref)
 	{
 		global $rbacadmin, $rbacreview;
 
@@ -1243,7 +1243,7 @@ class ilObject
 	* @access	public
 	* @return	integer	reference_id of object
 	*/
-	function createReference()
+	public function createReference()
 	{
 		global $ilDB;
 
@@ -1273,7 +1273,7 @@ class ilObject
 	* @access	public
 	* @return	integer		number of references for this object
 	*/
-	function countReferences()
+	public function countReferences()
 	{
 		global $ilDB;
 
@@ -1302,7 +1302,7 @@ class ilObject
 		* @access	public
 	* @return	boolean	true if object was removed completely; false if only a references was removed
 	*/
-	function delete()
+	public function delete()
 	{
 		global $rbacadmin, $log, $ilDB;
 
@@ -1428,7 +1428,7 @@ class ilObject
 	* @access	public
 	* @return	array	empty array
 	*/
-	function initDefaultRoles()
+	public function initDefaultRoles()
 	{
 		return array();
 	}
@@ -1442,7 +1442,7 @@ class ilObject
 	* @param	object	parent object where the rolefolder is attached to
 	* @return	object	rolefolder object
 	*/
-	function createRoleFolder()
+	public function createRoleFolder()
 	{
 		global $rbacreview;
 
@@ -1527,7 +1527,7 @@ class ilObject
 	* @param	array	passes optional parameters if required
 	* @return	boolean
 	*/
-	function notify($a_event, $a_ref_id, $a_parent_non_rbac_id, $a_node_id, $a_params = 0)
+	public function notify($a_event, $a_ref_id, $a_parent_non_rbac_id, $a_node_id, $a_params = 0)
 	{
 		global $tree;
 
@@ -1542,29 +1542,29 @@ class ilObject
 	}
 
 	// toggle subscription interface
-	function setRegisterMode($a_bool)
+	public function setRegisterMode($a_bool)
 	{
 		$this->register = (bool) $a_bool;
 	}
 
 	// check register status of current user
 	// abstract method; overwrite in object type class
-	function isUserRegistered($a_user_id = 0)
+	public function isUserRegistered($a_user_id = 0)
 	{
 		return false;
 	}
 
-	function requireRegistration()
+	public function requireRegistration()
 	{
 		return $this->register;
 	}
 
 
-	function getXMLZip()
+	public function getXMLZip()
 	{
 		return false;
 	}
-	function getHTMLDirectory()
+	public function getHTMLDirectory()
 	{
 		return false;
 	}
@@ -1572,7 +1572,7 @@ class ilObject
 	/**
 	* Get objects by type
 	*/
-	static function _getObjectsByType($a_obj_type = "", $a_owner = "")
+	public static function _getObjectsByType($a_obj_type = "", $a_owner = "")
 	{
 		global $ilDB;
 
@@ -1898,7 +1898,7 @@ class ilObject
 	 * @param
 	 * @return
 	 */
-	static final function collectDeletionDependencies(&$deps, $a_ref_id, $a_obj_id, $a_type, $a_depth = 0)
+	final public static function collectDeletionDependencies(&$deps, $a_ref_id, $a_obj_id, $a_type, $a_depth = 0)
 	{
 		global $objDefinition, $tree;
 
@@ -1938,7 +1938,7 @@ class ilObject
 	 * Get deletion dependencies
 	 *
 	 */
-	static function getDeletionDependencies($a_obj_id)
+	public static function getDeletionDependencies($a_obj_id)
 	{
 		return false;
 	}
@@ -1949,7 +1949,7 @@ class ilObject
 	 * @param array $a_obj_ids
 	 * @return array
 	 */
-	static function getLongDescriptions(array $a_obj_ids)
+	public static function getLongDescriptions(array $a_obj_ids)
 	{
 		global $ilDB;
 
@@ -1968,7 +1968,7 @@ class ilObject
 	 * @param int $a_user_id
 	 * @return array
 	 */
-	static function getAllOwnedRepositoryObjects($a_user_id)
+	public static function getAllOwnedRepositoryObjects($a_user_id)
 	{
 		global $ilDB, $objDefinition;
 
@@ -2004,7 +2004,7 @@ class ilObject
 	 * @param
 	 * @return
 	 */
-	function _lookupCreationDate($a_id)
+	public function _lookupCreationDate($a_id)
 	{
 		global $ilDB;
 

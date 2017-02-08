@@ -1359,7 +1359,7 @@ class ilObjStudyProgramme extends ilContainer
 	/**
 	* save container icons
 	*/
-	function saveIcons($a_custom_icon)
+	public function saveIcons($a_custom_icon)
 	{
 		global $ilDB;
 
@@ -1404,7 +1404,7 @@ class ilObjStudyProgramme extends ilContainer
 	/**
 	* remove small icon
 	*/
-	function removeCustomIcon()
+	public function removeCustomIcon()
 	{
 		$cont_dir = $this->getContainerDirectory();
 		$small_file_name = $cont_dir."/icon_custom.png";
