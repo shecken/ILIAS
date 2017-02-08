@@ -1,12 +1,16 @@
 <?php
 
 require_once("./Services/Repository/classes/class.ilObjectPlugin.php");
-require_once("./vendor/autoload.php");
 
 use \CaT\Plugins\ReportVAPass;
 
 class ilObjReportVAPass extends ilObjectPlugin
 {
+	/**
+	 * @var CaT\Plugins\ReportVAPass\Settings\VAPass
+	 */
+	protected $va_pass_settings;
+
 	public function __construct($a_ref_id = 0)
 	{
 		$this->settings = null;
@@ -32,6 +36,8 @@ class ilObjReportVAPass extends ilObjectPlugin
 	 */
 	public function doCreate()
 	{
+		$post = $_POST;
+		$this->va_pass_settings = $this->getActions()->create($post);
 	}
 
 	/**
@@ -39,6 +45,7 @@ class ilObjReportVAPass extends ilObjectPlugin
 	 */
 	public function doRead()
 	{
+		$this->va_pass_settings = $this->getActions()->read();
 	}
 
 	/**
@@ -46,6 +53,7 @@ class ilObjReportVAPass extends ilObjectPlugin
 	 */
 	public function doUpdate()
 	{
+		$this->getActions()->update($this->va_pass_settings);
 	}
 
 	/**
@@ -53,6 +61,7 @@ class ilObjReportVAPass extends ilObjectPlugin
 	 */
 	public function doDelete()
 	{
+		$this->getActions()->delete();
 	}
 
 	/**
@@ -60,5 +69,28 @@ class ilObjReportVAPass extends ilObjectPlugin
 	 */
 	public function doCloneObject($new_obj, $a_target_id, $a_copy_id)
 	{
+		$new_obj->setSettings($this->va_pass_settings->withOnline(false));
+		$new_obj->update();
+	}
+
+	/**
+	 * @return ilActions
+	 */
+	public function getActions()
+	{
+		if ($this->actions === null) {
+			$this->actions = new ReportVAPass\ilActions($this->getId(), $this->getVAPassDB());
+		}
+		return $this->actions;
+	}
+
+	protected function getVAPassDB()
+	{
+		return $this->plugin->getVAPassDB();
+	}
+
+	public function setSettings(ReportVAPass\Settings\VAPass $va_pass)
+	{
+		$this->va_pass_settings = $va_pass;
 	}
 }
