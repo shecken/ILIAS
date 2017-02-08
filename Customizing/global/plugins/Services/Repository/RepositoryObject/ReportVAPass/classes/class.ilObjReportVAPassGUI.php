@@ -30,11 +30,12 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 	 */
 	protected function afterConstructor()
 	{
-		global $ilAccess, $ilCtrl, $ilTabs;
+		global $ilAccess, $ilCtrl, $ilTabs, $ilUser;
 
 		$this->g_access = $ilAccess;
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tabs = $ilTabs;
+		$this->g_user = $ilUser;
 	}
 
 	/**
@@ -110,10 +111,29 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 
 	public function showContent()
 	{
-		$this->g_tabs->setTabActive(self::TAB_SHOW_CONTENT);
+		if (!$this->g_access->checkAccess("visible", "", $this->object->getRefId())) {
+			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
+			$this->g_ctrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
+		} else {
+			$this->g_tabs->setTabActive(self::TAB_SHOW_CONTENT);
+			$settings = $this->object->getSettings();
+
+			require_once("Modules/StudyProgramme/classes/class.ilObjectFactoryWrapper.php");
+			$sp = \ilObjectFactoryWrapper::getInstanceByRefId($settings->getSPNodeRefId());
+			$assignments = $sp->getAssignmentsOf($this->g_user->getId());
+			$assignment = $assignments[0];
+
+			require_once("Services/GEV/VAPass/clasess/class.gevMyVAPassGUI.php");
+			$gui = new \gevMyVAPassGUI();
+			$gui->setUserId($this->g_user->getId());
+			$gui->setAssignmentId($assignment->getId());
+			$gui->setSPRefId($settings->getSPNodeRefId());
+
+			$this->g_ctrl->forwardCommand($gui);
+		}
 	}
 
-		/**
+	/**
 	 * Set tabs
 	 */
 	protected function setTabs()
