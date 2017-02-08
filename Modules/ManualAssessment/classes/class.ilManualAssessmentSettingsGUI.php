@@ -17,6 +17,8 @@ class ilManualAssessmentSettingsGUI
 	const PROP_INFO_MAILS = "mails";
 	const PROP_INFO_CONSULTATION = "consultatilon";
 	const PROP_FILE_REQUIRED = "file_required";
+	const PROP_SUPERIOR_EXAMINATE = "superior_examinate";
+	const PROP_SUPERIOR_VIEW = "superior_view";
 
 	const TAB_EDIT = 'settings';
 	const TAB_EDIT_INFO = 'infoSettings';
@@ -136,8 +138,9 @@ class ilManualAssessmentSettingsGUI
 								->setRecordTemplate($_POST[self::PROP_RECORD_TEMPLATE])
 								->setFileRequired((bool)$_POST[self::PROP_FILE_REQUIRED])
 								->setRecordTemplate($_POST[self::PROP_RECORD_TEMPLATE])
-								->setEventTimePlaceRequired($_POST[self::PROP_EVENT_TIME_PLACE_REQUIRED]);
-
+								->setEventTimePlaceRequired($_POST[self::PROP_EVENT_TIME_PLACE_REQUIRED])
+								->setSuperiorExaminate((bool)$_POST[self::PROP_SUPERIOR_EXAMINATE])
+								->setSuperiorView((bool)$_POST[self::PROP_SUPERIOR_VIEW]);
 			$this->object->update();
 			ilUtil::sendSuccess($this->lng->txt('mass_settings_saved'));
 		}
@@ -180,6 +183,14 @@ class ilManualAssessmentSettingsGUI
 
 		$option = new ilCheckboxInputGUI($this->lng->txt('mass_event_time_place_required'), self::PROP_EVENT_TIME_PLACE_REQUIRED);
 		$form->addItem($option);
+
+		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_superior_can_examinate'), self::PROP_SUPERIOR_EXAMINATE);
+		$cb->setInfo($this->lng->txt('mass_superior_can_examinate_info'));
+		$form->addItem($cb);
+
+		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_superior_view_assessments'), self::PROP_SUPERIOR_VIEW);
+		$cb->setInfo($this->lng->txt('mass_superior_view_assessments_info'));
+		$form->addItem($cb);
 
 		$form->addCommandButton('update', $this->lng->txt('save'));
 		$form->addCommandButton('cancel', $this->lng->txt('cancel'));
@@ -239,6 +250,8 @@ class ilManualAssessmentSettingsGUI
 			, self::PROP_RECORD_TEMPLATE => $settings->recordTemplate()
 			, self::PROP_FILE_REQUIRED => $settings->fileRequired()
 			, self::PROP_EVENT_TIME_PLACE_REQUIRED => $settings->eventTimePlaceRequired()
+			, self::PROP_SUPERIOR_EXAMINATE => $settings->superiorExaminate()
+			, self::PROP_SUPERIOR_VIEW => $settings->superiorView()
 			));
 		return $a_form;
 	}
