@@ -138,6 +138,7 @@ class ilObjReportOverviewVA extends ilObjReportBase
 
 	public function buildQueryStatement()
 	{
+		return null;
 	}
 
 	protected function getData()
