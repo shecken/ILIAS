@@ -18,18 +18,32 @@ class ilManualAssessmentSettings
 	 */
 	protected $record_template;
 
+	/*
+	 * @var boolean
+	 */
+	protected $superior_examinate;
+
+	/**
+	 * @var boolean
+	 */
+	protected $superior_view;
+
 	/**
 	 * @var $boolean
 	 */
 	protected $file_required;
 
-	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $file_required = false, $event_time_place_required = false)
+	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $file_required = false, $event_time_place_required = false, $superior_examinate = false, $superior_view = false)
 	{
+		assert('is_bool($superior_examinate)');
+		assert('is_bool($superior_view)');
 		$this->id = $mass->getId();
 		$this->content = $content !== null ? $content : self::DEF_CONTENT;
 		$this->record_template = $record_template !== null ? $record_template : self::DEF_RECORD_TEMPLATE;
 		$this->file_required = $file_required;
 		$this->event_time_place_required = $event_time_place_required;
+		$this->superior_examinate = $superior_examinate;
+		$this->superior_view = $superior_view;
 	}
 
 	/**
@@ -83,6 +97,26 @@ class ilManualAssessmentSettings
 		return $this->event_time_place_required;
 	}
 
+	/*
+	 * Superiors are allowed to examinate their employees
+	 *
+	 * @return boolean
+	 */
+	public function superiorExaminate()
+	{
+		return $this->superior_examinate;
+	}
+
+	/**
+	 * Superiors are allowed to view results of their employees
+	 *
+	 * @return boolean
+	 */
+	public function superiorView()
+	{
+		return $this->superior_view;
+	}
+
 	/**
 	 * Set the content of this assessment, e.g. corresponding topics...
 	 *
@@ -119,6 +153,17 @@ class ilManualAssessmentSettings
 	{
 		assert('is_bool($file_required)');
 		$this->file_required = $file_required;
+	}
+
+	/*
+	 * Set superiors are allowed to examinate their employees
+	 *
+	 * @param boolean 	$superior_examinate
+	 */
+	public function setSuperiorExaminate($superior_examinate)
+	{
+		assert('is_bool($superior_examinate)');
+		$this->superior_examinate = $superior_examinate;
 		return $this;
 	}
 
@@ -132,6 +177,18 @@ class ilManualAssessmentSettings
 	{
 		assert('is_integer($event_time_place_required)');
 		$this->event_time_place_required = $event_time_place_required;
+	}
+
+	/*
+	 * Set superiors are allowed to view their employees results
+	 *
+	 * @param boolean 	$superior_view
+	 */
+	public function setSuperiorView($superior_view)
+	{
+		assert('is_bool($superior_view)');
+		$this->superior_view = $superior_view;
+
 		return $this;
 	}
 }

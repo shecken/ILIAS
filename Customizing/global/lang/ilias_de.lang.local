@@ -1735,6 +1735,10 @@ mass#:#mass_file_required#:#Dateiupload verpflichtend
 mass#:#mass_file_required_info#:#In der Beurteilung zu einem Teilnehmer muss eine Datei hochgeladen werden.
 mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer
 mass#:#mass_user_view_file_info#:#Der Teilnehmer kann die Datei auf der Info-Seite einsehen.
+mass#:#mass_superior_can_examinate#:#Vorgesetzte dürfen Teilnehmer bewerten
+mass#:#mass_superior_can_examinate_info#:#Die Vorgesetzten dürfen Mitarbeiter aus Ihrer Organisationseinheit bewerten.
+mass#:#mass_superior_view_assessments#:#Vorgesetzte dürfen Ergebnisse einsehen
+mass#:#mass_superior_view_assessments_info#:#Die Vorgesetzten dürfen alle Ergebnisse der Mitarbeiter aus Ihrer Organisationseinheit einsehen.
 gev#:#gev_my_va_plan#:#VA-Ausbildungsplan
 prg#:#prg_multi_mark_accredited#:#Akkredieren
 prg#:#prg_multi_unmark_accredited#:#Akkreditierung entfernen

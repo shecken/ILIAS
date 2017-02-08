@@ -1,5 +1,4 @@
 <?php
-
 require_once 'Services/Form/classes/class.ilTextAreaInputGUI.php';
 require_once 'Services/Form/classes/class.ilTextInputGUI.php';
 require_once 'Services/Form/classes/class.ilCheckboxInputGUI.php';
@@ -11,7 +10,6 @@ require_once 'Modules/ManualAssessment/classes/class.ilManualAssessmentLP.php';
 require_once "Services/Calendar/classes/class.ilDateTime.php";
 require_once 'Modules/ManualAssessment/classes/class.ilObjManualAssessment.php';
 require_once 'Modules/ManualAssessment/classes/FileStorage/class.ilManualAssessmentFileStorage.php';
-
 /**
  * For the purpose of streamlining the grading and learning-process status definition
  * outside of tests, SCORM courses e.t.c. the ManualAssessment is used.
@@ -40,8 +38,11 @@ class ilManualAssessmentMemberGUI
 		$this->setTabs($ilTabs);
 		$this->member = $this->object->membersStorage()
 						->loadMember($this->object, $this->examinee);
+
 		$this->settings = $this->object->getSettings();
 		$this->file_storage = $this->object->getFileStorage();
+		$this->superior_examinate = $a_parent_gui->object->getSettings()->superiorExaminate();
+		$this->superior_view = $a_parent_gui->object->getSettings()->superiorView();
 	}
 
 	public function executeCommand()
@@ -52,7 +53,6 @@ class ilManualAssessmentMemberGUI
 		if (!$read_permission && !$edit_permission) {
 			$a_parent_gui->handleAccessViolation();
 		}
-
 		$cmd = $this->ctrl->getCmd();
 		switch ($cmd) {
 			case 'edit':
@@ -98,20 +98,16 @@ class ilManualAssessmentMemberGUI
 		if (!$this->mayBeEdited()) {
 			$this->parent_gui->handleAccessViolation();
 		}
-
 		$form = $this->initGradingForm();
 		if (!$form->checkInput()) {
 			$form->setValuesByPost();
 			$this->edit($form);
 			return;
 		}
-
 		$this->saveMember($_POST);
-
 		if ($this->object->isActiveLP()) {
 			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
 		}
-
 		ilUtil::sendSuccess($this->lng->txt('mass_membership_saved'), true);
 		$this->redirect('edit');
 	}
@@ -121,16 +117,13 @@ class ilManualAssessmentMemberGUI
 		if (!$this->mayBeEdited()) {
 			$this->parent_gui->handleAccessViolation();
 		}
-
 		$form = $this->initGradingForm();
 		if (!$form->checkInput()) {
 			$form->setValuesByPost();
 			$this->edit($form);
 			return;
 		}
-
 		$this->saveMember($_POST);
-
 		if ($this->member->mayBeFinalized()) {
 			include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
 			$confirm = new ilConfirmationGUI();
@@ -204,7 +197,6 @@ class ilManualAssessmentMemberGUI
 		if ($new_file) {
 			$member = $member->withFileName($data['file']['name']);
 		}
-
 		return $member;
 	}
 
@@ -232,9 +224,7 @@ class ilManualAssessmentMemberGUI
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->ctrl->getFormAction($this));
 		$form->setTitle($this->lng->txt('mass_edit_record'));
-
 		$examinee_name = $this->examinee->getLastname().', '.$this->examinee->getFirstname();
-
 		$usr_name = new ilNonEditableValueGUI($this->lng->txt('name'), 'name');
 		$form->addItem($usr_name);
 		// record
@@ -244,7 +234,6 @@ class ilManualAssessmentMemberGUI
 		$ti->setRows(5);
 		$ti->setDisabled(!$may_be_edited);
 		$form->addItem($ti);
-
 		// description
 		$ta = new ilTextAreaInputGUI($this->lng->txt('mass_internal_note'), 'internal_note');
 		$ta->setInfo($this->lng->txt('mass_internal_note_info'));
@@ -252,18 +241,15 @@ class ilManualAssessmentMemberGUI
 		$ta->setRows(5);
 		$ta->setDisabled(!$may_be_edited);
 		$form->addItem($ta);
-
 		$txt = new ilTextInputGUI($this->lng->txt('mass_place'), 'place');
 		$txt->setRequired($this->settings->eventTimePlaceRequired());
 		$txt->setDisabled(!$may_be_edited);
 		$form->addItem($txt);
-
 		$date = new ilDateTimeInputGUI($this->lng->txt('mass_event_time'), 'event_time');
 		$date->setShowTime(true);
 		$date->setRequired($this->settings->eventTimePlaceRequired());
 		$date->setDisabled(!$may_be_edited);
 		$form->addItem($date);
-
 		$learning_progress = new ilSelectInputGUI($this->lng->txt('grading'), 'learning_progress');
 		$learning_progress->setOptions(
 			array(ilManualAssessmentMembers::LP_IN_PROGRESS => $this->lng->txt('mass_status_pending')
@@ -273,24 +259,20 @@ class ilManualAssessmentMemberGUI
 		);
 		$learning_progress->setDisabled(!$may_be_edited);
 		$form->addItem($learning_progress);
-
 		require_once("Services/Form/classes/class.ilFileInputGUI.php");
 		$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
 		$file->setRequired($this->object->getSettings()->fileRequired());
 		$file->setAllowDeletion(true);
 		$form->addItem($file);
-
 		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_user_view_file'), 'user_view_file');
 		$cb->setInfo($this->lng->txt('mass_user_view_file_info'));
 		$cb->setDisabled(!$may_be_edited);
 		$form->addItem($cb);
-
 		// notify examinee
 		$notify = new ilCheckboxInputGUI($this->lng->txt('mass_notify'), 'notify');
 		$notify->setInfo($this->lng->txt('mass_notify_explanation'));
 		$notify->setDisabled(!$may_be_edited);
 		$form->addItem($notify);
-
 		return $form;
 	}
 
@@ -299,7 +281,6 @@ class ilManualAssessmentMemberGUI
 		$dt = $member->eventTime()->get(IL_CAL_DATETIME);
 		$dt = explode(" ", $dt);
 		$event_time = ["date" => $dt[0], "time" => $dt[1]];
-
 		$a_form->setValuesByArray(array(
 			  'name' => $member->name()
 			, 'record' => $member->record()
@@ -318,7 +299,10 @@ class ilManualAssessmentMemberGUI
 	{
 		if (!$this->isFinalized()
 			&& !$this->targetWasEditedByOtherUser($this->member)
-			&& $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress')) {
+			&& ($this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress')
+				|| ($this->isSuperior($this->examiner->getId()) && $this->superior_examinate)
+				)
+		) {
 			return true;
 		}
 		return false;
@@ -329,7 +313,9 @@ class ilManualAssessmentMemberGUI
 		if ($this->isFinalized()
 			&& (
 					(!$this->targetWasEditedByOtherUser($this->member)
-						&& $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress')
+						&& ($this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress')
+							|| ($this->isSuperior($this->examiner->getId()) && $this->superior_view)
+							)
 					)
 					|| $this->object->accessHandler()->checkAccessToObj($this->object, 'read_learning_progress')
 				)
@@ -344,6 +330,13 @@ class ilManualAssessmentMemberGUI
 		return $this->member->finalized();
 	}
 
+	protected function isSuperior($examiner_id)
+	{
+		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		$examiner_id_utils = gevUserUtils::getInstance((int)$examiner_id);
+		return $examiner_id_utils->isSuperiorOf($this->examinee->getId());
+	}
+
 	protected function saveMember($post)
 	{
 		$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
@@ -354,21 +347,17 @@ class ilManualAssessmentMemberGUI
 	protected function uploadFile($file, $file_delete)
 	{
 		$new_file = false;
-
 		$this->file_storage->setUserId($this->member->id());
 		$this->file_storage->create();
-
 		if (!$file["name"] == "" || $file_delete) {
 			$this->file_storage->deleteCurrentFile();
 			$this->file_storage->uploadFile($file);
 			$new_file = true;
 		}
-
 		if (!$file["name"] == "") {
 			$this->file_storage->uploadFile($file);
 			$new_file = true;
 		}
-
 		return $new_file;
 	}
 
