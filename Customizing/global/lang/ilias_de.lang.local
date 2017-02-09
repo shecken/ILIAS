@@ -1735,7 +1735,7 @@ mass#:#mass_edit_conditions#:#Vorbedingungen
 rbac#:#amend_grading#:#Beurteilung ändern
 mass#:#mass_usr_amend#:#Beurteilung ändern
 mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.
-rbac#:mass_amend_grading#:#Benutzer darf die Prüfungsdaten nachträglich ändern.
+rbac#:#mass_amend_grading#:#Benutzer darf die Prüfungsdaten nachträglich ändern.
 mass#:#mass_file_required#:#Dateiupload verpflichtend
 mass#:#mass_file_required_info#:#In der Beurteilung zu einem Teilnehmer muss eine Datei hochgeladen werden.
 mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer
