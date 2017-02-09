@@ -98,6 +98,7 @@ class ilManualAssessmentMemberGUI
 		}
 
 		$form = $this->initGradingForm();
+		$form->setValuesByArray(array('file' => $this->member->fileName()));
 		if (!$form->checkInput()) {
 			$form->setValuesByPost();
 			$this->edit($form);
@@ -116,7 +117,10 @@ class ilManualAssessmentMemberGUI
 		if (!$this->mayBeEdited()) {
 			$this->parent_gui->handleAccessViolation();
 		}
+
 		$form = $this->initGradingForm();
+		$form->setValuesByArray(array('file' => $this->member->fileName()));
+
 		if (!$form->checkInput()) {
 			$form->setValuesByPost();
 			$this->edit($form);
@@ -188,6 +192,7 @@ class ilManualAssessmentMemberGUI
 		}
 
 		$form = $this->initGradingForm();
+		$form->setValuesByArray(array('file' => $this->member->fileName()));
 		if (!$form->checkInput()) {
 			$form->setValuesByPost();
 			$this->amend($form);
