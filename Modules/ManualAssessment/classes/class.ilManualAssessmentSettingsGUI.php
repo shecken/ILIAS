@@ -218,10 +218,11 @@ class ilManualAssessmentSettingsGUI
 
 		$ti = new ilTextInputGUI($this->lng->txt('mass_mails'), self::PROP_INFO_MAILS);
 		$ti->setInfo($this->lng->txt('mass_info_emails_expl'));
-		$ti->setSize(300);
+		$ti->setSize(100);
 		$form->addItem($ti);
 
 		$item = new ilTextAreaInputGUI($this->lng->txt('mass_consultation_hours'), self::PROP_INFO_CONSULTATION);
+		$item->setCols(40);
 		$form->addItem($item);
 
 		$form->addCommandButton('updateInfo', $this->lng->txt('save'));
