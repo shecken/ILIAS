@@ -153,6 +153,7 @@ class ilManualAssessmentSettings
 	{
 		assert('is_bool($file_required)');
 		$this->file_required = $file_required;
+		return $this;
 	}
 
 	/*
@@ -177,6 +178,7 @@ class ilManualAssessmentSettings
 	{
 		assert('is_integer($event_time_place_required)');
 		$this->event_time_place_required = $event_time_place_required;
+		return $this;
 	}
 
 	/*
