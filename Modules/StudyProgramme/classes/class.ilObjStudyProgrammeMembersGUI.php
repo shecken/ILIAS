@@ -308,7 +308,9 @@ class ilObjStudyProgrammeMembersGUI
 
 		foreach ($prgrs_ids as $key => $prgrs_id) {
 			$prgrs = $this->getProgressObject((int)$prgrs_id);
-			$prgrs->markRelevant($this->user->getId());
+			if (!$prgrs->isRelevant()) {
+				$prgrs->markRelevant($this->user->getId());
+			}
 		}
 
 		$this->showSuccessMessage("mark_relevant_multi_success");
@@ -321,7 +323,10 @@ class ilObjStudyProgrammeMembersGUI
 
 		foreach ($prgrs_ids as $key => $prgrs_id) {
 			$prgrs = $this->getProgressObject((int)$prgrs_id);
-			$prgrs->markNotRelevant($this->user->getId());
+
+			if ($prgrs_id->isRelevant()) {
+				$prgrs->markNotRelevant($this->user->getId());
+			}
 		}
 
 		$this->showSuccessMessage("mark_not_relevant_multi_success");
