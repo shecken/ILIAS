@@ -123,7 +123,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 				   )
 			   )
 			)
-			&& $a_set["type"] != "Selbstlernkurs"
+			&& !in_array($a_set["type"], array("Selbstlernkurs"))
 			;
 
 		if ($show_cancel_link) {
@@ -202,19 +202,20 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 	}
 
 	// overwritten from ilTable2GUI to get sorting of fee right.
-	function numericOrdering($a_field)
+	public function numericOrdering($a_field)
 	{
 		return $a_field == "fee";
 	}
 
-	protected function buildNAQualiLink($ref_id) {
+	protected function buildNAQualiLink($ref_id)
+	{
 		$backlink = $this->gCtrl->getLinkTarget($this->parent_obj, $this->parent_cmd, "", true);
 		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", $ref_id);
 		$this->gCtrl->setParameterByClass("ilObjJillGUI", "referrer", base64_encode($backlink));
 		$link = $this->gCtrl->getLinkTargetByClass(
-						array("ilObjPluginDispatchGUI", "ilObjJillGUI"),
-						"xView"
-						);
+			array("ilObjPluginDispatchGUI", "ilObjJillGUI"),
+			"xView"
+		);
 		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", null);
 		$this->gCtrl->setParameterByClass("ilObjJillGUI", "referrer");
 		return $link;

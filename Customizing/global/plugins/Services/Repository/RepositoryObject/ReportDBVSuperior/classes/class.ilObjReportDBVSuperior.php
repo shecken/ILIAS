@@ -3,53 +3,60 @@
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php';
 require_once 'Services/GEV/Utils/classes/class.gevUserUtils.php';
 require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
 
-ini_set("memory_limit","2048M"); 
+ini_set("memory_limit", "2048M");
 ini_set('max_execution_time', 0);
 set_time_limit(0);
 
-class ilObjReportDBVSuperior extends ilObjReportBase {
-	
+class ilObjReportDBVSuperior extends ilObjReportBase
+{
+
 	protected $gUser;
 	protected $relevant_parameters = array();
 
-	public function __construct($a_ref_id = 0) {
+	public function __construct($a_ref_id = 0)
+	{
 		parent::__construct($a_ref_id);
 		global $ilUser;
 		$this->gUser = $ilUser;
 	}
 
-	public function initType() {
+	public function initType()
+	{
 		 $this->setType("xrds");
 	}
 
-	protected function createLocalReportSettings() {
+	protected function createLocalReportSettings()
+	{
 		$this->local_report_settings =
 			$this->s_f->reportSettings('rep_robj_rds')
 				->addSetting($this->s_f
 								->settingInt('year', $this->plugin->txt('report_year'))
-								->setDefaultValue(2016)
-									)
+								->setDefaultValue(2016))
 				->addSetting($this->s_f
 								->settingInt('dbv_report_ref', $this->plugin->txt('dbv_report_ref'))
 								->setDefaultValue(0));
 	}
 
 
-	protected function buildQuery($query) {
+	protected function buildQuery($query)
+	{
 		$query	->select("dbv.user_id")
 				->select("dbv.lastname")
 				->select("dbv.firstname")
 				->select("huo_in.org_unit_above1")
 				->select("huo_in.org_unit_above2")
 				->select_raw(
-					"SUM(IF(hucs.participation_status != 'nicht gesetzt', hucs.credit_points, 0)) as credit_points")
+					"SUM(IF(hucs.participation_status != 'nicht gesetzt', hucs.credit_points, 0)) as credit_points"
+				)
 				->select_raw(
 					"SUM(IF(hucs.participation_status != 'nicht gesetzt', hucs.credit_points,
-						hc.max_credit_points)) as max_credit_points")
+						hc.max_credit_points)) as max_credit_points"
+				)
 				->from("org_unit_personal oup")
 				->join("hist_userorgu huo_in")
-					->on("oup.orgunit_id = huo_in.orgu_id AND huo_in.`action` = 1 AND rol_title = ".$this->gIldb->quote("Mitarbeiter","text"))
+					->on("oup.orgunit_id = huo_in.orgu_id AND huo_in.`action` = 1 AND rol_title = ".$this->gIldb->quote("Mitarbeiter", "text"))
 				->left_join("hist_userorgu huo_out")
 					->on(" huo_out.`action` = -1"
 						." AND huo_in.usr_id = huo_out.usr_id AND huo_in.orgu_id = huo_out.orgu_id"
@@ -70,7 +77,8 @@ class ilObjReportDBVSuperior extends ilObjReportBase {
 		return $query;
 	}
 
-	protected function buildFilter($filter) {
+	protected function buildFilter($filter)
+	{
 
 		$user_utils = gevUserUtils::getInstanceByObj($this->gUser);
 		$roles = gevRoleUtils::getInstance();
@@ -78,34 +86,31 @@ class ilObjReportDBVSuperior extends ilObjReportBase {
 		$end_of_year_ts = strtotime(($this->settings['year']+1)."-01-01");
 		if ($user_utils->isAdmin()) {
 			$dbv_fin_uvg_employees = $dbv_fin_uvg;
-		}
-		else {
+		} else {
 			$employees = $user_utils->getEmployees();
 			$dbv_fin_uvg_employees = array_intersect($dbv_fin_uvg, $employees);
 		}
-		$filter ->checkbox( "critical"
-						  , $this->plugin->txt("filter_show_critical_dbvs")
-						  , " credit_points < ".$this->gIldb->quote(200,"integer")
-						  , " TRUE "								  
-						  , true
-						  )
-				->textinput( "lastname"
-						   , $this->plugin->txt("lastname_filter")
-						   , "dbv.lastname"
-						   )
+		$filter ->checkbox("critical", $this->plugin->txt("filter_show_critical_dbvs"), " credit_points < ".$this->gIldb->quote(200, "integer"), " TRUE ", true)
+				->textinput("lastname", $this->plugin->txt("lastname_filter"), "dbv.lastname")
 				->static_condition($this->gIldb->in("oup.usr_id", $dbv_fin_uvg_employees, false, "integer"))
-				->static_condition("hc.begin_date < ".$this->gIldb->quote(($this->settings['year']+1)."-01-01","date"))
-				->static_condition("hc.end_date >= ".$this->gIldb->quote($this->settings['year']."-01-01","date"))
+				->static_condition("hc.begin_date < ".$this->gIldb->quote(($this->settings['year']+1)."-01-01", "date"))
+				->static_condition("hc.end_date >= ".$this->gIldb->quote($this->settings['year']."-01-01", "date"))
 				->static_condition("(huo_out.created_ts IS NULL "
-									." OR huo_out.created_ts > ".$this->gIldb->quote($end_of_year_ts,"integer")
-									.") AND huo_in.created_ts < ".$this->gIldb->quote($end_of_year_ts,"integer"))
+									." OR huo_out.created_ts > ".$this->gIldb->quote($end_of_year_ts, "integer")
+									.") AND huo_in.created_ts < ".$this->gIldb->quote($end_of_year_ts, "integer"))
 				->static_condition(
 					$this->gIldb->in(
-						"hucs.participation_status", array("fehlt entschuldigt", "fehlt ohne Absage"), true, "text"))
+						"hucs.participation_status",
+						array("fehlt entschuldigt", "fehlt ohne Absage"),
+						true,
+						"text"
+					)
+				)
 				->static_condition("hucs.hist_historic = 0")
 				->static_condition("hucs.booking_status != ".$this->gIldb->quote('-empty-', 'text'))
 				->static_condition("huo_out_aux.hist_version IS NULL")
 				->static_condition("hc.hist_historic = 0")
+				->static_condition("hc.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text"))
 				->static_condition("dbv.hist_historic = 0")
 				->static_condition($this->gIldb->in("hc.dbv_hot_topic", gevSettings::$dbv_hot_topics, false, "text"))
 				->action($this->filter_action)
@@ -113,26 +118,30 @@ class ilObjReportDBVSuperior extends ilObjReportBase {
 		return $filter;
 	}
 
-	protected function getRowTemplateTitle() {
+	protected function getRowTemplateTitle()
+	{
 		return "tpl.gev_dbv_report_superior_row.html";
 	}
 
-	protected function buildTable($table) {
-		$table	->column("lastname", $this->plugin->txt("lastname"),true)
-				->column("firstname", $this->plugin->txt("firstname"),true)
-				->column("odbd", $this->plugin->txt("bd"),true)
-				->column("credit_points", $this->plugin->txt("credit_points"),true)
-				->column("max_credit_points", $this->plugin->txt("credit_points_forecast"),true);
+	protected function buildTable($table)
+	{
+		$table	->column("lastname", $this->plugin->txt("lastname"), true)
+				->column("firstname", $this->plugin->txt("firstname"), true)
+				->column("odbd", $this->plugin->txt("bd"), true)
+				->column("credit_points", $this->plugin->txt("credit_points"), true)
+				->column("max_credit_points", $this->plugin->txt("credit_points_forecast"), true);
 		return parent::buildTable($table);
 	}
 
-	protected function buildOrder($order) {
+	protected function buildOrder($order)
+	{
 		$order 	->defaultOrder("lastname", "ASC")
 				;
 		return $order;
 	}
 
-	public function getRelevantParameters() {
+	public function getRelevantParameters()
+	{
 		return $this->relevant_parameters;
 	}
 }

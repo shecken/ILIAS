@@ -307,6 +307,8 @@ class gevUserUtils
 				 , gevSettings::CRS_AMD_CONTENTS 			=> "content"
 			);
 
+		$additional_where = " AND (amd6.value != 'Praxisbegleitung' OR amd6.value IS NULL)";
+
 		require_once("Services/ParticipationStatus/classes/class.ilParticipationStatus.php");
 		$booked = array_diff(
 			$this->filter_for_online_courses($this->getBookedCourses()),
@@ -315,7 +317,7 @@ class gevUserUtils
 												,ilParticipationStatus::STATUS_ABSENT_NOT_EXCUSED))
 		);
 
-		$booked_amd = gevAMDUtils::getInstance()->getTable($booked, $crs_amd);
+		$booked_amd = gevAMDUtils::getInstance()->getTable($booked, $crs_amd, array(), array(), $additional_where);
 		foreach ($booked_amd as $key => $value) {
 			$booked_amd[$key]["status"] = ilCourseBooking::STATUS_BOOKED;
 			$booked_amd[$key]["cancel_date"] = gevCourseUtils::mkDeadlineDate($value["start_date"], $value["cancel_date"]);
@@ -500,7 +502,9 @@ class gevUserUtils
 				// finalized
 				array(" LEFT JOIN crs_pstatus_crs pstatus ON pstatus.crs_id = od.obj_id "),
 				" AND ( pstatus.state != ".$this->db->quote(ilParticipationStatus::STATE_FINALIZED, "integer").
-			    "       OR pstatus.state IS NULL) ".$order_sql
+				"       OR pstatus.state IS NULL) ".
+				" AND (amd3.value != ".$this->db->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")." OR amd3.value IS NULL)"
+				.$order_sql
 			);
 
 			$ret = array();
@@ -1207,6 +1211,11 @@ class gevUserUtils
 		return $this->hasRoleIn(gevSettings::$ADMIN_ROLES);
 	}
 
+	public function isAdminTA()
+	{
+		return $this->hasRoleIn(array("Admin-TA"));
+	}
+
 	public function isSystemAdmin()
 	{
 		return $this->hasRoleIn(gevSettings::$SYSTEM_ADMIN_ROLES);
@@ -1829,6 +1838,23 @@ class gevUserUtils
 		}
 	}
 
+	/**
+	 * Get employees where user is direct superior
+	 *
+	 * @return int[]
+	 */
+	public function getDirectEmployees()
+	{
+		$_ds_ous = $this->getOrgUnitsWhereUserIsDirectSuperior();
+		// ref_ids of ous where user is direct superior
+		$ds_ous = array();
+		foreach ($_ds_ous as $ou) {
+			$ds_ous[] = $ou["ref_id"];
+		}
+
+		return array_unique(gevOrgUnitUtils::getEmployeesIn($ds_ous));
+	}
+
 	public function getVenuesWhereUserIsMember()
 	{
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php");
@@ -2013,6 +2039,7 @@ class gevUserUtils
 					." AND histucs.hist_historic = 0"
 					." AND ".$this->db->in("histu.user_id", $to_search, false, "integer").""
 					." AND histucs.creator_user_id != ".$this->db->quote(gevWBD::WBD_IMPORT_CREATOR_ID, "integer").""
+					." AND histc.type != ".$this->db->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")
 					." ORDER BY histucs.booking_status, histu.lastname, histu.firstname, histucs.created_ts";
 
 			$res_emp = $this->db->query($sql_emp);

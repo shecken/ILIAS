@@ -531,6 +531,7 @@ gev#:#gev_excel_member_row_title#:#Mitgliederliste
 gev#:#gev_excel_member_title#:#Mitgliederliste
 gev#:#gev_exit_date#:#Austrittsdatum
 gev#:#gev_failed#:#nicht teilgenommen
+gev#:#gev_not_yet_started#:#noch nicht begonnen
 gev#:#gev_fee_bill_item#:#Teilnahmegebühr Training "%s"
 gev#:#gev_bill_covered_skip_coupons#:#Die Rechnung ist schon gedeckt. Keine weiteren Gutscheine nötig.
 gev#:#gev_cupon_has_no_value#:#Der Gutschein hat keinen Restwert.
@@ -1650,6 +1651,9 @@ prg#:#prg_points_reachable#:#Erreichbare Punkte
 gev#:#gev_open_same_window#:#Im selben Fenster öffnen
 gev#:#jill_na_link_label#:#Zur Qualifizierung nach der EU-Vermittlerrichtlinie
 mass#:#general#:#Allgemein
+mass#:#mass_place#:#Ort
+mass#:#mass_event_time#:#Veranstaltungszeitpunkt
+mass#:#mass_event_time_place_required#:#Datum und Ort sind Pflichtfelder
 mass#:#mass_content#:#Inhalt
 mass#:#mass_record_template#:#Vorlage Prüfungsnotiz
 mass#:#mass_graded_by#:#Bewertet von
@@ -1744,3 +1748,28 @@ gev#:#gev_va_pass_date#:#Datum
 gev#:#gev_va_pass_result#:#Ergebnis
 gev#:#gev_va_pass_crs_type#:#Art des bestehens
 gev#:#gev_va_pass_status#:#Status
+rbac#:#amend_grading#:#Beurteilung ändern
+mass#:#mass_usr_amend#:#Beurteilung ändern
+mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.
+rbac#:#mass_amend_grading#:#Benutzer darf die Prüfungsdaten nachträglich ändern.
+mass#:#mass_file_required#:#Dateiupload verpflichtend
+mass#:#mass_file_required_info#:#In der Beurteilung zu einem Teilnehmer muss eine Datei hochgeladen werden.
+mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer
+mass#:#mass_user_view_file_info#:#Der Teilnehmer kann die Datei auf der Info-Seite einsehen.
+mass#:#mass_superior_can_examinate#:#Vorgesetzte dürfen Teilnehmer bewerten
+mass#:#mass_superior_can_examinate_info#:#Die Vorgesetzten dürfen Mitarbeiter aus Ihrer Organisationseinheit bewerten.
+mass#:#mass_superior_view_assessments#:#Vorgesetzte dürfen Ergebnisse einsehen
+mass#:#mass_superior_view_assessments_info#:#Die Vorgesetzten dürfen alle Ergebnisse der Mitarbeiter aus Ihrer Organisationseinheit einsehen.
+gev#:#gev_my_va_plan#:#VA-Ausbildungsplan
+prg#:#prg_multi_mark_accredited#:#Akkredieren
+prg#:#prg_multi_unmark_accredited#:#Akkreditierung entfernen
+prg#:#prg_multi_remove_user#:#Benutzer entfernen
+prg#:#prg_multi_mark_relevant#:#Als relevant markieren
+prg#:#prg_multi_unmark_relevant#:#Als irrelevant markieren
+prg#:#prg_multi_update_from_current_plan#:#Aus dem aktuellen Plan aktualisieren.
+prg#:#prg_remove_users_success#:#Die Benutzer wurden entfernt.
+prg#:#prg_remove_users_not_possible#:#Die Benutzer konnten nicht entfernt werden, da sie nicht an diesem Studienprogramm hinzugefügt wurden.
+prg#:#prg_remove_users_partitial_success#:#Die Benutzer wurden teilweise entfernt. Einige konnten nicht entfernt werden, da sie nicht an diesem Studienprogramm hinzugefügt wurden.
+prg#:#prg_mark_accredited_multi_success#:#Das Programm wurde für die Benutzer erfolgreich akkreditiert.
+prg#:#prg_mark_relevant_multi_success#:#Das Programm wurde für die Benutzer als relevant markiert.
+prg#:#prg_mark_not_relevant_multi_success#:#Das Programm wurde für die Benutzer als nicht relevant markiert.

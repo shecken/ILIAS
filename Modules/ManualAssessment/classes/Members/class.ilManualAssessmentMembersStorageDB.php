@@ -7,23 +7,27 @@ require_once 'Modules/ManualAssessment/classes/class.ilObjManualAssessment.php';
  * Store member infos to DB
  * @inheritdoc
  */
-class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersStorage {
+class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersStorage
+{
+	const MEMBERS_TABLE = "mass_members";
 
 	protected $db;
 
-	public function __construct($ilDB) {
+	public function __construct($ilDB)
+	{
 		$this->db = $ilDB;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function loadMembers(ilObjManualAssessment $obj) {
+	public function loadMembers(ilObjManualAssessment $obj)
+	{
 		$members = new ilManualAssessmentMembers($obj);
 		$obj_id = $obj->getId();
 		$sql = $this->loadMembersQuery($obj_id);
 		$res = $this->db->query($sql);
-		while($rec = $this->db->fetchAssoc($res)) {
+		while ($rec = $this->db->fetchAssoc($res)) {
 			$members = $members->withAdditionalRecord($rec);
 		}
 		return $members;
@@ -32,7 +36,8 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 	/**
 	 * @inheritdoc
 	 */
-	public function loadMember(ilObjManualAssessment $obj, ilObjUser $usr) {
+	public function loadMember(ilObjManualAssessment $obj, ilObjUser $usr)
+	{
 		$obj_id = $obj->getId();
 		$usr_id = $usr->getId();
 		$sql = 'SELECT massme.*'
@@ -40,9 +45,9 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 				.'	JOIN usr_data usr ON massme.usr_id = usr.usr_id'
 				.'	LEFT JOIN usr_data ex ON massme.examiner_id = ex.usr_id'
 				.'	WHERE obj_id = '.$this->db->quote($obj_id, 'integer')
-				.'		AND massme.usr_id = '.$this->db->quote($usr_id,'integer');
+				.'		AND massme.usr_id = '.$this->db->quote($usr_id, 'integer');
 		$rec = $this->db->fetchAssoc($this->db->query($sql));
-		if($rec) {
+		if ($rec) {
 			$member = new ilManualAssessmentMember($obj, $usr, $rec);
 			return $member;
 		} else {
@@ -53,24 +58,33 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 	/**
 	 * @inheritdoc
 	 */
-	public function updateMember(ilManualAssessmentMember $member) {
-		$sql = 'UPDATE mass_members SET '
-				.'	'.ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS.' = '.$this->db->quote($member->LPStatus(),'text')
-				.'	,'.ilManualAssessmentMembers::FIELD_EXAMINER_ID.' = '.$this->db->quote($member->examinerId(),'integer')
-				.'	,'.ilManualAssessmentMembers::FIELD_RECORD.' = '.$this->db->quote($member->record(),'text')
-				.'	,'.ilManualAssessmentMembers::FIELD_INTERNAL_NOTE.' = '.$this->db->quote($member->internalNote(),'text')
-				.'	,'.ilManualAssessmentMembers::FIELD_NOTIFY.' = '.$this->db->quote($member->notify() ? 1 : 0,'integer')
-				.'	,'.ilManualAssessmentMembers::FIELD_FINALIZED.' = '.$this->db->quote($member->finalized() ? 1 : 0,'integer')
-				.'	,'.ilManualAssessmentMembers::FIELD_NOTIFICATION_TS.' = '.$this->db->quote($member->notificationTS(),'integer')
-				.'	WHERE obj_id = '.$this->db->quote($member->assessmentId(),'integer')
-				.'		AND usr_id = '.$this->db->quote($member->id(),'integer');
-		$this->db->manipulate($sql);
+	public function updateMember(ilManualAssessmentMember $member)
+	{
+		$where = array("obj_id" => array("integer", $member->assessmentId())
+					 , "usr_id" => array("integer", $member->id())
+				);
+
+		$values = array(ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS => array("text", $member->LPStatus())
+					  , ilManualAssessmentMembers::FIELD_EXAMINER_ID => array("integer", $member->examinerId())
+					  , ilManualAssessmentMembers::FIELD_RECORD => array("text", $member->record())
+					  , ilManualAssessmentMembers::FIELD_INTERNAL_NOTE => array("text", $member->internalNote())
+					  , ilManualAssessmentMembers::FIELD_PLACE => array("text", $member->place())
+					  , ilManualAssessmentMembers::FIELD_EVENTTIME => array("integer", $member->eventTime()->get(IL_CAL_UNIX))
+					  , ilManualAssessmentMembers::FIELD_NOTIFY => array("integer", $member->notify() ? 1 : 0)
+					  , ilManualAssessmentMembers::FIELD_FINALIZED => array("integer", $member->finalized() ? 1 : 0)
+					  , ilManualAssessmentMembers::FIELD_NOTIFICATION_TS => array("integer", $member->notificationTS())
+					  , ilManualAssessmentMembers::FIELD_FILE_NAME => array("text", $member->fileName())
+					  , ilManualAssessmentMembers::FIELD_USER_VIEW_FILE => array("integer", $member->viewFile())
+				);
+
+		$this->db->update(self::MEMBERS_TABLE, $values, $where);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function deleteMembers(ilObjManualAssessment $obj) {
+	public function deleteMembers(ilObjManualAssessment $obj)
+	{
 		$sql = "DELETE FROM mass_members WHERE obj_id = ".$this->db->quote($obj->getId(), 'integer');
 		$this->db->manipulate($sql);
 	}
@@ -78,7 +92,8 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 	/**
 	 * @inheritdoc
 	 */
-	protected function loadMembersQuery($obj_id) {
+	protected function loadMembersQuery($obj_id)
+	{
 		return 'SELECT ex.firstname as '.ilManualAssessmentMembers::FIELD_EXAMINER_FIRSTNAME
 				.'	, ex.lastname as '.ilManualAssessmentMembers::FIELD_EXAMINER_LASTNAME
 				.'	,usr.firstname as '.ilManualAssessmentMembers::FIELD_FIRSTNAME
@@ -94,22 +109,32 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 	/**
 	 * @inheritdoc
 	 */
-	public function insertMembersRecord(ilObjManualAssessment $mass, array $record) {
-		$sql = 'INSERT INTO mass_members (obj_id,usr_id,record,learning_progress,notify) '
-				.'	VALUES ('
-				.'		'.$this->db->quote($mass->getId(),'integer')
-				.'		,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_USR_ID],'integer')
-				.'		,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_RECORD],'text')
-				.'		,'.$this->db->quote($record[ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS],'integer')
-				.'		,'.$this->db->quote(0,'integer')
-				.'	)';
-		$this->db->manipulate($sql);
+	public function insertMembersRecord(ilObjManualAssessment $mass, array $record)
+	{
+		var_dump($record);
+		$values = array("obj_id" => array("integer", $mass->getId())
+					  , "usr_id" => array("integer", $record[ilManualAssessmentMembers::FIELD_USR_ID])
+					  , ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS => array("text", $record[ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS])
+					  , ilManualAssessmentMembers::FIELD_EXAMINER_ID => array("integer", $record[ilManualAssessmentMembers::FIELD_EXAMINER_ID])
+					  , ilManualAssessmentMembers::FIELD_RECORD => array("text", $record[ilManualAssessmentMembers::FIELD_RECORD])
+					  , ilManualAssessmentMembers::FIELD_INTERNAL_NOTE => array("text", $record[ilManualAssessmentMembers::FIELD_INTERNAL_NOTE])
+					  , ilManualAssessmentMembers::FIELD_PLACE => array("text", $record[ilManualAssessmentMembers::FIELD_PLACE])
+					  , ilManualAssessmentMembers::FIELD_EVENTTIME => array("integer", $record[ilManualAssessmentMembers::FIELD_EVENTTIME])
+					  , ilManualAssessmentMembers::FIELD_NOTIFY => array("integer", 0)
+					  , ilManualAssessmentMembers::FIELD_FINALIZED => array("integer", 0)
+					  , ilManualAssessmentMembers::FIELD_NOTIFICATION_TS => array("integer", -1)
+					  , ilManualAssessmentMembers::FIELD_FILE_NAME => array("text", $record[ilManualAssessmentMembers::FIELD_FILE_NAME])
+					  , ilManualAssessmentMembers::FIELD_USER_VIEW_FILE => array("integer", $record[ilManualAssessmentMembers::FIELD_USER_VIEW_FILE])
+				);
+
+		$this->db->insert(self::MEMBERS_TABLE, $values);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function removeMembersRecord(ilObjManualAssessment $mass,array $record) {
+	public function removeMembersRecord(ilObjManualAssessment $mass, array $record)
+	{
 		$sql = 'DELETE FROM mass_members'
 				.'	WHERE obj_id = '.$this->db->quote($mass->getId(), 'integer')
 				.'		AND usr_id = '.$this->db->quote($record[ilManualAssessmentMembers::FIELD_USR_ID], 'integer');
