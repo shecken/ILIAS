@@ -194,8 +194,7 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
-		$this->member = $this->updateDataInMemberByArray($this->member, $_POST);
-		$this->object->membersStorage()->updateMember($this->member);
+		$this->saveMember($_POST);
 
 		if ($this->object->isActiveLP()) {
 			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
@@ -220,7 +219,7 @@ class ilManualAssessmentMemberGUI
 		$this->tpl->setContent($a_form->getHTML());
 	}
 
-	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data)
+	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data, $new_file)
 	{
 		$member = $member->withRecord($data['record'])
 					->withInternalNote($data['internal_note'])
