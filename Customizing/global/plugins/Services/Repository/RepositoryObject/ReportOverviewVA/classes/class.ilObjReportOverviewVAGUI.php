@@ -137,4 +137,48 @@ class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI
 			get_class($this)
 		);
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function showContent()
+	{
+		if($this->object->getStudyId() == null || $this->getType($this->object->getStudyId()) != "prg") {
+			if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+				ilUtil::sendInfo($this->plugin->txt('no_prg_warning'), true);
+				$this->gCtrl->redirect($this, "settings");
+			} else {
+				ilUtil::sendInfo($this->plugin->txt('user_no_prg_warning'), true);
+				ilUtil::redirect("ilias.php?baseClass=gevDesktopGUI&cmd=toMyCourses");
+				$this->gCtrl->redirect($this->parent_obj, "view");
+			}
+		}
+
+		if ($this->gAccess->checkAccess("read", "", $this->object->getRefId())) {
+			$this->gTabs->activateTab("content");
+			$this->object->prepareRelevantParameters();
+			$this->setFilterAction($cmd);
+			return $this->renderReport();
+		}
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function saveSettings()
+	{
+		$settings_form = $this->settingsForm();
+		$settings_form->setValuesByPost();
+		if ($settings_form->checkInput()) {
+			$potential_study_id = $settings_form->getItemByPostVar('selected_study_prg')->getValue();
+			if($this->getType($potential_study_id) !== "prg") {
+				ilUtil::sendInfo($this->plugin->txt('no_prg_warning'), true);
+			}
+
+			$this->saveSettingsData($settings_form);
+			$red = $this->gCtrl->getLinkTarget($this, "settings", "", false, false);
+			ilUtil::redirect($red);
+		}
+		$this->gTpl->setContent($settings_form->getHtml());
+	}
 }
