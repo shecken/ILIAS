@@ -359,10 +359,7 @@ class ilManualAssessmentMemberGUI
 	protected function mayBeEdited()
 	{
 		if (!$this->isFinalized()
-			&& !$this->targetWasEditedByOtherUser($this->member)
-			&& ($this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress')
-				|| ($this->isSuperior($this->examiner->getId()) && $this->superior_examinate)
-				)
+				&& ($this->userCanGrade() || $this->superiorCanGrade())
 		) {
 			return true;
 		}
@@ -372,16 +369,12 @@ class ilManualAssessmentMemberGUI
 
 	protected function mayBeViewed()
 	{
-		if ($this->isFinalized()
-			&& (
-					(!$this->targetWasEditedByOtherUser($this->member)
-						&& ($this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress')
-							|| ($this->isSuperior($this->examiner->getId()) && $this->superior_view)
-							)
-					)
-					|| $this->object->accessHandler()->checkAccessToObj($this->object, 'read_learning_progress')
-				)
-			) {
+		if ((!$this->isFinalized()
+				&& ($this->userCanGrade() || $this->superiorCanGrade())
+			)
+			|| $this->userCanView()
+			|| $this->superiorCanView()
+		) {
 			return true;
 		}
 
@@ -391,11 +384,36 @@ class ilManualAssessmentMemberGUI
 	protected function mayBeAmended()
 	{
 		if ($this->isFinalized()
-			&& $this->object->accessHandler()->checkAccessToObj($this->object, 'amend_grading')) {
+				&& $this->userCanAmend()) {
 			return true;
 		}
 
 		return false;
+	}
+
+	protected function userCanGrade()
+	{
+		return !$this->targetWasEditedByOtherUser($this->member) && $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress');
+	}
+
+	protected function superiorCanGrade()
+	{
+		return !$this->targetWasEditedByOtherUser($this->member) && $this->isSuperior($this->examiner->getId()) && $this->superior_examinate;
+	}
+
+	protected function userCanView()
+	{
+		return $this->object->accessHandler()->checkAccessToObj($this->object, 'read_learning_progress');
+	}
+
+	protected function superiorCanView()
+	{
+		return $this->isSuperior($this->examiner->getId()) && $this->superior_view;
+	}
+
+	protected function userCanAmend()
+	{
+		return $this->object->accessHandler()->checkAccessToObj($this->object, 'amend_grading');
 	}
 
 	protected function isFinalized()
