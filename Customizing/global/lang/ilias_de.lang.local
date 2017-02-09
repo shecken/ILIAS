@@ -1757,3 +1757,6 @@ prg#:#prg_remove_users_partitial_success#:#Die Benutzer wurden teilweise entfern
 prg#:#prg_mark_accredited_multi_success#:#Das Programm wurde für die Benutzer erfolgreich akkreditiert.
 prg#:#prg_mark_relevant_multi_success#:#Das Programm wurde für die Benutzer als relevant markiert.
 prg#:#prg_mark_not_relevant_multi_success#:#Das Programm wurde für die Benutzer als nicht relevant markiert.
+mass#:#mass_upload_file#:#Datei
+rbac#:#read_learning_progress#:#Beurteilungen einsehen
+rbac#:#prg_manage_members#:#Mitglieder verwalten
