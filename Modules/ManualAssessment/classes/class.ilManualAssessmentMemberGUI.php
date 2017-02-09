@@ -126,26 +126,26 @@ class ilManualAssessmentMemberGUI
 			$this->edit($form);
 			return;
 		}
+
 		$this->saveMember($_POST);
-		if ($this->member->mayBeFinalized()) {
-			include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
-			$confirm = new ilConfirmationGUI();
-			$confirm->addHiddenItem('usr_id', $_GET['usr_id']);
-			$confirm->setHeaderText($this->lng->txt('mass_finalize_user_qst'));
-			$confirm->setFormAction($this->ctrl->getFormAction($this));
-			$confirm->setConfirm($this->lng->txt('mass_finalize'), 'finalize');
-			$confirm->setCancel($this->lng->txt('cancel'), 'cancelFinalize');
-			$this->tpl->setContent($confirm->getHTML());
-		} else {
+
+		if (!$this->member->mayBeFinalized()) {
 			ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
+			$form->setValuesByPost();
 			$this->edit($form);
+			return;
 		}
 
-		$form->addCommandButton('save', $this->lng->txt('save'));
-		$form->addCommandButton('finalizeConfirmation', $this->lng->txt('mass_finalize'));
-		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 
-		$this->renderForm($form);
+		include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
+		$confirm = new ilConfirmationGUI();
+		$confirm->addHiddenItem('usr_id', $_GET['usr_id']);
+		$confirm->setHeaderText($this->lng->txt('mass_finalize_user_qst'));
+		$confirm->setFormAction($this->ctrl->getFormAction($this));
+		$confirm->setConfirm($this->lng->txt('mass_finalize'), 'finalize');
+		$confirm->setCancel($this->lng->txt('cancel'), 'cancelFinalize');
+
+		$this->tpl->setContent($confirm->getHTML());
 	}
 
 	protected function finalize()
@@ -168,6 +168,11 @@ class ilManualAssessmentMemberGUI
 
 		ilUtil::sendSuccess($this->lng->txt('mass_membership_finalized'), true);
 		$this->redirect('view');
+	}
+
+	protected function cancelFinalize()
+	{
+		$this->edit();
 	}
 
 	protected function amend($form = null)
@@ -314,6 +319,7 @@ class ilManualAssessmentMemberGUI
 		require_once("Services/Form/classes/class.ilFileInputGUI.php");
 		$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
 		$file->setRequired($this->object->getSettings()->fileRequired());
+		$file->setDisabled(!$may_be_edited);
 		$file->setAllowDeletion(true);
 		$form->addItem($file);
 
