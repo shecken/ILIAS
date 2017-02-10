@@ -83,7 +83,7 @@ class ilObjReportOverviewVA extends ilObjReportBase
 		$f->sequence(
 			$f->sequence(
 				$f->dateperiod(
-					$txt("period"),
+					$txt("entrydate"),
 					""
 				)->map(
 					function ($start, $end) use ($f) {
