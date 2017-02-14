@@ -18,6 +18,14 @@ class ilReportVAPassPlugin extends ilRepositoryObjectPlugin
 	}
 
 	/**
+	 * Get name of gui class handling the commands
+	 */
+	public function getGuiClass()
+	{
+		return "ilObjReportVAPassGUI";
+	}
+
+	/**
 	 * create (if not available) and returns SettingsDB
 	 *
 	 * @return \CaT\Plugins\ReportVAPass\Settings\DB
