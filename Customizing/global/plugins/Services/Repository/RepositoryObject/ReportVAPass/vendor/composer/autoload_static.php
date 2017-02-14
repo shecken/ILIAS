@@ -6,25 +6,26 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit58cf36a9c339ff534b6f52455a2e0cf4
 {
-	public static $prefixLengthsPsr4 = array (
-		'C' =>
-		array (
-			'CaT\\Plugins\\ReportVAPass\\' => 25,
-		),
-	);
+    public static $prefixLengthsPsr4 = array (
+        'C' => 
+        array (
+            'CaT\\Plugins\\ReportVAPass\\' => 25,
+        ),
+    );
 
-	public static $prefixDirsPsr4 = array (
-		'CaT\\Plugins\\ReportVAPass\\' =>
-		array (
-			0 => __DIR__ . '/../..' . '/classes',
-		),
-	);
+    public static $prefixDirsPsr4 = array (
+        'CaT\\Plugins\\ReportVAPass\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/classes',
+        ),
+    );
 
-	public static function getInitializer(ClassLoader $loader)
-	{
-		return \Closure::bind(function () use ($loader) {
-			$loader->prefixLengthsPsr4 = ComposerStaticInit58cf36a9c339ff534b6f52455a2e0cf4::$prefixLengthsPsr4;
-			$loader->prefixDirsPsr4 = ComposerStaticInit58cf36a9c339ff534b6f52455a2e0cf4::$prefixDirsPsr4;
-		}, null, ClassLoader::class);
-	}
+    public static function getInitializer(ClassLoader $loader)
+    {
+        return \Closure::bind(function () use ($loader) {
+            $loader->prefixLengthsPsr4 = ComposerStaticInit58cf36a9c339ff534b6f52455a2e0cf4::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit58cf36a9c339ff534b6f52455a2e0cf4::$prefixDirsPsr4;
+
+        }, null, ClassLoader::class);
+    }
 }

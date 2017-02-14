@@ -7,7 +7,7 @@
  *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
  */
-class gevMyVAPassGUI
+class ilIndividualPlanGUI
 {
 
 	/**
@@ -67,8 +67,8 @@ class gevMyVAPassGUI
 
 		$html = "";
 		if (count($with_children) > 0) {
-			require_once("Services/GEV/VAPass/classes/class.gevMyVAPassTableGUI.php");
-			$tbl_children = new gevMyVAPassTableGUI($this, $with_children, $this->getAssignmentId(), $this->getUserId(), "view");
+			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanTableGUI.php");
+			$tbl_children = new ilIndividualPlanTableGUI($this, $with_children, $this->getAssignmentId(), $this->getUserId(), "view");
 			$tbl_children->setTitle($this->getStudyProgramme()->getTitle());
 			$tbl_children->setSubtitle($this->getStudyProgramme()->getDescription());
 			$tbl_children->setLegend($this->createLegend());
@@ -77,8 +77,8 @@ class gevMyVAPassGUI
 		}
 
 		if (count($with_lp_children) > 0) {
-			require_once("Services/GEV/VAPass/classes/class.gevMyVAPassCourseTableGUI.php");
-			$tbl_lp_children = new gevMyVAPassCourseTableGUI($this, $with_lp_children, $this->getAssignmentId(), $this->getUserId(), "view");
+			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanCourseTableGUI.php");
+			$tbl_lp_children = new ilIndividualPlanCourseTableGUI($this, $with_lp_children, $this->getAssignmentId(), $this->getUserId(), "view");
 
 			if ($html == "") {
 				$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle());

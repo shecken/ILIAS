@@ -1,6 +1,6 @@
 <?php
 
-class gevMyVAPassDetailEntry
+class ilIndividualPlanDetailEntry
 {
 	protected $title;
 	protected $accountable;

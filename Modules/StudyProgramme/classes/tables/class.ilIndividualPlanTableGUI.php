@@ -8,7 +8,7 @@ require_once("Services/CaTUIComponents/classes/class.catTableGUI.php");
  *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
  */
-class gevMyVAPassTableGUI extends catTableGUI
+class ilIndividualPlanTableGUI extends catTableGUI
 {
 	/**
 	 * @var ilLanguage
@@ -38,7 +38,7 @@ class gevMyVAPassTableGUI extends catTableGUI
 
 		$entries = array();
 		foreach ($children as $current_child_key => $child) {
-			require_once("Services/GEV/VAPass/classes/class.gevMyVAPassEntry.php");
+			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanEntry.php");
 			$entry = new gevMyVAPassEntry();
 			$entry->setTitle($child->getTitle());
 			$entry->setObjId($child->getId());
@@ -98,7 +98,7 @@ class gevMyVAPassTableGUI extends catTableGUI
 		$this->setEnableHeader(true);
 		$this->setFormAction($this->g_ctrl->getFormAction($this->parent_obj, "view"));
 
-		$this->setRowTemplate("tpl.gev_my_va_pass_row.html", "Services/GEV/VAPass");
+		$this->setRowTemplate("tpl.individual_plan_row.html", "Modules/StudyProgramme");
 		$this->useLngInTitle(false);
 	}
 

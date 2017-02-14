@@ -196,7 +196,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			$gui = $va_pass_plugin->getGUIClass();
 
 			foreach ($va_pass_object_ids as $obj_id => $obj_values) {
-				$object = ilObjectFactory::getgetInstanceByObjId($obj_id);
+				$object = ilObjectFactory::getInstanceByObjId($obj_id);
 				$ref_id = $object->getRefId();
 
 				if ($this->gAccess->checkAccessOfUser($this->gUser->getId(), "visible", "", $ref_id)) {
@@ -292,7 +292,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 					= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
 			}
 		}
-
+// var_dump($items);exit;
 		return $items;
 	}
 

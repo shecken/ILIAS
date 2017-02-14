@@ -1,6 +1,6 @@
 <?php
 
-class gevMyVAPassEntry
+class ilIndividualPlanEntry
 {
 	protected $title;
 	protected $sp_ref_id;
