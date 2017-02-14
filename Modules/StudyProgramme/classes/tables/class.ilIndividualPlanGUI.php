@@ -36,18 +36,19 @@ class ilIndividualPlanGUI
 	public function executeCommand()
 	{
 		$cmd = $this->g_ctrl->getCmd("view");
-		$next_class = $this->g_ctrl->getNextClass();
+		//$next_class = $this->g_ctrl->getNextClass();
 
-		switch ($next_class) {
-			default:
+		//switch ($next_class) {
+		//	default:
 				switch ($cmd) {
 					case "view":
 					case "showContent":
+						$this->showContent();
 						break;
 					default:
 						throw new Exception("command unkown: $cmd");
 				}
-		}
+		//}
 
 		$this->$cmd();
 	}
