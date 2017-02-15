@@ -1761,6 +1761,8 @@ gev#:#gev_va_pass_date#:#Datum
 gev#:#gev_va_pass_result#:#Ergebnis
 gev#:#gev_va_pass_crs_type#:#Art des bestehens
 gev#:#gev_va_pass_status#:#Status
+gev#:#gev_va_pass_finish_until#:#zu erledigen bis
+gev#:#gev_va_pass_type_of_passed#:#Art des Bestehens
 rbac#:#amend_grading#:#Beurteilung ändern
 mass#:#mass_usr_amend#:#Beurteilung ändern
 mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.

@@ -20,16 +20,28 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 */
 	protected $g_ctrl;
 
+	/**
+	 * @var ilDB;
+	 */
+	protected $g_db;
+
+	/**
+	 * @var ilSetting;
+	 */
+	protected $g_settings;
+
 	public function __construct($a_parent_obj, $lp_children, $assignment_id, $user_id, $a_parent_cmd = "", $a_template_context = "")
 	{
 		$this->setID("va_pass_member");
 
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $lng, $ilCtrl;
+		global $lng, $ilCtrl, $ilDB,  $ilSetting;
 
 		$this->g_lng = $lng;
 		$this->g_ctrl = $ilCtrl;
+		$this->g_db = $ilDB;
+		$this->g_settings =  $ilSetting;
 		$this->user_id = $user_id;
 		$this->assignment_id = $assignment_id;
 
@@ -41,21 +53,68 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$this->confugireTable();
 		$this->addColums();
 
-		require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanEntry.php");
-		foreach ($lp_children as $key => $value) {
-			$entry = new ilIndividualPlanDetailEntry();
-			$entry->setTitle($value->getTitle());
-			$entry->setResult($this->getResultInfo($value));
-		}
-
 		$entries = array();
+		require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanDetailEntry.php");
+		foreach ($lp_children as $lp_current_child_key => $lp_child) {
+			$entry = new ilIndividualPlanDetailEntry();
+			$entry->setTitle($lp_child->getTitle());
+			//$entry->setResult($this->getResultInfo($value));
+			$entry->setAccountable($this->getAccountable($lp_child->getId(), $this->getVAPassAccountableFieldId()));
+			$entry->setTypeOfPass("pass");
+			$lp_status = $this->getLpStatusFor($lp_child->getId(), $this->user_id);
+			$entry->setStatus($lp_status["status"]);
+			$entry->setFinished($lp_status["finished"]);
 
+			// $finish_until = $this->getCourseStartNextSP($lp_children, $lp_current_child_key + 1);
+			// if ($finish_until) {
+			// 	$entry->setFinishUntil($finish_until);
+			// }
+
+
+			$entries[] = $entry;
+		}
+		// var_dump($entries);exit;
 		$this->setData($entries);
 	}
 
 	public function fillRow($a_set)
 	{
+		$this->tpl->setVariable("STEPNAME", $a_set->getTitle());
+		$this->tpl->setVariable("ACCOUNTABLE", $a_set->getAccountable());
+		$this->tpl->setVariable("RESULT", $a_set->getResult());
+		$this->tpl->setVariable("TYPE_OF_PASSED", $a_set->getTypeOfPass());
+		$this->tpl->setVariable("STATUS", $this->getStatusIcon($a_set->getStatus()));
+		//$this->tpl->setVariable("FINISHED", $finish_until->get(IL_CAL_FKT_DATE, "d.m.Y"));
+		$finish_until = $a_set->getFinishUntil();
+		if ($finish_until) {
+			$this->tpl->setVariable("FINISHED", $finish_until->get(IL_CAL_FKT_DATE, "d.m.Y"));
+		} else {
+			$this->tpl->setVariable("FINISHED","-");
+		}
 	}
+
+	// public function fillRow($a_set)
+	// {
+	// 	$this->g_ctrl->setParameter($this->parent_obj, "spRefId", $a_set->getRefId());
+	// 	$this->g_ctrl->setParameter($this->parent_obj, "user_id", $this->user_id);
+	// 	$this->g_ctrl->setParameter($this->parent_obj, "assignment_id", $this->assignment_id);
+	// 	$link = $this->g_ctrl->getLinkTarget($this->parent_obj, "view");
+	// 	$this->g_ctrl->setParameter($this->parent_obj, "spRefId", null);
+	// 	$this->g_ctrl->setParameter($this->parent_obj, "user_id", null);
+	// 	$this->g_ctrl->setParameter($this->parent_obj, "assignment_id", null);
+	// 	$this->tpl->setVariable("HREF", $link);
+
+	// 	$this->tpl->setVariable("TITLE", $a_set->getTitle());
+	// 	$this->tpl->setVariable("STATUS", $this->parent_obj->getStatusIcon($a_set->getStatus()));
+	// 	$this->tpl->setVariable("FINISHED", $a_set->getFinished());
+
+	// 	$finish_until = $a_set->getFinishUntil();
+	// 	if ($finish_until) {
+	// 		$this->tpl->setVariable("FINISH_UNTIL", $finish_until->get(IL_CAL_FKT_DATE, "d.m.Y"));
+	// 	}
+
+	// 	$this->g_ctrl->setParameter($this->parent_obj, "selectedRefId", null);
+	// }
 
 	/**
 	 * Configures the table settings
@@ -83,7 +142,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		$this->addColumn($this->g_lng->txt("gev_va_pass_step"));
 		$this->addColumn($this->g_lng->txt("gev_va_pass_accountable"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_finished"));
+		$this->addColumn($this->g_lng->txt("gev_va_pass_date"));
 		$this->addColumn($this->g_lng->txt("gev_va_pass_result"));
 		$this->addColumn($this->g_lng->txt("gev_va_pass_type_of_passed"));
 		$this->addColumn($this->g_lng->txt("gev_va_pass_status"));
@@ -140,7 +199,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		return $this->getCrsUtils($crs_id)->isSelflearning();
 	}
 
-	protected function getStatDateOfTarget($crs_id)
+	protected function getStartDateOfTarget($crs_id)
 	{
 		return $this->getCrsUtils($crs_id)->getStartDate();
 	}
@@ -148,5 +207,25 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	protected function currentFinishUntilIsLater($finish_until, $startdate)
 	{
 		return $finish_until->get(IL_CAL_UNIX) > $startdate->get(IL_CAL_UNIX);
+	}
+
+	protected function getVAPassAccountableFieldId()
+	{
+		var_dump($this->g_settings->get(gevSettings::VA_PASS_ACCOUNTABLE_FIELD_ID));exit;
+		return $this->g_settings->get(gevSettings::VA_PASS_ACCOUNTABLE_FIELD_ID);
+	}
+
+	protected function getGevSettings()
+	{
+		var_dump($this->g_settings->get(gevSettings::getVAPassPassingTypeFieldId));
+	}
+
+	protected function getAccountable($obj_id, $field_id) {
+		$query = "SELECT value \n"
+				."FROM adv_md_values_text\n"
+				."WHERE obj_id = " . $this->g_db->quote($obj_id, "integer") ."\n"
+				."   AND field_id = " . $this->g_db->quote($field_id, "integer");
+		$res = $this->g_db->query($query);
+		return $this->g_db->fetchAssoc($res)['value'];
 	}
 }

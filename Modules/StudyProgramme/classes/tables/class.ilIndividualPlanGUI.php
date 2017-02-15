@@ -43,7 +43,7 @@ class ilIndividualPlanGUI
 				switch ($cmd) {
 					case "view":
 					case "showContent":
-						$this->showContent();
+						$this->view();
 						break;
 					default:
 						throw new Exception("command unkown: $cmd");
@@ -56,6 +56,9 @@ class ilIndividualPlanGUI
 	protected function view()
 	{
 		//WERTE FÜR USER_ID, SP_REF_ID und ASSIGNMENT_ID ermitterln
+		$this->setUserId(6);
+		$this->setSPRefId(96);
+		$this->setAssignmentId(4);
 
 		$this->showContent();
 	}
@@ -65,7 +68,7 @@ class ilIndividualPlanGUI
 		$relevant_children = $this->getRelevantChildren();
 		$with_children = $this->getSPWithChildrenBelow($relevant_children);
 		$with_lp_children = $this->getSPWithLPChildren($relevant_children);
-
+		// TODO: Feedback für keine Anzeige
 		$html = "";
 		if (count($with_children) > 0) {
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanTableGUI.php");
@@ -78,8 +81,8 @@ class ilIndividualPlanGUI
 		}
 
 		if (count($with_lp_children) > 0) {
-			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanCourseTableGUI.php");
-			$tbl_lp_children = new ilIndividualPlanCourseTableGUI($this, $with_lp_children, $this->getAssignmentId(), $this->getUserId(), "view");
+			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanDetailTableGUI.php");
+			$tbl_lp_children = new ilIndividualPlanDetailTableGUI($this, $with_lp_children, $this->getAssignmentId(), $this->getUserId(), "view");
 
 			if ($html == "") {
 				$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle());
@@ -123,18 +126,14 @@ class ilIndividualPlanGUI
 	protected function getSPWithChildrenBelow($children)
 	{
 		return array_filter($children, function ($child) {
-			if ($child->hasChildren()) {
-				return $child;
-			}
+			return $child->hasChildren();
 		});
 	}
 
 	protected function getSPWithLPChildren($children)
 	{
 		return array_filter($children, function ($child) {
-			if ($child->hasLPChildren()) {
-				return $child;
-			}
+			return $child->hasLPChildren();
 		});
 	}
 

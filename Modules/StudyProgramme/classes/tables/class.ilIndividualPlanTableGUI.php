@@ -39,7 +39,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		$entries = array();
 		foreach ($children as $current_child_key => $child) {
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanEntry.php");
-			$entry = new gevMyVAPassEntry();
+			$entry = new ilIndividualPlanEntry();
 			$entry->setTitle($child->getTitle());
 			$entry->setObjId($child->getId());
 			$entry->setRefId($child->getRefId());
