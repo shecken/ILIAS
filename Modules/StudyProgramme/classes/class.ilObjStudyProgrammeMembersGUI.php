@@ -324,7 +324,7 @@ class ilObjStudyProgrammeMembersGUI
 		foreach ($prgrs_ids as $key => $prgrs_id) {
 			$prgrs = $this->getProgressObject((int)$prgrs_id);
 
-			if ($prgrs_id->isRelevant()) {
+			if ($prgrs->isRelevant()) {
 				$prgrs->markNotRelevant($this->user->getId());
 			}
 		}
