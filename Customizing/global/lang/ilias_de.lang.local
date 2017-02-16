@@ -1667,7 +1667,7 @@ mass#:#mass_internal_note#:#Interne Anmerkungen zur Prüfung
 mass#:#mass_status_completed#:#Bestanden
 mass#:#mass_status_failed#:#Nicht bestanden
 mass#:#mass_status_pending#:#Noch nicht bewertet
-mass#:#mass_notify#:#Teilnehmer nach Finalisierung benachrichtigen
+mass#:#mass_notify#:#Teilnehmer nach Abschluss benachrichtigen
 mass#:#mass_finalize#:#Abschließen
 mass#:#il_mass_member#:#Teilnehmer
 mass#:#il_mass_members#:#Teilnehmer
@@ -1718,7 +1718,7 @@ mass#:#grading_info#:#Bewertungsinformationen
 mass#:#grading_record#:#Bewertungszusammenfassung
 mass#:#mass_content_explanation#:#Inhalte der Prüfung.
 mass#:#mass_record_template_explanation#:#Vorlage für die Prüfungsnotiz. Wird für jeden neuen Teilnehmer verwendet.
-mass#:#mass_notify_explanation#:#Der Teilnehmer wird nach der Finalisierung per E-Mail benachrichtigt und kann die Prüfungsnotiz auf der Info-Seite einsehen.
+mass#:#mass_notify_explanation#:#Der Teilnehmer wird nach Abschluss per E-Mail benachrichtigt und kann die Prüfungsnotiz auf der Info-Seite einsehen.
 mass#:#mass_contact#:#Name
 mass#:#mass_responsibility#:#Zuständigkeit
 mass#:#mass_phone#:#Telefon
@@ -1730,7 +1730,7 @@ mass#:#mass_mess_notification_completed#:#Sie haben die Prüfung %s bestanden. B
 mass#:#mass_mess_notification_failed#:#Sie haben die Prüfung %s nicht bestanden. Beachten Sie auch die folgende Zusammenfassung für Details.
 mass#:#mass_contact_info#:#Kontaktinformationen
 mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
-mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach finaler Bewertung vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
+mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach Abschluss vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
 mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
 mass#:#mass_edit_conditions#:#Vorbedingungen
 rbac#:#amend_grading#:#Beurteilung ändern
