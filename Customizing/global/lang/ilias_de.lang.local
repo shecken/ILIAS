@@ -381,7 +381,7 @@ gev#:#gev_dbv_hot_topic#:#relevante Themen
 gev#:#gev_agent_key#:#Vermittlerschlüssel
 gev#:#gev_agent_registration#:#Registrierung: Generali Online Akademie
 gev#:#gev_agent_registration_note#:#Bitte vervollständigen Sie Ihr Benutzerprofil.
-gev#:#gev_agent_registration_success#:#<b>ACHTUNG:</b> BITTE GEHEN SIE JETZT <a href="http://www.generali-onlineakademie.de">"ZURÜCK ZUR STARTSEITE"</a> UND MELDEN SICH MIT IHREN BENUTZERDATEN AN, UM DIE PUNKTEMELDUNG AN DIE WBD ABZUSCHLIEßEN. 
+gev#:#gev_agent_registration_success#:#<b>ACHTUNG:</b> BITTE GEHEN SIE JETZT <a href="http://www.generali-onlineakademie.de">"ZURÜCK ZUR STARTSEITE"</a> UND MELDEN SICH MIT IHREN BENUTZERDATEN AN, UM DIE PUNKTEMELDUNG AN DIE WBD ABZUSCHLIEßEN.
 gev#:#gev_alternative_email#:#alternative E-Mail-Adresse
 gev#:#gev_apprentice_grant#:#Azubizuschuss
 gev#:#gev_attachment_used_in#:#Die Datei wird in folgenden Mails verwendet
@@ -657,7 +657,7 @@ gev#:#gev_provider#:#Anbieter
 gev#:#gev_quicklinks#:#Quicklinks
 gev#:#gev_quicklinks_desc#:#Greifen Sie hier schnell und unkompliziert auf weitere Informationen zu Ihren Trainings und auf Ihre persönliche Bildungsbiografie zu.
 gev#:#gev_refresh_attachments#:#Anhänge aktualisieren
-gev#:#gev_registration#:#Erstregistrierung: Generali Online Akademie 
+gev#:#gev_registration#:#Erstregistrierung: Generali Online Akademie
 gev#:#gev_registration_success#:#Eine Email mit einem Aktivierungslink wurde an Sie versendet.
 gev#:#gev_registration_pretext#:#Bitte treffen Sie Ihre Auswahl:
 gev#:#gev_agent_registration_label#:#Erstregistrierung als:
@@ -1138,7 +1138,7 @@ gev#:#gev_cancellation#:#Absage
 gev#:#gev_training_cancelled#:#Das Training wurde erfolgreich abgesagt. Bitte denken Sie daran, verbleibende Mitglieder des Trainings, die nicht automatisch entfernt werden konnten, eventuell zu benachrichten und vom Training zu entfernen.
 gev#:#gev_needs_wbd_acceptance#:#Sie müssen die Einwilligung zur Eintragung von Weiterbildungspunkten und -maßnahmen in die WBD erteilen, um fortfahren zu können.
 gev#:#gev_company_name#:#Firmenname
-gev#:#gev_pstatus_mail_date_title#:#Die Einladung zum Seminar wurde verschickt am: 
+gev#:#gev_pstatus_mail_date_title#:#Die Einladung zum Seminar wurde verschickt am:
 gev#:#gev_pstatus_mail_confirm_title#:#Einladungsmail ist versandt:
 gev#:#gev_psstatus_mail_send_date_error#:#Bitte bestätigen Sie den Versandt der Einladungsmail!
 gev#:#gev_psstatus_mail_send_date_success#:#Das Versandtdatum der Einladungsmail wurde gespeichert.
@@ -1575,7 +1575,7 @@ prg#:#prg_mark_accredited#:#akkreditieren
 prg#:#prg_unmark_accredited#:#Akkreditierung entfernen
 prg#:#prg_mark_accredited_success#:#Das Programm wurde für den Benutzer erfolgreich akkreditiert.
 prg#:#prg_unmark_accredited_success#:#Die Akkreditierung wurde erfolgreich entfernt.
-prg#:#prg_remove_user_success#:#Der Benutzer wurde entfernt. 
+prg#:#prg_remove_user_success#:#Der Benutzer wurde entfernt.
 prg#:#prg_type_add#:#Studienprogrammtyp hinzufügen
 prg#:#prg_subtypes#:#Typen
 prg#:#prg_subtype_add#:#Neuen Typ hinzufügen
@@ -1760,3 +1760,6 @@ prg#:#prg_mark_not_relevant_multi_success#:#Das Programm wurde für die Benutzer
 mass#:#mass_upload_file#:#Datei
 rbac#:#read_learning_progress#:#Beurteilungen einsehen
 rbac#:#prg_manage_members#:#Mitglieder verwalten
+prg#:#prg_update_from_current_plan_success#:#Die Aktualisierung aus dem aktuellen Plan war erfolgreich.
+prg#:#prg_update_from_current_plan_not_possible#:#Die Aktualisierung aus dem aktuellen Plan ist nicht möglich.
+prg#:#update_from_current_plan_partitial_success#:#Die Aktualisierung aus dem aktuellen Plan war nur teilweise möglich.
