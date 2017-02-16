@@ -381,7 +381,7 @@ gev#:#gev_dbv_hot_topic#:#relevante Themen
 gev#:#gev_agent_key#:#Vermittlerschlüssel
 gev#:#gev_agent_registration#:#Registrierung: Generali Online Akademie
 gev#:#gev_agent_registration_note#:#Bitte vervollständigen Sie Ihr Benutzerprofil.
-gev#:#gev_agent_registration_success#:#<b>ACHTUNG:</b> BITTE GEHEN SIE JETZT <a href="http://www.generali-onlineakademie.de">"ZURÜCK ZUR STARTSEITE"</a> UND MELDEN SICH MIT IHREN BENUTZERDATEN AN, UM DIE PUNKTEMELDUNG AN DIE WBD ABZUSCHLIEßEN. 
+gev#:#gev_agent_registration_success#:#<b>ACHTUNG:</b> BITTE GEHEN SIE JETZT <a href="http://www.generali-onlineakademie.de">"ZURÜCK ZUR STARTSEITE"</a> UND MELDEN SICH MIT IHREN BENUTZERDATEN AN, UM DIE PUNKTEMELDUNG AN DIE WBD ABZUSCHLIEßEN.
 gev#:#gev_alternative_email#:#alternative E-Mail-Adresse
 gev#:#gev_apprentice_grant#:#Azubizuschuss
 gev#:#gev_attachment_used_in#:#Die Datei wird in folgenden Mails verwendet
@@ -657,7 +657,7 @@ gev#:#gev_provider#:#Anbieter
 gev#:#gev_quicklinks#:#Quicklinks
 gev#:#gev_quicklinks_desc#:#Greifen Sie hier schnell und unkompliziert auf weitere Informationen zu Ihren Trainings und auf Ihre persönliche Bildungsbiografie zu.
 gev#:#gev_refresh_attachments#:#Anhänge aktualisieren
-gev#:#gev_registration#:#Erstregistrierung: Generali Online Akademie 
+gev#:#gev_registration#:#Erstregistrierung: Generali Online Akademie
 gev#:#gev_registration_success#:#Eine Email mit einem Aktivierungslink wurde an Sie versendet.
 gev#:#gev_registration_pretext#:#Bitte treffen Sie Ihre Auswahl:
 gev#:#gev_agent_registration_label#:#Erstregistrierung als:
@@ -1138,7 +1138,7 @@ gev#:#gev_cancellation#:#Absage
 gev#:#gev_training_cancelled#:#Das Training wurde erfolgreich abgesagt. Bitte denken Sie daran, verbleibende Mitglieder des Trainings, die nicht automatisch entfernt werden konnten, eventuell zu benachrichten und vom Training zu entfernen.
 gev#:#gev_needs_wbd_acceptance#:#Sie müssen die Einwilligung zur Eintragung von Weiterbildungspunkten und -maßnahmen in die WBD erteilen, um fortfahren zu können.
 gev#:#gev_company_name#:#Firmenname
-gev#:#gev_pstatus_mail_date_title#:#Die Einladung zum Seminar wurde verschickt am: 
+gev#:#gev_pstatus_mail_date_title#:#Die Einladung zum Seminar wurde verschickt am:
 gev#:#gev_pstatus_mail_confirm_title#:#Einladungsmail ist versandt:
 gev#:#gev_psstatus_mail_send_date_error#:#Bitte bestätigen Sie den Versandt der Einladungsmail!
 gev#:#gev_psstatus_mail_send_date_success#:#Das Versandtdatum der Einladungsmail wurde gespeichert.
@@ -1575,7 +1575,7 @@ prg#:#prg_mark_accredited#:#akkreditieren
 prg#:#prg_unmark_accredited#:#Akkreditierung entfernen
 prg#:#prg_mark_accredited_success#:#Das Programm wurde für den Benutzer erfolgreich akkreditiert.
 prg#:#prg_unmark_accredited_success#:#Die Akkreditierung wurde erfolgreich entfernt.
-prg#:#prg_remove_user_success#:#Der Benutzer wurde entfernt. 
+prg#:#prg_remove_user_success#:#Der Benutzer wurde entfernt.
 prg#:#prg_type_add#:#Studienprogrammtyp hinzufügen
 prg#:#prg_subtypes#:#Typen
 prg#:#prg_subtype_add#:#Neuen Typ hinzufügen
@@ -1652,8 +1652,9 @@ gev#:#gev_open_same_window#:#Im selben Fenster öffnen
 gev#:#jill_na_link_label#:#Zur Qualifizierung nach der EU-Vermittlerrichtlinie
 mass#:#general#:#Allgemein
 mass#:#mass_place#:#Ort
-mass#:#mass_event_time#:#Veranstaltungszeitpunkt
-mass#:#mass_event_time_place_required#:#Datum und Ort sind Pflichtfelder
+mass#:#mass_event_time#:#Datum
+mass#:#mass_event_time_place_required#:#Verpflichtende Angabe von Datum und Ort
+mass#:#mass_event_time_place_required_info#:#In der Beurteilung zu einem Teilnehmer müssen Datum und Ort angegeben werden.
 mass#:#mass_content#:#Inhalt
 mass#:#mass_record_template#:#Vorlage Prüfungsnotiz
 mass#:#mass_graded_by#:#Bewertet von
@@ -1666,7 +1667,7 @@ mass#:#mass_internal_note#:#Interne Anmerkungen zur Prüfung
 mass#:#mass_status_completed#:#Bestanden
 mass#:#mass_status_failed#:#Nicht bestanden
 mass#:#mass_status_pending#:#Noch nicht bewertet
-mass#:#mass_notify#:#Teilnehmer nach Finalisierung benachrichtigen
+mass#:#mass_notify#:#Teilnehmer nach Abschluss benachrichtigen
 mass#:#mass_finalize#:#Abschließen
 mass#:#il_mass_member#:#Teilnehmer
 mass#:#il_mass_members#:#Teilnehmer
@@ -1717,7 +1718,7 @@ mass#:#grading_info#:#Bewertungsinformationen
 mass#:#grading_record#:#Bewertungszusammenfassung
 mass#:#mass_content_explanation#:#Inhalte der Prüfung.
 mass#:#mass_record_template_explanation#:#Vorlage für die Prüfungsnotiz. Wird für jeden neuen Teilnehmer verwendet.
-mass#:#mass_notify_explanation#:#Der Teilnehmer wird nach der Finalisierung per E-Mail benachrichtigt und kann die Prüfungsnotiz auf der Info-Seite einsehen.
+mass#:#mass_notify_explanation#:#Der Teilnehmer wird nach Abschluss per E-Mail benachrichtigt und kann die Prüfungsnotiz auf der Info-Seite einsehen.
 mass#:#mass_contact#:#Name
 mass#:#mass_responsibility#:#Zuständigkeit
 mass#:#mass_phone#:#Telefon
@@ -1729,28 +1730,28 @@ mass#:#mass_mess_notification_completed#:#Sie haben die Prüfung %s bestanden. B
 mass#:#mass_mess_notification_failed#:#Sie haben die Prüfung %s nicht bestanden. Beachten Sie auch die folgende Zusammenfassung für Details.
 mass#:#mass_contact_info#:#Kontaktinformationen
 mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
-mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach finaler Bewertung vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
+mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach Abschluss vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
 mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
 mass#:#mass_edit_conditions#:#Vorbedingungen
 rbac#:#amend_grading#:#Beurteilung ändern
 mass#:#mass_usr_amend#:#Beurteilung ändern
 mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.
 rbac#:#mass_amend_grading#:#Benutzer darf die Prüfungsdaten nachträglich ändern.
-mass#:#mass_file_required#:#Dateiupload verpflichtend
+mass#:#mass_file_required#:#Verpflichtender Dateiupload
 mass#:#mass_file_required_info#:#In der Beurteilung zu einem Teilnehmer muss eine Datei hochgeladen werden.
 mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer
 mass#:#mass_user_view_file_info#:#Der Teilnehmer kann die Datei auf der Info-Seite einsehen.
 mass#:#mass_superior_can_examinate#:#Vorgesetzte dürfen Teilnehmer bewerten
-mass#:#mass_superior_can_examinate_info#:#Die Vorgesetzten dürfen Mitarbeiter aus Ihrer Organisationseinheit bewerten.
+mass#:#mass_superior_can_examinate_info#:#Vorgesetzte dürfen Mitarbeiter aus Ihren Organisationseinheiten bewerten.
 mass#:#mass_superior_view_assessments#:#Vorgesetzte dürfen Ergebnisse einsehen
-mass#:#mass_superior_view_assessments_info#:#Die Vorgesetzten dürfen alle Ergebnisse der Mitarbeiter aus Ihrer Organisationseinheit einsehen.
+mass#:#mass_superior_view_assessments_info#:#Die Vorgesetzten dürfen alle Ergebnisse der Mitarbeiter aus Ihren Organisationseinheiten einsehen.
 gev#:#gev_my_va_plan#:#VA-Ausbildungsplan
 prg#:#prg_multi_mark_accredited#:#Akkredieren
 prg#:#prg_multi_unmark_accredited#:#Akkreditierung entfernen
 prg#:#prg_multi_remove_user#:#Benutzer entfernen
 prg#:#prg_multi_mark_relevant#:#Als relevant markieren
 prg#:#prg_multi_unmark_relevant#:#Als irrelevant markieren
-prg#:#prg_multi_update_from_current_plan#:#Aus dem aktuellen Plan aktualisieren.
+prg#:#prg_multi_update_from_current_plan#:#Aus dem aktuellen Plan aktualisieren
 prg#:#prg_remove_users_success#:#Die Benutzer wurden entfernt.
 prg#:#prg_remove_users_not_possible#:#Die Benutzer konnten nicht entfernt werden, da sie nicht an diesem Studienprogramm hinzugefügt wurden.
 prg#:#prg_remove_users_partitial_success#:#Die Benutzer wurden teilweise entfernt. Einige konnten nicht entfernt werden, da sie nicht an diesem Studienprogramm hinzugefügt wurden.
@@ -1760,3 +1761,6 @@ prg#:#prg_mark_not_relevant_multi_success#:#Das Programm wurde für die Benutzer
 mass#:#mass_upload_file#:#Datei
 rbac#:#read_learning_progress#:#Beurteilungen einsehen
 rbac#:#prg_manage_members#:#Mitglieder verwalten
+prg#:#prg_update_from_current_plan_success#:#Die Aktualisierung aus dem aktuellen Plan war erfolgreich.
+prg#:#prg_update_from_current_plan_not_possible#:#Die Aktualisierung aus dem aktuellen Plan ist nicht möglich.
+prg#:#update_from_current_plan_partitial_success#:#Die Aktualisierung aus dem aktuellen Plan war nur teilweise möglich.
