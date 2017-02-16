@@ -182,6 +182,7 @@ class ilManualAssessmentSettingsGUI
 		$form->addItem($cb);
 
 		$option = new ilCheckboxInputGUI($this->lng->txt('mass_event_time_place_required'), self::PROP_EVENT_TIME_PLACE_REQUIRED);
+		$option->setInfo($this->lng->txt('mass_event_time_place_required_info'));
 		$form->addItem($option);
 
 		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_superior_can_examinate'), self::PROP_SUPERIOR_EXAMINATE);

@@ -1653,7 +1653,8 @@ gev#:#jill_na_link_label#:#Zur Qualifizierung nach der EU-Vermittlerrichtlinie
 mass#:#general#:#Allgemein
 mass#:#mass_place#:#Ort
 mass#:#mass_event_time#:#Veranstaltungszeitpunkt
-mass#:#mass_event_time_place_required#:#Datum und Ort sind Pflichtfelder
+mass#:#mass_event_time_place_required#:#Verpflichtende Angabe von Datum und Ort
+mass#:#mass_event_time_place_required_info#:#In der Beurteilung zu einem Teilnehmer müssen Datum und Ort angegeben werden.
 mass#:#mass_content#:#Inhalt
 mass#:#mass_record_template#:#Vorlage Prüfungsnotiz
 mass#:#mass_graded_by#:#Bewertet von
@@ -1736,7 +1737,7 @@ rbac#:#amend_grading#:#Beurteilung ändern
 mass#:#mass_usr_amend#:#Beurteilung ändern
 mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.
 rbac#:#mass_amend_grading#:#Benutzer darf die Prüfungsdaten nachträglich ändern.
-mass#:#mass_file_required#:#Dateiupload verpflichtend
+mass#:#mass_file_required#:#Verpflichtender Dateiupload
 mass#:#mass_file_required_info#:#In der Beurteilung zu einem Teilnehmer muss eine Datei hochgeladen werden.
 mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer
 mass#:#mass_user_view_file_info#:#Der Teilnehmer kann die Datei auf der Info-Seite einsehen.
