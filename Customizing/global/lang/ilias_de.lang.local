@@ -1652,7 +1652,7 @@ gev#:#gev_open_same_window#:#Im selben Fenster öffnen
 gev#:#jill_na_link_label#:#Zur Qualifizierung nach der EU-Vermittlerrichtlinie
 mass#:#general#:#Allgemein
 mass#:#mass_place#:#Ort
-mass#:#mass_event_time#:#Veranstaltungszeitpunkt
+mass#:#mass_event_time#:#Datum
 mass#:#mass_event_time_place_required#:#Verpflichtende Angabe von Datum und Ort
 mass#:#mass_event_time_place_required_info#:#In der Beurteilung zu einem Teilnehmer müssen Datum und Ort angegeben werden.
 mass#:#mass_content#:#Inhalt
