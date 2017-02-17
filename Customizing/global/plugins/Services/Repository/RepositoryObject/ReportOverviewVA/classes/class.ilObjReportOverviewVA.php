@@ -12,6 +12,11 @@ set_time_limit(0);
 
 class ilObjReportOverviewVA extends ilObjReportBase
 {
+	/**
+	 * @var ilDb
+	 */
+	protected $g_db;
+
 	protected $relevant_parameters = array();
 
 	public function initType()
@@ -153,26 +158,31 @@ class ilObjReportOverviewVA extends ilObjReportBase
 
 		$arr2 = array();
 		foreach ($user_ids as $user_id) {
-			$utils = gevUserUtils::getInstance($user_id);
-			$arr = array();
-			$arr["user_id"] = $user_id;
-			$arr["firstname"] = $utils->getFirstname();
-			$arr["lastname"] = $utils->getLastname();
-			$arr["orgunit"] = $utils->getOrgUnitNamesWhereUserIsEmployee();
-			$entrydate = $utils->getEntryDate();
-			if ($entrydate === null) {
-				$arr["entry_date"] = "-";
-			} else {
-				$arr["entry_date"] = $entrydate->get(IL_CAL_FKT_DATE, "d.m.Y");
+			$assigns_per_user = $osp->getAssignmentsOf($user_id);
+			foreach ($assigns_per_user as $assign) {
+				$utils = gevUserUtils::getInstance($user_id);
+				$arr = array();
+				$arr["user_id"] = $user_id;
+				$arr["sp_ref_id"] = $this->getStudyId();
+				$arr["assignment"] = $assign->getId();
+				$arr["firstname"] = $utils->getFirstname();
+				$arr["lastname"] = $utils->getLastname();
+				$arr["orgunit"] = $utils->getOrgUnitNamesWhereUserIsEmployee();
+				$entrydate = $utils->getEntryDate();
+				if ($entrydate === null) {
+					$arr["entry_date"] = "-";
+				} else {
+					$arr["entry_date"] = $entrydate->get(IL_CAL_FKT_DATE, "d.m.Y");
+				}
+				$arr["status"] = $osp->getProgressForAssignment($assign)->getStatus();
+				foreach ($children as $child) {
+					$column_key = $child->getTitle();
+					$column_key = strtolower($column_key);
+					$column_key = str_replace(" ", "_", $column_key);
+					$arr[$column_key] = $child->getProgressForAssignment($assign)->getStatus();;
+				}
+				$arr2[] = $arr;
 			}
-			$arr["status"] = ilLPStatus::_lookupStatus($osp->getId(), $user_id);
-			foreach ($children as $child) {
-				$column_key = $child->getTitle();
-				$column_key = strtolower($column_key);
-				$column_key = str_replace(" ", "_", $column_key);
-				$arr[$column_key] = ilLPStatus::_lookupStatus($child->getId(), $user_id);
-			}
-			$arr2[] = $arr;
 		}
 		return $arr2;
 	}

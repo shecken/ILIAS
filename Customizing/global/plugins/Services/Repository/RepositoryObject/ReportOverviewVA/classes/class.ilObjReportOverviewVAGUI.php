@@ -8,7 +8,7 @@ require_once("Services/CaTUIComponents/classes/class.catTableGUI.php");
 * ...
 * @ilCtrl_isCalledBy ilObjReportOverviewVAGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
 * @ilCtrl_Calls ilObjReportOverviewVAGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI
-* @ilCtrl_Calls ilObjReportOverviewVAGUI: ilCommonActionDispatcherGUI
+* @ilCtrl_Calls ilObjReportOverviewVAGUI: ilCommonActionDispatcherGUI, ilIndividualPlanGUI
 */
 class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI
 {
@@ -20,6 +20,37 @@ class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI
 	public function getType()
 	{
 		return 'xova';
+	}
+
+	/**
+	 * Handles all commmands of this class, centralizes permission checks
+	 */
+	public function performCommand($cmd)
+	{
+		global $ilCtrl;
+		$this->g_ctrl = $ilCtrl;
+		$next_class = $this->g_ctrl->getNextClass();
+
+		switch ($next_class) {
+			case 'ilindividualplangui':
+				$this->lauf();
+				break;
+			default:
+				$this->showContent();
+				break;
+		}
+	}
+
+	public function lauf()
+	{
+		$get = $_GET;
+		require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanGUI.php");
+		$gui = new ilIndividualPlanGUI();
+		$gui->setUserId($get['user_id']);
+		$gui->setAssignmentId($get['assignment_id']);
+		$gui->setSPRefId($get['spRefId']);
+
+		$this->g_ctrl->forwardCommand($gui);
 	}
 
 	protected function prepareTitle($a_title)
@@ -52,7 +83,6 @@ class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI
 
 	protected function render()
 	{
-
 		$this->gTpl->setTitle(null);
 		$res = $this->title->render();
 		$res .= $this->renderFilter();

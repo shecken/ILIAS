@@ -8,7 +8,7 @@ use \CaT\Plugins\ReportVAPass;
 /**
  * @ilCtrl_isCalledBy ilObjReportVAPassGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
  * @ilCtrl_Calls ilObjReportVAPassGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI
- * @ilCtrl_Calls ilObjReportVAPassGUI: ilVAPassSettingsGUI, ilIndividualPlanGUI
+ * @ilCtrl_Calls ilObjReportVAPassGUI: ilVAPassSettingsGUI, ilIndividualPlanGUI, 
  * @author 		Stefan Hecken <stefan.hecken@concepts-and-training.de>
  */
 class ilObjReportVAPassGUI extends ilObjectPluginGUI

@@ -2,7 +2,7 @@
 
 $id = "xova";
 
-$version = "0.0.4";
+$version = "0.0.6";
 
 
 $ilias_min_version = "4.2.0";
