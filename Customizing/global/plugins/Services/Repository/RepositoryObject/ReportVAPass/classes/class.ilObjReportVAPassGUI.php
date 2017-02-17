@@ -58,6 +58,9 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 			case "ilvapasssettingsgui":
 				$this->forwardSettings();
 				break;
+			case 'ilindividualplangui':
+				$this->showContent();
+				break;
 			default:
 				switch ($cmd) {
 					case ilVAPassSettingsGUI::EDIT_SETTINGS:

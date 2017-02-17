@@ -66,7 +66,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		$this->g_ctrl->setParameter($this->parent_obj, "spRefId", $a_set->getRefId());
 		$this->g_ctrl->setParameter($this->parent_obj, "user_id", $this->user_id);
 		$this->g_ctrl->setParameter($this->parent_obj, "assignment_id", $this->assignment_id);
-		$link = $this->g_ctrl->getLinkTarget($this->parent_obj, "view");
+		$link = $this->g_ctrl->getLinkTargetByClass(array("ilObjReportVAPassGUI", "ilIndividualPlanGUI"), "view");
 		$this->g_ctrl->setParameter($this->parent_obj, "spRefId", null);
 		$this->g_ctrl->setParameter($this->parent_obj, "user_id", null);
 		$this->g_ctrl->setParameter($this->parent_obj, "assignment_id", null);

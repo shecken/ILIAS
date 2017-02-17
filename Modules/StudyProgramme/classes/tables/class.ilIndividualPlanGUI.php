@@ -20,13 +20,23 @@ class ilIndividualPlanGUI
 	 */
 	protected $g_tpl;
 
+	/**
+	 * @var ilUsr;
+	 */
+	protected $g_user;
+
+	/**
+	 * @var bool
+	 */
+	protected $isPost;
+
 	public function __construct()
 	{
 		global $ilCtrl, $tpl;
 
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tpl = $tpl;
-
+		$this->isPost = false;
 		$this->success = '<img src="'.ilUtil::getImagePath("gev_va_pass_success_icon.png").'" />';
 		$this->in_progress = '<img src="'.ilUtil::getImagePath("gev_va_pass_progress_icon.png").'" />';
 		$this->faild = '<img src="'.ilUtil::getImagePath("gev_va_pass_failed_icon.png").'" />';
@@ -35,6 +45,8 @@ class ilIndividualPlanGUI
 
 	public function executeCommand()
 	{
+		global $ilLog;
+		$ilLog->write(get_class($this));
 		$cmd = $this->g_ctrl->getCmd("view");
 		//$next_class = $this->g_ctrl->getNextClass();
 
@@ -55,16 +67,16 @@ class ilIndividualPlanGUI
 
 	protected function view()
 	{
-		//WERTE FÜR USER_ID, SP_REF_ID und ASSIGNMENT_ID ermitterln
-		$this->setUserId(6);
-		$this->setSPRefId(96);
-		$this->setAssignmentId(4);
-
+		$this->findUserId();
+		$this->findSPRefId();
+		$this->findAssignmentId();
 		$this->showContent();
 	}
 
 	protected function showContent()
 	{
+		global $ilUser;
+		$this->g_user  = $ilUser;
 		$relevant_children = $this->getRelevantChildren();
 		$with_children = $this->getSPWithChildrenBelow($relevant_children);
 		$with_lp_children = $this->getSPWithLPChildren($relevant_children);
@@ -73,7 +85,13 @@ class ilIndividualPlanGUI
 		if (count($with_children) > 0) {
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanTableGUI.php");
 			$tbl_children = new ilIndividualPlanTableGUI($this, $with_children, $this->getAssignmentId(), $this->getUserId(), "view");
-			$tbl_children->setTitle($this->getStudyProgramme()->getTitle());
+			if($this->getUserId() == $this->g_user->getId()) {
+				$tbl_children->setTitle($this->getStudyProgramme()->getTitle());
+			}else{
+				$tbl_children->setTitle($this->getStudyProgramme()->getTitle()
+										. " " . $this->g_user->getLastname()
+										. ", " . $this->g_user->getFirstname());
+			}
 			$tbl_children->setSubtitle($this->getStudyProgramme()->getDescription());
 			$tbl_children->setLegend($this->createLegend());
 
@@ -85,7 +103,13 @@ class ilIndividualPlanGUI
 			$tbl_lp_children = new ilIndividualPlanDetailTableGUI($this, $with_lp_children, $this->getAssignmentId(), $this->getUserId(), "view");
 
 			if ($html == "") {
-				$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle());
+				if($this->getUserId() == $this->g_user->getId()) {
+					$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle());
+				}else{
+					$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle()
+											. " " . $this->g_user->getLastname()
+											. ", " . $this->g_user->getFirstname());
+				}
 				$tbl_lp_children->setSubtitle($this->getStudyProgramme()->getDescription());
 				$tbl_lp_children->setLegend($this->createLegend());
 				$html = $tbl_lp_children->getHtml();
@@ -208,8 +232,9 @@ class ilIndividualPlanGUI
 	{
 		$get = $_GET;
 
-		if ($get["spRefId"] && $get["spRefId"] !== null && is_integer((int)$post["spRefId"])) {
+		if ($get["spRefId"] && $get["spRefId"] !== null && is_integer((int)$get["spRefId"])) {
 			$this->sp_ref_id = (int)$_GET["spRefId"];
+			$this->isPost = true;
 		}
 	}
 
@@ -217,8 +242,9 @@ class ilIndividualPlanGUI
 	{
 		$get = $_GET;
 
-		if ($get["user_id"] && $get["user_id"] !== null && is_integer((int)$post["user_id"])) {
+		if ($get["user_id"] && $get["user_id"] !== null && is_integer((int)$get["user_id"])) {
 			$this->user_id = (int)$_GET["user_id"];
+			$this->isPost = true;
 		}
 	}
 
@@ -226,8 +252,9 @@ class ilIndividualPlanGUI
 	{
 		$get = $_GET;
 
-		if ($get["assignment_id"] && $get["assignment_id"] !== null && is_integer((int)$post["assignment_id"])) {
+		if ($get["assignment_id"] && $get["assignment_id"] !== null && is_integer((int)$get["assignment_id"])) {
 			$this->assignment_id =  (int)$_GET["assignment_id"];
+			$this->isPost = true;
 		}
 	}
 
