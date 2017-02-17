@@ -99,7 +99,7 @@ class ilObjReportTrainerOpTepCat extends ilObjReportBase
 				."	JOIN hist_tep_individ_days AS htid\n"
 				."		ON individual_days = id\n"
 				."	LEFT JOIN hist_course AS hc\n"
-				."		ON context_id = crs_id AND ht.category  = 'Training' AND hc.type != ".$this->gIldb->qoute(gevCourseUtils::CRS_TYPE_COACHING, "text")."\n";
+				."		ON context_id = crs_id AND ht.category  = 'Training' AND hc.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")."\n";
 		$where = "	WHERE (hc.hist_historic = 0 OR hc.hist_historic IS NULL)\n"
 				."		AND ht.hist_historic = 0\n"
 				."		AND ht.deleted = 0\n"
