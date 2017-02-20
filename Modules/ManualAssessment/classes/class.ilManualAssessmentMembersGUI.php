@@ -47,7 +47,8 @@ class ilManualAssessmentMembersGUI
 	{
 		if (!$this->userMayEditMembers()
 			&& !$this->userMayEditGrades()
-			&& !$this->userMayViewGrades()) {
+			&& !$this->userMayViewGrades()
+			&& !$this->userMayGradeSelf()) {
 			$this->parent_gui->handleAccessViolation();
 		}
 
@@ -115,23 +116,38 @@ class ilManualAssessmentMembersGUI
 			}
 		}
 
-		$employees = null;
-		if ($this->isSuperior($this->user->getId())
-			&& ($this->superior_examinate || $this->superior_view)
-			&& (!$this->access_handler->checkAccessToObj($this->object, 'edit_learning_progress')
-				&& !$this->access_handler->checkAccessToObj($this->object, 'read_learning_progress'))
-		) {
-			$employees = $this->getEmployeesOf($this->user->getId());
-		} elseif ($this->isSuperior($this->user->getId())
-			&& !$this->superior_examinate
-			&& !$this->superior_view
-			&& !$this->access_handler->checkAccessToObj($this->object, 'edit_learning_progress')
-			&& !$this->access_handler->checkAccessToObj($this->object, 'read_learning_progress')
-		) {
-			$employees = array();
+		$may_edit_lp = $this->access_handler->checkAccessToObj($this->object, 'edit_learning_progress');
+		$may_read_lp = $this->access_handler->checkAccessToObj($this->object, 'read_learning_progress');
+		$may_edit_members = $this->access_handler->checkAccessToObj($this->object, 'edit_members');
+
+		$filter_users = null;
+
+		if (!$may_edit_lp && !$may_read_lp && !$may_edit_members) {
+			if ($this->isSuperior($this->user->getId())
+				&& ($this->superior_examinate || $this->superior_view)
+
+			) {
+				$filter_users = $this->getEmployeesOf($this->user->getId());
+			} elseif ($this->isSuperior($this->user->getId())
+				&& !$this->superior_examinate
+				&& !$this->superior_view
+
+			) {
+				$filter_users = array();
+			}
+
+			if ($this->userMayGradeSelf()) {
+				$self = array($this->user->getId());
+
+				if (is_array($filter_users)) {
+					$filter_users = array_merge($filter_users, $self);
+				} else {
+					$filter_users = $self;
+				}
+			}
 		}
 
-		$table = new ilManualAssessmentMembersTableGUI($this, $employees);
+		$table = new ilManualAssessmentMembersTableGUI($this, $filter_users);
 		$this->tpl->setContent($table->getHTML());
 	}
 
@@ -241,5 +257,10 @@ class ilManualAssessmentMembersGUI
 	public function userMayEditMembers()
 	{
 		return $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_members');
+	}
+
+	public function userMayGradeSelf()
+	{
+		return $this->object->getSettings()->gradeSelf() && $this->object->loadMembers()->userAllreadyMember($this->user);
 	}
 }
