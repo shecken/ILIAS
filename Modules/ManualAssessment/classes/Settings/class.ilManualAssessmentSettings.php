@@ -42,6 +42,7 @@ class ilManualAssessmentSettings
 	{
 		assert('is_bool($superior_examinate)');
 		assert('is_bool($superior_view)');
+		assert('is_bool($grade_self)');
 		$this->id = $mass->getId();
 		$this->content = $content !== null ? $content : self::DEF_CONTENT;
 		$this->record_template = $record_template !== null ? $record_template : self::DEF_RECORD_TEMPLATE;
