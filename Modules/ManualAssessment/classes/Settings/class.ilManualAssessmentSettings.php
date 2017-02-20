@@ -18,7 +18,7 @@ class ilManualAssessmentSettings
 	 */
 	protected $record_template;
 
-	/*
+	/**
 	 * @var boolean
 	 */
 	protected $superior_examinate;
@@ -29,11 +29,16 @@ class ilManualAssessmentSettings
 	protected $superior_view;
 
 	/**
-	 * @var $boolean
+	 * @var boolean
 	 */
 	protected $file_required;
 
-	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $file_required = false, $event_time_place_required = false, $superior_examinate = false, $superior_view = false)
+	/**
+	 * @var boolean
+	 */
+	protected $grade_self;
+
+	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $file_required = false, $event_time_place_required = false, $superior_examinate = false, $superior_view = false, $grade_self = false)
 	{
 		assert('is_bool($superior_examinate)');
 		assert('is_bool($superior_view)');
@@ -44,6 +49,7 @@ class ilManualAssessmentSettings
 		$this->event_time_place_required = $event_time_place_required;
 		$this->superior_examinate = $superior_examinate;
 		$this->superior_view = $superior_view;
+		$this->grade_self = $grade_self;
 	}
 
 	/**
@@ -95,6 +101,16 @@ class ilManualAssessmentSettings
 	public function eventTimePlaceRequired()
 	{
 		return $this->event_time_place_required;
+	}
+
+	/**
+	 * Get to know whether the self-grading is enabled for this mass.
+	 *
+	 * @return	boolean
+	 */
+	public function gradeSelf()
+	{
+		return $this->grade_self;
 	}
 
 	/*
@@ -190,6 +206,19 @@ class ilManualAssessmentSettings
 	{
 		assert('is_bool($superior_view)');
 		$this->superior_view = $superior_view;
+
+		return $this;
+	}
+
+	/**
+	 * Enable/disable the self grading.
+	 *
+	 * @param boolean 	$grade_self
+	 */
+	public function setGradeSelf($grade_self)
+	{
+		assert('is_bool($grade_self)');
+		$this->grade_self = $grade_self;
 
 		return $this;
 	}
