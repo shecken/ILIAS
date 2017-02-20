@@ -119,10 +119,11 @@ class ilManualAssessmentMembersGUI
 		$may_edit_lp = $this->access_handler->checkAccessToObj($this->object, 'edit_learning_progress');
 		$may_read_lp = $this->access_handler->checkAccessToObj($this->object, 'read_learning_progress');
 		$may_edit_members = $this->access_handler->checkAccessToObj($this->object, 'edit_members');
+		$may_amend_lp = $this->access_handler->checkAccessToObj($this->object, 'amend_grading');
 
 		$filter_users = null;
 
-		if (!$may_edit_lp && !$may_read_lp && !$may_edit_members) {
+		if (!$may_edit_lp && !$may_read_lp && !$may_edit_members && !$may_amend_lp) {
 			if ($this->isSuperior($this->user->getId())
 				&& ($this->superior_examinate || $this->superior_view)
 
