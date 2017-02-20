@@ -4017,23 +4017,24 @@ class gevCourseUtils
 	public static function possiblyReferenceIntoSamePRGS(ilObjCourse $src_crs, ilObjCourse $target_crs)
 	{
 		$src_utils = self::getInstanceByObj($src_crs);
-		if(!$src_utils->isTemplate()) {
+		if (!$src_utils->isTemplate()) {
 			return;
 		}
 		require_once 'Modules/CourseReference/classes/class.ilObjCourseReference.php';
 		$target_utils = self::getInstanceByObj($target_crs);
 		global $tree;
-		foreach(ilObjCourseReference::_lookupSourceIds($src_utils->getId()) as $crs_ref_obj_id ) {
+		foreach (ilObjCourseReference::_lookupSourceIds($src_utils->getId()) as $crs_ref_obj_id) {
 			foreach (ilObject::_getAllReferences($crs_ref_obj_id) as $ref_id) {
-				$parent_id = $tree->getParentId($ref_id);				
-				if(ilObject::_lookupType($parent_id, true) === 'prg') {
+				$parent_id = $tree->getParentId($ref_id);
+				if (ilObject::_lookupType($parent_id, true) === 'prg') {
 					$target_utils->referenceInto($parent_id);
 				}
 			}
 		}
 	}
 
-	public function referenceInto($ref_id) {
+	public function referenceInto($ref_id)
+	{
 		$crs_ref = new ilObjCourseReference();
 		$crs_ref->setTargetId($this->getId());
 		$crs_ref->setTargetRefId($this->getRefId());
