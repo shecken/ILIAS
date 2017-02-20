@@ -246,7 +246,8 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 		}
 		if ($access_handler->checkAccessToObj($this->object, 'edit_members')
 			|| $access_handler->checkAccessToObj($this->object, 'edit_learning_progress')
-			|| $access_handler->checkAccessToObj($this->object, 'read_learning_progress') ) {
+			|| $access_handler->checkAccessToObj($this->object, 'read_learning_progress')
+			|| ($this->object->loadMembers()->userAllreadyMember($this->usr) && $this->object->getSettings()->gradeSelf())) {
 			$this->tabs_gui->addTab(self::TAB_MEMBERS, $this->lng->txt('il_mass_members'), $this->getLinkTarget('members'));
 		}
 		if (($access_handler->checkAccessToObj($this->object, 'read_learning_progress')
