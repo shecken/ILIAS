@@ -19,6 +19,7 @@ class ilManualAssessmentSettingsGUI
 	const PROP_FILE_REQUIRED = "file_required";
 	const PROP_SUPERIOR_EXAMINATE = "superior_examinate";
 	const PROP_SUPERIOR_VIEW = "superior_view";
+	const PROP_GRADE_SELF = "grade_self";
 
 	const TAB_EDIT = 'settings';
 	const TAB_EDIT_INFO = 'infoSettings';
@@ -140,7 +141,8 @@ class ilManualAssessmentSettingsGUI
 								->setRecordTemplate($_POST[self::PROP_RECORD_TEMPLATE])
 								->setEventTimePlaceRequired($_POST[self::PROP_EVENT_TIME_PLACE_REQUIRED])
 								->setSuperiorExaminate((bool)$_POST[self::PROP_SUPERIOR_EXAMINATE])
-								->setSuperiorView((bool)$_POST[self::PROP_SUPERIOR_VIEW]);
+								->setSuperiorView((bool)$_POST[self::PROP_SUPERIOR_VIEW])
+								->setGradeSelf((bool)$_POST[self::PROP_GRADE_SELF]);
 			$this->object->update();
 			ilUtil::sendSuccess($this->lng->txt('mass_settings_saved'));
 		}
@@ -190,6 +192,10 @@ class ilManualAssessmentSettingsGUI
 
 		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_superior_view_assessments'), self::PROP_SUPERIOR_VIEW);
 		$cb->setInfo($this->lng->txt('mass_superior_view_assessments_info'));
+		$form->addItem($cb);
+
+		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_grade_self'), self::PROP_GRADE_SELF);
+		$cb->setInfo($this->lng->txt('mass_grade_self_info'));
 		$form->addItem($cb);
 
 		$form->addCommandButton('update', $this->lng->txt('save'));
@@ -253,6 +259,7 @@ class ilManualAssessmentSettingsGUI
 			, self::PROP_EVENT_TIME_PLACE_REQUIRED => $settings->eventTimePlaceRequired()
 			, self::PROP_SUPERIOR_EXAMINATE => $settings->superiorExaminate()
 			, self::PROP_SUPERIOR_VIEW => $settings->superiorView()
+			, self::PROP_GRADE_SELF => $settings->gradeSelf()
 			));
 		return $a_form;
 	}

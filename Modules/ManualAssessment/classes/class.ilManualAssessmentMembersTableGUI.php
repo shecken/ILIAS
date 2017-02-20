@@ -7,7 +7,7 @@ require_once 'Services/Tracking/classes/class.ilLearningProgressBaseGUI.php';
 require_once 'Services/Tracking/classes/class.ilLPStatus.php';
 class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 {
-	public function __construct($a_parent_obj, array $employees = null, $a_parent_cmd = "", $a_template_context = "")
+	public function __construct($a_parent_obj, array $filter_users = null, $a_parent_cmd = "", $a_template_context = "")
 	{
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 		global $ilCtrl, $lng, $ilUser;
@@ -22,10 +22,11 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 		$this->setFormAction($this->ctrl->getFormAction($a_parent_obj, "view"));
 		$this->parent_obj = $a_parent_obj;
 
-		$this->may_edit_grades = $this->userMayEditGrades();
-		$this->may_view_grades = $this->userMayViewGrades();
-		$this->may_edit_members = $this->userMayEditMembers();
-		$this->may_amend_grades = $this->userMayAmendGrades();
+		$this->usr_utils = gevUserUtils::getInstanceByObj($ilUser);
+		$this->settings = $this->parent_obj->object->getSettings();
+		$this->access = $this->parent_obj->object->accessHandler();
+
+		$this->cachePermissions($this->usr_utils, $this->settings, $this->access);
 
 		$this->columns = $this->visibleColumns();
 		$this->viewer_id = $ilUser->getId();
@@ -34,9 +35,9 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 		}
 
 		$members = iterator_to_array($a_parent_obj->object->loadMembers());
-		if ($employees !== null) {
-			$members = array_filter($members, function ($member) use ($employees) {
-				if (in_array($member[ilManualAssessmentMembers::FIELD_USR_ID], $employees)) {
+		if ($filter_users !== null) {
+			$members = array_filter($members, function ($member) use ($filter_users) {
+				if (in_array($member[ilManualAssessmentMembers::FIELD_USR_ID], $filter_users)) {
 					return $member;
 				}
 			});
@@ -119,29 +120,44 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 
 	protected function buildActionDropDown($a_set)
 	{
+
+		$t_usr_id = $a_set[ilManualAssessmentMembers::FIELD_USR_ID];
+		$finalized = $a_set[ilManualAssessmentMembers::FIELD_FINALIZED];
+
 		$l = new ilAdvancedSelectionListGUI();
 		$l->setListTitle($this->lng->txt("actions"));
-		$l->setId($a_set['usr_id']);
+		$l->setId($t_usr_id);
 
-		$this->ctrl->setParameterByClass('ilManualAssessmentMemberGUI', 'usr_id', $a_set['usr_id']);
+		$this->ctrl->setParameterByClass('ilManualAssessmentMemberGUI', 'usr_id', $t_usr_id);
 		$edited_by_other = $this->setWasEditedByOtherUser($a_set);
 
-		if (($a_set['finalized'] && $this->may_edit_grades && !$edited_by_other) || $this->may_view_grades) {
+		$target_is_employee = $this->userIsEmployee($t_usr_id);
+		$target_is_self = $t_usr_id == $this->viewer_id;
+
+		$may_grade_this_user = $this->may_grade_any_user
+								|| ($this->may_grade_employees && $target_is_employee)
+								|| ($may_grade_self && $target_is_self);
+
+
+		$may_view_this_user = $this->may_view_any_user
+								|| ($this->may_view_employees && $target_is_employee);
+
+		if (($finalized && !$edited_by_other && $may_grade_this_user)
+			|| $this->may_view_this_user) {
 			$target = $this->ctrl->getLinkTargetByClass('ilManualAssessmentMemberGUI', 'view');
 			$l->addItem($this->lng->txt('mass_usr_view'), 'view', $target);
 		}
-		if (!$a_set['finalized'] && $this->may_edit_grades && !$edited_by_other) {
+		if (!$finalized && !$edited_by_other && $may_grade_this_user) {
 			$target = $this->ctrl->getLinkTargetByClass('ilManualAssessmentMemberGUI', 'edit');
 			$l->addItem($this->lng->txt('mass_usr_edit'), 'edit', $target);
 		}
-		if (!$a_set['finalized'] && $this->may_edit_members) {
-			$this->ctrl->setParameter($this->parent_obj, 'usr_id', $a_set['usr_id']);
+		if (!$finalized && $this->may_edit_members) {
+			$this->ctrl->setParameter($this->parent_obj, 'usr_id', $t_usr_id);
 			$target = $this->ctrl->getLinkTarget($this->parent_obj, 'removeUserConfirmation');
 			$this->ctrl->setParameter($this->parent_obj, 'usr_id', null);
 			$l->addItem($this->lng->txt('mass_usr_remove'), 'removeUser', $target);
 		}
-
-		if ($a_set['finalized'] && $this->may_amend_grades) {
+		if ($finalized && $this->may_amend_grades) {
 			$target = $this->ctrl->getLinkTargetByClass('ilManualAssessmentMemberGUI', 'amend');
 			$l->addItem($this->lng->txt('mass_usr_amend'), 'amend', $target);
 		}
@@ -149,29 +165,25 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 		return $l->getHTML();
 	}
 
+	protected function userIsEmployee($a_usr_id)
+	{
+		return in_array($a_usr_id, $this->usr_utils->getEmployees());
+	}
+
+	protected function cachePermissions($usr_utils, $settings, $access)
+	{
+		$this->may_grade_employees = $usr_utils->isSuperior() && $settings->superiorExaminate();
+		$this->may_edit_employees = $usr_utils->isSuperior() && $settings->superiorView();
+		$this->may_grade_self = $settings->gradeSelf();
+		$this->may_edit_members = $access->checkAccessToObj($this->parent_obj->object, 'edit_members');
+		$this->may_amend_grades = $access->checkAccessToObj($this->parent_obj->object, 'amend_grading');
+		$this->may_view_any_user = $access->checkAccessToObj($this->parent_obj->object, 'read_learning_progress');
+		$this->may_grade_any_user = $access->checkAccessToObj($this->parent_obj->object, 'edit_learning_progress');
+	}
+
 	protected function setWasEditedByOtherUser($set)
 	{
 		return (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID] !== (int)$this->viewer_id
 				&& 0 !== (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID];
-	}
-
-	protected function userMayEditGrades()
-	{
-		return $this->parent_obj->userMayEditGrades();
-	}
-
-	protected function userMayAmendGrades()
-	{
-		return $this->parent_obj->object->accessHandler()->checkAccessToObj($this->parent_obj->object, 'amend_grading');
-	}
-
-	protected function userMayViewGrades()
-	{
-		return $this->parent_obj->userMayViewGrades();
-	}
-
-	protected function userMayEditMembers()
-	{
-		return $this->parent_obj->userMayEditMembers();
 	}
 }

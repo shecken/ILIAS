@@ -246,7 +246,9 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 		}
 		if ($access_handler->checkAccessToObj($this->object, 'edit_members')
 			|| $access_handler->checkAccessToObj($this->object, 'edit_learning_progress')
-			|| $access_handler->checkAccessToObj($this->object, 'read_learning_progress') ) {
+			|| $access_handler->checkAccessToObj($this->object, 'read_learning_progress')
+			|| $this->mayGradeSelf()
+			|| $this->mayViewMembersAsSuperior()) {
 			$this->tabs_gui->addTab(self::TAB_MEMBERS, $this->lng->txt('il_mass_members'), $this->getLinkTarget('members'));
 		}
 		if (($access_handler->checkAccessToObj($this->object, 'read_learning_progress')
@@ -337,5 +339,18 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 				$this->ilNavigationHistory->addItem($_GET['ref_id'], $link, 'mass');
 			}
 		}
+	}
+
+	protected function mayViewMembersAsSuperior()
+	{
+		$settings = $this->object->getSettings();
+		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		return gevUserUtils::getInstance((int)$this->usr->getId())->isSuperior()
+			&& ($settings->superiorExaminate() || $settings->superiorView());
+	}
+
+	protected function mayGradeSelf()
+	{
+		return $this->object->loadMembers()->userAllreadyMember($this->usr) && $this->object->getSettings()->gradeSelf();
 	}
 }

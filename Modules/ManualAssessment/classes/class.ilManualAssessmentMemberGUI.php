@@ -361,7 +361,7 @@ class ilManualAssessmentMemberGUI
 	protected function mayBeEdited()
 	{
 		if (!$this->isFinalized()
-				&& ($this->userCanGrade() || $this->superiorCanGrade())
+				&& ($this->userCanGrade() || $this->superiorCanGrade() || $this->mayGradeSelf())
 		) {
 			return true;
 		}
@@ -376,11 +376,19 @@ class ilManualAssessmentMemberGUI
 			)
 			|| $this->userCanView()
 			|| $this->superiorCanView()
+			|| $this->mayGradeSelf()
 		) {
 			return true;
 		}
 
 		return false;
+	}
+
+	protected function mayGradeSelf()
+	{
+		return $this->object->getSettings()->gradeSelf()
+			&& $this->examinee->getId() === $this->examiner->getId()
+			&& !$this->targetWasEditedByOtherUser($this->member);
 	}
 
 	protected function mayBeAmended()
