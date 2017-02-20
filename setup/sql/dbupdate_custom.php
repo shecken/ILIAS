@@ -6138,3 +6138,15 @@ ilCustomInstaller::initPluginEnv();
 ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
 
 ?>
+
+<#254>
+<?php
+if (!$ilDB->tableColumnExists('mass_settings', 'grade_self')) {
+	$ilDB->addTableColumn('mass_settings', 'grade_self', array(
+	"type" => "integer",
+	"length" => 1,
+	"notnull" => true,
+	"default" => 0
+	));
+}
+?>
