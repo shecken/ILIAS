@@ -22,10 +22,11 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 		$this->setFormAction($this->ctrl->getFormAction($a_parent_obj, "view"));
 		$this->parent_obj = $a_parent_obj;
 
-		$this->may_edit_grades = $this->userMayEditGrades();
-		$this->may_view_grades = $this->userMayViewGrades();
-		$this->may_edit_members = $this->userMayEditMembers();
-		$this->may_amend_grades = $this->userMayAmendGrades();
+		$this->usr_utils = gevUserUtils::getInstanceByObj($ilUser);
+		$this->settings = $this->parent_obj->object->getSettings();
+		$this->access = $this->parent_obj->object->accessHandler();
+
+		$this->cachePermissions($this->usr_utils, $this->settings, $this->access);
 
 		$this->columns = $this->visibleColumns();
 		$this->viewer_id = $ilUser->getId();
@@ -130,10 +131,19 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 		$this->ctrl->setParameterByClass('ilManualAssessmentMemberGUI', 'usr_id', $t_usr_id);
 		$edited_by_other = $this->setWasEditedByOtherUser($a_set);
 
-		$may_grade_this_user = $this->may_edit_grades || $this->mayGradeSelf($t_usr_id);
+		$target_is_employee = $this->userIsEmployee($t_usr_id);
+		$target_is_self = $t_usr_id == $this->viewer_id;
+
+		$may_grade_this_user = $this->may_grade_any_user
+								|| ($this->may_grade_employees && $target_is_employee)
+								|| ($may_grade_self && $target_is_self);
+
+
+		$may_view_this_user = $this->may_view_any_user
+								|| ($this->may_view_employees && $target_is_employee);
 
 		if (($finalized && !$edited_by_other && $may_grade_this_user)
-			|| $this->may_view_grades) {
+			|| $this->may_view_this_user) {
 			$target = $this->ctrl->getLinkTargetByClass('ilManualAssessmentMemberGUI', 'view');
 			$l->addItem($this->lng->txt('mass_usr_view'), 'view', $target);
 		}
@@ -155,34 +165,25 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 		return $l->getHTML();
 	}
 
-	private function mayGradeSelf($usr_id)
+	protected function userIsEmployee($a_usr_id)
 	{
-		return $this->parent_obj->object->getSettings()->gradeSelf() && $usr_id == $this->viewer_id;
+		return in_array($a_usr_id, $this->usr_utils->getEmployees());
+	}
+
+	protected function cachePermissions($usr_utils, $settings, $access)
+	{
+		$this->may_grade_employees = $usr_utils->isSuperior() && $settings->superiorExaminate();
+		$this->may_edit_employees = $usr_utils->isSuperior() && $settings->superiorView();
+		$this->may_grade_self = $settings->gradeSelf();
+		$this->may_edit_members = $access->checkAccessToObj($this->parent_obj->object, 'edit_members');
+		$this->may_amend_grades = $access->checkAccessToObj($this->parent_obj->object, 'amend_grading');
+		$this->may_view_any_user = $access->checkAccessToObj($this->parent_obj->object, 'read_learning_progress');
+		$this->may_grade_any_user = $access->checkAccessToObj($this->parent_obj->object, 'edit_learning_progress');
 	}
 
 	protected function setWasEditedByOtherUser($set)
 	{
 		return (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID] !== (int)$this->viewer_id
 				&& 0 !== (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID];
-	}
-
-	protected function userMayEditGrades()
-	{
-		return $this->parent_obj->userMayEditGrades();
-	}
-
-	protected function userMayAmendGrades()
-	{
-		return $this->parent_obj->object->accessHandler()->checkAccessToObj($this->parent_obj->object, 'amend_grading');
-	}
-
-	protected function userMayViewGrades()
-	{
-		return $this->parent_obj->userMayViewGrades();
-	}
-
-	protected function userMayEditMembers()
-	{
-		return $this->parent_obj->userMayEditMembers();
 	}
 }
