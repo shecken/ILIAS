@@ -4014,6 +4014,13 @@ class gevCourseUtils
 		);
 	}
 
+	/**
+	 * Get the references of $src_course, which are located inside any prg
+	 * and reference $target_course into the same prgs.
+	 *
+	 * @param	ilObjCourse	$src_course
+	 * @param	ilObjCourse	$target_course
+	 */
 	public static function possiblyReferenceIntoSamePRGS(ilObjCourse $src_crs, ilObjCourse $target_crs)
 	{
 		$src_utils = self::getInstanceByObj($src_crs);
@@ -4033,6 +4040,11 @@ class gevCourseUtils
 		}
 	}
 
+	/**
+	 * Make a course reference inside $ref_id.
+	 *
+	 * @param	int	$ref_id
+	 */
 	public function referenceInto($ref_id)
 	{
 		$crs_ref = new ilObjCourseReference();
