@@ -61,7 +61,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		foreach ($lp_children as $lp_current_child_key => $lp_child) {
 			$entry = new ilIndividualPlanDetailEntry();
 			$entry->setTitle($lp_child->getTitle());
-			//$entry->setResult($this->getResultInfo($value));
+			$entry->setResult($this->getResultInfo($lp_child));
 			$entry->setAccountable($this->obj->getAccountable($lp_child->getId(), $this->obj->getVAPassAccountableFieldId()));
 			$entry->setTypeOfPass($this->obj->getAccountable($lp_child->getId(), $this->obj->getVAPassPassingTypeFieldId()));
 			$lp = $this->obj->getLPStatus($lp_child->getId(), $this->user_id);
@@ -141,8 +141,9 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	protected function getResultInfo($child)
 	{
 		foreach ($child->getLPChildren() as $key => $crs_ref) {
-			$crs = ilObjectFactory::getInstanceByObjId($crs_ref->getTargetId());
+			$crs = ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId());
 			$sub_items = $crs->getSubItems();
+			var_dump($sub_items);exit;
 		}
 	}
 
