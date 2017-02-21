@@ -34,6 +34,7 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 				, "event_time_place_required" => array("integer", $settings->eventTimePlaceRequired())
 				, "superior_examinate" => array("integer", $settings->superiorExaminate())
 				, "superior_view" => array("integer", $settings->superiorView())
+				, "grade_self" => array("integer", $settings->gradeSelf())
 				);
 		$this->db->insert(self::MASS_SETTINGS_TABLE, $values);
 
@@ -50,9 +51,9 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 			$obj_id = $obj->getId();
 			assert('is_numeric($obj_id)');
 
-			$sql = 'SELECT content, record_template, file_required, event_time_place_required, superior_examinate, superior_view FROM mass_settings WHERE obj_id = '.$this->db->quote($obj_id, 'integer');
+			$sql = 'SELECT content, record_template, file_required, event_time_place_required, superior_examinate, superior_view, grade_self FROM mass_settings WHERE obj_id = '.$this->db->quote($obj_id, 'integer');
 			if ($res = $this->db->fetchAssoc($this->db->query($sql))) {
-				return new ilManualAssessmentSettings($obj, $res["content"], $res["record_template"], (bool)$res["file_required"], $res["event_time_place_required"], (bool)$res["superior_examinate"], (bool)$res["superior_view"]);
+				return new ilManualAssessmentSettings($obj, $res["content"], $res["record_template"], (bool)$res["file_required"], $res["event_time_place_required"], (bool)$res["superior_examinate"], (bool)$res["superior_view"], (bool)$res["grade_self"]);
 			}
 			throw new ilManualAssessmentException("$obj_id not in database");
 		} else {
@@ -74,6 +75,7 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 				, "event_time_place_required" => array("integer", $settings->eventTimePlaceRequired())
 				, "superior_examinate" => array("integer", $settings->superiorExaminate())
 				, "superior_view" => array("integer", $settings->superiorView())
+				, "grade_self" => array("integer", $settings->gradeSelf())
 				);
 
 		$this->db->update(self::MASS_SETTINGS_TABLE, $values, $where);

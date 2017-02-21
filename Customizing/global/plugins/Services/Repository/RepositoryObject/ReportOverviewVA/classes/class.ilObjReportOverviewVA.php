@@ -30,14 +30,15 @@ class ilObjReportOverviewVA extends ilObjReportBase
 		$this->local_report_settings =
 			$this->s_f->reportSettings('rep_robj_ova')
 			->addSetting($this->s_f
-								->settingString('selected_study_prg', $this->plugin->txt('selected_study_prg')));
+								->settingInt('selected_study_prg', $this->plugin->txt('selected_study_prg')));
 	}
 
-	protected function getStudyId()
+	public function getStudyId()
 	{
 		if ((string)$this->getSettingsDataFor("selected_study_prg") !== "") {
 			return (string)$this->getSettingsDataFor("selected_study_prg");
 		}
+		return null;
 	}
 
 	protected function getRowTemplateTitle()
@@ -87,7 +88,7 @@ class ilObjReportOverviewVA extends ilObjReportBase
 		$f->sequence(
 			$f->sequence(
 				$f->dateperiod(
-					$txt("period"),
+					$txt("entrydate"),
 					""
 				)->map(
 					function ($start, $end) use ($f) {

@@ -198,12 +198,9 @@ class ilManualAssessmentMember
 	public function withPlace($place)
 	{
 		assert('is_string($place) || $place === null');
-		if (!$this->finalized()) {
-			$clone = clone $this;
-			$clone->place = $place;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		$clone = clone $this;
+		$clone->place = $place;
+		return $clone;
 	}
 
 	/**
@@ -215,12 +212,9 @@ class ilManualAssessmentMember
 	public function withEventTime($event_time)
 	{
 		assert('$event_time instanceof ilDateTime || $event_time === null');
-		if (!$this->finalized()) {
-			$clone = clone $this;
-			$clone->event_time = $event_time;
-			return $clone;
-		}
-		throw new ilManualAssessmentException('user allready finalized');
+		$clone = clone $this;
+		$clone->event_time = $event_time;
+		return $clone;
 	}
 
 	/**

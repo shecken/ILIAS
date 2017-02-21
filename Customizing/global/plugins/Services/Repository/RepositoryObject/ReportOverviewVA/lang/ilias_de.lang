@@ -30,3 +30,5 @@ xova_write#:#Report über Ausbildungsstand zum Vertriebsassistenten bearbeiten
 xova_delete#:#Report über Ausbildungsstand zum Vertriebsassistenten löschen
 xova_edit_permission#:#Rechte zu Report über Ausbildungsstand zum Vertriebsassistenten bearbeiten
 selected_study_prg#:#Id des Studienprogramms
+no_prg_warning#:#Kein Eintrag für die Id des Studienprogramms
+user_no_prg_warning#:#Der Report kann im Moment nicht angezeigt werden - Fehler in der Konfiguration
