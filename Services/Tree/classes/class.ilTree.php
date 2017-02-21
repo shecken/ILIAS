@@ -745,6 +745,16 @@ class ilTree
 		{
 			ilObject::_resetDeletedDate($a_node_id);
 		}
+		if (isset($GLOBALS["ilAppEventHandler"]) && $this->__isMainTree()) {
+			$GLOBALS['ilAppEventHandler']->raise(
+					"Services/Tree", 
+					"insertNode", 
+					array(
+						'tree'		=> $this->table_tree,
+						'node_id' 	=> $a_node_id, 
+						'parent_id'	=> $a_parent_id)
+			);
+		}
 	}
 	
 	/**
@@ -2615,7 +2625,8 @@ class ilTree
 				array(
 					'tree'		=> $this->table_tree,
 					'source_id' => $a_source_id, 
-					'target_id' => $a_target_id)
+					'target_id' => $a_target_id,
+					'old_parent_id'	=> $old_parent_id)
 		);
 		return true;
 	}
