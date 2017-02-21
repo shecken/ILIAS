@@ -4033,11 +4033,32 @@ class gevCourseUtils
 		foreach (ilObjCourseReference::_lookupSourceIds($src_utils->getId()) as $crs_ref_obj_id) {
 			foreach (ilObject::_getAllReferences($crs_ref_obj_id) as $ref_id) {
 				$parent_id = $tree->getParentId($ref_id);
-				if (ilObject::_lookupType($parent_id, true) === 'prg') {
+				if (self::mayReferenceIntoObject($parent_id)) {
 					$target_utils->referenceInto($parent_id);
 				}
 			}
 		}
+	}
+
+	/**
+	 * Only consider Active, Draft or (Outdated and having nonfinished users).
+	 */
+	protected static function mayReferenceIntoObject($prg_ref_id)
+	{
+		if (ilObject::_lookupType($prg_ref_id, true) !== 'prg') {
+			return false;
+		}
+		require_once 'Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php';
+		$prg_obj = ilObjStudyProgramme::getInstanceByRefId($prg_ref_id);
+		// prg is draft or active.
+		if (in_array(
+			$prg_obj->getStatus(),
+			array(ilStudyProgramme::STATUS_DRAFT, ilStudyProgramme::STATUS_ACTIVE)
+		)) {
+			return true;
+		}
+		// prg has outdated and nonfinished users.
+		return count($prg_obj->getIdsOfUsersWithNotCompletedAndRelevantProgress()) > 0;
 	}
 
 	/**
