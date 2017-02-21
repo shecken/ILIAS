@@ -11,7 +11,7 @@
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilInfoScreenGUI
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilObjectCopyGUI
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilCommonActionDispatcherGUI
- * @ilCtrl_Calls ilObjManualAssessmentGUI: ilManualAssessmentSettingsGUIilOject::_lookupObjId()
+ * @ilCtrl_Calls ilObjManualAssessmentGUI: ilManualAssessmentSettingsGUI
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilManualAssessmentMembersGUI
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilLearningProgressGUI
  * @ilCtrl_Calls ilObjManualAssessmentGUI: ilExportGUI
