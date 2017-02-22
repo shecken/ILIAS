@@ -1,16 +1,16 @@
 <?php
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseGUI.php';
-require_once "Customizing/global/plugins/Services/Repository/RepositoryObject/ReportOverviewVA/classes/class.ilObjReportOverviewVATableGUI.php";
+require_once "Customizing/global/plugins/Services/Repository/RepositoryObject/ReportStudyProgrammeOverview/classes/class.ilObjReportStudyProgrammeOverviewTableGUI.php";
 require_once("Services/CaTUIComponents/classes/class.catTableGUI.php");
 /**
 * User Interface class for example repository object.
 * ...
-* @ilCtrl_isCalledBy ilObjReportOverviewVAGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
-* @ilCtrl_Calls ilObjReportOverviewVAGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI
-* @ilCtrl_Calls ilObjReportOverviewVAGUI: ilCommonActionDispatcherGUI, ilIndividualPlanGUI
+* @ilCtrl_isCalledBy ilObjReportStudyProgrammeOverviewGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
+* @ilCtrl_Calls ilObjReportStudyProgrammeOverviewGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI
+* @ilCtrl_Calls ilObjReportStudyProgrammeOverviewGUI: ilCommonActionDispatcherGUI, ilIndividualPlanGUI
 */
-class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI
+class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 {
 	protected static $success_img;
 	protected static $in_progress_img;
@@ -19,7 +19,7 @@ class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI
 
 	public function getType()
 	{
-		return 'xova';
+		return 'xspo';
 	}
 
 	/**
@@ -33,7 +33,7 @@ class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI
 
 		switch ($next_class) {
 			case 'ilindividualplangui':
-				$this->lauf();
+				$this->view();
 				break;
 			default:
 				$this->showContent();
@@ -41,7 +41,7 @@ class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI
 		}
 	}
 
-	public function lauf()
+	public function view()
 	{
 		$get = $_GET;
 		require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanGUI.php");
@@ -103,7 +103,7 @@ class ilObjReportOverviewVAGUI extends ilObjReportBaseGUI
 		$this->object->prepareReport();
 		$this->title = $this->prepareTitle(catTitleGUI::create());
 		$this->spacer = $this->prepareSpacer(new catHSpacerGUI());
-		$this->table = $this->prepareTable(new ilObjReportOverviewVATableGUI($this, "showContent"));
+		$this->table = $this->prepareTable(new ilObjReportStudyProgrammeOverviewTableGUI($this, "showContent"));
 		$this->gTpl->setContent($this->render());
 	}
 

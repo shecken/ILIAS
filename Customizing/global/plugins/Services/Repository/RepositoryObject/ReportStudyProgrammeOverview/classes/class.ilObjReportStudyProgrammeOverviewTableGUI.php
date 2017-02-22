@@ -5,7 +5,7 @@ require_once "Modules/StudyProgramme/classes/tables/class.ilIndividualPlanGUI.ph
 /**
  * @author Daniel Weise <daniel.weise@concepts-and-training.de>
  */
-class ilObjReportOverviewVATableGUI extends catTableGUI
+class ilObjReportStudyProgrammeOverviewTableGUI extends catTableGUI
 {
 	public function __construct($a_parent_obj, $a_parent_cmd = "", $a_template_context = "")
 	{

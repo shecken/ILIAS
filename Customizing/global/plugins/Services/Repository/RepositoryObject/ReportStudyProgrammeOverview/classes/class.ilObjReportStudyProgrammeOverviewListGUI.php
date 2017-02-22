@@ -2,7 +2,7 @@
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseListGUI.php';
 
-class ilObjReportOverviewVAListGUI extends ilObjReportBaseListGUI
+class ilObjReportStudyProgrammeOverviewListGUI extends ilObjReportBaseListGUI
 {
 
 	/**
@@ -10,7 +10,7 @@ class ilObjReportOverviewVAListGUI extends ilObjReportBaseListGUI
 	*/
 	public function initType()
 	{
-		$this->setType("xova");
+		$this->setType("xspo");
 		parent::initType();
 	}
 
@@ -19,15 +19,15 @@ class ilObjReportOverviewVAListGUI extends ilObjReportBaseListGUI
 	*/
 	public function getGuiClass()
 	{
-		return "ilObjReportOverviewVAGUI";
+		return "ilObjReportStudyProgrammeOverviewGUI";
 	}
 
 	public function getProperties()
 	{
 		$props = array();
-		$this->plugin->includeClass("class.ilObjReportOverviewVAAccess.php");
+		$this->plugin->includeClass("class.ilObjReportStudyProgrammeOverviewAccess.php");
 
-		if (!ilObjReportOverviewVAAccess::checkOnline($this->obj_id)) {
+		if (!ilObjReportStudyProgrammeOverviewAccess::checkOnline($this->obj_id)) {
 			$props[] = array("alert" => true, "property" => $this->lng->txt("status"),
 			"value" => $this->lng->txt("offline"));
 		}
