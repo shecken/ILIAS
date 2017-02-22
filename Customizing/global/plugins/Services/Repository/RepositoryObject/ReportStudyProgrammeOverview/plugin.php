@@ -2,7 +2,7 @@
 
 $id = "xspo";
 
-$version = "0.0.2";
+$version = "0.0.4";
 
 
 $ilias_min_version = "4.2.0";
