@@ -82,9 +82,17 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	public function fillRow(\ilIndividualPlanDetailEntry $entry)
 	{
 		$this->tpl->setVariable("STEPNAME", $entry->getTitle());
-		$this->tpl->setVariable("ACCOUNTABLE", $entry->getAccountable());
+		if ($entry->getAccountable()) {
+			$this->tpl->setVariable("ACCOUNTABLE", $entry->getAccountable());
+		} else {
+			$this->tpl->setVariable("ACCOUNTABLE", "-");
+		}
 		$this->tpl->setVariable("RESULT", $entry->getResult());
-		$this->tpl->setVariable("TYPE_OF_PASSED", $entry->getTypeOfPass());
+		if ($entry->getTypeOfPass()) {
+			$this->tpl->setVariable("TYPE_OF_PASSED", $entry->getTypeOfPass());
+		} else {
+			$this->tpl->setVariable("TYPE_OF_PASSED", "-");
+		}
 		$this->tpl->setVariable("STATUS", $this->getStatusIcon($entry->getStatus()));
 		$finish_until = $entry->getFinishUntil();
 		if ($finish_until && $entry->getStatus() == 3) {
