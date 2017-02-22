@@ -6,6 +6,7 @@ require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanDetail
 require_once("Services/Calendar/classes/class.ilDateTime.php");
 require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
+require_once("Modules/ManualAssessment/classes/Members/class.ilManualAssessmentMembersStorageDB.php");
 
 /**
  * Shows study programme and course of members VA Pass as a table
@@ -30,6 +31,11 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	protected $g_db;
 
 	/**
+	 * @var ilObjUser
+	 */
+	protected $g_user;
+
+	/**
 	 * @var ilSetting;
 	 */
 	protected $settings;
@@ -40,12 +46,15 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $lng, $ilCtrl, $ilDB;
+		global $lng, $ilCtrl, $ilDB, $ilUser;
 
 		$this->g_lng = $lng;
 		$this->g_ctrl = $ilCtrl;
 		$this->g_db = $ilDB;
+		$this->g_user = $ilUser;
 		$this->user_id = $user_id;
+		$this->user = ilObjectFactory::getInstanceByObjId($this->user_id);
+		$this->mass_storage = new ilManualAssessmentMembersStorageDB($this->g_db);
 		$this->assignment_id = $assignment_id;
 
 		$this->success = '<img src="'.ilUtil::getImagePath("gev_va_pass_success_icon.png").'" />';
@@ -138,11 +147,52 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if ($crs_utils->isPraesenztraining() || $crs_utils->isWebinar() || $crs_utils->isVirtualTraining()) {
 		}
 		else if ($crs_utils->isCoaching()) {
-			$mass = $this->getIndividualAssessmentIn($crs);
+			$mass = $this->getManualAssessmentIn($crs);
 			if ($mass) {
+				// Make the user a member if he currently is not one.
+				$members = $this->mass_storage->loadMembers($mass);
+				if (!$members->userAllreadyMember($this->user)) {
+					$members = $members->withAdditionalUser($this->user);
+					$members->updateStorageAndRBAC($this->mass_storage, $mass->accessHandler());
+				}
+				if ($this->mayViewManualAssessmentRecord($mass)) {
+					$items[] =
+						["title" => "Gesprächsnotizen einsehen",
+						 "link" => $this->manualAssessmentRecordViewLink($mass)];
+				}
 			}
 		}
 		return $items;
+	}
+
+	/**
+	 * Check if a user may view the record of the user on the manual assessment.
+	 *
+	 * @param	\ilObjManualAssessment	$mass
+	 * @return	bool
+	 */
+	protected function mayViewManualAssessmentRecord(\ilObjManualAssessment $mass) {
+		$mass_member = $this->mass_storage->loadMember($mass, $this->user);
+		if (!$mass_member->finalized()) {
+			// No finalized record, no record.
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Get the link to view the manual assessment record for the user.
+	 *
+	 * @param	\ilObjManualAssessment	$mass
+	 * @return	bool
+	 */
+	protected function manualAssessmentRecordViewLink(\ilObjManualAssessment $mass) {
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", $mass->getRefId());
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", $this->user_id);
+		$link = $this->g_ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilObjManualAssessmentGUI", "ilManualAssessmentMembersGUI", "ilManualAssessmentMemberGUI"], "view");
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", null);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", null);
+		return $link;
 	}
 
 	/**
@@ -242,15 +292,15 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	}
 
 	/**
-	 * Get the first Individual Assessment in the course.
+	 * Get the first Manual Assessment in the course.
 	 *
-	 * TODO: This just returns the first individual assessment that is found. A more
+	 * TODO: This just returns the first manual assessment that is found. A more
 	 * sophisticated choice would be great.
 	 *
 	 * @param	ilObjCourse	$crs
-	 * @return	ilObjIndividualAssessment
+	 * @return	ilObjManualAssessment
 	 */
-	protected function getIndividualAssessmentIn(\ilObjCourse $crs) {
+	protected function getManualAssessmentIn(\ilObjCourse $crs) {
 		$sub_items = $crs->getSubItems();
 		if (array_key_exists("mass", $sub_items)) {
 			$item = array_shift($sub_items["mass"]);
