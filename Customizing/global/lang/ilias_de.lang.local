@@ -1630,6 +1630,10 @@ prg#:#prg_type_msg_missing_title#:#Titel kann nicht leer sein.
 prg#:#prg_added_member#:#Das neue Mitglied wurde erfolgreich hinzugefügt.
 prg#:#prg_added_members#:#Die neuen Mitglieder wurden erfolgreich hinzugefügt.
 prg#:#prg_acknowledge_completed_courses#:#Bestandene Kurse anerkennen
+prg#:#prg_modul#:#Ausbildungsschritt
+prg#:#prg_state#:#Status
+prg#:#prg_finish_until#:#zu erledigen bis
+prg#:#prg_finished#:#erledigt am
 common#:#obj_prg_duplicate#:#Studienprogramm kopieren
 common#:#obj_prg_select#:#-- Bitte wählen Sie ein Studienprogramm --
 common#:#obj_prg#:#Studienprogramm
