@@ -14,7 +14,7 @@ require_once './Services/HistorizingStorage/classes/class.ilHistorizingStorage.p
  */
 class ilTEPHistorizing extends ilHistorizingStorage
 {
-	
+
 	/**
 	 * Returns the defined name of the table to be used for historizing.
 	 *
@@ -173,9 +173,9 @@ class ilTEPHistorizing extends ilHistorizingStorage
 			'cal_derived_entry_id'	=>	'integer'
 		);
 	}
-	
-	
-	
+
+
+
 	// gev-patch start
 	/**
 	 * Overwritten to write individual days to hist_tep_individ_days.
@@ -186,32 +186,26 @@ class ilTEPHistorizing extends ilHistorizingStorage
 		$a_record_creator = null,
 		$a_creation_timestamp = null,
 		$mass_modification_allowed = false
-	)
-	{
-		if (!$a_record_creator)
-		{
+	) {
+
+		if (!$a_record_creator) {
 			/** @var $ilUser ilObjUser */
 			global $ilUser;
 			$a_record_creator = $ilUser->getId();
 		}
-
-		if (!$a_creation_timestamp)
-		{
+		if (!$a_creation_timestamp) {
 			$a_creation_timestamp = time();
 		}
-
 		$cases = self::getCaseIdsByPartialCase($a_case_id);
-		if (count($cases) > 1 && $mass_modification_allowed == false)
-		{
-			throw new Exception( 'Illegal call: Case-Id '.implode(", ", $a_case_id).' does not point to a unique record in '
+		if (count($cases) > 1 && $mass_modification_allowed == false) {
+			global $ilLog;
+			$ilLog->write('Illegal call: Case-Id '.implode(", ", $a_case_id).' does not point to a unique record in '
 								.static::getHistorizedTableName().'.');
 		}
-
-		if ( count($cases) == 0 && $mass_modification_allowed == false)
-		{
+		if (count($cases) == 0 && $mass_modification_allowed == false) {
 			// gev-patch start
 			if (array_key_exists("individual_days", $a_data)) {
-				$a_data["individual_days"] 
+				$a_data["individual_days"]
 						= static::updateIndividualDays(null, $a_data["individual_days"]);
 			}
 			// gev-patch end
@@ -219,16 +213,15 @@ class ilTEPHistorizing extends ilHistorizingStorage
 			return self::createRecord($a_case_id, $a_data, '1', $a_record_creator, $a_creation_timestamp);
 		}
 
-		foreach ($cases as $case)
-		{
+		foreach ($cases as $case) {
 			$current_data = static::getCurrentRecordByCase($case);
-			
+
 			// gev-patch start
 			if (array_key_exists("individual_days", $a_data)) {
-				$a_data["individual_days"] 
+				$a_data["individual_days"]
 					= static::updateIndividualDays($current_data["individual_days"], $a_data["individual_days"]);
 			}
-			
+
 			if (!static::containsChanges($current_data, $a_data)) {
 				continue;
 			}
@@ -242,23 +235,22 @@ class ilTEPHistorizing extends ilHistorizingStorage
 				global $ilDB;
 				self::historizeRecord($case);
 				$ilDB->setUnfatal(true);
-				self::createRecord($case, $new_data, $new_data[static::getVersionColumnName()],$a_record_creator, $a_creation_timestamp);
-			}
-			catch (ilHistorizingException $ex)
-			{
+				self::createRecord($case, $new_data, $new_data[static::getVersionColumnName()], $a_record_creator, $a_creation_timestamp);
+			} catch (ilHistorizingException $ex) {
 				self::createRecord($case, $current_data, $current_data[static::getVersionColumnName()], $a_record_creator, $a_creation_timestamp);
 				throw $ex;
 			}
 			$ilDB->setUnfatal(false);
 		}
 	}
-	
+
 	// This updates the table hist_tep_individ_days if the days stored with $a_days_id
 	// differ from the days given in array $a_days. Returns the id of the entries in
 	// hist_tep_individ_days in both cases.
-	protected static function updateIndividualDays($a_days_id, $a_days) {
+	protected static function updateIndividualDays($a_days_id, $a_days)
+	{
 		global $ilDB;
-		
+
 		if ($a_days_id) {
 			$res = $ilDB->query("SELECT day, start_time, end_time, weight FROM hist_tep_individ_days "
 							   ." WHERE id = ".$ilDB->quote($a_days_id, "integer")
@@ -267,12 +259,12 @@ class ilTEPHistorizing extends ilHistorizingStorage
 			while ($rec = $ilDB->fetchAssoc($res)) {
 				$cur_days[] = $rec;
 			}
-			
+
 			if ($cur_days == $a_days) {
 				return $a_days_id;
 			}
 		}
-		
+
 		$next = $ilDB->nextID("hist_tep_individ_days");
 		foreach ($a_days as $rec) {
 			$res = $ilDB->manipulate("INSERT INTO hist_tep_individ_days "
@@ -282,12 +274,11 @@ class ilTEPHistorizing extends ilHistorizingStorage
 									."        , ".$ilDB->quote($rec["start_time"], "text")
 									."        , ".$ilDB->quote($rec["end_time"], "text")
 									."        , ".$ilDB->quote($rec["weight"], "integer")
-									."        )"
-									);
+									."        )");
 		}
-		
+
 		return $next;
 	}
-	
+
 	// gev-patch end
 }
