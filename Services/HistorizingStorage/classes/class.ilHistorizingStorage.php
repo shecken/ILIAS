@@ -385,7 +385,6 @@ abstract class ilHistorizingStorage
 			self::validateRecordData($a_data);
 			return static::createRecord($a_case_id, $a_data, '1', $a_record_creator, $a_creation_timestamp);
 		}
-
 		foreach ($cases as $case)
 		{
 			$current_data = static::getCurrentRecordByCase($case);
@@ -565,7 +564,6 @@ abstract class ilHistorizingStorage
 		$data_types  	= self::getInsertionDatatypes();
 		$statement 		= self::getPreparedStatementBySqlString($query, $data_types);
 		$values 		= self::getInsertionValues($case_id, $data, (int) $version, $record_creator, $creation_timestamp);
-
 		$ilDB->execute($statement, $values);
 		return;
 	}
@@ -822,7 +820,7 @@ abstract class ilHistorizingStorage
 	 */
 	private static function getCasesByPartialCaseQuery($a_case_id)
 	{
-		$query  = 'SELECT';
+		$query  = 'SELECT DISTINCT ';
 		$i = 0;
 		foreach ( static::getCaseIdColumns() as $column_name => $column_datatype)
 		{
@@ -916,13 +914,28 @@ abstract class ilHistorizingStorage
 		$values 	= self::getCurrentRecordByCaseValues($a_case_id);
 		$statement	= self::getPreparedStatementBySqlString($query, $datatypes);
 		$result = $ilDB->execute($statement, $values);
-		if ($ilDB->numRows($result) == 0)
+		$num_rows = $ilDB->numRows($result);
+		if ( $num_rows == 0)
 		{
 			require_once './Services/HistorizingStorage/classes/class.ilHistorizingException.php';
 			throw new ilHistorizingException('ilHistorizingStorage::getCurrentRecordByCase: No case.');
+		} elseif( $num_rows > 1) { 
+			// return the row with the highest version
+			$aux = null;
+			$vcn = static::getVersionColumnName();
+			while($row = $ilDB->fetchAssoc($result)) {
+				if($aux === null) {
+					$aux = $row;
+					continue;
+				}
+				if($aux[$vcn] < $row[$vcn]) {
+					$aux = $row;
+				}
+			}
+			return $aux;
+		} else {
+			return $ilDB->fetchAssoc($result);
 		}
-		$row = $ilDB->fetchAssoc($result);
-		return $row;
 	}
 
 	/**
