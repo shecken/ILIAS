@@ -30,7 +30,7 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 	 */
 	protected function afterConstructor()
 	{
-		global $ilAccess, $ilCtrl, $ilTabs, $ilUser, $lng;
+		global $ilAccess, $ilCtrl, $ilTabs, $ilUser, $lng, $tpl;
 
 		$lng->loadLanguageModule("prg");
 
@@ -38,6 +38,7 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tabs = $ilTabs;
 		$this->g_user = $ilUser;
+		$this->g_tpl = $tpl;
 	}
 
 	/**
@@ -74,6 +75,8 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 						break;
 				}
 		}
+
+		$this->g_tpl->setTitle(null);
 	}
 
 	/**
