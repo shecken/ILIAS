@@ -57,7 +57,7 @@ class ilIndividualPlanGUI
 	/**
 	 * @var string
 	 */
-	protected $faild;
+	protected $failed;
 
 	/**
 	 * @var string
@@ -71,15 +71,15 @@ class ilIndividualPlanGUI
 
 	public function __construct()
 	{
-		global $ilCtrl, $tpl;
-
+		global $ilCtrl, $tpl, $lng;
+		$lng->loadLanguageModule("prg");
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tpl = $tpl;
 		$this->isPost = false;
-		$this->success = '<img src="'.ilUtil::getImagePath("prg_success_icon.png").'" />';
-		$this->in_progress = '<img src="'.ilUtil::getImagePath("prg_progress_icon.png").'" />';
-		$this->faild = '<img src="'.ilUtil::getImagePath("prg_failed_icon.png").'" />';
-		$this->not_attemped = '<img src="'.ilUtil::getImagePath("prg_not_attemped_icon.png").'" />';
+		$this->success  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
+		$this->in_progress = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
+		$this->failed = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-red.png").'" />';
+		$this->not_attemped = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
 	}
 
 	public function executeCommand()
@@ -209,7 +209,7 @@ class ilIndividualPlanGUI
 		$legend = new catLegendGUI();
 		$legend->addItem($this->success, "prg_success")
 			   ->addItem($this->in_progress, "prg_progress")
-			   ->addItem($this->faild, "prg_failed")
+			   ->addItem($this->failed, "prg_failed")
 			   ->addItem($this->not_attemped, "prg_not_attemped");
 
 		return $legend;
@@ -225,7 +225,7 @@ class ilIndividualPlanGUI
 			case ilLPStatus::LP_STATUS_COMPLETED_NUM:
 				return $this->success;
 			case ilLPStatus::LP_STATUS_FAILED_NUM:
-				return $this->faild;
+				return $this->failed;
 			default:
 				return "";
 		}

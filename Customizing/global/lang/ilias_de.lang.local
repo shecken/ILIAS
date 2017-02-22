@@ -1795,3 +1795,7 @@ rbac#:#prg_manage_members#:#Mitglieder verwalten
 prg#:#prg_update_from_current_plan_success#:#Die Aktualisierung aus dem aktuellen Plan war erfolgreich.
 prg#:#prg_update_from_current_plan_not_possible#:#Die Aktualisierung aus dem aktuellen Plan ist nicht möglich.
 prg#:#update_from_current_plan_partitial_success#:#Die Aktualisierung aus dem aktuellen Plan war nur teilweise möglich.
+prg#:#prg_success#:#teilgenommen
+prg#:#prg_progress#:#in Bearbeitung
+prg#:#prg_failed#:#nicht teilgenommen
+prg#:#prg_not_attemped#:#noch nicht begonnen

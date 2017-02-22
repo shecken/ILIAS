@@ -109,10 +109,10 @@ class ilIndividualPlanTableGUI extends catTableGUI
 	 */
 	protected function addColums()
 	{
-		$this->addColumn($this->g_lng->txt("gev_va_pass_modul"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_state"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_finish_until"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_finished"));
+		$this->addColumn($this->g_lng->txt("prg_modul"));
+		$this->addColumn($this->g_lng->txt("prg_state"));
+		$this->addColumn($this->g_lng->txt("prg_finish_until"));
+		$this->addColumn($this->g_lng->txt("prg_finished"));
 	}
 
 	protected function getLpStatusFor($obj_id, $user_id)

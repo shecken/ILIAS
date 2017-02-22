@@ -46,10 +46,10 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$this->user_id = $user_id;
 		$this->assignment_id = $assignment_id;
 
-		$this->success = '<img src="'.ilUtil::getImagePath("gev_va_pass_success_icon.png").'" />';
-		$this->in_progress = '<img src="'.ilUtil::getImagePath("gev_va_pass_progress_icon.png").'" />';
-		$this->faild = '<img src="'.ilUtil::getImagePath("gev_va_pass_failed_icon.png").'" />';
-		$this->not_attemped = '<img src="'.ilUtil::getImagePath("gev_va_pass_not_attemped_icon.png").'" />';
+		$this->success = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
+		$this->in_progress = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
+		$this->faild = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-red.png").'" />';
+		$this->not_attemped = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
 
 		$this->settings = new ilSetting("gev");
 		$this->obj = new ilIndividualPlanDetailTable();
@@ -118,12 +118,12 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 */
 	protected function addColums()
 	{
-		$this->addColumn($this->g_lng->txt("gev_va_pass_step"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_accountable"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_date"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_result"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_type_of_passed"));
-		$this->addColumn($this->g_lng->txt("gev_va_pass_status"));
+		$this->addColumn($this->g_lng->txt("prg_step"));
+		$this->addColumn($this->g_lng->txt("prg_accountable"));
+		$this->addColumn($this->g_lng->txt("prg_date"));
+		$this->addColumn($this->g_lng->txt("prg_result"));
+		$this->addColumn($this->g_lng->txt("prg_type_of_passed"));
+		$this->addColumn($this->g_lng->txt("prg_status"));
 		$this->addColumn($this->g_lng->txt("actions"));
 	}
 
