@@ -7,6 +7,8 @@
  *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
  */
+// TODO: rename gev_va_* lang variables here (and on other files in this folder) to prg_* variables.
+// TODO: check if all lang_vars are defined in global lang/ilias_de.lang
 class ilIndividualPlanGUI
 {
 
@@ -30,6 +32,8 @@ class ilIndividualPlanGUI
 	 */
 	protected $isPost;
 
+	// TODO: Pass required attributes (i.e. assignment id and sp_ref_id) as args here.
+	// TODO: declare all attributes as docstrings.
 	public function __construct()
 	{
 		global $ilCtrl, $tpl;
@@ -258,6 +262,7 @@ class ilIndividualPlanGUI
 		}
 	}
 
+	// TODO: Remove this. The user could unambigously be retreived from the assignment.
 	public function setUserId($user_id)
 	{
 		$this->user_id = $user_id;
