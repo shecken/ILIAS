@@ -21,3 +21,5 @@ online#:#Online
 rep_robj_xsp_offline#:#Offline
 xsp_content#:#Report
 xsp_properties#:#Eigenschaften
+no_sp_id#:#ID ist keine Studyprogram ID
+no_assignment#:#Der Benutzer ist keinem Studienprogramm zugeordnet
