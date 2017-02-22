@@ -64,9 +64,11 @@ class ilIndividualPlanGUI
 	 */
 	protected $not_attemped;
 
+	/**
+	 * @var integer
+	 */
+	protected $user_id;
 
-	// TODO: Pass required attributes (i.e. assignment id and sp_ref_id) as args here.
-	// TODO: declare all attributes as docstrings.
 	public function __construct()
 	{
 		global $ilCtrl, $tpl;
@@ -94,8 +96,6 @@ class ilIndividualPlanGUI
 			default:
 				throw new Exception("command unkown: $cmd");
 		}
-
-
 		$this->$cmd();
 	}
 
@@ -114,7 +114,11 @@ class ilIndividualPlanGUI
 		$relevant_children = $this->getRelevantChildren();
 		$with_children = $this->getSPWithChildrenBelow($relevant_children);
 		$with_lp_children = $this->getSPWithLPChildren($relevant_children);
-		// TODO: Feedback für keine Anzeige
+
+		if(count($with_children) === 0 && count($with_lp_children) === 0) {
+			// TODO: Anzeige
+		}
+
 		$html = "";
 		if (count($with_children) > 0) {
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanTableGUI.php");
@@ -300,5 +304,10 @@ class ilIndividualPlanGUI
 	public function setSPRefId($sp_ref_id)
 	{
 		$this->sp_ref_id = $sp_ref_id;
+	}
+
+	public function setUserId($user_id)
+	{
+		$this->user_id = $user_id;
 	}
 }
