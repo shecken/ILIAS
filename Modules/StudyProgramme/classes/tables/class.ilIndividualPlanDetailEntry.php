@@ -1,7 +1,9 @@
 <?php
 
+// TODO: add docstring
 class ilIndividualPlanDetailEntry
 {
+	// TODO: add docstring
 	protected $title;
 	protected $accountable;
 	protected $finished;
@@ -9,6 +11,8 @@ class ilIndividualPlanDetailEntry
 	protected $type_of_pass;
 	protected $status;
 
+	// TODO: Add a constructor that takes all the attributes and checks them
+	// remove setters then.
 
 	public function setTitle($title)
 	{
