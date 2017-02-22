@@ -7,10 +7,12 @@
  *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
  */
-// TODO: rename gev_va_* lang variables here (and on other files in this folder) to prg_* variables.
-// TODO: check if all lang_vars are defined in global lang/ilias_de.lang
 class ilIndividualPlanGUI
 {
+	/**
+	 * @var array
+	 */
+	protected $studyprogramme = array();
 
 	/**
 	 * @var ilCtrl
@@ -32,6 +34,37 @@ class ilIndividualPlanGUI
 	 */
 	protected $isPost;
 
+	/**
+	 * @var integer
+	 */
+	protected $assignment_id;
+
+	/**
+	 * @var integer
+	 */
+	protected $sp_ref_id;
+
+	/**
+	 * @var string
+	 */
+	protected $success;
+
+	/**
+	 * @var string
+	 */
+	protected $in_progress;
+
+	/**
+	 * @var string
+	 */
+	protected $faild;
+
+	/**
+	 * @var string
+	 */
+	protected $not_attemped;
+
+
 	// TODO: Pass required attributes (i.e. assignment id and sp_ref_id) as args here.
 	// TODO: declare all attributes as docstrings.
 	public function __construct()
@@ -41,10 +74,10 @@ class ilIndividualPlanGUI
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tpl = $tpl;
 		$this->isPost = false;
-		$this->success = '<img src="'.ilUtil::getImagePath("gev_va_pass_success_icon.png").'" />';
-		$this->in_progress = '<img src="'.ilUtil::getImagePath("gev_va_pass_progress_icon.png").'" />';
-		$this->faild = '<img src="'.ilUtil::getImagePath("gev_va_pass_failed_icon.png").'" />';
-		$this->not_attemped = '<img src="'.ilUtil::getImagePath("gev_va_pass_not_attemped_icon.png").'" />';
+		$this->success = '<img src="'.ilUtil::getImagePath("prg_success_icon.png").'" />';
+		$this->in_progress = '<img src="'.ilUtil::getImagePath("prg_progress_icon.png").'" />';
+		$this->faild = '<img src="'.ilUtil::getImagePath("prg_failed_icon.png").'" />';
+		$this->not_attemped = '<img src="'.ilUtil::getImagePath("prg_not_attemped_icon.png").'" />';
 	}
 
 	public function executeCommand()
@@ -52,19 +85,16 @@ class ilIndividualPlanGUI
 		global $ilLog;
 		$ilLog->write(get_class($this));
 		$cmd = $this->g_ctrl->getCmd("view");
-		//$next_class = $this->g_ctrl->getNextClass();
 
-		//switch ($next_class) {
-		//	default:
-				switch ($cmd) {
-					case "view":
-					case "showContent":
-						$this->view();
-						break;
-					default:
-						throw new Exception("command unkown: $cmd");
-				}
-		//}
+		switch ($cmd) {
+			case "view":
+			case "showContent":
+				$this->view();
+				break;
+			default:
+				throw new Exception("command unkown: $cmd");
+		}
+
 
 		$this->$cmd();
 	}
@@ -173,10 +203,10 @@ class ilIndividualPlanGUI
 	public function createLegend()
 	{
 		$legend = new catLegendGUI();
-		$legend->addItem($this->success, "gev_va_pass_success")
-			   ->addItem($this->in_progress, "gev_va_pass_progress")
-			   ->addItem($this->faild, "gev_va_pass_failed")
-			   ->addItem($this->not_attemped, "gev_va_pass_not_attemped");
+		$legend->addItem($this->success, "prg_success")
+			   ->addItem($this->in_progress, "prg_progress")
+			   ->addItem($this->faild, "prg_failed")
+			   ->addItem($this->not_attemped, "prg_not_attemped");
 
 		return $legend;
 	}
@@ -260,12 +290,6 @@ class ilIndividualPlanGUI
 			$this->assignment_id =  (int)$_GET["assignment_id"];
 			$this->isPost = true;
 		}
-	}
-
-	// TODO: Remove this. The user could unambigously be retreived from the assignment.
-	public function setUserId($user_id)
-	{
-		$this->user_id = $user_id;
 	}
 
 	public function setAssignmentId($assignment_id)

@@ -122,17 +122,21 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 			$settings = $this->object->getSettings();
 
 			require_once("Modules/StudyProgramme/classes/class.ilObjectFactoryWrapper.php");
-			$sp = \ilObjectFactoryWrapper::getInstanceByRefId($settings->getSPNodeRefId());
-			// TODO: Use most recent assignment, not the first that accidentially is in the list.
-			$assignments = $sp->getAssignmentsOf($this->g_user->getId());
-			// TODO: Check if there are actually assignments and print an error message if
-			// none could be found.
-			$assignment = $assignments[0];
 
+			if(ilObject::_lookupType($settings->getSPNodeRefId(), true) !== "prg") {
+				ilUtil::sendFailure($this->plugin->txt('no_sp_id'), true);
+				$this->g_ctrl->redirectByClass("ilReportStudyProgrammeSettingsGUI", "settings");
+			}
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanGUI.php");
 			$gui = new \ilIndividualPlanGUI();
-			$gui->setUserId($this->g_user->getId());
+			$sp = \ilObjectFactoryWrapper::getInstanceByRefId($settings->getSPNodeRefId());
+			$assignments = $sp->getAssignmentsOf($this->g_user->getId());
+			if(count($assignment) < 1) {
+				ilUtil::sendFailure($this->plugin->txt('no_assignment'), true);
+			}
+			$assignment = $assignments[0];
 			$gui->setAssignmentId($assignment->getId());
+			$gui->setUserId($this->g_user->getId());
 			$gui->setSPRefId($settings->getSPNodeRefId());
 
 			$this->g_ctrl->forwardCommand($gui);
