@@ -149,6 +149,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if(!$progress->isSuccessful() || $progress->isAccredited()) {
 			return "-";
 		}
+		// TODO: we need the actually completed course here, not _ANY_ course.
 		foreach ($child->getLPChildren() as $key => $crs_ref) {
 			$crs = ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId());
 			$sub_items = $crs->getSubItems();
