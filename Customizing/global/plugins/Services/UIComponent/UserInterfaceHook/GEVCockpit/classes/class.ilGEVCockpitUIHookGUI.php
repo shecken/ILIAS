@@ -6,6 +6,7 @@ require_once("./Services/UIComponent/classes/class.ilUIHookPluginGUI.php");
 require_once("./Services/GEV/CourseSearch/classes/class.gevCourseSearch.php");
 require_once("./Services/GEV/Utils/classes/class.gevMyTrainingsAdmin.php");
 require_once("./Services/GEV/Utils/classes/class.gevSettings.php");
+require_once("./Services/GEV/Utils/classes/class.gevObjectUtils.php");
 include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBio.php';
 include_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportExamBio/classes/class.ilObjReportExamBioGUI.php';
 
@@ -184,20 +185,20 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 				= array($this->gLng->txt("gev_edu_bio"), $user_utils->getEduBioLink());
 		}
 
-		$va_pass_plugin = ilPlugin::getPluginObject(
+		$sp_report_plugin = ilPlugin::getPluginObject(
 			IL_COMP_SERVICE,
 			"Repository",
 			"robj",
-			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xvap")
+			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xsp")
 		);
 
-		if ($va_pass_plugin && $va_pass_plugin->active) {
-			$va_pass_object_ids = ilObject::_getObjectsByType("xvap");
-			$gui = $va_pass_plugin->getGUIClass();
+		if ($sp_report_plugin && $sp_report_plugin->active) {
+			$sp_report_object_ids = ilObject::_getObjectsByType("xsp");
+			$gui = $sp_report_plugin->getGUIClass();
 
-			foreach ($va_pass_object_ids as $obj_id => $obj_values) {
+			foreach ($sp_report_object_ids as $obj_id => $obj_values) {
 				$object = ilObjectFactory::getInstanceByObjId($obj_id);
-				$ref_id = $object->getRefId();
+				$ref_id = gevObjectUtils::getRefId($obj_id);
 
 				if ($this->gAccess->checkAccessOfUser($this->gUser->getId(), "visible", "", $ref_id)) {
 					$this->gCtrl->setParameterByClass($gui, "ref_id", $ref_id);
