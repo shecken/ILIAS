@@ -10,6 +10,8 @@ class ilIndividualPlanDetailEntry
 	protected $result;
 	protected $type_of_pass;
 	protected $status;
+	protected $study_programme;
+	protected $course_where_user_is_member;
 
 	// TODO: Add a constructor that takes all the attributes and checks them
 	// remove setters then.
@@ -77,5 +79,21 @@ class ilIndividualPlanDetailEntry
 	public function getStatus()
 	{
 		return $this->status;
+	}
+
+	public function setStudyProgramme(\ilObjStudyProgramme $sp) {
+		$this->study_programme = $sp;
+	}
+
+	public function getStudyProgramme() {
+		return $this->study_programme;
+	}
+
+	public function setCourseWhereUserIsMember(\ilObjCourse $course_where_user_is_member = null) {
+		$this->course_where_user_is_member = $course_where_user_is_member;
+	}
+
+	public function getCourseWhereUserIsMember() {
+		return $this->course_where_user_is_member;
 	}
 }
