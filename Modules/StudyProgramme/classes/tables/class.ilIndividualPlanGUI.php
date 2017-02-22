@@ -116,7 +116,7 @@ class ilIndividualPlanGUI
 		$with_lp_children = $this->getSPWithLPChildren($relevant_children);
 
 		if(count($with_children) === 0 && count($with_lp_children) === 0) {
-			// TODO: Anzeige
+			ilUtil::sendFailure($this->plugin->txt('no_sp_chidren'), true);
 		}
 
 		$html = "";
