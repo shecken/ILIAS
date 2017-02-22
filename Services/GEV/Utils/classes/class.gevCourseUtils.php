@@ -4013,4 +4013,68 @@ class gevCourseUtils
 			$type
 		);
 	}
+
+	/**
+	 * Get the references of $src_course, which are located inside any prg
+	 * and reference $target_course into the same prgs.
+	 *
+	 * @param	ilObjCourse	$src_course
+	 * @param	ilObjCourse	$target_course
+	 */
+	public static function possiblyReferenceIntoSamePRGS(ilObjCourse $src_crs, ilObjCourse $target_crs)
+	{
+		$src_utils = self::getInstanceByObj($src_crs);
+		if (!$src_utils->isTemplate()) {
+			return;
+		}
+		require_once 'Modules/CourseReference/classes/class.ilObjCourseReference.php';
+		$target_utils = self::getInstanceByObj($target_crs);
+		global $tree;
+		foreach (ilObjCourseReference::_lookupSourceIds($src_utils->getId()) as $crs_ref_obj_id) {
+			foreach (ilObject::_getAllReferences($crs_ref_obj_id) as $ref_id) {
+				$parent_id = $tree->getParentId($ref_id);
+				if (self::mayReferenceIntoObject($parent_id)) {
+					$target_utils->referenceInto($parent_id);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Only consider Active, Draft or (Outdated and having nonfinished users).
+	 */
+	protected static function mayReferenceIntoObject($prg_ref_id)
+	{
+		if (ilObject::_lookupType($prg_ref_id, true) !== 'prg') {
+			return false;
+		}
+		require_once 'Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php';
+		$prg_obj = ilObjStudyProgramme::getInstanceByRefId($prg_ref_id);
+		// prg is draft or active.
+		if (in_array(
+			$prg_obj->getStatus(),
+			array(ilStudyProgramme::STATUS_DRAFT, ilStudyProgramme::STATUS_ACTIVE)
+		)) {
+			return true;
+		}
+		// prg has outdated and nonfinished users.
+		return count($prg_obj->getIdsOfUsersWithNotCompletedAndRelevantProgress()) > 0;
+	}
+
+	/**
+	 * Make a course reference inside $ref_id.
+	 *
+	 * @param	int	$ref_id
+	 */
+	public function referenceInto($ref_id)
+	{
+		$crs_ref = new ilObjCourseReference();
+		$crs_ref->setTargetId($this->getId());
+		$crs_ref->setTargetRefId($this->getRefId());
+		$crs_ref->setTitle($this->getTitle());
+		$crs_ref->create();
+		$crs_ref->update();
+		$crs_ref->createReference();
+		$crs_ref->putInTree($ref_id);
+	}
 }
