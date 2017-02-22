@@ -4,6 +4,8 @@
 require_once("Services/CaTUIComponents/classes/class.catTableGUI.php");
 require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanDetailTable.php");
 require_once("Services/Calendar/classes/class.ilDateTime.php");
+require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 
 /**
  * Shows study programme and course of members VA Pass as a table
@@ -60,6 +62,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanDetailEntry.php");
 		foreach ($lp_children as $lp_current_child_key => $lp_child) {
 			$entry = new ilIndividualPlanDetailEntry();
+			$entry->setStudyProgramme($lp_child);
+			$entry->setCourseWhereUserIsMember($this->getCourseWhereUserIsMember($lp_child));
 			$entry->setTitle($lp_child->getTitle());
 			$entry->setAccountable($this->obj->getAccountable($lp_child->getId(), $this->obj->getVAPassAccountableFieldId()));
 			$type = $this->obj->getAccountable($lp_child->getId(), $this->obj->getVAPassPassingTypeFieldId());
@@ -82,6 +86,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	public function fillRow(\ilIndividualPlanDetailEntry $entry)
 	{
 		$this->tpl->setVariable("STEPNAME", $entry->getTitle());
+		// TODO: There needs to be a link here to the course where the user is member
 		if ($entry->getAccountable()) {
 			$this->tpl->setVariable("ACCOUNTABLE", $entry->getAccountable());
 		} else {
@@ -100,6 +105,44 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		} else {
 			$this->tpl->setVariable("FINISHED","-");
 		}
+		$this->tpl->setVariable("ACTION", $this->getActionMenu($entry));
+	}
+
+	public function getActionMenu(\ilIndividualPlanDetailEntry $entry) {
+		include_once("Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php");
+		$l = new \ilAdvancedSelectionListGUI();
+		$l->setAsynch(false);
+		$l->setAsynchUrl(true);
+		$l->setListTitle($this->g_lng->txt("actions"));
+		$l->setId($entry->getStudyProgramme()->getRefId());
+		$l->setSelectionHeaderClass("small");
+		$l->setItemLinkClass("xsmall");
+		$l->setLinksMode("il_ContainerItemCommand2");
+		$l->setHeaderIcon(\ilAdvancedSelectionListGUI::DOWN_ARROW_DARK);
+		$l->setUseImages(false);
+		$l->setAdditionalToggleElement("err_ids".$err_ids, "ilContainerListItemOuterHighlight");
+
+		foreach ($this->getActionMenuItems($entry) as $item) {
+			$l->addItem($item["title"],"",$item["link"],"","","_blank");
+		}
+		return $l->getHTML();
+	}
+
+	public function getActionMenuItems(\ilIndividualPlanDetailEntry $entry) {
+		$crs = $entry->getCourseWhereUserIsMember($entry->getStudyProgramme());
+		if ($crs === null) {
+			return [];
+		}
+		$crs_utils = gevCourseUtils::getInstanceByObj($crs);
+		$items = [];
+		if ($crs_utils->isPraesenztraining() || $crs_utils->isWebinar() || $crs_utils->isVirtualTraining()) {
+		}
+		else if ($crs_utils->isCoaching()) {
+			$mass = $this->getIndividualAssessmentIn($crs);
+			if ($mass) {
+			}
+		}
+		return $items;
 	}
 
 	/**
@@ -107,6 +150,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 *
 	 * @return null
 	 */
+	// TODO: There is spelling mistake hidden in this name....
 	protected function confugireTable()
 	{
 		$this->setEnableTitle(true);
@@ -151,23 +195,86 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		}
 	}
 
-	protected function getResultInfo($child)
-	{
+	/**
+	 * Get the course the user passed to complete the given SP.
+	 *
+	 * If no course lead to passing returns null.
+	 *
+	 * @param	ilObjStudyProgramme		$sp
+	 * @return	ilObjCourse|null
+	 */
+	protected function getPassedCourse(\ilObjStudyProgramme $sp) {
 		$progress = $child->getProgressForAssignment($this->assignment_id);
 		if(!$progress->isSuccessful() || $progress->isAccredited()) {
+			return null;
+		}
+		// This should be a course as we are in the LP-Mode study programmes and
+		// the node was not accredited.
+		$crs_id = $progress->getCompletionBy();
+		$crs_ref_id = gevObjectUtils::getRefId($crs_id);
+		if ($crs_ref_id == null) {
+			throw new \ilException("Cannot find ref_id for course '$crs_id'");
+		}
+		return ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId());
+	}
+
+	/**
+	 * Get the first course in this SP where the user is member.
+	 *
+	 * TODO: This just returns on the first course that is found. A more sophisticated
+	 * choice would be great.
+	 *
+	 * If no course is found returns null.
+	 *
+	 * @param	ilObjStudyProgramme	$sp
+	 * @param	ilObjCourse
+	 */
+	protected function getCourseWhereUserIsMember(\ilObjStudyProgramme $sp) {
+		assert('$sp->getLPMode() == \ilStudyProgramme::MODE_LP_COMPLETED');
+		foreach ($sp->getLPChildren() as $crs_ref) {
+			$crs = ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId());
+			$crs_utils = gevCourseUtils::getInstanceByObj($crs);
+			if ($crs_utils->isMember($this->user_id)) {
+				return $crs;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get the first Individual Assessment in the course.
+	 *
+	 * TODO: This just returns the first individual assessment that is found. A more
+	 * sophisticated choice would be great.
+	 *
+	 * @param	ilObjCourse	$crs
+	 * @return	ilObjIndividualAssessment
+	 */
+	protected function getIndividualAssessmentIn(\ilObjCourse $crs) {
+		$sub_items = $crs->getSubItems();
+		if (array_key_exists("mass", $sub_items)) {
+			$item = array_shift($sub_items["mass"]);
+			return ilObjectFactory::getInstanceByRefId($item['ref_id']);
+		}
+		return null;
+	}
+
+	protected function getResultInfo(\ilObjStudyProgramme $child)
+	{
+		$maybe_crs = $this->getPassedCourse($child);
+		if ($maybe_crs === null) {
 			return "-";
 		}
-		// TODO: we need the actually completed course here, not _ANY_ course.
-		foreach ($child->getLPChildren() as $key => $crs_ref) {
-			$crs = ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId());
-			$sub_items = $crs->getSubItems();
-			if (array_key_exists("mass", $sub_items)) {
-				foreach($sub_items['mass'] as $item) {
-					$ia = ilObjectFactory::getInstanceByRefId($item['ref_id']);
-					$members = $ia->loadMembers();
-					foreach ($members as $member) {
-						return $member['record'] . "<br>";
-					}
+
+		$sub_items = $crs->getSubItems();
+		if (array_key_exists("mass", $sub_items)) {
+			foreach($sub_items['mass'] as $item) {
+				$ia = ilObjectFactory::getInstanceByRefId($item['ref_id']);
+				// TODO: This just returns the result for the first member. That
+				// is not what we want.
+				$members = $ia->loadMembers();
+				foreach ($members as $member) {
+					return $member['record'] . "<br>";
 				}
 			}
 		}
