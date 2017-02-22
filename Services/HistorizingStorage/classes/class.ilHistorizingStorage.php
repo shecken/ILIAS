@@ -42,7 +42,7 @@ abstract class ilHistorizingStorage
 	 *
 	 * @return string Name of the table which contains the historized records.
 	 */
-	protected abstract function getHistorizedTableName();
+	abstract protected function getHistorizedTableName();
 
 	/**
 	 * Returns the column name which holds the current records version.
@@ -56,7 +56,7 @@ abstract class ilHistorizingStorage
 	 *
 	 * @return string Name of the column which is used to track the records version.
 	 */
-	protected abstract function getVersionColumnName();
+	abstract protected function getVersionColumnName();
 
 	/**
 	 * Returns the column name which holds the current records historic state.
@@ -70,7 +70,7 @@ abstract class ilHistorizingStorage
 	 *
 	 * @return string Name of the column which holds the current records historic state.
 	 */
-	protected abstract function getHistoricStateColumnName();
+	abstract protected function getHistoricStateColumnName();
 
 	/**
 	 * Returns the column name which holds the current records creator id.
@@ -84,7 +84,7 @@ abstract class ilHistorizingStorage
 	 *
 	 * @return string Name of the column which holds the current records creator.
 	 */
-	protected abstract function getCreatorColumnName();
+	abstract protected function getCreatorColumnName();
 
 	/**
 	 * Returns the column name which holds the current records creation timestamp is integer.
@@ -98,7 +98,7 @@ abstract class ilHistorizingStorage
 	 *
 	 * @return string Name of the column which holds the current records creator.
 	 */
-	protected abstract function getCreatedColumnName();
+	abstract protected function getCreatedColumnName();
 
 	/**
 	 * Defines the content columns for the historized records.
@@ -119,7 +119,7 @@ abstract class ilHistorizingStorage
 	 *
 	 * @return Array Array with field definitions in the format "fieldname" => "datatype".
 	 */
-	protected abstract function getContentColumnsDefinition();
+	abstract protected function getContentColumnsDefinition();
 
 	/**
 	 * Returns the column name which holds the current records unique record id.
@@ -134,7 +134,7 @@ abstract class ilHistorizingStorage
 	 *
 	 * @return string Name of the column which holds the current records database id.
 	 */
-	protected abstract function getRecordIdColumn();
+	abstract protected function getRecordIdColumn();
 
 	/**
 	 * Returns the column name which holds the current records case db-id.
@@ -150,7 +150,7 @@ abstract class ilHistorizingStorage
 	 *
 	 * @return array Name of the column which holds the current records case id.
 	 */
-	protected abstract function getCaseIdColumns();
+	abstract protected function getCaseIdColumns();
 
 	#endregion
 
@@ -175,24 +175,18 @@ abstract class ilHistorizingStorage
 		global $ilDB;
 
 		$id = md5($a_sql_string);
-		if (array_key_exists($id, self::$prepared_statements))
-		{
+		if (array_key_exists($id, self::$prepared_statements)) {
 			return self::$prepared_statements[$id];
-		}
-		else
-		{
-			if(strpos(strtolower(trim($a_sql_string)), 'select') == 0)
-			{
+		} else {
+			if (strpos(strtolower(trim($a_sql_string)), 'select') == 0) {
 				$statement = $ilDB->prepare(
-								  $a_sql_string,
-								  $a_data_types
+					$a_sql_string,
+					$a_data_types
 				);
-			}
-			else
-			{
+			} else {
 				$statement = $ilDB->prepareManip(
-								  $a_sql_string,
-								  $a_data_types
+					$a_sql_string,
+					$a_data_types
 				);
 			}
 
@@ -249,15 +243,13 @@ abstract class ilHistorizingStorage
 	 */
 	public static function createNewHistorizedCase($a_case_id, $a_data, $a_record_creator = null, $a_creation_timestamp = null)
 	{
-		if (!$a_record_creator)
-		{
+		if (!$a_record_creator) {
 			/** @var $ilUser ilObjUser */
 			global $ilUser;
 			$a_record_creator = $ilUser->getId();
 		}
 
-		if (!$a_creation_timestamp)
-		{
+		if (!$a_creation_timestamp) {
 			$a_creation_timestamp = time();
 		}
 
@@ -275,13 +267,10 @@ abstract class ilHistorizingStorage
 	 */
 	protected static function validateRecordData(array &$a_record)
 	{
-		foreach(static::getContentColumnsDefinition() as $id => $type)
-		{
-			if( !isset( $a_record[$id] ) || $a_record[$id] === null || $a_record[$id] === "" )
-			{
+		foreach (static::getContentColumnsDefinition() as $id => $type) {
+			if (!isset($a_record[$id]) || $a_record[$id] === null || $a_record[$id] === "") {
 				$value = null;
-				switch($type)
-				{
+				switch ($type) {
 					case "date":
 						$value = "00-00-0000";
 						break;
@@ -355,38 +344,33 @@ abstract class ilHistorizingStorage
 		$a_record_creator = null,
 		$a_creation_timestamp = null,
 		$mass_modification_allowed = false
-	)
-	{
+	) {
 
-		if (!$a_record_creator)
-		{
+
+		if (!$a_record_creator) {
 			/** @var $ilUser ilObjUser */
 			global $ilUser;
 			$a_record_creator = $ilUser->getId();
 		}
 
-		if (!$a_creation_timestamp)
-		{
+		if (!$a_creation_timestamp) {
 			$a_creation_timestamp = time();
 		}
 
 		$cases = self::getCaseIdsByPartialCase($a_case_id);
 
-		if (count($cases) > 1 && $mass_modification_allowed == false)
-		{
+		if (count($cases) > 1 && $mass_modification_allowed == false) {
 			global $ilLog;
 			$ilLog->write('Illegal call: Case-Id '.implode(", ", $a_case_id).' does not point to a unique record in '
 								.static::getHistorizedTableName().'.');
 			/*throw new Exception( 'Illegal call: Case-Id '.implode(", ", $a_case_id).' does not point to a unique record in '
 								.static::getHistorizedTableName().'.');*/
 		}
-		if ( count($cases) == 0 && $mass_modification_allowed == false)
-		{
+		if (count($cases) == 0 && $mass_modification_allowed == false) {
 			self::validateRecordData($a_data);
 			return static::createRecord($a_case_id, $a_data, '1', $a_record_creator, $a_creation_timestamp);
 		}
-		foreach ($cases as $case)
-		{
+		foreach ($cases as $case) {
 			$current_data = static::getCurrentRecordByCase($case);
 
 			// gev-patch start
@@ -403,10 +387,8 @@ abstract class ilHistorizingStorage
 				global $ilDB;
 				self::historizeRecord($case);
 				$ilDB->setUnfatal(true);
-				self::createRecord($case, $new_data, $new_data[static::getVersionColumnName()],$a_record_creator, $a_creation_timestamp);
-			}
-			catch (ilHistorizingException $ex)
-			{
+				self::createRecord($case, $new_data, $new_data[static::getVersionColumnName()], $a_record_creator, $a_creation_timestamp);
+			} catch (ilHistorizingException $ex) {
 				self::createRecord($case, $current_data, $current_data[static::getVersionColumnName()], $a_record_creator, $a_creation_timestamp);
 				throw $ex;
 			}
@@ -415,25 +397,26 @@ abstract class ilHistorizingStorage
 	}
 
 	// gev-patch start
-	/** 
+	/**
 	 * Checks, weather new data is different than old.
-	 *  
+	 *
 	 * Takes references to arrays for performance, but does not make any changes.
 	 * Takes database representation of nulls (like "-empty-") into account.
-	 * 
+	 *
 	 * @return boolean
 	 */
-	public static function containsChanges(&$a_current_data, &$a_new_data) {
+	public static function containsChanges(&$a_current_data, &$a_new_data)
+	{
 		$col_def = static::getContentColumnsDefinition();
 		foreach ($a_new_data as $key => $value) {
 			//echo $key.":".$a_data[$key].":".$current_data[$key]."\n";
-			if (   $key == "creator_user_id" || $key == "created_ts"
+			if ($key == "creator_user_id" || $key == "created_ts"
 				|| $key == "hist_historic" || $key == "hist_version") {
 				continue;
 			}
 
 			if ($a_new_data[$key] === null || $a_new_data[$key] === "") {
-				switch($col_def[$key]) {
+				switch ($col_def[$key]) {
 					case "date":
 						$value = "0000-00-00";
 						break;
@@ -448,18 +431,16 @@ abstract class ilHistorizingStorage
 						trigger_error("unknown column definition type ".$type, E_USER_ERROR);
 						break;
 				}
-
 				if ((string)$a_current_data[$key] !== (string)$value) {
 					return true;
 				}
-			}
-			else {
+			} else {
 				if ((string)$a_current_data[$key] !== (string)$a_new_data[$key]) {
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
 	// gev-patch end
@@ -490,13 +471,10 @@ abstract class ilHistorizingStorage
 	 */
 	public static function caseExists($a_case_id)
 	{
-		try
-		{
+		try {
 			self::getCurrentRecordByCase($a_case_id);
 			$case_exists = true;
-		}
-		catch (ilHistorizingException $ex)
-		{
+		} catch (ilHistorizingException $ex) {
 			$case_exists = false;
 		}
 
@@ -527,9 +505,8 @@ abstract class ilHistorizingStorage
 
 		// validate against definition - get rid of undefined columns
 		$column_ids = array_keys(static::getContentColumnsDefinition());
-		if(in_array($a_id_column, $column_ids) &&
-			in_array($a_content_column, $column_ids))
-		{
+		if (in_array($a_id_column, $column_ids) &&
+			in_array($a_content_column, $column_ids)) {
 			$query = 'UPDATE ' . static::getHistorizedTableName() . ' SET ' . $a_content_column . ' = ' .
 				$ilDB->quote($a_content_value, $content_column_data_type)
 				. ' WHERE ' . $a_id_column . ' = ' . $ilDB->quote($a_id_value, $id_column_data_type);
@@ -579,30 +556,26 @@ abstract class ilHistorizingStorage
 		$query = 'INSERT INTO ' . static::getHistorizedTableName();
 		$query .= ' ( ' . static::getRecordIdColumn();
 
-		foreach (static::getCaseIdColumns() as $case_id_element => $case_id_datatype)
-		{
+		foreach (static::getCaseIdColumns() as $case_id_element => $case_id_datatype) {
 			$query .= ', ' . $case_id_element;
 		}
 
 		$query .= ', ' . static::getVersionColumnName() . ', ' . static::getHistoricStateColumnName();
 		$query .= ', ' . static::getCreatorColumnName() . ', ' . static::getCreatedColumnName();
 
-		foreach (static::getContentColumnsDefinition() as $content_element => $content_datatype)
-		{
+		foreach (static::getContentColumnsDefinition() as $content_element => $content_datatype) {
 			$query .= ', ' . $content_element;
 		}
 		$query .= ' ) VALUES ( ';
 		$query .= '?';
 
-		foreach (static::getCaseIdColumns() as $case_id_element => $case_id_datatype)
-		{
+		foreach (static::getCaseIdColumns() as $case_id_element => $case_id_datatype) {
 			$query .= ', ?';
 		}
 
 		$query .= ', ?, ?, ?, ?';
 
-		foreach (static::getContentColumnsDefinition() as $content_element => $content_datatype)
-		{
+		foreach (static::getContentColumnsDefinition() as $content_element => $content_datatype) {
 			$query .= ', ?';
 		}
 
@@ -621,8 +594,7 @@ abstract class ilHistorizingStorage
 		$datatypes = array();
 		$datatypes[] = 'integer';
 
-		foreach (static::getCaseIdColumns() as $case_id_element => $case_id_datatype)
-		{
+		foreach (static::getCaseIdColumns() as $case_id_element => $case_id_datatype) {
 			$datatypes[] = $case_id_datatype;
 		}
 
@@ -631,8 +603,7 @@ abstract class ilHistorizingStorage
 		$datatypes[] = 'integer';
 		$datatypes[] = 'integer';
 
-		foreach (static::getContentColumnsDefinition() as $content_element => $content_datatype)
-		{
+		foreach (static::getContentColumnsDefinition() as $content_element => $content_datatype) {
 			$datatypes[] = $content_datatype;
 		}
 
@@ -660,8 +631,7 @@ abstract class ilHistorizingStorage
 		global $ilDB;
 		$values[] = $ilDB->nextId(static::getHistorizedTableName());
 
-		foreach (static::getCaseIdColumns() as $case_id_element => $case_id_datatype)
-		{
+		foreach (static::getCaseIdColumns() as $case_id_element => $case_id_datatype) {
 			$values[] = $a_case_id[$case_id_element];
 		}
 
@@ -670,8 +640,7 @@ abstract class ilHistorizingStorage
 		$values[] = $record_creator;
 		$values[] = $creation_timestamp;
 
-		foreach (static::getContentColumnsDefinition() as $content_element => $content_datatype)
-		{
+		foreach (static::getContentColumnsDefinition() as $content_element => $content_datatype) {
 			$values[] = $a_data[$content_element];
 		}
 
@@ -720,12 +689,10 @@ abstract class ilHistorizingStorage
 		$query .= 'SET ' . static::getHistoricStateColumnName() . ' =  1 ';
 		$query .= 'WHERE';
 		$i = 0;
-		foreach ( static::getCaseIdColumns() as $field_name => $field_datatype )
-		{
+		foreach (static::getCaseIdColumns() as $field_name => $field_datatype) {
 			$i++;
 			$query .= ' '.$field_name . ' = ?';
-			if (count(static::getCaseIdColumns()) != $i)
-			{
+			if (count(static::getCaseIdColumns()) != $i) {
 				$query .= ' AND';
 			}
 		}
@@ -743,8 +710,7 @@ abstract class ilHistorizingStorage
 	{
 		$datatypes = array();
 		$i = 0;
-		foreach ( static::getCaseIdColumns() as $field_name => $field_datatype )
-		{
+		foreach (static::getCaseIdColumns() as $field_name => $field_datatype) {
 			$i++;
 			$datatypes[] = $field_datatype;
 		}
@@ -764,8 +730,7 @@ abstract class ilHistorizingStorage
 	{
 		$values = array();
 		$i = 0;
-		foreach ( static::getCaseIdColumns() as $field_name => $field_datatype )
-		{
+		foreach (static::getCaseIdColumns() as $field_name => $field_datatype) {
 			$i++;
 			$values[] = $a_case_id[$field_name];
 		}
@@ -797,11 +762,9 @@ abstract class ilHistorizingStorage
 		$result = $ilDB->execute($statement, $values);
 		$cases = array();
 		/** @noinspection PhpAssignmentInConditionInspection */
-		while($row = $ilDB->fetchAssoc($result))
-		{
+		while ($row = $ilDB->fetchAssoc($result)) {
 			$case_id = array();
-			foreach(static::getCaseIdColumns() as $column_name => $column_datatype)
-			{
+			foreach (static::getCaseIdColumns() as $column_name => $column_datatype) {
 				$case_id[$column_name] = $row[$column_name];
 			}
 			$cases[] = $case_id;
@@ -822,12 +785,10 @@ abstract class ilHistorizingStorage
 	{
 		$query  = 'SELECT DISTINCT ';
 		$i = 0;
-		foreach ( static::getCaseIdColumns() as $column_name => $column_datatype)
-		{
+		foreach (static::getCaseIdColumns() as $column_name => $column_datatype) {
 			$i++;
 			$query .= ' ' . $column_name;
-			if (count(static::getCaseIdColumns()) != $i)
-			{
+			if (count(static::getCaseIdColumns()) != $i) {
 				$query .= ',';
 			}
 		}
@@ -835,12 +796,10 @@ abstract class ilHistorizingStorage
 		$query .= ' FROM ' . static::getHistorizedTableName();
 		$query .= ' WHERE';
 		$i = 0;
-		foreach ( $a_case_id as $field_name => $field_value )
-		{
+		foreach ($a_case_id as $field_name => $field_value) {
 			$i++;
 			$query .= ' '.$field_name . ' = ?';
-			if (count($a_case_id) != $i)
-			{
+			if (count($a_case_id) != $i) {
 				$query .= ' AND';
 			}
 		}
@@ -862,8 +821,7 @@ abstract class ilHistorizingStorage
 	{
 		$datatypes = array();
 		$case_id_definition = static::getCaseIdColumns();
-		foreach ( $a_case_id as $field_name => $field_value )
-		{
+		foreach ($a_case_id as $field_name => $field_value) {
 			$datatypes[] = $case_id_definition[$field_name];
 		}
 		return $datatypes;
@@ -881,8 +839,7 @@ abstract class ilHistorizingStorage
 	private static function getCasesByPartialCaseValues($a_case_id)
 	{
 		$values = array();
-		foreach ( $a_case_id as $field_name => $field_value )
-		{
+		foreach ($a_case_id as $field_name => $field_value) {
 			$values[] = $a_case_id[$field_name];
 		}
 		return $values;
@@ -915,20 +872,19 @@ abstract class ilHistorizingStorage
 		$statement	= self::getPreparedStatementBySqlString($query, $datatypes);
 		$result = $ilDB->execute($statement, $values);
 		$num_rows = $ilDB->numRows($result);
-		if ( $num_rows == 0)
-		{
+		if ($num_rows == 0) {
 			require_once './Services/HistorizingStorage/classes/class.ilHistorizingException.php';
 			throw new ilHistorizingException('ilHistorizingStorage::getCurrentRecordByCase: No case.');
-		} elseif( $num_rows > 1) { 
+		} elseif ($num_rows > 1) {
 			// return the row with the highest version
 			$aux = null;
 			$vcn = static::getVersionColumnName();
-			while($row = $ilDB->fetchAssoc($result)) {
-				if($aux === null) {
+			while ($row = $ilDB->fetchAssoc($result)) {
+				if ($aux === null) {
 					$aux = $row;
 					continue;
 				}
-				if($aux[$vcn] < $row[$vcn]) {
+				if ($aux[$vcn] < $row[$vcn]) {
 					$aux = $row;
 				}
 			}
@@ -949,12 +905,10 @@ abstract class ilHistorizingStorage
 	{
 		$query  = 'SELECT';
 		$i = 0;
-		foreach ( static::getCaseIdColumns() as $column_name => $column_datatype)
-		{
+		foreach (static::getCaseIdColumns() as $column_name => $column_datatype) {
 			$i++;
 			$query .= ' ' . $column_name;
-			if (count(static::getCaseIdColumns()) != $i)
-			{
+			if (count(static::getCaseIdColumns()) != $i) {
 				$query .= ',';
 			}
 		}
@@ -963,12 +917,10 @@ abstract class ilHistorizingStorage
 
 		$query .= ',';
 		$i = 0;
-		foreach ( static::getContentColumnsDefinition() as $column_name => $column_datatype)
-		{
+		foreach (static::getContentColumnsDefinition() as $column_name => $column_datatype) {
 			$i++;
 			$query .= ' ' . $column_name;
-			if (count(static::getContentColumnsDefinition()) != $i)
-			{
+			if (count(static::getContentColumnsDefinition()) != $i) {
 				$query .= ',';
 			}
 		}
@@ -976,12 +928,10 @@ abstract class ilHistorizingStorage
 		$query .= ' FROM ' . static::getHistorizedTableName();
 		$query .= ' WHERE';
 		$i = 0;
-		foreach ( static::getCaseIdColumns() as $field_name => $field_datatype )
-		{
+		foreach (static::getCaseIdColumns() as $field_name => $field_datatype) {
 			$i++;
 			$query .= ' '.$field_name . ' = ?';
-			if ( count( static::getCaseIdColumns() ) != $i )
-			{
+			if (count(static::getCaseIdColumns()) != $i) {
 				$query .= ' AND';
 			}
 		}
@@ -1000,8 +950,7 @@ abstract class ilHistorizingStorage
 	private static function getCurrentRecordByCaseDatatypes()
 	{
 		$datatypes = array();
-		foreach ( static::getCaseIdColumns() as $field_name => $field_datatype )
-		{
+		foreach (static::getCaseIdColumns() as $field_name => $field_datatype) {
 			$datatypes[] = $field_datatype;
 		}
 		return $datatypes;
@@ -1019,13 +968,11 @@ abstract class ilHistorizingStorage
 	private static function getCurrentRecordByCaseValues($a_case_id)
 	{
 		$values = array();
-		foreach ( $a_case_id as $field_name => $field_value )
-		{
+		foreach ($a_case_id as $field_name => $field_value) {
 			$values[] = $a_case_id[$field_name];
 		}
 		return $values;
 	}
 
 	#endregion
-
 }
