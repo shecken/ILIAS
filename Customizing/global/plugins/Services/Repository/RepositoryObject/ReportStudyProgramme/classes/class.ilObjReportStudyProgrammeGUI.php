@@ -30,7 +30,9 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 	 */
 	protected function afterConstructor()
 	{
-		global $ilAccess, $ilCtrl, $ilTabs, $ilUser;
+		global $ilAccess, $ilCtrl, $ilTabs, $ilUser, $lng;
+
+		$lng->loadLanguageModule("prg");
 
 		$this->g_access = $ilAccess;
 		$this->g_ctrl = $ilCtrl;

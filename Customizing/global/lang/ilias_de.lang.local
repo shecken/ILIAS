@@ -1634,6 +1634,11 @@ prg#:#prg_modul#:#Ausbildungsschritt
 prg#:#prg_state#:#Status
 prg#:#prg_finish_until#:#zu erledigen bis
 prg#:#prg_finished#:#erledigt am
+prg#:#prg_step#:#Ausbildungsschritt
+prg#:#prg_accountable#:#Verantwortlich
+prg#:#prg_date#:#Datum
+prg#:#prg_result#:#Ergebnis
+prg#:#prg_type_of_passed#:#Art des Bestehens
 common#:#obj_prg_duplicate#:#Studienprogramm kopieren
 common#:#obj_prg_select#:#-- Bitte wählen Sie ein Studienprogramm --
 common#:#obj_prg#:#Studienprogramm
