@@ -895,7 +895,7 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 		$cert = new ilCertificate(new ilCourseCertificateAdapter($this));
 		$newcert = new ilCertificate(new ilCourseCertificateAdapter($new_obj));
 		$cert->cloneCertificate($newcert);
-		
+
 		return $new_obj;
 	}
 	
