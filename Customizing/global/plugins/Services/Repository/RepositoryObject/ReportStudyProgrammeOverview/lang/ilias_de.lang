@@ -4,18 +4,6 @@ lastname#:#Nachname
 orgunit#:#Org-Einheit
 entrydate#:#Eintrittsdatum
 status#:#Gesamtstatus
-preparation#:#Vorbereitung auf die Ausbildung
-base_1#:#Basis I
-base_2#:#Basis II
-base_3#:#Basis III
-buildup_1#:#Aufbau I
-buildup_2#:#Aufbau II
-ihk_1#:#IHK I
-ihk_2#:#IHK II
-ihk_exam#:#IHK Prüfung
-agency_1#:#Agentur I
-agency_2#:#Agentur II
-va_certificate#:#VA-Zertifizierung
 obj_xspo#:#Übersicht über Studienprogramm
 xspo_new#:#Neuen Übersicht über Studienprogramm
 objs_xspo_duplicate#:#Übersicht über Studienprogramm kopieren
