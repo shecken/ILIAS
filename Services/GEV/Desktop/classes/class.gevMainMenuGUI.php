@@ -373,6 +373,17 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		$entries = array();
 
 		$visible_repo_reports = array_merge(ilObjReportBase2::getVisibleReportsObjectData($this->gUser));
+
+		global $ilAccess;
+		$sp_overviews = ilObject::_getObjectsByType("xspo");
+		foreach ($sp_overviews as $sp_overviews_data) {
+			foreach (ilObject::_getAllReferences($sp_overviews_data["id"]) as $ref_id) {
+				$ilAccess->checkAccessOfUser($this->gUser->getId(), "read", null, $ref_id);
+				$visible_repo_reports[] = ["ref_id" => $ref_id, "type" => "xspo", "title" => $sp_overviews_data["title"]];
+				break;
+			}
+		}
+
 		foreach ($visible_repo_reports as $info) {
 			$entries[] = array(true, ilLink::_getStaticLink($info["ref_id"], $info["type"]),$info["title"]);
 		}
