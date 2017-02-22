@@ -79,15 +79,15 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$this->setData($entries);
 	}
 
-	public function fillRow($a_set)
+	public function fillRow(\ilIndividualPlanDetailEntry $entry)
 	{
-		$this->tpl->setVariable("STEPNAME", $a_set->getTitle());
-		$this->tpl->setVariable("ACCOUNTABLE", $a_set->getAccountable());
-		$this->tpl->setVariable("RESULT", $a_set->getResult());
-		$this->tpl->setVariable("TYPE_OF_PASSED", $a_set->getTypeOfPass());
-		$this->tpl->setVariable("STATUS", $this->getStatusIcon($a_set->getStatus()));
-		$finish_until = $a_set->getFinishUntil();
-		if ($finish_until && $a_set->getStatus() == 3) {
+		$this->tpl->setVariable("STEPNAME", $entry->getTitle());
+		$this->tpl->setVariable("ACCOUNTABLE", $entry->getAccountable());
+		$this->tpl->setVariable("RESULT", $entry->getResult());
+		$this->tpl->setVariable("TYPE_OF_PASSED", $entry->getTypeOfPass());
+		$this->tpl->setVariable("STATUS", $this->getStatusIcon($entry->getStatus()));
+		$finish_until = $entry->getFinishUntil();
+		if ($finish_until && $entry->getStatus() == 3) {
 			$this->tpl->setVariable("FINISHED", $finish_until->get(IL_CAL_FKT_DATE, "d.m.Y"));
 		} else {
 			$this->tpl->setVariable("FINISHED","-");
