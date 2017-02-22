@@ -10,7 +10,7 @@ ini_set("memory_limit", "2048M");
 ini_set('max_execution_time', 0);
 set_time_limit(0);
 
-class ilObjReportOverviewVA extends ilObjReportBase
+class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 {
 	/**
 	 * @var ilDb
@@ -21,14 +21,14 @@ class ilObjReportOverviewVA extends ilObjReportBase
 
 	public function initType()
 	{
-		$this->setType("xova");
+		$this->setType("xspo");
 	}
 
 
 	protected function createLocalReportSettings()
 	{
 		$this->local_report_settings =
-			$this->s_f->reportSettings('rep_robj_ova')
+			$this->s_f->reportSettings('rep_robj_xspo')
 			->addSetting($this->s_f
 								->settingInt('selected_study_prg', $this->plugin->txt('selected_study_prg')));
 	}

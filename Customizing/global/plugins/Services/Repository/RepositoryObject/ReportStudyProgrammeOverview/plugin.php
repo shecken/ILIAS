@@ -1,8 +1,8 @@
 <?php
 
-$id = "xova";
+$id = "xspo";
 
-$version = "0.0.6";
+$version = "0.0.2";
 
 
 $ilias_min_version = "4.2.0";
