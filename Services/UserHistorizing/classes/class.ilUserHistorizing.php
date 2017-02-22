@@ -127,12 +127,12 @@ class ilUserHistorizing extends ilHistorizingStorage
 			'city'						=> 'text',
 			'phone_nr'					=> 'text',
 			'mobile_phone_nr'			=> 'text',
-			
+
 			'email'						=> 'text',
 			'wbd_agent_status'			=> 'text',
 			'wbd_type'					=> 'text',
 			'wbd_email'					=> 'text',
-			
+
 			'job_number'				=> 'text',
 			'adp_number'				=> 'text',
 			'position_key'				=> 'text',
@@ -143,7 +143,7 @@ class ilUserHistorizing extends ilHistorizingStorage
 			'exit_date_wbd'				=> 'date',
 			'next_wbd_action'			=> 'text',
 			'login'						=> 'text',
-			'report_points_from'		=> 'text',
+			'report_points_from'		=> 'date',
 
 
 		);
