@@ -1,6 +1,6 @@
 <?php
 
-namespace CaT\Plugins\ReportVAPass\Settings;
+namespace CaT\Plugins\ReportStudyProgramme\Settings;
 
 /**
  * Inteface for db abstraction
@@ -17,26 +17,26 @@ interface DB
 	 *
 	 * @param int 		$obj_id
 	 *
-	 * @return VAPass
+	 * @return ReportStudyProgramme
 	 */
 	public function read($obj_id);
 
 	/**
 	 * Insert a ew VA Pass into DB
 	 *
-	 * @param VAPass 	$va_pass
+	 * @param ReportStudyProgramme 	$xsp_pass
 	 */
-	public function insert(VAPass $va_pass);
+	public function insert(ReportStudyProgramme $xsp_pass);
 
 	/**
-	 * Update an existing VAPass
+	 * Update an existing ReportStudyProgramme
 	 *
-	 * @param VAPass 	$va_pass
+	 * @param ReportStudyProgramme 	$xsp_pass
 	 */
-	public function update(VAPass $va_pass);
+	public function update(ReportStudyProgramme $xsp_pass);
 
 	/**
-	 * Delete a VAPass
+	 * Delete a ReportStudyProgramme
 	 *
 	 * @param int 		$obj_id
 	 */

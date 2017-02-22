@@ -1,8 +1,8 @@
 <?php
 
-$id = "xvap";
+$id = "xsp";
 
-$version = "0.0.9";
+$version = "0.1.1";
 
 $ilias_min_version = "4.2.0";
 $ilias_max_version = "5.0.0";

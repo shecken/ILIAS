@@ -2,19 +2,19 @@
 include_once("./Services/Repository/classes/class.ilRepositoryObjectPlugin.php");
 require_once(__DIR__."/../vendor/autoload.php");
 
-use \CaT\Plugins\ReportVAPass\Settings;
+use \CaT\Plugins\ReportStudyProgramme\Settings;
 
-class ilReportVAPassPlugin extends ilRepositoryObjectPlugin
+class ilReportStudyProgrammePlugin extends ilRepositoryObjectPlugin
 {
 	/**
-	 * @var CaT\Plugins\ReportVAPass\Settings\DB
+	 * @var CaT\Plugins\ReportStudyProgramme\Settings\DB
 	 */
 	protected $settings_db;
 
 	// must correspond to the plugin subdirectory
 	public function getPluginName()
 	{
-		return "ReportVAPass";
+		return "ReportStudyProgramme";
 	}
 
 	/**
@@ -22,15 +22,15 @@ class ilReportVAPassPlugin extends ilRepositoryObjectPlugin
 	 */
 	public function getGuiClass()
 	{
-		return "ilObjReportVAPassGUI";
+		return "ilObjReportStudyProgrammeGUI";
 	}
 
 	/**
 	 * create (if not available) and returns SettingsDB
 	 *
-	 * @return \CaT\Plugins\ReportVAPass\Settings\DB
+	 * @return \CaT\Plugins\ReportStudyProgramme\Settings\DB
 	 */
-	public function getVAPassDB()
+	public function getReportStudyProgrammeDB()
 	{
 		global $ilDB;
 		if ($this->settings_db === null) {

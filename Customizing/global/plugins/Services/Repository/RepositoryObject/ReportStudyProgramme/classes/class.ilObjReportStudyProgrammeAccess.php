@@ -1,7 +1,7 @@
 <?php
 include_once("./Services/Repository/classes/class.ilObjectPluginAccess.php");
 
-class ilObjReportVAPassAccess extends ilObjectPluginAccess
+class ilObjReportStudyProgrammeAccess extends ilObjectPluginAccess
 {
 	/**
 	* Checks wether a user may invoke a command or not

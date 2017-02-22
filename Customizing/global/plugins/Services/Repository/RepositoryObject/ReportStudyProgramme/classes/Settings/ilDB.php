@@ -1,13 +1,13 @@
 <?php
 
-namespace CaT\Plugins\ReportVAPass\Settings;
+namespace CaT\Plugins\ReportStudyProgramme\Settings;
 
 /**
  * Implementation of Db abstraction for ILIAS
  */
 class ilDB implements DB
 {
-	const VA_PASS_TABLE = "va_pass";
+	const XSP_TABLE = "xsp";
 
 	/**
 	 * @var ilDB
@@ -34,7 +34,7 @@ class ilDB implements DB
 	{
 		assert('is_int($obj_id)');
 		$query = "SELECT obj_id, sp_node_ref_id, is_online\n"
-				." FROM ".self::VA_PASS_TABLE."\n"
+				." FROM ".self::XSP_TABLE."\n"
 				." WHERE obj_id = ".$this->db->quote($obj_id, "integer");
 
 		$res = $this->db->query($query);
@@ -45,34 +45,34 @@ class ilDB implements DB
 
 		$row = $this->db->fetchAssoc($res);
 
-		return new VAPass($obj_id, $row["sp_node_ref_id"], (bool)$row["is_online"]);
+		return new ReportStudyProgramme($obj_id, $row["sp_node_ref_id"], (bool)$row["is_online"]);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function insert(VAPass $va_pass)
+	public function insert(ReportStudyProgramme $xsp_pass)
 	{
-		$values = array("obj_id" => array("integer", $va_pass->getObjId())
-					   ," sp_node_ref_id" => array("integer", $va_pass->getSPNodeRefId())
-					   ," is_online" => array("integer", $va_pass->getOnline())
+		$values = array("obj_id" => array("integer", $xsp_pass->getObjId())
+					   ," sp_node_ref_id" => array("integer", $xsp_pass->getSPNodeRefId())
+					   ," is_online" => array("integer", $xsp_pass->getOnline())
 			);
 
-		$this->db->insert(self::VA_PASS_TABLE, $values);
+		$this->db->insert(self::XSP_TABLE, $values);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function update(VAPass $va_pass)
+	public function update(ReportStudyProgramme $xsp_pass)
 	{
-		$where = array("obj_id" => array("integer", $va_pass->getObjId()));
+		$where = array("obj_id" => array("integer", $xsp_pass->getObjId()));
 
-		$values = array(" sp_node_ref_id" => array("integer", $va_pass->getSPNodeRefId())
-					   ," is_online" => array("integer", $va_pass->getOnline())
+		$values = array(" sp_node_ref_id" => array("integer", $xsp_pass->getSPNodeRefId())
+					   ," is_online" => array("integer", $xsp_pass->getOnline())
 			);
 
-		$this->db->update(self::VA_PASS_TABLE, $values, $where);
+		$this->db->update(self::XSP_TABLE, $values, $where);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class ilDB implements DB
 	 */
 	public function delete($obj_id)
 	{
-		$query = "DELETE FROM ".self::VA_PASS_TABLE."\n"
+		$query = "DELETE FROM ".self::XSP_TABLE."\n"
 				." WHERE obj_id = ".$this->db->quote($obj_id, "integer");
 
 		$this->db->manipulate($query);
@@ -91,7 +91,7 @@ class ilDB implements DB
 	 */
 	protected function createTable()
 	{
-		if (!$this->db->tableExists(self::VA_PASS_TABLE)) {
+		if (!$this->db->tableExists(self::XSP_TABLE)) {
 			$fields =
 				array('obj_id' => array(
 						'type' 		=> 'integer',
@@ -110,7 +110,7 @@ class ilDB implements DB
 					)
 				);
 
-			$this->db->createTable(self::VA_PASS_TABLE, $fields);
+			$this->db->createTable(self::XSP_TABLE, $fields);
 		}
 	}
 }

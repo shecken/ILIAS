@@ -61,9 +61,14 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		foreach ($lp_children as $lp_current_child_key => $lp_child) {
 			$entry = new ilIndividualPlanDetailEntry();
 			$entry->setTitle($lp_child->getTitle());
-			$entry->setResult($this->getResultInfo($lp_child));
 			$entry->setAccountable($this->obj->getAccountable($lp_child->getId(), $this->obj->getVAPassAccountableFieldId()));
-			$entry->setTypeOfPass($this->obj->getAccountable($lp_child->getId(), $this->obj->getVAPassPassingTypeFieldId()));
+			$type = $this->obj->getAccountable($lp_child->getId(), $this->obj->getVAPassPassingTypeFieldId());
+			$entry->setTypeOfPass($type);
+			if($type == "Manueller Eintrag") {
+				$entry->setResult($this->getResultInfo($lp_child));
+			} else {
+				$entry->setResult("-");
+			}
 			$lp = $this->obj->getLPStatus($lp_child->getId(), $this->user_id);
 			$entry->setStatus($lp['status']);
 			$date = new ilDateTime($lp['last_change'], IL_CAL_DATETIME);
@@ -140,30 +145,22 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function getResultInfo($child)
 	{
+		$progress = $child->getProgressForAssignment($this->assignment_id);
+		if(!$progress->isSuccessful() || $progress->isAccredited()) {
+			return "-";
+		}
 		foreach ($child->getLPChildren() as $key => $crs_ref) {
 			$crs = ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId());
 			$sub_items = $crs->getSubItems();
-			var_dump($sub_items);exit;
+			if (array_key_exists("mass", $sub_items)) {
+				foreach($sub_items['mass'] as $item) {
+					$ia = ilObjectFactory::getInstanceByRefId($item['ref_id']);
+					$members = $ia->loadMembers();
+					foreach ($members as $member) {
+						return $member['record'] . "<br>";
+					}
+				}
+			}
 		}
-	}
-
-	protected function getCrsUtils($crs_id)
-	{
-		return gevCourseUtils::getInstance($crs_id);
-	}
-
-	protected function targetIsSelflearning($crs_id)
-	{
-		return $this->getCrsUtils($crs_id)->isSelflearning();
-	}
-
-	protected function getStartDateOfTarget($crs_id)
-	{
-		return $this->getCrsUtils($crs_id)->getStartDate();
-	}
-
-	protected function currentFinishUntilIsLater($finish_until, $startdate)
-	{
-		return $finish_until->get(IL_CAL_UNIX) > $startdate->get(IL_CAL_UNIX);
 	}
 }

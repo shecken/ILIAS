@@ -1,10 +1,10 @@
 <?php
-namespace CaT\Plugins\ReportVAPass\Settings;
+namespace CaT\Plugins\ReportStudyProgramme\Settings;
 
 /**
  * Class for the VA Pass Settings
  */
-class VAPass
+class ReportStudyProgramme
 {
 	/**
 	 * @var int
@@ -56,7 +56,7 @@ class VAPass
 	 *
 	 * @param boolean 	$online
 	 *
-	 * @return VAPass
+	 * @return ReportStudyProgramme
 	 */
 	public function withOnline($online)
 	{
@@ -81,7 +81,7 @@ class VAPass
 	 *
 	 * @param int 	$sp_node_ref_id
 	 *
-	 * @return VAPass
+	 * @return ReportStudyProgramme
 	 */
 	public function withSPNodeRefId($sp_node_ref_id)
 	{

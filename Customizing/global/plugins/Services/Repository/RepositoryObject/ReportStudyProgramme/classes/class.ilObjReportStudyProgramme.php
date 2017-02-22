@@ -2,14 +2,14 @@
 
 require_once("./Services/Repository/classes/class.ilObjectPlugin.php");
 
-use \CaT\Plugins\ReportVAPass;
+use \CaT\Plugins\ReportStudyProgramme;
 
-class ilObjReportVAPass extends ilObjectPlugin
+class ilObjReportStudyProgramme extends ilObjectPlugin
 {
 	/**
-	 * @var CaT\Plugins\ReportVAPass\Settings\VAPass
+	 * @var CaT\Plugins\ReportStudyProgramme\Settings\ReportStudyProgramme
 	 */
-	protected $va_pass_settings;
+	protected $xsp_pass_settings;
 
 	public function __construct($a_ref_id = 0)
 	{
@@ -28,7 +28,7 @@ class ilObjReportVAPass extends ilObjectPlugin
 
 	public function initType()
 	{
-		$this->setType("xvap");
+		$this->setType("xsp");
 	}
 
 	/**
@@ -37,7 +37,7 @@ class ilObjReportVAPass extends ilObjectPlugin
 	public function doCreate()
 	{
 		$post = $_POST;
-		$this->va_pass_settings = $this->getActions()->create($post);
+		$this->xsp_pass_settings = $this->getActions()->create($post);
 	}
 
 	/**
@@ -45,7 +45,7 @@ class ilObjReportVAPass extends ilObjectPlugin
 	 */
 	public function doRead()
 	{
-		$this->va_pass_settings = $this->getActions()->read();
+		$this->xsp_pass_settings = $this->getActions()->read();
 	}
 
 	/**
@@ -53,7 +53,7 @@ class ilObjReportVAPass extends ilObjectPlugin
 	 */
 	public function doUpdate()
 	{
-		$this->getActions()->update($this->va_pass_settings);
+		$this->getActions()->update($this->xsp_pass_settings);
 	}
 
 	/**
@@ -69,7 +69,7 @@ class ilObjReportVAPass extends ilObjectPlugin
 	 */
 	public function doCloneObject($new_obj, $a_target_id, $a_copy_id)
 	{
-		$new_obj->setSettings($this->va_pass_settings->withOnline(false));
+		$new_obj->setSettings($this->xsp_pass_settings->withOnline(false));
 		$new_obj->update();
 	}
 
@@ -79,23 +79,23 @@ class ilObjReportVAPass extends ilObjectPlugin
 	public function getActions()
 	{
 		if ($this->actions === null) {
-			$this->actions = new ReportVAPass\ilActions($this, $this->getVAPassDB());
+			$this->actions = new ReportStudyProgramme\ilActions($this, $this->getReportStudyProgrammeDB());
 		}
 		return $this->actions;
 	}
 
-	protected function getVAPassDB()
+	protected function getReportStudyProgrammeDB()
 	{
-		return $this->plugin->getVAPassDB();
+		return $this->plugin->getReportStudyProgrammeDB();
 	}
 
-	public function setSettings(ReportVAPass\Settings\VAPass $va_pass)
+	public function setSettings(ReportStudyProgramme\Settings\ReportStudyProgramme $xsp_pass)
 	{
-		$this->va_pass_settings = $va_pass;
+		$this->xsp_pass_settings = $xsp_pass;
 	}
 
 	public function getSettings()
 	{
-		return $this->va_pass_settings;
+		return $this->xsp_pass_settings;
 	}
 }

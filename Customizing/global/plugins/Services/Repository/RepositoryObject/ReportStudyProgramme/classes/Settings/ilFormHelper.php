@@ -1,7 +1,7 @@
 <?php
 
-namespace CaT\Plugins\ReportVAPass\Settings;
-use \CaT\Plugins\ReportVAPass\ilActions;
+namespace CaT\Plugins\ReportStudyProgramme\Settings;
+use \CaT\Plugins\ReportStudyProgramme\ilActions;
 
 trait ilFormHelper
 {
@@ -24,9 +24,9 @@ trait ilFormHelper
 		return $form;
 	}
 
-	public function getSettingValues(VAPass $va_pass, array &$values)
+	public function getSettingValues(ReportStudyProgramme $xsp_pass, array &$values)
 	{
-		$values[ilActions::F_SP_NODE_REF_ID] = $va_pass->getSPNodeRefId();
-		$values[ilActions::F_ONLINE] = $va_pass->getOnline();
+		$values[ilActions::F_SP_NODE_REF_ID] = $xsp_pass->getSPNodeRefId();
+		$values[ilActions::F_ONLINE] = $xsp_pass->getOnline();
 	}
 }

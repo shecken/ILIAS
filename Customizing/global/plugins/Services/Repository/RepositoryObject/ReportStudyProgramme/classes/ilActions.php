@@ -1,6 +1,6 @@
 <?php
 
-namespace CaT\Plugins\ReportVAPass;
+namespace CaT\Plugins\ReportStudyProgramme;
 
 class ilActions
 {
@@ -9,7 +9,7 @@ class ilActions
 	const F_SP_NODE_REF_ID = "sp_node_ref_id";
 	const F_ONLINE = "is_online";
 
-	public function __construct(\ilObjReportVAPass $obj, $db)
+	public function __construct(\ilObjReportStudyProgramme $obj, $db)
 	{
 		$this->obj = $obj;
 		$this->obj_id = $this->obj->getId();
@@ -20,10 +20,10 @@ class ilActions
 	{
 		$sp_node_ref_id = $post[self::F_SP_NODE_REF_ID];
 
-		$new_va_pass = new Settings\VAPass($this->obj_id, $sp_node_ref_id);
-		$this->db->insert($new_va_pass);
+		$new_xsp = new Settings\ReportStudyProgramme($this->obj_id, $sp_node_ref_id);
+		$this->db->insert($new_xsp);
 
-		return $new_va_pass;
+		return $new_xsp;
 	}
 
 	public function read()
@@ -31,9 +31,9 @@ class ilActions
 		return $this->db->read($this->obj_id);
 	}
 
-	public function update(Settings\VAPass $va_pass)
+	public function update(Settings\ReportStudyProgramme $xsp_pass)
 	{
-		$this->db->update($va_pass);
+		$this->db->update($xsp_pass);
 	}
 
 	public function delete()
@@ -51,7 +51,7 @@ class ilActions
 		$sp_node_ref_id = (int)$post[self::F_SP_NODE_REF_ID];
 		$online = (bool)$post[self::F_ONLINE];
 
-		return new Settings\VAPass($this->obj_id, $sp_node_ref_id, $online);
+		return new Settings\ReportStudyProgramme($this->obj_id, $sp_node_ref_id, $online);
 	}
 
 	public function updateObjectFromArray(array $post)

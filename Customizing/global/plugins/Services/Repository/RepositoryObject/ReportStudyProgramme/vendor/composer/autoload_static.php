@@ -9,12 +9,12 @@ class ComposerStaticInit58cf36a9c339ff534b6f52455a2e0cf4
     public static $prefixLengthsPsr4 = array (
         'C' => 
         array (
-            'CaT\\Plugins\\ReportVAPass\\' => 25,
+            'CaT\\Plugins\\ReportStudyProgramme\\' => 33,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'CaT\\Plugins\\ReportVAPass\\' => 
+        'CaT\\Plugins\\ReportStudyProgramme\\' => 
         array (
             0 => __DIR__ . '/../..' . '/classes',
         ),

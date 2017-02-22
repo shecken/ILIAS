@@ -1,19 +1,19 @@
 <?php
 require_once(__DIR__."/../vendor/autoload.php");
 include_once("./Services/Repository/classes/class.ilObjectPluginGUI.php");
-require_once(__DIR__."/Settings/class.ilVAPassSettingsGUI.php");
+require_once(__DIR__."/Settings/class.ilReportStudyProgrammeSettingsGUI.php");
 
-use \CaT\Plugins\ReportVAPass;
+use \CaT\Plugins\ReportStudyProgramme;
 
 /**
- * @ilCtrl_isCalledBy ilObjReportVAPassGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
- * @ilCtrl_Calls ilObjReportVAPassGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI
- * @ilCtrl_Calls ilObjReportVAPassGUI: ilVAPassSettingsGUI, ilIndividualPlanGUI, 
+ * @ilCtrl_isCalledBy ilObjReportStudyProgrammeGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
+ * @ilCtrl_Calls ilObjReportStudyProgrammeGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI
+ * @ilCtrl_Calls ilObjReportStudyProgrammeGUI: ilReportStudyProgrammeSettingsGUI, ilIndividualPlanGUI, 
  * @author 		Stefan Hecken <stefan.hecken@concepts-and-training.de>
  */
-class ilObjReportVAPassGUI extends ilObjectPluginGUI
+class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 {
-	use ReportVAPass\Settings\ilFormHelper;
+	use ReportStudyProgramme\Settings\ilFormHelper;
 
 	const TAB_SHOW_CONTENT = "tab_show_content";
 	const TAB_SETTINGS = "tab_settings";
@@ -21,7 +21,7 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 	const SHOW_CONTENT = "showContent";
 
 	/**
-	 * @var CaT\Plugins\ReportVAPass\ilActions
+	 * @var CaT\Plugins\ReportStudyProgramme\ilActions
 	 */
 	protected $plugin_actions;
 
@@ -43,7 +43,7 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 	 */
 	final public function getType()
 	{
-		return "xvap";
+		return "xsp";
 	}
 
 	/**
@@ -55,7 +55,7 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 		$next_class = $this->g_ctrl->getNextClass();
 
 		switch ($next_class) {
-			case "ilvapasssettingsgui":
+			case "ilReportStudyProgrammeSettingsGUI":
 				$this->forwardSettings();
 				break;
 			case 'ilindividualplangui':
@@ -63,8 +63,8 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 				break;
 			default:
 				switch ($cmd) {
-					case ilVAPassSettingsGUI::EDIT_SETTINGS:
-					case ilVAPassSettingsGUI::SAVE_SETTINGS:
+					case ilReportStudyProgrammeSettingsGUI::EDIT_SETTINGS:
+					case ilReportStudyProgrammeSettingsGUI::SAVE_SETTINGS:
 						$this->forwardSettings();
 						break;
 					case self::SHOW_CONTENT:
@@ -79,7 +79,7 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 	 */
 	public function getAfterCreationCmd()
 	{
-		return ilVAPassSettingsGUI::EDIT_SETTINGS;
+		return ilReportStudyProgrammeSettingsGUI::EDIT_SETTINGS;
 	}
 
 	/**
@@ -106,8 +106,8 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 		} else {
 			$this->g_tabs->setTabActive(self::TAB_SETTINGS);
 			$actions = $this->object->getActions();
-			require_once(__DIR__."/Settings/class.ilVAPassSettingsGUI.php");
-			$gui = new \ilVAPassSettingsGUI($actions, $this->plugin->txtClosure());
+			require_once(__DIR__."/Settings/class.ilReportStudyProgrammeSettingsGUI.php");
+			$gui = new \ilReportStudyProgrammeSettingsGUI($actions, $this->plugin->txtClosure());
 			$this->g_ctrl->forwardCommand($gui);
 		}
 	}
@@ -146,7 +146,7 @@ class ilObjReportVAPassGUI extends ilObjectPluginGUI
 		}
 
 		if ($this->g_access->checkAccess("write", "", $this->object->getRefId())) {
-			$this->g_tabs->addTab(self::TAB_SETTINGS, $this->txt("properties"), $this->g_ctrl->getLinkTarget($this, ilVAPassSettingsGUI::EDIT_SETTINGS));
+			$this->g_tabs->addTab(self::TAB_SETTINGS, $this->txt("properties"), $this->g_ctrl->getLinkTarget($this, ilReportStudyProgrammeSettingsGUI::EDIT_SETTINGS));
 		}
 
 		$this->addPermissionTab();

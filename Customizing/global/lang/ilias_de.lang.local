@@ -1534,19 +1534,19 @@ gev#:#rep_robj_xrea_rbac_create_xrea#:#Report Teilnahme nach Mitarbeiter / Vertr
 gev#:#rep_robj_xttc_rbac_create_xttc#:#Report Trainereinsätze nach TEP-Kategorie anlegen
 gev#:#rep_robj_xrta_rbac_create_xrta#:#Report über Teilnahmen an Trainings anlegen
 gev#:#rep_robj_xtda_rbac_create_xtda#:#Report Trainingsauslastung (Ausblick) anlegen
-gev#:#rep_robj_xvap_view#:#Inhalt
-gev#:#rep_robj_xvap_properties#:#Eigenschaften
-gev#:#rep_robj_xvap_settings_title#:#Titel
-gev#:#rep_robj_xvap_setting_description#:#Beschreibung
-gev#:#rep_robj_xvap_setting_sp_node_ref_id#:#Id des Studienprogramms
-gev#:#rep_robj_xvap_setting_online#:#Online
-gev#:#rep_robj_xvap_save#:#Speichern
-gev#:#rep_robj_xvap_cancel#:#Abbrechen
-gev#:#rep_robj_xvap_edit#:#Bearbeiten
-gev#:#rep_robj_xvap_offline#:#Offline
-gev#:#rep_robj_xvap_status#:#Status
-gev#:#rep_robj_xvap_objs_xvap#:#Report Einzelansicht Ausbildungsstand zum Vertriebsassistenzen
-gev#:#rep_robj_xvap_obj_xvap#:#Report Einzelansicht Ausbildungsstand zum Vertriebsassistenzen
+gev#:#rep_robj_xsp_view#:#Inhalt
+gev#:#rep_robj_xsp_properties#:#Eigenschaften
+gev#:#rep_robj_xsp_settings_title#:#Titel
+gev#:#rep_robj_xsp_setting_description#:#Beschreibung
+gev#:#rep_robj_xsp_setting_sp_node_ref_id#:#Id des Studienprogramms
+gev#:#rep_robj_xsp_setting_online#:#Online
+gev#:#rep_robj_xsp_save#:#Speichern
+gev#:#rep_robj_xsp_cancel#:#Abbrechen
+gev#:#rep_robj_xsp_edit#:#Bearbeiten
+gev#:#rep_robj_xsp_offline#:#Offline
+gev#:#rep_robj_xsp_status#:#Status
+gev#:#rep_robj_xsp_objs_xsp#:#Report Einzelansicht Ausbildungsstand zum Vertriebsassistenzen
+gev#:#rep_robj_xsp_obj_xsp#:#Report Einzelansicht Ausbildungsstand zum Vertriebsassistenzen
 gev#:#cron_wbd_relevant_title#:#Setzt Trainings auf WBD relevant.
 gev#:#cron_wbd_relevant_description#:#Wenn beim Benutzer das UDF Feld 'WBD Punkte nachmelden ab' einen Wert besitzt, werden alle Trainings deren Enddatum >= ist auf WBD relevant gestzt.
 gev#:#gev_attendance_list#:#Anwesenheitsliste
@@ -1746,24 +1746,24 @@ mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
 mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach Abschluss vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
 mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
 mass#:#mass_edit_conditions#:#Vorbedingungen
-gev#:#gev_va_pass_success#:#teilgenommen
-gev#:#gev_va_pass_progress#:#in Bearbeitung
-gev#:#gev_va_pass_failed#:#nicht teilgenommen
-gev#:#gev_va_pass_not_attemped#:#noch nicht teilgenommen
-gev#:#gev_my_va_pass_title#:#Mein Ausbildungspass für Vertriebsassistenten (VA)
-gev#:#gev_my_va_pass_title_desc#:#Hier sehen Sie die Übersicht der Ausbildungsmodule und den jeweiligen Bearbeitungsstatus. Mit einem Klick auf das jeweilige Modul, gelangen Sie zu den Inhalten des jeweiligen Ausbildungsmoduls.
-gev#:#gev_va_pass_modul#:#Ausbildungsmodul
-gev#:#gev_va_pass_state#:#Status
-gev#:#gev_va_pass_finish_unitl#:#zu erledigen bis
-gev#:#gev_va_pass_finished#:#erledigt am
-gev#:#gev_va_pass_step#:#Ausbildungsschritt
-gev#:#gev_va_pass_accountable#:#Verantwortlich
-gev#:#gev_va_pass_date#:#Datum
-gev#:#gev_va_pass_result#:#Ergebnis
-gev#:#gev_va_pass_crs_type#:#Art des bestehens
-gev#:#gev_va_pass_status#:#Status
-gev#:#gev_va_pass_finish_until#:#zu erledigen bis
-gev#:#gev_va_pass_type_of_passed#:#Art des Bestehens
+gev#:#gev_xsp_success#:#teilgenommen
+gev#:#gev_xsp_progress#:#in Bearbeitung
+gev#:#gev_xsp_failed#:#nicht teilgenommen
+gev#:#gev_xsp_not_attemped#:#noch nicht teilgenommen
+gev#:#gev_my_xsp_title#:#Mein Ausbildungspass für Vertriebsassistenten (VA)
+gev#:#gev_my_xsp_title_desc#:#Hier sehen Sie die Übersicht der Ausbildungsmodule und den jeweiligen Bearbeitungsstatus. Mit einem Klick auf das jeweilige Modul, gelangen Sie zu den Inhalten des jeweiligen Ausbildungsmoduls.
+gev#:#gev_xsp_modul#:#Ausbildungsmodul
+gev#:#gev_xsp_state#:#Status
+gev#:#gev_xsp_finish_unitl#:#zu erledigen bis
+gev#:#gev_xsp_finished#:#erledigt am
+gev#:#gev_xsp_step#:#Ausbildungsschritt
+gev#:#gev_xsp_accountable#:#Verantwortlich
+gev#:#gev_xsp_date#:#Datum
+gev#:#gev_xsp_result#:#Ergebnis
+gev#:#gev_xsp_crs_type#:#Art des bestehens
+gev#:#gev_xsp_status#:#Status
+gev#:#gev_xsp_finish_until#:#zu erledigen bis
+gev#:#gev_xsp_type_of_passed#:#Art des Bestehens
 rbac#:#amend_grading#:#Beurteilung ändern
 mass#:#mass_usr_amend#:#Beurteilung ändern
 mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.

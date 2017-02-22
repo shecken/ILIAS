@@ -45,7 +45,6 @@ class ilIndividualPlanDetailTable {
 
 	public function getLPStatus($obj_id, $usr_id)
 	{
-		$result = array();
 		$query = "SELECT status, last_change\n"
 				."FROM prg_usr_progress\n"
 				."WHERE usr_id = " . $this->g_db->quote($usr_id, "integer") . "\n"

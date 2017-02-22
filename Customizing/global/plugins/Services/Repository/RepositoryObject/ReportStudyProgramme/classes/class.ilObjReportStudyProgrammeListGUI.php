@@ -1,11 +1,11 @@
 <?php
 include_once "./Services/Repository/classes/class.ilObjectPluginListGUI.php";
 
-class ilObjReportVAPassListGUI extends ilObjectPluginListGUI
+class ilObjReportStudyProgrammeListGUI extends ilObjectPluginListGUI
 {
 	public function initType()
 	{
-		$this->setType("xvap");
+		$this->setType("xsp");
 	}
 
 	/**
@@ -13,7 +13,7 @@ class ilObjReportVAPassListGUI extends ilObjectPluginListGUI
 	 */
 	public function getGuiClass()
 	{
-		return "ilObjReportVAPassGUI";
+		return "ilObjReportStudyProgrammeGUI";
 	}
 
 	/**
@@ -46,8 +46,8 @@ class ilObjReportVAPassListGUI extends ilObjectPluginListGUI
 
 		$props = array();
 
-		$this->plugin->includeClass("class.ilObjReportVAPassAccess.php");
-		if (!\ilObjReportVAPassAccess::checkOnline($this->obj_id)) {
+		$this->plugin->includeClass("class.ilObjReportStudyProgrammeAccess.php");
+		if (!\ilObjReportStudyProgrammeAccess::checkOnline($this->obj_id)) {
 			$props[] = array("alert" => true, "property" => $this->txt("status"),
 			"value" => $this->txt("offline"));
 		}

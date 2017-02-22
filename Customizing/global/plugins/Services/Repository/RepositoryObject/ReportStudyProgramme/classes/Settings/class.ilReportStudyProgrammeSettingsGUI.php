@@ -1,14 +1,14 @@
 <?php
 
-use \CaT\Plugins\ReportVAPass;
+use \CaT\Plugins\ReportStudyProgramme;
 
-class ilVAPassSettingsGUI
+class ilReportStudyProgrammeSettingsGUI
 {
-	use ReportVAPass\Settings\ilFormHelper;
+	use ReportStudyProgramme\Settings\ilFormHelper;
 
 	const EDIT_SETTINGS = "editProperties";
 	const SAVE_SETTINGS = "saveSettings";
-	public function __construct(ReportVAPass\ilActions $actions, Closure $txt)
+	public function __construct(ReportStudyProgramme\ilActions $actions, Closure $txt)
 	{
 		global $ilCtrl, $tpl;
 
@@ -28,7 +28,7 @@ class ilVAPassSettingsGUI
 				$this->$cmd();
 				break;
 			default:
-				throw new Exception("ilVAPassSettingsGUI::executeCommand: cmd not found: $cmd");
+				throw new Exception("ilReportStudyProgrammeSettingsGUI::executeCommand: cmd not found: $cmd");
 		}
 	}
 
@@ -66,11 +66,11 @@ class ilVAPassSettingsGUI
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->g_ctrl->getFormAction($this));
 
-		$ti = new ilTextInputGUI($this->txt("settings_title"), ReportVAPass\ilActions::F_TITLE);
+		$ti = new ilTextInputGUI($this->txt("settings_title"), ReportStudyProgramme\ilActions::F_TITLE);
 		$ti->setRequired(true);
 		$form->addItem($ti);
 
-		$ta = new ilTextareaInputGUI($this->txt("setting_description"), ReportVAPass\ilActions::F_DESCRIPTION);
+		$ta = new ilTextareaInputGUI($this->txt("setting_description"), ReportStudyProgramme\ilActions::F_DESCRIPTION);
 		$form->addItem($ta);
 
 		$this->addSettingsEditFormItems($form);
@@ -83,8 +83,8 @@ class ilVAPassSettingsGUI
 		$current = $this->actions->getObject();
 		$settings = $current->getSettings();
 
-		$values = array(ReportVAPass\ilActions::F_TITLE => $current->getTitle()
-			, ReportVAPass\ilActions::F_DESCRIPTION => $current->getDescription()
+		$values = array(ReportStudyProgramme\ilActions::F_TITLE => $current->getTitle()
+			, ReportStudyProgramme\ilActions::F_DESCRIPTION => $current->getDescription()
 			);
 
 		$this->getSettingValues($settings, $values);
