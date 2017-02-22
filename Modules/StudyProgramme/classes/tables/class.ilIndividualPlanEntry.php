@@ -1,7 +1,9 @@
 <?php
 
+// TODO: add docstring
 class ilIndividualPlanEntry
 {
+	// TODO: add docstrings
 	protected $title;
 	protected $sp_ref_id;
 	protected $sp_obj_id;
@@ -10,6 +12,8 @@ class ilIndividualPlanEntry
 	protected $finished;
 	protected $has_lp_children;
 	protected $has_children;
+
+	// TODO: make this an immutable object.
 
 	public function setTitle($title)
 	{
