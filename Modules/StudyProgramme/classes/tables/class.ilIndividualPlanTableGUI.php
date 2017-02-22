@@ -74,11 +74,18 @@ class ilIndividualPlanTableGUI extends catTableGUI
 
 		$this->tpl->setVariable("TITLE", $a_set->getTitle());
 		$this->tpl->setVariable("STATUS", $this->parent_obj->getStatusIcon($a_set->getStatus()));
-		$this->tpl->setVariable("FINISHED", $a_set->getFinished());
+		if ($a_set->getFinished()) {
+			$this->tpl->setVariable("FINISHED", $a_set->getFinished());
+		} else {
+			$this->tpl->setVariable("FINISHED","-");
+		}
 
 		$finish_until = $a_set->getFinishUntil();
 		if ($finish_until) {
 			$this->tpl->setVariable("FINISH_UNTIL", $finish_until->get(IL_CAL_FKT_DATE, "d.m.Y"));
+		}
+		else {
+			$this->tpl->setVariable("FINISH_UNTIL","-");
 		}
 
 		$this->g_ctrl->setParameter($this->parent_obj, "selectedRefId", null);
