@@ -292,7 +292,6 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 					= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
 			}
 		}
-// var_dump($items);exit;
 		return $items;
 	}
 
