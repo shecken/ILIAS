@@ -111,7 +111,6 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 	 */
 	public function insertMembersRecord(ilObjManualAssessment $mass, array $record)
 	{
-		var_dump($record);
 		$values = array("obj_id" => array("integer", $mass->getId())
 					  , "usr_id" => array("integer", $record[ilManualAssessmentMembers::FIELD_USR_ID])
 					  , ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS => array("text", $record[ilManualAssessmentMembers::FIELD_LEARNING_PROGRESS])

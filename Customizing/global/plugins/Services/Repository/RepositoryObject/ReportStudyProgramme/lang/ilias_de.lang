@@ -1,0 +1,26 @@
+<!-- language file start -->
+obj_xsp#:#Studienprogrammreport
+objs_xsp#:#Studienprogrammreports
+obj_xsp_duplicate#:#Studienprogrammreport kopieren
+objs_xsp_duplicate#:#Studienprogrammreports kopieren
+obj_xsp_select#:#Studienprogrammreport auswählen
+xsp_add#:#Studienprogrammreport hinzufügen
+xsp_new#:#Neuen Studienprogrammreport hinzufügen
+xsp_read#:#Lesezugriff zum Studienprogrammreport
+xsp_write#:#Studienprogrammreport bearbeiten
+xsp_delete#:#Studienprogrammreport löschen
+xsp_visible#:#sichtbar
+xsp_edit_permission#:#schreibberechtigt
+crs_create_xsp#:#Studienprogrammreport erzeugen
+grp_create_xsp#:#Studienprogrammreport erzeugen
+fold_create_xsp#:#Studienprogrammreport erzeugen
+root_create_xsp#:#Studienprogrammreport erzeugen
+cat_create_xsp#:#Studienprogrammreport erzeugen
+rep_robj_xsp_status#:#Status
+online#:#Online
+rep_robj_xsp_offline#:#Offline
+xsp_content#:#Report
+xsp_properties#:#Eigenschaften
+no_sp_id#:#ID ist keine Studyprogram ID
+no_assignment#:#Der Benutzer ist keinem Studienprogramm zugeordnet
+no_sp_chidren#:#Es sind keine weiteren Studienprogramme untergeordnet

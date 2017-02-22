@@ -98,7 +98,7 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 							"usrcrs.begin_date",
 							"usrcrs.end_date"
 						);
-						return array("date_period_predicate" => $pc($start,$end)
+						return array("date_period_predicate" => $pc($start, $end)
 							,"start" => $start
 							,"end" => $end);
 			}, $tf->dict(array(

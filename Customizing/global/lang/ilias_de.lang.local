@@ -1534,6 +1534,19 @@ gev#:#rep_robj_xrea_rbac_create_xrea#:#Report Teilnahme nach Mitarbeiter / Vertr
 gev#:#rep_robj_xttc_rbac_create_xttc#:#Report Trainereinsätze nach TEP-Kategorie anlegen
 gev#:#rep_robj_xrta_rbac_create_xrta#:#Report über Teilnahmen an Trainings anlegen
 gev#:#rep_robj_xtda_rbac_create_xtda#:#Report Trainingsauslastung (Ausblick) anlegen
+gev#:#rep_robj_xsp_view#:#Inhalt
+gev#:#rep_robj_xsp_properties#:#Eigenschaften
+gev#:#rep_robj_xsp_settings_title#:#Titel
+gev#:#rep_robj_xsp_setting_description#:#Beschreibung
+gev#:#rep_robj_xsp_setting_sp_node_ref_id#:#Id des Studienprogramms
+gev#:#rep_robj_xsp_setting_online#:#Online
+gev#:#rep_robj_xsp_save#:#Speichern
+gev#:#rep_robj_xsp_cancel#:#Abbrechen
+gev#:#rep_robj_xsp_edit#:#Bearbeiten
+gev#:#rep_robj_xsp_offline#:#Offline
+gev#:#rep_robj_xsp_status#:#Status
+gev#:#rep_robj_xsp_objs_xsp#:#Report Einzelansicht Ausbildungsstand zum Vertriebsassistenzen
+gev#:#rep_robj_xsp_obj_xsp#:#Report Einzelansicht Ausbildungsstand zum Vertriebsassistenzen
 gev#:#cron_wbd_relevant_title#:#Setzt Trainings auf WBD relevant.
 gev#:#cron_wbd_relevant_description#:#Wenn beim Benutzer das UDF Feld 'WBD Punkte nachmelden ab' einen Wert besitzt, werden alle Trainings deren Enddatum >= ist auf WBD relevant gestzt.
 gev#:#gev_attendance_list#:#Anwesenheitsliste
@@ -1617,6 +1630,15 @@ prg#:#prg_type_msg_missing_title#:#Titel kann nicht leer sein.
 prg#:#prg_added_member#:#Das neue Mitglied wurde erfolgreich hinzugefügt.
 prg#:#prg_added_members#:#Die neuen Mitglieder wurden erfolgreich hinzugefügt.
 prg#:#prg_acknowledge_completed_courses#:#Bestandene Kurse anerkennen
+prg#:#prg_modul#:#Ausbildungsschritt
+prg#:#prg_state#:#Status
+prg#:#prg_finish_until#:#zu erledigen bis
+prg#:#prg_finished#:#erledigt am
+prg#:#prg_step#:#Ausbildungsschritt
+prg#:#prg_accountable#:#Verantwortlich
+prg#:#prg_date#:#Datum
+prg#:#prg_result#:#Ergebnis
+prg#:#prg_type_of_passed#:#Art des Bestehens
 common#:#obj_prg_duplicate#:#Studienprogramm kopieren
 common#:#obj_prg_select#:#-- Bitte wählen Sie ein Studienprogramm --
 common#:#obj_prg#:#Studienprogramm
@@ -1733,6 +1755,24 @@ mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
 mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach Abschluss vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
 mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
 mass#:#mass_edit_conditions#:#Vorbedingungen
+gev#:#gev_xsp_success#:#teilgenommen
+gev#:#gev_xsp_progress#:#in Bearbeitung
+gev#:#gev_xsp_failed#:#nicht teilgenommen
+gev#:#gev_xsp_not_attemped#:#noch nicht teilgenommen
+gev#:#gev_my_xsp_title#:#Mein Ausbildungspass für Vertriebsassistenten (VA)
+gev#:#gev_my_xsp_title_desc#:#Hier sehen Sie die Übersicht der Ausbildungsmodule und den jeweiligen Bearbeitungsstatus. Mit einem Klick auf das jeweilige Modul, gelangen Sie zu den Inhalten des jeweiligen Ausbildungsmoduls.
+gev#:#gev_xsp_modul#:#Ausbildungsmodul
+gev#:#gev_xsp_state#:#Status
+gev#:#gev_xsp_finish_unitl#:#zu erledigen bis
+gev#:#gev_xsp_finished#:#erledigt am
+gev#:#gev_xsp_step#:#Ausbildungsschritt
+gev#:#gev_xsp_accountable#:#Verantwortlich
+gev#:#gev_xsp_date#:#Datum
+gev#:#gev_xsp_result#:#Ergebnis
+gev#:#gev_xsp_crs_type#:#Art des bestehens
+gev#:#gev_xsp_status#:#Status
+gev#:#gev_xsp_finish_until#:#zu erledigen bis
+gev#:#gev_xsp_type_of_passed#:#Art des Bestehens
 rbac#:#amend_grading#:#Beurteilung ändern
 mass#:#mass_usr_amend#:#Beurteilung ändern
 mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.
@@ -1764,3 +1804,7 @@ rbac#:#prg_manage_members#:#Mitglieder verwalten
 prg#:#prg_update_from_current_plan_success#:#Die Aktualisierung aus dem aktuellen Plan war erfolgreich.
 prg#:#prg_update_from_current_plan_not_possible#:#Die Aktualisierung aus dem aktuellen Plan ist nicht möglich.
 prg#:#update_from_current_plan_partitial_success#:#Die Aktualisierung aus dem aktuellen Plan war nur teilweise möglich.
+prg#:#prg_success#:#teilgenommen
+prg#:#prg_progress#:#in Bearbeitung
+prg#:#prg_failed#:#nicht teilgenommen
+prg#:#prg_not_attemped#:#noch nicht begonnen

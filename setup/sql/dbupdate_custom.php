@@ -5226,7 +5226,7 @@ ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "
 
 <#230>
 <?php
-
+;
 ?>
 
 <#231>
@@ -6136,8 +6136,8 @@ require_once "Customizing/class.ilCustomInstaller.php";
 
 ilCustomInstaller::initPluginEnv();
 ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
-
 ?>
+
 
 <#254>
 <?php

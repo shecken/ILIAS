@@ -1,6 +1,6 @@
 <?php
 
-$id = "xova";
+$id = "xspo";
 
 $version = "0.0.4";
 
