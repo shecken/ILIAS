@@ -895,13 +895,7 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 		$cert = new ilCertificate(new ilCourseCertificateAdapter($this));
 		$newcert = new ilCertificate(new ilCourseCertificateAdapter($new_obj));
 		$cert->cloneCertificate($newcert);
-		
 
-		// gev patch start #2764
-		require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
-		gevCourseUtils::possiblyReferenceIntoSamePRGS($this, $new_obj);
-		// gev patch end #2764
-		 
 		return $new_obj;
 	}
 	

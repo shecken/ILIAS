@@ -66,6 +66,8 @@ class ilGEVCourseCreationPlugin extends ilEventHookPlugin
 			return;
 		}
 		
+		gevCourseUtils::possiblyReferenceIntoSamePRGS($source, $target);
+
 		$ilLog->write("Cloned course ".$a_target_ref_id." from course ". $a_source_ref_id);		
 	}
 		
