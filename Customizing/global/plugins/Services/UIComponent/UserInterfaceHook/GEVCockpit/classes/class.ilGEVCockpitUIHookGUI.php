@@ -202,7 +202,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 
 				if ($this->gAccess->checkAccessOfUser($this->gUser->getId(), "visible", "", $ref_id)) {
 					$this->gCtrl->setParameterByClass($gui, "ref_id", $ref_id);
-					$link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", $gui));
+					$link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", $gui), "showContent");
 					$this->gCtrl->setParameterByClass($gui, "ref_id", null);
 					$items["va_plan_".$obj_id] = array($object->getTitle(), $link);
 				}
