@@ -131,8 +131,9 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 			$gui = new \ilIndividualPlanGUI();
 			$sp = \ilObjectFactoryWrapper::getInstanceByRefId($settings->getSPNodeRefId());
 			$assignments = $sp->getAssignmentsOf($this->g_user->getId());
-			if(count($assignment) < 1) {
+			if(count($assignments) < 1) {
 				ilUtil::sendFailure($this->plugin->txt('no_assignment'), true);
+				return;
 			}
 			$assignment = $assignments[0];
 			$gui->setAssignmentId($assignment->getId());
