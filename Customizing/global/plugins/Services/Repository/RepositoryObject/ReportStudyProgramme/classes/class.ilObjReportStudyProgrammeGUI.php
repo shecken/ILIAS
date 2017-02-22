@@ -123,7 +123,10 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 
 			require_once("Modules/StudyProgramme/classes/class.ilObjectFactoryWrapper.php");
 			$sp = \ilObjectFactoryWrapper::getInstanceByRefId($settings->getSPNodeRefId());
+			// TODO: Use most recent assignment, not the first that accidentially is in the list.
 			$assignments = $sp->getAssignmentsOf($this->g_user->getId());
+			// TODO: Check if there are actually assignments and print an error message if
+			// none could be found.
 			$assignment = $assignments[0];
 
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanGUI.php");
