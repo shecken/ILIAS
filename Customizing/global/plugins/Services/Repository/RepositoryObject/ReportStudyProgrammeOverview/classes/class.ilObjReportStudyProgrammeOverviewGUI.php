@@ -36,7 +36,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 				$this->view();
 				break;
 			default:
-				$this->showContent();
+				parent::performCommand($cmd);
 				break;
 		}
 	}
