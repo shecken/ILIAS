@@ -167,6 +167,9 @@ class ilIndividualPlanTableGUI extends catTableGUI
 
 				if (!$this->targetIsSelflearning($crs_id)) {
 					$startdate = $this->getStatDateOfTarget($crs_id);
+					if ($startdate === null) {
+						continue;
+					}
 
 					if ($finish_until === null) {
 						$finish_until = $startdate;
@@ -192,6 +195,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		return $this->getCrsUtils($crs_id)->isSelflearning();
 	}
 
+	// TODO: There is a mistake hidden in this name.
 	protected function getStatDateOfTarget($crs_id)
 	{
 		return $this->getCrsUtils($crs_id)->getStartDate();
