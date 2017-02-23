@@ -197,7 +197,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		return $this->getCrsUtils($crs_id)->getStartDate();
 	}
 
-	protected function currentFinishUntilIsLater($finish_until, $startdate)
+	protected function currentFinishUntilIsLater(\ilDateTime $finish_until, \ilDateTime $startdate)
 	{
 		return $finish_until->get(IL_CAL_UNIX) > $startdate->get(IL_CAL_UNIX);
 	}
