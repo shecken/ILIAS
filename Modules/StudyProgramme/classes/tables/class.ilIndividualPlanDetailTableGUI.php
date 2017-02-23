@@ -108,8 +108,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			$this->tpl->setVariable("TYPE_OF_PASSED", "-");
 		}
 		$this->tpl->setVariable("STATUS", $this->getStatusIcon($entry->getStatus()));
-		$finish_until = $entry->getFinishUntil();
-		if ($finish_until && $entry->getStatus() == 3) {
+		$finish_until = $entry->getFinished();
+		if ($finish_until && $entry->getStatus() == 2) {
 			$this->tpl->setVariable("FINISHED", $finish_until->get(IL_CAL_FKT_DATE, "d.m.Y"));
 		} else {
 			$this->tpl->setVariable("FINISHED","-");

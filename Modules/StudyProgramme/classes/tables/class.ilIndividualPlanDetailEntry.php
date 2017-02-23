@@ -43,7 +43,7 @@ class ilIndividualPlanDetailEntry
 		$this->finished = $finished;
 	}
 
-	public function getFinishUntil()
+	public function getFinished()
 	{
 		return $this->finished;
 	}
