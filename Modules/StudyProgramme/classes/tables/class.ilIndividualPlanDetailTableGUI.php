@@ -120,10 +120,18 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$this->tpl->setVariable("ACTION", $this->getActionMenu($entry));
 	}
 
-	protected function getStatusAndDate(\ilObjStudyProgramme $lp_child) {
-		$lp = $this->obj->getLPStatus($lp_child->getId(), $this->user_id);
-		$date = new ilDateTime($lp['last_change'], IL_CAL_DATETIME);
-		return [$lp["status"], $entry];
+	protected function getStatusAndDate(\ilObjStudyProgramme $sp) {
+		$progress = $sp->getProgressForAssignment($this->assignment_id);
+		if ($progress->isAccredited() && $progress->isSuccessful()) {
+			$lp = $this->obj->getLPStatus($crs->getId(), $this->user_id);
+			$date = new ilDateTime($lp['last_change'], IL_CAL_DATETIME);
+			return [self::STATUS_SUCCESS, $entry];
+		}
+		$crs = $this->getCourseWhereUserIsMember($sp);
+		if ($crs === null) {
+			return [self::STATUS_NOT_ATTEMPTED, null];
+		}
+		return [self::STATUS_IN_PROGRESS, null];
 	}
 
 	public function getActionMenu(\ilIndividualPlanDetailEntry $entry) {
