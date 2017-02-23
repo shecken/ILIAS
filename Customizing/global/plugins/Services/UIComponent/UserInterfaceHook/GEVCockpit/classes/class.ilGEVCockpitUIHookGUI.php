@@ -80,8 +80,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 				|| $base_class == "iltepgui"
 			)
 		|| (
-			$base_class == "ilobjplugindispatchgui" && $cmd_class == "ilobjreportstudyprogrammegui"
-				&& $cmd == "showcontent"
+			$base_class == "ilobjplugindispatchgui" &&
+				   (($cmd_class == "ilobjreportstudyprogrammegui" && $cmd == "showcontent")
+				|| ($cmd_class == "ilindividualplangui" && $cmd == "view"))
 		);
 	}
 
@@ -138,7 +139,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			if ($_GET["cmd"] == "toMyAssessments") {
 				return "my_assessments";
 			}
-			if ($_GET["cmdClass"] == "ilobjreportstudyprogrammegui") {
+			if ($_GET["cmdClass"] == "ilobjreportstudyprogrammegui"
+			||  $_GET["cmdClass"] == "ilindividualplangui") {
 				return "va_pass";
 			}
 		}
