@@ -1,5 +1,6 @@
 <?php
 include_once("./Services/Repository/classes/class.ilObjectPluginAccess.php");
+require_once(__DIR__."/Settings/ilDB.php");
 
 class ilObjReportStudyProgrammeAccess extends ilObjectPluginAccess
 {
@@ -50,8 +51,8 @@ class ilObjReportStudyProgrammeAccess extends ilObjectPluginAccess
 	{
 		global $ilDB;
 
-		$set = $ilDB->query("SELECT is_online FROM rep_master_data"
-			." WHERE id = ".$ilDB->quote($a_id, "integer"));
+		$set = $ilDB->query("SELECT is_online FROM ".\CaT\Plugins\ReportStudyProgramme\Settings\ilDB::XSP_TABLE
+			." WHERE obj_id = ".$ilDB->quote($a_id, "integer"));
 
 		$rec  = $ilDB->fetchAssoc($set);
 		return (boolean) $rec["is_online"];
