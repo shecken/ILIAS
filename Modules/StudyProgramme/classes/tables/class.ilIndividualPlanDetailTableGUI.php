@@ -254,7 +254,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 * @return	ilObjCourse|null
 	 */
 	protected function getPassedCourse(\ilObjStudyProgramme $sp) {
-		$progress = $child->getProgressForAssignment($this->assignment_id);
+		$progress = $sp->getProgressForAssignment($this->assignment_id);
 		if(!$progress->isSuccessful() || $progress->isAccredited()) {
 			return null;
 		}
