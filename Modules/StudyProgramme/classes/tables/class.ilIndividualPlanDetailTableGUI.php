@@ -333,7 +333,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			return "-";
 		}
 
-		$sub_items = $crs->getSubItems();
+		$sub_items = $maybe_crs->getSubItems();
 		if (array_key_exists("mass", $sub_items)) {
 			foreach($sub_items['mass'] as $item) {
 				$ia = ilObjectFactory::getInstanceByRefId($item['ref_id']);
