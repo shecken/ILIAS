@@ -82,11 +82,9 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			} else {
 				$entry->setResult("-");
 			}
-			$lp = $this->obj->getLPStatus($lp_child->getId(), $this->user_id);
-			$entry->setStatus($lp['status']);
-			$date = new ilDateTime($lp['last_change'], IL_CAL_DATETIME);
+			list($status, $date) = $this->getStatusAndDate($lp_child);
+			$entry->setStatus($status);
 			$entry->setFinished($date);
-
 			$entries[] = $entry;
 		}
 		$this->setData($entries);
@@ -115,6 +113,12 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			$this->tpl->setVariable("FINISHED","-");
 		}
 		$this->tpl->setVariable("ACTION", $this->getActionMenu($entry));
+	}
+
+	protected function getStatusAndDate(\ilObjStudyProgramme $lp_child) {
+		$lp = $this->obj->getLPStatus($lp_child->getId(), $this->user_id);
+		$date = new ilDateTime($lp['last_change'], IL_CAL_DATETIME);
+		return [$lp["status"], $entry];
 	}
 
 	public function getActionMenu(\ilIndividualPlanDetailEntry $entry) {
