@@ -96,6 +96,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 	 *
 	 * @return null
 	 */
+	// TODO: This name has a twist...
 	protected function confugireTable()
 	{
 		$this->setEnableTitle(true);
