@@ -11,8 +11,16 @@ class ilObjReportStudyProgramme extends ilObjectPlugin
 	 */
 	protected $xsp_pass_settings;
 
+	/**
+	 * @var	ilObjUser
+	 */
+	protected $g_user;
+
 	public function __construct($a_ref_id = 0)
 	{
+		global $ilUser;
+		$this->g_user = $ilUser;
+
 		$this->settings = null;
 		$this->actions = null;
 
@@ -87,6 +95,18 @@ class ilObjReportStudyProgramme extends ilObjectPlugin
 	protected function getReportStudyProgrammeDB()
 	{
 		return $this->plugin->getReportStudyProgrammeDB();
+	}
+
+	public function showInCockpit() {
+		$settings = $this->getSettings();
+		if (!$settings->getOnline()) {
+			return false;
+		}
+		$sp = ilObjectFactory::getInstanceByRefId($settings->getSPNodeRefId());
+		if (!($sp instanceof \ilObjStudyProgramme)) {
+			return false;
+		}
+		return $sp->hasAssignmentOf($this->g_user->getId());
 	}
 
 	public function setSettings(ReportStudyProgramme\Settings\ReportStudyProgramme $xsp_pass)

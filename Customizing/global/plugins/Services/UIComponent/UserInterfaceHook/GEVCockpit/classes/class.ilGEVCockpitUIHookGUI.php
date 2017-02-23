@@ -204,7 +204,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 				$object = ilObjectFactory::getInstanceByObjId($obj_id);
 				$ref_id = gevObjectUtils::getRefId($obj_id);
 
-				if ($this->gAccess->checkAccessOfUser($this->gUser->getId(), "visible", "", $ref_id)) {
+				if ($this->gAccess->checkAccessOfUser($this->gUser->getId(), "visible", "", $ref_id) && $object->showInCockpit()) {
 					$this->gCtrl->setParameterByClass($gui, "ref_id", $ref_id);
 					$link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", $gui), "showContent");
 					$this->gCtrl->setParameterByClass($gui, "ref_id", null);
