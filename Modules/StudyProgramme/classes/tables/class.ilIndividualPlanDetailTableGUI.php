@@ -125,7 +125,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if ($progress->isAccredited() || $progress->isSuccessful()) {
 			$lp = $this->obj->getLPStatus($sp->getId(), $this->user_id);
 			$date = new ilDateTime($lp['last_change'], IL_CAL_DATETIME);
-			return [self::STATUS_SUCCESS, $entry];
+			return [self::STATUS_SUCCESS, $date];
 		}
 		$crs = $this->getCourseWhereUserIsMember($sp);
 		if ($crs === null) {
