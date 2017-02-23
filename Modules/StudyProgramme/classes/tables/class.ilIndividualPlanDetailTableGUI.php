@@ -283,7 +283,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			throw new \ilException("Cannot find ref_id for course '$crs_id'");
 		}
 		$crs_ref = ilObjectFactory::getInstanceByRefId($crs_ref_id);
-		if ($crs_ref instanceof \ilObjCourseReference) {
+		if (!($crs_ref instanceof \ilObjCourseReference)) {
 			throw new \ilException("Expected '$crs_ref_id' to be a course reference.");
 		}
 		return ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId());
