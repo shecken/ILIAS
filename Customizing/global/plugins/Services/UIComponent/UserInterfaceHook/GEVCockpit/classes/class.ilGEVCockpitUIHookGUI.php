@@ -64,13 +64,13 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 		$cmd_class = strtolower($get["cmdClass"]);
 		$cmd = strtolower($get["cmd"]);
 
-		return $this->isBaseClassDesktopGUI($base_class, $cmd_class, $get)
+		return $this->isBaseClassDesktopGUI($base_class, $cmd_class, $get, $cmd)
 				&& $this->cmdClassNotIn($cmd_class)
 				&& $this->cmdNotIn($cmd)
 			;
 	}
 
-	protected function isBaseClassDesktopGUI($base_class, $cmd_class, $get)
+	protected function isBaseClassDesktopGUI($base_class, $cmd_class, $get, $cmd)
 	{
 		return ( $base_class == "gevdesktopgui"
 				|| ($cmd_class == "ilobjreportedubiogui"
@@ -78,7 +78,11 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 				|| ($cmd_class == "ilobjreportexambiogui"
 					&& $get["target_user_id"] == $this->gUser->getId())
 				|| $base_class == "iltepgui"
-			);
+			)
+		|| (
+			$base_class == "ilobjplugindispatchgui" && $cmd_class == "ilobjreportstudyprogrammegui"
+				&& $cmd == "showcontent"
+		);
 	}
 
 	protected function cmdClassNotIn($cmd_class)
@@ -134,8 +138,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			if ($_GET["cmd"] == "toMyAssessments") {
 				return "my_assessments";
 			}
-			if ($_GET["cmd"] == "toMyStudyProgramme") {
-				return "my_study_proramme";
+			if ($_GET["cmdClass"] == "ilobjreportstudyprogrammegui") {
+				return "va_pass";
 			}
 		}
 		if ($this->isSearch()) {
@@ -204,7 +208,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 					$this->gCtrl->setParameterByClass($gui, "ref_id", $ref_id);
 					$link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", $gui), "showContent");
 					$this->gCtrl->setParameterByClass($gui, "ref_id", null);
-					$items["va_plan_".$obj_id] = array($object->getTitle(), $link);
+					$items["va_pass"] = array($object->getTitle(), $link);
+					break;
 				}
 			}
 		}
