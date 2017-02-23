@@ -123,7 +123,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	protected function getStatusAndDate(\ilObjStudyProgramme $sp) {
 		$progress = $sp->getProgressForAssignment($this->assignment_id);
 		if ($progress->isAccredited() || $progress->isSuccessful()) {
-			$lp = $this->obj->getLPStatus($crs->getId(), $this->user_id);
+			$lp = $this->obj->getLPStatus($sp->getId(), $this->user_id);
 			$date = new ilDateTime($lp['last_change'], IL_CAL_DATETIME);
 			return [self::STATUS_SUCCESS, $entry];
 		}
