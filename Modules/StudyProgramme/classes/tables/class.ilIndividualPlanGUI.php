@@ -181,7 +181,7 @@ class ilIndividualPlanGUI
 				} else {
 					$user = ilObjectFactory::getInstanceByObjId($this->user_id);
 					$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle()
-											. " " . $user->getLastname()
+											. " von " . $user->getLastname()
 											. ", " . $user->getFirstname());
 				}
 				$tbl_lp_children->setSubtitle($this->getStudyProgramme()->getDescription());
