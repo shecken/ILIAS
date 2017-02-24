@@ -46,9 +46,9 @@ class ilIndividualPlanTableGUI extends catTableGUI
 			$entry->setHasLpChildren($child->hasLPChildren());
 			$entry->setHasChildren($child->hasChildren());
 
-			$lp_status = $this->getLpStatusFor($child->getId(), $this->user_id);
-			$entry->setStatus($lp_status["status"]);
-			$entry->setFinished($lp_status["finished"]);
+			list($status, $finished) = $this->getLpStatusFor($child->getId(), $this->user_id);
+			$entry->setStatus($status);
+			$entry->setFinished($finished);
 
 			$finish_until = $this->getCourseStartNextSP($children, $current_child_key + 1);
 			if ($finish_until) {
@@ -136,7 +136,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 			$lp["finished"] = $finished;
 		}
 
-		return $lp;
+		return [$lp["status"], $lp["finished"]];
 	}
 
 	protected function getCourseStartNextSP($children, $next_child_key, $finish_until = null)
