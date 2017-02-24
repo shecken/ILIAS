@@ -150,8 +150,8 @@ class ilIndividualPlanGUI
 		$with_children = $this->getSPWithChildrenBelow($relevant_children);
 		$with_lp_children = $this->getSPWithLPChildren($relevant_children);
 
-		if (count($with_children) === 0 && count($with_lp_children) === 0) {
-			ilUtil::sendFailure($this->g_lng->txt('no_sp_chidren'), true);
+		if(count($with_children) === 0 && count($with_lp_children) === 0) {
+			ilUtil::sendFailure($this->g_lng->txt('rep_robj_xsp_no_sp_children'), true);
 		}
 
 		$html = "";

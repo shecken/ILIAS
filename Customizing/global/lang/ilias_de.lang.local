@@ -1543,6 +1543,7 @@ gev#:#rep_robj_xttc_rbac_create_xttc#:#Report Trainereinsätze nach TEP-Kategori
 gev#:#rep_robj_xrta_rbac_create_xrta#:#Report über Teilnahmen an Trainings anlegen
 gev#:#rep_robj_xtda_rbac_create_xtda#:#Report Trainingsauslastung (Ausblick) anlegen
 gev#:#rep_robj_xsp_view#:#Inhalt
+gev#:#rep_robj_xsp_no_sp_children#:#Das gewählte Studienprogramm hat keine Inhalte
 gev#:#rep_robj_xsp_properties#:#Eigenschaften
 gev#:#rep_robj_xsp_settings_title#:#Titel
 gev#:#rep_robj_xsp_setting_description#:#Beschreibung
