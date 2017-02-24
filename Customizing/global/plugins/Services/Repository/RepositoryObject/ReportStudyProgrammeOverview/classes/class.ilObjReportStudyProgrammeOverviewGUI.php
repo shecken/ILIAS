@@ -14,7 +14,6 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 {
 	protected static $success_img;
 	protected static $in_progress_img;
-	protected static $failed_img;
 	protected static $not_yet_started_img;
 
 	public function getType()
@@ -60,9 +59,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		$a_title->legend(catLegendGUI::create()
 					->item(self::$success_img, "rep_robj_xsp_passed")
 					->item(self::$in_progress_img, "rep_robj_xsp_in_progress")
-					->item(self::$failed_img, "gev_failed")
 					->item(self::$not_yet_started_img, "rep_robj_xsp_not_yet_started"));
-		;
 		return $a_title;
 	}
 
@@ -98,7 +95,6 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	{
 		self::$success_img  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		self::$in_progress_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
-		self::$failed_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-red.png").'" />';
 		self::$not_yet_started_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
 		$this->object->prepareReport();
 		$this->title = $this->prepareTitle(catTitleGUI::create());

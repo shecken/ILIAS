@@ -58,8 +58,6 @@ class ilObjReportStudyProgrammeOverviewTableGUI extends catTableGUI
 				return '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 			case ilStudyProgrammeProgress::STATUS_IN_PROGRESS:
 				return '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
-			case ilStudyProgrammeProgress::STATUS_NOT_RELEVANT:
-				return '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-red.png").'" />';
 			case ilStudyProgrammeProgress::STATUS_ACCREDITED:
 				return '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		}

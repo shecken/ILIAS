@@ -121,7 +121,6 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 					"",
 					array(ilLPStatus::LP_STATUS_COMPLETED_NUM => "teilgenommen",
 							ilLPStatus::LP_STATUS_IN_PROGRESS_NUM => "in Bearbeitung",
-							ilLPStatus::LP_STATUS_FAILED_NUM => "nicht teilgenommen",
 							ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM => "noch nicht begonnen")
 				)
 			)

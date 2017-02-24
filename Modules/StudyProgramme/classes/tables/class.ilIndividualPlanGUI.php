@@ -59,11 +59,6 @@ class ilIndividualPlanGUI
 	/**
 	 * @var string
 	 */
-	protected $failed;
-
-	/**
-	 * @var string
-	 */
 	protected $not_attemped;
 
 	/**
@@ -81,7 +76,6 @@ class ilIndividualPlanGUI
 		$this->isPost = false;
 		$this->success  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		$this->in_progress = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
-		$this->failed = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-red.png").'" />';
 		$this->not_attemped = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
 	}
 
@@ -250,7 +244,6 @@ class ilIndividualPlanGUI
 		$legend = new catLegendGUI();
 		$legend->addItem($this->success, "rep_robj_xsp_passed")
 			   ->addItem($this->in_progress, "rep_robj_xsp_in_progress")
-			   ->addItem($this->failed, "prg_failed")
 			   ->addItem($this->not_attemped, "rep_robj_xsp_not_yet_started");
 		return $legend;
 	}
@@ -264,8 +257,6 @@ class ilIndividualPlanGUI
 				return $this->in_progress;
 			case ilLPStatus::LP_STATUS_COMPLETED_NUM:
 				return $this->success;
-			case ilLPStatus::LP_STATUS_FAILED_NUM:
-				return $this->failed;
 			default:
 				return "";
 		}
