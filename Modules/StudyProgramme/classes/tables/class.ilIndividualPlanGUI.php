@@ -208,11 +208,10 @@ class ilIndividualPlanGUI
 	public function createLegend()
 	{
 		$legend = new catLegendGUI();
-		$legend->addItem($this->success, "prg_success")
-			   ->addItem($this->in_progress, "prg_progress")
+		$legend->addItem($this->success, "rep_robj_xsp_passed")
+			   ->addItem($this->in_progress, "rep_robj_xsp_in_progress")
 			   ->addItem($this->failed, "prg_failed")
-			   ->addItem($this->not_attemped, "prg_not_attemped");
-
+			   ->addItem($this->not_attemped, "rep_robj_xsp_not_yet_started");
 		return $legend;
 	}
 
