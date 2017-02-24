@@ -228,7 +228,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::LOAD_MEMBER_LIST)) {
 			$this->g_ctrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $crs_utils->getRefId());
-			$items[] = ['title' => $this->g_lng->txt("download_memberlist"),
+			$items[] = ['title' => $this->g_lng->txt("download_memberlist_ip"),
 						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "trainer")];
 			$this->g_ctrl->clearParametersByClass("gevMemberListDeliveryGUI");
 		}
@@ -239,7 +239,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		if ($crs_utils->canViewBookings($this->user_id)) {
 			$this->g_ctrl->setParameterByClass("ilCourseBookingGUI", "ref_id", $crs_utils->getRefId());
-			$items[] = ['title' => $this->g_lng->txt('view_bookings'),
+			$items[] = ['title' => $this->g_lng->txt('view_bookings_ip'),
 						'link' => $this->g_ctrl->getLinkTargetByClass(["ilCourseBookingGUI", "ilCourseBookingAdminGUI"])];
 			$this->g_ctrl->clearParametersByClass("ilCourseBookingGUI");
 		}
@@ -250,7 +250,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::VIEW_MAILING)) {
 			$this->g_ctrl->setParameterByClass("gevTrainerMailHandlingGUI", "crs_id", $crs_utils->getId());
-			$items[] = ['title' => $this->g_lng->txt('view_mailing'),
+			$items[] = ['title' => $this->g_lng->txt('view_mailing_ip'),
 						'link' => $this->g_ctrl->getLinkTargetByClass("gevTrainerMailHandlingGUI", "showLog")];
 			$this->g_ctrl->clearParametersByClass("gevTrainerMailHandlingGUI");
 		}
@@ -262,7 +262,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::LOAD_SIGNATURE_LIST)) {
 			$this->g_ctrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $crs_utils->getRefId());
-			$items[] = ['title' => $this->g_lng->txt('signature_list'),
+			$items[] = ['title' => $this->g_lng->txt('signature_list_ip'),
 						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_signature_list")];
 			$this->g_ctrl->clearParametersByClass("gevMemberListDeliveryGUI");
 		}
@@ -274,7 +274,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::LOAD_SIGNATURE_LIST)
 			&& ilParticipationStatus::getInstance($crs_utils->getCourse())->getAttendanceList()) {
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "crsrefid", $crs_utils->getRefId());
-			$items[] = ['title' => $this->g_lng->txt('participants_list'),
+			$items[] = ['title' => $this->g_lng->txt('participants_list_ip'),
 						'link' => $this->g_ctrl
 										->getLinkTarget($this->parent_obj, "viewAttendanceList")];
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "crsrefid", null);
@@ -286,7 +286,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		if ($crs_utils->canModifyParticipationStatus($this->user_id)) {
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "target_ref_id", $crs_utils->getRefId());
-			$items[] = ['title' => $this->g_lng->txt('p_status'),
+			$items[] = ['title' => $this->g_lng->txt('p_status_ip'),
 						'link' => $this->g_ctrl
 										->getLinkTarget($this->parent_obj, 'participationStatus')];
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "target_ref_id", null);
