@@ -135,7 +135,7 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 
 			if (ilObject::_lookupType($settings->getSPNodeRefId(), true) !== "prg") {
 				ilUtil::sendFailure($this->plugin->txt('no_sp_id'), true);
-				$this->g_ctrl->redirectByClass("ilReportStudyProgrammeSettingsGUI", "settings");
+				$this->g_ctrl->redirectByClass("ilReportStudyProgrammeSettingsGUI", "editProperties");
 			}
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanGUI.php");
 			$gui = new \ilIndividualPlanGUI();

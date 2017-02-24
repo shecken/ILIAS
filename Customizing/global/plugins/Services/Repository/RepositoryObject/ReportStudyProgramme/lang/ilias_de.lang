@@ -24,3 +24,4 @@ xsp_properties#:#Eigenschaften
 no_sp_id#:#ID ist keine Studyprogram ID
 no_assignment#:#Der Benutzer ist keinem Studienprogramm zugeordnet
 no_sp_chidren#:#Es sind keine weiteren Studienprogramme untergeordnet
+edit_success#:#Die Einstellungen wurden erfolgreich gespeichert
