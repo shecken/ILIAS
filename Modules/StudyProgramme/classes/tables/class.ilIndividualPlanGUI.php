@@ -7,6 +7,8 @@
  *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
  */
+require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+
 class ilIndividualPlanGUI
 {
 	/**
@@ -127,9 +129,10 @@ class ilIndividualPlanGUI
 			if($this->getUserId() == $this->g_user->getId()) {
 				$tbl_children->setTitle($this->getStudyProgramme()->getTitle());
 			}else{
+				$user = gevUserUtils::getInstance($this->user_id);
 				$tbl_children->setTitle($this->getStudyProgramme()->getTitle()
-										. " " . $this->g_user->getLastname()
-										. ", " . $this->g_user->getFirstname());
+										. " " . $user->getLastname()
+										. ", " . $user->getFirstname());
 			}
 			$tbl_children->setSubtitle($this->getStudyProgramme()->getDescription());
 			$tbl_children->setLegend($this->createLegend());
@@ -140,14 +143,14 @@ class ilIndividualPlanGUI
 		if (count($with_lp_children) > 0) {
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanDetailTableGUI.php");
 			$tbl_lp_children = new ilIndividualPlanDetailTableGUI($this, $with_lp_children, $this->getAssignmentId(), $this->getUserId(), "view");
-
 			if ($html == "") {
 				if($this->getUserId() == $this->g_user->getId()) {
 					$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle());
 				}else{
+					$user = gevUserUtils::getInstance($this->user_id);
 					$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle()
-											. " " . $this->g_user->getLastname()
-											. ", " . $this->g_user->getFirstname());
+											. " " . $user->getLastname()
+											. ", " . $user->getFirstname());
 				}
 				$tbl_lp_children->setSubtitle($this->getStudyProgramme()->getDescription());
 				$tbl_lp_children->setLegend($this->createLegend());
