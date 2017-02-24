@@ -58,10 +58,10 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		$a_title = parent::prepareTitle($a_title);
 		$a_title->image("GEV_img/ico-head-edubio.png");
 		$a_title->legend(catLegendGUI::create()
-					->item(self::$success_img, "gev_passed")
-					->item(self::$in_progress_img, "gev_in_progress")
+					->item(self::$success_img, "rep_robj_xsp_passed")
+					->item(self::$in_progress_img, "rep_robj_xsp_in_progress")
 					->item(self::$failed_img, "gev_failed")
-					->item(self::$not_yet_started_img, "gev_not_yet_started"));
+					->item(self::$not_yet_started_img, "rep_robj_xsp_not_yet_started"));
 		;
 		return $a_title;
 	}
