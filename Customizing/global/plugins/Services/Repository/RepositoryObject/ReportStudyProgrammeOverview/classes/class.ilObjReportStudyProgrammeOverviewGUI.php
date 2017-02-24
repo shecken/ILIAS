@@ -58,10 +58,10 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		$a_title = parent::prepareTitle($a_title);
 		$a_title->image("GEV_img/ico-head-edubio.png");
 		$a_title->legend(catLegendGUI::create()
-					->item(self::$success_img, "gev_passed")
-					->item(self::$in_progress_img, "gev_in_progress")
+					->item(self::$success_img, "rep_robj_xsp_passed")
+					->item(self::$in_progress_img, "rep_robj_xsp_in_progress")
 					->item(self::$failed_img, "gev_failed")
-					->item(self::$not_yet_started_img, "gev_not_yet_started"));
+					->item(self::$not_yet_started_img, "rep_robj_xsp_not_yet_started"));
 		;
 		return $a_title;
 	}
@@ -173,7 +173,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	 */
 	protected function showContent()
 	{
-		if($this->object->getStudyId() == null || ilObject::_lookupType($this->object->getStudyId(), true) != "prg") {
+		if ($this->object->getStudyId() == null || ilObject::_lookupType($this->object->getStudyId(), true) != "prg") {
 			if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
 				ilUtil::sendInfo($this->plugin->txt('no_prg_warning'), true);
 				$this->gCtrl->redirect($this, "settings");
@@ -201,7 +201,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		$settings_form->setValuesByPost();
 		if ($settings_form->checkInput()) {
 			$potential_study_id = $settings_form->getItemByPostVar('selected_study_prg')->getValue();
-			if(ilObject::_lookupType($potential_study_id, true) !== "prg") {
+			if (ilObject::_lookupType($potential_study_id, true) !== "prg") {
 				ilUtil::sendInfo($this->plugin->txt('no_prg_warning'), true);
 				$settings_form->getItemByPostVar('is_online')->setValue(0);
 			}

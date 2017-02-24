@@ -354,6 +354,14 @@ exc#:#exc_team_member_container_add#:#Team-Mitglied aus Training/Gruppe hinzufü
 exercise#:#exc_crs_add_members#:#Mitglieder dieses Trainings hinzufügen
 exercise#:#exc_feedback_from_tutor#:#Feedback des Trainers
 fm#:#fm_settings_active_info#:#Benutzer können Kategorien, Trainings, Gruppen und Ordner öffnen, indem Sie im Magazin die Aktion "Mit Dateimanager öffnen" ausführen.
+gev#:#mass_view_record_ip#:#Gesprächsnotizen
+gev#:#mass_edit_record_ip#:#Teilnehmer bewerten und Lernfortschritt bearbeiten
+gev#:#download_memberlist_ip#:#Download Teilnehmerliste
+gev#:#view_bookings_ip#:#Buchungen einsehen
+gev#:#view_mailing_ip#:#Mailing einsehen
+gev#:#signature_list_ip#:#Unterschriftenliste herunterladen
+gev#:#participants_list_ip#:#Anwesenheitsliste herunterladen
+gev#:#p_status_ip#:#Teilnahmestatus setzen
 gev#:#report_query_view#:#Abfrage betrachten
 gev#:#report_query_text#:#Abfrage:
 gev#:#video_link#:#Link zum Erklärungsvideo
@@ -1548,6 +1556,9 @@ gev#:#rep_robj_xsp_offline#:#Offline
 gev#:#rep_robj_xsp_status#:#Status
 gev#:#rep_robj_xsp_objs_xsp#:#Report Einzelansicht Ausbildungsstand zum Vertriebsassistenzen
 gev#:#rep_robj_xsp_obj_xsp#:#Report Einzelansicht Ausbildungsstand zum Vertriebsassistenzen
+gev#:#rep_robj_xsp_passed#:#abgeschlossen
+gev#:#rep_robj_xsp_in_progress#:#gebucht
+gev#:#rep_robj_xsp_not_yet_started#:#noch nicht gebucht
 gev#:#cron_wbd_relevant_title#:#Setzt Trainings auf WBD relevant.
 gev#:#cron_wbd_relevant_description#:#Wenn beim Benutzer das UDF Feld 'WBD Punkte nachmelden ab' einen Wert besitzt, werden alle Trainings deren Enddatum >= ist auf WBD relevant gestzt.
 gev#:#gev_attendance_list#:#Anwesenheitsliste
