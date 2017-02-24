@@ -1,6 +1,7 @@
 <?php
-
 namespace CaT\Plugins\ReportStudyProgramme;
+
+require_once("Services/Object/classes/class.ilObject.php");
 
 class ilActions
 {
@@ -66,5 +67,13 @@ class ilActions
 		$this->obj->setSettings($new_settings);
 
 		$this->obj->update();
+	}
+
+
+	public function isSPId($id) {
+		if(\ilObject::_lookupType($id, true) == "prg") {
+			return true;
+		}
+		return false;
 	}
 }
