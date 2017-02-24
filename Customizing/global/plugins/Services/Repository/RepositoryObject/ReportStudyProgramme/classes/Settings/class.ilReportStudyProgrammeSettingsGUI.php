@@ -58,7 +58,7 @@ class ilReportStudyProgrammeSettingsGUI
 
 		$post = $_POST;
 		$this->actions->updateObjectFromArray($post);
-		if($this->actions->isSPId($post['sp_node_ref_id'])) {
+		if ($this->actions->isSPId($post['sp_node_ref_id'])) {
 			ilUtil::sendSuccess($this->txt('edit_success'), true);
 		} else {
 			ilUtil::sendFailure($this->txt('no_sp_id'), true);

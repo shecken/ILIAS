@@ -2,7 +2,7 @@
 
 $id = "xsp";
 
-$version = "0.2.1";
+$version = "0.2.2";
 
 $ilias_min_version = "4.2.0";
 $ilias_max_version = "5.0.0";

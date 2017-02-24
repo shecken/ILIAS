@@ -70,8 +70,9 @@ class ilActions
 	}
 
 
-	public function isSPId($id) {
-		if(\ilObject::_lookupType($id, true) == "prg") {
+	public function isSPId($id)
+	{
+		if (\ilObject::_lookupType($id, true) == "prg") {
 			return true;
 		}
 		return false;

@@ -198,7 +198,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xsp")
 		);
 
-		if ($sp_report_plugin && $sp_report_plugin->active) {
+		if ($sp_report_plugin && $sp_report_plugin->isActive()) {
 			$sp_report_object_ids = ilObject::_getObjectsByType("xsp");
 			$gui = $sp_report_plugin->getGUIClass();
 
@@ -208,7 +208,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 
 				if ($this->gAccess->checkAccessOfUser($this->gUser->getId(), "visible", "", $ref_id) && $object->showInCockpit()) {
 					$this->gCtrl->setParameterByClass($gui, "ref_id", $ref_id);
-					$link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", $gui), "showContent");
+					$link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", $gui, 'ilindividualplangui'), "showContent");
 					$this->gCtrl->setParameterByClass($gui, "ref_id", null);
 					$items["va_pass"] = array($object->getTitle(), $link);
 					break;

@@ -173,7 +173,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	 */
 	protected function showContent()
 	{
-		if($this->object->getStudyId() == null || ilObject::_lookupType($this->object->getStudyId(), true) != "prg") {
+		if ($this->object->getStudyId() == null || ilObject::_lookupType($this->object->getStudyId(), true) != "prg") {
 			if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
 				ilUtil::sendInfo($this->plugin->txt('no_prg_warning'), true);
 				$this->gCtrl->redirect($this, "settings");
@@ -201,7 +201,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		$settings_form->setValuesByPost();
 		if ($settings_form->checkInput()) {
 			$potential_study_id = $settings_form->getItemByPostVar('selected_study_prg')->getValue();
-			if(ilObject::_lookupType($potential_study_id, true) !== "prg") {
+			if (ilObject::_lookupType($potential_study_id, true) !== "prg") {
 				ilUtil::sendInfo($this->plugin->txt('no_prg_warning'), true);
 				$settings_form->getItemByPostVar('is_online')->setValue(0);
 			}

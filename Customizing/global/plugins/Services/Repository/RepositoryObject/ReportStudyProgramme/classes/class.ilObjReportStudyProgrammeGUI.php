@@ -8,7 +8,7 @@ use \CaT\Plugins\ReportStudyProgramme;
 /**
  * @ilCtrl_isCalledBy ilObjReportStudyProgrammeGUI: ilRepositoryGUI, ilAdministrationGUI, ilObjPluginDispatchGUI
  * @ilCtrl_Calls ilObjReportStudyProgrammeGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI
- * @ilCtrl_Calls ilObjReportStudyProgrammeGUI: ilReportStudyProgrammeSettingsGUI, ilIndividualPlanGUI, 
+ * @ilCtrl_Calls ilObjReportStudyProgrammeGUI: ilReportStudyProgrammeSettingsGUI, ilIndividualPlanGUI
  * @author 		Stefan Hecken <stefan.hecken@concepts-and-training.de>
  */
 class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
@@ -56,7 +56,6 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 	{
 		$this->plugin_actions = $this->object->getActions();
 		$next_class = $this->g_ctrl->getNextClass();
-
 		switch ($next_class) {
 			case "ilReportStudyProgrammeSettingsGUI":
 				$this->forwardSettings();
@@ -65,13 +64,14 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 				$this->showContent();
 				break;
 			default:
+				$cmd = $this->g_ctrl->getCmd(self::SHOW_CONTENT);
 				switch ($cmd) {
 					case ilReportStudyProgrammeSettingsGUI::EDIT_SETTINGS:
 					case ilReportStudyProgrammeSettingsGUI::SAVE_SETTINGS:
 						$this->forwardSettings();
 						break;
-					default:
-						$this->showContent();
+					case self::SHOW_CONTENT:
+						$this->redirectShowContent();
 						break;
 				}
 		}
@@ -117,18 +117,23 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 		}
 	}
 
+	protected function redirectShowContent()
+	{
+		$this->g_ctrl->redirectByClass('ilindividualplangui', 'showContent');
+	}
+
 	public function showContent()
 	{
+		global $ilLog;
 		if (!$this->g_access->checkAccess("visible", "", $this->object->getRefId())) {
 			\ilUtil::sendFailure($this->plugin->txt('obj_permission_denied'), true);
 			$this->g_ctrl->redirectByClass("ilPersonalDesktopGUI", "jumpToSelectedItems");
 		} else {
 			$this->g_tabs->setTabActive(self::TAB_SHOW_CONTENT);
 			$settings = $this->object->getSettings();
-
 			require_once("Modules/StudyProgramme/classes/class.ilObjectFactoryWrapper.php");
 
-			if(ilObject::_lookupType($settings->getSPNodeRefId(), true) !== "prg") {
+			if (ilObject::_lookupType($settings->getSPNodeRefId(), true) !== "prg") {
 				ilUtil::sendFailure($this->plugin->txt('no_sp_id'), true);
 				$this->g_ctrl->redirectByClass("ilReportStudyProgrammeSettingsGUI", "editProperties");
 			}
@@ -136,7 +141,7 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 			$gui = new \ilIndividualPlanGUI();
 			$sp = \ilObjectFactoryWrapper::getInstanceByRefId($settings->getSPNodeRefId());
 			$assignments = $sp->getAssignmentsOf($this->g_user->getId());
-			if(count($assignments) < 1) {
+			if (count($assignments) < 1) {
 				ilUtil::sendFailure($this->plugin->txt('no_assignment'), true);
 				return;
 			}
@@ -144,7 +149,6 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 			$gui->setAssignmentId($assignment->getId());
 			$gui->setUserId($this->g_user->getId());
 			$gui->setSPRefId($settings->getSPNodeRefId());
-
 			$this->g_ctrl->forwardCommand($gui);
 		}
 	}
