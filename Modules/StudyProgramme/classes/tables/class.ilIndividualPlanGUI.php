@@ -73,6 +73,7 @@ class ilIndividualPlanGUI
 	{
 		global $ilCtrl, $tpl, $lng;
 		$lng->loadLanguageModule("prg");
+		$this->g_lng = $lng;
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tpl = $tpl;
 		$this->isPost = false;
@@ -116,7 +117,7 @@ class ilIndividualPlanGUI
 		$with_lp_children = $this->getSPWithLPChildren($relevant_children);
 
 		if(count($with_children) === 0 && count($with_lp_children) === 0) {
-			ilUtil::sendFailure($this->plugin->txt('no_sp_chidren'), true);
+			ilUtil::sendFailure($this->g_lng->txt('no_sp_chidren'), true);
 		}
 
 		$html = "";
