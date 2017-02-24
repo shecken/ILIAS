@@ -5,6 +5,8 @@
  * This GUI will show the member of an VA Pass the historie of his own learning progress
  * and which study programme and course he has to do
  *
+ * @ilCtrl_Calls ilIndividualPlanGUI: gevTrainerMailHandlingGUI, ilParticipationStatusAdminGUI
+ *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
  */
 class ilIndividualPlanGUI
@@ -85,19 +87,57 @@ class ilIndividualPlanGUI
 
 	public function executeCommand()
 	{
-		global $ilLog;
-		$ilLog->write(get_class($this));
 		$cmd = $this->g_ctrl->getCmd("view");
-
-		switch ($cmd) {
-			case "view":
-			case "showContent":
-				$this->view();
+		$next_class = $this->g_ctrl->getNextClass();
+		switch ($next_class) {
+			case 'gevtrainermailhandlinggui':
+				require_once 'Services/GEV/Mailing/classes/class.gevTrainerMailHandlingGUI.php';
+				$next_gui = new gevTrainerMailHandlingGUI($this);
+				$this->g_ctrl->forwardCommand($next_gui);
 				break;
 			default:
-				throw new Exception("command unkown: $cmd");
+				switch ($cmd) {
+					case "view":
+					case "showContent":
+						$this->view();
+						break;
+					case 'participationStatus':
+						$this->participationStatus();
+						break;
+					case "finalize":
+					case "confirmFinalize":
+					case "saveStatusAndPoints":
+					case "uploadAttendanceList":
+					case "viewAttendanceList":
+					case 'listStatus':
+						//ilParticipationStatusTableGUI
+						require_once("Services/ParticipationStatus/classes/class.ilParticipationStatusAdminGUI.php");
+						$crs_ref_id = $_GET['crsrefid'];
+						$gui = ilParticipationStatusAdminGUI::getInstanceByRefId($crs_ref_id, 'ilindividualplangui');
+
+						$this->g_ctrl->setParameter($gui, "crsrefid", $crs_ref_id);
+						$ret = $this->g_ctrl->forwardCommand($gui);
+						break;
+					default:
+						throw new Exception("command unkown: $cmd");
+				}
 		}
-		$this->$cmd();
+	}
+
+
+	protected function participationStatus()
+	{
+		global $ilCtrl, $tpl;
+		$ref_id = $_GET['target_ref_id'];
+		require_once("Services/GEV/Desktop/classes/class.gevMyTrainingsApGUI.php");
+		$tpl->setTitle(null);
+		$tpl->setContent(
+			gevMyTrainingsApGUI::renderListParticipationStatus(
+				$this,
+				$ilCtrl->getLinkTarget($this, "view"),
+				$ref_id
+			)
+		);
 	}
 
 	protected function view()
@@ -116,7 +156,7 @@ class ilIndividualPlanGUI
 		$with_children = $this->getSPWithChildrenBelow($relevant_children);
 		$with_lp_children = $this->getSPWithLPChildren($relevant_children);
 
-		if(count($with_children) === 0 && count($with_lp_children) === 0) {
+		if (count($with_children) === 0 && count($with_lp_children) === 0) {
 			ilUtil::sendFailure($this->g_lng->txt('no_sp_chidren'), true);
 		}
 
@@ -124,9 +164,9 @@ class ilIndividualPlanGUI
 		if (count($with_children) > 0) {
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanTableGUI.php");
 			$tbl_children = new ilIndividualPlanTableGUI($this, $with_children, $this->getAssignmentId(), $this->getUserId(), "view");
-			if($this->getUserId() == $this->g_user->getId()) {
+			if ($this->getUserId() == $this->g_user->getId()) {
 				$tbl_children->setTitle($this->getStudyProgramme()->getTitle());
-			}else{
+			} else {
 				$tbl_children->setTitle($this->getStudyProgramme()->getTitle()
 										. " " . $this->g_user->getLastname()
 										. ", " . $this->g_user->getFirstname());
@@ -142,9 +182,9 @@ class ilIndividualPlanGUI
 			$tbl_lp_children = new ilIndividualPlanDetailTableGUI($this, $with_lp_children, $this->getAssignmentId(), $this->getUserId(), "view");
 
 			if ($html == "") {
-				if($this->getUserId() == $this->g_user->getId()) {
+				if ($this->getUserId() == $this->g_user->getId()) {
 					$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle());
-				}else{
+				} else {
 					$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle()
 											. " " . $this->g_user->getLastname()
 											. ", " . $this->g_user->getFirstname());
