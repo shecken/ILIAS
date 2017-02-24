@@ -31,11 +31,11 @@ class ilIndividualPlanTableGUI extends catTableGUI
 
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $lng, $ilCtrl, $ilTree;
+		global $lng, $ilCtrl, $tree;
 
 		$this->g_lng = $lng;
 		$this->g_ctrl = $ilCtrl;
-		$this->g_tree = $ilTree;
+		$this->g_tree = $tree;
 		$this->user_id = $user_id;
 		$this->assignment_id = $assignment_id;
 
