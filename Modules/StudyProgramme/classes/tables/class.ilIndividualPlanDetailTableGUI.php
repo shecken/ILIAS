@@ -416,7 +416,10 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		assert('$sp->getLPMode() == \ilStudyProgramme::MODE_LP_COMPLETED');
 		foreach ($sp->getLPChildren() as $crs_ref) {
-			$crs = ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId());
+			$crs = ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId(), false);
+			if (!$crs) {
+				continue;
+			}
 			$crs_utils = gevCourseUtils::getInstanceByObj($crs);
 			if ($crs_utils->isMember($this->user_id)) {
 				return $crs;
