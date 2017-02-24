@@ -6150,3 +6150,8 @@ if (!$ilDB->tableColumnExists('mass_settings', 'grade_self')) {
 	));
 }
 ?>
+
+<#255>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
