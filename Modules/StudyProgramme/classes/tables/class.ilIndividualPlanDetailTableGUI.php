@@ -56,6 +56,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$this->g_ctrl = $ilCtrl;
 		$this->g_db = $ilDB;
 		$this->g_user = $ilUser;
+		$this->g_user_id = $this->g_user->getId();
 		$this->user_id = $user_id;
 		$this->user = ilObjectFactory::getInstanceByObjId($this->user_id);
 		$this->mass_storage = new ilManualAssessmentMembersStorageDB($this->g_db);
@@ -193,7 +194,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$access = $mass->accessHandler();
 
 		$finalized = $member->finalized();
-		$edited_by_other = $ex_id != $this->user_id && 0 !== (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID];
+		$edited_by_other = $ex_id != $this->g_user_id && 0 !== (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID];
 		$may_view = $access->mayViewUserIn($this->user_id, $mass, true);
 		$may_grade = $access->mayGradeUserIn($this->user_id, $mass, true);
 
@@ -211,7 +212,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$ex_id = $member->examinerId();
 
 		$finalized = $member->finalized();
-		$edited_by_other = $ex_id != $this->user_id && 0 !== (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID];
+		$edited_by_other = $ex_id != $this->g_user_id && 0 !== (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID];
 		$may_grade = $mass->accessHandler()->mayGradeUserIn($this->user_id, $mass, true);
 
 		if (!$finalized && !$edited_by_other && $may_grade) {
@@ -224,7 +225,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function maybeAddDownloadMemberlistTo(array $items, $crs_utils)
 	{
-		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::LOAD_MEMBER_LIST)) {
+		if ($crs_utils->userHasPermissionTo($this->g_user_id, gevSettings::LOAD_MEMBER_LIST)) {
 			$this->g_ctrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt("download_memberlist_ip"),
 						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "trainer")];
@@ -235,7 +236,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function maybeAddViewBookingsTo(array $items, $crs_utils)
 	{
-		if ($crs_utils->canViewBookings($this->user_id)) {
+		if ($crs_utils->canViewBookings($this->g_user_id)) {
 			$this->g_ctrl->setParameterByClass("ilCourseBookingGUI", "ref_id", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt('view_bookings_ip'),
 						'link' => $this->g_ctrl->getLinkTargetByClass(["ilCourseBookingGUI", "ilCourseBookingAdminGUI"])];
@@ -246,7 +247,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function maybeAddViewMailingTo(array $items, $crs_utils)
 	{
-		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::VIEW_MAILING)) {
+		if ($crs_utils->userHasPermissionTo($this->g_user_id, gevSettings::VIEW_MAILING)) {
 			$this->g_ctrl->setParameterByClass("gevTrainerMailHandlingGUI", "crs_id", $crs_utils->getId());
 			$items[] = ['title' => $this->g_lng->txt('view_mailing_ip'),
 						'link' => $this->g_ctrl->getLinkTargetByClass("gevTrainerMailHandlingGUI", "showLog")];
@@ -258,7 +259,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function maybeAddDownloadSignatureListTo(array $items, $crs_utils)
 	{
-		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::LOAD_SIGNATURE_LIST)) {
+		if ($crs_utils->userHasPermissionTo($this->g_user_id, gevSettings::LOAD_SIGNATURE_LIST)) {
 			$this->g_ctrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt('signature_list_ip'),
 						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_signature_list")];
@@ -269,7 +270,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function maybeAddDownloadParticipantsListTo(array $items, $crs_utils)
 	{
-		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::LOAD_SIGNATURE_LIST)
+		if ($crs_utils->userHasPermissionTo($this->g_user_id, gevSettings::LOAD_SIGNATURE_LIST)
 			&& ilParticipationStatus::getInstance($crs_utils->getCourse())->getAttendanceList()) {
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "crsrefid", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt('participants_list_ip'),
@@ -282,7 +283,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function maybeAddSetParticipationStatusTo(array $items, $crs_utils)
 	{
-		if ($crs_utils->canModifyParticipationStatus($this->user_id)) {
+		if ($crs_utils->canModifyParticipationStatus($this->g_user_id)) {
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "target_ref_id", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt('p_status_ip'),
 						'link' => $this->g_ctrl
