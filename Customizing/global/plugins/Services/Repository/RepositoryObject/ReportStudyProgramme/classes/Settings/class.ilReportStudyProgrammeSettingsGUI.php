@@ -1,4 +1,5 @@
 <?php
+require_once("Services/Utilities/classes/class.ilUtil.php");
 
 use \CaT\Plugins\ReportStudyProgramme;
 
@@ -57,8 +58,12 @@ class ilReportStudyProgrammeSettingsGUI
 
 		$post = $_POST;
 		$this->actions->updateObjectFromArray($post);
-
-		$this->g_ctrl->redirect($this);
+		if($this->actions->isSPId($post['sp_node_ref_id'])) {
+			ilUtil::sendSuccess($this->txt('edit_success'), true);
+		} else {
+			ilUtil::sendFailure($this->txt('no_sp_id'), true);
+		}
+		$this->g_ctrl->redirect($this, self::EDIT_SETTINGS);
 	}
 
 	protected function initForm()
