@@ -67,6 +67,9 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 		$osp = new ilObjStudyProgramme($this->getStudyId());
 
 		foreach ($osp->getChildren() as $child) {
+			if(!$child->isActive()) {
+				continue;
+			}
 			$column_key = $child->getTitle();
 			$column_key = strtolower($column_key);
 			$column_key = str_replace(" ", "_", $column_key);
@@ -160,6 +163,7 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 		$arr2 = array();
 		foreach ($user_ids as $user_id) {
 			$assigns_per_user = $osp->getAssignmentsOf($user_id);
+
 			foreach ($assigns_per_user as $assign) {
 				$utils = gevUserUtils::getInstance($user_id);
 				$arr = array();
@@ -175,12 +179,15 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 				} else {
 					$arr["entry_date"] = $entrydate->get(IL_CAL_FKT_DATE, "d.m.Y");
 				}
-				$arr["status"] = $osp->getProgressForAssignment($assign)->getStatus();
+				$arr["status"] = $osp->getProgressForAssignment($assign->getId())->getStatus();
 				foreach ($children as $child) {
+					if(!$child->isActive()) {
+						continue;
+					}
 					$column_key = $child->getTitle();
 					$column_key = strtolower($column_key);
 					$column_key = str_replace(" ", "_", $column_key);
-					$arr[$column_key] = $child->getProgressForAssignment($assign)->getStatus();;
+					$arr[$column_key] = $child->getProgressForAssignment($assign->getId())->getStatus();;
 				}
 				$arr2[] = $arr;
 			}

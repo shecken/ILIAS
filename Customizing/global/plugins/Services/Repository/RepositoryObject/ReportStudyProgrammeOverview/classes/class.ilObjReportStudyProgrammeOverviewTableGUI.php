@@ -1,6 +1,7 @@
 <?php
 require_once "Services/CaTUIComponents/classes/class.catTableGUI.php";
 require_once "Modules/StudyProgramme/classes/tables/class.ilIndividualPlanGUI.php";
+require_once "Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php";
 
 /**
  * @author Daniel Weise <daniel.weise@concepts-and-training.de>
@@ -40,7 +41,7 @@ class ilObjReportStudyProgrammeOverviewTableGUI extends catTableGUI
 				continue;
 			}
 
-			$diff_arr = ["user_id", "firstname", "lastname", "orgunit", "entry_date"];
+			$diff_arr = ["firstname", "lastname", "orgunit", "entry_date"];
 			if (!in_array($key, $diff_arr)) {
 				$value = $this->statusToImage($value);
 			}
