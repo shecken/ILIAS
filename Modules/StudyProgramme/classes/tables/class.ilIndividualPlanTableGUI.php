@@ -156,7 +156,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 
 		foreach ($crsrs as $ref) {
 			$crs_id = ilContainerReference::_lookupTargetId($ref["obj_id"]);
-			$crs_utils = gevCourseUtils::getInstanceByObj($crs);
+			$crs_utils = gevCourseUtils::getInstance($crs_id);
 			if ($crs_utils->isMember($user_id)) {
 				return true;
 			}
