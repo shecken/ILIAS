@@ -190,7 +190,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function maybeAddViewRecordTo(array $items, ilObjManualAssessment $mass)
 	{
-		$member = $mass->membersStorage()->loadMember($mass, $this->g_user);
+		$member = $mass->membersStorage()->loadMember($mass, $this->user);
 		$ex_id = $member->examinerId();
 		$access = $mass->accessHandler();
 
@@ -209,7 +209,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function maybeAddEditRecordTo(array $items, ilObjManualAssessment $mass)
 	{
-		$member = $mass->membersStorage()->loadMember($mass, $this->g_user);
+		$member = $mass->membersStorage()->loadMember($mass, $this->user);
 		$ex_id = $member->examinerId();
 
 		$finalized = $member->finalized();
