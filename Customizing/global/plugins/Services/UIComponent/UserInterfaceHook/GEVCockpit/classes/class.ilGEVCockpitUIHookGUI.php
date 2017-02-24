@@ -82,7 +82,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 		|| (
 			$base_class == "ilobjplugindispatchgui" &&
 				   (($cmd_class == "ilobjreportstudyprogrammegui" && $cmd == "showcontent")
-				|| ($cmd_class == "ilindividualplangui" && $cmd == "view"))
+				|| ($cmd_class == "ilindividualplangui" && ($cmd == "view" || $cmd == "showcontent")))
 		);
 	}
 
@@ -175,7 +175,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 
 	protected function getCockpitItems()
 	{
-		if (isset($_GET['spRefId']) && $_GET['user_id'] != $this->gUser->getId()) {
+		if (isset($_GET['spRefId']) && isset($_GET['user_id']) && $_GET['user_id'] != $this->gUser->getId()) {
 			return array();
 		}
 		if ($this->gUser->getId() !== 0) {
