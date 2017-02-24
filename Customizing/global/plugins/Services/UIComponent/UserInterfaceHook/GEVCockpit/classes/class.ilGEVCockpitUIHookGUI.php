@@ -198,7 +198,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xsp")
 		);
 
-		if ($sp_report_plugin && $sp_report_plugin->isActive()) {
+		if ($sp_report_plugin && $sp_report_plugin->isActive() && $_GET['user_id'] != $this->gUser->getId()) {
 			$sp_report_object_ids = ilObject::_getObjectsByType("xsp");
 			$gui = $sp_report_plugin->getGUIClass();
 
