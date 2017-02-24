@@ -20,16 +20,22 @@ class ilIndividualPlanTableGUI extends catTableGUI
 	 */
 	protected $g_ctrl;
 
+	/**
+	 * @var ilTree
+	 */
+	protected $g_tree;
+
 	public function __construct($a_parent_obj, $children, $assignment_id, $user_id, $a_parent_cmd = "", $a_template_context = "")
 	{
 		$this->setID("va_pass_member");
 
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $lng, $ilCtrl;
+		global $lng, $ilCtrl, $ilTree;
 
 		$this->g_lng = $lng;
 		$this->g_ctrl = $ilCtrl;
+		$this->g_tree = $ilTree;
 		$this->user_id = $user_id;
 		$this->assignment_id = $assignment_id;
 
@@ -46,7 +52,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 			$entry->setHasLpChildren($child->hasLPChildren());
 			$entry->setHasChildren($child->hasChildren());
 
-			list($status, $finished) = $this->getLpStatusFor($child->getId(), $this->user_id);
+			list($status, $finished) = $this->getLpStatusFor($child, $this->user_id);
 			$entry->setStatus($status);
 			$entry->setFinished($finished);
 
@@ -123,20 +129,39 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		$this->addColumn($this->g_lng->txt("prg_finished"));
 	}
 
-	protected function getLpStatusFor($obj_id, $user_id)
+	protected function getLpStatusFor(\ilObjStudyProgramme $sp, $user_id)
 	{
 		$lp = array();
 		require_once("Services/Tracking/classes/class.ilLPStatus.php");
-		$status = ilLPStatus::_lookupStatus($obj_id, $user_id);
-		$lp["status"] = $status;
-		$lp["finished"] = "";
+		$status = ilLPStatus::_lookupStatus($sp->getId(), $user_id);
 
 		if ($status == ilLPStatus::LP_STATUS_COMPLETED_NUM) {
 			$finished = ilLPStatus::_lookupStatusChanged;
-			$lp["finished"] = $finished;
+			return [$status, $finished];
 		}
 
-		return [$lp["status"], $lp["finished"]];
+		if ($this->hasBookedCourseIn($sp, $user_id)) {
+			return [ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM, null];
+		}
+
+		return [ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM, null];
+	}
+
+	protected function hasBookedCourseIn(\ilObjStudyProgramme $sp, $user_id) {
+		require_once("Services/ContainerReference/classes/class.ilContainerReference.php");
+		require_once("Services/Tracking/classes/class.ilLPStatus.php");
+
+		$node_data = $this->g_tree->getNodeData($sp->getRefId());
+		$crsrs = $this->g_tree->getSubTree($node_data, true, "crsr");
+
+		foreach ($crsrs as $ref) {
+			$crs_id = ilContainerReference::_lookupTargetId($ref["obj_id"]);
+			$crs_utils = gevCourseUtils::getInstanceByObj($crs);
+			if ($crs_utils->isMember($user_id)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected function getCourseStartNextSP($children, $next_child_key, $finish_until = null)
