@@ -82,7 +82,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			$entry->setAccountable($this->obj->getAccountable($lp_child->getId(), $this->obj->getVAPassAccountableFieldId()));
 			$type = $this->obj->getAccountable($lp_child->getId(), $this->obj->getVAPassPassingTypeFieldId());
 			$entry->setTypeOfPass($type);
-			if($type == "Manueller Eintrag") {
+			if ($type == "Manueller Eintrag") {
 				$entry->setResult($this->getResultInfo($lp_child));
 			} else {
 				$entry->setResult("-");
@@ -115,12 +115,13 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if ($finish_until && $entry->getStatus() == 2) {
 			$this->tpl->setVariable("FINISHED", $finish_until->get(IL_CAL_FKT_DATE, "d.m.Y"));
 		} else {
-			$this->tpl->setVariable("FINISHED","-");
+			$this->tpl->setVariable("FINISHED", "-");
 		}
 		$this->tpl->setVariable("ACTION", $this->getActionMenu($entry));
 	}
 
-	protected function getStatusAndDate(\ilObjStudyProgramme $sp) {
+	protected function getStatusAndDate(\ilObjStudyProgramme $sp)
+	{
 		$progress = $sp->getProgressForAssignment($this->assignment_id);
 		if ($progress->isAccredited() || $progress->isSuccessful()) {
 			$lp = $this->obj->getLPStatus($sp->getId(), $this->user_id);
@@ -134,7 +135,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		return [self::STATUS_IN_PROGRESS, null];
 	}
 
-	public function getActionMenu(\ilIndividualPlanDetailEntry $entry) {
+	public function getActionMenu(\ilIndividualPlanDetailEntry $entry)
+	{
 		include_once("Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php");
 		$l = new \ilAdvancedSelectionListGUI();
 		$l->setAsynch(false);
@@ -149,12 +151,13 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$l->setAdditionalToggleElement("err_ids".$err_ids, "ilContainerListItemOuterHighlight");
 
 		foreach ($this->getActionMenuItems($entry) as $item) {
-			$l->addItem($item["title"],"",$item["link"],"","","_blank");
+			$l->addItem($item["title"], "", $item["link"], "", "", "_blank");
 		}
 		return $l->getHTML();
 	}
 
-	public function getActionMenuItems(\ilIndividualPlanDetailEntry $entry) {
+	public function getActionMenuItems(\ilIndividualPlanDetailEntry $entry)
+	{
 		$crs = $entry->getCourseWhereUserIsMember($entry->getStudyProgramme());
 		if ($crs === null) {
 			return [];
@@ -162,8 +165,13 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$crs_utils = gevCourseUtils::getInstanceByObj($crs);
 		$items = [];
 		if ($crs_utils->isPraesenztraining() || $crs_utils->isWebinar() || $crs_utils->isVirtualTraining()) {
-		}
-		else if ($crs_utils->isCoaching()) {
+			$items = $this->maybeAddDownloadMemberlistTo($items, $crs_utils);
+			$items = $this->maybeAddViewBookingsTo($items, $crs_utils);
+			$items = $this->maybeAddViewMailingTo($items, $crs_utils);
+			$items = $this->maybeAddDownloadSignatureListTo($items, $crs_utils);
+			$items = $this->maybeAddDownloadParticipantsListTo($items, $crs_utils);
+			$items = $this->maybeAddSetParticipationStatusTo($items, $crs_utils);
+		} elseif ($crs_utils->isCoaching()) {
 			$mass = $this->getManualAssessmentIn($crs);
 			if ($mass) {
 				// Make the user a member if he currently is not one.
@@ -172,41 +180,147 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 					$members = $members->withAdditionalUser($this->user);
 					$members->updateStorageAndRBAC($this->mass_storage, $mass->accessHandler());
 				}
-				if ($this->mayViewManualAssessmentRecord($mass)) {
-					$items[] =
-						["title" => "Gesprächsnotizen einsehen",
-						 "link" => $this->manualAssessmentRecordViewLink($mass)];
-				}
+
+				$items = $this->maybeAddViewRecordTo($items, $mass);
+				$items = $this->maybeAddEditRecordTo($items, $mass);
 			}
 		}
 		return $items;
 	}
 
-	/**
-	 * Check if a user may view the record of the user on the manual assessment.
-	 *
-	 * @param	\ilObjManualAssessment	$mass
-	 * @return	bool
-	 */
-	protected function mayViewManualAssessmentRecord(\ilObjManualAssessment $mass) {
-		$mass_member = $this->mass_storage->loadMember($mass, $this->user);
-		if (!$mass_member->finalized()) {
-			// No finalized record, no record.
-			return false;
+	protected function maybeAddViewRecordTo(array $items, ilObjManualAssessment $mass)
+	{
+		$member = $mass->membersStorage()->loadMember($mass, $this->g_user);
+		$ex_id = $member->examinerId();
+		$access = $mass->accessHandler();
+
+		$finalized = $member->finalized();
+		$edited_by_other = $ex_id != $this->user_id && 0 !== (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID];
+		$may_view = $access->mayViewUserIn($this->user_id, $mass, true);
+		$may_grade = $access->mayGradeUserIn($this->user_id, $mass, true);
+
+		if (($finalized && !$edited_by_other && $may_grade) || $may_view) {
+			$items[] =
+				["title" => $this->g_lng->txt("mass_view_record_ip"),
+				 "link" => $this->manualAssessmentRecordViewLink($mass)];
 		}
-		return true;
+		return $items;
+	}
+
+	protected function maybeAddEditRecordTo(array $items, ilObjManualAssessment $mass)
+	{
+		$member = $mass->membersStorage()->loadMember($mass, $this->g_user);
+		$ex_id = $member->examinerId();
+
+		$finalized = $member->finalized();
+		$edited_by_other = $ex_id != $this->user_id && 0 !== (int)$set[ilManualAssessmentMembers::FIELD_EXAMINER_ID];
+		$may_grade = $mass->accessHandler()->mayGradeUserIn($this->user_id, $mass, true);
+
+		if (!$finalized && !$edited_by_other && $may_grade) {
+			$items[] =
+				["title" => $this->g_lng->txt("mass_edit_record_ip"),
+				 "link" => $this->manualAssessmentRecordEditLink($mass)];
+		}
+		return $items;
+	}
+
+	protected function maybeAddDownloadMemberlistTo(array $items, $crs_utils)
+	{
+		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::LOAD_MEMBER_LIST)) {
+			$this->g_ctrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $crs_utils->getRefId());
+			$items[] = ['title' => $this->g_lng->txt("download_memberlist"),
+						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "trainer")];
+			$this->g_ctrl->clearParametersByClass("gevMemberListDeliveryGUI");
+		}
+		return $items;
+	}
+
+	protected function maybeAddViewBookingsTo(array $items, $crs_utils)
+	{
+		if ($crs_utils->canViewBookings($this->user_id)) {
+			$this->g_ctrl->setParameterByClass("ilCourseBookingGUI", "ref_id", $crs_utils->getRefId());
+			$items[] = ['title' => $this->g_lng->txt('view_bookings'),
+						'link' => $this->g_ctrl->getLinkTargetByClass(["ilCourseBookingGUI", "ilCourseBookingAdminGUI"])];
+			$this->g_ctrl->clearParametersByClass("ilCourseBookingGUI");
+		}
+		return $items;
+	}
+
+	protected function maybeAddViewMailingTo(array $items, $crs_utils)
+	{
+		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::VIEW_MAILING)) {
+			$this->g_ctrl->setParameterByClass("gevTrainerMailHandlingGUI", "crs_id", $crs_utils->getId());
+			$items[] = ['title' => $this->g_lng->txt('view_mailing'),
+						'link' => $this->g_ctrl->getLinkTargetByClass("gevTrainerMailHandlingGUI", "showLog")];
+			$this->g_ctrl->clearParametersByClass("gevTrainerMailHandlingGUI");
+		}
+
+		return $items;
+	}
+
+	protected function maybeAddDownloadSignatureListTo(array $items, $crs_utils)
+	{
+		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::LOAD_SIGNATURE_LIST)) {
+			$this->g_ctrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $crs_utils->getRefId());
+			$items[] = ['title' => $this->g_lng->txt('signature_list'),
+						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_signature_list")];
+			$this->g_ctrl->clearParametersByClass("gevMemberListDeliveryGUI");
+		}
+		return $items;
+	}
+
+	protected function maybeAddDownloadParticipantsListTo(array $items, $crs_utils)
+	{
+		if ($crs_utils->userHasPermissionTo($this->user_id, gevSettings::LOAD_SIGNATURE_LIST)
+			&& ilParticipationStatus::getInstance($crs_utils->getCourse())->getAttendanceList()) {
+			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "crsrefid", $crs_utils->getRefId());
+			$items[] = ['title' => $this->g_lng->txt('participants_list'),
+						'link' => $this->g_ctrl
+										->getLinkTarget($this->parent_obj, "viewAttendanceList")];
+			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "crsrefid", null);
+		}
+		return $items;
+	}
+
+	protected function maybeAddSetParticipationStatusTo(array $items, $crs_utils)
+	{
+		if ($crs_utils->canModifyParticipationStatus($this->user_id)) {
+			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "target_ref_id", $crs_utils->getRefId());
+			$items[] = ['title' => $this->g_lng->txt('p_status'),
+						'link' => $this->g_ctrl
+										->getLinkTarget($this->parent_obj, 'participationStatus')];
+			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "target_ref_id", null);
+		}
+		return $items;
 	}
 
 	/**
 	 * Get the link to view the manual assessment record for the user.
 	 *
 	 * @param	\ilObjManualAssessment	$mass
-	 * @return	bool
+	 * @return	string
 	 */
-	protected function manualAssessmentRecordViewLink(\ilObjManualAssessment $mass) {
+	protected function manualAssessmentRecordViewLink(\ilObjManualAssessment $mass)
+	{
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", $mass->getRefId());
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", $this->user_id);
 		$link = $this->g_ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilObjManualAssessmentGUI", "ilManualAssessmentMembersGUI", "ilManualAssessmentMemberGUI"], "view");
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", null);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", null);
+		return $link;
+	}
+
+	/**
+	 * Get the link to edit the manual assessment record for the user.
+	 *
+	 * @param	\ilObjManualAssessment	$mass
+	 * @return	string
+	 */
+	protected function manualAssessmentRecordEditLink(\ilObjManualAssessment $mass)
+	{
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", $mass->getRefId());
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", $this->user_id);
+		$link = $this->g_ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilObjManualAssessmentGUI", "ilManualAssessmentMembersGUI", "ilManualAssessmentMemberGUI"], "edit");
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", null);
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", null);
 		return $link;
@@ -270,9 +384,10 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 * @param	ilObjStudyProgramme		$sp
 	 * @return	ilObjCourse|null
 	 */
-	protected function getPassedCourse(\ilObjStudyProgramme $sp) {
+	protected function getPassedCourse(\ilObjStudyProgramme $sp)
+	{
 		$progress = $sp->getProgressForAssignment($this->assignment_id);
-		if(!$progress->isSuccessful() || $progress->isAccredited()) {
+		if (!$progress->isSuccessful() || $progress->isAccredited()) {
 			return null;
 		}
 		// This should be a course as we are in the LP-Mode study programmes and
@@ -300,7 +415,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 * @param	ilObjStudyProgramme	$sp
 	 * @param	ilObjCourse
 	 */
-	protected function getCourseWhereUserIsMember(\ilObjStudyProgramme $sp) {
+	protected function getCourseWhereUserIsMember(\ilObjStudyProgramme $sp)
+	{
 		assert('$sp->getLPMode() == \ilStudyProgramme::MODE_LP_COMPLETED');
 		foreach ($sp->getLPChildren() as $crs_ref) {
 			$crs = ilObjectFactory::getInstanceByRefId($crs_ref->getTargetRefId());
@@ -321,7 +437,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 * @param	ilObjCourse	$crs
 	 * @return	ilObjManualAssessment
 	 */
-	protected function getManualAssessmentIn(\ilObjCourse $crs) {
+	protected function getManualAssessmentIn(\ilObjCourse $crs)
+	{
 		$sub_items = $crs->getSubItems();
 		if (array_key_exists("mass", $sub_items)) {
 			$item = array_shift($sub_items["mass"]);
@@ -339,7 +456,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 		$sub_items = $maybe_crs->getSubItems();
 		if (array_key_exists("mass", $sub_items)) {
-			foreach($sub_items['mass'] as $item) {
+			foreach ($sub_items['mass'] as $item) {
 				$ia = ilObjectFactory::getInstanceByRefId($item['ref_id']);
 				// TODO: This just returns the result for the first member. That
 				// is not what we want.
