@@ -141,7 +141,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		}
 
 		if ($this->hasBookedCourseIn($sp, $user_id)) {
-			return [ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM, null];
+			return [ilLPStatus::LP_STATUS_IN_PROGRESS_NUM, null];
 		}
 
 		return [ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM, null];
