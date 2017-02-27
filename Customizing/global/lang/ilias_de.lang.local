@@ -354,6 +354,7 @@ exc#:#exc_team_member_container_add#:#Team-Mitglied aus Training/Gruppe hinzufü
 exercise#:#exc_crs_add_members#:#Mitglieder dieses Trainings hinzufügen
 exercise#:#exc_feedback_from_tutor#:#Feedback des Trainers
 fm#:#fm_settings_active_info#:#Benutzer können Kategorien, Trainings, Gruppen und Ordner öffnen, indem Sie im Magazin die Aktion "Mit Dateimanager öffnen" ausführen.
+gev#:#mass_download_attached_file#:#Angehängte Datei Herunterladen
 gev#:#mass_view_record_ip#:#Gesprächsnotizen
 gev#:#mass_edit_record_ip#:#Teilnehmer bewerten und Lernfortschritt bearbeiten
 gev#:#download_memberlist_ip#:#Download Teilnehmerliste
