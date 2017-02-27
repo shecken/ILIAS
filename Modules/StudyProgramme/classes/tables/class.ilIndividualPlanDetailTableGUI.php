@@ -210,7 +210,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$may_view = $access->mayViewUserIn($this->user_id, $mass, true);
 		$may_grade = $access->mayGradeUserIn($this->user_id, $mass, true);
 
-		if (($finalized && !$edited_by_other && $may_grade) || $may_view) {
+		if (($finalized && !$edited_by_other && $may_grade) || ($finalized && $may_view)) {
 			$items[] =
 				["title" => $this->g_lng->txt("mass_view_record_ip"),
 				 "link" => $this->manualAssessmentRecordViewLink($mass)];
