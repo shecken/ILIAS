@@ -180,7 +180,7 @@ class ilManualAssessmentMembers implements Iterator, Countable
 		return array(
 			  self::FIELD_USR_ID				=> $usr->getId()
 			, self::FIELD_RECORD				=> $this->mass->getSettings()->recordTemplate()
-			, self::FIELD_NOTIFY				=> 0
+			, self::FIELD_NOTIFY				=> 1
 			, self::FIELD_FIRSTNAME				=> $usr->getFirstname()
 			, self::FIELD_LASTNAME				=> $usr->getLastname()
 			, self::FIELD_LOGIN					=> $usr->getLogin()
@@ -193,6 +193,7 @@ class ilManualAssessmentMembers implements Iterator, Countable
 			, self::FIELD_PLACE					=> null
 			, self::FIELD_EVENTTIME				=> time()
 			, self::FIELD_FILE_NAME 			=> ""
+			, self::FIELD_USER_VIEW_FILE		=> 1
 			);
 	}
 
