@@ -162,7 +162,12 @@ class ilObjManualAssessment extends ilObject
 		$new_settings = new ilManualAssessmentSettings(
 			$new_obj,
 			$settings->content(),
-			$settings->recordTemplate()
+			$settings->recordTemplate(),
+			$settings->fileRequired(),
+			$settings->eventTimePlaceRequired(),
+			$settings->superiorExaminate(),
+			$settings->superiorView(),
+			$settings->gradeSelf()
 		);
 		$new_obj->settings = $new_settings;
 
