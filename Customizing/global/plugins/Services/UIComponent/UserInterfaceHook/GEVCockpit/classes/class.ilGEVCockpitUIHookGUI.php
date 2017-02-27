@@ -82,7 +82,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 		|| (
 			$base_class == "ilobjplugindispatchgui" &&
 				   (($cmd_class == "ilobjreportstudyprogrammegui" && $cmd == "showcontent")
-				|| ($cmd_class == "ilindividualplangui" && $cmd == "view"))
+				|| ($cmd_class == "ilindividualplangui" && ($cmd == "view" || $cmd == "showcontent")))
 		);
 	}
 
@@ -175,6 +175,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 
 	protected function getCockpitItems()
 	{
+		if (isset($_GET['spRefId']) && isset($_GET['user_id']) && $_GET['user_id'] != $this->gUser->getId()) {
+			return array();
+		}
 		if ($this->gUser->getId() !== 0) {
 			$user_utils = gevUserUtils::getInstanceByObj($this->gUser);
 		} else {
@@ -198,7 +201,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Repository", "robj", "xsp")
 		);
 
-		if ($sp_report_plugin && $sp_report_plugin->isActive() && $_GET['user_id'] != $this->gUser->getId()) {
+		if ($sp_report_plugin && $sp_report_plugin->isActive()) {
 			$sp_report_object_ids = ilObject::_getObjectsByType("xsp");
 			$gui = $sp_report_plugin->getGUIClass();
 
