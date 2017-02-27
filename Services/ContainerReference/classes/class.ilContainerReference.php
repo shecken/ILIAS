@@ -369,6 +369,22 @@ class ilContainerReference extends ilObject
 		}
 		return $ret;
 	}
+
+	// gev-patch start #2896
+	/**
+	 * Delete all references targeting the given source.
+	 *
+	 * @param	int	$a_target_obj_id	 of the course or category
+	 * @return	null
+	 */
+	public static function _deleteBySourceId($a_target_obj_id) {
+		$obj_ids = self::_lookupSourceIds($a_target_obj_id);
+		foreach ($obj_ids as $obj_id) {
+			$obj = \ilObjectFactory::getInstanceByObjId($obj_id);
+			$obj->delete();
+		}
+	}
+	// gev-patch end #2896
 }
 
 ?>

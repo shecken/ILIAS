@@ -1094,6 +1094,11 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 		
 		include_once('Modules/Course/classes/Export/class.ilCourseDefinedFieldDefinition.php');
 		ilCourseDefinedFieldDefinition::_deleteByContainer($this->getId());
+
+		// gev-patch start #2896
+		require_once("Services/ContainerReference/classes/class.ilContainerReference.php");
+		\ilContainerReference::_deleteBySourceId($this->getId());
+		// gev-patch end #2896
 		
 		$ilAppEventHandler->raise('Modules/Course',
 			'delete',
