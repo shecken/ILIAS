@@ -447,6 +447,28 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		return null;
 	}
 
+	/**
+	 * Get the first Manual Assessment in the course where the user is a member.
+	 *
+	 * @parm	ilObjCourse $crs
+	 * @return	ilObjManualAssessment|null
+	 */
+	protected function getManualAssessmentWhereUserIsMemberIn(\ilObjCourse $crs)
+	{
+		$sub_items = $maybe_crs->getSubItems();
+		if (array_key_exists("mass", $sub_items)) {
+			foreach ($sub_items['mass'] as $item) {
+				$ia = ilObjectFactory::getInstanceByRefId($item['ref_id']);
+				$members = $ia->loadMembers();
+				if (!$members->userAllreadyMember($this->user)) {
+					continue;
+				}
+				return $ia;
+			}
+		}
+		return null;
+	}
+
 	protected function getResultInfo(\ilObjStudyProgramme $child)
 	{
 		$maybe_crs = $this->getPassedCourse($child);
@@ -454,18 +476,11 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			return "-";
 		}
 
-		$sub_items = $maybe_crs->getSubItems();
-		if (array_key_exists("mass", $sub_items)) {
-			foreach ($sub_items['mass'] as $item) {
-				$ia = ilObjectFactory::getInstanceByRefId($item['ref_id']);
-				// TODO: This just returns the result for the first member. That
-				// is not what we want.
-				$members = $ia->loadMembers();
-				if (!$members->userAllreadyMember($this->user)) {
-					continue;
-				}
-				return $ia->membersStorage()->loadMember($ia, $this->user)->record();
-			}
+		$ia = $this->getManualAssessmentWhereUserIsMemberIn($maybe_crs);
+		if ($ia) {
+			return $ia->membersStorage()->loadMember($ia, $this->user)->record();
+		} else {
+			return "-";
 		}
 	}
 }
