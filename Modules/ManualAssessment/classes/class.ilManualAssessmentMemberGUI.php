@@ -58,6 +58,7 @@ class ilManualAssessmentMemberGUI
 			case 'cancelFinalize':
 			case 'view':
 			case 'cancel':
+			case 'downloadAttachement':
 				break;
 			default:
 				$this->parent_gui->handleAccessViolation();
@@ -74,6 +75,9 @@ class ilManualAssessmentMemberGUI
 		$form = $this->fillForm($this->initGradingForm(false), $this->member);
 		$form = $this->fillForm($this->initGradingForm(false), $this->member);
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
+		if ($this->member->fileName() && $this->member->fileName() != "") {
+			$form->addCommandButton('downloadAttachement', $this->lng->txt('mass_download_attached_file'));
+		}
 		$this->renderForm($form);
 	}
 
@@ -87,8 +91,18 @@ class ilManualAssessmentMemberGUI
 		}
 		$form->addCommandButton('save', $this->lng->txt('save'));
 		$form->addCommandButton('finalizeConfirmation', $this->lng->txt('mass_finalize'));
+		if ($this->member->fileName() && $this->member->fileName() != "") {
+			$form->addCommandButton('downloadAttachement', $this->lng->txt('mass_download_attached_file'));
+		}
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		$this->renderForm($form);
+	}
+
+	protected function downloadAttachement()
+	{
+		$file_storage = $this->object->getFileStorage();
+		$file_storage->setUserId($this->member->id());
+		ilUtil::deliverFile($file_storage->getFilePath(), $this->member->fileName());
 	}
 
 	protected function save()
