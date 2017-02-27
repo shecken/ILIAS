@@ -461,9 +461,10 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 				// TODO: This just returns the result for the first member. That
 				// is not what we want.
 				$members = $ia->loadMembers();
-				foreach ($members as $member) {
-					return $member['record'] . "<br>";
+				if (!$members->userAllreadyMember($this->user)) {
+					continue;
 				}
+				return $ia->membersStorage()->loadMember($ia, $this->user)->record();
 			}
 		}
 	}
