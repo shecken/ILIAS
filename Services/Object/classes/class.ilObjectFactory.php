@@ -79,8 +79,7 @@ class ilObjectFactory
 			$message = "ilObjectFactory::getInstanceByObjId(): No obj_id given!";
 			if ($stop_on_error === true)
 			{
-				$ilias->raiseError($message,$ilias->error_obj->WARNING);
-				exit();
+				throw new \ilException($message);
 			}
 			#var_dump("<pre>",$message,"<pre>");
 
@@ -97,8 +96,7 @@ class ilObjectFactory
 			$message = "ilObjectFactory::getInstanceByObjId(): Object with obj_id: ".$a_obj_id." not found!";
 			if ($stop_on_error === true)
 			{
-				$ilias->raiseError($message,$ilias->error_obj->WARNING);
-				exit();
+				throw new \ilException($message);
 			}
 			#var_dump("<pre>",$message,"<pre>");
 			return false;
@@ -114,8 +112,7 @@ class ilObjectFactory
 				"class for type".$object_rec["type"].".";
 			if ($stop_on_error === true)
 			{
-				$ilias->raiseError($message,$ilias->error_obj->WARNING);
-				exit();
+				throw new ilException($message);
 			}
 			return false;
 		}
@@ -150,8 +147,7 @@ class ilObjectFactory
 			if ($stop_on_error === true)
 			{
 				$message = "ilObjectFactory::getInstanceByRefId(): No ref_id given!";
-				$ilias->raiseError($message,$ilias->error_obj->WARNING);
-				exit();
+				throw new ilException($message);
 			}
 			
 			return false;
@@ -170,8 +166,7 @@ class ilObjectFactory
 			if ($stop_on_error === true)
 			{
 				$message = "ilObjectFactory::getInstanceByRefId(): Object with ref_id ".$a_ref_id." not found!";
-				$ilias->raiseError($message,$ilias->error_obj->WARNING);
-				exit();
+				throw new ilException($message);
 			}
 			
 			return false;
@@ -187,8 +182,7 @@ class ilObjectFactory
 			{
 				$message = "ilObjectFactory::getInstanceByRefId(): Not able to determine object ".
 						   "class for type".$object_rec["type"].".";
-				$ilias->raiseError($message,$ilias->error_obj->WARNING);
-				exit();
+				throw new ilException($message);
 			}
 			
 			return false;
@@ -223,8 +217,7 @@ class ilObjectFactory
 			if ($stop_on_error === true)
 			{
 				$message = "ilObjectFactory::getTypeByRefId(): No ref_id given!";
-				$ilias->raiseError($message,$ilias->error_obj->WARNING);
-				exit();
+				throw new ilException($message);
 			}
 			
 			return false;
@@ -241,8 +234,7 @@ class ilObjectFactory
 			if ($stop_on_error === true)
 			{
 				$message = "ilObjectFactory::getTypeByRefId(): Object with ref_id ".$a_ref_id." not found!";
-				$ilias->raiseError($message,$ilias->error_obj->WARNING);
-				exit();
+				throw new ilException($message);
 			}
 			
 			return false;
