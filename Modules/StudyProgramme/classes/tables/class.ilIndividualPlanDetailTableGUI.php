@@ -130,7 +130,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 				$maybe_ia = null;
 			}
 			if ($maybe_ia) {
-				$record = $ia->membersStorage()->loadMember($ia, $this->user);
+				$record = $maybe_ia->membersStorage()->loadMember($ia, $this->user);
 				$date = $record->eventTime();
 			}
 			if (!$date) {
