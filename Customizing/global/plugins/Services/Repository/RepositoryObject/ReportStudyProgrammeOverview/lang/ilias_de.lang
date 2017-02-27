@@ -18,5 +18,6 @@ xspo_write#:#Übersicht über Studienprogramm bearbeiten
 xspo_delete#:#Übersicht über Studienprogramm löschen
 xspo_edit_permission#:#Rechte zu Übersicht über Studienprogramm bearbeiten
 selected_study_prg#:#Id des Studienprogramms
+trainer_view#:#Traineransicht
 no_prg_warning#:#Kein Eintrag für die Id des Studienprogramms
 user_no_prg_warning#:#Der Report kann im Moment nicht angezeigt werden - Fehler in der Konfiguration

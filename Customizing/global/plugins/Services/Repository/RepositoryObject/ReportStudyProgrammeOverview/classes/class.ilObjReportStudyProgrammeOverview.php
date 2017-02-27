@@ -30,7 +30,9 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 		$this->local_report_settings =
 			$this->s_f->reportSettings('rep_robj_xspo')
 			->addSetting($this->s_f
-								->settingInt('selected_study_prg', $this->plugin->txt('selected_study_prg')));
+								->settingInt('selected_study_prg', $this->plugin->txt('selected_study_prg')))
+			->addSetting($this->s_f
+								->settingBool('trainer_view', $this->plugin->txt('trainer_view')));
 	}
 
 	public function getStudyId()
@@ -67,7 +69,7 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 		$osp = new ilObjStudyProgramme($this->getStudyId());
 
 		foreach ($osp->getChildren() as $child) {
-			if(!$child->isActive()) {
+			if (!$child->isActive()) {
 				continue;
 			}
 			$column_key = $child->getTitle();
@@ -180,13 +182,14 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 				}
 				$arr["status"] = $osp->getProgressForAssignment($assign->getId())->getStatus();
 				foreach ($children as $child) {
-					if(!$child->isActive()) {
+					if (!$child->isActive()) {
 						continue;
 					}
 					$column_key = $child->getTitle();
 					$column_key = strtolower($column_key);
 					$column_key = str_replace(" ", "_", $column_key);
-					$arr[$column_key] = $child->getProgressForAssignment($assign->getId())->getStatus();;
+					$arr[$column_key] = $child->getProgressForAssignment($assign->getId())->getStatus();
+					;
 				}
 				$arr2[] = $arr;
 			}
