@@ -105,7 +105,7 @@ class ilManualAssessmentMemberGUI
 		}
 		$file_storage = $this->object->getFileStorage();
 		$file_storage->setUserId($this->member->id());
-		die($file_storage->getFilePath());
+		$file_storage->setObjId($this->object->getId());
 		ilUtil::deliverFile($file_storage->getFilePath(), $this->member->fileName());
 	}
 
