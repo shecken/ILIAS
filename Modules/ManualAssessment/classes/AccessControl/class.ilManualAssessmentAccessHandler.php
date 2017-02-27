@@ -166,13 +166,14 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 			return true;
 		}
 		$this->cacheSettingsAndEmployees($mass, $this->usr_utils);
+		$aux = false;
 		if ($this->mass_settings_cache[$mass->getId()]->superiorExaminate()) {
-			return in_array($usr_id, $this->employee_cache);
+			$aux = $aux || in_array($usr_id, $this->employee_cache);
 		}
 		if ($this->mass_settings_cache[$mass->getId()]->gradeSelf()) {
-			return $usr_id == $this->usr->getId();
+			$aux = $aux || $usr_id == $this->usr->getId();
 		}
-		return false;
+		return $aux;
 	}
 
 	protected function cacheSettingsAndEmployees($mass, $usr_utils)
