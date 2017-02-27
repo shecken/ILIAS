@@ -119,7 +119,7 @@ class ilManualAssessmentMembersStorageDB implements ilManualAssessmentMembersSto
 					  , ilManualAssessmentMembers::FIELD_INTERNAL_NOTE => array("text", $record[ilManualAssessmentMembers::FIELD_INTERNAL_NOTE])
 					  , ilManualAssessmentMembers::FIELD_PLACE => array("text", $record[ilManualAssessmentMembers::FIELD_PLACE])
 					  , ilManualAssessmentMembers::FIELD_EVENTTIME => array("integer", $record[ilManualAssessmentMembers::FIELD_EVENTTIME])
-					  , ilManualAssessmentMembers::FIELD_NOTIFY => array("integer", 0)
+					  , ilManualAssessmentMembers::FIELD_NOTIFY => array("integer", $record[ilManualAssessmentMembers::FIELD_NOTIFY])
 					  , ilManualAssessmentMembers::FIELD_FINALIZED => array("integer", 0)
 					  , ilManualAssessmentMembers::FIELD_NOTIFICATION_TS => array("integer", -1)
 					  , ilManualAssessmentMembers::FIELD_FILE_NAME => array("text", $record[ilManualAssessmentMembers::FIELD_FILE_NAME])
