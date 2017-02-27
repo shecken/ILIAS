@@ -18,6 +18,11 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 	protected $g_db;
 
 	/**
+	 * @var \gevUserUtils
+	 */
+	protected $user_utils = null;
+
+	/**
 	 * @var \gevCourseUtils
 	 */
 	protected $course_utils = null;
@@ -164,13 +169,15 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 	protected function showUser($user_id)
 	{
 		if (!$this->isTrainerView()) {
-			require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-			global $ilUser;
-			$user_utils = gevUserUtils::getInstanceByObj($ilUser);
-			if ($ilUser->isAdmin()) {
+			if ($this->user_utils === null) {
+				require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+				global $ilUser;
+				$this->user_utils = gevUserUtils::getInstanceByObj($ilUser);
+			}
+			if ($this->user_utils->isAdmin()) {
 				return true;
 			}
-			if ($ilUser->isSuperiorOf($user_id)) {
+			if ($this->user_utils->isSuperiorOf($user_id)) {
 				return true;
 			}
 			return false;
