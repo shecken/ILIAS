@@ -105,6 +105,7 @@ class ilManualAssessmentMemberGUI
 		}
 		$file_storage = $this->object->getFileStorage();
 		$file_storage->setUserId($this->member->id());
+		die($file_storage->getFilePath());
 		ilUtil::deliverFile($file_storage->getFilePath(), $this->member->fileName());
 	}
 
@@ -473,6 +474,7 @@ class ilManualAssessmentMemberGUI
 	{
 		$new_file = false;
 		$this->file_storage->setUserId($this->member->id());
+		$this->file_storage->setObjId($this->object->getId());
 		$this->file_storage->create();
 		if (!$file["name"] == "" || $file_delete) {
 			$this->file_storage->deleteCurrentFile();

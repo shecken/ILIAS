@@ -57,6 +57,16 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 	}
 
 	/**
+	 * Set the obj id for an extra folder of each participant in the IA
+	 *
+	 * @param int 	$obj_id
+	 */
+	public function setObjId($obj_id)
+	{
+		$this->obj_id = $obj_id;
+	}
+
+	/**
 	 * creates the folder structure
 	 *
 	 * @return boolen
@@ -77,7 +87,7 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 	public function getAbsolutePath()
 	{
 		$path = parent::getAbsolutePath();
-		$path .= "/user_".$this->user_id;
+		$path .= "/user_".$this->user_id."_".$this->obj_id;
 
 		return $path;
 	}
