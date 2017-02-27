@@ -218,7 +218,7 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
-		$this->saveMember($_POST);
+		$this->saveMember($_POST, true);
 
 		if ($this->object->isActiveLP()) {
 			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
@@ -243,15 +243,18 @@ class ilManualAssessmentMemberGUI
 		$this->tpl->setContent($a_form->getHTML());
 	}
 
-	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data, $new_file)
+	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data, $new_file, $keep_examiner = false)
 	{
 		$member = $member->withRecord($data['record'])
 					->withInternalNote($data['internal_note'])
 					->withPlace($data['place'])
 					->withEventTime($this->createDatetime($data['event_time']))
 					->withLPStatus($data['learning_progress'])
-					->withExaminerId($this->examiner->getId())
 					->withViewFile((bool)$data['user_view_file']);
+
+		if (!$keep_examiner) {
+			$member = $member->withExaminerId($this->examiner->getId());
+		}
 
 		if ($data['notify']  == 1) {
 			$member = $member->withNotify(true);
@@ -385,12 +388,11 @@ class ilManualAssessmentMemberGUI
 
 	protected function mayBeViewed()
 	{
-		if ((!$this->isFinalized()
-				&& ($this->userCanGrade() || $this->superiorCanGrade())
-			)
+		if (($this->isFinalized() &&
+			($this->userCanGrade() || $this->superiorCanGrade() || $this->mayGradeSelf()))
 			|| $this->userCanView()
 			|| $this->superiorCanView()
-			|| $this->mayGradeSelf()
+
 		) {
 			return true;
 		}
@@ -452,10 +454,10 @@ class ilManualAssessmentMemberGUI
 		return $examiner_id_utils->isSuperiorOf($this->examinee->getId());
 	}
 
-	protected function saveMember($post)
+	protected function saveMember($post, $keep_examiner = false)
 	{
 		$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
-		$this->member = $this->updateDataInMemberByArray($this->member, $post, $new_file);
+		$this->member = $this->updateDataInMemberByArray($this->member, $post, $new_file, $keep_examiner);
 		$this->object->membersStorage()->updateMember($this->member);
 	}
 
