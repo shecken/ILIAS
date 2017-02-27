@@ -455,7 +455,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 */
 	protected function getManualAssessmentWhereUserIsMemberIn(\ilObjCourse $crs)
 	{
-		$sub_items = $maybe_crs->getSubItems();
+		$sub_items = $crs->getSubItems();
 		if (array_key_exists("mass", $sub_items)) {
 			foreach ($sub_items['mass'] as $item) {
 				$ia = ilObjectFactory::getInstanceByRefId($item['ref_id']);
