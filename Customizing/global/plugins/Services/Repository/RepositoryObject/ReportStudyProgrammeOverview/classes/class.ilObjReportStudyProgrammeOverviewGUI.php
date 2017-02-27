@@ -48,7 +48,6 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		$gui->setUserId($get['user_id']);
 		$gui->setAssignmentId($get['assignment_id']);
 		$gui->setSPRefId($get['spRefId']);
-
 		$this->g_ctrl->forwardCommand($gui);
 	}
 
@@ -74,7 +73,6 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 				new \CaT\Filter\TypeFactory
 			);
 		}
-
 		$this->loadFilterSettings();
 	}
 
@@ -162,6 +160,44 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 			"write",
 			get_class($this)
 		);
+	}
+
+	public function initCreateForm($a_new_type)
+	{
+		$form = parent::initCreateForm($a_new_type);
+		$this->addSettingsFormItems($form);
+
+		return $form;
+	}
+
+	protected function addSettingsFormItems($form)
+	{
+		$ti = new \ilNumberInputGUI($this->lng->txt("rep_robj_xsp_setting_sp_node_ref_id"), "selected_study_prg");
+		$ti->setRequired(true);
+		$form->addItem($ti);
+
+		return $form;
+	}
+
+	public function afterSave(ilObject $sp)
+	{
+		$settings = $sp->getSettingsData();
+		$settings['selected_study_prg'] = $_POST['selected_study_prg'];
+		$sp->setSettingsData($settings);
+		$sp->update();
+		ilUtil::sendSuccess($this->lng->txt("object_added"), true);
+		parent::afterSave($sp);
+	}
+
+	protected function renderSettings()
+	{
+		if ($this->object->getStudyId() == null || ilObject::_lookupType($this->object->getStudyId(), true) != "prg") {
+			if ($this->gAccess->checkAccess("write", "", $this->object->getRefId())) {
+				ilUtil::sendInfo($this->plugin->txt('no_prg_warning'), true);
+			}
+		}
+		$settings_form = $this->fillSettingsFormFromDatabase($this->settingsForm());
+		$this->gTpl->setContent($settings_form->getHtml());
 	}
 
 	/**
