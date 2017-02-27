@@ -160,7 +160,7 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
-		$this->member = $this->member->withFinalized()->maybeSendNotification($this->notificator);
+		$this->member = $this->member->withFinalized();
 		$this->object->membersStorage()->updateMember($this->member);
 		if ($this->object->isActiveLP()) {
 			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
