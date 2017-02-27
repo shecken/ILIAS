@@ -123,8 +123,20 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		$progress = $sp->getProgressForAssignment($this->assignment_id);
 		if ($progress->isAccredited() || $progress->isSuccessful()) {
-			$lp = $this->obj->getLPStatus($sp->getId(), $this->user_id);
-			$date = new ilDateTime($lp['last_change'], IL_CAL_DATETIME);
+			$maybe_crs = $this->getPassedCourse($sp);
+			if ($maybe_crs) {
+				$maybe_ia = $this->getManualAssessmentWhereUserIsMemberIn($maybe_crs);
+			} else {
+				$maybe_ia = null;
+			}
+			if ($maybe_ia) {
+				$record = $ia->membersStorage()->loadMember($ia, $this->user);
+				$date = $record->eventTime();
+			}
+			if (!$date) {
+				$lp = $this->obj->getLPStatus($sp->getId(), $this->user_id);
+				$date = new ilDateTime($lp['last_change'], IL_CAL_DATETIME);
+			}
 			return [self::STATUS_SUCCESS, $date];
 		}
 		$crs = $this->getCourseWhereUserIsMember($sp);
