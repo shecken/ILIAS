@@ -150,14 +150,12 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 		if ($this->checkAccessToObj($mass, 'edit_learning_progress')) {
 			return true;
 		}
-		$aux = false;
-		if ($mass->getSettings()->superiorExaminate()) {
-			$aux = $aux || in_array($usr_id, $this->usr_utils->getEmployees());
-		}
-		if ($mass->getSettings()->gradeSelf()) {
-			$aux = $aux || $usr_id == $this->usr->getId();
-		}
-		return $aux;
+		return $this->calcMayGradeUserIn(
+			$mass->getSettings()->superiorExaminate(),
+			in_array($usr_id, $this->usr_utils->getEmployees()),
+			$mass->getSettings()->gradeSelf(),
+			$usr_id
+		);
 	}
 
 	protected function fromCacheMayGradeUserIn($usr_id, ilObjManualAssessment $mass)
@@ -166,13 +164,28 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 			return true;
 		}
 		$this->cacheSettingsAndEmployees($mass, $this->usr_utils);
-		if ($this->mass_settings_cache[$mass->getId()]->superiorExaminate()) {
-			return in_array($usr_id, $this->employee_cache);
+		return $this->calcMayGradeUserIn(
+			$this->mass_settings_cache[$mass->getId()]->superiorExaminate(),
+			in_array($usr_id, $this->employee_cache),
+			$this->mass_settings_cache[$mass->getId()]->gradeSelf(),
+			$usr_id == $this->usr->getId()
+		);
+	}
+
+	protected function calcMayGradeUserIn($superior_examinate, $is_employee, $grade_self, $usr_id)
+	{
+		assert('is_bool($superior_examinate)');
+		assert('is_bool($is_employee)');
+		assert('is_bool($grade_self)');
+		assert('is_numeric($usr_id)');
+		$aux = false;
+		if ($superior_examinate) {
+			$aux = $aux || $is_employee;
 		}
-		if ($this->mass_settings_cache[$mass->getId()]->gradeSelf()) {
-			return $usr_id == $this->usr->getId();
+		if ($grade_self) {
+			$aux = $aux || $usr_id == $this->usr->getId();
 		}
-		return false;
+		return $aux;
 	}
 
 	protected function cacheSettingsAndEmployees($mass, $usr_utils)
