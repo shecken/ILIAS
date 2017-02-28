@@ -139,7 +139,7 @@ class ilManualAssessmentMembersGUI
 				$filter_users = array();
 			}
 
-			if (($this->view_self || $this->grade_self)&& $this->object->loadMembers()->userAllreadyMember($this->user)) {
+			if (($this->view_self || $this->grade_self) && $this->object->loadMembers()->userAllreadyMember($this->user)) {
 				$self = array($this->user->getId());
 
 				if (is_array($filter_users)) {
