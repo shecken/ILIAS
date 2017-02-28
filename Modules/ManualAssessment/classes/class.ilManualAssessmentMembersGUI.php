@@ -38,9 +38,11 @@ class ilManualAssessmentMembersGUI
 		$this->toolbar = $ilToolbar;
 		$this->access_handler = $this->object->accessHandler();
 		$this->user = $ilUser;
-
-		$this->superior_examinate = $a_parent_gui->object->getSettings()->superiorExaminate();
-		$this->superior_view = $a_parent_gui->object->getSettings()->superiorView();
+		$settings =  $a_parent_gui->object->getSettings();
+		$this->superior_examinate = $settings->superiorExaminate();
+		$this->superior_view = $settings->superiorView();
+		$this->grade_self = $settings->gradeSelf();
+		$this->view_self = $settings->viewSelf();
 	}
 
 	public function executeCommand()
@@ -137,7 +139,7 @@ class ilManualAssessmentMembersGUI
 				$filter_users = array();
 			}
 
-			if ($this->userMayGradeSelf()) {
+			if (($this->view_self || $this->grade_self)&& $this->object->loadMembers()->userAllreadyMember($this->user)) {
 				$self = array($this->user->getId());
 
 				if (is_array($filter_users)) {
@@ -251,8 +253,9 @@ class ilManualAssessmentMembersGUI
 
 	public function userMayViewGrades()
 	{
-		return (($this->isSuperior($this->user->getId()) && $this->superior_view)
-			|| $this->access_handler->checkAccessToObj($this->object, 'read_learning_progress'));
+		return ($this->isSuperior($this->user->getId()) && $this->superior_view)
+			|| ($this->view_self && $this->object->loadMembers()->userAllreadyMember($this->user))
+			|| $this->access_handler->checkAccessToObj($this->object, 'read_learning_progress');
 	}
 
 	public function userMayEditMembers()
@@ -262,6 +265,6 @@ class ilManualAssessmentMembersGUI
 
 	public function userMayGradeSelf()
 	{
-		return $this->object->getSettings()->gradeSelf() && $this->object->loadMembers()->userAllreadyMember($this->user);
+		return $this->grade_self && $this->object->loadMembers()->userAllreadyMember($this->user);
 	}
 }
