@@ -91,6 +91,13 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		global $ilLocator;
 
 		if ($this->g_ctrl->getNextClass() == "ilindividualplangui") {
+			$this->initIndividualPlanGUI(
+				(int)$_GET["user_id"],
+				(int)$_GET["assignment_id"],
+				(int)$_GET["spRefId"]
+			);
+			$this->individual_plan_gui->setLocatorItems($ilLocator);
+			$this->gTpl->setLocator();
 		} else {
 			parent::setLocator();
 		}
