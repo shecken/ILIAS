@@ -25,3 +25,15 @@ if (!$ilDB->tableColumnExists("rep_robj_xspo", "selected_study_prg")) {
 				));
 }
 ?>
+
+<#3>
+<?php
+if (!$ilDB->tableColumnExists("rep_robj_xspo", "trainer_view")) {
+	$ilDB->addTableColumn('rep_robj_xspo', 'trainer_view', array(
+				'type' => 'integer',
+				'length' => 1,
+				'notnull' => false,
+				'default' => 0
+				));
+}
+?>

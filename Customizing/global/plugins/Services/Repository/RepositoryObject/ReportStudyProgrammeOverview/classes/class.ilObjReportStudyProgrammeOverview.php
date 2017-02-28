@@ -17,6 +17,16 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 	 */
 	protected $g_db;
 
+	/**
+	 * @var \gevUserUtils
+	 */
+	protected $user_utils = null;
+
+	/**
+	 * @var \gevCourseUtils
+	 */
+	protected $course_utils = null;
+
 	protected $relevant_parameters = array();
 
 	public function initType()
@@ -30,7 +40,9 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 		$this->local_report_settings =
 			$this->s_f->reportSettings('rep_robj_xspo')
 			->addSetting($this->s_f
-								->settingInt('selected_study_prg', $this->plugin->txt('selected_study_prg')));
+								->settingInt('selected_study_prg', $this->plugin->txt('selected_study_prg')))
+			->addSetting($this->s_f
+								->settingBool('trainer_view', $this->plugin->txt('trainer_view')));
 	}
 
 	public function getStudyId()
@@ -39,6 +51,11 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 			return (string)$this->getSettingsDataFor("selected_study_prg");
 		}
 		return null;
+	}
+
+	public function isTrainerView()
+	{
+		return $this->getSettingsDataFor("trainer_view");
 	}
 
 	protected function getRowTemplateTitle()
@@ -67,7 +84,7 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 		$osp = new ilObjStudyProgramme($this->getStudyId());
 
 		foreach ($osp->getChildren() as $child) {
-			if(!$child->isActive()) {
+			if (!$child->isActive()) {
 				continue;
 			}
 			$column_key = $child->getTitle();
@@ -149,6 +166,43 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 		return null;
 	}
 
+	protected function showUser($user_id)
+	{
+		if (!$this->isTrainerView()) {
+			if ($this->user_utils === null) {
+				require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+				global $ilUser;
+				$this->user_utils = gevUserUtils::getInstanceByObj($ilUser);
+			}
+			if ($this->user_utils->isAdmin()) {
+				return true;
+			}
+			if ($this->user_utils->isSuperiorOf($user_id)) {
+				return true;
+			}
+			return false;
+		} else {
+			if ($this->course_utils === null) {
+				$id = $this->getParentCourseId();
+				if (!$id) {
+					throw new \ilException("Trainer view activated, but no parent course found...");
+				}
+				$this->course_utils = gevCourseUtils::getInstance($id);
+			}
+			return $this->course_utils->isMember($user_id);
+		}
+	}
+
+	protected function getParentCourseId()
+	{
+		$data = $this->gTree->getParentNodeData($this->getRefId());
+		while ("crs" !== $data['type'] && (string)ROOT_FOLDER_ID !== (string)$data['ref_id']) {
+			$data = $this->gTree->getParentNodeData($data['ref_id']);
+		}
+		return ( "crs" === $data['type'] )
+			? $data['obj_id'] : null;
+	}
+
 	protected function getData()
 	{
 		$osp = new ilObjStudyProgramme($this->getStudyId());
@@ -161,6 +215,10 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 
 		$arr2 = array();
 		foreach ($user_ids as $user_id) {
+			if (!$this->showUser($user_id)) {
+				continue;
+			}
+
 			$assigns_per_user = $osp->getAssignmentsOf($user_id);
 
 			foreach ($assigns_per_user as $assign) {
@@ -180,13 +238,14 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 				}
 				$arr["status"] = $osp->getProgressForAssignment($assign->getId())->getStatus();
 				foreach ($children as $child) {
-					if(!$child->isActive()) {
+					if (!$child->isActive()) {
 						continue;
 					}
 					$column_key = $child->getTitle();
 					$column_key = strtolower($column_key);
 					$column_key = str_replace(" ", "_", $column_key);
-					$arr[$column_key] = $child->getProgressForAssignment($assign->getId())->getStatus();;
+					$arr[$column_key] = $child->getProgressForAssignment($assign->getId())->getStatus();
+					;
 				}
 				$arr2[] = $arr;
 			}
