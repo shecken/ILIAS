@@ -352,12 +352,12 @@ class ilManualAssessmentMemberGUI
 
 		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_user_view_file'), 'user_view_file');
 		$cb->setInfo($this->lng->txt('mass_user_view_file_info'));
-		$cb->setDisabled(!$may_be_edited);
+		$cb->setDisabled(!$may_be_edited || $this->object->getSettings()->viewSelf());
 		$form->addItem($cb);
 		// notify examinee
 		$notify = new ilCheckboxInputGUI($this->lng->txt('mass_notify'), 'notify');
 		$notify->setInfo($this->lng->txt('mass_notify_explanation'));
-		$notify->setDisabled(!$may_be_edited);
+		$notify->setDisabled(!$may_be_edited || $this->object->getSettings()->viewSelf());
 		$form->addItem($notify);
 
 		return $form;
@@ -400,7 +400,7 @@ class ilManualAssessmentMemberGUI
 			($this->userCanGrade() || $this->superiorCanGrade() || $this->mayGradeSelf()))
 			|| $this->userCanView()
 			|| $this->superiorCanView()
-
+			|| $this->mayViewSelf()
 		) {
 			return true;
 		}
@@ -413,6 +413,12 @@ class ilManualAssessmentMemberGUI
 		return $this->object->getSettings()->gradeSelf()
 			&& $this->examinee->getId() === $this->examiner->getId()
 			&& !$this->targetWasEditedByOtherUser($this->member);
+	}
+
+	protected function mayViewSelf()
+	{
+		return $this->object->getSettings()->viewSelf()
+			&& $this->examinee->getId() === $this->examiner->getId();
 	}
 
 	protected function mayBeAmended()
