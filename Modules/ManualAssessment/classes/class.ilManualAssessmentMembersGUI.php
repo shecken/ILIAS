@@ -246,18 +246,18 @@ class ilManualAssessmentMembersGUI
 	public function userMayEditGrades()
 	{
 		return (($this->isSuperior($this->user->getId()) && $this->superior_examinate)
-			|| $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress'));
+			|| $this->access_handler->checkAccessToObj($this->object, 'edit_learning_progress'));
 	}
 
 	public function userMayViewGrades()
 	{
 		return (($this->isSuperior($this->user->getId()) && $this->superior_view)
-			|| $this->object->accessHandler()->checkAccessToObj($this->object, 'read_learning_progress'));
+			|| $this->access_handler->checkAccessToObj($this->object, 'read_learning_progress'));
 	}
 
 	public function userMayEditMembers()
 	{
-		return $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_members');
+		return $this->access_handler->checkAccessToObj($this->object, 'edit_members');
 	}
 
 	public function userMayGradeSelf()
