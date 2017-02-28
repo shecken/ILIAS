@@ -350,15 +350,17 @@ class ilManualAssessmentMemberGUI
 		$file->setAllowDeletion(true);
 		$form->addItem($file);
 
-		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_user_view_file'), 'user_view_file');
-		$cb->setInfo($this->lng->txt('mass_user_view_file_info'));
-		$cb->setDisabled(!$may_be_edited || $this->object->getSettings()->viewSelf());
-		$form->addItem($cb);
-		// notify examinee
-		$notify = new ilCheckboxInputGUI($this->lng->txt('mass_notify'), 'notify');
-		$notify->setInfo($this->lng->txt('mass_notify_explanation'));
-		$notify->setDisabled(!$may_be_edited || $this->object->getSettings()->viewSelf());
-		$form->addItem($notify);
+		if (!$this->object->getSettings()->viewSelf()) {
+			$cb = new ilCheckboxInputGUI($this->lng->txt('mass_user_view_file'), 'user_view_file');
+			$cb->setInfo($this->lng->txt('mass_user_view_file_info'));
+			$cb->setDisabled(!$may_be_edited);
+			$form->addItem($cb);
+			// notify examinee
+			$notify = new ilCheckboxInputGUI($this->lng->txt('mass_notify'), 'notify');
+			$notify->setInfo($this->lng->txt('mass_notify_explanation'));
+			$notify->setDisabled(!$may_be_edited);
+			$form->addItem($notify);
+		}
 
 		return $form;
 	}
