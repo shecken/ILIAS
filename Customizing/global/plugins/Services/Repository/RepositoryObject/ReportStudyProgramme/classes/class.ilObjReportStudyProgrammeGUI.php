@@ -54,6 +54,10 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 	 */
 	public function performCommand($cmd)
 	{
+		if ($this->g_user->getId() === $_GET["user_id"] || !isset($_GET["user_id"]) || trim($_GET['user_id']) === '') {
+			global $ilMainMenu;
+			$ilMainMenu->setActive("gev_me_menu");
+		}
 		$this->plugin_actions = $this->object->getActions();
 		$next_class = $this->g_ctrl->getNextClass();
 		switch ($next_class) {
