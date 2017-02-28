@@ -18,6 +18,13 @@ class ilObjManualAssessment extends ilObject
 {
 
 	protected $lp_active = null;
+	protected $file_storage;
+	protected $settings_storage;
+	protected $members_storage;
+	protected $access_handler;
+
+	protected $settings;
+	protected $info_settings;
 
 	public function __construct($a_id = 0, $a_call_by_reference = true)
 	{
@@ -34,8 +41,6 @@ class ilObjManualAssessment extends ilObject
 			$ilDB,
 			$rbacadmin
 		);
-
-		$this->file_storage = new ilManualAssessmentFileStorage($this->getId());
 	}
 
 	/**
@@ -231,6 +236,9 @@ class ilObjManualAssessment extends ilObject
 	 */
 	public function getFileStorage()
 	{
+		if ($this->file_storage === null) {
+			$this->file_storage =  ilManualAssessmentFileStorage::getInstance($this->getId());
+		}
 		return $this->file_storage;
 	}
 }

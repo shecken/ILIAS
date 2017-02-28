@@ -9,9 +9,9 @@ include_once('Services/FileSystem/classes/class.ilFileSystemStorage.php');
 */
 class ilManualAssessmentFileStorage extends ilFileSystemStorage implements ManualAssessmentFileStorage
 {
-	public function __construct($a_container_id = 0)
+	public static function getInstance($a_container_id = 0)
 	{
-		parent::__construct(self::STORAGE_WEB, true, $a_container_id);
+		return new self(self::STORAGE_WEB, true, $a_container_id);
 	}
 
 	/**

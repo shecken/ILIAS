@@ -30,6 +30,7 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 	const TAB_MEMBERS = 'members';
 	const TAB_LP = 'learning_progress';
 	const TAB_EXPORT = 'export';
+
 	public function __construct($a_data, $a_id = 0, $a_call_by_reference = true, $a_prepare_output = true)
 	{
 
@@ -62,6 +63,7 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 		$cmd = $this->ctrl->getCmd();
 		$this->prepareOutput();
 		$this->addToNavigationHistory();
+		$access_handler = $this->object->accessHandler();
 		switch ($next_class) {
 			case 'ilpermissiongui':
 				$this->tabs_gui->setTabActive(self::TAB_PERMISSION);
@@ -85,7 +87,7 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 				$this->ctrl->forwardCommand($info);
 				break;
 			case 'illearningprogressgui':
-				if (!$this->object->access_handler->checkAccessToObj($this->object, 'read')) {
+				if (!$access_handler->checkAccessToObj($this->object, 'read')) {
 					$this->handleAccessViolation();
 				}
 				require_once 'Services/Tracking/classes/class.ilLearningProgressGUI.php';
@@ -112,7 +114,7 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 			default:
 				if (!$cmd) {
 					$cmd = 'view';
-					if ($this->object->access_handler->checkAccessToObj($this->object, 'edit_members')) {
+					if ($access_handler->checkAccessToObj($this->object, 'edit_members')) {
 						$this->ctrl->setCmdClass('ilmanualassessmentmembersgui');
 						$cmd = 'members';
 					}
@@ -333,8 +335,7 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 	public function addToNavigationHistory()
 	{
 		if (!$this->getCreationMode()) {
-			$access_handler = $this->object->accessHandler();
-			if ($access_handler->checkAccessToObj($this->object, 'read')) {
+			if ($this->object->accessHandler()->checkAccessToObj($this->object, 'read')) {
 				$link = $this->ctrl->getLinkTargetByClass("ilrepositorygui", "frameset");
 				$this->ilNavigationHistory->addItem($_GET['ref_id'], $link, 'mass');
 			}
