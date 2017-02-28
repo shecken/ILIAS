@@ -9,9 +9,9 @@ include_once('Services/FileSystem/classes/class.ilFileSystemStorage.php');
 */
 class ilManualAssessmentFileStorage extends ilFileSystemStorage implements ManualAssessmentFileStorage
 {
-	public function __construct($a_container_id = 0)
+	public static function getInstance($a_container_id = 0)
 	{
-		parent::__construct(self::STORAGE_WEB, true, $a_container_id);
+		return new self(self::STORAGE_WEB, true, $a_container_id);
 	}
 
 	/**
@@ -57,16 +57,6 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 	}
 
 	/**
-	 * Set the obj id for an extra folder of each participant in the IA
-	 *
-	 * @param int 	$obj_id
-	 */
-	public function setObjId($obj_id)
-	{
-		$this->obj_id = $obj_id;
-	}
-
-	/**
 	 * creates the folder structure
 	 *
 	 * @return boolen
@@ -87,7 +77,7 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 	public function getAbsolutePath()
 	{
 		$path = parent::getAbsolutePath();
-		$path .= "/user_".$this->user_id."_".$this->obj_id;
+		$path .= "/user_".$this->user_id;
 
 		return $path;
 	}
