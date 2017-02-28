@@ -123,10 +123,12 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 		if ($this->checkAccessToObj($mass, 'read_learning_progress')) {
 			return true;
 		}
-		if ($mass->getSettings()->superiorView()) {
-			return in_array($usr_id, $this->usr_utils->getEmployees());
-		}
-		return false;
+		return $this->calcMayViewUserIn(
+			$mass->getSettings()->superiorView(),
+			in_array($usr_id, $this->usr_utils->getEmployees()),
+			$mass->getSettings()->viewSelf(),
+			$usr_id
+		);
 	}
 
 	protected function fromCacheMayViewUserIn($usr_id, ilObjManualAssessment $mass)
@@ -136,11 +138,14 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 			return true;
 		}
 		$this->cacheSettingsAndEmployees($mass, $this->usr_utils);
-		if ($this->mass_settings_cache[$mass->getId()]->superiorView()) {
-			return in_array($usr_id, $this->employee_cache);
-		}
-		return false;
+		return $this->calcMayViewUserIn(
+			$this->mass_settings_cache[$mass->getId()]->superiorView(),
+			in_array($usr_id, $this->employee_cache),
+			$this->mass_settings_cache[$mass->getId()]->viewSelf(),
+			$usr_id
+		);
 	}
+
 
 	public function mayGradeUserIn($usr_id, ilObjManualAssessment $mass, $use_cache = false)
 	{
@@ -158,6 +163,8 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 		);
 	}
 
+
+
 	protected function fromCacheMayGradeUserIn($usr_id, ilObjManualAssessment $mass)
 	{
 		if ($this->fromCacheCheckAccessToObj($mass, 'edit_learning_progress')) {
@@ -170,6 +177,22 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 			$this->mass_settings_cache[$mass->getId()]->gradeSelf(),
 			$usr_id == $this->usr->getId()
 		);
+	}
+
+	protected function calcMayViewUserIn($superior_view, $is_employee, $view_self, $usr_id)
+	{
+		assert('is_bool($superior_view)');
+		assert('is_bool($is_employee)');
+		assert('is_bool($view_self)');
+		assert('is_numeric($usr_id)');
+		$aux = false;
+		if ($superior_view) {
+			$aux = $aux || $is_employee;
+		}
+		if ($view_self) {
+			$aux = $aux || $usr_id == $this->usr->getId();
+		}
+		return $aux;
 	}
 
 	protected function calcMayGradeUserIn($superior_examinate, $is_employee, $grade_self, $usr_id)
