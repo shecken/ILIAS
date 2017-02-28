@@ -163,14 +163,15 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 	protected function addMemberDataToInfo(ilInfoScreenGUI $info)
 	{
 		$member = $this->object->membersStorage()->loadMember($this->object, $this->usr);
+		$view_self = $this->object->getSettings()->viewSelf();
 		$info->addSection($this->lng->txt('grading_info'));
 		if ($member->finalized()) {
 			$info->addProperty($this->lng->txt('grading'), $this->getEntryForStatus($member->LPStatus()));
 		}
-		if ($member->notify() && $member->finalized()) {
+		if (($member->notify() || $view_self) && $member->finalized()) {
 			$info->addProperty($this->lng->txt('grading_record'), nl2br($member->record()));
 		}
-		if ($member->viewFile() && $member->fileName() && $member->fileName() != "") {
+		if (($member->viewFile() || $view_self) && $member->fileName() && $member->fileName() != "") {
 			$tpl = new ilTemplate("tpl.mass_user_file_download.html", true, true, "Modules/ManualAssessment");
 			$tpl->setVariable("FILE_NAME", $member->fileName());
 			$tpl->setVariable("HREF", $this->ctrl->getLinkTarget($this, "downloadFile"));
@@ -249,6 +250,7 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 			|| $access_handler->checkAccessToObj($this->object, 'edit_learning_progress')
 			|| $access_handler->checkAccessToObj($this->object, 'read_learning_progress')
 			|| $this->mayGradeSelf()
+			|| $this->mayViewSelf()
 			|| $this->mayViewMembersAsSuperior()) {
 			$this->tabs_gui->addTab(self::TAB_MEMBERS, $this->lng->txt('il_mass_members'), $this->getLinkTarget('members'));
 		}
@@ -352,5 +354,10 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 	protected function mayGradeSelf()
 	{
 		return $this->object->loadMembers()->userAllreadyMember($this->usr) && $this->object->getSettings()->gradeSelf();
+	}
+
+	protected function mayViewSelf()
+	{
+		return $this->object->loadMembers()->userAllreadyMember($this->usr) && $this->object->getSettings()->viewSelf();
 	}
 }
