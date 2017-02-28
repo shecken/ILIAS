@@ -32,6 +32,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 
 		switch ($next_class) {
 			case 'ilindividualplangui':
+				$this->gTpl->setTitle(null);
 				$this->view();
 				break;
 			default:
