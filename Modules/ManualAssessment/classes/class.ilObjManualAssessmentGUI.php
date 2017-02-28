@@ -63,7 +63,6 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 		$cmd = $this->ctrl->getCmd();
 		$this->prepareOutput();
 		$this->addToNavigationHistory();
-		$access_handler = $this->object->accessHandler();
 		switch ($next_class) {
 			case 'ilpermissiongui':
 				$this->tabs_gui->setTabActive(self::TAB_PERMISSION);
@@ -87,7 +86,7 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 				$this->ctrl->forwardCommand($info);
 				break;
 			case 'illearningprogressgui':
-				if (!$access_handler->checkAccessToObj($this->object, 'read')) {
+				if (!$this->object->accessHandler()->checkAccessToObj($this->object, 'read')) {
 					$this->handleAccessViolation();
 				}
 				require_once 'Services/Tracking/classes/class.ilLearningProgressGUI.php';
@@ -114,7 +113,7 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 			default:
 				if (!$cmd) {
 					$cmd = 'view';
-					if ($access_handler->checkAccessToObj($this->object, 'edit_members')) {
+					if ($this->object->accessHandler()->checkAccessToObj($this->object, 'edit_members')) {
 						$this->ctrl->setCmdClass('ilmanualassessmentmembersgui');
 						$cmd = 'members';
 					}
