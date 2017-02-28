@@ -90,7 +90,7 @@ class ilManualAssessmentMemberGUI
 		if ($form === null) {
 			$form = $this->fillForm($this->initGradingForm(), $this->member);
 		}
-		$form->addCommandButton('save', $this->lng->txt('save'));
+		$form->addCommandButton('save', $this->lng->txt('mass_save'));
 		$form->addCommandButton('finalizeConfirmation', $this->lng->txt('mass_finalize'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
@@ -206,7 +206,7 @@ class ilManualAssessmentMemberGUI
 			$form = $this->fillForm($this->initGradingForm(), $this->member);
 		}
 
-		$form->addCommandButton('saveAmend', $this->lng->txt('save'));
+		$form->addCommandButton('saveAmend', $this->lng->txt('mass_save'));
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
 		$this->renderForm($form);
