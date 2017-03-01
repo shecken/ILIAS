@@ -354,6 +354,8 @@ exc#:#exc_team_member_container_add#:#Team-Mitglied aus Training/Gruppe hinzufü
 exercise#:#exc_crs_add_members#:#Mitglieder dieses Trainings hinzufügen
 exercise#:#exc_feedback_from_tutor#:#Feedback des Trainers
 fm#:#fm_settings_active_info#:#Benutzer können Kategorien, Trainings, Gruppen und Ordner öffnen, indem Sie im Magazin die Aktion "Mit Dateimanager öffnen" ausführen.
+gev#:#mass_view_self#:#Eigene Bewertung einsehen
+gev#:#mass_view_self_info#:#Teilnehmer dürfen nach Abschluss ihre Bewertung betrachten. Die Optionen "Dateieinsicht für Teilnehmer" und "Prüfungsnotiz einsehbar" im Prüfungsformular gelten dadurch pauschal als aktiviert.
 gev#:#mass_download_attached_file#:#Angehängte Datei herunterladen
 gev#:#mass_view_record_ip#:#Gesprächsnotizen
 gev#:#mass_edit_record_ip#:#Teilnehmer bewerten und Lernfortschritt bearbeiten
@@ -1687,24 +1689,25 @@ prg#:#prg_points_reachable#:#Erreichbare Punkte
 gev#:#gev_open_same_window#:#Im selben Fenster öffnen
 gev#:#jill_na_link_label#:#Zur Qualifizierung nach der EU-Vermittlerrichtlinie
 mass#:#general#:#Allgemein
-mass#:#mass_place#:#Ort
-mass#:#mass_event_time#:#Datum
+mass#:#mass_place#:#Ort der Durchführung
+mass#:#mass_event_time#:#Datum der Durchführung
 mass#:#mass_event_time_place_required#:#Verpflichtende Angabe von Datum und Ort
 mass#:#mass_event_time_place_required_info#:#In der Beurteilung zu einem Teilnehmer müssen Datum und Ort angegeben werden.
 mass#:#mass_content#:#Inhalt
 mass#:#mass_record_template#:#Vorlage Prüfungsnotiz
 mass#:#mass_graded_by#:#Bewertet von
 mass#:#mass_usr_remove#:#Teilnehmer entfernen
-mass#:#mass_usr_edit#:#Teilnehmer bewerten und Lernfortschritt bearbeiten
-mass#:#mass_usr_view#:#Prüfungsdaten
-mass#:#mass_edit_record#:#Prüfungsdaten
-mass#:#mass_record#:#Prüfungsnotiz
-mass#:#mass_internal_note#:#Interne Anmerkungen zur Prüfung
-mass#:#mass_status_completed#:#Bestanden
-mass#:#mass_status_failed#:#Nicht bestanden
-mass#:#mass_status_pending#:#Noch nicht bewertet
+mass#:#mass_usr_edit#:#Dokumentation anlegen
+mass#:#mass_usr_view#:#Dokumentation einsehen
+mass#:#mass_edit_record#:#Dokumentation
+mass#:#mass_record#:#Eingabe Dokumentation
+mass#:#mass_internal_note#:#erweiterte Dokumentation
+mass#:#mass_status_completed#:#erfolgreich durchgeführt
+mass#:#mass_status_failed#:#nicht durchgeführt
+mass#:#mass_status_pending#:#noch nicht bewertet
 mass#:#mass_notify#:#Prüfungsnotiz einsehbar
-mass#:#mass_finalize#:#Abschließen
+mass#:#mass_finalize#:#Abschluss der Dokumentation
+mass#:#mass_save#:#Zwischenspeichern
 mass#:#il_mass_member#:#Teilnehmer
 mass#:#il_mass_members#:#Teilnehmer
 mass#:#edit_members#:#Teilnehmer bearbeiten
@@ -1741,15 +1744,15 @@ rbac#:#mass_edit_permission#:#Rechte einer Individuellen Bewertung bearbeiten
 mass#:#lp_inactive#:#Beachten Sie: die Lernfortschrittsbestimmung für dieses Objekt ist deaktiviert. Daher können Teilnahmen nicht finalisiert werden.
 mass#:#mass_edit#:#Einstellungen
 mass#:#mass_add#:#Individuelle Bewertung anlegen
-mass#:#mass_membership_finalized#:#Prüfungsdaten finalisiert
+mass#:#mass_membership_finalized#:#Dokumentation abgeschlossen
 mass#:#mass_membership_saved#:#Prüfungsdaten gespeichert, jedoch noch nicht finalisiert
 mass#:#mass_return#:#Zurück zur Übersicht
 mass#:#mass_remove_user_qst#:#Soll der Teilnehmer wirklich entfernt werden?
-mass#:#mass_finalize_user_qst#:#Sollen die Prüfungsdaten des Teilnehmers wirklich finalisiert werden? Änderungen an der Bewertung sind hinterher nicht mehr möglich.
+mass#:#mass_finalize_user_qst#:#Soll die Dokumentation final abgeschlossen werden? Sie können danach keine Änderungen mehr vornehmen.
 mass#:#mass_settings_saved#:#Einstellungen gespeichert.
 mass#:#mass_add_user_failure#:#Einer oder mehrere Benutzer konnten nicht hinzugefügt werden.
 mass#:#mass_add_user_success#:#Benutzer als Teilnehmer hinzugefügt.
-mass#:#grading#:#Bewertung
+mass#:#grading#:#Status
 mass#:#grading_info#:#Bewertungsinformationen
 mass#:#grading_record#:#Bewertungszusammenfassung
 mass#:#mass_content_explanation#:#Inhalte der Prüfung.
@@ -1766,8 +1769,8 @@ mass#:#mass_mess_notification_completed#:#Sie haben die Prüfung %s bestanden. B
 mass#:#mass_mess_notification_failed#:#Sie haben die Prüfung %s nicht bestanden. Beachten Sie auch die folgende Zusammenfassung für Details.
 mass#:#mass_contact_info#:#Kontaktinformationen
 mass#:#mass_added#:#Individuelle Bewertung hinzugefügt
-mass#:#mass_record_info#:#Die Prüfungsnotiz kann nach Abschluss vom Teilnehmer eingesehen werden. Ist unten die Benachrichtigung aktiviert, erhält der Teilnehmer die Prüfungsnotiz auch per E-Mail.
-mass#:#mass_internal_note_info#:#Diese Notiz ist nur für Tutoren sichtbar, die Prüfungsdaten von Teilnehmern einsehen können. Die Teilnehmer selbst sehen die Prüfungsnotiz nicht.
+mass#:#mass_record_info#:#Geben Sie hier die für die Dokumentation erforderlichen Angaben ein. Details hierzu entnehmen Sie bitte der Arbeitsanweisung.
+mass#:#mass_internal_note_info#:#Bitte geben Sie hier keine Werte ein. Die hier eingegebene Werte werden NICHT in den VA-Pass übertragen.
 mass#:#mass_edit_conditions#:#Vorbedingungen
 gev#:#gev_xsp_success#:#teilgenommen
 gev#:#gev_xsp_progress#:#in Bearbeitung
@@ -1812,7 +1815,7 @@ prg#:#prg_remove_users_partitial_success#:#Die Benutzer wurden teilweise entfern
 prg#:#prg_mark_accredited_multi_success#:#Das Programm wurde für die Benutzer erfolgreich akkreditiert.
 prg#:#prg_mark_relevant_multi_success#:#Das Programm wurde für die Benutzer als relevant markiert.
 prg#:#prg_mark_not_relevant_multi_success#:#Das Programm wurde für die Benutzer als nicht relevant markiert.
-mass#:#mass_upload_file#:#Datei
+mass#:#mass_upload_file#:#Upload Formular
 rbac#:#read_learning_progress#:#Beurteilungen einsehen
 rbac#:#prg_manage_members#:#Mitglieder verwalten
 prg#:#prg_update_from_current_plan_success#:#Die Aktualisierung aus dem aktuellen Plan war erfolgreich.

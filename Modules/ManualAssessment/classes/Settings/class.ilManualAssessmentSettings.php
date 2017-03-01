@@ -38,8 +38,23 @@ class ilManualAssessmentSettings
 	 */
 	protected $grade_self;
 
-	public function __construct(ilObjManualAssessment $mass, $content = null, $record_template = null, $file_required = false, $event_time_place_required = false, $superior_examinate = false, $superior_view = false, $grade_self = false)
-	{
+	/**
+	 * @var boolean
+	 */
+	protected $view_self;
+
+	public function __construct(
+		ilObjManualAssessment $mass,
+		$content = null,
+		$record_template = null,
+		$file_required = false,
+		$event_time_place_required = false,
+		$superior_examinate = false,
+		$superior_view = false,
+		$grade_self = false,
+		$view_self = false
+	) {
+
 		assert('is_bool($superior_examinate)');
 		assert('is_bool($superior_view)');
 		assert('is_bool($grade_self)');
@@ -51,6 +66,7 @@ class ilManualAssessmentSettings
 		$this->superior_examinate = $superior_examinate;
 		$this->superior_view = $superior_view;
 		$this->grade_self = $grade_self;
+		$this->view_self = $view_self;
 	}
 
 	/**
@@ -112,6 +128,16 @@ class ilManualAssessmentSettings
 	public function gradeSelf()
 	{
 		return $this->grade_self;
+	}
+
+	/**
+	 * Get to know whether the self-viewing is enabled for this mass.
+	 *
+	 * @return	boolean
+	 */
+	public function viewSelf()
+	{
+		return $this->view_self;
 	}
 
 	/*
@@ -220,6 +246,19 @@ class ilManualAssessmentSettings
 	{
 		assert('is_bool($grade_self)');
 		$this->grade_self = $grade_self;
+
+		return $this;
+	}
+
+	/**
+	 * Enable/disable the self viewing.
+	 *
+	 * @param boolean 	$view_self
+	 */
+	public function setViewSelf($view_self)
+	{
+		assert('is_bool($view_self)');
+		$this->view_self = $view_self;
 
 		return $this;
 	}

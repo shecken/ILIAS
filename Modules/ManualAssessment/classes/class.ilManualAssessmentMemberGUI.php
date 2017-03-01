@@ -90,7 +90,7 @@ class ilManualAssessmentMemberGUI
 		if ($form === null) {
 			$form = $this->fillForm($this->initGradingForm(), $this->member);
 		}
-		$form->addCommandButton('save', $this->lng->txt('save'));
+		$form->addCommandButton('save', $this->lng->txt('mass_save'));
 		$form->addCommandButton('finalizeConfirmation', $this->lng->txt('mass_finalize'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
@@ -206,7 +206,7 @@ class ilManualAssessmentMemberGUI
 			$form = $this->fillForm($this->initGradingForm(), $this->member);
 		}
 
-		$form->addCommandButton('saveAmend', $this->lng->txt('save'));
+		$form->addCommandButton('saveAmend', $this->lng->txt('mass_save'));
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
 		$this->renderForm($form);
@@ -350,15 +350,17 @@ class ilManualAssessmentMemberGUI
 		$file->setAllowDeletion(true);
 		$form->addItem($file);
 
-		$cb = new ilCheckboxInputGUI($this->lng->txt('mass_user_view_file'), 'user_view_file');
-		$cb->setInfo($this->lng->txt('mass_user_view_file_info'));
-		$cb->setDisabled(!$may_be_edited);
-		$form->addItem($cb);
-		// notify examinee
-		$notify = new ilCheckboxInputGUI($this->lng->txt('mass_notify'), 'notify');
-		$notify->setInfo($this->lng->txt('mass_notify_explanation'));
-		$notify->setDisabled(!$may_be_edited);
-		$form->addItem($notify);
+		if (!$this->object->getSettings()->viewSelf()) {
+			$cb = new ilCheckboxInputGUI($this->lng->txt('mass_user_view_file'), 'user_view_file');
+			$cb->setInfo($this->lng->txt('mass_user_view_file_info'));
+			$cb->setDisabled(!$may_be_edited);
+			$form->addItem($cb);
+			// notify examinee
+			$notify = new ilCheckboxInputGUI($this->lng->txt('mass_notify'), 'notify');
+			$notify->setInfo($this->lng->txt('mass_notify_explanation'));
+			$notify->setDisabled(!$may_be_edited);
+			$form->addItem($notify);
+		}
 
 		return $form;
 	}
@@ -400,7 +402,7 @@ class ilManualAssessmentMemberGUI
 			($this->userCanGrade() || $this->superiorCanGrade() || $this->mayGradeSelf()))
 			|| $this->userCanView()
 			|| $this->superiorCanView()
-
+			|| $this->mayViewSelf()
 		) {
 			return true;
 		}
@@ -413,6 +415,12 @@ class ilManualAssessmentMemberGUI
 		return $this->object->getSettings()->gradeSelf()
 			&& $this->examinee->getId() === $this->examiner->getId()
 			&& !$this->targetWasEditedByOtherUser($this->member);
+	}
+
+	protected function mayViewSelf()
+	{
+		return $this->object->getSettings()->viewSelf()
+			&& $this->examinee->getId() === $this->examiner->getId();
 	}
 
 	protected function mayBeAmended()
