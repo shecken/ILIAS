@@ -354,12 +354,14 @@ class ilManualAssessmentMemberGUI
 		$form->addItem($date);
 
 
-		require_once("Services/Form/classes/class.ilFileInputGUI.php");
-		$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
-		$file->setRequired($this->object->getSettings()->fileRequired());
-		$file->setDisabled(!$may_be_edited);
-		$file->setAllowDeletion(true);
-		$form->addItem($file);
+		if ($this->object->getSettings()->fileRequired()) {
+			require_once("Services/Form/classes/class.ilFileInputGUI.php");
+			$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
+			$file->setRequired(true);
+			$file->setDisabled(!$may_be_edited);
+			$file->setAllowDeletion(true);
+			$form->addItem($file);
+		}
 
 		if (!$this->object->getSettings()->viewSelf()) {
 			$cb = new ilCheckboxInputGUI($this->lng->txt('mass_user_view_file'), 'user_view_file');
