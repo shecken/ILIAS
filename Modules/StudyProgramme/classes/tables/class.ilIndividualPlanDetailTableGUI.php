@@ -99,7 +99,14 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	public function fillRow(\ilIndividualPlanDetailEntry $entry)
 	{
 		$this->tpl->setVariable("STEPNAME", $entry->getTitle());
-		// TODO: There needs to be a link here to the course where the user is member
+		$crs = $entry->getCourseWhereUserIsMember();
+		if($crs != null) {
+			$this->g_ctrl->setParameterByClass("ilObjCourseGUI", "ref_id", $crs->getRefId());
+			$link = $this->g_ctrl->getLinkTargetByClass(array("ilRepositoryGUI", "ilObjCourseGUI"), "view");
+			$this->tpl->setVariable("LINK", $link);
+			$this->g_ctrl->clearParametersByClass("ilObjCourseGUI");
+		}
+
 		if ($entry->getAccountable()) {
 			$this->tpl->setVariable("ACCOUNTABLE", $entry->getAccountable());
 		} else {

@@ -196,41 +196,35 @@ class ilIndividualPlanGUI
 		if (count($with_children) > 0) {
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanTableGUI.php");
 			$tbl_children = new ilIndividualPlanTableGUI($this, $with_children, $this->getAssignmentId(), $this->getUserId(), "view");
-			if ($this->getUserId() == $this->g_user->getId()) {
-				$tbl_children->setTitle($this->getStudyProgramme()->getTitle());
-			} else {
-				$user = ilObjectFactory::getInstanceByObjId($this->user_id);
-				$tbl_children->setTitle($this->getStudyProgramme()->getTitle()
-										. " von " . $user->getLastname()
-										. ", " . $user->getFirstname());
-			}
-			$tbl_children->setSubtitle($this->getStudyProgramme()->getDescription());
-			$tbl_children->setLegend($this->createLegend());
-
-			$html = $tbl_children->getHtml();
+			$html = $this->getHTML($tbl_children);
 		}
 
 		if (count($with_lp_children) > 0) {
 			require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanDetailTableGUI.php");
 			$tbl_lp_children = new ilIndividualPlanDetailTableGUI($this, $with_lp_children, $this->getAssignmentId(), $this->getUserId(), "view");
 			if ($html == "") {
-				if ($this->getUserId() == $this->g_user->getId()) {
-					$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle());
-				} else {
-					$user = ilObjectFactory::getInstanceByObjId($this->user_id);
-					$tbl_lp_children->setTitle($this->getStudyProgramme()->getTitle()
-											. " von " . $user->getLastname()
-											. ", " . $user->getFirstname());
-				}
-				$tbl_lp_children->setSubtitle($this->getStudyProgramme()->getDescription());
-				$tbl_lp_children->setLegend($this->createLegend());
-				$html = $tbl_lp_children->getHtml();
+				$html = $this->getHTML($tbl_lp_children);
 			} else {
 				$html .= "<br />".$tbl_lp_children->getHtml();
 			}
 		}
-
 		$this->g_tpl->setContent($html);
+	}
+
+	protected function getHTML($children) {
+
+		if ($this->getUserId() == $this->g_user->getId()) {
+			$tbl_children->setTitle($this->getStudyProgramme()->getTitle());
+		} else {
+			$user = ilObjectFactory::getInstanceByObjId($this->user_id);
+			$children->setTitle($this->getStudyProgramme()->getTitle()
+									. " von " . $user->getLastname()
+									. ", " . $user->getFirstname());
+		}
+		$children->setSubtitle($this->getStudyProgramme()->getDescription());
+		$children->setLegend($this->createLegend());
+
+		return $children->getHtml();
 	}
 
 	protected function getStudyProgramme()
