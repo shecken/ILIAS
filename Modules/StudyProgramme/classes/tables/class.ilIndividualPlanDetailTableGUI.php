@@ -222,7 +222,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 		if (($finalized && !$edited_by_other && $may_grade) || ($finalized && $may_view)) {
 			$items[] =
-				["title" => $this->g_lng->txt("mass_view_record"),
+				["title" => $this->g_lng->txt("mass_usr_view"),
 				 "link" => $this->manualAssessmentRecordViewLink($mass)];
 		}
 		return $items;
