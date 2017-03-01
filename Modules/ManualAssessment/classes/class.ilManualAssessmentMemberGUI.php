@@ -238,6 +238,10 @@ class ilManualAssessmentMemberGUI
 
 	protected function cancel()
 	{
+		if ($back_to = $this->getBackToLink()) {
+			ilUtil::redirect($back_to);
+		}
+
 		$this->ctrl->redirect($this->members_gui);
 	}
 
@@ -287,6 +291,10 @@ class ilManualAssessmentMemberGUI
 
 	protected function getBackLink()
 	{
+		if ($back_to = $this->getBackToLink()) {
+			return $back_to;
+		}
+
 		return $this->ctrl->getLinkTargetByClass(
 			array(get_class($this->parent_gui)
 					,get_class($this->members_gui)),
@@ -298,6 +306,9 @@ class ilManualAssessmentMemberGUI
 	{
 		require_once 'Services/Form/classes/class.ilPropertyFormGUI.php';
 		$form = new ilPropertyFormGUI();
+		if ($back_to = $this->getBackToLink()) {
+			$this->ctrl->setParameter($this, "back_to", base64_encode($back_to));
+		}
 		$form->setFormAction($this->ctrl->getFormAction($this));
 		$form->setTitle($this->lng->txt('mass_edit_record'));
 		$examinee_name = $this->examinee->getLastname().', '.$this->examinee->getFirstname();
@@ -511,5 +522,16 @@ class ilManualAssessmentMemberGUI
 			$form->addCommandButton('downloadAttachment', $this->lng->txt('mass_download_attached_file'));
 		}
 		return $form;
+	}
+
+	protected function getBackToLink()
+	{
+		if (isset($_GET["back_to"]) && trim($_GET["back_to"]) != "") {
+			$back_to = $_GET["back_to"];
+			$back_to = base64_decode($back_to);
+			return $back_to;
+		}
+
+		return "";
 	}
 }
