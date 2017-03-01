@@ -6155,3 +6155,15 @@ if (!$ilDB->tableColumnExists('mass_settings', 'grade_self')) {
 <?php
 	$ilCtrlStructureReader->getStructure();
 ?>
+
+<#256>
+<?php
+if (!$ilDB->tableColumnExists('mass_settings', 'view_self')) {
+	$ilDB->addTableColumn('mass_settings', 'view_self', array(
+	"type" => "integer",
+	"length" => 1,
+	"notnull" => true,
+	"default" => 0
+	));
+}
+?>
