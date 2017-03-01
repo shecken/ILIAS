@@ -211,10 +211,11 @@ class ilIndividualPlanGUI
 		$this->g_tpl->setContent($html);
 	}
 
-	protected function getHTML($children) {
+	protected function getHTML($children)
+	{
 
 		if ($this->getUserId() == $this->g_user->getId()) {
-			$tbl_children->setTitle($this->getStudyProgramme()->getTitle());
+			$children->setTitle($this->getStudyProgramme()->getTitle());
 		} else {
 			$user = ilObjectFactory::getInstanceByObjId($this->user_id);
 			$children->setTitle($this->getStudyProgramme()->getTitle()
