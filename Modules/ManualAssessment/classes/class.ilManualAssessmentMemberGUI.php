@@ -337,7 +337,7 @@ class ilManualAssessmentMemberGUI
 		$form->addItem($txt);
 
 		$date = new ilDateTimeInputGUI($this->lng->txt('mass_event_time'), 'event_time');
-		$date->setShowTime(true);
+		$date->setShowTime(false);
 		$date->setRequired($this->settings->eventTimePlaceRequired());
 		$date->setDisabled(!$may_be_edited);
 		$form->addItem($date);
