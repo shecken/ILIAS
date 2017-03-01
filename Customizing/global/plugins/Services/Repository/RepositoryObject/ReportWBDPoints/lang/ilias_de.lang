@@ -7,7 +7,7 @@ obj_xwbp_duplicate#:#Report über Gemeldete Bildungspunkte kopieren
 objs_xwbp_duplicate#:#Reports über Gemeldete Bildungspunkte kopieren
 obj_xwbp_select#:#Report über Gemeldete Bildungspunkte auswählen
 xwbp_add#:#Report über Gemeldete Bildungspunkte hinzufügen
-xwbp_new#:#Neuen Report über Gemeldete Bildungspunktehinzufügen
+xwbp_new#:#Neuen Report über Gemeldete Bildungspunkte hinzufügen
 xwbp_read#:#Lesezugriff zum Report über Gemeldete Bildungspunkte
 xwbp_write#:#Report über Gemeldete Bildungspunkte bearbeiten
 xwbp_delete#:#Report über Gemeldete Bildungspunkte löschen
