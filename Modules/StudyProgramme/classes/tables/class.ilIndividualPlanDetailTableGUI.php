@@ -62,6 +62,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$this->mass_storage = new ilManualAssessmentMembersStorageDB($this->g_db);
 		$this->assignment_id = $assignment_id;
 
+		$this->g_lng->loadLanguageModule("mass");
+
 		$this->success = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		$this->in_progress = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
 		$this->not_attemped = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
@@ -212,7 +214,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 		if (($finalized && !$edited_by_other && $may_grade) || ($finalized && $may_view)) {
 			$items[] =
-				["title" => $this->g_lng->txt("mass_view_record_ip"),
+				["title" => $this->g_lng->txt("mass_view_record"),
 				 "link" => $this->manualAssessmentRecordViewLink($mass)];
 		}
 		return $items;
@@ -229,7 +231,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 		if (!$finalized && !$edited_by_other && $may_grade) {
 			$items[] =
-				["title" => $this->g_lng->txt("mass_edit_record_ip"),
+				["title" => $this->g_lng->txt("mass_edit_record"),
 				 "link" => $this->manualAssessmentRecordEditLink($mass)];
 		}
 		return $items;

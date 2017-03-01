@@ -357,8 +357,6 @@ fm#:#fm_settings_active_info#:#Benutzer können Kategorien, Trainings, Gruppen u
 gev#:#mass_view_self#:#Eigene Bewertung einsehen
 gev#:#mass_view_self_info#:#Teilnehmer dürfen nach Abschluss ihre Bewertung betrachten. Die Optionen "Dateieinsicht für Teilnehmer" und "Prüfungsnotiz einsehbar" im Prüfungsformular gelten dadurch pauschal als aktiviert.
 gev#:#mass_download_attached_file#:#Angehängte Datei herunterladen
-gev#:#mass_view_record_ip#:#Gesprächsnotizen
-gev#:#mass_edit_record_ip#:#Teilnehmer bewerten und Lernfortschritt bearbeiten
 gev#:#download_memberlist_ip#:#Download Teilnehmerliste
 gev#:#view_bookings_ip#:#Buchungen einsehen
 gev#:#view_mailing_ip#:#Mailing einsehen
@@ -1692,14 +1690,14 @@ mass#:#general#:#Allgemein
 mass#:#mass_place#:#Ort der Durchführung
 mass#:#mass_event_time#:#Datum der Durchführung
 mass#:#mass_event_time_place_required#:#Verpflichtende Angabe von Datum und Ort
-mass#:#mass_event_time_place_required_info#:#In der Beurteilung zu einem Teilnehmer müssen Datum und Ort angegeben werden.
+mass#:#mass_event_time_place_required_info#:#In der Dokumentation zu einem Teilnehmer müssen Datum und Ort angegeben werden.
 mass#:#mass_content#:#Inhalt
 mass#:#mass_record_template#:#Vorlage Prüfungsnotiz
 mass#:#mass_graded_by#:#Bewertet von
 mass#:#mass_usr_remove#:#Teilnehmer entfernen
 mass#:#mass_usr_edit#:#Dokumentation anlegen
 mass#:#mass_usr_view#:#Dokumentation einsehen
-mass#:#mass_edit_record#:#Dokumentation
+mass#:#
 mass#:#mass_record#:#Eingabe Dokumentation
 mass#:#mass_internal_note#:#erweiterte Dokumentation
 mass#:#mass_status_completed#:#erfolgreich durchgeführt
@@ -1790,12 +1788,12 @@ gev#:#gev_xsp_crs_type#:#Art des bestehens
 gev#:#gev_xsp_status#:#Status
 gev#:#gev_xsp_finish_until#:#zu erledigen bis
 gev#:#gev_xsp_type_of_passed#:#Art des Bestehens
-rbac#:#amend_grading#:#Beurteilung ändern
-mass#:#mass_usr_amend#:#Beurteilung ändern
+rbac#:#amend_grading#:#Dokumentation ändern
+mass#:#mass_usr_amend#:#Dokumentation ändern
 mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.
 rbac#:#mass_amend_grading#:#Benutzer darf die Prüfungsdaten nachträglich ändern.
 mass#:#mass_file_required#:#Verpflichtender Dateiupload
-mass#:#mass_file_required_info#:#In der Beurteilung zu einem Teilnehmer muss eine Datei hochgeladen werden.
+mass#:#mass_file_required_info#:#In der Dokumentation zu einem Teilnehmer muss eine Datei hochgeladen werden.
 mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer
 mass#:#mass_user_view_file_info#:#Der Teilnehmer kann die Datei auf der Info-Seite einsehen.
 mass#:#mass_superior_can_examinate#:#Vorgesetzte dürfen Teilnehmer bewerten
@@ -1816,7 +1814,7 @@ prg#:#prg_mark_accredited_multi_success#:#Das Programm wurde für die Benutzer e
 prg#:#prg_mark_relevant_multi_success#:#Das Programm wurde für die Benutzer als relevant markiert.
 prg#:#prg_mark_not_relevant_multi_success#:#Das Programm wurde für die Benutzer als nicht relevant markiert.
 mass#:#mass_upload_file#:#Upload Formular
-rbac#:#read_learning_progress#:#Beurteilungen einsehen
+rbac#:#read_learning_progress#:#Dokumentation einsehen
 rbac#:#prg_manage_members#:#Mitglieder verwalten
 prg#:#prg_update_from_current_plan_success#:#Die Aktualisierung aus dem aktuellen Plan war erfolgreich.
 prg#:#prg_update_from_current_plan_not_possible#:#Die Aktualisierung aus dem aktuellen Plan ist nicht möglich.
