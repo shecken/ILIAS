@@ -355,7 +355,7 @@ exercise#:#exc_crs_add_members#:#Mitglieder dieses Trainings hinzufügen
 exercise#:#exc_feedback_from_tutor#:#Feedback des Trainers
 fm#:#fm_settings_active_info#:#Benutzer können Kategorien, Trainings, Gruppen und Ordner öffnen, indem Sie im Magazin die Aktion "Mit Dateimanager öffnen" ausführen.
 gev#:#mass_view_self#:#Eigene Bewertung einsehen
-gev#:#mass_view_self_info#:#Teilnehmer dürfen nach finalisierung ihre Bewertung betrachten. Die Optionen "Dateieinsicht für Teilnehmer" und "Prüfungsnotiz einsehbar" im Prüfungsformulat gelten dadurch pauschal als aktiviert.
+gev#:#mass_view_self_info#:#Teilnehmer dürfen nach Abschluss ihre Bewertung betrachten. Die Optionen "Dateieinsicht für Teilnehmer" und "Prüfungsnotiz einsehbar" im Prüfungsformular gelten dadurch pauschal als aktiviert.
 gev#:#mass_download_attached_file#:#Angehängte Datei herunterladen
 gev#:#mass_view_record_ip#:#Gesprächsnotizen
 gev#:#mass_edit_record_ip#:#Teilnehmer bewerten und Lernfortschritt bearbeiten
