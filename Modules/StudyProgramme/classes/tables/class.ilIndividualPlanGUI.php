@@ -5,7 +5,7 @@
  * This GUI will show the member of an VA Pass the historie of his own learning progress
  * and which study programme and course he has to do
  *
- * @ilCtrl_Calls ilIndividualPlanGUI: gevTrainerMailHandlingGUI, ilParticipationStatusAdminGUI, ilObjCourseGUI
+ * @ilCtrl_Calls ilIndividualPlanGUI: gevTrainerMailHandlingGUI, ilParticipationStatusAdminGUI
  *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
  */
