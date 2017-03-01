@@ -16,6 +16,27 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	protected static $in_progress_img;
 	protected static $not_yet_started_img;
 
+	/**
+	 * @var	\ilCtrl
+	 */
+	protected $g_ctrl;
+
+	/**
+	 * @var	\ilIndividualPlanGUI
+	 */
+	protected $individual_plan_gui = null;
+
+	/**
+	 * Overwritten from ilObjectPluginGUI
+	 */
+	public function __construct($a_ref_id = 0, $a_id_type = self::REPOSITORY_NODE_ID, $a_parent_node_id = 0)
+	{
+		parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
+
+		global $ilCtrl;
+		$this->g_ctrl = $ilCtrl;
+	}
+
 	public function getType()
 	{
 		return 'xspo';
@@ -26,13 +47,10 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	 */
 	public function performCommand($cmd)
 	{
-		global $ilCtrl;
-		$this->g_ctrl = $ilCtrl;
 		$next_class = $this->g_ctrl->getNextClass();
 
 		switch ($next_class) {
 			case 'ilindividualplangui':
-				$this->gTpl->setTitle(null);
 				$this->view();
 				break;
 			default:
@@ -41,15 +59,60 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		}
 	}
 
+	/**
+	 * Initialize the subgui initIndividualPlanGUI.
+	 *
+	 * @param	int $user_id
+	 * @param	int $assignment_id
+	 * @param	int $sp_ref_id
+	 * @return 	null
+	 */
+	protected function initIndividualPlanGUI($user_id, $assignment_id, $sp_ref_id)
+	{
+		assert('is_int($user_id)');
+		assert('is_int($assignment_id)');
+		assert('is_int($sp_ref_id)');
+		if ($this->individual_plan_gui !== null) {
+			return;
+		}
+		$this->individual_plan_gui = new ilIndividualPlanGUI();
+		$this->individual_plan_gui->setUserId($user_id);
+		$this->individual_plan_gui->setAssignmentId($assignment_id);
+		$this->individual_plan_gui->setSPRefId($sp_ref_id);
+	}
+
+	/**
+	 * Overwritten from ilObject2GUI
+	 *
+	 * @return null
+	 */
+	protected function setLocator()
+	{
+		global $ilLocator;
+
+		if ($this->g_ctrl->getNextClass() == "ilindividualplangui") {
+			$this->initIndividualPlanGUI(
+				(int)$_GET["user_id"],
+				(int)$_GET["assignment_id"],
+				(int)$_GET["spRefId"]
+			);
+			$this->individual_plan_gui->setLocatorItems($ilLocator);
+			$this->gTpl->setLocator();
+		} else {
+			parent::setLocator();
+		}
+	}
+
 	public function view()
 	{
-		$get = $_GET;
 		require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanGUI.php");
-		$gui = new ilIndividualPlanGUI();
-		$gui->setUserId($get['user_id']);
-		$gui->setAssignmentId($get['assignment_id']);
-		$gui->setSPRefId($get['spRefId']);
-		$this->g_ctrl->forwardCommand($gui);
+		$this->gTpl->setTitle(null);
+		$this->initIndividualPlanGUI(
+			(int)$_GET["user_id"],
+			(int)$_GET["assignment_id"],
+			(int)$_GET["spRefId"]
+		);
+		$this->g_ctrl->forwardCommand($this->individual_plan_gui);
 	}
 
 	protected function prepareTitle($a_title)

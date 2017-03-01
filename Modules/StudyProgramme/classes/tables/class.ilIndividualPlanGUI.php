@@ -118,6 +118,44 @@ class ilIndividualPlanGUI
 		}
 	}
 
+	/**
+	 * Set the items on the supplied locator accoring to the displayed position in
+	 * the assignment.
+	 *
+	 * @param	\ilLocatorGUI $locator
+	 * @param
+	 */
+	public function setLocatorItems(\ilLocatorGUI $locator)
+	{
+		$sp = $this->getStudyProgramme();
+		$ass = $this->getAssignment();
+		$root = $ass->getStudyProgramme();
+		$root_id = $root->getId();
+
+		// Collect items
+
+		$loc_items = [];
+		while ($sp && $root_id != $sp->getId()) {
+			$loc_items[] = ["title" => $sp->getTitle(),
+							"ref_id" => $sp->getRefId()];
+			$sp = $sp->getParent();
+		}
+		$loc_items[] = ["title" => $sp->getTitle(),
+						"ref_id" => $sp->getRefId()];
+
+		// Insert items
+
+		$this->g_ctrl->saveParameter($this, "user_id");
+		$this->g_ctrl->saveParameter($this, "assignment_id");
+		while (count($loc_items)) {
+			$cur = array_pop($loc_items);
+			$this->g_ctrl->setParameter($this, "spRefId", $cur["ref_id"]);
+			$link = $this->g_ctrl->getLinkTarget($this, "showContent");
+
+			$locator->addItem($cur["title"], $link);
+		}
+	}
+
 
 	protected function participationStatus()
 	{
@@ -150,7 +188,7 @@ class ilIndividualPlanGUI
 		$with_children = $this->getSPWithChildrenBelow($relevant_children);
 		$with_lp_children = $this->getSPWithLPChildren($relevant_children);
 
-		if(count($with_children) === 0 && count($with_lp_children) === 0) {
+		if (count($with_children) === 0 && count($with_lp_children) === 0) {
 			ilUtil::sendFailure($this->g_lng->txt('rep_robj_xsp_no_sp_children'), true);
 		}
 
@@ -192,6 +230,7 @@ class ilIndividualPlanGUI
 	protected function getStudyProgramme()
 	{
 		$sp_ref_id = $this->getSPRefId();
+		assert('!is_null($sp_ref_id)');
 
 		if (!array_key_exists($sp_ref_id, $this->studyprogramme)) {
 			require_once("Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php");
@@ -199,6 +238,18 @@ class ilIndividualPlanGUI
 		}
 
 		return $this->studyprogramme[$sp_ref_id];
+	}
+
+	/**
+	 * Get the assignment for the set id.
+	 *
+	 * @return \ilStudyProgrammeUserAssignment
+	 */
+	protected function getAssignment()
+	{
+		assert('!is_null($this->assignment_id)');
+		require_once("Modules/StudyProgramme/classes/class.ilStudyProgrammeUserAssignment.php");
+		return ilStudyProgrammeUserAssignment::getInstance($this->assignment_id);
 	}
 
 	protected function getRelevantChildren($children)
