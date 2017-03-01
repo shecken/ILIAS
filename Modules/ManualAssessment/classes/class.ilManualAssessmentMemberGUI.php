@@ -324,12 +324,14 @@ class ilManualAssessmentMemberGUI
 		$ti->setRequired(true);
 		$form->addItem($ti);
 		// description
-		$ta = new ilTextAreaInputGUI($this->lng->txt('mass_internal_note'), 'internal_note');
-		$ta->setInfo($this->lng->txt('mass_internal_note_info'));
-		$ta->setCols(40);
-		$ta->setRows(5);
-		$ta->setDisabled(!$may_be_edited);
-		$form->addItem($ta);
+
+		// hide for gev 2914
+		// $ta = new ilTextAreaInputGUI($this->lng->txt('mass_internal_note'), 'internal_note');
+		// $ta->setInfo($this->lng->txt('mass_internal_note_info'));
+		// $ta->setCols(40);
+		// $ta->setRows(5);
+		// $ta->setDisabled(!$may_be_edited);
+		// $form->addItem($ta);
 
 		$txt = new ilTextInputGUI($this->lng->txt('mass_place'), 'place');
 		$txt->setRequired($this->settings->eventTimePlaceRequired());
