@@ -23,7 +23,7 @@ class ilObjReportStudyProgrammeOverviewTableGUI extends catTableGUI
 			$this->g_ctrl->setParameter($this->link_tgt, "spRefId", $a_set['sp_ref_id']);
 			$this->g_ctrl->setParameter($this->link_tgt, "user_id", $a_set['user_id']);
 			$this->g_ctrl->setParameter($this->link_tgt, "assignment_id", $a_set['assignment']);
-			$link = $this->g_ctrl->getLinkTargetByClass(array("ilIndividualPlanGUI"), "showContent");
+			$link = $this->g_ctrl->getLinkTargetByClass(array("ilIndividualPlanGUI"), "linkFollower");
 			$this->g_ctrl->setParameter($this->link_tgt, "spRefId", null);
 			$this->g_ctrl->setParameter($this->link_tgt, "user_id", null);
 			$this->g_ctrl->setParameter($this->link_tgt, "assignment_id", null);

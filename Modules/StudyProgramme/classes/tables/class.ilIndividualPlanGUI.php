@@ -68,11 +68,12 @@ class ilIndividualPlanGUI
 
 	public function __construct()
 	{
-		global $ilCtrl, $tpl, $lng;
+		global $ilCtrl, $tpl, $lng, $ilTabs;
 		$lng->loadLanguageModule("prg");
 		$this->g_lng = $lng;
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tpl = $tpl;
+		$this->g_iltabs = $ilTabs;
 		$this->isPost = false;
 		$this->success  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		$this->in_progress = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
@@ -111,6 +112,10 @@ class ilIndividualPlanGUI
 
 						$this->g_ctrl->setParameter($gui, "crsrefid", $crs_ref_id);
 						$ret = $this->g_ctrl->forwardCommand($gui);
+						break;
+					case "linkFollower":
+						$this->g_iltabs->activateTab("content");
+						$this->view();
 						break;
 					default:
 						throw new Exception("command unkown: $cmd");
