@@ -258,6 +258,10 @@ class ilManualAssessmentMemberGUI
 
 	protected function cancel()
 	{
+		if ($back_to = $this->getBackToLink()) {
+			ilUtil::redirect($back_to);
+		}
+
 		$this->ctrl->redirect($this->members_gui);
 	}
 
@@ -302,6 +306,10 @@ class ilManualAssessmentMemberGUI
 
 	protected function getBackLink()
 	{
+		if ($back_to = $this->getBackToLink()) {
+			return $back_to;
+		}
+
 		return $this->ctrl->getLinkTargetByClass(
 			array(get_class($this->parent_gui)
 					,get_class($this->members_gui)),
@@ -313,6 +321,9 @@ class ilManualAssessmentMemberGUI
 	{
 		require_once 'Services/Form/classes/class.ilPropertyFormGUI.php';
 		$form = new ilPropertyFormGUI();
+		if ($back_to = $this->getBackToLink()) {
+			$this->ctrl->setParameter($this, "back_to", base64_encode($back_to));
+		}
 		$form->setFormAction($this->ctrl->getFormAction($this));
 		$form->setTitle(" ");
 
@@ -340,12 +351,14 @@ class ilManualAssessmentMemberGUI
 		$ti->setRequired(true);
 		$form->addItem($ti);
 		// description
-		$ta = new ilTextAreaInputGUI($this->lng->txt('mass_internal_note'), 'internal_note');
-		$ta->setInfo($this->lng->txt('mass_internal_note_info'));
-		$ta->setCols(40);
-		$ta->setRows(5);
-		$ta->setDisabled(!$may_be_edited);
-		$form->addItem($ta);
+
+		// hide for gev 2914
+		// $ta = new ilTextAreaInputGUI($this->lng->txt('mass_internal_note'), 'internal_note');
+		// $ta->setInfo($this->lng->txt('mass_internal_note_info'));
+		// $ta->setCols(40);
+		// $ta->setRows(5);
+		// $ta->setDisabled(!$may_be_edited);
+		// $form->addItem($ta);
 
 		$txt = new ilTextInputGUI($this->lng->txt('mass_place'), 'place');
 		$txt->setRequired($this->settings->eventTimePlaceRequired());
@@ -353,18 +366,20 @@ class ilManualAssessmentMemberGUI
 		$form->addItem($txt);
 
 		$date = new ilDateTimeInputGUI($this->lng->txt('mass_event_time'), 'event_time');
-		$date->setShowTime(true);
+		$date->setShowTime(false);
 		$date->setRequired($this->settings->eventTimePlaceRequired());
 		$date->setDisabled(!$may_be_edited);
 		$form->addItem($date);
 
 
-		require_once("Services/Form/classes/class.ilFileInputGUI.php");
-		$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
-		$file->setRequired($this->object->getSettings()->fileRequired());
-		$file->setDisabled(!$may_be_edited);
-		$file->setAllowDeletion(true);
-		$form->addItem($file);
+		if ($this->object->getSettings()->fileRequired()) {
+			require_once("Services/Form/classes/class.ilFileInputGUI.php");
+			$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
+			$file->setRequired(true);
+			$file->setDisabled(!$may_be_edited);
+			$file->setAllowDeletion(true);
+			$form->addItem($file);
+		}
 
 		if (!$this->object->getSettings()->viewSelf()) {
 			$cb = new ilCheckboxInputGUI($this->lng->txt('mass_user_view_file'), 'user_view_file');
@@ -585,5 +600,16 @@ class ilManualAssessmentMemberGUI
 	{
 		$tpl->setVariable("TXT_SECTION_FORM", $this->lng->txt('mass_edit_record'));
 		$tpl->setVariable("FORM", $form->getHtml());
+	}
+
+	protected function getBackToLink()
+	{
+		if (isset($_GET["back_to"]) && trim($_GET["back_to"]) != "") {
+			$back_to = $_GET["back_to"];
+			$back_to = base64_decode($back_to);
+			return $back_to;
+		}
+
+		return "";
 	}
 }

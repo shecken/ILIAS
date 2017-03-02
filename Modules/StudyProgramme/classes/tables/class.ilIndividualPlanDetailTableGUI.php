@@ -172,7 +172,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$l->setAdditionalToggleElement("err_ids".$err_ids, "ilContainerListItemOuterHighlight");
 
 		foreach ($this->getActionMenuItems($entry) as $item) {
-			$l->addItem($item["title"], "", $item["link"], "", "", "_blank");
+			$l->addItem($item["title"], "", $item["link"], "", "", $item["target"]);
 		}
 		return $l->getHTML();
 	}
@@ -202,14 +202,14 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 					$members->updateStorageAndRBAC($this->mass_storage, $mass->accessHandler());
 				}
 
-				$items = $this->maybeAddViewRecordTo($items, $mass);
-				$items = $this->maybeAddEditRecordTo($items, $mass);
+				$items = $this->maybeAddViewRecordTo($items, $mass, $entry->getStudyProgramme()->getRefId());
+				$items = $this->maybeAddEditRecordTo($items, $mass, $entry->getStudyProgramme()->getRefId());
 			}
 		}
 		return $items;
 	}
 
-	protected function maybeAddViewRecordTo(array $items, ilObjManualAssessment $mass)
+	protected function maybeAddViewRecordTo(array $items, ilObjManualAssessment $mass, $sp_ref_id)
 	{
 		$member = $mass->membersStorage()->loadMember($mass, $this->user);
 		$ex_id = $member->examinerId();
@@ -223,12 +223,13 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if (($finalized && !$edited_by_other && $may_grade) || ($finalized && $may_view)) {
 			$items[] =
 				["title" => $this->g_lng->txt("mass_usr_view"),
-				 "link" => $this->manualAssessmentRecordViewLink($mass)];
+				 "link" => $this->manualAssessmentRecordViewLink($mass, $sp_ref_id),
+				 "target" => ""];
 		}
 		return $items;
 	}
 
-	protected function maybeAddEditRecordTo(array $items, ilObjManualAssessment $mass)
+	protected function maybeAddEditRecordTo(array $items, ilObjManualAssessment $mass, $sp_ref_id)
 	{
 		$member = $mass->membersStorage()->loadMember($mass, $this->user);
 		$ex_id = $member->examinerId();
@@ -240,7 +241,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if (!$finalized && !$edited_by_other && $may_grade) {
 			$items[] =
 				["title" => $this->g_lng->txt("mass_usr_edit"),
-				 "link" => $this->manualAssessmentRecordEditLink($mass)];
+				 "link" => $this->manualAssessmentRecordEditLink($mass, $sp_ref_id),
+				 "target" => ""];
 		}
 		return $items;
 	}
@@ -250,7 +252,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if ($crs_utils->userHasPermissionTo($this->g_user_id, gevSettings::LOAD_MEMBER_LIST)) {
 			$this->g_ctrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt("download_memberlist_ip"),
-						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "trainer")];
+						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "trainer"),
+						"target" => "_blank"];
 			$this->g_ctrl->clearParametersByClass("gevMemberListDeliveryGUI");
 		}
 		return $items;
@@ -261,7 +264,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if ($crs_utils->canViewBookings($this->g_user_id)) {
 			$this->g_ctrl->setParameterByClass("ilCourseBookingGUI", "ref_id", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt('view_bookings_ip'),
-						'link' => $this->g_ctrl->getLinkTargetByClass(["ilCourseBookingGUI", "ilCourseBookingAdminGUI"])];
+						'link' => $this->g_ctrl->getLinkTargetByClass(["ilCourseBookingGUI", "ilCourseBookingAdminGUI"]),
+						'target' => "_blank"];
 			$this->g_ctrl->clearParametersByClass("ilCourseBookingGUI");
 		}
 		return $items;
@@ -272,7 +276,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if ($crs_utils->userHasPermissionTo($this->g_user_id, gevSettings::VIEW_MAILING)) {
 			$this->g_ctrl->setParameterByClass("gevTrainerMailHandlingGUI", "crs_id", $crs_utils->getId());
 			$items[] = ['title' => $this->g_lng->txt('view_mailing_ip'),
-						'link' => $this->g_ctrl->getLinkTargetByClass("gevTrainerMailHandlingGUI", "showLog")];
+						'link' => $this->g_ctrl->getLinkTargetByClass("gevTrainerMailHandlingGUI", "showLog"),
+						'target' => "_blank"];
 			$this->g_ctrl->clearParametersByClass("gevTrainerMailHandlingGUI");
 		}
 
@@ -284,7 +289,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		if ($crs_utils->userHasPermissionTo($this->g_user_id, gevSettings::LOAD_SIGNATURE_LIST)) {
 			$this->g_ctrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt('signature_list_ip'),
-						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_signature_list")];
+						'link' => $this->g_ctrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_signature_list"),
+						'target' => "_blank"];
 			$this->g_ctrl->clearParametersByClass("gevMemberListDeliveryGUI");
 		}
 		return $items;
@@ -297,7 +303,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "crsrefid", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt('participants_list_ip'),
 						'link' => $this->g_ctrl
-										->getLinkTarget($this->parent_obj, "viewAttendanceList")];
+										->getLinkTarget($this->parent_obj, "viewAttendanceList"),
+						'target' => "_blank"];
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "crsrefid", null);
 		}
 		return $items;
@@ -309,7 +316,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "target_ref_id", $crs_utils->getRefId());
 			$items[] = ['title' => $this->g_lng->txt('p_status_ip'),
 						'link' => $this->g_ctrl
-										->getLinkTarget($this->parent_obj, 'participationStatus')];
+										->getLinkTarget($this->parent_obj, 'participationStatus'),
+						'target' => "_blank"];
 			$this->g_ctrl->setParameterByClass('ilIndividualPlanGUI', "target_ref_id", null);
 		}
 		return $items;
@@ -321,13 +329,28 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 * @param	\ilObjManualAssessment	$mass
 	 * @return	string
 	 */
-	protected function manualAssessmentRecordViewLink(\ilObjManualAssessment $mass)
+	protected function manualAssessmentRecordViewLink(\ilObjManualAssessment $mass, $sp_ref_id)
 	{
+		assert('is_integer($sp_ref_id)');
+
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "user_id", $this->user_id);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "assignment_id", $this->assignment_id);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "spRefId", $sp_ref_id);
+		$link = $this->g_ctrl->getLinkTargetByClass("ilindividualplangui", "view", "", false, false);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "user_id", null);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "assignment_id", null);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "spRefId", null);
+
+		$back_to = base64_encode($link);
+
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", $mass->getRefId());
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", $this->user_id);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "back_to", $back_to);
 		$link = $this->g_ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilObjManualAssessmentGUI", "ilManualAssessmentMembersGUI", "ilManualAssessmentMemberGUI"], "view");
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", null);
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", null);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "back_to", null);
+
 		return $link;
 	}
 
@@ -337,10 +360,23 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 * @param	\ilObjManualAssessment	$mass
 	 * @return	string
 	 */
-	protected function manualAssessmentRecordEditLink(\ilObjManualAssessment $mass)
+	protected function manualAssessmentRecordEditLink(\ilObjManualAssessment $mass, $sp_ref_id)
 	{
+		assert('is_integer($sp_ref_id)');
+
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "user_id", $this->user_id);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "assignment_id", $this->assignment_id);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "spRefId", $sp_ref_id);
+		$link = $this->g_ctrl->getLinkTargetByClass("ilindividualplangui", "view", "", false, false);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "user_id", null);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "assignment_id", null);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "spRefId", null);
+
+		$back_to = base64_encode($link);
+
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", $mass->getRefId());
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", $this->user_id);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "back_to", $back_to);
 		$link = $this->g_ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilObjManualAssessmentGUI", "ilManualAssessmentMembersGUI", "ilManualAssessmentMemberGUI"], "edit");
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", null);
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", null);

@@ -83,15 +83,14 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		if ($a_set->getFinished()) {
 			$this->tpl->setVariable("FINISHED", $a_set->getFinished());
 		} else {
-			$this->tpl->setVariable("FINISHED","-");
+			$this->tpl->setVariable("FINISHED", "-");
 		}
 
 		$finish_until = $a_set->getFinishUntil();
 		if ($finish_until) {
 			$this->tpl->setVariable("FINISH_UNTIL", $finish_until->get(IL_CAL_FKT_DATE, "d.m.Y"));
-		}
-		else {
-			$this->tpl->setVariable("FINISH_UNTIL","-");
+		} else {
+			$this->tpl->setVariable("FINISH_UNTIL", "-");
 		}
 
 		$this->g_ctrl->setParameter($this->parent_obj, "selectedRefId", null);
@@ -136,7 +135,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		$status = ilLPStatus::_lookupStatus($sp->getId(), $user_id);
 
 		if ($status == ilLPStatus::LP_STATUS_COMPLETED_NUM) {
-			$finished = ilLPStatus::_lookupStatusChanged;
+			$finished = ilLPStatus::_lookupStatusChanged($sp->getId(), $user_id);
 			return [$status, $finished];
 		}
 
@@ -147,7 +146,8 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		return [ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM, null];
 	}
 
-	protected function hasBookedCourseIn(\ilObjStudyProgramme $sp, $user_id) {
+	protected function hasBookedCourseIn(\ilObjStudyProgramme $sp, $user_id)
+	{
 		require_once("Services/ContainerReference/classes/class.ilContainerReference.php");
 		require_once("Services/Tracking/classes/class.ilLPStatus.php");
 
