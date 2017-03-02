@@ -59,6 +59,7 @@ class ilManualAssessmentMemberGUI
 			case 'view':
 			case 'cancel':
 			case 'downloadAttachment':
+			case 'deliverFile':
 				break;
 			default:
 				$this->parent_gui->handleAccessViolation();
@@ -74,11 +75,16 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
+		$tpl = new ilTemplate("tpl.mass_edit_member_sectioning.html", true, true, "Modules/ManualAssessment");
+
 		$form = $this->fillForm($this->initGradingForm(false), $this->member);
 		$form = $this->fillForm($this->initGradingForm(false), $this->member);
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
-		$this->renderForm($form);
+
+		$this->addFormToTpl($form, $tpl);
+
+		$this->tpl->setContent($tpl->get());
 	}
 
 	protected function edit($form = null)
@@ -90,11 +96,18 @@ class ilManualAssessmentMemberGUI
 		if ($form === null) {
 			$form = $this->fillForm($this->initGradingForm(), $this->member);
 		}
+		$tpl = new ilTemplate("tpl.mass_edit_member_sectioning.html", true, true, "Modules/ManualAssessment");
+
+		$this->renderWorkInstructions($tpl);
+
 		$form->addCommandButton('save', $this->lng->txt('mass_save'));
 		$form->addCommandButton('finalizeConfirmation', $this->lng->txt('mass_finalize'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
-		$this->renderForm($form);
+
+		$this->addFormToTpl($form, $tpl);
+
+		$this->tpl->setContent($tpl->get());
 	}
 
 	protected function downloadAttachment()
@@ -206,10 +219,17 @@ class ilManualAssessmentMemberGUI
 			$form = $this->fillForm($this->initGradingForm(), $this->member);
 		}
 
+		$tpl = new ilTemplate("tpl.mass_edit_member_sectioning.html", true, true, "Modules/ManualAssessment");
+
+		$this->renderWorkInstructions($tpl);
+
 		$form->addCommandButton('saveAmend', $this->lng->txt('mass_save'));
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
-		$this->renderForm($form);
+
+		$this->addFormToTpl($form, $tpl);
+
+		$this->tpl->setContent($tpl->get());
 	}
 
 	protected function saveAmend()
@@ -244,11 +264,6 @@ class ilManualAssessmentMemberGUI
 	protected function redirect($cmd)
 	{
 		$this->ctrl->redirect($this, $cmd);
-	}
-
-	protected function renderForm(ilPropertyFormGUI $a_form)
-	{
-		$this->tpl->setContent($a_form->getHTML());
 	}
 
 	protected function updateDataInMemberByArray(ilManualAssessmentMember $member, $data, $new_file, $keep_examiner = false)
@@ -299,7 +314,8 @@ class ilManualAssessmentMemberGUI
 		require_once 'Services/Form/classes/class.ilPropertyFormGUI.php';
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->ctrl->getFormAction($this));
-		$form->setTitle($this->lng->txt('mass_edit_record'));
+		$form->setTitle(" ");
+
 		$examinee_name = $this->examinee->getLastname().', '.$this->examinee->getFirstname();
 
 		$usr_name = new ilNonEditableValueGUI($this->lng->txt('name'), 'name');
@@ -511,5 +527,63 @@ class ilManualAssessmentMemberGUI
 			$form->addCommandButton('downloadAttachment', $this->lng->txt('mass_download_attached_file'));
 		}
 		return $form;
+	}
+
+	/**
+	 * Deliver clicked file
+	 *
+	 * @return null
+	 */
+	protected function deliverFile()
+	{
+		$file_name = $_GET["fileName"];
+		ilUtil::deliverFile($this->file_storage->getAbsolutePath()."/".$file_name, $file_name);
+	}
+
+	/**
+	 * Render the work intsruction into tpl
+	 *
+	 * @param ilTemplate 	$tpl
+	 *
+	 * @return null
+	 */
+	protected function renderWorkInstructions(ilTemplate &$tpl)
+	{
+		$work_instructions_files = $this->object->getWorkIntructionFileNames();
+		$work_instructions_text = $this->object->getSettings()->workInstruction();
+		if (count($work_instructions_files) > 0 || $work_instructions_text != "") {
+			if (count($work_instructions_files) > 0) {
+				$tpl->setVariable("UL_HEADER", $this->lng->txt('mass_work_instructions_files'));
+				foreach ($work_instructions_files as $file) {
+					$this->ctrl->setParameter($this, "fileName", $file);
+					$link = $this->ctrl->getLinkTarget($this, "deliverFile");
+					$this->ctrl->setParameter($this, "fileName", null);
+
+					$tpl->setCurrentBlock("file_list_item");
+					$tpl->setVariable("HREF_LINK", $link);
+					$tpl->setVariable("HREF_TITLE", $file);
+					$tpl->parseCurrentBlock();
+				}
+			}
+
+			$tpl->setCurrentBlock("work_instructions");
+			$tpl->setVariable("TXT_SECTION_WORK_INSTRUCTION", $this->lng->txt('mass_work_instructions'));
+			$tpl->setVariable("WORK_INSTRUCTION_TEXT", $work_instructions_text);
+			$tpl->parseCurrentBlock();
+		}
+	}
+
+	/**
+	 * Add form to tpl
+	 *
+	 * @param ilPropertyFormGUI 	$form
+	 * @param ilTemplate 			$tpl
+	 *
+	 * @return null
+	 */
+	protected function addFormToTpl(ilPropertyFormGUI $form, ilTemplate &$tpl)
+	{
+		$tpl->setVariable("TXT_SECTION_FORM", $this->lng->txt('mass_edit_record'));
+		$tpl->setVariable("FORM", $form->getHtml());
 	}
 }

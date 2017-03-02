@@ -6167,3 +6167,12 @@ if (!$ilDB->tableColumnExists('mass_settings', 'view_self')) {
 	));
 }
 ?>
+
+<#257>
+<?php
+if (!$ilDB->tableColumnExists('mass_settings', 'work_instruction')) {
+	$ilDB->addTableColumn('mass_settings', 'work_instruction', array(
+		"type" => "clob"
+	));
+}
+?>

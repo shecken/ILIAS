@@ -77,7 +77,10 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 	public function getAbsolutePath()
 	{
 		$path = parent::getAbsolutePath();
-		$path .= "/user_".$this->user_id;
+
+		if ($this->user_id) {
+			$path .= "/user_".$this->user_id;
+		}
 
 		return $path;
 	}
@@ -145,5 +148,15 @@ class ilManualAssessmentFileStorage extends ilFileSystemStorage implements Manua
 	{
 		$files = $this->readDir();
 		return $this->getAbsolutePath()."/".$files[0];
+	}
+
+	/**
+	 * Delete a file by name
+	 *
+	 * @param string 	$file_name
+	 */
+	public function deleteFileByName($file_name)
+	{
+		$this->deleteFile($this->getAbsolutePath()."/".$file_name);
 	}
 }

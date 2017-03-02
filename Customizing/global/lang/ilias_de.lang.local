@@ -1823,3 +1823,9 @@ prg#:#prg_success#:#teilgenommen
 prg#:#prg_progress#:#in Bearbeitung
 prg#:#prg_failed#:#nicht teilgenommen
 prg#:#prg_not_attemped#:#noch nicht begonnen
+mass#:#mass_work_instructions#:#Arbeitsanweisung
+mass#:#mass_work_instructions_files#:#Dateien
+mass#:#mass_work_instruction_text#:#Anweisung
+mass#:#mass_work_instruction_upload#:#Upload Dateien
+mass#:#mass_work_instruction_uploaded_files#:#Vorhandene Dateien
+mass#:#mass_work_instruction_uploaded_files_info#:#Um Dateien zu entfernen wählen Sie die Checkbox aus und klicken auf Speichern.
