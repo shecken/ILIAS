@@ -43,6 +43,11 @@ class ilManualAssessmentSettings
 	 */
 	protected $view_self;
 
+	/**
+	 * @var string
+	 */
+	protected $work_instruction;
+
 	public function __construct(
 		ilObjManualAssessment $mass,
 		$content = null,
@@ -52,12 +57,14 @@ class ilManualAssessmentSettings
 		$superior_examinate = false,
 		$superior_view = false,
 		$grade_self = false,
-		$view_self = false
+		$view_self = false,
+		$work_instruction = ""
 	) {
 
 		assert('is_bool($superior_examinate)');
 		assert('is_bool($superior_view)');
 		assert('is_bool($grade_self)');
+		assert('is_string($work_instruction)');
 		$this->id = $mass->getId();
 		$this->content = $content !== null ? $content : self::DEF_CONTENT;
 		$this->record_template = $record_template !== null ? $record_template : self::DEF_RECORD_TEMPLATE;
@@ -67,6 +74,7 @@ class ilManualAssessmentSettings
 		$this->superior_view = $superior_view;
 		$this->grade_self = $grade_self;
 		$this->view_self = $view_self;
+		$this->work_instruction = $work_instruction;
 	}
 
 	/**
@@ -158,6 +166,16 @@ class ilManualAssessmentSettings
 	public function superiorView()
 	{
 		return $this->superior_view;
+	}
+
+	/**
+	 * Get the work instructions
+	 *
+	 * @return string
+	 */
+	public function workInstruction()
+	{
+		return $this->work_instruction;
 	}
 
 	/**
@@ -259,6 +277,21 @@ class ilManualAssessmentSettings
 	{
 		assert('is_bool($view_self)');
 		$this->view_self = $view_self;
+
+		return $this;
+	}
+
+	/**
+	 * Set the work instructions
+	 *
+	 * @param string 	$work_instruction
+	 *
+	 * @return ilManualAssessmentSettings
+	 */
+	public function setWorkInstruction($work_instruction)
+	{
+		assert('is_string($work_instruction)');
+		$this->work_instruction = $work_instruction;
 
 		return $this;
 	}

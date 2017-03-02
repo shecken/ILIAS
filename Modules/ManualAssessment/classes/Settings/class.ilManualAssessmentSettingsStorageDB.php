@@ -36,6 +36,7 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 				, "superior_view" => array("integer", $settings->superiorView())
 				, "grade_self" => array("integer", $settings->gradeSelf())
 				, 'view_self' => array("integer", $settings->viewSelf())
+				, 'work_instruction' => array("text", $settings->workInstruction())
 				);
 		$this->db->insert(self::MASS_SETTINGS_TABLE, $values);
 
@@ -52,7 +53,7 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 			$obj_id = $obj->getId();
 			assert('is_numeric($obj_id)');
 
-			$sql = 	'SELECT content, record_template, file_required, event_time_place_required, superior_examinate, superior_view, grade_self, view_self'
+			$sql = 	'SELECT content, record_template, file_required, event_time_place_required, superior_examinate, superior_view, grade_self, view_self, work_instruction'
 					.'	FROM mass_settings WHERE obj_id = '.$this->db->quote($obj_id, 'integer');
 			if ($res = $this->db->fetchAssoc($this->db->query($sql))) {
 				return new ilManualAssessmentSettings(
@@ -64,7 +65,8 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 					(bool)$res["superior_examinate"],
 					(bool)$res["superior_view"],
 					(bool)$res["grade_self"],
-					(bool)$res['view_self']
+					(bool)$res['view_self'],
+					$res["work_instruction"]
 				);
 			}
 			throw new ilManualAssessmentException("$obj_id not in database");
@@ -89,6 +91,7 @@ class ilManualAssessmentSettingsStorageDB implements ilManualAssessmentSettingsS
 				, "superior_view" => array("integer", $settings->superiorView())
 				, "grade_self" => array("integer", $settings->gradeSelf())
 				, "view_self" => array("integer", $settings->viewSelf())
+				, 'work_instruction' => array("text", $settings->workInstruction())
 				);
 
 		$this->db->update(self::MASS_SETTINGS_TABLE, $values, $where);

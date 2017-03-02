@@ -241,4 +241,14 @@ class ilObjManualAssessment extends ilObject
 		}
 		return $this->file_storage;
 	}
+
+	/**
+	 * Get the uploaded work intruction files
+	 *
+	 * @return string[]
+	 */
+	public function getWorkIntructionFileNames()
+	{
+		return $this->getFileStorage()->readDir();
+	}
 }

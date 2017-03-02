@@ -1,10 +1,11 @@
 <?php
+require_once './Modules/ManualAssessment/classes/WorkInstructions/class.ilManualAssessmentWorkInstructionsGUI.php';
+
 /**
- * @ilCtrl_Calls ilManualAssessmentSettingsGUI: ilConditionHandlerInterface
+ * @ilCtrl_Calls ilManualAssessmentSettingsGUI: ilConditionHandlerInterface, ilManualAssessmentWorkInstructionsGUI
 */
 class ilManualAssessmentSettingsGUI
 {
-
 	const PROP_CONTENT = "content";
 	const PROP_RECORD_TEMPLATE = "record_template";
 	const PROP_TITLE = "title";
@@ -25,6 +26,7 @@ class ilManualAssessmentSettingsGUI
 	const TAB_EDIT = 'settings';
 	const TAB_EDIT_INFO = 'infoSettings';
 	const TAB_PRECONDITIONS = 'preconditions';
+	const TAB_WORK_INSTRUCTIONS = "workInstructions";
 
 	public function __construct($a_parent_gui, $a_ref_id)
 	{
@@ -56,6 +58,11 @@ class ilManualAssessmentSettingsGUI
 			$this->lng->txt("mass_edit_conditions"),
 			$this->ctrl->getLinkTargetByClass(array('ilManualAssessmentSettingsGUI','ilConditionHandlerInterface'), 'listConditions')
 		);
+		$tabs->addSubTab(
+			self::TAB_WORK_INSTRUCTIONS,
+			$this->lng->txt("mass_work_instructions"),
+			$this->ctrl->getLinkTargetByClass(array('ilManualAssessmentSettingsGUI','ilManualAssessmentWorkInstructionsGUI'), ilManualAssessmentWorkInstructionsGUI::CMD_EDIT)
+		);
 	}
 
 	public function executeCommand()
@@ -68,6 +75,11 @@ class ilManualAssessmentSettingsGUI
 				include_once './Services/AccessControl/classes/class.ilConditionHandlerInterface.php';
 				$this->tabs_gui->setSubTabActive(self::TAB_PRECONDITIONS);
 				$new_gui =& new ilConditionHandlerInterface($this);
+				$this->ctrl->forwardCommand($new_gui);
+				break;
+			case "ilmanualassessmentworkinstructionsgui":
+				$this->tabs_gui->setSubTabActive(self::TAB_WORK_INSTRUCTIONS);
+				$new_gui = new ilManualAssessmentWorkInstructionsGUI($this);
 				$this->ctrl->forwardCommand($new_gui);
 				break;
 			default:
