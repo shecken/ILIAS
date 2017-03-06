@@ -90,7 +90,7 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 			$column_key = $child->getTitle();
 			$column_key = strtolower($column_key);
 			$column_key = str_replace(" ", "_", $column_key);
-			$table->column($column_key, $child->getTitle(), true, "9%");
+			$table->column($column_key, $child->getTitle(), true, "7%");
 		}
 		return parent::buildTable($table);
 	}
