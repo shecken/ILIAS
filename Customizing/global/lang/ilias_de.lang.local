@@ -1829,3 +1829,5 @@ mass#:#mass_work_instruction_text#:#Anweisung
 mass#:#mass_work_instruction_upload#:#Upload Dateien
 mass#:#mass_work_instruction_uploaded_files#:#Vorhandene Dateien
 mass#:#mass_work_instruction_uploaded_files_info#:#Um Dateien zu entfernen wählen Sie die Checkbox aus und klicken auf Speichern.
+mass#:#mass_work_instruction_delete_confirm#:#Sollen folgende Dateien wirklich entfernt werden?
+mass#:#mass_work_instruction_delete#:#Entfernen
