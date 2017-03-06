@@ -308,4 +308,51 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		}
 		$this->gTpl->setContent($settings_form->getHtml());
 	}
+
+	protected function renderUngroupedTable($data)
+	{
+		if (!$this->object->deliverTable()->row_template_filename) {
+			throw new Exception("No template defined for table ".get_class($this));
+		}
+		$this->table->setRowTemplate(
+			$this->object->deliverTable()->row_template_filename,
+			$this->object->deliverTable()->row_template_module
+		);
+
+		foreach ($this->object->deliverTable()->columns as $col) {
+			$this->table->addColumn($col[2] ? $col[1] : $this->lng->txt($col[1]), $col[5] ? $col[0] : "", $col[3]);
+		}
+
+		if ($this->object->deliverOrder() !== null) {
+			$this->table->setOrderField($this->object->deliverOrder()->getOrderField());
+			$this->table->setOrderDirection($this->object->deliverOrder()->getOrderDirection());
+		}
+
+		$cnt = count($data);
+		$this->table->setLimit($cnt);
+		$this->table->setMaxCount($cnt);
+		$external_sorting = true;
+
+		if ($this->object->deliverOrder() === null ||
+			in_array(
+				$this->object->deliverOrder()->getOrderField(),
+				$this->internal_sorting_fields ? $this->internal_sorting_fields : array()
+			)
+			) {
+				$external_sorting = false;
+		}
+
+		$this->table->setExternalSorting($external_sorting);
+		if ($this->internal_sorting_numeric) {
+			foreach ($this->internal_sorting_numeric as $col) {
+				$table->numericOrdering($col);
+			}
+		}
+
+		$this->table->setData($data);
+		$this->enableRelevantParametersCtrl();
+		$return = $this->table->getHTML();
+		$this->disableRelevantParametersCtrl();
+		return $return;
+	}
 }

@@ -75,11 +75,11 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 
 	protected function buildTable($table)
 	{
-		$table	->column("firstname", $this->plugin->txt("firstname"), true)
-				->column("lastname", $this->plugin->txt("lastname"), true)
-				->column("orgunit", $this->plugin->txt("orgunit"), true)
-				->column("entrydate", $this->plugin->txt("entrydate"), true)
-				->column("status", $this->plugin->txt("status"), true);
+		$table	->column("firstname", $this->plugin->txt("firstname"), true, "4%")
+				->column("lastname", $this->plugin->txt("lastname"), true, "4%")
+				->column("orgunit", $this->plugin->txt("orgunit"), true, "4%")
+				->column("entrydate", $this->plugin->txt("entrydate"), true, "4%")
+				->column("status", $this->plugin->txt("status"), true, "4%");
 
 		$osp = new ilObjStudyProgramme($this->getStudyId());
 
@@ -90,7 +90,7 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 			$column_key = $child->getTitle();
 			$column_key = strtolower($column_key);
 			$column_key = str_replace(" ", "_", $column_key);
-			$table->column($column_key, $child->getTitle(), true, "7%");
+			$table->column($column_key, $child->getTitle(), true, "3%");
 		}
 		return parent::buildTable($table);
 	}
