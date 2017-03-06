@@ -8,6 +8,10 @@ require_once "Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php";
  */
 class ilObjReportStudyProgrammeOverviewTableGUI extends catTableGUI
 {
+	public $styles = array(
+							"table"		=> "tripleFullWidth"
+					);
+
 	public function __construct($a_parent_obj, $a_parent_cmd = "", $a_template_context = "")
 	{
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
