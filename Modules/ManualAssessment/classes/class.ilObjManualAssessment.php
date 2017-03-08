@@ -111,6 +111,8 @@ class ilObjManualAssessment extends ilObject
 	{
 		$this->settings_storage->deleteSettings($this);
 		$this->members_storage->deleteMembers($this);
+		$f_storage = $this->getFileStorage();
+		$f_storage->delete($f_storage->getAbsolutePath());
 		parent::delete();
 	}
 
@@ -177,7 +179,6 @@ class ilObjManualAssessment extends ilObject
 			$settings->workInstruction()
 		);
 		$new_obj->settings = $new_settings;
-
 		$new_info_settings = new ilManualAssessmentInfoSettings(
 			$new_obj,
 			$info_settings->contact(),
@@ -190,6 +191,11 @@ class ilObjManualAssessment extends ilObject
 		$new_obj->info_settings = $new_info_settings;
 		$new_obj->settings_storage->updateSettings($new_settings);
 		$new_obj->settings_storage->updateInfoSettings($new_info_settings);
+
+		$fstorage = $this->getFileStorage();
+		$n_fstorage = $new_obj->getFileStorage();
+		$n_fstorage->create();
+		$fstorage->_copyDirectory($fstorage->getAbsolutePath(), $n_fstorage->getAbsolutePath());
 		return $new_obj;
 	}
 
