@@ -172,7 +172,9 @@ class ilObjManualAssessment extends ilObject
 			$settings->eventTimePlaceRequired(),
 			$settings->superiorExaminate(),
 			$settings->superiorView(),
-			$settings->gradeSelf()
+			$settings->gradeSelf(),
+			$settings->viewSelf(),
+			$settings->workInstruction()
 		);
 		$new_obj->settings = $new_settings;
 
