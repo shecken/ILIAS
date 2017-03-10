@@ -240,6 +240,12 @@ abstract class gevCrsAutoMail extends ilAutoMail
 		return $utils->isCoaching();
 	}
 
+	protected function getCourseIsOffline()
+	{
+		include_once 'Modules/Course/classes/class.ilObjCourseAccess.php';
+		return ilObjCourseAccess::_isOffline($this->crs_id);
+	}
+
 	protected function getCourseAccomodationAddress()
 	{
 		$accom = $this->getCourseUtils()->getAccomodation();
@@ -502,8 +508,12 @@ abstract class gevCrsAutoMail extends ilAutoMail
 			return;
 		}
 
-		require_once("Services/GEV/Mailing/classes/class.gevDeferredMails.php");
+		if ($this->getCourseIsCoaching()) {
+			$ilLog->write("....course is type of coaching. no mail");
+			return;
+		}
 
+		require_once("Services/GEV/Mailing/classes/class.gevDeferredMails.php");
 
 		if ($a_recipients === null) {
 			$ilLog->write("....no recipients");
