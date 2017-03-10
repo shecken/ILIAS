@@ -68,8 +68,7 @@ class gevNASuccessfull extends gevCrsAutoMail
 
 	public function shouldBeSend()
 	{
-		include_once 'Modules/Course/classes/class.ilObjCourseAccess.php';
-		if (ilObjCourseAccess::_isOffline($this->crs_id)) {
+		if ($this->getCourseIsOffline()) {
 			return false;
 		}
 
