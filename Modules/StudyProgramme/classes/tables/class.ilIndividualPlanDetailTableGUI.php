@@ -442,12 +442,15 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	protected function getPassedCourse(\ilObjStudyProgramme $sp)
 	{
 		$progress = $sp->getProgressForAssignment($this->assignment_id);
-		if (!$progress->isSuccessful() || $progress->isAccredited()) {
+		if (!$progress->isSuccessful() || !$progress->isAccredited()) {
 			return null;
 		}
 		// This should be a course as we are in the LP-Mode study programmes and
 		// the node was not accredited.
 		$crs_id = $progress->getCompletionBy();
+		if($crs === null) {
+			return null;
+		}
 		$crs_ref_id = gevObjectUtils::getRefId($crs_id);
 		if ($crs_ref_id == null) {
 			throw new \ilException("Cannot find ref_id for course '$crs_id'");
