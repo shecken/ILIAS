@@ -282,10 +282,12 @@ class ilObjReportEduBio extends ilObjReportBase
 	 */
 	public static function getEduBioLinkFor($usr_id = null)
 	{
-		global $ilCtrl;
+		global $ilCtrl, $ilUser, $ilAccess;
+
+		$user = $ilUser->getId();
 		//note: in the next line we assume that there is exactly one edu bio in the repository.
 		$ref_id = current(ilObject::_getAllReferences(current(ilObject::_getObjectsDataForType('xreb', true))["id"]));
-		if ($ref_id) {
+		if ($ref_id && $ilAccess->checkAccessOfUser($user, "read", "", $ref_id)) {
 			$ilCtrl->setParameterByClass("ilObjReportEduBioGUI", "target_user_id", $usr_id);
 			$ilCtrl->setParameterByClass("ilObjReportEduBioGUI", "ref_id", $ref_id);
 			$return = $ilCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", "ilObjReportEduBioGUI"), '');
