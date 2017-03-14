@@ -322,7 +322,7 @@ class ilIndividualPlanGUI
 		return $progress->isRelevant();
 	}
 
-	protected function getSPRefId()
+	public function getSPRefId()
 	{
 		if ($this->sp_ref_id === null) {
 			throw new Exception("No studyprogramme node id given");
