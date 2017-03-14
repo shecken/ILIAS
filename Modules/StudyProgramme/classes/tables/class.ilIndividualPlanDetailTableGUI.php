@@ -107,9 +107,13 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 				$mass = $this->getManualAssessmentIn($crs);
 				$items = $this->maybeAddViewRecordTo($items, $mass, $entry->getStudyProgramme()->getRefId());
 				$items = $this->maybeAddEditRecordTo($items, $mass, $entry->getStudyProgramme()->getRefId());
-				// We currently use the link from the first item. If there are more items in the future
-				// we have to fix it
-				$link = $items[0]['link'];
+				foreach ($items as $item) {
+					if(in_array($this->g_lng->txt("mass_usr_edit"), $item)) {
+						$link = $item['link'];
+						break;
+					}
+					$link = $item['link'];
+				}
 			} else {
 				$this->g_ctrl->setParameterByClass("ilObjCourseGUI", "ref_id", $crs->getRefId());
 				$link = $this->g_ctrl->getLinkTargetByClass(array("ilRepositoryGUI", "ilObjCourseGUI"), "view");
