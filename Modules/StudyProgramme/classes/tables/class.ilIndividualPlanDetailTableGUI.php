@@ -101,9 +101,20 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$stepname = $entry->getTitle();
 		$crs = $entry->getCourseWhereUserIsMember();
 		if ($crs != null) {
-			$this->g_ctrl->setParameterByClass("ilObjCourseGUI", "ref_id", $crs->getRefId());
-			$link = $this->g_ctrl->getLinkTargetByClass(array("ilRepositoryGUI", "ilObjCourseGUI"), "view");
-			$this->g_ctrl->clearParametersByClass("ilObjCourseGUI");
+			$crs_utils = gevCourseUtils::getInstanceByObj($crs);
+			if($this->getManualAssessmentWhereUserIsMemberIn($crs) !== null && $crs_utils->isCoaching()) {
+				$items = [];
+				$mass = $this->getManualAssessmentIn($crs);
+				$items = $this->maybeAddViewRecordTo($items, $mass, $entry->getStudyProgramme()->getRefId());
+				$items = $this->maybeAddEditRecordTo($items, $mass, $entry->getStudyProgramme()->getRefId());
+				// We currently use the link from the first item. If there are more items in the future
+				// we have to fix it
+				$link = $items[0]['link'];
+			} else {
+				$this->g_ctrl->setParameterByClass("ilObjCourseGUI", "ref_id", $crs->getRefId());
+				$link = $this->g_ctrl->getLinkTargetByClass(array("ilRepositoryGUI", "ilObjCourseGUI"), "view");
+				$this->g_ctrl->clearParametersByClass("ilObjCourseGUI");
+			}
 			$stepname = "<a href='$link'>$stepname</a>";
 		}
 		$this->tpl->setVariable("STEPNAME", $stepname);
