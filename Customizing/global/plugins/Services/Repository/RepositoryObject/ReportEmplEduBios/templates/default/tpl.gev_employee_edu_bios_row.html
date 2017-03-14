@@ -1,12 +1,23 @@
 <tr class="{CSS_ROW}">
 	<td></td>
+	<!-- BEGIN withlink -->
 	<td><a class="cat_block_link" href="{VAL_EDU_BIO_LINK}">{VAL_LASTNAME}</a></td>
 	<td><a class="cat_block_link" href="{VAL_EDU_BIO_LINK}">{VAL_FIRSTNAME}</a></td>
+	<!-- END withlink -->
+	<!-- BEGIN withoutlink -->
+	<td>{VAL_LASTNAME}</td>
+	<td>{VAL_FIRSTNAME}</td>
+	<!-- END withoutlink -->
 	<td>{VAL_POINTS_SUM}</td>
 	<td>{VAL_POINTS_TOTAL_GOA}</td>
 	<td>{VAL_CERT_PERIOD}</td>
 	<td>{VAL_ATTENTION}</td>
+	<!-- BEGIN login_link -->
 	<td><a class="cat_block_link" href="{VAL_EDU_BIO_LINK}">{VAL_LOGIN}</a></td>
+	<!-- END login_link -->
+	<!-- BEGIN login -->
+	<td>{VAL_LOGIN}</td>
+	<!-- END login -->
 	<td>{VAL_ADP_NUMBER}</td>
 	<td>{VAL_JOB_NUMBER}</td>
 	<td>{VAL_OD_BD}</td>

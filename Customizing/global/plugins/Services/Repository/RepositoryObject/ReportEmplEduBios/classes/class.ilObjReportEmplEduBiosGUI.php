@@ -2,6 +2,7 @@
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseGUI.php';
 require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportEduBio/classes/class.ilObjReportEduBio.php';
+require_once 'Customizing/global/plugins/Services/Repository/RepositoryObject/ReportEmplEduBios/classes/class.ilObjReportEmplEduBiosTableGUI.php';
 /**
 * User Interface class for example repository object.
 * ...
@@ -88,6 +89,18 @@ class ilObjReportEmplEduBiosGUI extends ilObjReportBaseGUI
 		$a_title = parent::prepareTitle($a_title);
 		$a_title->image("GEV_img/ico-head-edubio.png");
 		return $a_title;
+	}
+
+	/**
+	 * render report.
+	 */
+	public function renderReport()
+	{
+		$this->object->prepareReport();
+		$this->title = $this->prepareTitle(catTitleGUI::create());
+		$this->spacer = $this->prepareSpacer(new catHSpacerGUI());
+		$this->table = $this->prepareTable(new ilObjReportEmplEduBiosTableGUI($this, "showContent"));
+		$this->gTpl->setContent($this->render());
 	}
 
 	public static function transformResultRow($rec)
