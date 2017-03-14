@@ -2,24 +2,30 @@
 
 require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMail.php");
 
-class gevNASuccessfull extends gevCrsAutoMail {
-	public function getTitle() {
+class gevNASuccessfull extends gevCrsAutoMail
+{
+	public function getTitle()
+	{
 		return "Info ADSS/ADSN";
 	}
-	
-	public function _getDescription() {
+
+	public function _getDescription()
+	{
 		return "NA erhält Teilnahmestatus 'teilgenommen'";
 	}
-	
-	public function getScheduledFor() {
+
+	public function getScheduledFor()
+	{
 		return null;
 	}
-	
-	public function getTemplateCategory() {
+
+	public function getTemplateCategory()
+	{
 		return "F04";
 	}
-	
-	public function getRecipientUserIDs() {
+
+	public function getRecipientUserIDs()
+	{
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		$recp = array();
 		foreach ($this->getCourseSuccessfullParticipants() as $part) {
@@ -29,24 +35,26 @@ class gevNASuccessfull extends gevCrsAutoMail {
 		}
 		return $recp;
 	}
-	
-	public function getCC($a_recipient) {
+
+	public function getCC($a_recipient)
+	{
 		return array();
 	}
-	
-	public function getMessage($a_template_id, $a_recipient) {
+
+	public function getMessage($a_template_id, $a_recipient)
+	{
 		if (!$this->checkUserID($a_recipient)) {
 			throw new Exception("NASuccessfull-Mail will only work for ILIAS-Users.");
 		}
-		
+
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		$user_utils = gevUserUtils::getInstance($a_recipient);
 		if (!$user_utils->isNA()) {
 			return null;
 		}
-		
+
 		$message = parent::getMessage($a_template_id, $a_recipient);
-		
+
 		require_once("Services/GEV/Utils/classes/class.gevNAUtils.php");
 		$message["to"] = gevNAUtils::getNASuccessfullMailRecipient($a_recipient);
 		$na_utils = $user_utils->getNAAdviserUtils();
@@ -54,9 +62,20 @@ class gevNASuccessfull extends gevCrsAutoMail {
 			$message["subject"] = $message["subject"]
 								 ." (".$na_utils->getODTitle().")";
 		}
-		
+
 		return $message;
 	}
-}
 
-?>
+	public function shouldBeSend()
+	{
+		if ($this->getCourseIsOffline()) {
+			return false;
+		}
+
+		if ($this->getCourseIsCoaching()) {
+			return false;
+		}
+
+		return true;
+	}
+}

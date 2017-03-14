@@ -7,11 +7,12 @@
 * @author Richard Klees <richard.klees@concepts-and-training>
 */
 
-require_once ("./Services/Mailing/classes/class.ilAutoMail.php");
-require_once ("./Services/GEV/Utils/classes/class.gevCourseUtils.php");
-require_once ("./Services/GEV/Utils/classes/class.gevUserUtils.php");
+require_once("./Services/Mailing/classes/class.ilAutoMail.php");
+require_once("./Services/GEV/Utils/classes/class.gevCourseUtils.php");
+require_once("./Services/GEV/Utils/classes/class.gevUserUtils.php");
 
-abstract class gevCrsAutoMail extends ilAutoMail {
+abstract class gevCrsAutoMail extends ilAutoMail
+{
 	protected $crs_id;
 	protected $crs;
 	protected $template_api;
@@ -21,10 +22,11 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 	protected $global_bcc;
 
 	protected $gev_crs_mail_template_type;
-	
+
 	private static $template_type = "CrsMail";
 
-	public function __construct($a_crs_id, $a_id) {
+	public function __construct($a_crs_id, $a_id)
+	{
 		global $ilDB, $lng, $ilCtrl, $ilias, $ilSetting, $ilUser;
 
 		$this->db = &$ilDB;
@@ -34,7 +36,7 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		$this->user = &$ilUser;
 
 		if (!is_numeric($a_crs_id)) {
-			throw new Exception ("gevCrsAutoMail not initialised with integer crs_id.");
+			throw new Exception("gevCrsAutoMail not initialised with integer crs_id.");
 		}
 
 		$this->crs_id = $a_crs_id;
@@ -52,7 +54,8 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 	}
 
 	// TODO: Move this to ilAutoMail
-	public function getLastSend() {
+	public function getLastSend()
+	{
 		$result = $this->db->query("SELECT last_send
 									FROM gev_automail_info
 									WHERE crs_id = ".$this->db->quote($this->crs_id)."
@@ -65,17 +68,18 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return null;
 	}
 
-	protected function setLastSend() {
+	protected function setLastSend()
+	{
 		$this->db->manipulate("INSERT INTO gev_automail_info (crs_id, mail_id, last_send)
 							  VALUES ("
 							  	.$this->db->quote($this->crs_id, "integer").", "
 							  	.$this->db->quote($this->getId(), "text").", "
 							  	.$this->db->quote(time(), "integer")."
-							  ) ON DUPLICATE KEY UPDATE last_send = ".$this->db->quote(time(), "integer")
-							);
+							  ) ON DUPLICATE KEY UPDATE last_send = ".$this->db->quote(time(), "integer"));
 	}
 
-	protected function getCourse() {
+	protected function getCourse()
+	{
 		if ($this->crs === null) {
 			$this->crs = new ilObjCourse($this->crs_id, false);
 		}
@@ -83,43 +87,50 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return $this->crs;
 	}
 
-	protected function getCourseUtils() {
+	protected function getCourseUtils()
+	{
 		if ($this->crs_utils === null) {
 			$this->crs_utils = gevCourseUtils::getInstanceByObj($this->getCourse());
 		}
 		return $this->crs_utils;
 	}
 
-	public function getDescription() {
+	public function getDescription()
+	{
 		return "Vorlage ".$this->getTemplateCategory() . ", " . $this->_getDescription();
 	}
 
-	abstract function _getDescription();
+	abstract public function _getDescription();
 
 	// This will be evaluated by the mailing cron job only and could be
 	// used to encode special circumstances under which the mail should not
 	// be send (e.g. for reminders).
 	// Per default disables sending of mails for offline courses.
-	public function shouldBeSend() {
+	public function shouldBeSend()
+	{
 		include_once 'Modules/Course/classes/class.ilObjCourseAccess.php';
 		return !ilObjCourseAccess::_isOffline($this->crs_id);
 	}
 
 	// SOME DEFAULTS
 
-	public function getScheduledFor() {
+	public function getScheduledFor()
+	{
 		return null;
 	}
 
-	public function getUsersOnly() {
+	public function getUsersOnly()
+	{
 		return true;
 	}
 
-	public function getRecipientUserIDs() {
+	public function getRecipientUserIDs()
+	{
 		return array();
 	}
 
-	public function getRecipientAddresses() {
+	public function getRecipientAddresses()
+	{
 		$ret = array();
 		foreach ($this->getRecipientUserIDs() as $user_id) {
 			$ret[] = ilObjUser::_lookupEmail($user_id);
@@ -129,89 +140,117 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 
 	// COURSE TIMES
 
-	protected function getCourseBookingDeadline() {
+	protected function getCourseBookingDeadline()
+	{
 		return $this->getCourseUtils()->getBookingDeadlineDate();
 	}
 
-	protected function getCourseCancelDeadline() {
+	protected function getCourseCancelDeadline()
+	{
 		return $this->getCourseUtils()->getCancelDeadlineDate();
 	}
 
-	protected function getCourseStart() {
+	protected function getCourseStart()
+	{
 		return $this->getCourseUtils()->getStartDate();
 	}
 
-	protected function getCourseEnd() {
+	protected function getCourseEnd()
+	{
 		return $this->getCourseUtils()->getEndDate();
 	}
 
 	// COURSE PEOPLE
 
-	protected function getCourseParticipants() {
+	protected function getCourseParticipants()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getParticipants();
 	}
 
-	protected function getCourseMembers() {
+	protected function getCourseMembers()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getMembers();
 	}
 
-	protected function getCourseTrainers() {
+	protected function getCourseTrainers()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getTrainers();
 	}
 
-	protected function getCourseAdmins() {
+	protected function getCourseAdmins()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getAdmins();
 	}
-	
-	protected function getCourseSpecialMembers() {
+
+	protected function getCourseSpecialMembers()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getSpecialMembers();
 	}
 
-	protected function getCourseCancelledMembers() {
+	protected function getCourseCancelledMembers()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getCancelledMembers();
 	}
 
-	protected function getCourseCancelledWithCostsMembers() {
+	protected function getCourseCancelledWithCostsMembers()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getCancelledWithCostsMembers();
 	}
 
-	protected function getCourseCancelledWithoutCostsMembers() {
+	protected function getCourseCancelledWithoutCostsMembers()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getCancelledWithoutCostsMembers();
 	}
 
-	protected function getCourseSuccessfullParticipants() {
+	protected function getCourseSuccessfullParticipants()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getSuccessfullParticipants();
 	}
 
-	protected function getCourseAbsentParticipants(){
+	protected function getCourseAbsentParticipants()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getAbsentParticipants();
 	}
 
-	protected function getCourseExcusedParticipants(){
+	protected function getCourseExcusedParticipants()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getExcusedParticipants();
 	}
 
-	protected function getCourseUsersOnWaitingList() {
+	protected function getCourseUsersOnWaitingList()
+	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);
 		return $utils->getWaitingMembers();
 	}
-	
-	
-	protected function getCourseAccomodationAddress() {
+
+	protected function getCourseIsCoaching()
+	{
+		$utils = gevCourseUtils::getInstance($this->crs_id);
+		return $utils->isCoaching();
+	}
+
+	protected function getCourseIsOffline()
+	{
+		include_once 'Modules/Course/classes/class.ilObjCourseAccess.php';
+		return ilObjCourseAccess::_isOffline($this->crs_id);
+	}
+
+	protected function getCourseAccomodationAddress()
+	{
 		$accom = $this->getCourseUtils()->getAccomodation();
-		
-		if ($accom === null ) {
+
+		if ($accom === null) {
 			return null;
 		}
 
@@ -222,10 +261,11 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 					);
 	}
 
-	protected function getCourseVenueAddress() {
+	protected function getCourseVenueAddress()
+	{
 		$ven = $this->getCourseUtils()->getVenue();
-		
-		if ($ven === null ) {
+
+		if ($ven === null) {
 			return null;
 		}
 
@@ -236,7 +276,8 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 					);
 	}
 
-	protected function getCourseHotelAddresses() {
+	protected function getCourseHotelAddresses()
+	{
 		$to_accom = $this->getAdditionalMailSettings()->getSendListToAccomodation();
 		$to_venue = $this->getAdditionalMailSettings()->getSendListToVenue();
 		$accom_address = $this->getCourseAccomodationAddress();
@@ -246,11 +287,11 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		if ($to_accom and $accom_address !== null) {
 			$addresses[] = $accom_address;
 		}
-		if($to_venue and $venue_address !== null) {
+		if ($to_venue and $venue_address !== null) {
 			$addresses[] = $venue_address;
 		}
 
-		if( count($addresses) == 2
+		if (count($addresses) == 2
 		and $addresses[0]["name"] == $addresses[1]["name"]
 		and $addresses[0]["email"] == $addresses[1]["email"] ) {
 			array_pop($addresses);
@@ -259,30 +300,34 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return $addresses;
 	}
 
-	protected function getAttachments() {
+	protected function getAttachments()
+	{
 		if ($this->attachments === null) {
-			require_once ("Services/GEV/Mailing/classes/class.gevCrsMailAttachments.php");
+			require_once("Services/GEV/Mailing/classes/class.gevCrsMailAttachments.php");
 			$this->attachments = new gevCrsMailAttachments($this->crs_id);
 		}
 
 		return $this->attachments;
 	}
 
-	public function getAttachmentPath($a_name) {
+	public function getAttachmentPath($a_name)
+	{
 		return $this->getAttachments()->getPathTo($a_name);
 	}
 
-	protected function checkUserID($a_recipient) {
+	protected function checkUserID($a_recipient)
+	{
 		return is_numeric($a_recipient) && ilObjUser::_lookupEmail($a_recipient) !== false;
 	}
 
 
-	private function initTemplateObjects($a_templ_id, $a_language) {
+	private function initTemplateObjects($a_templ_id, $a_language)
+	{
 		require_once "./Services/MailTemplates/classes/class.ilMailTemplateSettingsEntity.php";
 		require_once "./Services/MailTemplates/classes/class.ilMailTemplateVariantEntity.php";
 		require_once "./Services/MailTemplates/classes/class.ilMailTemplateManagementAPI.php";
 		require_once "./Services/MailTemplates/classes/class.ilMailTemplateFrameSettingsEntity.php";
-		
+
 		if ($this->template_api === null) {
 			$this->template_api = new ilMailTemplateManagementAPI();
 		}
@@ -290,7 +335,7 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 			$this->template_settings = new ilMailTemplateSettingsEntity();
 			$this->template_settings->setIlDB($this->db);
 		}
-		if($this->template_variant === null) {
+		if ($this->template_variant === null) {
 			$this->template_variant = new ilMailTemplateVariantEntity();
 			$this->template_variant->setIlDB($this->db);
 		}
@@ -302,7 +347,8 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		$this->template_variant->loadByTypeAndLanguage($a_templ_id, $a_language);
 	}
 
-	protected function getTemplateIdByTypeAndCategory($a_type, $a_category) {
+	protected function getTemplateIdByTypeAndCategory($a_type, $a_category)
+	{
 		require_once "./Services/MailTemplates/classes/class.ilMailTemplateSettingsEntity.php";
 
 		if ($this->template_settings === null) {
@@ -314,13 +360,15 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return $this->template_settings->getTemplateTypeId();
 	}
 
-	protected function getUserFunction($a_user_id) {
+	protected function getUserFunction($a_user_id)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 		return gevCourseUtils::getInstance($this->crs_id)
 							 ->getFunctionOfUser($a_user_id);
 	}
 
-	protected function getFrom() {
+	protected function getFrom()
+	{
 		$fn = $this->settings->get("mail_system_sender_name");
 		$fm = $this->ilias->getSetting("mail_external_sender_noreply");
 
@@ -328,14 +376,16 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 	}
 
 
-	protected function getTo($a_user_id) {
+	protected function getTo($a_user_id)
+	{
 		$tn = ilObjUser::_lookupFullname($a_user_id);
 		$tm = ilObjUser::_lookupEmail($a_user_id);
 
 		return $tn." <".$tm.">";
 	}
 
-	protected function getCC($a_recipient) {
+	protected function getCC($a_recipient)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 
 		if (!$this->checkUserID($a_recipient)) {
@@ -347,7 +397,8 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return array_map(array($this, "getTo"), $superior_ids);
 	}
 
-	protected function getBCC($a_recipient) {
+	protected function getBCC($a_recipient)
+	{
 		//TODO: this needs to be adjusted
 		/*if ($this->global_bcc === null) {
 			require_once "Services/Administration/classes/class.ilSetting.php";
@@ -359,23 +410,24 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return array();
 	}
 
-	protected function getFullnameForTemplate($a_recipient) {
+	protected function getFullnameForTemplate($a_recipient)
+	{
 		return ilObjUser::_lookupFullname($a_recipient);
 	}
 
-	protected function getEmailForTemplate($a_recipient) {
+	protected function getEmailForTemplate($a_recipient)
+	{
 		return ilObjUser::_lookupEmail($a_recipient);
 	}
 
-	protected function getAttachmentsForMail($a_recipient) {
+	protected function getAttachmentsForMail($a_recipient)
+	{
 		return array();
 	}
 
-	protected function getMessage($a_template_id, $a_recipient) {
-		$message = $this->getMessageFromTemplate($a_template_id
-												, $a_recipient
-												, $this->getFullnameForTemplate($a_recipient)
-												, $this->getEmailForTemplate($a_recipient));
+	protected function getMessage($a_template_id, $a_recipient)
+	{
+		$message = $this->getMessageFromTemplate($a_template_id, $a_recipient, $this->getFullnameForTemplate($a_recipient), $this->getEmailForTemplate($a_recipient));
 
 		return array( "from" => $this->getFrom()
 					, "to" => $this->getTo($a_recipient)
@@ -395,7 +447,8 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 
 	// Turn template to mail content. Returns
 	// a dict containing fields "subject", "plain" and "html"
-	protected function getMessageFromTemplate($a_templ_id, $a_user_id, $a_email, $a_name) {
+	protected function getMessageFromTemplate($a_templ_id, $a_user_id, $a_email, $a_name)
+	{
 		$this->initTemplateObjects($a_templ_id, "de");
 
 		require_once "./Services/GEV/Mailing/classes/class.gevCrsMailData.php";
@@ -411,13 +464,11 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		$adapter = $this->template_settings->getAdapterClassInstance();
 
 		$placeholders = $adapter->getPlaceholdersLocalized();
-		return $this->template_api->getPopulatedVariantMessages($this->template_variant
-															   , $placeholders
-															   , $mail_data
-															   , "de");
+		return $this->template_api->getPopulatedVariantMessages($this->template_variant, $placeholders, $mail_data, "de");
 	}
 
-	public function send($a_recipients = null, $a_occasion = null) {
+	public function send($a_recipients = null, $a_occasion = null)
+	{
 		//TODO: this maybe needs to be adjusted
 		// Do not send mails for online-trainings.
 /*		if ($this->getCourse()->getVfSettings()->isTypeOnline()) {
@@ -440,8 +491,7 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 
 			$ilLog->write("gevCrsAutoMail::send: sending done. crs_id=".$this->getCourse()->getId().", mail_id=".$this->getId().
 						  ($a_recipients?(", ".print_r($a_recipients, true)):""));
-		}
-		else {
+		} else {
 			$ilLog->write("gevCrsAutoMail::send: problem when sending. crs_id=".$this->getCourse()->getId().", mail_id=".$this->getId().
 						  ($a_recipients?(", ".print_r($a_recipients, true)):""));
 		}
@@ -449,16 +499,21 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return $res;
 	}
 
-	public function sendDeferred($a_recipients = null, $a_occasion = null) {
+	public function sendDeferred($a_recipients = null, $a_occasion = null)
+	{
 		global $ilLog;
 		$ilLog->write("gevCrsAutoMail::sendDeferred");
 		if ($this->getCourse()->getOfflineStatus() && $this->getId() != "bill_mail") {
 			$ilLog->write("....courseOffline and not a bill");
 			return;
 		}
-		
+
+		if ($this->getCourseIsCoaching()) {
+			$ilLog->write("....course is type of coaching. no mail");
+			return;
+		}
+
 		require_once("Services/GEV/Mailing/classes/class.gevDeferredMails.php");
-		
 
 		if ($a_recipients === null) {
 			$ilLog->write("....no recipients");
@@ -466,19 +521,20 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 							? $this->getRecipientUserIDs()
 							: $this->getRecipientAddresses();
 		}
-		
+
 		if ($a_occasion === null) {
 			$ilLog->write("....no occasion");
 			$a_occasion = $this->getTitle();//$this->lng->txt("send_by").": ".$this->user->getLogin();
 		}
-		
+
 
 		$ilLog->write("....>send this: crs=" .$this->crs_id .', mail=' .$this->getId() .' occasion=' .$a_occasion);
 
 		gevDeferredMails::getInstance()->deferredSendMail($this->crs_id, $this->getId(), $a_recipients, $a_occasion);
 	}
 
-	public function getMail($a_recipient) {
+	public function getMail($a_recipient)
+	{
 		if ($this->getCourseUtils()->isTemplate()) {
 			return null;
 		}
@@ -486,17 +542,20 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return $this->getMessage($this->getTemplateId(), $a_recipient);
 	}
 
-	public function getTemplateId() {
+	public function getTemplateId()
+	{
 		return $this->getTemplateIdByTypeAndCategory($this->getTemplateType(), $this->getTemplateCategory());
 	}
 
-	public function getTemplateType() {
+	public function getTemplateType()
+	{
 		return $this->gev_crs_mail_template_type;
 	}
 
 	abstract public function getTemplateCategory();
 
-	public function swapToWithCC($a_message) {
+	public function swapToWithCC($a_message)
+	{
 		$cc = $a_message["cc"];
 
 		if (count($cc) == 0) {
@@ -513,11 +572,13 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 
 	protected $additional_mail_settings;
 
-	protected function setAdditionalMailSettings(gevCrsAdditionalMailSettings $a_settings) {
+	protected function setAdditionalMailSettings(gevCrsAdditionalMailSettings $a_settings)
+	{
 		$this->additional_mail_settings = $a_settings;
 	}
 
-	protected function getAdditionalMailSettings() {
+	protected function getAdditionalMailSettings()
+	{
 		if ($this->additional_mail_settings === null) {
 			$this->initAdditionalMailSettings();
 
@@ -532,12 +593,14 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 		return $this->additional_mail_settings;
 	}
 
-	protected function initAdditionalMailSettings() {
-		require_once ("./Services/GEV/Mailing/classes/class.gevCrsAdditionalMailSettings.php");
+	protected function initAdditionalMailSettings()
+	{
+		require_once("./Services/GEV/Mailing/classes/class.gevCrsAdditionalMailSettings.php");
 		$this->setAdditionalMailSettings(new gevCrsAdditionalMailSettings($this->crs_id));
 	}
-	
-	protected function maybeSuperiorsCC($a_recipient) {
+
+	protected function maybeSuperiorsCC($a_recipient)
+	{
 		return array();
 		// For Präsenztrainings only
 		if ($this->getCourseUtils()->isPraesenztraining()) {
@@ -545,7 +608,4 @@ abstract class gevCrsAutoMail extends ilAutoMail {
 			return gevUserUtils::getInstance($a_recipient)->getDirectSuperiors();
 		}
 	}
-
 }
-
-?>

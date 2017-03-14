@@ -49,13 +49,25 @@ class ilObjManualAssessmentGUI extends ilObjectGUI
 		parent::__construct($a_data, $a_id, $a_call_by_reference, $a_prepare_output);
 	}
 
+	//gev-patch start #2922
 	public function addLocatorItems()
 	{
-
-		if (is_object($this->object)) {
+		if (is_object($this->object) && !$this->hasBackToLink()) {
 			$this->locator->addItem($this->object->getTitle(), $this->ctrl->getLinkTarget($this, "view"), "", $this->object->getRefId());
+		} else {
+			$this->locator->clearItems();
 		}
 	}
+
+	protected function hasBackToLink()
+	{
+		if (isset($_GET["back_to"]) && trim($_GET["back_to"]) != "") {
+			return true;
+		}
+
+		return false;
+	}
+	//gev-patch end
 
 	public function executeCommand()
 	{
