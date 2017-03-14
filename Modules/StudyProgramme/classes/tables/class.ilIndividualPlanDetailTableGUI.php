@@ -202,8 +202,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 					$members->updateStorageAndRBAC($this->mass_storage, $mass->accessHandler());
 				}
 
-				$items = $this->maybeAddViewRecordTo($items, $mass, $entry->getStudyProgramme()->getRefId());
-				$items = $this->maybeAddEditRecordTo($items, $mass, $entry->getStudyProgramme()->getRefId());
+				$items = $this->maybeAddViewRecordTo($items, $mass, $this->parent_obj->getSPRefId());
+				$items = $this->maybeAddEditRecordTo($items, $mass, $this->parent_obj->getSPRefId());
 			}
 		}
 		return $items;
@@ -324,6 +324,30 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	}
 
 	/**
+	 * Get link back to sp overview wrt to parameters in order to enable
+	 * proper backreference via the back button from target obj.
+	 *
+	 * @param	int	$usr_id
+	 * @param	int	$assignment_id
+	 * @param	int	$sp_ref_id
+	 * @return	string
+	 */
+	protected function getBackLinkToViewOf($usr_id, $assignment_id, $sp_ref_id)
+	{
+		assert('is_integer($usr_id)');
+		assert('is_integer($assignment_id)');
+		assert('is_integer($sp_ref_id)');
+		$this->g_ctrl->setParameterByClass("ilindividualplangui", "user_id", $usr_id);
+		$this->g_ctrl->setParameterByClass("ilindividualplangui", "assignment_id", $assignment_id);
+		$this->g_ctrl->setParameterByClass("ilindividualplangui", "spRefId", $sp_ref_id);
+		$link = $this->g_ctrl->getLinkTargetByClass("ilindividualplangui", "view", "", false, false);
+		$this->g_ctrl->setParameterByClass("ilindividualplangui", "user_id", null);
+		$this->g_ctrl->setParameterByClass("ilindividualplangui", "assignment_id", null);
+		$this->g_ctrl->setParameterByClass("ilindividualplangui", "spRefId", null);
+		return $link;
+	}
+
+	/**
 	 * Get the link to view the manual assessment record for the user.
 	 *
 	 * @param	\ilObjManualAssessment	$mass
@@ -333,15 +357,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		assert('is_integer($sp_ref_id)');
 
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "user_id", $this->user_id);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "assignment_id", $this->assignment_id);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "spRefId", $sp_ref_id);
-		$link = $this->g_ctrl->getLinkTargetByClass("ilindividualplangui", "view", "", false, false);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "user_id", null);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "assignment_id", null);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "spRefId", null);
-
-		$back_to = base64_encode($link);
+		$back_to = base64_encode($this->getBackLinkToViewOf($this->user_id, $this->assignment_id, $sp_ref_id));
 
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", $mass->getRefId());
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", $this->user_id);
@@ -364,15 +380,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	{
 		assert('is_integer($sp_ref_id)');
 
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "user_id", $this->user_id);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "assignment_id", $this->assignment_id);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "spRefId", $sp_ref_id);
-		$link = $this->g_ctrl->getLinkTargetByClass("ilindividualplangui", "view", "", false, false);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "user_id", null);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "assignment_id", null);
-		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "spRefId", null);
-
-		$back_to = base64_encode($link);
+		$back_to = base64_encode($this->getBackLinkToViewOf($this->user_id, $this->assignment_id, $sp_ref_id));
 
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", $mass->getRefId());
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", $this->user_id);
