@@ -39,7 +39,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		$this->user_id = $user_id;
 		$this->assignment_id = $assignment_id;
 
-		$this->confugireTable();
+		$this->configureTable();
 		$this->addColums();
 
 		$entries = array();
@@ -101,8 +101,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 	 *
 	 * @return null
 	 */
-	// TODO: This name has a twist...
-	protected function confugireTable()
+	protected function configureTable()
 	{
 		$this->setEnableTitle(true);
 		$this->setExternalSegmentation(false);
@@ -110,7 +109,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		$this->setTopCommands(false);
 		$this->setEnableHeader(true);
 		$this->setFormAction($this->g_ctrl->getFormAction($this->parent_obj, "view"));
-
+		$this->setLimit(0);
 		$this->setRowTemplate("tpl.individual_plan_row.html", "Modules/StudyProgramme");
 		$this->useLngInTitle(false);
 	}
