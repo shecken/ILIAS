@@ -71,7 +71,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$this->settings = new ilSetting("gev");
 		$this->obj = new ilIndividualPlanDetailTable();
 
-		$this->confugireTable();
+		$this->configureTable();
+
 		$this->addColums();
 		$entries = array();
 		require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanDetailEntry.php");
@@ -397,13 +398,14 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	 * @return null
 	 */
 	// TODO: There is spelling mistake hidden in this name....
-	protected function confugireTable()
+	protected function configureTable()
 	{
 		$this->setEnableTitle(true);
 		$this->setExternalSegmentation(false);
 		$this->setExternalSorting(true);
 		$this->setTopCommands(false);
 		$this->setEnableHeader(true);
+		$this->setLimit(0);
 		$this->setFormAction($this->g_ctrl->getFormAction($this->parent_obj, "view"));
 		$this->setRowTemplate("tpl.individual_plan_detail_row.html", "Modules/StudyProgramme/");
 		$this->useLngInTitle(false);
@@ -456,7 +458,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		// This should be a course as we are in the LP-Mode study programmes and
 		// the node was not accredited.
 		$crs_id = $progress->getCompletionBy();
-		if($crs === null) {
+		if ($crs === null) {
 			return null;
 		}
 		$crs_ref_id = gevObjectUtils::getRefId($crs_id);
