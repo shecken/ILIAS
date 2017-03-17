@@ -22,6 +22,11 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	protected $g_ctrl;
 
 	/**
+	 * @var	\ilTabs
+	 */
+	protected $g_tabs;
+
+	/**
 	 * @var	\ilIndividualPlanGUI
 	 */
 	protected $individual_plan_gui = null;
@@ -33,8 +38,9 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	{
 		parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
 
-		global $ilCtrl;
+		global $ilCtrl, $ilTabs;
 		$this->g_ctrl = $ilCtrl;
+		$this->g_tabs = $ilTabs;
 	}
 
 	public function getType()
@@ -107,6 +113,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	{
 		require_once("Modules/StudyProgramme/classes/tables/class.ilIndividualPlanGUI.php");
 		$this->gTpl->setTitle(null);
+		$this->g_tabs->ActivateTab("content");
 		$this->initIndividualPlanGUI(
 			(int)$_GET["user_id"],
 			(int)$_GET["assignment_id"],
