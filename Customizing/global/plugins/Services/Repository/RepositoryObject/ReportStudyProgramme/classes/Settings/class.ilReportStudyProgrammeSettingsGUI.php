@@ -1,5 +1,6 @@
 <?php
 require_once("Services/Utilities/classes/class.ilUtil.php");
+require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 
 use \CaT\Plugins\ReportStudyProgramme;
 
