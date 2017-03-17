@@ -104,13 +104,12 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			$crs_utils = gevCourseUtils::getInstanceByObj($crs);
 			if($this->getManualAssessmentWhereUserIsMemberIn($crs) !== null && $crs_utils->isCoaching()) {
 				$items = [];
-				$edit = [];
 				$mass = $this->getManualAssessmentIn($crs);
-				$items = $this->maybeAddViewRecordTo($items, $mass, $this->parent_obj->getSPRefId());
-				$edit = $this->maybeAddEditRecordTo($edit, $mass, $this->parent_obj->getSPRefId());
-				if(!is_null($edit[0]['link'])) {
-					$link = $edit[0]['link'];
+				$items = $this->maybeAddEditRecordTo($items, $mass, $this->parent_obj->getSPRefId());
+				if(!count($items) == 0) {
+					$link = $items[0]['link'];
 				} else {
+					$items = $this->maybeAddViewRecordTo($items, $mass, $this->parent_obj->getSPRefId());
 					$link = $items[0]['link'];
 				}
 			} else {
