@@ -99,22 +99,17 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	public function fillRow(\ilIndividualPlanDetailEntry $entry)
 	{
+		$link = null;
 		$stepname = $entry->getTitle();
 		$crs = $entry->getCourseWhereUserIsMember();
 		if ($crs != null) {
 			$crs_utils = gevCourseUtils::getInstanceByObj($crs);
 
 			if ($this->getManualAssessmentWhereUserIsMemberIn($crs) !== null && $crs_utils->isCoaching()) {
-				$items = [];
-				$mass = $this->getManualAssessmentIn($crs);
-				$items = $this->maybeAddEditRecordTo($items, $mass, $this->parent_obj->getSPRefId());
-				if (!count($items) == 0) {
-					$link = $items[0]['link'];
-				} else {
-					$items = $this->maybeAddViewRecordTo($items, $mass, $this->parent_obj->getSPRefId());
-					$link = $items[0]['link'];
-				}
-			} else {
+				$link = $this->getLinkToManualAssessment($crs);
+			}
+
+			if (!$link) {
 				$link = $this->getCourseLink($crs->getRefId(), $this->parent_obj->getSPRefId());
 			}
 
@@ -141,6 +136,30 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			$this->tpl->setVariable("FINISHED", "-");
 		}
 		$this->tpl->setVariable("ACTION", $this->getActionMenu($entry));
+	}
+
+	/**
+	 * Get the correct link to manual assessment
+	 *
+	 * @param ilObjCourse 	$crs
+	 *
+	 * @return string | null
+	 */
+	protected function getLinkToManualAssessment($crs)
+	{
+		$mass = $this->getManualAssessmentIn($crs);
+
+		$items = $this->maybeAddEditRecordTo(array(), $mass, $this->parent_obj->getSPRefId());
+		if (!count($items) == 0) {
+			return $items[0]['link'];
+		}
+
+		$items = $this->maybeAddViewRecordTo(array(), $mass, $this->parent_obj->getSPRefId());
+		if (!count($items) == 0) {
+			return $items[0]['link'];
+		}
+
+		return null;
 	}
 
 	protected function getStatusAndDate(\ilObjStudyProgramme $sp)
