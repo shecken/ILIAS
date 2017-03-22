@@ -3483,11 +3483,23 @@ class ilObjCourseGUI extends ilContainerGUI
 		$this->ctrl->setParameter($this, "ref_id", $this->ref_id);
 
 		// gev-patch start
+		// #2941 set backlink to va pass
+		$back_to = null;
+		if (isset($_GET["back_to"]) && trim($_GET["back_to"]) != "") {
+			$back_to = $_GET["back_to"];
+			$back_to = base64_decode($back_to);
+		}
+
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		if (!gevUserUtils::getInstanceByObj($ilUser)->isAdmin()) {
+		if (!gevUserUtils::getInstanceByObj($ilUser)->isAdmin() && $back_to === null) {
 			$tabs_gui->setBackTarget(
 				$lng->txt("back"),
 				$this->ctrl->getLinkTargetByClass("gevDesktopGUI", "toMyCourses")
+			);
+		} elseif (!gevUserUtils::getInstanceByObj($ilUser)->isAdmin() && $back_to !== null) {
+			$tabs_gui->setBackTarget(
+				$lng->txt("back"),
+				$back_to
 			);
 		}
 

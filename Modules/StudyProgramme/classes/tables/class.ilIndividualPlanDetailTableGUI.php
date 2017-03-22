@@ -99,25 +99,20 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	public function fillRow(\ilIndividualPlanDetailEntry $entry)
 	{
+		$link = null;
 		$stepname = $entry->getTitle();
 		$crs = $entry->getCourseWhereUserIsMember();
 		if ($crs != null) {
 			$crs_utils = gevCourseUtils::getInstanceByObj($crs);
-			if($this->getManualAssessmentWhereUserIsMemberIn($crs) !== null && $crs_utils->isCoaching()) {
-				$items = [];
-				$mass = $this->getManualAssessmentIn($crs);
-				$items = $this->maybeAddEditRecordTo($items, $mass, $this->parent_obj->getSPRefId());
-				if(!count($items) == 0) {
-					$link = $items[0]['link'];
-				} else {
-					$items = $this->maybeAddViewRecordTo($items, $mass, $this->parent_obj->getSPRefId());
-					$link = $items[0]['link'];
-				}
-			} else {
-				$this->g_ctrl->setParameterByClass("ilObjCourseGUI", "ref_id", $crs->getRefId());
-				$link = $this->g_ctrl->getLinkTargetByClass(array("ilRepositoryGUI", "ilObjCourseGUI"), "view");
-				$this->g_ctrl->clearParametersByClass("ilObjCourseGUI");
+
+			if ($this->getManualAssessmentWhereUserIsMemberIn($crs) !== null && $crs_utils->isCoaching()) {
+				$link = $this->getLinkToManualAssessment($crs);
 			}
+
+			if (!$link) {
+				$link = $this->getCourseLink($crs->getRefId(), $this->parent_obj->getSPRefId());
+			}
+
 			$stepname = "<a href='$link'>$stepname</a>";
 		}
 		$this->tpl->setVariable("STEPNAME", $stepname);
@@ -141,6 +136,30 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 			$this->tpl->setVariable("FINISHED", "-");
 		}
 		$this->tpl->setVariable("ACTION", $this->getActionMenu($entry));
+	}
+
+	/**
+	 * Get the correct link to manual assessment
+	 *
+	 * @param ilObjCourse 	$crs
+	 *
+	 * @return string | null
+	 */
+	protected function getLinkToManualAssessment($crs)
+	{
+		$mass = $this->getManualAssessmentIn($crs);
+
+		$items = $this->maybeAddEditRecordTo(array(), $mass, $this->parent_obj->getSPRefId());
+		if (!count($items) == 0) {
+			return $items[0]['link'];
+		}
+
+		$items = $this->maybeAddViewRecordTo(array(), $mass, $this->parent_obj->getSPRefId());
+		if (!count($items) == 0) {
+			return $items[0]['link'];
+		}
+
+		return null;
 	}
 
 	protected function getStatusAndDate(\ilObjStudyProgramme $sp)
@@ -402,6 +421,27 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$link = $this->g_ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilObjManualAssessmentGUI", "ilManualAssessmentMembersGUI", "ilManualAssessmentMemberGUI"], "edit");
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "ref_id", null);
 		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "usr_id", null);
+		$this->g_ctrl->setParameterByClass("ilManualAssessmentMemberGUI", "back_to", null);
+		return $link;
+	}
+
+	/**
+	 * Get the link to crs
+	 *
+	 * @param int 	$crs_ref_id
+	 * @param int 	$sp_ref_id
+	 *
+	 * @return string
+	 */
+	protected function getCourseLink($crs_ref_id, $sp_ref_id)
+	{
+		$back_to = base64_encode($this->getBackLinkToViewOf($this->user_id, $this->assignment_id, $sp_ref_id));
+
+		$this->g_ctrl->setParameterByClass("ilObjCourseGUI", "ref_id", $crs_ref_id);
+		$this->g_ctrl->setParameterByClass("ilObjCourseGUI", "back_to", $back_to);
+		$link = $this->g_ctrl->getLinkTargetByClass(array("ilRepositoryGUI", "ilObjCourseGUI"), "view");
+		$this->g_ctrl->clearParametersByClass("ilObjCourseGUI");
+
 		return $link;
 	}
 
