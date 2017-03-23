@@ -128,14 +128,21 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
+		$new_file = null;
 		$form = $this->initGradingForm();
+		$item = $form->getItemByPostVar('file');
+		if ($item->checkInput()) {
+			$new_file = $this->uploadFile($_POST["file"], $_POST["file_delete"]);
+		}
+
 		$form->setValuesByArray(array('file' => $this->member->fileName()));
 		if (!$form->checkInput()) {
 			$form->setValuesByPost();
 			$this->edit($form);
 			return;
 		}
-		$this->saveMember($_POST);
+
+		$this->saveMember($_POST, $new_file);
 		if ($this->object->isActiveLP()) {
 			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
 		}
@@ -150,7 +157,13 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
+		$new_file = null;
 		$form = $this->initGradingForm();
+		$item = $form->getItemByPostVar('file');
+		if ($item->checkInput()) {
+			$new_file = $this->uploadFile($_POST["file"], $_POST["file_delete"]);
+		}
+
 		$form->setValuesByArray(array('file' => $this->member->fileName()));
 
 		if (!$form->checkInput()) {
@@ -159,15 +172,12 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
-		$this->saveMember($_POST);
+		$this->saveMember($_POST, $new_file);
 
 		if (!$this->member->mayBeFinalized()) {
 			ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
-			$form->setValuesByPost();
-			$this->edit($form);
-			return;
+			$this->redirect('edit');
 		}
-
 
 		include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
 		$confirm = new ilConfirmationGUI();
@@ -223,7 +233,7 @@ class ilManualAssessmentMemberGUI
 
 		$this->renderWorkInstructions($tpl);
 
-		$form->addCommandButton('saveAmend', $this->lng->txt('mass_save'));
+		$form->addCommandButton('saveAmend', $this->lng->txt('mass_save_amend'));
 		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
 
@@ -238,7 +248,14 @@ class ilManualAssessmentMemberGUI
 			$this->parent_gui->handleAccessViolation();
 			return;
 		}
+
+		$new_file = null;
 		$form = $this->initGradingForm();
+		$item = $form->getItemByPostVar('file');
+		if ($item->checkInput()) {
+			$new_file = $this->uploadFile($_POST["file"], $_POST["file_delete"]);
+		}
+
 		$form->setValuesByArray(array('file' => $this->member->fileName()));
 		if (!$form->checkInput()) {
 			$form->setValuesByPost();
@@ -246,7 +263,7 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
-		$this->saveMember($_POST, true);
+		$this->saveMember($_POST, $new_file, true);
 
 		if ($this->object->isActiveLP()) {
 			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
@@ -501,9 +518,8 @@ class ilManualAssessmentMemberGUI
 		return $examiner_id_utils->isSuperiorOf($this->examinee->getId());
 	}
 
-	protected function saveMember($post, $keep_examiner = false)
+	protected function saveMember($post, $new_file, $keep_examiner = false)
 	{
-		$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
 		$this->member = $this->updateDataInMemberByArray($this->member, $post, $new_file, $keep_examiner);
 		$this->object->membersStorage()->updateMember($this->member);
 	}
