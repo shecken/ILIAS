@@ -100,20 +100,24 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	public function fillRow(\ilIndividualPlanDetailEntry $entry)
 	{
 		$link = null;
+		$has_manual_assessment = false;
 		$stepname = $entry->getTitle();
 		$crs = $entry->getCourseWhereUserIsMember();
 		if ($crs != null) {
 			$crs_utils = gevCourseUtils::getInstanceByObj($crs);
 
 			if ($this->getManualAssessmentWhereUserIsMemberIn($crs) !== null && $crs_utils->isCoaching()) {
+				$has_manual_assessment = true;
 				$link = $this->getLinkToManualAssessment($crs);
 			}
 
-			if (!$link) {
+			if (!$link && !$has_manual_assessment) {
 				$link = $this->getCourseLink($crs->getRefId(), $this->parent_obj->getSPRefId());
 			}
 
-			$stepname = "<a href='$link'>$stepname</a>";
+			if ($link) {
+				$stepname = "<a href='$link'>$stepname</a>";
+			}
 		}
 		$this->tpl->setVariable("STEPNAME", $stepname);
 
