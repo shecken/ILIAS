@@ -3482,15 +3482,6 @@ class ilObjCourseGUI extends ilContainerGUI
 
 		$this->ctrl->setParameter($this, "ref_id", $this->ref_id);
 
-		// gev-patch start
-		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		if (!gevUserUtils::getInstanceByObj($ilUser)->isAdmin()) {
-			$tabs_gui->setBackTarget(
-				$lng->txt("back"),
-				$this->ctrl->getLinkTargetByClass("gevDesktopGUI", "toMyCourses")
-			);
-		}
-
 		if ($ilAccess->checkAccess('visible', '', $this->ref_id)) {
 			//$next_class = $this->ctrl->getNextClass($this);
 

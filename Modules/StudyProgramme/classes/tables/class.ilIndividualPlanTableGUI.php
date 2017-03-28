@@ -54,7 +54,9 @@ class ilIndividualPlanTableGUI extends catTableGUI
 
 			list($status, $finished) = $this->getLpStatusFor($child, $this->user_id);
 			$entry->setStatus($status);
-			$entry->setFinished($finished);
+			if($finished !== null) {
+				$entry->setFinished(new ilDate($finished, IL_CAL_DATE));
+			}
 
 			$finish_until = $this->getCourseStartNextSP($children, $current_child_key + 1);
 			if ($finish_until) {
@@ -80,8 +82,10 @@ class ilIndividualPlanTableGUI extends catTableGUI
 
 		$this->tpl->setVariable("TITLE", $a_set->getTitle());
 		$this->tpl->setVariable("STATUS", $this->parent_obj->getStatusIcon($a_set->getStatus()));
-		if ($a_set->getFinished()) {
-			$this->tpl->setVariable("FINISHED", $a_set->getFinished());
+
+		$finished = $a_set->getFinished();
+		if ($finished) {
+			$this->tpl->setVariable("FINISHED", $finished->get(IL_CAL_FKT_DATE, "d.m.Y"));
 		} else {
 			$this->tpl->setVariable("FINISHED", "-");
 		}
@@ -92,7 +96,6 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		} else {
 			$this->tpl->setVariable("FINISH_UNTIL", "-");
 		}
-
 		$this->g_ctrl->setParameter($this->parent_obj, "selectedRefId", null);
 	}
 

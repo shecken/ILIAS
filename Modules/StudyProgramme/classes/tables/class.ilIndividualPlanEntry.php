@@ -78,7 +78,7 @@ class ilIndividualPlanEntry
 		return $this->has_children;
 	}
 
-	public function setFinished($finished)
+	public function setFinished(ilDate $finished)
 	{
 		$this->finished = $finished;
 	}
