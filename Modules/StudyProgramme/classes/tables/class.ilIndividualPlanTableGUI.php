@@ -54,7 +54,9 @@ class ilIndividualPlanTableGUI extends catTableGUI
 
 			list($status, $finished) = $this->getLpStatusFor($child, $this->user_id);
 			$entry->setStatus($status);
-			$entry->setFinished(new ilDate($finished, IL_CAL_DATE));
+			if($finished !== null) {
+				$entry->setFinished(new ilDate($finished, IL_CAL_DATE));
+			}
 
 			$finish_until = $this->getCourseStartNextSP($children, $current_child_key + 1);
 			if ($finish_until) {
