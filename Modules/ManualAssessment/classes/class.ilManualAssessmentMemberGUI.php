@@ -131,8 +131,12 @@ class ilManualAssessmentMemberGUI
 		$new_file = null;
 		$form = $this->initGradingForm();
 		$item = $form->getItemByPostVar('file');
-		if ($item->checkInput()) {
-			$new_file = $this->uploadFile($_POST["file"], $_POST["file_delete"]);
+		if ($item && $item->checkInput()) {
+			$post = $_POST;
+			$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
+			if ($new_file) {
+				$this->updateFileName($post['file']['name']);
+			}
 		}
 
 		$form->setValuesByArray(array('file' => $this->member->fileName()));
@@ -142,7 +146,7 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
-		$this->saveMember($_POST, $new_file);
+		$this->saveMember($_POST);
 		if ($this->object->isActiveLP()) {
 			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
 		}
@@ -160,8 +164,12 @@ class ilManualAssessmentMemberGUI
 		$new_file = null;
 		$form = $this->initGradingForm();
 		$item = $form->getItemByPostVar('file');
-		if ($item->checkInput()) {
-			$new_file = $this->uploadFile($_POST["file"], $_POST["file_delete"]);
+		if ($item && $item->checkInput()) {
+			$post = $_POST;
+			$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
+			if ($new_file) {
+				$this->updateFileName($post['file']['name']);
+			}
 		}
 
 		$form->setValuesByArray(array('file' => $this->member->fileName()));
@@ -172,7 +180,7 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
-		$this->saveMember($_POST, $new_file);
+		$this->saveMember($_POST);
 
 		if (!$this->member->mayBeFinalized()) {
 			ilUtil::sendFailure($this->lng->txt('mass_may_not_finalize'), true);
@@ -252,8 +260,12 @@ class ilManualAssessmentMemberGUI
 		$new_file = null;
 		$form = $this->initGradingForm();
 		$item = $form->getItemByPostVar('file');
-		if ($item->checkInput()) {
-			$new_file = $this->uploadFile($_POST["file"], $_POST["file_delete"]);
+		if ($item && $item->checkInput()) {
+			$post = $_POST;
+			$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
+			if ($new_file) {
+				$this->updateFileName($post['file']['name']);
+			}
 		}
 
 		$form->setValuesByArray(array('file' => $this->member->fileName()));
@@ -263,7 +275,7 @@ class ilManualAssessmentMemberGUI
 			return;
 		}
 
-		$this->saveMember($_POST, $new_file, true);
+		$this->saveMember($_POST, true);
 
 		if ($this->object->isActiveLP()) {
 			ilManualAssessmentLPInterface::updateLPStatusOfMember($this->member);
@@ -518,9 +530,22 @@ class ilManualAssessmentMemberGUI
 		return $examiner_id_utils->isSuperiorOf($this->examinee->getId());
 	}
 
-	protected function saveMember($post, $new_file, $keep_examiner = false)
+	protected function saveMember($post, $keep_examiner = false)
 	{
-		$this->member = $this->updateDataInMemberByArray($this->member, $post, $new_file, $keep_examiner);
+		$this->member = $this->updateDataInMemberByArray($this->member, $post, $keep_examiner);
+		$this->object->membersStorage()->updateMember($this->member);
+	}
+
+	/**
+	 * Update member with actual uploaded filename
+	 *
+	 * @param string 	$file_name
+	 *
+	 * @return null
+	 */
+	protected function updateFileName($file_name)
+	{
+		$this->member = $this->member->withFileName($file_name);
 		$this->object->membersStorage()->updateMember($this->member);
 	}
 
@@ -580,7 +605,8 @@ class ilManualAssessmentMemberGUI
 	 */
 	protected function renderWorkInstructions(ilTemplate &$tpl)
 	{
-		$work_instructions_files = $this->object->getWorkIntructionFileNames();
+		$work_instructions_file_storage = $this->object->getWorkIntructionFileStorage();
+		$work_instructions_files = $work_instructions_file_storage->readDir();
 		$work_instructions_text = $this->object->getSettings()->workInstruction();
 		if (count($work_instructions_files) > 0 || $work_instructions_text != "") {
 			if (count($work_instructions_files) > 0) {

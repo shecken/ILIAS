@@ -245,18 +245,22 @@ class ilObjManualAssessment extends ilObject
 	public function getFileStorage()
 	{
 		if ($this->file_storage === null) {
-			$this->file_storage =  ilManualAssessmentFileStorage::getInstance($this->getId());
+			$this->file_storage = ilManualAssessmentFileStorage::getInstance($this->getId());
 		}
 		return $this->file_storage;
 	}
 
 	/**
-	 * Get the uploaded work intruction files
+	 * Get filestorage for work intruction files
 	 *
-	 * @return string[]
+	 * @return ilManualAssessmentFileStorage
 	 */
-	public function getWorkIntructionFileNames()
+	public function getWorkIntructionFileStorage()
 	{
-		return $this->getFileStorage()->readDir();
+		if ($this->intruction_file_storage === null) {
+			$this->intruction_file_storage = ilManualAssessmentFileStorage::getInstance($this->getId());
+		}
+
+		return $this->intruction_file_storage;
 	}
 }
