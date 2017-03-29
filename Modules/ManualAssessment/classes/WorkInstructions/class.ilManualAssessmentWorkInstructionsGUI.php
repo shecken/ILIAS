@@ -59,7 +59,7 @@ class ilManualAssessmentWorkInstructionsGUI
 
 		$this->parent_gui = $parent_gui;
 		$this->object = $parent_gui->object;
-		$this->file_storage = $parent_gui->object->getFileStorage();
+		$this->file_storage = $parent_gui->object->getWorkIntructionFileStorage();
 	}
 
 	public function executeCommand()
@@ -234,7 +234,7 @@ class ilManualAssessmentWorkInstructionsGUI
 	 */
 	protected function uploadedFilesInformations()
 	{
-		$files = $this->object->getWorkIntructionFileNames();
+		$files = $this->file_storage->readDir();
 		$file_infos = array();
 
 		foreach ($files as $file_name) {
