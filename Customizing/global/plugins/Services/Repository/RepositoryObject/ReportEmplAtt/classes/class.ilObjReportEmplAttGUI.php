@@ -154,6 +154,10 @@ class ilObjReportEmplAttGUI extends ilObjReportBaseGUI
 			) {
 			$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
 			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
+			$date = ilDatePresentation::formatPeriod($start, $end);
+		} elseif ($rec["begin_date"] && $rec["begin_date"] != "0000-00-00") {
+			$start = new ilDate($rec["begin_date"], IL_CAL_DATE);
+			$date = ilDatePresentation::formatDate($start);
 		} else {
 			$date = '-';
 		}
