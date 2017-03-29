@@ -131,7 +131,7 @@ class ilManualAssessmentMemberGUI
 		$new_file = null;
 		$form = $this->initGradingForm();
 		$item = $form->getItemByPostVar('file');
-		if ($item->checkInput()) {
+		if ($item && $item->checkInput()) {
 			$post = $_POST;
 			$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
 			if ($new_file) {
@@ -164,7 +164,7 @@ class ilManualAssessmentMemberGUI
 		$new_file = null;
 		$form = $this->initGradingForm();
 		$item = $form->getItemByPostVar('file');
-		if ($item->checkInput()) {
+		if ($item && $item->checkInput()) {
 			$post = $_POST;
 			$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
 			if ($new_file) {
@@ -260,7 +260,7 @@ class ilManualAssessmentMemberGUI
 		$new_file = null;
 		$form = $this->initGradingForm();
 		$item = $form->getItemByPostVar('file');
-		if ($item->checkInput()) {
+		if ($item && $item->checkInput()) {
 			$post = $_POST;
 			$new_file = $this->uploadFile($post["file"], $post["file_delete"]);
 			if ($new_file) {
