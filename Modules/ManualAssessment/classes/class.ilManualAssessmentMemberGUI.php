@@ -605,7 +605,8 @@ class ilManualAssessmentMemberGUI
 	 */
 	protected function renderWorkInstructions(ilTemplate &$tpl)
 	{
-		$work_instructions_files = $this->object->getWorkIntructionFileNames();
+		$work_instructions_file_storage = $this->object->getWorkIntructionFileStorage();
+		$work_instructions_files = $work_instructions_file_storage->readDir();
 		$work_instructions_text = $this->object->getSettings()->workInstruction();
 		if (count($work_instructions_files) > 0 || $work_instructions_text != "") {
 			if (count($work_instructions_files) > 0) {
