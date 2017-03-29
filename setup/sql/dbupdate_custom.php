@@ -6176,3 +6176,32 @@ if (!$ilDB->tableColumnExists('mass_settings', 'work_instruction')) {
 	));
 }
 ?>
+
+<#258>
+<?php
+if ($ilDB->tableExists('viwis_refs')) {
+	$ilDB->addTableColumn('viwis_refs', 'obj_id', array(
+	"type" => "integer",
+	"length" => 4,
+	"notnull" => true,
+	"default" => 0
+	));
+}
+?>
+
+<#259>
+<?php
+if($ilDB->tableColumnExists('viwis_refs','obj_id')) {
+	$ilDB->manipulate('UPDATE viwis_refs vref'
+					.'	JOIN object_reference oref'
+					.'		ON vref.ref_id = oref.ref_id'
+					.'	SET vref.obj_id = oref.obj_id');
+}
+?>
+
+<#260>
+<?php
+if($ilDB->tableColumnExists('viwis_refs','ref_id')) {
+	$ilDB->dropTableColumn('viwis_refs','ref_id');
+}
+?>
