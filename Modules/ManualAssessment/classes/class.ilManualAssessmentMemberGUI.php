@@ -57,7 +57,6 @@ class ilManualAssessmentMemberGUI
 			case 'saveAmend':
 			case 'cancelFinalize':
 			case 'view':
-			case 'cancel':
 			case 'downloadAttachment':
 			case 'deliverFile':
 				break;
@@ -78,8 +77,6 @@ class ilManualAssessmentMemberGUI
 		$tpl = new ilTemplate("tpl.mass_edit_member_sectioning.html", true, true, "Modules/ManualAssessment");
 
 		$form = $this->fillForm($this->initGradingForm(false), $this->member);
-		$form = $this->fillForm($this->initGradingForm(false), $this->member);
-		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
 
 		$this->addFormToTpl($form, $tpl);
@@ -103,7 +100,6 @@ class ilManualAssessmentMemberGUI
 		$form->addCommandButton('save', $this->lng->txt('mass_save'));
 		$form->addCommandButton('finalizeConfirmation', $this->lng->txt('mass_finalize'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
-		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 
 		$this->addFormToTpl($form, $tpl);
 
@@ -242,7 +238,6 @@ class ilManualAssessmentMemberGUI
 		$this->renderWorkInstructions($tpl);
 
 		$form->addCommandButton('saveAmend', $this->lng->txt('mass_save_amend'));
-		$form->addCommandButton('cancel', $this->lng->txt('mass_return'));
 		$form = $this->possiblyAddDownloadAttachmentButtonTo($form);
 
 		$this->addFormToTpl($form, $tpl);
@@ -285,15 +280,6 @@ class ilManualAssessmentMemberGUI
 		$this->redirect("amend");
 	}
 
-	protected function cancel()
-	{
-		if ($back_to = $this->getBackToLink()) {
-			ilUtil::redirect($back_to);
-		}
-
-		$this->ctrl->redirect($this->members_gui);
-	}
-
 	protected function redirect($cmd)
 	{
 		$this->ctrl->redirect($this, $cmd);
@@ -327,23 +313,6 @@ class ilManualAssessmentMemberGUI
 	protected function setTabs(ilTabsGUI $tabs)
 	{
 		$tabs->clearTargets();
-		$tabs->setBackTarget(
-			$this->lng->txt('back'),
-			$this->getBackLink()
-		);
-	}
-
-	protected function getBackLink()
-	{
-		if ($back_to = $this->getBackToLink()) {
-			return $back_to;
-		}
-
-		return $this->ctrl->getLinkTargetByClass(
-			array(get_class($this->parent_gui)
-					,get_class($this->members_gui)),
-			'view'
-		);
 	}
 
 	protected function initGradingForm($may_be_edited = true)
