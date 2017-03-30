@@ -4,27 +4,37 @@ require_once 'Services/VIWIS/classes/class.WBTLocator.php';
 /**
  * Redirect to the appropriate WBT.
  */
-class WBTLocatorGUI {
+class WBTLocatorGUI
+{
 
-	public function __construct() {
-		global $ilDB, $ilCtrl, $lng;
+	public function __construct()
+	{
+		global $ilDB, $ilCtrl, $lng, $ilAccess;
 		$this->ctrl = $ilCtrl;
 		$this->locator = new WBTLocator($ilDB);
 		$this->lng = $lng;
+		$this->access = $ilAccess;
 	}
 
-	public function executeCommand() {
+	public function executeCommand()
+	{
 		$cmd = $this->ctrl->getCmd();
-		switch($cmd) {
+		switch ($cmd) {
 			case 'redirect_viwis':
 				$redirect_params = $this->locator->getRedirectParameterForQuestionRef($_GET['q_ref']);
-				if($redirect_params !== null) {
+				if ($redirect_params !== null) {
+					foreach (ilObject::_getAllReferences($redirect_params['obj_id']) as $ref_id) {
+						$redirect_ref_id = $ref_id;
+						if ($this->access->checkAccess('read', '', $redirect_ref_id)) {
+							break;
+						}
+					}
 					$redirect = "ilias.php?baseClass=ilSAHSPresentationGUI"
-						."&ref_id=".$redirect_params['ref_id']
+						."&ref_id=".$redirect_ref_id
 						.'&redirect_viwis='.$redirect_params['wbt_item'];
 					ilUtil::redirect($redirect);
 				} else {
-					ilUtil::sendInfo(sprintf($this->lng->txt('no_wbt_found_for_ref'),$_GET['q_ref']));
+					ilUtil::sendInfo(sprintf($this->lng->txt('no_wbt_found_for_ref'), $_GET['q_ref']));
 				}
 				break;
 			default:
