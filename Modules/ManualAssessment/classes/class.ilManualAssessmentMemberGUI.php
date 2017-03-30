@@ -406,7 +406,7 @@ class ilManualAssessmentMemberGUI
 			$file = new ilFileInputGUI($this->lng->txt('mass_upload_file'), 'file');
 			$file->setRequired(true);
 			$file->setDisabled(!$may_be_edited);
-			$file->setAllowDeletion(true);
+			$file->setAllowDeletion(false);
 			$form->addItem($file);
 		}
 
