@@ -6205,3 +6205,23 @@ if($ilDB->tableColumnExists('viwis_refs','ref_id')) {
 	$ilDB->dropTableColumn('viwis_refs','ref_id');
 }
 ?>
+
+<#261>
+<?php
+require_once 'Services/GEV/Utils/classes/class.gevRoleUtils.php';
+if($role_id = gevRoleUtils::getInstance()->getRoleIdByName('Admin-Orga')) {
+	require_once "Customizing/class.ilCustomInstaller.php";
+	ilCustomInstaller::maybeInitClientIni();
+	ilCustomInstaller::maybeInitPluginAdmin();
+	ilCustomInstaller::maybeInitObjDefinition();
+	ilCustomInstaller::maybeInitAppEventHandler();
+	ilCustomInstaller::maybeInitTree();
+	ilCustomInstaller::maybeInitRBAC();
+	ilCustomInstaller::maybeInitObjDataCache();
+	ilCustomInstaller::maybeInitUserToRoot();
+	ilCustomInstaller::maybeInitSettings();
+	require_once 'Services/GEV/Utils/classes/class.gevOrgUnitUtils.php';
+	$a_start_ref = ilObjOrgUnit::getRootOrgRefId();
+	gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, $role_id, array('read_users'));
+}
+?>
