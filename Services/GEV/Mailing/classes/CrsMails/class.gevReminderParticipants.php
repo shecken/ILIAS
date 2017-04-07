@@ -25,7 +25,13 @@ class gevReminderParticipants extends gevInvitation {
 	}
 
 	public function shouldBeSend() {
-		if(date("Y-m-d") != $this->getScheduledFor()->get(IL_CAL_DATE)) {
+		$today = new ilDate(time(),IL_CAL_UNIX);
+		$scheduled_for = $this->getScheduledFor();
+		$crs_start = $this->getCourseUtils()->getStartDate();
+		if(!$scheduled_for) {
+			return false;
+		}
+		if(!ilDate::_within($today,$scheduled_for,$crs_start)) {
 			return false;
 		}
 		return parent::shouldBeSend();
