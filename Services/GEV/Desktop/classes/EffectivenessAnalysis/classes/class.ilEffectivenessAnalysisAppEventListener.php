@@ -20,7 +20,12 @@ class ilEffectivenessAnalysisAppEventListener implements ilAppEventListener {
 			if($crs_utils->isOnlineTraining()) {
 				$due_date = date("Y-m-d", time() + 90 * 24 * 60 * 60);
 			} else {
-				$due_date = date("Y-m-d",$crs_utils->getEndDate()->increment(ilDateTime::DAY, 90));
+				$end_date = $crs_utils->getEndDate();
+				if($end_date !== null) {
+					$due_date = date("Y-m-d",$end_date->increment(ilDateTime::DAY, 90));
+				} else {
+					$due_date = "0000-00-00";
+				}
 			}
 
 			self::writeLog(__METHOD__, "Due date: ".$due_date);
