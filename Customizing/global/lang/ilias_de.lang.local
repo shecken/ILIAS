@@ -8918,7 +8918,7 @@ gev#:#evg_wbd#:#Hiermit erteile ich die <a href='/Customizing/global/skin/genv/s
 gev#:#gev_accept_book_cond#:#Hiermit akzeptiere ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_Allg_Trainingsinfos Praesenz.pdf' target='_blank'  class='blue'>Buchungs- und Stornierungsbedingungen</a> der Generali Online Akademie.
 gev#:#gev_accomodation#:#Übernachtungsort
 gev#:#gev_accomodations#:#Übernachtungen
-gev#:#gev_accomodation_note#:#Sollten Sie Anpassungen an den von Ihnen gewählten Übernachtungen wünschen,<br>wenden Sie sich bitte an <a href="mailto:"Ad-Schulung.de@generali.com">Ad-Schulung.de@generali.com</a>
+gev#:#gev_accomodation_note#:#Sollten Sie Anpassungen an den von Ihnen gewählten Übernachtungen wünschen,<br>wenden Sie sich bitte an <a href="mailto:"seepex-campus@seepex.com">seepex-campus@seepex.com</a>
 gev#:#gev_activity#:#Aktivität
 gev#:#gev_additional_settings_updated#:#Die weiteren Einstellungen wurden aktualisiert.
 gev#:#gev_additional_settings_update_failure#:#Die weiteren Einstellungen konnten nicht aktualisiert werden.
@@ -8934,7 +8934,7 @@ gev#:#gev_agent_registration#:#Registrierung: Generali Online Akademie
 gev#:#gev_agent_registration_button#:#unabhängiger Vertriebspartner
 gev#:#gev_agent_registration_label#:#Erstregistrierung als:
 gev#:#gev_agent_registration_note#:#Bitte vervollständigen Sie Ihr Benutzerprofil.
-gev#:#gev_agent_registration_success#:#<b>ACHTUNG:</b> BITTE GEHEN SIE JETZT <a href="http://www.generali-onlineakademie.de">"ZURÜCK ZUR STARTSEITE"</a> UND MELDEN SICH MIT IHREN BENUTZERDATEN AN, UM DIE PUNKTEMELDUNG AN DIE WBD ABZUSCHLIEßEN.
+gev#:#gev_agent_registration_success#:#<b>ACHTUNG:</b> BITTE GEHEN SIE JETZT <a href="https://campus.seepex.com/">"ZURÜCK ZUR STARTSEITE"</a> UND MELDEN SICH MIT IHREN BENUTZERDATEN AN.
 gev#:#gev_alternative_email#:#alternative E-Mail-Adresse
 gev#:#gev_apprentice_grant#:#Azubizuschuss
 gev#:#gev_attachments_refreshed#:#Anhänge aktualisiert.
@@ -9072,7 +9072,7 @@ gev#:#gev_entry_date#:#Eintrittsdatum
 gev#:#gev_event_title#:#Veranstaltungstitel
 gev#:#gev_evg_registration#:#Registrierung: Generali Online Akademie
 gev#:#gev_evg_registration_header_note#:#Hier können Sie einen neuen Benutzer mit Ihren Daten aus der IV-Datenbank anlegen.
-gev#:#gev_evg_registration_not_found#:#Zu Ihrer Eingabe konnte kein passender Datensatz gefunden werden. Versuchen Sie es erneut oder wenden Sie sich an <a href="mailto:bildungspunkte.de@generali.com" class="blue">bildungspunkte.de@generali.com</a>.
+gev#:#gev_evg_registration_not_found#:#Zu Ihrer Eingabe konnte kein passender Datensatz gefunden werden. Versuchen Sie es erneut oder wenden Sie sich an <a href="mailto: seepex-campus@seepex.com" class="blue">seepex-campus@seepex.com</a>.
 gev#:#gev_evg_registration_success#:#Ihre Eingabe konnte eindeutig zugeordnet werden.
 gev#:#gev_excel_course_title#:#Generelle Angaben zum Training
 gev#:#gev_excel_member_row_title#:#Mitgliederliste
@@ -9219,8 +9219,8 @@ gev#:#gev_quicklinks#:#Quicklinks
 gev#:#gev_quicklinks_desc#:#Greifen Sie hier schnell und unkompliziert auf weitere Informationen zu Ihren Trainings und auf Ihre persönliche Bildungsbiografie zu.
 gev#:#gev_refresh_attachments#:#Anhänge aktualisieren
 gev#:#gev_registration#:#Erstregistrierung: Generali Online Akademie
-gev#:#gev_registration_install_note#:#Generali Vermittler melden sich bitte mit der Generali E-Mail-Adresse an.
-gev#:#gev_registration_posttext#:#Bei Rückfragen wenden Sie sich an: <a href="mailto:bildungspunkte.de@generali.com" class="blue">bildungspunkte.de@generali.com</a>
+gev#:#gev_registration_install_note#:#Bitte melden Sie sich mit Ihrer E-Mail-Adresse an.
+gev#:#gev_registration_posttext#:#Bei Rückfragen wenden Sie sich an: <a href="seepex-campus@seepex.com" class="blue">seepex-campus@seepex.com</a>
 gev#:#gev_registration_pretext#:#Bitte treffen Sie Ihre Auswahl:
 gev#:#gev_registration_success#:#Eine Email mit einem Aktivierungslink wurde an Sie versendet.
 gev#:#gev_reporting_menu#:#Reports
@@ -9311,9 +9311,9 @@ gev#:#gev_wbd_registration_create_bwv_id#:#Die Generali soll für mich ein Weite
 gev#:#gev_wbd_registration_create_bwv_id_cmd#:#Kontoeröffnung
 gev#:#gev_wbd_registration_finished_create_bwv_id#:#Vielen Dank, wir werden für Sie ein Konto in der Weiterbildungsdatenbank (WBD) des BWV e.V. sowie ein Nutzerkonto bei der Trusted German Insurance Cloud (TGIC) eröffnen.<br />Dieser Prozess wird in den nächsten Tagen abgeschlossen werden.<br />Nach Eröffnung Ihres Kontos erhalten Sie von dort insgesamt 3 Systemmails mit Ihrer Benutzerkennung, Ihrem Passwort und Ihrer Vermittler-ID.
 gev#:#gev_wbd_registration_finished_has_bwv_id#:#Vielen Dank, wir werden Ihre bei uns erworbenen Weiterbildungspunkte unter dieser Vermittler-ID an die zentrale Weiterbildungsdatenbank melden.
-gev#:#gev_wbd_registration_finished_has_bwv_id_service#:#Vielen Dank, wir werden Ihre bei uns erworbenen Weiterbildungspunkte unter dieser Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto:Bildungspunkte.de@Generali.com">Bildungspunkte.de@Generali.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.
+gev#:#gev_wbd_registration_finished_has_bwv_id_service#:#Vielen Dank, wir werden Ihre bei uns erworbenen Weiterbildungspunkte unter dieser Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto: seepex-campus@seepex.com">seepex-campus@seepex.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.
 gev#:#gev_wbd_registration_finished_no_bwv_id#:#Vielen Dank für die Anmeldung an der Generali Online Akademie. Wir werden Ihre bei uns erworbenen Weiterbildungspunkte in der Generali Online Akademie sammeln und nach Eingabe Ihrer GDV Vermittler-ID an die zentrale Weiterbildungsdatenbank (WBD) melden. <br><br>Bitte beachten Sie, daß die Weiterbildungspunkte verfallen, sofern Sie Ihre GDV Vermittler-ID nicht innerhalb von 12 Monaten in Ihren Profildaten ergänzen.
-gev#:#gev_wbd_registration_finished_no_bwv_id_service#:#Vielen Dank für die Anmeldung an der Generali Online Akademie. Wir werden Ihre bei uns erworbenen Weiterbildungspunkte in der Generali Online Akademie sammeln und nach Eingabe Ihrer GDV Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto:Bildungspunkte.de@Generali.com">Bildungspunkte.de@Generali.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.<br><br>Bitte beachten Sie, daß die Weiterbildungspunkte verfallen, sofern Sie Ihre GDV Vermittler-ID nicht innerhalb von 12 Monaten in Ihren Profildaten ergänzen.
+gev#:#gev_wbd_registration_finished_no_bwv_id_service#:#Vielen Dank für die Anmeldung an dem SEEPEX Campus. Wir werden Ihre bei uns erworbenen Weiterbildungspunkte in dem SEEPEX Campus sammeln und nach Eingabe Ihrer GDV Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto: seepex-campus@seepex.com">seepex-campus@seepex.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.<br><br>Bitte beachten Sie, dass die Weiterbildungspunkte verfallen, sofern Sie Ihre GDV Vermittler-ID nicht innerhalb von 12 Monaten in Ihren Profildaten ergänzen.
 gev#:#gev_wbd_registration_has_bwv_id#:#Ich habe bereits eine GDV Vermittler-ID
 gev#:#gev_wbd_registration_has_bwv_id_cmd#:#Weiter
 gev#:#gev_wbd_registration_has_bwv_id_cmd_service#:#Weiter
@@ -9321,7 +9321,7 @@ gev#:#gev_wbd_registration_header_note#:#Registrieren Sie sich bei der Weiterbil
 gev#:#gev_wbd_registration_no_bwv_id#:#Nein, ich habe noch keine GDV Vermittler-ID und werde diese in meinem Benutzeraccount nachtragen.
 gev#:#gev_wbd_registration_no_bwv_id_cmd#:#Anmeldung ohne Eröffnung eines Kontos und vorerst ohne Übermittlung der Punkte
 gev#:#gev_wbd_registration_question_basis#:#Haben Sie bereits ein Weiterbildungskonto im Rahmen der Brancheninitiative „gut beraten“?
-gev#:#gev_wbd_registration_question_service#:#Sofern die Generali nicht Ihr Trusted Partner Service sein soll, oder Sie bereits an anderer Stelle eine Kontoeröffnung beantragt haben, nutzen Sie unten stehende Eingabefelder.
+gev#:#gev_wbd_registration_question_service#:#Sofern die SEEPEX GmbH nicht Ihr Trusted Partner Service sein soll, oder Sie bereits an anderer Stelle eine Kontoeröffnung beantragt haben, nutzen Sie unten stehende Eingabefelder.
 gev#:#gev_wbd_reg_pending#:#Ihre Anmeldung bei der WBD wird in Kürze erfolgen.
 gev#:#gev_wbd_relevant#:#WBD relevant
 gev#:#gev_wbd_transfer_on#:#Ihre Bildungspunkte werden an die WBD gemeldet.
