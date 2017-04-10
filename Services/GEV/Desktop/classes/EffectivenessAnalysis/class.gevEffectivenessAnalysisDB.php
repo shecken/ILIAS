@@ -172,6 +172,7 @@ class gevEffectivenessAnalysisDB {
 				."     AND eff_log_first.type = 'first'\n"
 				." WHERE ".$this->gDB->in("eff_analysis_due_date.user_id", $employees, false, "integer")."\n"
 				."     AND eff_analysis_due_date.due_date <= DATE_SUB(CURDATE(), INTERVAL 15 DAY)\n"
+				."     AND eff_analysis_due_date != '0000-00-00'\n"
 				." GROUP BY eff_analysis_due_date.user_id, eff_analysis_due_date.crs_id\n"
 				." HAVING send_first = true AND eff_analysis.crs_id IS NULL\n";
 
@@ -213,6 +214,7 @@ class gevEffectivenessAnalysisDB {
 				."     AND eff_log_second.type = 'second'\n"
 				." WHERE ".$this->gDB->in("eff_analysis_due_date.user_id", $employees, false, "integer")."\n"
 				."     AND eff_analysis_due_date.due_date <= DATE_SUB(CURDATE(), INTERVAL 15 DAY)\n"
+				."     AND eff_analysis_due_date != '0000-00-00'\n"
 				." GROUP BY eff_analysis_due_date.user_id, eff_analysis_due_date.crs_id\n"
 				." HAVING send_second = true AND eff_analysis.crs_id IS NULL\n";
 
