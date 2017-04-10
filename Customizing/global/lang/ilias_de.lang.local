@@ -1579,6 +1579,7 @@ prg#:#prg_type#:#Studienprogrammtyp
 prg#:#prg_view_tree#:#Baumansicht
 prg#:#prg_assessment#:#Studienprogrammbewertung
 prg#:#prg_points#:#Punkte
+prg#:#prg_ordering#:#Sortieren
 prg#:#prg_status#:#Status
 prg#:#prg_status_draft#:#Entwurf
 prg#:#prg_status_active#:#Aktiv
