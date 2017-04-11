@@ -27,6 +27,8 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 	 */
 	protected $course_utils = null;
 
+	protected $edu_bio_employees = null;
+
 	protected $relevant_parameters = array();
 
 	public function initType()
