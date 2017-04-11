@@ -6229,6 +6229,17 @@ if($role_id = gevRoleUtils::getInstance()->getRoleIdByName('Admin-Orga')) {
 <#262>
 <?php
 
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::maybeInitClientIni();
+ilCustomInstaller::maybeInitPluginAdmin();
+ilCustomInstaller::maybeInitObjDefinition();
+ilCustomInstaller::maybeInitAppEventHandler();
+ilCustomInstaller::maybeInitTree();
+ilCustomInstaller::maybeInitRBAC();
+ilCustomInstaller::maybeInitObjDataCache();
+ilCustomInstaller::maybeInitUserToRoot();
+ilCustomInstaller::maybeInitSettings();
+
 require_once 'Modules/StudyProgramme/classes/model/class.ilStudyProgrammeType.php';
 require_once 'Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php';
 require_once 'Services/AdvancedMetaData/classes/class.ilAdvancedMDValues.php';
