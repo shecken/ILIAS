@@ -6225,3 +6225,108 @@ if($role_id = gevRoleUtils::getInstance()->getRoleIdByName('Admin-Orga')) {
 	gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, $role_id, array('read_users'));
 }
 ?>
+
+<#262>
+<?php
+
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::maybeInitClientIni();
+ilCustomInstaller::maybeInitPluginAdmin();
+ilCustomInstaller::maybeInitObjDefinition();
+ilCustomInstaller::maybeInitAppEventHandler();
+ilCustomInstaller::maybeInitTree();
+ilCustomInstaller::maybeInitRBAC();
+ilCustomInstaller::maybeInitObjDataCache();
+ilCustomInstaller::maybeInitUserToRoot();
+ilCustomInstaller::maybeInitSettings();
+
+require_once 'Modules/StudyProgramme/classes/model/class.ilStudyProgrammeType.php';
+require_once 'Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php';
+require_once 'Services/AdvancedMetaData/classes/class.ilAdvancedMDValues.php';
+require_once 'Modules/CourseReference/classes/class.ilObjCourseReference.php';
+
+//get all prgs having amd_responsible set to Trainer or Vorgesetzter.
+foreach(ilStudyProgrammeType::getAllTypes() as $type) {
+	if($type->getTitle() === 'VA-Ausbildung') {
+		$rel_type = $type;
+		break;
+	}
+}
+
+require_once 'Services/GEV/Utils/classes/class.gevSettings.php';
+
+$settings = gevSettings::getInstance();
+$responsible_field_id = $settings->getVAPassAccountableFieldId();
+$rel_prg_ids = array_filter($rel_type->getAssignedStudyProgrammeIds(),
+	function($id) use ($rel_type, $responsible_field_id) {
+		$amd_values = ilAdvancedMDValues::getInstancesForObjectId($id, "prg", 'prg_type',$rel_type->getId());
+		foreach ($amd_values as $key => $amd_value) {
+			$amd_value->read();
+			foreach ($amd_value->getDefinitions() as $key => $definition) {
+				if ($definition->getFieldId() == $responsible_field_id) {
+					return in_array( $definition->getADT()->getSelection(),array('Trainer','Vorgesetzter'));
+				}
+			}
+		}
+		return false;
+	});
+
+$rel_prg_refs = array();
+
+//get all corresponding references
+foreach($rel_prg_ids as $prg_id) {
+	$rel_prg_refs = array_merge($rel_prg_refs, ilObject::_getAllReferences($prg_id));
+}
+
+//search all children for courses
+global $tree;
+$lp_children_rec = array();
+while($prg_ref = array_shift($rel_prg_refs)) {
+	$lp_children = array_map(
+		function($child_md) {
+			return $child_md['ref_id'];
+		}
+		,$tree->getChildsByType($prg_ref, 'crsr'));
+
+	if(count($lp_children) > 0) {
+		$lp_children_rec = array_merge($lp_children_rec, $lp_children);
+	} else {
+		foreach(ilObjStudyProgramme::getInstanceByRefId($prg_ref)->getChildren() as $child) {
+			$child_ref = $child->getRefId();
+			if(!in_array($child_ref, $rel_prg_refs)) {
+				array_push($rel_prg_refs, $child_ref);
+			}
+
+		}
+	}
+}
+
+$crs_refs = array();
+foreach($lp_children_rec as $lp_child_ref_id) {
+	$lp_child = new ilObjCourseReference($lp_child_ref_id);
+	$crs_refs = array_merge($crs_refs, ilObject::_getAllReferences($lp_child->getTargetId()));
+}
+
+//filter coachings and collent mass-objs
+array_unique($crs_refs);
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
+$mass_refs = array();
+foreach($crs_refs as $crs_ref) {
+	if(gevCourseUtils::getInstance(ilObject::_lookupObjId($crs_ref))->isCoaching()) {
+		$mass_refs = array_merge($mass_refs,array_map(
+			function($child_md) {
+				return $child_md['ref_id'];
+			}
+			,$tree->getChildsByType($crs_ref, 'mass')));
+	}
+}
+
+//grant relevant permissions
+array_unique($mass_refs);
+global $rbacadmin;
+$rol_id = current(ilObject::_getIdsForTitle('OD-Betreuer', 'role'));
+$grant_ops = ilRbacReview::_getOperationIdsByName(array('read','read_learning_progress', 'edit_learning_progress'));
+foreach($mass_refs as $mass_ref_id) {
+	$rbacadmin->grantPermission( $rol_id, $grant_ops, $mass_ref_id);
+}
+?>
