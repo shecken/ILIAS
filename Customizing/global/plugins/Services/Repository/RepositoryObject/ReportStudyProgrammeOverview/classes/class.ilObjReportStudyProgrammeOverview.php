@@ -166,21 +166,21 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 		return null;
 	}
 
+	protected function mayViewEdubioOf($usr_id)
+	{
+		if ($this->edu_bio_employees === null) {
+			$this->edu_bio_employees = $this->user_utils->getEmployeesWhereUserCanViewEduBios();
+		}
+		return in_array($usr_id, $this->edu_bio_employees);
+	}
+
 	protected function showUser($user_id)
 	{
 		if (!$this->isTrainerView()) {
-			if ($this->user_utils === null) {
-				require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-				global $ilUser;
-				$this->user_utils = gevUserUtils::getInstanceByObj($ilUser);
-			}
 			if ($this->user_utils->isAdmin()) {
 				return true;
 			}
-			if ($this->user_utils->isSuperiorOf($user_id)) {
-				return true;
-			}
-			return false;
+			return $this->mayViewEdubioOf($user_id);
 		} else {
 			if ($this->course_utils === null) {
 				$id = $this->getParentCourseId();
