@@ -241,6 +241,16 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI
 					case "infoScreen":
 						$this->ctrl->redirectByClass("ilInfoScreenGUI", "showSummary");
 						break;
+					// GEV-Patch Start 2790
+					case "editOrder":
+						$this->editOrderObject();
+						$this->tabs_gui->setTabActive("view_content");
+						$this->tabs_gui->setSubTabActive('sorting');
+						break;
+					case "saveSorting":
+						$this->saveSortingObject();
+						break;
+					// GEV-Patch End
 					case 'getAsynchItemList':
 						parent::getAsynchItemListObject();
 						break;
@@ -560,6 +570,9 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI
 		switch ($a_parent_tab) {
 			case self::TAB_VIEW_CONTENT:
 			case self::SUBTAB_VIEW_TREE:
+			// GEV-Patch Start 2790
+			case "editOrder":
+			// GEV-Patch End
 			case 'view':
 				if ($this->checkAccess("read")) {
 					$this->tabs_gui->addSubTab(self::TAB_VIEW_CONTENT, $this->lng->txt("view"), $this->getLinkTarget("view"));
@@ -567,6 +580,10 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI
 
 				if ($this->checkAccess("write")) {
 					$this->tabs_gui->addSubTab(self::SUBTAB_VIEW_TREE, $this->lng->txt("prg_treeview"), $this->getLinkTarget(self::SUBTAB_VIEW_TREE));
+					// GEV-Patch Start 2790
+					$this->tabs_gui->addSubTab("sorting", $this->lng->txt("prg_ordering"),
+									$this->ctrl->getLinkTarget($this, "editOrder"));
+					// GEV-Patch End
 				}
 				break;
 			case 'settings':
