@@ -74,7 +74,6 @@ class ilGEVMailingPlugin extends ilEventHookPlugin
 		if ($a_event == "deleteStatus") {
 			require_once("Services/GEV/Mailing/classes/class.gevDeferredMails.php");
 			gevDeferredMails::getInstance()->removeDeferredMails(array($a_parameter["crs_obj_id"]), array( "participant_successfull"
-																	   , "na_successfull"
 																	   , "participant_absent_excused"
 																	   , "participant_absent_not_excused"
 																	   ), array($a_parameter["user_id"]));
@@ -104,9 +103,6 @@ class ilGEVMailingPlugin extends ilEventHookPlugin
 
 		if ($status == ilParticipationStatus::STATUS_SUCCESSFUL) {
 			$mails->sendDeferred("participant_successfull", array($usr_id));
-			if (gevUserUtils::getInstance($usr_id)->isNA()) {
-				$mails->sendDeferred("na_successfull", array($usr_id));
-			}
 		} elseif ($status == ilParticipationStatus::STATUS_ABSENT_EXCUSED) {
 			$mails->sendDeferred("participant_absent_excused", array($usr_id));
 		} elseif ($status == ilParticipationStatus::STATUS_ABSENT_NOT_EXCUSED) {
