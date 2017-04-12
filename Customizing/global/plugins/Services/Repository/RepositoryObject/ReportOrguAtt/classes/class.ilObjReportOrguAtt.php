@@ -128,16 +128,72 @@ class ilObjReportOrguAtt extends ilObjReportBase
 					.'			AND usrcrs.booking_status != '.$this->gIldb->quote('-empty-', 'text').PHP_EOL
 					.'			'.$this->datePeriodFilter()
 					.'			'.$this->noWBDImportedFilter()
-					.'	LEFT JOIN hist_course crs'.PHP_EOL
-					.'		ON crs.crs_id = usrcrs.crs_id'.PHP_EOL
-					.'			AND crs.hist_historic = 0'.PHP_EOL
-					.'			AND crs.type != '.$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text").PHP_EOL
-					.'			'.$this->tpl_filter
+					.$this->leftJoinCourse()
 					.$this->courseTopicsFilter()
 					.$this->queryWhere().PHP_EOL
 					.'	GROUP BY orgu.orgu_id'.PHP_EOL
 					.$this->queryOrder();
 		return $query;
+	}
+
+	private function leftJoinCourse()
+	{
+		return '	LEFT JOIN hist_course crs'.PHP_EOL
+				.'		ON crs.crs_id = usrcrs.crs_id'.PHP_EOL
+				.'			AND crs.hist_historic = 0'.PHP_EOL
+				.'			AND crs.type != '.$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text").PHP_EOL
+				.'			'.$this->tpl_filter
+				.'			'.$this->eduProgrammFilterForCrsJoin()
+				.'			'.$this->typeFilterForCrsJoin()
+				.'			'.$this->templateTitleFilterForCrsJoin()
+				.'			'.$this->venueFilterToForCrsJoin()
+				.'			'.$this->providerFilterToForCrsJoin()
+				;
+	}
+
+	private function eduProgrammFilterForCrsJoin()
+	{
+		$selection = $this->filter_selections['edu_program'];
+		if (count($selection)>0) {
+			return $this->andFieldInSelection('crs.edu_program', $selection).PHP_EOL;
+		}
+		return '';
+	}
+
+	private function typeFilterForCrsJoin()
+	{
+		$selection = $this->filter_selections['type'];
+		if (count($selection)>0) {
+			return $this->andFieldInSelection('crs.type', $selection).PHP_EOL;
+		}
+		return '';
+	}
+
+	private function templateTitleFilterForCrsJoin()
+	{
+		$selection = $this->filter_selections['template_title'];
+		if (count($selection)>0) {
+			return $this->andFieldInSelection('crs.template_title', $selection).PHP_EOL;
+		}
+		return '';
+	}
+
+	private function venueFilterToForCrsJoin()
+	{
+		$selection = $this->filter_selections['venue'];
+		if (count($selection)>0) {
+			return $this->andFieldInSelection('crs.venue', $selection).PHP_EOL;
+		}
+		return '';
+	}
+
+	private function providerFilterToForCrsJoin()
+	{
+		$selection = $this->filter_selections['provider'];
+		if (count($selection)>0) {
+			return $this->andFieldInSelection('crs.provider', $selection).PHP_EOL;
+		}
+		return '';
 	}
 
 	private function courseTopicsFilter()
@@ -200,9 +256,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		."					AND usrcrs.booking_status != ".$this->gIldb->quote('-empty-', 'text')
 		."					".$this->datePeriodFilter()
 		."					".$this->noWBDImportedFilter()
-		."			LEFT JOIN `hist_course` crs "
-		."				ON usrcrs.crs_id = crs.crs_id AND crs.hist_historic = 0 "
-		."					".$this->tpl_filter;
+		.$this->leftJoinCourse();
 		$topics = $this->filter_selections['crs_topics'];
 		if (count($topics) > 0) {
 			$sum_sql .=
@@ -270,32 +324,6 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		return array_unique($aux);
 	}
 
-	private function addEduProgrammFilterToQueryWhere($query_where)
-	{
-		$selection = $this->filter_selections['edu_program'];
-		if (count($selection)>0) {
-			return $query_where.$this->andFieldInSelection('crs.edu_program', $selection);
-		}
-		return $query_where;
-	}
-
-	private function addTypeFilterToQueryWhere($query_where)
-	{
-		$selection = $this->filter_selections['type'];
-		if (count($selection)>0) {
-			return $query_where.$this->andFieldInSelection('crs.type', $selection);
-		}
-		return $query_where;
-	}
-
-	private function addTemplateTitleFilterToQueryWhere($query_where)
-	{
-		$selection = $this->filter_selections['template_title'];
-		if (count($selection)>0) {
-			return $query_where.$this->andFieldInSelection('crs.template_title', $selection);
-		}
-		return $query_where;
-	}
 
 	private function addParticipationStatusFilterToQueryWhere($query_where)
 	{
@@ -324,23 +352,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		return $query_where;
 	}
 
-	private function addVenueFilterToQueryWhere($query_where)
-	{
-		$selection = $this->filter_selections['venue'];
-		if (count($selection)>0) {
-			return $query_where.$this->andFieldInSelection('crs.venue', $selection);
-		}
-		return $query_where;
-	}
 
-	private function addProviderFilterToQueryWhere($query_where)
-	{
-		$selection = $this->filter_selections['provider'];
-		if (count($selection)>0) {
-			return $query_where.$this->andFieldInSelection('crs.provider', $selection);
-		}
-		return $query_where;
-	}
 
 	protected function queryWhere()
 	{
@@ -353,15 +365,10 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			$query_where .=
 				'		AND '.$this->gIldb->in("orgu.usr_id", $this->user_utils->getEmployeesWhereUserCanViewEduBios(), false, "integer").PHP_EOL;
 		}
-		$query_where = $this->addTemplateTitleFilterToQueryWhere($query_where);
-		$query_where = $this->addOrguFilterToQueryWhere($query_where);
-		$query_where = $this->addEduProgrammFilterToQueryWhere($query_where);
-		$query_where = $this->addTypeFilterToQueryWhere($query_where);
 		$query_where = $this->addParticipationStatusFilterToQueryWhere($query_where);
 		$query_where = $this->addBookingStatusFilterToQueryWhere($query_where);
 		$query_where = $this->addGenderFilterToQueryWhere($query_where);
-		$query_where = $this->addVenueFilterToQueryWhere($query_where);
-		$query_where = $this->addProviderFilterToQueryWhere($query_where);
+		$query_where = $this->addOrguFilterToQueryWhere($query_where);
 		return $query_where;
 	}
 
