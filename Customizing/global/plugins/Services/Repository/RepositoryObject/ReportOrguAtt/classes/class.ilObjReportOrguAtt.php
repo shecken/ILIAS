@@ -123,17 +123,42 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		$query .= 	'	FROM hist_userorgu orgu'.PHP_EOL
 					.'	JOIN hist_user usr'.PHP_EOL
 					.'		ON usr.user_id = orgu.usr_id'.PHP_EOL
-					.'	LEFT JOIN hist_usercoursestatus usrcrs'.PHP_EOL
-					.'		ON usrcrs.usr_id = orgu.usr_id AND usrcrs.hist_historic = 0'.PHP_EOL
-					.'			AND usrcrs.booking_status != '.$this->gIldb->quote('-empty-', 'text').PHP_EOL
-					.'			'.$this->datePeriodFilter()
-					.'			'.$this->noWBDImportedFilter()
+					.$this->leftJoinUserCourseStatus()
 					.$this->leftJoinCourse()
 					.$this->courseTopicsFilter()
 					.$this->queryWhere().PHP_EOL
 					.'	GROUP BY orgu.orgu_id'.PHP_EOL
 					.$this->queryOrder();
 		return $query;
+	}
+
+	private function leftJoinUserCourseStatus()
+	{
+		return 	'	LEFT JOIN hist_usercoursestatus usrcrs'.PHP_EOL
+				.'		ON usrcrs.usr_id = orgu.usr_id AND usrcrs.hist_historic = 0'.PHP_EOL
+				.'			AND usrcrs.booking_status != '.$this->gIldb->quote('-empty-', 'text').PHP_EOL
+				.'			'.$this->datePeriodFilter()
+				.'			'.$this->noWBDImportedFilter()
+				.'			'.$this->participationStatusFilterForUsrCrsJoin()
+				.'			'.$this->bookingStatusFilterForUsrCrsJoin();
+	}
+
+	private function participationStatusFilterForUsrCrsJoin()
+	{
+		$selection = $this->filter_selections['p_status'];
+		if (count($selection)>0) {
+			return $this->andFieldInSelection('usrcrs.participation_status', $selection);
+		}
+		return '';
+	}
+
+	private function bookingStatusFilterForUsrCrsJoin()
+	{
+		$selection = $this->filter_selections['b_status'];
+		if (count($selection)>0) {
+			return $this->andFieldInSelection('usrcrs.booking_status', $selection);
+		}
+		return '';
 	}
 
 	private function leftJoinCourse()
@@ -251,11 +276,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		."			FROM hist_userorgu orgu "
 		."			JOIN hist_user usr"
 		."				ON orgu.usr_id = usr.user_id"
-		."			LEFT JOIN `hist_usercoursestatus` usrcrs "
-		."				ON usrcrs.usr_id = orgu.usr_id AND usrcrs.hist_historic = 0 "
-		."					AND usrcrs.booking_status != ".$this->gIldb->quote('-empty-', 'text')
-		."					".$this->datePeriodFilter()
-		."					".$this->noWBDImportedFilter()
+		.$this->leftJoinUserCourseStatus()
 		.$this->leftJoinCourse();
 		$topics = $this->filter_selections['crs_topics'];
 		if (count($topics) > 0) {
@@ -325,24 +346,6 @@ class ilObjReportOrguAtt extends ilObjReportBase
 	}
 
 
-	private function addParticipationStatusFilterToQueryWhere($query_where)
-	{
-		$selection = $this->filter_selections['p_status'];
-		if (count($selection)>0) {
-			return $query_where.$this->andFieldInSelection('usrcrs.participation_status', $selection);
-		}
-		return $query_where;
-	}
-
-	private function addBookingStatusFilterToQueryWhere($query_where)
-	{
-		$selection = $this->filter_selections['b_status'];
-		if (count($selection)>0) {
-			return $query_where.$this->andFieldInSelection('usrcrs.booking_status', $selection);
-		}
-		return $query_where;
-	}
-
 	private function addGenderFilterToQueryWhere($query_where)
 	{
 		$selection = $this->filter_selections['gender'];
@@ -365,8 +368,6 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			$query_where .=
 				'		AND '.$this->gIldb->in("orgu.usr_id", $this->user_utils->getEmployeesWhereUserCanViewEduBios(), false, "integer").PHP_EOL;
 		}
-		$query_where = $this->addParticipationStatusFilterToQueryWhere($query_where);
-		$query_where = $this->addBookingStatusFilterToQueryWhere($query_where);
 		$query_where = $this->addGenderFilterToQueryWhere($query_where);
 		$query_where = $this->addOrguFilterToQueryWhere($query_where);
 		return $query_where;
