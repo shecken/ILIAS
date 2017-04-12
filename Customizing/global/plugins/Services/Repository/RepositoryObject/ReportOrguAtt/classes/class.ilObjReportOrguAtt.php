@@ -198,7 +198,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 	{
 		$selection = $this->filter_selections['template_title'];
 		if (count($selection)>0) {
-			return $this->andFieldInSelection('crs.template_title', $selection).PHP_EOL;
+			return $this->andFieldInSelection('crs.template_obj_id', $selection).PHP_EOL;
 		}
 		return '';
 	}
@@ -484,7 +484,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 								,'crs_topics' => $tf->lst($tf->string())
 								,'edu_program' => $tf->lst($tf->string())
 								,'type' => $tf->lst($tf->string())
-								,'template_title' => $tf->lst($tf->string())
+								,'template_title' => $tf->lst($tf->int())
 								,'p_status' => $tf->lst($tf->string())
 								,'b_status' => $tf->lst($tf->string())
 								,'gender' => $tf->lst($tf->string())
@@ -580,7 +580,21 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		if ($this->settings['is_local']) {
 			return $this->subtreeTemplateTitles();
 		}
-		return $this->getDistinctRowEntriesFormTableForFilter('template_title', 'hist_course');
+		return $this->getDistinctTemplateIdTitlePairsFromTableForFilter();
+	}
+
+	private function getDistinctTemplateIdTitlePairsFromTableForFilter()
+	{
+		$sql = 'SELECT DISTINCT crs_id, title'
+				.'	FROM hist_course'
+				.'	WHERE is_template = \'Ja\''
+				.'		AND hist_historic = 0';
+		$res = $this->gIldb->query($sql);
+		$return = [];
+		while ($rec = $this->gIldb->fetchAssoc($res)) {
+			$return[$rec['crs_id']] = $rec['title'];
+		}
+		return $return;
 	}
 
 	private function subtreeTemplateTitles()
@@ -589,7 +603,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 		$return = array();
 		foreach ($template_ids as $template_id) {
 			$title = ilObject::_lookupTitle($template_id);
-			$return[$title] = $title;
+			$return[$template_id] = $title;
 		}
 		return $return;
 	}
