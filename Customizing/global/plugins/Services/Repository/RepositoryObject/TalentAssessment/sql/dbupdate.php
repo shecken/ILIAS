@@ -79,3 +79,13 @@ require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/Ta
 $settings_db = new \CaT\Plugins\TalentAssessment\Observator\ilDB($ilDB, $ilUser);
 $settings_db->setDefaultPermissions(\CaT\Plugins\TalentAssessment\ilActions::OBSERVATOR_ROLE_NAME, 8, array("visible", "read", "edit_observation"));
 ?>
+
+<#9>
+<?php
+global $ilDB;
+
+$query = "UPDATE object_data\n"
+		."SET title = 'pl_xtas_observator'\n"
+		."WHERE title = 'il_xtas_observator'";
+$ilDB->query($query);
+?>

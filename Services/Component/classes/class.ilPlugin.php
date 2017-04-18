@@ -1026,5 +1026,29 @@ abstract class ilPlugin
 			return $rec["plugin_id"];
 		}
 	}
+
+	// gev-patch start 2548
+	/**
+	 * Get plugin object by plugin_id
+	 *
+	 * @param string 	$plugin_id
+	 * @return ilPlugin
+	 */
+	public static function getPluginByPluginId($plugin_id) {
+		global $ilDB;
+
+		$query = "SELECT component_type, component_name, slot_id, name\n"
+				."FROM il_plugin\n"
+				."WHERE plugin_id = " .$ilDB->quote($plugin_id, "text");
+
+		$result = $ilDB->query($query);
+		if($rec = $ilDB->fetchAssoc($result)) {
+			return self::getPluginObject($rec['component_type'],
+										 $rec['component_name'],
+										 $rec['slot_id'],
+										 $rec['name']);
+		}
+	}
+	// gev-patch end 2548
 }
 ?>

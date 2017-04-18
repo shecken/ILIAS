@@ -98,7 +98,7 @@ open#:#Beobachtungen bearbeiten
 no_observator_cant_start#:#Die Beobachtungen konnten nicht gestartet werden, da Sie keinen Beobachter hinzugefügt haben.
 no_observator_no_overview#:#Da keine Beobachter eingetragen sind ist keine Übersicht vorhanden.
 no_observator_no_cumulative#:#Da keine Beobachter eingetragen sind ist keine kumulierte Ansicht vorhanden.
-il_xtas_observator#:#Beobachter
+pl_xtas_observator#:#Beobachter
 view_observations#:#Beobachtungen einsehen
 edit_observation#:#Beobachtung bearbeiten
 ta_manager#:#TA-Termin starten und abschließen
