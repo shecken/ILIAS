@@ -148,7 +148,7 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		//Für den Anfang sollen das nur Administratoren sehen
 		$is_training_manager = ($this->user_utils && $this->user_utils->isTrainingManagerOnAnyCourse());
 
-		$view_all_assessments = ($this->user_utils && $this->user_utils->hasRoleIn(array("Administrator, Admin-TA")));
+		$view_all_assessments = ($this->user_utils && $this->user_utils->hasRoleIn(array("Administrator", "Admin-TA")));
 
 		//get all OrgUnits of superior
 		$arr_org_units_of_superior = $this->user_utils ? $this->user_utils->getOrgUnitsWhereUserIsDirectSuperior() : array();
