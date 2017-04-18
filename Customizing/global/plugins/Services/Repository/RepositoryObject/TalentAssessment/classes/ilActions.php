@@ -26,7 +26,7 @@ class ilActions {
 	const START_DATE = "start_date";
 	const END_DATE = "end_date";
 
-	const OBSERVATOR_ROLE_NAME = "il_xtas_observator";
+	const OBSERVATOR_ROLE_NAME = "pl_xtas_observator";
 	const OBSERVATOR_ROLE_DESCRIPTION = "Local role for observator at obj_id: ";
 
 	const SI_PREFIX = "req_id";

@@ -478,7 +478,17 @@ class ilObjRole extends ilObject
 
 		$role_title = self::_removeObjectId($a_role_title);
 
-		if (preg_match("/^il./", $role_title))
+		// gev-patch start 2548
+		if (preg_match("/^pl_./", $role_title))
+		{
+			$plugin_accronym = explode("_", $role_title, -1)[1];
+			$plugin = ilPlugin::getPluginByPluginId($plugin_accronym);
+
+			return $plugin->txt($role_title);
+		}
+		// gev-patch end 2548
+
+		else if (preg_match("/^il_./", $role_title))
 		{
 			return $lng->txt($role_title);
 		}
