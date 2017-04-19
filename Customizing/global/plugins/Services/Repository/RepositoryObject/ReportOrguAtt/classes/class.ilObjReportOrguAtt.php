@@ -364,7 +364,7 @@ class ilObjReportOrguAtt extends ilObjReportBase
 			.'		AND orgu.hist_historic = 0'.PHP_EOL
 			.'		AND orgu.action >= 0'.PHP_EOL
 			.'		AND orgu.rol_title = \'Mitarbeiter\''.PHP_EOL;
-		if ("1" !== (string)$this->options['all_orgus_filter']) {
+		if ("1" !== (string)$this->settings['all_orgus_filter']) {
 			$query_where .=
 				'		AND '.$this->gIldb->in("orgu.usr_id", $this->user_utils->getEmployeesWhereUserCanViewEduBios(), false, "integer").PHP_EOL;
 		}
