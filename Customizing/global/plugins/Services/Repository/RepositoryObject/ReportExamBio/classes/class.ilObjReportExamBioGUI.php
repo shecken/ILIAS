@@ -97,7 +97,7 @@ class ilObjReportExamBioGUI extends ilObjReportBase2GUI
 			$objs = ilObjReportExamBio::queryReports(array('for_trainer' => 0), $db);
 			while ($next = array_shift($objs)) {
 				$ref_id = current(ilObject::_getAllReferences($next['id']));
-				if ($ref_id && ilObject::_lookupDeletedDate($ref_id) === null) {
+				if ($ref_id) {
 					return $ref_id;
 				}
 			}
