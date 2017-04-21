@@ -41,6 +41,7 @@ if ($ilDB->tableExists("rep_robj_rexbio")) {
 	$res = $ilDB->query($query);
 	while ($rec = $ilDB->fetchAssoc($res)) {
 		$ilDB->manipulate('DELETE FROM rep_robj_rexbio WHERE id = '.$rec['id']);
+		$ilDB->manipulate('DELETE FROM rep_master_data WHERE id = '.$rec['id']);
 	}
 }
 ?>
