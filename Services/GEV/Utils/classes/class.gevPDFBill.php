@@ -67,7 +67,7 @@ class gevPDFBill extends ilPDFBill {
 		}
 		$this->setPosttext($posttext);
 		
-		$this->setGreetings(" \nMit freundlichen Grüßen\nGenerali Versicherung AG\nPersonalentwicklung Vertrieb");
+		$this->setGreetings(" \nMit freundlichen Grüßen\nIhre Generali Versicherung AG");
 		//TODO: title and stuff needs to be set here
 	}
 }
