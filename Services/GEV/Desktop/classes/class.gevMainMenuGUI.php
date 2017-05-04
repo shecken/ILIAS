@@ -389,8 +389,8 @@ class gevMainMenuGUI extends ilMainMenuGUI
 						$visible_repo_reports[] = ["ref_id" => $ref_id, "type" => "xspo", "title" => $sp_overview->getTitle()];
 					}
 				}
+				unset($visible_repo_reports[$key]);
 			}
-			unset($visible_repo_reports[$key]);
 		}
 
 		foreach ($visible_repo_reports as $info) {
