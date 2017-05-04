@@ -375,13 +375,22 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		$visible_repo_reports = array_merge(ilObjReportBase2::getVisibleReportsObjectData($this->gUser));
 
 		global $ilAccess;
-		$sp_overviews = ilObject::_getObjectsByType("xspo");
-		foreach ($sp_overviews as $sp_overviews_data) {
-			foreach (ilObject::_getAllReferences($sp_overviews_data["id"]) as $ref_id) {
-				$ilAccess->checkAccessOfUser($this->gUser->getId(), "read", null, $ref_id);
-				$visible_repo_reports[] = ["ref_id" => $ref_id, "type" => "xspo", "title" => $sp_overviews_data["title"]];
-				break;
+		foreach ($visible_repo_reports as $key => $visible_report) {
+			if ($visible_report["type"] == "xspo") {
+				foreach (ilObject::_getAllReferences($visible_report["obj_id"]) as $ref_id) {
+					$ilAccess->checkAccessOfUser($this->gUser->getId(), "read", null, $ref_id);
+					$sp_overview = ilObjectFactory::getInstanceByRefId($ref_id);
+
+					if ($sp_overview->isTrainerView()) {
+						if ($crs_title = $sp_overview->getParentCourseTitle()) {
+							$visible_repo_reports[] = ["ref_id" => $ref_id, "type" => "xspo", "title" => $sp_overview->getTitle()." (".$crs_title.")"];
+						}
+					} else {
+						$visible_repo_reports[] = ["ref_id" => $ref_id, "type" => "xspo", "title" => $sp_overview->getTitle()];
+					}
+				}
 			}
+			unset($visible_repo_reports[$key]);
 		}
 
 		foreach ($visible_repo_reports as $info) {

@@ -203,6 +203,18 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 			? $data['obj_id'] : null;
 	}
 
+	public function getParentCourseTitle()
+	{
+		$crs_id = $this->getParentCourseId();
+
+		if (!$crs_id) {
+			return null;
+		}
+
+		$crs = ilObjectFactory::getInstanceByObjId($crs_id);
+		return $crs->getTitle();
+	}
+
 	protected function getData()
 	{
 		$osp = new ilObjStudyProgramme($this->getStudyId());
