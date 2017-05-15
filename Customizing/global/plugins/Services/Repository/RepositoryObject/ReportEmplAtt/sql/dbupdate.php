@@ -1,6 +1,6 @@
 <#1>
 <?php
-$fields = 
+$fields =
 	array(
 		'id' => array(
 			'type' => 'integer',
@@ -13,7 +13,7 @@ $fields =
 			'notnull' => false
 		)
 	);
- 
+
 $ilDB->createTable("rep_robj_rea", $fields);
 $ilDB->addPrimaryKey("rep_robj_rea", array("id"));
 ?>
@@ -22,18 +22,18 @@ $ilDB->addPrimaryKey("rep_robj_rea", array("id"));
 <?php
 	$field_data = array('type' => 'clob', 'notnull' => false, 'default' =>'');
 
-	if(!$ilDB->tableColumnExists("rep_robj_rea", "video_link")) {
-		$ilDB->addTableColumn("rep_robj_rea", "video_link", $field_data);
-	}
+if (!$ilDB->tableColumnExists("rep_robj_rea", "video_link")) {
+	$ilDB->addTableColumn("rep_robj_rea", "video_link", $field_data);
+}
 ?>
 
 <#3>
 <?php
 	$field_data = array('type' => 'clob', 'notnull' => false, 'default' =>'');
 
-	if(!$ilDB->tableColumnExists("rep_robj_rea", "pdf_link")) {
-		$ilDB->addTableColumn("rep_robj_rea", "pdf_link", $field_data);
-	}
+if (!$ilDB->tableColumnExists("rep_robj_rea", "pdf_link")) {
+	$ilDB->addTableColumn("rep_robj_rea", "pdf_link", $field_data);
+}
 ?>
 
 <#4>
@@ -43,4 +43,17 @@ $query = "INSERT INTO rep_master_data (id,is_online)"
 		."		RIGHT JOIN rep_robj_rea bi ON bi.id = md.id "
 		."	WHERE md.id IS NULL";
 $ilDB->manipulate($query);
+?>
+
+
+<#5>
+<?php
+	$field_data = [
+			'type' => 'integer',
+			'length' => 1,
+			'notnull' => false];
+
+	if (!$ilDB->tableColumnExists("rep_robj_rea", 'is_local')) {
+		$ilDB->addTableColumn("rep_robj_rea", 'is_local', $field_data);
+	}
 ?>
