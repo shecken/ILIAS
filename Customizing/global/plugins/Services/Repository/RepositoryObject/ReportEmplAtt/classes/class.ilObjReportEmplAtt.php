@@ -28,7 +28,7 @@ class ilObjReportEmplAtt extends ilObjReportBase
 		$this->local_report_settings =
 			$this->s_f->reportSettings('rep_robj_rea')
 						->addSetting($this->s_f
-							->settingBool('is_local', $this->master_plugin->txt('is_local')));
+							->settingBool('is_local', $this->plugin->txt('is_local')));
 	}
 
 	protected function getFilterSettings()
