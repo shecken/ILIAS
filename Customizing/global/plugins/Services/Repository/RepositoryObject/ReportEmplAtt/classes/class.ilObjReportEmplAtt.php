@@ -26,7 +26,9 @@ class ilObjReportEmplAtt extends ilObjReportBase
 	protected function createLocalReportSettings()
 	{
 		$this->local_report_settings =
-			$this->s_f->reportSettings('rep_robj_rea');
+			$this->s_f->reportSettings('rep_robj_rea')
+						->addSetting($this->s_f
+							->settingBool('is_local', $this->master_plugin->txt('is_local')));
 	}
 
 	protected function getFilterSettings()
@@ -36,6 +38,26 @@ class ilObjReportEmplAtt extends ilObjReportBase
 			$settings = call_user_func_array(array($filter, "content"), $this->filter_settings);
 		}
 		return $settings;
+	}
+
+	protected function mapToStatus($field)
+	{
+		$map = [];
+		foreach (gevSettings::$IDHGBAAD_STATUS_MAPPING as $role => $status) {
+			if (!array_key_exists($status, $map)) {
+				$map[$status] = [];
+			}
+			$map[$status][] = $role;
+		}
+		$transform_statement = 'CASE '.PHP_EOL;
+		foreach ($map as $status => $roles) {
+			$transform_statement
+				.= '	WHEN '.$this->gIldb->in($field, $roles, false, 'text')
+					.' 	THEN '.$this->gIldb->quote($status, 'text').PHP_EOL;
+		}
+		$transform_statement .= '	ELSE NULL '.PHP_EOL
+								.'END ';
+		return $transform_statement;
 	}
 
 	/**
@@ -48,12 +70,14 @@ class ilObjReportEmplAtt extends ilObjReportBase
 			->select("usr.lastname")
 			->select("usr.firstname")
 			->select("usr.email")
+			->select('usr.mobile_phone_nr')
 			->select_raw("usr.adp_number")
 			->select_raw("usr.job_number")
 			->select("orgu_all.org_unit_above1")
 			->select("orgu_all.org_unit_above2")
 			->select_raw("GROUP_CONCAT(DISTINCT orgu_all.orgu_title SEPARATOR ', ') AS org_unit")
 			->select_raw("GROUP_CONCAT(DISTINCT role.rol_title ORDER BY role.rol_title SEPARATOR ', ') AS roles")
+			->select_raw('GROUP_CONCAT(DISTINCT '.$this->mapToStatus('role.rol_title').' SEPARATOR \', \') AS status')
 			->select("usr.position_key")
 			->select("crs.custom_id")
 			->select("crs.title")
@@ -150,11 +174,13 @@ class ilObjReportEmplAtt extends ilObjReportBase
 			->column("lastname", $this->plugin->txt("lastname"), true)
 			->column("firstname", $this->plugin->txt("firstname"), true)
 			->column("email", $this->plugin->txt("email"), true)
+			->column("mobile_phone_nr", $this->plugin->txt("mobile_phone_nr"), true)
 			->column("adp_number", $this->plugin->txt("adp_number"), true)
 			->column("job_number", $this->plugin->txt("job_number"), true)
 			->column("od_bd", $this->plugin->txt("od_bd"), true, "", false, false)
 			->column("org_unit", $this->plugin->txt("org_unit_short"), true)
 			->column("roles", $this->plugin->txt("roles"), true)
+			->column("status", $this->plugin->txt("status"), true)
 			->column("custom_id", $this->plugin->txt("training_id"), true)
 			->column("title", $this->plugin->txt("title"), true)
 			->column("venue", $this->plugin->txt("location"), true)
@@ -167,8 +193,29 @@ class ilObjReportEmplAtt extends ilObjReportBase
 		return parent::buildTable($table);
 	}
 
+	protected function filterTemplates(array $crs_ids)
+	{
+		$res = $this->gIldb->query('SELECT crs_id'
+								.'	FROM hist_course'
+								.'	WHERE hist_historic = 0'
+								.'		AND is_template = '.$this->gIldb->quote('Ja', 'text')
+								.'		AND '.$this->gIldb->in('crs_id', $crs_ids, false, 'integer'));
+		$return = [];
+		while ($rec = $this->gIldb->fetchAssoc($res)) {
+			$return[] = $rec['crs_id'];
+		}
+		return $return;
+	}
+
 	protected function queryWhere()
 	{
+		$filter_courses_conditions = '';
+		if ($this->settings['is_local']) {
+			$sub_course_tpls = $this->filterTemplates($this->getSubtreeTypeIdsBelowParentType('crs', 'cat'));
+
+			$filter_courses_conditions
+				= '		AND '.$this->gIldb->in('crs.template_obj_id', $sub_course_tpls, false, 'integer');
+		}
 		return '	WHERE'.PHP_EOL
 				.'		usr.hist_historic = 0'
 				.'		AND '.$this->gIldb->in("usr.user_id", $this->user_utils->getEmployeesWhereUserCanViewEduBios(), false, "integer")
@@ -180,6 +227,7 @@ class ilObjReportEmplAtt extends ilObjReportBase
 				.'		AND orgu_all.rol_title = \'Mitarbeiter\''
 				.'		AND role.action = 1'
 				.'		AND role.hist_historic = 0'
+				.'		'.$filter_courses_conditions
 				.$this->participationStausFilter()
 				.$this->wbdImportedFilter()
 				.$this->templateTitleFilter()
