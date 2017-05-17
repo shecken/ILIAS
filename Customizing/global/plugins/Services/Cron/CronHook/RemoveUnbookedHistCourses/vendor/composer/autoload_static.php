@@ -9,12 +9,12 @@ class ComposerStaticInit11150372d74a3adf24d87c6ecc1870a7
 	public static $prefixLengthsPsr4 = array (
 		'C' =>
 		array (
-			'CaT\\Plugins\\RemoveUnbookedCourses\\' => 34,
+			'CaT\\Plugins\\RemoveUnbookedHistCourses\\' => 38,
 		),
 	);
 
 	public static $prefixDirsPsr4 = array (
-		'CaT\\Plugins\\RemoveUnbookedCourses\\' =>
+		'CaT\\Plugins\\RemoveUnbookedHistCourses\\' =>
 		array (
 			0 => __DIR__ . '/../..' . '/classes',
 		),

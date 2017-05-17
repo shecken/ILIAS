@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-	'CaT\\Plugins\\RemoveUnbookedCourses\\' => array($baseDir . '/classes'),
+	'CaT\\Plugins\\RemoveUnbookedHistCourses\\' => array($baseDir . '/classes'),
 );
