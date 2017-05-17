@@ -2,13 +2,23 @@
 include_once("./Services/Repository/classes/class.ilCronHookPlugin.php");
 require_once(__DIR__."/../vendor/autoload.php");
 
-use CaT\Plugins\RemoveUnbookedHistCourses\ilActions;
+use CaT\Plugins\RemoveUnbookedHistCourses;
 
 /**
  * Plugin base class. Keeps all information the plugin needs
  */
 class ilRemoveUnbookedHistCoursesPlugin extends ilCronHookPlugin
 {
+	/**
+	 * @var RemoveUnbookedHistCourses\ilActions
+	 */
+	protected $actions;
+
+	/**
+	 * @var RemoveUnbookedHistCourses\ilDB
+	 */
+	protected $data_base;
+
 	/**
 	 * Get the name of the Plugin
 	 *
@@ -40,5 +50,36 @@ class ilRemoveUnbookedHistCoursesPlugin extends ilCronHookPlugin
 	{
 		require_once $this->getDirectory()."/classes/class.ilRemoveUnbookedHistCoursesJob.php";
 		return new ilRemoveUnbookedHistCoursesJob();
+	}
+
+	/**
+	 * Get actions
+	 *
+	 * @return ilActions
+	 */
+	public function getActions()
+	{
+		if ($this->actions === null) {
+			global $ilDB;
+			$this->actions = new RemoveUnbookedHistCourses\ilActions($this, $this->getDatabase($ilDB));
+		}
+
+		return $this->actions;
+	}
+
+	/**
+	 * Get database actions
+	 *
+	 * @param \ilDB 	$db
+	 *
+	 * @return RemoveUnbookedHistCourses\ilDB
+	 */
+	protected function getDatabase(\ilDB $db)
+	{
+		if ($this->data_base === null) {
+			$this->data_base = new RemoveUnbookedHistCourses\ilDB($db);
+		}
+
+		return $this->data_base;
 	}
 }
