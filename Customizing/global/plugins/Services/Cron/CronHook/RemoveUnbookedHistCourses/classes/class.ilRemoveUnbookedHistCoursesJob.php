@@ -8,14 +8,39 @@ require_once "Services/Cron/classes/class.ilCronJob.php";
 */
 class ilRemoveUnbookedHistCoursesJob extends ilCronJob
 {
+	public function __construct()
+	{
+		$this->plugin =
+			ilPlugin::getPluginObject(
+				IL_COMP_SERVICE,
+				"Cron",
+				"crnhk",
+				ilPlugin::lookupNameForId(IL_COMP_SERVICE, "Cron", "crnhk", $this->getId())
+			);
+	}
 
 	/**
-	 * Get id
-	 *
-	 * @return string
+	 * @inheritdoc
 	 */
 	public function getId()
 	{
+		return "rmubhiscrs";
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getTitle()
+	{
+		return $this->plugin->txt("title");
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getDescription()
+	{
+		return $this->plugin->txt("description");
 	}
 
 	/**
@@ -25,6 +50,7 @@ class ilRemoveUnbookedHistCoursesJob extends ilCronJob
 	 */
 	public function hasAutoActivation()
 	{
+		return false;
 	}
 
 	/**
@@ -34,6 +60,7 @@ class ilRemoveUnbookedHistCoursesJob extends ilCronJob
 	 */
 	public function hasFlexibleSchedule()
 	{
+		return false;
 	}
 
 	/**
@@ -43,6 +70,7 @@ class ilRemoveUnbookedHistCoursesJob extends ilCronJob
 	 */
 	public function getDefaultScheduleType()
 	{
+		return ilCronJob::SCHEDULE_TYPE_DAILY;
 	}
 
 	/**
@@ -52,6 +80,7 @@ class ilRemoveUnbookedHistCoursesJob extends ilCronJob
 	 */
 	public function getDefaultScheduleValue()
 	{
+		return 1;
 	}
 
 	/**
