@@ -36,7 +36,7 @@ class ilRemoveUnbookedHistCoursesPlugin extends ilCronHookPlugin
 	 *
 	 * @return ilRemoveUnbookedHistCoursesJob
 	 */
-	public function getCronJobInstance()
+	public function getCronJobInstance($a_job_id)
 	{
 		require_once $this->getDirectory()."/classes/class.ilRemoveUnbookedHistCoursesJob.php";
 		return new ilRemoveUnbookedHistCoursesJob();
