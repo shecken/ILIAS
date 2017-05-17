@@ -89,5 +89,18 @@ class ilRemoveUnbookedHistCoursesJob extends ilCronJob
 	 */
 	public function run()
 	{
+		global $ilLog;
+		$cron_result = new ilCronJobResult();
+		$actions = $this->plugin->getActions();
+
+		$ilLog->write(__METHOD__." Getting course id to delete.");
+		foreach ($actions->getCourseToDelete() as $crs_id) {
+			$ilLog->write(__METHOD__." Mark course with id:".$crs_id." as historic.");
+			$actions->markCourseHistoric($crs_id);
+			ilCronManager::ping($this->getId());
+		}
+
+		$cron_result->setStatus(ilCronJobResult::STATUS_OK);
+		return $cron_result;
 	}
 }
