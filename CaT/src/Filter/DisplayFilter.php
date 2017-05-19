@@ -7,14 +7,16 @@ namespace CaT\Filter;
 /**
 * Decides which kind of Filter should be displayed and initialize GUI
 */
-class DisplayFilter {
+class DisplayFilter
+{
 	const START_PATH = "0";
 
 	protected $sequence;
 	protected $parent;
 	protected $gui_factory;
 
-	public function __construct(FilterGUIFactory $gui_factory, TypeFactory $type_factory) {
+	public function __construct(FilterGUIFactory $gui_factory, TypeFactory $type_factory)
+	{
 		$this->gui_factory = $gui_factory;
 		$this->type_factory = $type_factory;
 	}
@@ -26,16 +28,17 @@ class DisplayFilter {
 	*
 	* @return Filter|null
 	*/
-	public function getNextFilter(Navigator $navi) {
-		if($navi->path() === null) {
+	public function getNextFilter(Navigator $navi)
+	{
+		if ($navi->path() === null) {
 			$navi->go_to("0");
 			return $navi->current();
 		}
 
-		if($next = $this->getNextRight($navi)) {
+		if ($next = $this->getNextRight($navi)) {
 			return $next;
 		} else {
-			if($next = $this->getNextUpRight($navi)) {
+			if ($next = $this->getNextUpRight($navi)) {
 				return $next;
 			}
 		}
@@ -51,10 +54,11 @@ class DisplayFilter {
 	*
 	* @return FilterGUI|null
 	*/
-	public function getNextFilterGUI(Filters\Sequence $sequence, array $post_values) {
+	public function getNextFilterGUI(Filters\Sequence $sequence, array $post_values)
+	{
 		$navi = new Navigator($sequence);
 
-		if(empty($post_values)) {
+		if (empty($post_values)) {
 			$navi->go_to("0");
 			$filter = $navi->current();
 		} else {
@@ -62,8 +66,8 @@ class DisplayFilter {
 			$navi->go_to($last_path);
 			$filter = $this->getNextFilter($navi);
 		}
-		
-		if(!$filter) {
+
+		if (!$filter) {
 			return null;
 		}
 
@@ -78,10 +82,11 @@ class DisplayFilter {
 	*
 	* @return FilterGUI
 	*/
-	protected function getNextGUI($filter, Navigator $navi) {
+	protected function getNextGUI($filter, Navigator $navi)
+	{
 		$filter_class = get_class($filter);
 
-		switch($filter_class) {
+		switch ($filter_class) {
 			case "CaT\Filter\Filters\DatePeriod":
 				return $this->gui_factory->dateperiod_gui($filter, $navi->path());
 				break;
@@ -123,8 +128,9 @@ class DisplayFilter {
 	*
 	* @return current_filter || false
 	*/
-	protected function getNextRight(Navigator $navi) {
-		try{
+	protected function getNextRight(Navigator $navi)
+	{
+		try {
 			$navi->right();
 			return $navi->current();
 		} catch (\OutOfBoundsException $e) {
@@ -142,11 +148,12 @@ class DisplayFilter {
 	*
 	* @return current_filter || false
 	*/
-	protected function getNextUpRight(Navigator $navi) {
-		while($this->getUp($navi)) {
-			$tmp = $this->getNextRight($navi); 
+	protected function getNextUpRight(Navigator $navi)
+	{
+		while ($this->getUp($navi)) {
+			$tmp = $this->getNextRight($navi);
 
-			if($tmp) {
+			if ($tmp) {
 				return $tmp;
 			}
 		}
@@ -161,7 +168,8 @@ class DisplayFilter {
 	*
 	* @return upper_filter || false
 	*/
-	protected function getUp(Navigator $navi) {
+	protected function getUp(Navigator $navi)
+	{
 		try {
 			$navi->up();
 			return $navi->current();
@@ -180,7 +188,8 @@ class DisplayFilter {
 	*
 	* @return string
 	*/
-	protected function firstKey(array $post_values) {
+	protected function firstKey(array $post_values)
+	{
 		return key($post_values);
 	}
 
@@ -190,11 +199,12 @@ class DisplayFilter {
 	*
 	* @return array|int|string
 	*/
-	protected function unserializeValue($value) {
-		if(is_string($value) && $uns = unserialize($value)) {
+	protected function unserializeValue($value)
+	{
+		if (is_string($value) && $uns = unserialize($value)) {
 			return $uns;
 		}
-		
+
 		return $value;
 	}
 
@@ -206,23 +216,30 @@ class DisplayFilter {
 	*
 	* @return array
 	*/
-	public function buildFilterValues(\CaT\Filter\Filters\Sequence $sequence, array $post_values) {
+	public function buildFilterValues(\CaT\Filter\Filters\Sequence $sequence, array $post_values)
+	{
 		$navi = new \CaT\Filter\Navigator($sequence);
 		$ret = array();
 
 		while ($filter = $this->getNextFilter($navi)) {
-			if($filter instanceof \CaT\Filter\Filters\Sequence) {
+			if ($filter instanceof \CaT\Filter\Filters\Sequence) {
 				$navi->enter();
 				$filter = $navi->current();
 			}
 
 			$current_class = get_class($filter);
 			$value = $post_values[$navi->path()];
-			switch($current_class) {
+			switch ($current_class) {
 				case "CaT\Filter\Filters\DatePeriod":
-					$value = $this->unserializeValue($value);
-					$start = $this->createDateTime($value["start"]["date"]);
-					$end = $this->createDateTime($value["end"]["date"]);
+					$start = $filter->default_begin();
+					$end = $filter->default_end();
+
+					if ($value !== null) {
+						$value = $this->unserializeValue($value);
+						$start = $this->createDateTime($value["start"]["date"]);
+						$end = $this->createDateTime($value["end"]["date"]);
+					}
+
 					array_push($ret, $start);
 					array_push($ret, $end);
 					break;
@@ -241,7 +258,9 @@ class DisplayFilter {
 					// to the correct type somewhere, but is this the correct location?
 					$subs = $filter->subs();
 					if ($subs[(int)$choice]->input_type() == $tf->lst($tf->int())) {
-						$value = array_map(function($v) { return (int)$v; }, $value);
+						$value = array_map(function ($v) {
+							return (int)$v;
+						}, $value);
 					}
 
 					if ($subs[(int)$choice]->input_type() == $tf->bool()) {
@@ -266,11 +285,10 @@ class DisplayFilter {
 						$value = array();
 					}
 					if ($filter->input_type()->repr() == "[int]") {
-						$value = array_map(function($v) {
+						$value = array_map(function ($v) {
 							if (is_numeric($v)) {
 								return (int)$v;
-							}
-							else {
+							} else {
 								return $v;
 							}
 						}, $value);
@@ -286,11 +304,10 @@ class DisplayFilter {
 						$value = array();
 					}
 					if ($filter->input_type()->repr() == "[int]") {
-						$value = array_map(function($v) {
+						$value = array_map(function ($v) {
 							if (is_numeric($v)) {
 								return (int)$v;
-							}
-							else {
+							} else {
 								return $v;
 							}
 						}, $value);
@@ -301,7 +318,12 @@ class DisplayFilter {
 					if ($filter->input_type() == $this->type_factory->int()) {
 						$value = (int)$value;
 					}
+					array_push($ret, $value);
+					break;
 				case "CaT\Filter\Filters\Text":
+					if ($value === null) {
+						$value = "";
+					}
 					array_push($ret, $value);
 					break;
 				case "CaT\Filter\Filters\Option":
@@ -315,11 +337,11 @@ class DisplayFilter {
 		return $ret;
 	}
 
-	protected function createDateTime(array $date) {
+	protected function createDateTime(array $date)
+	{
 		return new \DateTime($date["y"]."-"
 						.str_pad($date["m"], 2, "0", STR_PAD_LEFT)
 						."-"
-						.str_pad($date["d"], 2, "0", STR_PAD_LEFT)
-					);
+						.str_pad($date["d"], 2, "0", STR_PAD_LEFT));
 	}
 }
