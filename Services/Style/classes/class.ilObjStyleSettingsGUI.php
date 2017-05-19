@@ -80,6 +80,9 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 
 			case 'ilsystemstyledocumentationgui':
 				require_once("Services/Style/System/classes/Documentation/class.ilSystemStyleDocumentationGUI.php");
+				$doc_gui = new ilSystemStyleDocumentationGUI();
+				$this->ctrl->forwardCommand($doc_gui);
+				break;
 
 			default:
 				if ($cmd == "" || $cmd == "view")

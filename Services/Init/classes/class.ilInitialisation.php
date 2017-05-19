@@ -942,6 +942,35 @@ class ilInitialisation
 	}
 
 	/**
+	 * init the ILIAS UI framework.
+	 */
+	protected static function initUIFramework(\ILIAS\DI\Container $c) {
+		$c["ui.factory"] = function ($c) {
+			return new ILIAS\UI\Implementation\Factory();
+		};
+		$c["ui.renderer"] = function($c) {
+			return new ILIAS\UI\Implementation\DefaultRenderer
+							( $c["ui.factory"]
+							, $c["ui.template_factory"]
+							, $c["ui.resource_registry"]
+							, $c["lng"]
+							, $c["ui.javascript_binding"]
+							);
+		};
+		$c["ui.template_factory"] = function($c) {
+			return new ILIAS\UI\Implementation\Render\ilTemplateWrapperFactory
+							( $c["tpl"]
+							);
+		};
+		$c["ui.resource_registry"] = function($c) {
+			return new ILIAS\UI\Implementation\Render\ilResourceRegistry($c["tpl"]);
+		};
+		$c["ui.javascript_binding"] = function($c) {
+			return new ILIAS\UI\Implementation\Render\ilJavaScriptBinding($c["tpl"]);
+		};
+	}
+
+	/**
 	 * ilias initialisation
 	 */
 	public static function initILIAS()
@@ -1326,8 +1355,8 @@ class ilInitialisation
 		
 		// load style definitions
 		// use the init function with plugin hook here, too
-	    self::initStyle();
-
+		self::initStyle();
+		self::initUIFramework($GLOBALS["DIC"]);
 		// $tpl
 		$tpl = new ilTemplate("tpl.main.html", true, true);
 		self::initGlobal("tpl", $tpl);
