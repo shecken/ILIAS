@@ -10,7 +10,7 @@ include_once("./Services/Style/classes/class.ilPageLayout.php");
  * @author Alex Killing <alex.killing@gmx.de>
  * @version $Id$
  * 
- * @ilCtrl_Calls ilObjStyleSettingsGUI: ilPermissionGUI, ilPageLayoutGUI
+ * @ilCtrl_Calls ilObjStyleSettingsGUI: ilPermissionGUI, ilPageLayoutGUI, ilSystemStyleDocumentationGUI
  * 
  * @ingroup	ServicesStyle
  */
@@ -76,7 +76,10 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 				$this->ctrl->saveParameter($this, "obj_id");
 				$ret =& $this->ctrl->forwardCommand($layout_gui);
 				$this->tpl->setContent($ret);
-				break;	
+				break;
+
+			case 'ilsystemstyledocumentationgui':
+				require_once("Services/Style/System/classes/Documentation/class.ilSystemStyleDocumentationGUI.php");
 
 			default:
 				if ($cmd == "" || $cmd == "view")
@@ -913,6 +916,8 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 			$tabs_gui->addTarget("page_layouts",
 				$this->ctrl->getLinkTarget($this, "viewPageLayouts"), "viewPageLayouts", "", "");
 				
+			$tabs_gui->addTarget("Dokumentation",
+				$this->ctrl->getLinkTargetByClass("ilsystemstyledocumentationgui"));
 		}
 		
 		
