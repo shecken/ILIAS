@@ -106,40 +106,25 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 							,"start" => $tf->cls("DateTime")
 							,"end" => $tf->cls("DateTime")
 						))),
-			$f->one_of(
-				$txt("person_choice_label"),
-				$txt("person_choice_description"),
-				$f->multiselectsearch(
-					$txt("orgu_choice_label"),
-					$txt("orgu_choice_description"),
-					$this->getOrguOptions()
-				)->map(function ($id_s) {
+			$f->multiselectsearch(
+				$txt("orgu_choice_label"),
+				$txt("orgu_choice_description"),
+				$this->getOrguOptions()
+			)->map(function ($id_s) {
 						return $id_s;
-				}, $tf->lst($tf->int())),
-				$f->multiselectsearch(
-					$txt("role_choice_label"),
-					$txt("role_choice_description"),
-					$this->getRoleOptions()
-				)->map(function ($id_s) {
+			}, $tf->lst($tf->int())),
+			$f->multiselectsearch(
+				$txt("role_choice_label"),
+				$txt("role_choice_description"),
+				$this->getRoleOptions()
+			)->map(function ($id_s) {
 					return $id_s;
-				}, $tf->lst($tf->int()))
-			)->map(function ($choice, $id_s) {
-					return array($choice,$id_s);
-			}, $tf->tuple($tf->int(), $tf->lst($tf->int())))
-		)->map(function ($tpl_obj_id, $date_period_predicate, $start, $end, $choice, $id_s) {
-						$orgu_ids = array();
-						$role_ids = array();
-			if ((int)$choice === 0) {
-				$orgu_ids = $id_s;
-			} elseif ((int)$choice === 1) {
-				$role_ids = $id_s;
-			}
-
+			}, $tf->lst($tf->int()))
+		)->map(function ($tpl_obj_id, $date_period_predicate, $start, $end, $orgu_ids, $role_ids) {
 						return array( "template_obj_id" => $tpl_obj_id
 							, "period_pred" => $date_period_predicate
 							, "start" => $start
 							, "end" => $end
-							, "choice" => $choice
 							, "orgu_ids" => $orgu_ids
 							, "role_ids" => $role_ids
 							);
@@ -147,7 +132,6 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 							,"period_pred" => $tf->cls("CaT\Filter\Predicates\Predicate")
 							,"start" => $tf->cls("DateTime")
 							,"end" => $tf->cls("DateTime")
-							,"choice" => $tf->int()
 							, "orgu_ids" => $tf->lst($tf->int())
 							, "role_ids"=> $tf->lst($tf->int()))));
 	}
