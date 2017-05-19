@@ -154,25 +154,24 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 			$crs_ids[] = (int)$rec["crs_id"];
 		}
 
-		if ((string)$settings["choice"] === "0") {
-			require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
-			require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
-			$org_ref_ids = array_map(function ($obj_id) {
-				return gevObjectUtils::getRefId($obj_id);
-			}, $settings["orgu_ids"]);
-			$all_orgu_ref_ids = array_map(function ($rec) {
-				return $rec["ref_id"];
-			}, gevOrgUnitUtils::getAllChildren($org_ref_ids));
-			$all_orgu_ref_ids = array_merge($org_ref_ids, $all_orgu_ref_ids);
-			$users = gevOrgUnitUtils::getAllPeopleIn($all_orgu_ref_ids);
-		} elseif ((string)$settings["choice"] === "1") {
-			require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
-			$ru = gevRoleUtils::getInstance();
-			$users = array();
-			foreach ($settings["role_ids"] as $role_id) {
-				$users = array_merge($ru->usersHavingRoleId($role_id), $users);
-			}
+		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
+		$org_ref_ids = array_map(function ($obj_id) {
+			return gevObjectUtils::getRefId($obj_id);
+		}, $settings["orgu_ids"]);
+		$all_orgu_ref_ids = array_map(function ($rec) {
+			return $rec["ref_id"];
+		}, gevOrgUnitUtils::getAllChildren($org_ref_ids));
+		$all_orgu_ref_ids = array_merge($org_ref_ids, $all_orgu_ref_ids);
+		$users = gevOrgUnitUtils::getAllPeopleIn($all_orgu_ref_ids);
+
+		require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
+		$ru = gevRoleUtils::getInstance();
+		$users = array();
+		foreach ($settings["role_ids"] as $role_id) {
+			$users = array_merge($ru->usersHavingRoleId($role_id), $users);
 		}
+
 		$users = array_unique($users);
 
 		$usr_ids = array_intersect($this->user_utils->getEmployeesWhereUserCanViewEduBios(), $users);
