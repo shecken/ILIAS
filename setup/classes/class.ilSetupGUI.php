@@ -1106,6 +1106,18 @@ echo "<br>+".$client_id;
 		$ti = new ilTextInputGUI($lng->txt("clean_command"), "clean_command");
 		$this->form->addItem($ti);
 
+		// enabled system styles mangesment
+		$check = new ilCheckboxInputGUI($lng->txt('enable_system_styles_management'),'enable_system_styles_management');
+		$check->setInfo($lng->txt('enable_system_styles_management_info'));
+		$check->setValue(1);
+
+		// lessc command
+		$lessc = new ilTextInputGUI($lng->txt("lessc_path"), "lessc_path");
+		$lessc->setInfo($lng->txt("lessc_path_comment"));
+		$check->addSubItem($lessc);
+
+		$this->form->addItem($check);
+
 		if ($a_install)
 		{
 			$sh = new ilFormSectionHeaderGUI();

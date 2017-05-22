@@ -39,10 +39,9 @@ class ilSystemStyleDocumentationGUI
 	function __construct($skin_id = "",$style_id = "")
 	{
 		global $DIC;
-
 		$this->ctrl = $DIC->ctrl();
 		$this->lng = $DIC->language();
-		$this->tpl = $DIC["tpl"];
+		$this->tpl = $DIC->ui()->mainTemplate();
 
 		self::$DATA_PATH= self::DATA_DIRECTORY."/".self::DATA_FILE;
 
@@ -86,9 +85,9 @@ class ilSystemStyleDocumentationGUI
 
 		$explorer = new ilKSDocumentationExplorerGUI($this, "entries", $entries, $_GET["node_id"]);
 		$this->tpl->setLeftNavContent($explorer->getHTML());
+		$this->tpl->addInlineCss(".ilLeftNav { display: inline-block !important; position: absolute; }");
 		$entry_gui = new ilKSDocumentationEntryGUI($this,$explorer->getCurrentOpenedNode(), $entries);
 		$content .= $entry_gui->renderEntry();
-
 		$this->tpl->setContent($content);
 	}
 

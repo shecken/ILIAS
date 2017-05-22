@@ -576,3 +576,8 @@ tree_implementation_mp#:#Materialized-Path Model
 tree_implementation_switch_btn#:#Switch Tree Implementation
 tree_implementation_switched#:#The tree implementation type has been switched.
 feedback_recipient_info#:#This address is used in the footer link "Contact Administration".
+enable_system_styles_management#:#Manage System Styles
+enable_system_styles_management_info#:#Manage (add, edit, delete) System Styles (Skins) in the Layout and Styles section of the Administration.
+lessc_path#:#Path to lessc
+lessc_path_comment#:#Lessc is needed to compile less files to CSS. This is a requirement for generating new css files for systems styles through manipulating less variables in the Administration.
+lessc#:#Path to lessc
