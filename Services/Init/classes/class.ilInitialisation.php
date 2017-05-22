@@ -1382,19 +1382,19 @@ class ilInitialisation
 		self::initGlobal("ilNavigationHistory", "ilNavigationHistory",
 				"Services/Navigation/classes/class.ilNavigationHistory.php");
 
-		self::initGlobal("ilBrowser", "ilBrowser", 
+		self::initGlobal("ilBrowser", "ilBrowser",
 			"./Services/Utilities/classes/class.ilBrowser.php");
 
-		self::initGlobal("ilHelp", "ilHelpGUI", 
+		self::initGlobal("ilHelp", "ilHelpGUI",
 			"Services/Help/classes/class.ilHelpGUI.php");
 
 		self::initGlobal("ilToolbar", "ilToolbarGUI", 
 			"./Services/UIComponent/Toolbar/classes/class.ilToolbarGUI.php");	
 
-		self::initGlobal("ilLocator", "ilLocatorGUI", 
+		self::initGlobal("ilLocator", "ilLocatorGUI",
 			"./Services/Locator/classes/class.ilLocatorGUI.php");
 
-		self::initGlobal("ilTabs", "ilTabsGUI", 
+		self::initGlobal("ilTabs", "ilTabsGUI",
 			"./Services/UIComponent/Tabs/classes/class.ilTabsGUI.php");
 
 		// $ilMainMenu

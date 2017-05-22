@@ -45,6 +45,7 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 	 */
 	function &executeCommand()
 	{
+		global $ilTabs;
 		$next_class = $this->ctrl->getNextClass($this);
 		$cmd = $this->ctrl->getCmd();
 		 
@@ -58,6 +59,7 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 		{
 			case 'ilpermissiongui':
 				include_once("Services/AccessControl/classes/class.ilPermissionGUI.php");
+				$ilTabs->activateTab("perm_settings");
 				$perm_gui =& new ilPermissionGUI($this);
 				$ret =& $this->ctrl->forwardCommand($perm_gui);
 				break;
@@ -80,6 +82,7 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 
 			case 'ilsystemstyledocumentationgui':
 				require_once("Services/Style/System/classes/Documentation/class.ilSystemStyleDocumentationGUI.php");
+				$ilTabs->activateTab('documentation');
 				$doc_gui = new ilSystemStyleDocumentationGUI();
 				$this->ctrl->forwardCommand($doc_gui);
 				break;
@@ -120,8 +123,8 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 	*/
 	function editContentStylesObject()
 	{
-		global $rbacsystem, $ilias, $tpl, $ilToolbar, $ilCtrl, $lng;
-		
+		global $rbacsystem, $ilias, $tpl, $ilToolbar, $ilCtrl, $lng, $ilTabs;
+
 		if (!$rbacsystem->checkAccess("visible,read",$this->object->getRefId()))
 		{
 			$this->ilias->raiseError($this->lng->txt("permission_denied"),$this->ilias->error_obj->MESSAGE);
@@ -193,7 +196,7 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 		include_once("./Services/Style/classes/class.ilContentStylesTableGUI.php");
 		$table = new ilContentStylesTableGUI($this, "editContentStyles", $data, $this->object);
 		$tpl->setContent($table->getHTML());
-
+		$ilTabs->activateTab("content_styles");
 	}
 	
 	/**
@@ -249,7 +252,7 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 	*/
 	function editSystemStylesObject()
 	{
-		global $rbacsystem, $ilias, $styleDefinition, $ilToolbar, $ilCtrl, $lng, $tpl;
+		global $rbacsystem, $ilias, $styleDefinition, $ilToolbar, $ilCtrl, $lng, $tpl, $ilTabs;
 		
 		if (!$rbacsystem->checkAccess("visible,read",$this->object->getRefId()))
 		{
@@ -286,7 +289,7 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 		include_once("./Services/Style/classes/class.ilSystemStylesTableGUI.php");
 		$tab = new ilSystemStylesTableGUI($this, "editSystemStyles");
 		$tpl->setContent($tab->getHTML());
-
+		$ilTabs->activateTab("system_styles");
 	}
 	
 
@@ -919,7 +922,7 @@ class ilObjStyleSettingsGUI extends ilObjectGUI
 			$tabs_gui->addTarget("page_layouts",
 				$this->ctrl->getLinkTarget($this, "viewPageLayouts"), "viewPageLayouts", "", "");
 				
-			$tabs_gui->addTarget("Dokumentation",
+			$tabs_gui->addTarget("documentation",
 				$this->ctrl->getLinkTargetByClass("ilsystemstyledocumentationgui"));
 		}
 		
