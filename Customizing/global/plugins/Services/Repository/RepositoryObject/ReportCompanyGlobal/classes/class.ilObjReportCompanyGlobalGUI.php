@@ -12,7 +12,7 @@ require_once 'Services/Form/classes/class.ilCheckboxInputGUI.php';
 class ilObjReportCompanyGlobalGUI extends ilObjReportBaseGUI
 {
 	const CMD_SHOW_CONTENT = "showContent";
-	static protected $rows = array("type", "part_book", "part_user", "wp_part", "book_book", "book_user");
+	static protected $rows = array("type", "crs_cnt_book", "crs_cnt_part","part_book", "part_user", "wp_part", "book_book", "book_user");
 
 	protected function afterConstructor()
 	{
