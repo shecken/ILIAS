@@ -1174,6 +1174,8 @@ echo "<br>+".$client_id;
 		$values["fop_path"] = $this->setup->ini->readVariable("tools","fop");
 		$values["vscanner_type"] = $this->setup->ini->readVariable("tools", "vscantype");
 		$values["scan_command"] = $this->setup->ini->readVariable("tools", "scancommand");
+		$values["enable_system_styles_management"] = $this->setup->ini->readVariable("tools", "enable_system_styles_management");
+		$values["lessc_path"] = $this->setup->ini->readVariable("tools", "lessc");
 		$values["clean_command"] = $this->setup->ini->readVariable("tools", "cleancommand");
 		$values["log_path"] = $this->setup->ini->readVariable("log","path")."/".
 			$this->setup->ini->readVariable("log","file");
@@ -1198,7 +1200,7 @@ echo "<br>+".$client_id;
 			if (ilUtil::isWindows())
 			{
 				$fs = array("datadir_path", "log_path", "convert_path", "zip_path",
-					"unzip_path", "ghostscript_path", "java_path", "htmldoc_path", "ffmpeg_path");
+					"unzip_path", "ghostscript_path", "java_path", "htmldoc_path", "ffmpeg_path", "lessc_path");
 				foreach ($fs as $f)
 				{
 					$_POST[$f] = str_replace("\\", "/", $_POST[$f]);
@@ -1252,7 +1254,7 @@ echo "<br>+".$client_id;
 			if (ilUtil::isWindows())
 			{
 				$fs = array("datadir_path", "log_path", "convert_path", "zip_path",
-					"unzip_path", "ghostscript_path", "java_path", "htmldoc_path", "ffmpeg_path");
+					"unzip_path", "ghostscript_path", "java_path", "htmldoc_path", "ffmpeg_path", "lessc_path");
 				foreach ($fs as $f)
 				{
 					$_POST[$f] = str_replace("\\", "/", $_POST[$f]);

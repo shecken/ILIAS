@@ -85,7 +85,8 @@ class ilSystemStyleDocumentationGUI
 
 		$explorer = new ilKSDocumentationExplorerGUI($this, "entries", $entries, $_GET["node_id"]);
 		$this->tpl->setLeftNavContent($explorer->getHTML());
-		$this->tpl->addInlineCss(".ilLeftNav { display: inline-block !important; position: absolute; }");
+		$this->tpl->addInlineCss(".ilLeftNav { display: block !important; position: absolute; }");
+		$this->tpl->addCss("Services/Style/System/classes/css/zeze.css");
 		$entry_gui = new ilKSDocumentationEntryGUI($this,$explorer->getCurrentOpenedNode(), $entries);
 		$content .= $entry_gui->renderEntry();
 		$this->tpl->setContent($content);
