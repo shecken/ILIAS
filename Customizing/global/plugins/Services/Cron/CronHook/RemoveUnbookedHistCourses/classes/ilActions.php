@@ -8,7 +8,6 @@ namespace CaT\Plugins\RemoveUnbookedHistCourses;
  */
 class ilActions
 {
-
 	/**
 	 * @var \ilRemoveUnbookedHistCoursesPlugin
 	 */
