@@ -10,22 +10,20 @@ use ILIAS\UI\Component\Hoverable;
 use ILIAS\UI\Component\JavaScriptBindable;
 
 /**
- * This describes commonalities between all types of drop downs
+ * Drop down items
  */
-interface DropDown extends Component, JavaScriptBindable, Clickable, Hoverable {
+interface DropDownItem extends Component, JavaScriptBindable, Clickable, Hoverable {
 	/**
-	 * Get the label on the drop down.
+	 * Get the label of the item.
 	 *
 	 * @return	string
 	 */
 	public function getLabel();
 
 	/**
-	 * Get a drop down like this, but with an additional/replaced label.
+	 * Get the action of the item
 	 *
-	 * @param	string	$label
-	 * @return	DropDown
+	 * @return	string
 	 */
-	public function withLabel($label);
-
+	public function getAction();
 }

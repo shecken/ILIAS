@@ -11,9 +11,9 @@ use ILIAS\UI\Implementation\Component\JavaScriptBindable;
 use ILIAS\UI\Implementation\Component\Triggerer;
 
 /**
- * This implements commonalities between different types of drop downs.
+ * Drop down item
  */
-abstract class DropDown implements C\DropDown\DropDown {
+class DropDownItem implements C\DropDown\DropDownItem {
 	use ComponentHelper;
 	use JavaScriptBindable;
 	use Triggerer;
@@ -23,9 +23,16 @@ abstract class DropDown implements C\DropDown\DropDown {
 	 */
 	protected $label;
 
-	public function __construct($label) {
+	/**
+	 * @var string
+	 */
+	protected $action;
+
+	public function __construct($label, $action) {
 		$this->checkStringArg("label", $label);
+		$this->checkStringArg("action", $action);
 		$this->label = $label;
+		$this->action = $action;
 	} 
 
 	/**
@@ -38,18 +45,8 @@ abstract class DropDown implements C\DropDown\DropDown {
 	/**
 	 * @inheritdoc
 	 */
-	public function withLabel($label) {
-		$this->checkStringArg("label", $label);
-		$clone = clone $this;
-		$clone->label = $label;
-		return $clone;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function isActive() {
-		return $this->active;
+	public function getAction() {
+		return $this->action;
 	}
 
 	/**
