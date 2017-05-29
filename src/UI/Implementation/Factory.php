@@ -85,4 +85,12 @@ class Factory implements \ILIAS\UI\Factory
 	public function divider() {
 		return new Component\Divider\Factory();
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function dropdown()
+	{
+		return new Component\DropDown\Factory();
+	}
 }
