@@ -157,6 +157,7 @@ class ilReportDiscovery
 	{
 		assert('is_string($type)');
 		$reports = [];
+
 		foreach ($this->getVisibleReportsObjectData($user) as $report_data) {
 			if ($type === $report_data['type']) {
 				$reports[] = $report_data;
@@ -164,7 +165,7 @@ class ilReportDiscovery
 		}
 		$coll = new RD\MenuItemCollection();
 		foreach ($reports as $report) {
-			$coll->withMenuItem(new RD\Report($report['title'], ['type' => $type, 'ref_id' => $report['ref_id']]));
+			$coll = $coll->withMenuItem(new RD\Report($report['title'], ['type' => $type, 'ref_id' => $report['ref_id']]));
 		}
 		return $coll;
 	}
