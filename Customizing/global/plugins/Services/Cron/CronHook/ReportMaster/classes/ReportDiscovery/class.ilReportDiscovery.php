@@ -1,5 +1,6 @@
 <?php
 
+use CaT\Plugins\ReportMaster\ReportDiscovery as RD;
 
 require_once 'Services/Repository/classes/class.ilRepositoryObjectPlugin.php';
 
@@ -24,15 +25,7 @@ class ilReportDiscovery
 	 */
 	public function getReportsObjectData()
 	{
-
-
-		$plugins = $this->getPlugins();
-		$report_base_plugins = $this->filterPlugins($plugins);
-
-		//return empty array if there are no report plug ins
-		if (empty($report_base_plugins)) {
-			return array();
-		}
+		$report_base_plugins = $this->getReportPlugins();
 
 		$obj_data = array();
 		foreach ($report_base_plugins as $plugin) {
@@ -40,20 +33,31 @@ class ilReportDiscovery
 
 			// this actually is the object type
 			$type = $plugin->getId();
-
 			$icon = ilRepositoryObjectPlugin::_getIcon($type, "small");
 
-			$obj_data[] = array_map(function (&$data) use (&$icon) {
+			$obj_data[] = array_map(function ($data) use ($icon, $type) {
 					// adjust data to fit the documentation.
 					$data["obj_id"] = $data["id"];
 					unset($data["id"]);
 					$data["icon"] = $icon;
+					$data['type'] = $type;
 					return $data;
 											// second parameter is $a_omit_trash
 			}, ilObject::_getObjectsDataForType($type, true));
 		}
 
 		return call_user_func_array("array_merge", $obj_data);
+	}
+
+	public function getReportPlugins()
+	{
+		$report_base_plugins = $this->filterPlugins($this->getPlugins());
+
+		//return empty array if there are no report plug ins
+		if (empty($report_base_plugins)) {
+			return array();
+		}
+		return $report_base_plugins;
 	}
 
 	/**
@@ -87,6 +91,52 @@ class ilReportDiscovery
 	}
 
 	/**
+	 *
+	 * @param	ilObjUser	$usr
+	 * @return	MenuItemCollection
+	 */
+	public function getVisibleReportItemsForUser(ilObjUser $user)
+	{
+		$grouped_reports = [];
+		foreach ($this->getVisibleReportsObjectData($user) as $report_data) {
+			$type = $report_data['type'];
+			if (!array_key_exists($type, $grouped_reports)) {
+				$grouped_reports[$type] = [];
+			}
+			$grouped_reports[$type][] = $report_data;
+		}
+
+		$coll = new RD\MenuItemCollection();
+		foreach ($grouped_reports as $type => $reports) {
+			if (count($reports) > 1) {
+				$plugin = ilPlugin::getRepoPluginObjectByType($type);
+				$plugin->loadLanguageModule();
+				$coll = $coll->withMenuItem(new RD\Group($plugin->txt('objs_'.$type), ['type' => $type]));
+			} elseif (count($reports) === 1) {
+				$report = current($reports);
+				$coll = $coll->withMenuItem(new RD\Report($report['title'], ['type' => $type, 'ref_id' => $report['ref_id']]));
+			}
+		}
+		return $coll;
+	}
+
+	public function getVisibleReportItemsByType($type)
+	{
+		assert('is_string($type)');
+		$reports = [];
+		foreach ($this->getVisibleReportsObjectData($user) as $report_data) {
+			if ($type === $report_data['type']) {
+				$reports[] = $report_data;
+			}
+		}
+		$coll = new RD\MenuItemCollection();
+		foreach ($reports as $report) {
+			$coll->withMenuItem(new RD\Report($report['title'], ['type' => $type, 'ref_id' => $report['ref_id']]));
+		}
+		return $coll;
+	}
+
+	/**
 	 * plugin objects
 	 *
 	 * @return array
@@ -101,11 +151,7 @@ class ilReportDiscovery
 		$plugin_names = $p_a->getActivePluginsForSlot($c_type, $c_name, $slot_id);
 
 		return array_map(function ($plugin_name) use ($p_a, $c_type, $c_name, $slot_id) {
-								$plugin = $p_a->getPluginObject($c_type, $c_name, $slot_id, $plugin_name);
-
-			if ($plugin instanceof ilReportBasePlugin) {
-				return $plugin;
-			}
+								return $p_a->getPluginObject($c_type, $c_name, $slot_id, $plugin_name);
 		}, $plugin_names);
 	}
 
