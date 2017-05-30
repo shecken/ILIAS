@@ -90,7 +90,33 @@ class ilReportDiscovery
 		return $visible_reports;
 	}
 
+
 	/**
+	 * Get an Item Collection for all the visible reports of a user.
+	 * There will be no groupings. This should serve as a transition
+	 * from current logic.
+	 *
+	 * @param	ilObjUser	$usr
+	 * @return	MenuItemCollection
+	 */
+	public function getVisibleReportItemsForUserUngrouped(ilObjUser $user)
+	{
+		$coll = new RD\MenuItemCollection();
+		foreach ($this->getVisibleReportsObjectData($user) as $report_data) {
+			$coll = $coll->withMenuItem(
+				new RD\Report(
+					$report_data['title'],
+					['type' =>  $report_data['type'], 'ref_id' => $report_data['ref_id']],
+					$report_data['icon']
+				)
+			);
+		}
+		return $coll;
+	}
+
+	/**
+	 * Get an Item Collection containing all Reports visible by a user.
+	 * If a report type happens to occur several times in the list, it will be grouped.
 	 *
 	 * @param	ilObjUser	$usr
 	 * @return	MenuItemCollection
@@ -120,7 +146,14 @@ class ilReportDiscovery
 		return $coll;
 	}
 
-	public function getVisibleReportItemsByType($type)
+	/**
+	 * Get an Item Collection containing all Reports visible by a user corresponding to
+	 * some particular type.
+	 *
+	 * @param	ilObjUser	$usr
+	 * @return	MenuItemCollection
+	 */
+	public function getVisibleReportItemsByType($type, ilObjUser $user)
 	{
 		assert('is_string($type)');
 		$reports = [];
