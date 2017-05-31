@@ -6,9 +6,10 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Whoops\\' => array($vendorDir . '/filp/whoops/src/Whoops'),
-    'CaT\\Plugins\\TalentAssessment\\' => array($baseDir . '/../../Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes'),
-    'CaT\\Plugins\\CareerGoal\\' => array($baseDir . '/../../Customizing/global/plugins/Services/Repository/RepositoryObject/CareerGoal/classes'),
-    'CaT\\' => array($baseDir . '/../../CaT/src'),
-    'Box\\Spout\\' => array($vendorDir . '/box/spout/src/Spout'),
+	'Whoops\\' => array($vendorDir . '/filp/whoops/src/Whoops'),
+	'CaT\\Plugins\\TalentAssessment\\' => array($baseDir . '/../../Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes'),
+	'CaT\\Plugins\\ReportMaster\\' => array($baseDir . '/../../Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes'),
+	'CaT\\Plugins\\CareerGoal\\' => array($baseDir . '/../../Customizing/global/plugins/Services/Repository/RepositoryObject/CareerGoal/classes'),
+	'CaT\\' => array($baseDir . '/../../CaT/src'),
+	'Box\\Spout\\' => array($vendorDir . '/box/spout/src/Spout'),
 );

@@ -106,40 +106,25 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 							,"start" => $tf->cls("DateTime")
 							,"end" => $tf->cls("DateTime")
 						))),
-			$f->one_of(
-				$txt("person_choice_label"),
-				$txt("person_choice_description"),
-				$f->multiselectsearch(
-					$txt("orgu_choice_label"),
-					$txt("orgu_choice_description"),
-					$this->getOrguOptions()
-				)->map(function ($id_s) {
+			$f->multiselectsearch(
+				$txt("orgu_choice_label"),
+				$txt("orgu_choice_description"),
+				$this->getOrguOptions()
+			)->map(function ($id_s) {
 						return $id_s;
-				}, $tf->lst($tf->int())),
-				$f->multiselectsearch(
-					$txt("role_choice_label"),
-					$txt("role_choice_description"),
-					$this->getRoleOptions()
-				)->map(function ($id_s) {
+			}, $tf->lst($tf->int())),
+			$f->multiselectsearch(
+				$txt("role_choice_label"),
+				$txt("role_choice_description"),
+				$this->getRoleOptions()
+			)->map(function ($id_s) {
 					return $id_s;
-				}, $tf->lst($tf->int()))
-			)->map(function ($choice, $id_s) {
-					return array($choice,$id_s);
-			}, $tf->tuple($tf->int(), $tf->lst($tf->int())))
-		)->map(function ($tpl_obj_id, $date_period_predicate, $start, $end, $choice, $id_s) {
-						$orgu_ids = array();
-						$role_ids = array();
-			if ((int)$choice === 0) {
-				$orgu_ids = $id_s;
-			} elseif ((int)$choice === 1) {
-				$role_ids = $id_s;
-			}
-
+			}, $tf->lst($tf->int()))
+		)->map(function ($tpl_obj_id, $date_period_predicate, $start, $end, $orgu_ids, $role_ids) {
 						return array( "template_obj_id" => $tpl_obj_id
 							, "period_pred" => $date_period_predicate
 							, "start" => $start
 							, "end" => $end
-							, "choice" => $choice
 							, "orgu_ids" => $orgu_ids
 							, "role_ids" => $role_ids
 							);
@@ -147,7 +132,6 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 							,"period_pred" => $tf->cls("CaT\Filter\Predicates\Predicate")
 							,"start" => $tf->cls("DateTime")
 							,"end" => $tf->cls("DateTime")
-							,"choice" => $tf->int()
 							, "orgu_ids" => $tf->lst($tf->int())
 							, "role_ids"=> $tf->lst($tf->int()))));
 	}
@@ -170,25 +154,24 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 			$crs_ids[] = (int)$rec["crs_id"];
 		}
 
-		if ((string)$settings["choice"] === "0") {
-			require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
-			require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
-			$org_ref_ids = array_map(function ($obj_id) {
-				return gevObjectUtils::getRefId($obj_id);
-			}, $settings["orgu_ids"]);
-			$all_orgu_ref_ids = array_map(function ($rec) {
-				return $rec["ref_id"];
-			}, gevOrgUnitUtils::getAllChildren($org_ref_ids));
-			$all_orgu_ref_ids = array_merge($org_ref_ids, $all_orgu_ref_ids);
-			$users = gevOrgUnitUtils::getAllPeopleIn($all_orgu_ref_ids);
-		} elseif ((string)$settings["choice"] === "1") {
-			require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
-			$ru = gevRoleUtils::getInstance();
-			$users = array();
-			foreach ($settings["role_ids"] as $role_id) {
-				$users = array_merge($ru->usersHavingRoleId($role_id), $users);
-			}
+		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
+		$org_ref_ids = array_map(function ($obj_id) {
+			return gevObjectUtils::getRefId($obj_id);
+		}, $settings["orgu_ids"]);
+		$all_orgu_ref_ids = array_map(function ($rec) {
+			return $rec["ref_id"];
+		}, gevOrgUnitUtils::getAllChildren($org_ref_ids));
+		$all_orgu_ref_ids = array_merge($org_ref_ids, $all_orgu_ref_ids);
+		$users = gevOrgUnitUtils::getAllPeopleIn($all_orgu_ref_ids);
+
+		require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
+		$ru = gevRoleUtils::getInstance();
+		$users = array();
+		foreach ($settings["role_ids"] as $role_id) {
+			$users = array_merge($ru->usersHavingRoleId($role_id), $users);
 		}
+
 		$users = array_unique($users);
 
 		$usr_ids = array_intersect($this->user_utils->getEmployeesWhereUserCanViewEduBios(), $users);
