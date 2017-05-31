@@ -2,7 +2,7 @@
 
 $id = "xtas";
 
-$version = "0.0.18";
+$version = "0.0.19";
 
 
 $ilias_min_version = "4.2.0";
