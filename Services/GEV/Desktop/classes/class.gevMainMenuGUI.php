@@ -52,7 +52,7 @@ class gevMainMenuGUI extends ilMainMenuGUI
 	{
 		parent::__construct($a_target, $a_use_start_template);
 
-		global $lng, $ilCtrl, $ilAccess, $ilUser;
+		global $lng, $ilCtrl, $ilAccess, $ilUser, $tpl;
 
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
@@ -65,6 +65,10 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		}
 
 		$this->gLng->loadLanguageModule("gev");
+
+		$tpl->addCss("src/bootstrap/bootstrap.min.css");
+		$tpl->addJavascript("src/bootstrap/bootstrap.min.js");
+		$tpl->addJavascript("Services/CaTUIComponents/js/change_menu_content.js");
 	}
 
 	public function executeCommand()
@@ -75,8 +79,25 @@ class gevMainMenuGUI extends ilMainMenuGUI
 				assert($this->gCtrl->isAsynch());
 				echo $this->getReportingMenuDropDown();
 				die();
+			case "getMenuDropDown":
+				echo $this->getMenuDropDown();
+				die();
 			default:
 				throw new Exception("gevMainMenuGUI: Unknown Command '$cmd'.");
+		}
+	}
+
+	protected function getMenuDropDown()
+	{
+		$needed = $_POST["needed"];
+		switch ($needed) {
+			case self::IL_STANDARD_ADMIN:
+				require_once("Services/Administration/classes/class.ilAdministrationGUI.php");
+				$gui = new ilAdministrationGUI();
+				$gui->getDropDown();
+				break;
+			case self::GEV_REPORTING_MENU:
+				return $this->getReportingMenuDropDown();
 		}
 	}
 
@@ -104,6 +125,9 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 		// switch to patch template
 		$a_tpl = new ilTemplate("tpl.gev_main_menu_entries.html", true, true, "Services/GEV/Desktop");
+
+		//Set AJAX Link
+		$a_tpl->setVariable("MAIN_MENU_AJAX", "ilias.php?baseClass=gevMainMenuGUI&cmd=getMenuDropDown&cmdMode=asynch");
 
 		// known ref_ids
 		$repository = 1;
@@ -242,26 +266,22 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		} elseif ($a_id == self::GEV_REPORTING_MENU) {
 			$this->_renderReportingMenu($a_tpl, $count);
 		} else {
-			$trigger_id = $a_id;
-			$target_id = $a_id."_ov";
-
 			$tpl = new ilTemplate("tpl.gev_main_menu_entry.html", true, true, "Services/GEV/Desktop");
-			$tpl->setVariable("ENTRY_ID", 'id="'.$trigger_id.'"');
-			$a_tpl->setVariable("NUM", $count);
-			$tpl->setVariable("ENTRY_ID_OV", 'id="'.$target_id.'"');
-			$this->_setActiveClass($tpl, $a_id);
-			$tpl->setVariable("ENTRY_TITLE", $a_entry[3]);
+			$tpl->setVariable("PARENT_ID", 'id="'.$a_id.'"');
+			$tpl->setVariable("TITLE", $a_entry[3]);
+			$tpl->setVariable("NUM", $count);
 
-			$tpl->setVariable("ENTRY_CONT", $this->getDropDown($a_entry[2])->getHTML());
-
-			$ov = new ilOverlayGUI($target_id);
-			$ov->setTrigger($trigger_id);
-			$ov->setAnchor($trigger_id);
-			$ov->setAutoHide(false);
-			$ov->add();
+			foreach ($a_entry[2] as $id => $entry) {
+				if ($entry[0]) {
+					$tpl->setCurrentBlock("drop_entry");
+					$tpl->setVariable("ENTRY_TITLE", $entry[2]);
+					$tpl->setVariable("ENTRY_HREF", $entry[1]);
+					$tpl->setVariable("ENTRY_TARGET", "_top");
+					$tpl->parseCurrentBlock();
+				}
+			}
 
 			$a_tpl->setCurrentBlock("multi_entry");
-			$a_tpl->setVariable("NUM", $count);
 			$a_tpl->setVariable("CONTENT", $tpl->get());
 			$a_tpl->parseCurrentBlock();
 		}
@@ -269,42 +289,27 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 	protected function _renderAdminMenu($a_tpl, $count)
 	{
-		require_once("./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php");
-
-		$selection = new ilAdvancedSelectionListGUI();
-
-		$selection->setSelectionHeaderSpanClass("MMSpan");
-		$selection->setItemLinkClass("small");
-		$selection->setUseImages(false);
-
-		$selection->setListTitle($this->gLng->txt(self::IL_STANDARD_ADMIN));
-		$selection->setId(self::IL_STANDARD_ADMIN);
-		$selection->setAsynch(true);
-		$selection->setAsynchUrl("ilias.php?baseClass=ilAdministrationGUI&cmd=getDropDown&cmdMode=asynch");
+		$tpl = new ilTemplate("tpl.gev_main_menu_entry.html", true, true, "Services/GEV/Desktop");
+		$tpl->setVariable("PARENT_ID", 'id="expand_'.self::IL_STANDARD_ADMIN.'"');
+		$tpl->setVariable("TITLE", $this->gLng->txt(self::IL_STANDARD_ADMIN));
+		$tpl->setVariable("NUM", $count);
+		$tpl->touchBlock("drop_placeholder");
 
 		$a_tpl->setCurrentBlock("multi_entry");
-		$a_tpl->setVariable("NUM", $count);
-		$a_tpl->setVariable("CONTENT", $selection->getHTML());
+		$a_tpl->setVariable("CONTENT", $tpl->get());
 		$a_tpl->parseCurrentBlock();
 	}
 
 	protected function _renderReportingMenu($a_tpl, $count)
 	{
-		require_once("./Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvancedSelectionListGUI.php");
-
-		$selection = new ilAdvancedSelectionListGUI();
-
-		$selection->setSelectionHeaderSpanClass("MMSpan");
-		$selection->setItemLinkClass("small");
-		$selection->setUseImages(false);
-
-		$selection->setListTitle($this->gLng->txt(self::GEV_REPORTING_MENU));
-		$selection->setId(self::GEV_REPORTING_MENU);
-		$selection->setAsynch(true);
-		$selection->setAsynchUrl("ilias.php?baseClass=gevMainMenuGUI&cmd=getReportingMenuDropDown&cmdMode=asynch");
+		$tpl = new ilTemplate("tpl.gev_main_menu_entry.html", true, true, "Services/GEV/Desktop");
+		$tpl->setVariable("PARENT_ID", 'id="expand_'.self::GEV_REPORTING_MENU.'"');
+		$tpl->setVariable("TITLE", $this->gLng->txt(self::GEV_REPORTING_MENU));
+		$tpl->setVariable("NUM", $count);
+		$tpl->touchBlock("drop_placeholder");
 
 		$a_tpl->setCurrentBlock("multi_entry");
-		$a_tpl->setVariable("CONTENT", $selection->getHTML());
+		$a_tpl->setVariable("CONTENT", $tpl->get());
 		$a_tpl->parseCurrentBlock();
 	}
 
