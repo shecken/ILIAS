@@ -3,7 +3,8 @@ namespace CaT\Plugins\TalentAssessment\Settings;
 
 use CaT\Plugins\TalentAssessment\ilActions;
 
-trait ilFormHelper {
+trait ilFormHelper
+{
 	/**
 	 * @param 	string	$code
 	 * @return	string
@@ -20,12 +21,18 @@ trait ilFormHelper {
 	 *
 	 * @return null
 	 */
-	public function addSettingsFormItems(\ilPropertyFormGUI $form, array $career_goal_options, array $venue_options, array $org_unit_options, $autocomplete_link) {
+	public function addSettingsFormItems(\ilPropertyFormGUI $form, array $career_goal_options, array $venue_options, array $org_unit_options, $autocomplete_link)
+	{
 		$si = new \ilSelectInputGUI($this->txt("career_goal"), ilActions::F_CAREER_GOAL);
 		$options = array(null=>$this->txt("pls_select")) + $career_goal_options;
 		$si->setRequired(true);
 		$si->setOptions($options);
 		$form->addItem($si);
+
+		$ti = new \ilTextInputGUI($this->txt("report_title"), ilActions::F_REPORT_TITLE);
+		$ti->setRequired(true);
+		$ti->setInfo($this->txt("report_title_info"));
+		$form->addItem($ti);
 
 		$ti = new \ilTextInputGUI($this->txt("username"), ilActions::F_USERNAME);
 		$ti->setRequired(true);
@@ -64,7 +71,8 @@ trait ilFormHelper {
 	 *
 	 * @return null
 	 */
-	public function addSettingsFormItemsUpdate(\ilPropertyFormGUI $form, array $career_goal_options, array $venue_options, array $org_unit_options, $edit, $autocomplete_link) {
+	public function addSettingsFormItemsUpdate(\ilPropertyFormGUI $form, array $career_goal_options, array $venue_options, array $org_unit_options, $edit, $autocomplete_link)
+	{
 		require_once('Services/Form/classes/class.ilDateDurationInputGUI.php');
 		require_once('Services/Form/classes/class.ilNonEditableValueGUI.php');
 
@@ -77,6 +85,11 @@ trait ilFormHelper {
 		$si->setOptions($options);
 		$si->setDisabled($edit);
 		$form->addItem($si);
+
+		$ti = new \ilTextInputGUI($this->txt("report_title"), ilActions::F_REPORT_TITLE);
+		$ti->setRequired(true);
+		$ti->setInfo($this->txt("report_title_info"));
+		$form->addItem($ti);
 
 		$ti = new \ilTextInputGUI($this->txt("username"), ilActions::F_USERNAME);
 		$ti->setRequired(true);
