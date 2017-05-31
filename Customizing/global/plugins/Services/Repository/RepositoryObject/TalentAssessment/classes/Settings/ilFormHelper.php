@@ -32,6 +32,7 @@ trait ilFormHelper
 		$ti = new \ilTextInputGUI($this->txt("report_title"), ilActions::F_REPORT_TITLE);
 		$ti->setRequired(true);
 		$ti->setInfo($this->txt("report_title_info"));
+		$ti->setSize(55);
 		$form->addItem($ti);
 
 		$ti = new \ilTextInputGUI($this->txt("username"), ilActions::F_USERNAME);
@@ -89,6 +90,7 @@ trait ilFormHelper
 		$ti = new \ilTextInputGUI($this->txt("report_title"), ilActions::F_REPORT_TITLE);
 		$ti->setRequired(true);
 		$ti->setInfo($this->txt("report_title_info"));
+		$ti->setSize(55);
 		$form->addItem($ti);
 
 		$ti = new \ilTextInputGUI($this->txt("username"), ilActions::F_USERNAME);
