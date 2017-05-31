@@ -5,12 +5,14 @@ use CaT\Plugins\CareerGoal\Settings as CareerGoal;
 
 require_once("./Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 
-class ilDB implements DB {
+class ilDB implements DB
+{
 	const PLUGIN_TABLE = "rep_obj_xtas";
 	const USR_TABLE = "usr_data";
 	const CAREER_GOAL_TABLE = "rep_obj_xcgo";
 
-	public function __construct($db, $user, CareerGoal\ilDB $career_goal_db) {
+	public function __construct($db, $user, CareerGoal\ilDB $career_goal_db)
+	{
 		$this->db = $db;
 		$this->user = $user;
 		$this->career_goal_db = $career_goal_db;
@@ -19,14 +21,16 @@ class ilDB implements DB {
 	/**
 	 * @inheritdoc
 	 */
-	public function install() {
+	public function install()
+	{
 		$this->createTable();
 		$this->addColumns();
 	}
 
-	protected function createTable() {
-		if(!$this->getDB()->tableExists(self::PLUGIN_TABLE)) {
-			$fields = 
+	protected function createTable()
+	{
+		if (!$this->getDB()->tableExists(self::PLUGIN_TABLE)) {
+			$fields =
 				array('obj_id' => array(
 						'type' 		=> 'integer',
 						'length' 	=> 4,
@@ -101,22 +105,30 @@ class ilDB implements DB {
 		}
 	}
 
-	protected function addColumns() {
-		if(!$this->getDB()->tableColumnExists(self::PLUGIN_TABLE, "default_text_failed")) {
+	protected function addColumns()
+	{
+		if (!$this->getDB()->tableColumnExists(self::PLUGIN_TABLE, "default_text_failed")) {
 			$this->getDB()->addTableColumn(self::PLUGIN_TABLE, "default_text_failed", array(
 						'type' 		=> 'clob',
 						'notnull' 	=> false));
 		}
 
-		if(!$this->getDB()->tableColumnExists(self::PLUGIN_TABLE, "default_text_partial")) {
+		if (!$this->getDB()->tableColumnExists(self::PLUGIN_TABLE, "default_text_partial")) {
 			$this->getDB()->addTableColumn(self::PLUGIN_TABLE, "default_text_partial", array(
 						'type' 		=> 'clob',
 						'notnull' 	=> false));
 		}
 
-		if(!$this->getDB()->tableColumnExists(self::PLUGIN_TABLE, "default_text_success")) {
+		if (!$this->getDB()->tableColumnExists(self::PLUGIN_TABLE, "default_text_success")) {
 			$this->getDB()->addTableColumn(self::PLUGIN_TABLE, "default_text_success", array(
 						'type' 		=> 'clob',
+						'notnull' 	=> false));
+		}
+
+		if (!$this->getDB()->tableColumnExists(self::PLUGIN_TABLE, "report_title")) {
+			$this->getDB()->addTableColumn(self::PLUGIN_TABLE, "report_title", array(
+						'type' 		=> 'text',
+						'length' 	=> 255,
 						'notnull' 	=> false));
 		}
 	}
@@ -124,13 +136,9 @@ class ilDB implements DB {
 	/**
 	 * @inheritdoc
 	 */
-	public function create($obj_id, $state, $career_goal_id, $username, $firstname, $lastname, $email, $start_date, $end_date, $venue
-							, $org_unit, $started, $lowmark, $should_specification, $potential, $result_comment
-							, $default_text_failed, $default_text_partial, $default_text_success) 
+	public function create($obj_id, $state, $career_goal_id, $username, $firstname, $lastname, $email, $start_date, $end_date, $venue, $org_unit, $started, $lowmark, $should_specification, $potential, $result_comment, $default_text_failed, $default_text_partial, $default_text_success, $report_title)
 	{
-		$talent_assessment = new TalentAssessment($obj_id, $state, $career_goal_id, $username, $firstname, $lastname, $email, $start_date, $end_date, $venue
-													, $org_unit, $started, $lowmark, $should_specification, $potential, $result_comment
-													, $default_text_failed, $default_text_partial, $default_text_success);
+		$talent_assessment = new TalentAssessment($obj_id, $state, $career_goal_id, $username, $firstname, $lastname, $email, $start_date, $end_date, $venue, $org_unit, $started, $lowmark, $should_specification, $potential, $result_comment, $default_text_failed, $default_text_partial, $default_text_success, $report_title);
 
 		$values = array
 				( "obj_id" => array("integer", $talent_assessment->getObjId())
@@ -151,6 +159,7 @@ class ilDB implements DB {
 				, "default_text_failed" => array("text", $talent_assessment->getDefaultTextFailed())
 				, "default_text_partial" => array("text", $talent_assessment->getDefaultTextPartial())
 				, "default_text_success" => array("text", $talent_assessment->getDefaultTextSuccess())
+				, "report_title" => array("text", $talent_assessment->getReportTitle())
 				);
 		$this->getDB()->insert(self::PLUGIN_TABLE, $values);
 
@@ -162,7 +171,8 @@ class ilDB implements DB {
 	 *
 	 * @param 	TalentAssessment 		$talent_assessment
 	 */
-	public function update(TalentAssessment $talent_assessment) {
+	public function update(TalentAssessment $talent_assessment)
+	{
 		$values = array
 				( "state" => array("integer", $talent_assessment->getState())
 				, "career_goal_id" => array("integer", $talent_assessment->getCareerGoalId())
@@ -181,6 +191,7 @@ class ilDB implements DB {
 				, "default_text_failed" => array("text", $talent_assessment->getDefaultTextFailed())
 				, "default_text_partial" => array("text", $talent_assessment->getDefaultTextPartial())
 				, "default_text_success" => array("text", $talent_assessment->getDefaultTextSuccess())
+				, "report_title" => array("text",$talent_assessment->getReportTitle())
 				);
 
 		$where = array
@@ -193,7 +204,8 @@ class ilDB implements DB {
 	/**
 	 * @inheritdoc
 	 */
-	public function delete($obj_id) {
+	public function delete($obj_id)
+	{
 		$delete = "DELETE FROM ".self::PLUGIN_TABLE."\n"
 				." WHERE obj_id = ".$this->getDB()->quote($obj_id, "integer");
 
@@ -203,10 +215,11 @@ class ilDB implements DB {
 	/**
 	 * @inheritdoc
 	 */
-	public function select($obj_id) {
+	public function select($obj_id)
+	{
 		$select = "SELECT A.state, A.career_goal_id, A.username, A.start_date, A.end_date, A.venue, A.org_unit\n"
 				.", A.started, A.lowmark, A.should_specification, A.potential, A.result_comment\n"
-				.", A.default_text_failed, A.default_text_partial, A.default_text_success\n"
+				.", A.default_text_failed, A.default_text_partial, A.default_text_success, A.report_title\n"
 				.", B.firstname, B.lastname, B.email\n"
 				." FROM ".self::PLUGIN_TABLE." A\n"
 				." LEFT JOIN ".self::USR_TABLE." B\n"
@@ -216,38 +229,20 @@ class ilDB implements DB {
 		$res = $this->getDB()->query($select);
 		$row = $this->getDB()->fetchAssoc($res);
 
-		if(empty($row)) {
+		if (empty($row)) {
 			throw new \InvalidArgumentException("Invalid id '$obj_id' for TalentAssessment-object");
 		}
 
 		$start_date = new \iLDateTime($row["start_date"], IL_CAL_DATETIME);
 		$end_date = new \iLDateTime($row["end_date"], IL_CAL_DATETIME);
 
-		$talent_assessment = new TalentAssessment((int)$obj_id
-								 , (int)$row["state"]
-								 , (int)$row["career_goal_id"]
-								 , $row["username"]
-								 , $row["firstname"] ? $row["firstname"] : ""
-								 , $row["lastname"] ? $row["lastname"] : ""
-								 , $row["email"] ? $row["email"] : ""
-								 , $start_date
-								 , $end_date
-								 , (int)$row["venue"]
-								 , (int)$row["org_unit"]
-								 , (bool)$row["started"]
-								 , (float)$row["lowmark"]
-								 , (float)$row["should_specification"]
-								 , (float)$row["potential"]
-								 , $row["result_comment"] ? $row["result_comment"] : ""
-								 , $row["default_text_failed"] ? $row["default_text_failed"] : ""
-								 , $row["default_text_partial"] ? $row["default_text_partial"] : ""
-								 , $row["default_text_success"] ? $row["default_text_success"] : ""
-							);
+		$talent_assessment = new TalentAssessment((int)$obj_id, (int)$row["state"], (int)$row["career_goal_id"], $row["username"], $row["firstname"] ? $row["firstname"] : "", $row["lastname"] ? $row["lastname"] : "", $row["email"] ? $row["email"] : "", $start_date, $end_date, (int)$row["venue"], (int)$row["org_unit"], (bool)$row["started"], (float)$row["lowmark"], (float)$row["should_specification"], (float)$row["potential"], $row["result_comment"] ? $row["result_comment"] : "", $row["default_text_failed"] ? $row["default_text_failed"] : "", $row["default_text_partial"] ? $row["default_text_partial"] : "", $row["default_text_success"] ? $row["default_text_success"] : "", $row['report_title'] ? $row['report_title'] : '');
 
 		return $talent_assessment;
 	}
 
-	public function cloneTalentAssessment($target_id, TalentAssessment $talent_assessment) {
+	public function cloneTalentAssessment($target_id, TalentAssessment $talent_assessment)
+	{
 		$values = array
 				( "obj_id" => array("integer", (int)$target_id)
 				, "state" => array("integer", TalentAssessment::IN_PROGRESS)
@@ -267,6 +262,7 @@ class ilDB implements DB {
 				, "default_text_failed" => array("text", $talent_assessment->getDefaultTextFailed())
 				, "default_text_partial" => array("text", $talent_assessment->getDefaultTextPartial())
 				, "default_text_success" => array("text", $talent_assessment->getDefaultTextSuccess())
+				, "report_title" => array("text", $talent_assessment->getReportTitle())
 				);
 		$this->getDB()->insert(self::PLUGIN_TABLE, $values);
 
@@ -275,7 +271,8 @@ class ilDB implements DB {
 		return $new_talent_assessment;
 	}
 
-	public function isStarted($obj_id) {
+	public function isStarted($obj_id)
+	{
 		$select = "SELECT started\n"
 				." FROM ".self::PLUGIN_TABLE."\n"
 				." WHERE obj_id = ".$this->getDB()->quote($obj_id, "integer");
@@ -289,7 +286,8 @@ class ilDB implements DB {
 	/**
 	 * @inheritdoc
 	 */
-	public function getCareerGoalsOptions() {
+	public function getCareerGoalsOptions()
+	{
 		$ret = array();
 
 		$select = "SELECT obj.obj_id, obj.title\n"
@@ -301,38 +299,41 @@ class ilDB implements DB {
 
 		$res = $this->getDB()->query($select);
 
-		while($row = $this->getDB()->fetchAssoc($res)) {
+		while ($row = $this->getDB()->fetchAssoc($res)) {
 			$ret[(int)$row["obj_id"]] = $row["title"];
 		}
 
 		return $ret;
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
-	public function getVenueOptions() {
+	public function getVenueOptions()
+	{
 		return \gevOrgUnitUtils::getVenueNames();
 	}
-	
+
 	/**
 	 * @inheritdoc
 	 */
-	public function getOrgUnitOptions() {
+	public function getOrgUnitOptions()
+	{
 		$evg_id = \gevOrgUnitUtils::getEVGOrgUnitRefId();
 		$org_unit_utils = \gevOrgUnitUtils::getAllChildren(array($evg_id));
 		$evg_obj_id = \ilObject::_lookupObjId($evg_id);
 		$evg_title = \ilObject::_lookupTitle($evg_obj_id);
 
 		$ret = array($evg_obj_id => $evg_title);
-		foreach($org_unit_utils as $key => $value) {
+		foreach ($org_unit_utils as $key => $value) {
 			$ret[$value["obj_id"]] = \ilObject::_lookupTitle($value["obj_id"]);
 		}
 
 		return $ret;
 	}
 
-	public function getAllObservator($role_name) {
+	public function getAllObservator($role_name)
+	{
 		$select = "SELECT usr_id, CONCAT(firstname, ' ', lastname) as name\n"
 				 ." FROM usr_data\n"
 				 ." WHERE usr_id IN\n"
@@ -340,19 +341,20 @@ class ilDB implements DB {
 				 ."      FROM rbac_ua rua\n"
 				 ."      JOIN object_data od\n"
 				 ."          ON rua.rol_id = od.obj_id\n"
-				 ."      WHERE od.title LIKE ".$this->db->quote($role_name."%","text").")";
+				 ."      WHERE od.title LIKE ".$this->db->quote($role_name."%", "text").")";
 
 		$res = $this->db->query($select);
 		$ret = array();
-		while($row = $this->db->fetchAssoc($res)) {
+		while ($row = $this->db->fetchAssoc($res)) {
 			$ret[(int)$row["usr_id"]] = $row["name"];
 		}
 
 		return $ret;
 	}
 
-	protected function getDB() {
-		if(!$this->db) {
+	protected function getDB()
+	{
+		if (!$this->db) {
 			throw new \Exception("no Database");
 		}
 		return $this->db;
@@ -365,7 +367,8 @@ class ilDB implements DB {
 	 *
 	 * @return array
 	 */
-	public function getCareerGoalDefaultText($career_goal_id) {
+	public function getCareerGoalDefaultText($career_goal_id)
+	{
 		return $this->career_goal_db->getCareerGoalDefaultText($career_goal_id);
 	}
 }
