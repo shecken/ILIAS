@@ -6330,3 +6330,8 @@ foreach($mass_refs as $mass_ref_id) {
 	$rbacadmin->grantPermission( $rol_id, $grant_ops, $mass_ref_id);
 }
 ?>
+
+<#263>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
