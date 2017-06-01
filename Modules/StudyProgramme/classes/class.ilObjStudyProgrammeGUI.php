@@ -266,9 +266,21 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI
 						$this->tabs_gui->setBackTarget($this->lng->txt("back"), $this->ctrl->getLinkTarget($this));
 						parent::cutObject();
 						break;
+					case 'clear':
+						parent::clearObject();
+						break;
 					case 'performPasteIntoMultipleObjects':
 						$this->tabs_gui->clearTargets();
 						parent::performPasteIntoMultipleObjectsObject();
+						break;
+					case 'cancelMoveLink':
+						parent::cancelMoveLinkObject();
+						break;
+					case 'keepObjectsInClipboard':
+						parent::keepObjectsInClipboardObject();
+						break;
+					case 'render':
+						$this->view();
 						break;
 					/*case 'editSettings':
 						$this->tabs_gui->setTabActive("settings");
