@@ -7,6 +7,7 @@
 *
 * @author	Richard Klees <richard.klees@concepts-and-training.de>
 * @author   Martin Studer <ms@studer-raimann.ch>
+* @author	Stefan Hecken <stefan.hecken@concepts-and-training.de>
 * @version	$Id$
 */
 
@@ -91,9 +92,76 @@ class gevMainMenuGUI extends ilMainMenuGUI
 			case "getMenuDropDown":
 				echo $this->getMenuDropDown();
 				die();
+			case "getSubEntries":
+				echo $this->getSubMenuDropDown();
+				die();
 			default:
 				throw new Exception("gevMainMenuGUI: Unknown Command '$cmd'.");
 		}
+	}
+
+	protected function getAdminMenuDropDown()
+	{
+		require_once("Services/Administration/classes/class.ilAdministrationGUI.php");
+		$gui = new ilAdministrationGUI();
+		$elements = $gui->getAdminMenuEntries();
+		$groups = $elements["groups"];
+		$titems = $elements["titems"];
+
+		$main_tpl = new ilTemplate("tpl.gev_main_menu_report_entries.html", true, true, "Services/GEV/Desktop");
+		for ($i = 1; $i <= 3; $i++) {
+			foreach ($groups[$i] as $group => $entries) {
+				if (count($entries) > 0) {
+					//Group title. Menu level 2
+					$n_tpl = new ilTemplate("tpl.gev_main_menu_report_expand_entry.html", true, true, "Services/GEV/Desktop");
+					$n_tpl->touchBlock("fix_submenu_ul");
+					$id = $group;
+					$class = "expand_entry";
+					$link = "#";
+
+					$n_tpl->setVariable("ENTRY_TITLE", $this->gLng->txt("adm_".$group));
+					$n_tpl->setVariable("ENTRY_HREF", "#");
+					$n_tpl->setVariable("ENTRY_TARGET", "_top");
+					$n_tpl->setVariable("ENTRY_ID", $id);
+					$n_tpl->setVariable("ENTRY_CLASS", $class);
+
+					//Items of group. Menu level 3
+					foreach ($entries as $e) {
+						if ($e != "---") {
+							$entry_tpl = new ilTemplate("tpl.gev_main_menu_report_entry.html", true, true, "Services/GEV/Desktop");
+							$class = "single_entry";
+
+							if ($_GET["admin_mode"] == "settings" && $titems[$e]["ref_id"] == ROOT_FOLDER_ID) {
+								$title = $titems[$e]["title"];
+								$link = "ilias.php?baseClass=ilAdministrationGUI&amp;ref_id=".$titems[$e]["ref_id"]."&amp;admin_mode=repository";
+								$id = "mm_adm_rep";
+							} else {
+								$title = $titems[$e]["title"];
+								$link = "ilias.php?baseClass=ilAdministrationGUI&amp;ref_id=".$titems[$e]["ref_id"]."&amp;cmd=jump";
+								$id = "mm_adm_".$titems[$e]["type"];
+							}
+
+							$entry_tpl->setVariable("ENTRY_TITLE", $title);
+							$entry_tpl->setVariable("ENTRY_HREF", $link);
+							$entry_tpl->setVariable("ENTRY_TARGET", "_top");
+							$entry_tpl->setVariable("ENTRY_ID", $id);
+							$entry_tpl->setVariable("ENTRY_CLASS", $class);
+
+							$n_tpl->setCurrentBlock("fix_submenu");
+							$n_tpl->setVariable("ENTRY", $entry_tpl->get());
+							$n_tpl->parseCurrentBlock();
+						}
+					}
+
+					$n_tpl->touchBlock("fix_submenu_ul_end");
+					$main_tpl->setCurrentBlock("entry");
+					$main_tpl->setVariable("ENTRY", $n_tpl->get());
+					$main_tpl->parseCurrentBlock();
+				}
+			}
+		}
+
+		return $main_tpl->get();
 	}
 
 	protected function getMenuDropDown()
@@ -102,12 +170,44 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		switch ($needed) {
 			case self::IL_STANDARD_ADMIN:
 				require_once("Services/Administration/classes/class.ilAdministrationGUI.php");
-				$gui = new ilAdministrationGUI();
-				$gui->getDropDown();
+				return $this->getAdminMenuDropDown();
 				break;
 			case self::GEV_REPORTING_MENU:
 				return $this->getReportingMenuDropDown();
 		}
+	}
+
+	protected function getSubMenuDropDown()
+	{
+		require_once("Services/Link/classes/class.ilLink.php");
+
+		$tpl = new ilTemplate("tpl.gev_main_menu_report_entries.html", true, true, "Services/GEV/Desktop");
+		$tpl->setVariable("MAIN_MENU_EXPAND_AJAX", "ilias.php?baseClass=gevMainMenuGUI&cmd=getSubEntries&cmdMode=asynch");
+
+		$needed = $_POST["needed"];
+		$visible_repo_reports = $this->report_discovery->getVisibleReportItemsByType($needed, $this->gUser);
+		$visible_repo_reports->sortByTitle();
+
+		foreach ($visible_repo_reports as $visible_report) {
+			$type = $visible_report->linkParameter()['type'];
+			$ref_id = $visible_report->linkParameter()['ref_id'];
+			$title = $visible_report->title();
+			$link = ilLink::_getStaticLink($ref_id, $type);
+			$class = "single_entry";
+
+			$n_tpl = new ilTemplate("tpl.gev_main_menu_report_entry.html", true, true, "Services/GEV/Desktop");
+			$n_tpl->setVariable("ENTRY_TITLE", $title);
+			$n_tpl->setVariable("ENTRY_HREF", $link);
+			$n_tpl->setVariable("ENTRY_TARGET", "_top");
+			$n_tpl->setVariable("ENTRY_ID", $id);
+			$n_tpl->setVariable("ENTRY_CLASS", $class);
+
+			$tpl->setCurrentBlock("entry");
+			$tpl->setVariable("ENTRY", $n_tpl->get());
+			$tpl->parseCurrentBlock();
+		}
+
+		return $tpl->get();
 	}
 
 	public function renderMainMenuListEntries($a_tpl, $a_call_get = true)
@@ -279,6 +379,7 @@ class gevMainMenuGUI extends ilMainMenuGUI
 			$tpl->setVariable("PARENT_ID", 'id="'.$a_id.'"');
 			$tpl->setVariable("TITLE", $a_entry[3]);
 			$tpl->setVariable("NUM", $count);
+			$this->_setActiveClass($tpl, $a_id);
 
 			foreach ($a_entry[2] as $id => $entry) {
 				if ($entry[0]) {
@@ -303,6 +404,7 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		$tpl->setVariable("TITLE", $this->gLng->txt(self::IL_STANDARD_ADMIN));
 		$tpl->setVariable("NUM", $count);
 		$tpl->touchBlock("drop_placeholder");
+		$this->_setActiveClass($tpl, self::IL_STANDARD_ADMIN);
 
 		$a_tpl->setCurrentBlock("multi_entry");
 		$a_tpl->setVariable("CONTENT", $tpl->get());
@@ -316,6 +418,7 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		$tpl->setVariable("TITLE", $this->gLng->txt(self::GEV_REPORTING_MENU));
 		$tpl->setVariable("NUM", $count);
 		$tpl->touchBlock("drop_placeholder");
+		$this->_setActiveClass($tpl, self::GEV_REPORTING_MENU);
 
 		$a_tpl->setCurrentBlock("multi_entry");
 		$a_tpl->setVariable("CONTENT", $tpl->get());
@@ -329,21 +432,6 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		} else {
 			$a_tpl->setVariable("MM_CLASS", "MMInactive");
 		}
-	}
-
-	protected function getDropDown($a_entries)
-	{
-		$gl = new ilGroupedListGUI();
-
-		foreach ($a_entries as $id => $entry) {
-			if ($entry === null) {
-				$gl->addSeperator();
-			} elseif ($entry[0]) {
-				$gl->addEntry($entry[2], $entry[1], "_top");
-			}
-		}
-
-		return $gl;
 	}
 
 	protected function _getAdminMainMenuEntries($main_menue_permissions)
@@ -385,31 +473,44 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		require_once("Services/Link/classes/class.ilLink.php");
 		$entries = [];
 
-		$visible_repo_reports = $this->report_discovery->getVisibleReportItemsForUserUngrouped($this->gUser);
+		$tpl = new ilTemplate("tpl.gev_main_menu_report_entries.html", true, true, "Services/GEV/Desktop");
+		$tpl->setVariable("MAIN_MENU_EXPAND_AJAX", "ilias.php?baseClass=gevMainMenuGUI&cmd=getSubEntries&cmdMode=asynch");
+
+		$visible_repo_reports = $this->report_discovery->getVisibleReportItemsForUser($this->gUser);
+		$visible_repo_reports->sortByTitle();
 
 		foreach ($visible_repo_reports as $visible_report) {
 			$type = $visible_report->linkParameter()['type'];
 			$ref_id = $visible_report->linkParameter()['ref_id'];
 			$title = $visible_report->title();
 
-			if ($type == "xspo") {
-				$sp_overview = ilObjectFactory::getInstanceByRefId($ref_id);
-				if ($sp_overview->isTrainerView()) {
-					if ($crs_title = $sp_overview->getParentCourseTitle()) {
-						$title = $sp_overview->getTitle()." (".$crs_title.")";
-					}
-				}
+			if ($visible_report instanceof \CaT\Plugins\ReportMaster\ReportDiscovery\Report) {
+				$n_tpl = new ilTemplate("tpl.gev_main_menu_report_entry.html", true, true, "Services/GEV/Desktop");
+				$id = $type;
+				$class = "single_entry";
+				$link = ilLink::_getStaticLink($ref_id, $type);
+			} elseif ($visible_report instanceof \CaT\Plugins\ReportMaster\ReportDiscovery\Group) {
+				$n_tpl = new ilTemplate("tpl.gev_main_menu_report_expand_entry.html", true, true, "Services/GEV/Desktop");
+				$n_tpl->touchBlock("ajax_submenu");
+				$id = "sub_".$type;
+				$class = "expand_entry";
+				$link = "#";
 			}
-			$entries[] = array(true, ilLink::_getStaticLink($ref_id, $type),$title);
+
+			if ($n_tpl) {
+				$n_tpl->setVariable("ENTRY_TITLE", $title);
+				$n_tpl->setVariable("ENTRY_HREF", $link);
+				$n_tpl->setVariable("ENTRY_TARGET", "_top");
+				$n_tpl->setVariable("ENTRY_ID", $id);
+				$n_tpl->setVariable("ENTRY_CLASS", $class);
+
+				$tpl->setCurrentBlock("entry");
+				$tpl->setVariable("ENTRY", $n_tpl->get());
+				$tpl->parseCurrentBlock();
+			}
 		}
 
-		// sort entries by title
-		uasort($entries, function ($el1, $el2) {
-			return strcasecmp($el1[2], $el2[2]);
-		});
-
-		$grouped_list = $this->getDropDown($entries);
-		return $grouped_list->getHTML();
+		return $tpl->get();
 	}
 
 	// Stores the info whether a user has a reporting menu in the session of the user to
