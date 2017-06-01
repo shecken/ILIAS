@@ -66,6 +66,7 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		$this->gCtrl = $ilCtrl;
 		$this->gAccess = $ilAccess;
 		$this->gUser = $ilUser;
+		$this->g_tpl = $tpl;
 
 		$this->report_discovery = new ilReportDiscovery($ilPluginAdmin, $this->gAccess);
 
@@ -75,10 +76,6 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		}
 
 		$this->gLng->loadLanguageModule("gev");
-
-		$tpl->addCss("src/bootstrap/bootstrap.min.css");
-		$tpl->addJavascript("src/bootstrap/bootstrap.min.js");
-		$tpl->addJavascript("Services/CaTUIComponents/js/change_menu_content.js");
 	}
 
 	public function executeCommand()
@@ -212,6 +209,10 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 	public function renderMainMenuListEntries($a_tpl, $a_call_get = true)
 	{
+		$this->g_tpl->addCss("src/bootstrap/bootstrap.min.css");
+		$this->g_tpl->addJavascript("src/bootstrap/bootstrap.min.js");
+		$this->g_tpl->addJavascript("Services/CaTUIComponents/js/change_menu_content.js");
+
 		// No Menu during registration or on makler page
 		$basename = basename($_SERVER["PHP_SELF"]);
 		if ($basename == "gev_registration.php"
