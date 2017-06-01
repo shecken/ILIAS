@@ -42,21 +42,21 @@ include_once("./Services/Table/classes/class.ilTableGUI.php");
 */
 class ilAdministrationGUI
 {
-	var $lng;
-	var $ilias;
-	var $tpl;
-	var $tree;
-	var $rbacsystem;
-	var $cur_ref_id;
-	var $cmd;
-	var $mode;
-	var $ctrl;
+	public $lng;
+	public $ilias;
+	public $tpl;
+	public $tree;
+	public $rbacsystem;
+	public $cur_ref_id;
+	public $cmd;
+	public $mode;
+	public $ctrl;
 
 	/**
 	* Constructor
 	* @access	public
 	*/
-	function ilAdministrationGUI()
+	public function ilAdministrationGUI()
 	{
 		global $lng, $ilias, $tpl, $tree, $rbacsystem, $objDefinition,
 			$_GET, $ilCtrl, $ilLog, $ilMainMenu;
@@ -100,7 +100,7 @@ class ilAdministrationGUI
 	/**
 	* execute command
 	*/
-	function &executeCommand()
+	public function &executeCommand()
 	{
 		global $tree, $rbacsystem, $ilias, $lng, $objDefinition, $ilHelp, $ilMainMenu;
 
@@ -228,7 +228,7 @@ class ilAdministrationGUI
 	/**
 	 * Forward to class/command
 	 */
-	function forward()
+	public function forward()
 	{
 		global $tree;
 
@@ -280,7 +280,7 @@ class ilAdministrationGUI
 	/**
 	* display tree view
 	*/
-	function showTree()
+	public function showTree()
 	{
 		global $tpl, $tree, $lng;
 
@@ -298,7 +298,7 @@ class ilAdministrationGUI
 	/**
 	 * Special jump to plugin slot after ilCtrl has been reloaded
 	 */
-	function jumpToPluginSlot()
+	public function jumpToPluginSlot()
 	{
 		global $ilCtrl;
 
@@ -317,7 +317,85 @@ class ilAdministrationGUI
 	/**
 	 * Get drop down
 	 */
-	function getDropDown()
+	public function getDropDown()
+	{
+		global $lng;
+
+		//gev-patch start #3036
+		//Teile in die Funktion verschoben
+		$elements = $this->getAdminMenuEntries($layout);
+		$titems = $elements["titems"];
+		$groups = $elements["groups"];
+		//gev-patch end
+
+		include_once("./Services/UIComponent/GroupedList/classes/class.ilGroupedListGUI.php");
+		$gl = new ilGroupedListGUI();
+
+		for ($i = 1; $i <= 3; $i++) {
+			if ($i > 1) {
+				$gl->nextColumn();
+			}
+			foreach ($groups[$i] as $group => $entries) {
+				if (count($entries) > 0) {
+					$gl->addGroupHeader($lng->txt("adm_".$group));
+
+					foreach ($entries as $e) {
+						if ($e == "---") {
+							$gl->addSeparator();
+						} else {
+							$path = ilUtil::getImagePath("icon_".$titems[$e]["type"]."_s.png");
+							$icon = ($path != "")
+								? ilUtil::img($path)." "
+								: "";
+
+							if ($_GET["admin_mode"] == "settings" && $titems[$e]["ref_id"] == ROOT_FOLDER_ID) {
+								$gl->addEntry(
+									$icon.$titems[$e]["title"],
+									"ilias.php?baseClass=ilAdministrationGUI&amp;ref_id=".
+									$titems[$e]["ref_id"]."&amp;admin_mode=repository",
+									"_top",
+									"",
+									"",
+									"mm_adm_rep",
+									ilHelp::getMainMenuTooltip("mm_adm_rep"),
+									"bottom center",
+									"top center",
+									false
+								);
+							} else {
+								$gl->addEntry(
+									$icon.$titems[$e]["title"],
+									"ilias.php?baseClass=ilAdministrationGUI&amp;ref_id=".
+										$titems[$e]["ref_id"]."&amp;cmd=jump",
+									"_top",
+									"",
+									"",
+									"mm_adm_".$titems[$e]["type"],
+									ilHelp::getMainMenuTooltip("mm_adm_".$titems[$e]["type"]),
+									"bottom center",
+									"top center",
+									false
+								);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		//$gl->addSeparator();
+
+		echo $gl->getHTML();
+		exit;
+	}
+
+	//gev-patch start #3036
+	/**
+	 * Get gorups nd items for main admin menu
+	 *
+	 * @return array
+	 */
+	public function getAdminMenuEntries($layout)
 	{
 		global $tree, $rbacsystem, $lng, $ilSetting, $objDefinition;
 
@@ -437,71 +515,14 @@ class ilAdministrationGUI
 			}
 		}
 
-		include_once("./Services/UIComponent/GroupedList/classes/class.ilGroupedListGUI.php");
-		$gl = new ilGroupedListGUI();
-
-		for ($i = 1; $i <= 3; $i++) {
-			if ($i > 1) {
-				$gl->nextColumn();
-			}
-			foreach ($groups[$i] as $group => $entries) {
-				if (count($entries) > 0) {
-					$gl->addGroupHeader($lng->txt("adm_".$group));
-
-					foreach ($entries as $e) {
-						if ($e == "---") {
-							$gl->addSeparator();
-						} else {
-							$path = ilUtil::getImagePath("icon_".$titems[$e]["type"]."_s.png");
-							$icon = ($path != "")
-								? ilUtil::img($path)." "
-								: "";
-
-							if ($_GET["admin_mode"] == "settings" && $titems[$e]["ref_id"] == ROOT_FOLDER_ID) {
-								$gl->addEntry(
-									$icon.$titems[$e]["title"],
-									"ilias.php?baseClass=ilAdministrationGUI&amp;ref_id=".
-									$titems[$e]["ref_id"]."&amp;admin_mode=repository",
-									"_top",
-									"",
-									"",
-									"mm_adm_rep",
-									ilHelp::getMainMenuTooltip("mm_adm_rep"),
-									"bottom center",
-									"top center",
-									false
-								);
-							} else {
-								$gl->addEntry(
-									$icon.$titems[$e]["title"],
-									"ilias.php?baseClass=ilAdministrationGUI&amp;ref_id=".
-										$titems[$e]["ref_id"]."&amp;cmd=jump",
-									"_top",
-									"",
-									"",
-									"mm_adm_".$titems[$e]["type"],
-									ilHelp::getMainMenuTooltip("mm_adm_".$titems[$e]["type"]),
-									"bottom center",
-									"top center",
-									false
-								);
-							}
-						}
-					}
-				}
-			}
-		}
-
-		//$gl->addSeparator();
-
-		echo $gl->getHTML();
-		exit;
+		return ["groups" => $groups, "titems" => $titems];
 	}
+	//gev-patch end
 
 	/**
 	 * Jump to node
 	 */
-	function jump()
+	public function jump()
 	{
 		global $ilCtrl, $objDefinition;
 
