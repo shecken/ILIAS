@@ -259,6 +259,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 		$query = $this->possiblyAddOrguFilterJoin($query); //ok
 		$query = $this->possiblyAddCourseTopicsFilterJoin($query); //ok
 		$query .= 	'	WHERE hc.hist_historic = 0'
+					.'		AND (hc.is_cancelled IS NULL OR hc.is_cancelled = '.$this->gIldb->quote('Nein', 'text').')'
 					.'		AND hucs.hist_historic = 0'
 					.'		AND hucs.booking_status = '.$this->gIldb->quote('gebucht', 'text')
 					.'		AND '.$this->gIldb->in('hc.type', $this->types, false, 'text');
