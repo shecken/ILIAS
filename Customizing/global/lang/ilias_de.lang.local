@@ -512,6 +512,8 @@ gev#:#gev_dev_training_book_users#:#Bitte buchen Sie Benutzer auf das Training.
 gev#:#gev_dec_training_creation#:#Dezentrales Training anlegen
 gev#:#gev_dec_training_creation_header_note#:#Hier können Sie ein neues dezentrales Training anlegen.
 gev#:#gev_dec_training_settings_header#:#Einstellungen für dezentrales Training
+gev#:#gev_dct_day_no_period#:#Trainingsbeginn am Tag %s des Trainings:
+gev#:#gev_dec_training_to_long_on_day_set_back#:#Das Training fängt am Tag %s zu spät an. Bitte setzen sie an diesem Tag den Zeitplan um mindestens %s Minuten zurück.
 gev#:#gev_dec_training_settings_header_note#:#Hier können Sie für ein bestehendes dezentrales Training vornehmen.
 gev#:#gev_dec_training_settings#:#Trainingseinstellungen
 gev#:#gev_dec_training_no_templates#:#Es sind leider keine Vorlagen für dezentrale Trainings vorhanden.
