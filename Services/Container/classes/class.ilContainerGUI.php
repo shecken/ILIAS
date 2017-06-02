@@ -2055,7 +2055,22 @@ class ilContainerGUI extends ilObjectGUI implements ilDesktopItemHandling
 				{
 					$not_allowed_subobject[] = sprintf($this->lng->txt('msg_obj_may_not_contain_objects_of_type'), $folder_objects_cache[$folder_ref_id]->getTitle().' ['.$folder_objects_cache[$folder_ref_id]->getRefId().']', 
 							$GLOBALS['lng']->txt('obj_'.$obj_data->getType()));
-				}				
+				}
+
+				//gev-patch start 3124
+				if(ilObject::_lookupType($folder_ref_id, true) == "prg") {
+					$prg = ilObjectFactory::getInstanceByRefId($folder_ref_id);
+					if($obj_data->getType() == "crsr" && $prg->hasChildren()) {
+						$not_allowed_subobject[] = sprintf($this->lng->txt('msg_obj_may_not_contain_objects_of_type'), $folder_objects_cache[$folder_ref_id]->getTitle().' ['.$folder_objects_cache[$folder_ref_id]->getRefId().']', 
+							$GLOBALS['lng']->txt('obj_'.$obj_data->getType()));
+					}
+
+					if($obj_data->getType() == "prg" && $prg->hasLPChildren()) {
+						$not_allowed_subobject[] = sprintf($this->lng->txt('msg_obj_may_not_contain_objects_of_type'), $folder_objects_cache[$folder_ref_id]->getTitle().' ['.$folder_objects_cache[$folder_ref_id]->getRefId().']', 
+							$GLOBALS['lng']->txt('obj_'.$obj_data->getType()));
+					}
+				}
+				//gev-patch end
 			}		
 		}		
 		
@@ -2283,7 +2298,7 @@ class ilContainerGUI extends ilObjectGUI implements ilDesktopItemHandling
 		//
 		include_once("./Services/Repository/classes/class.ilRepositorySelectorExplorerGUI.php");
 		$exp = new ilRepositorySelectorExplorerGUI($this, "showPasteTree");
-		$exp->setTypeWhiteList(array("root", "cat", "grp", "crs", "fold"));
+		$exp->setTypeWhiteList(array("root", "cat", "grp", "crs", "fold", "prg"));
 		if ($cmd == "link")
 		{
 			$exp->setSelectMode("nodes", true);
