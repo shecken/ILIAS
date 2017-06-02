@@ -2,7 +2,8 @@
 
 namespace CaT\Plugins\TalentAssessment\Settings;
 
-interface DB {
+interface DB
+{
 	/**
 	 * Install tables
 	 */
@@ -30,9 +31,7 @@ interface DB {
 	 *
 	 * @return TalentAssessment
 	 */
-	public function create($obj_id, $state, $career_goal_id, $username, $firstname, $lastname, $email, $start_date, $end_date, $venue
-							, $org_unit, $started, $lowmark, $should_specification, $potential, $result_comment
-							, $default_text_failed, $default_text_partial, $default_text_success);
+	public function create($obj_id, $state, $career_goal_id, $username, $firstname, $lastname, $email, $start_date, $end_date, $venue, $org_unit, $started, $lowmark, $should_specification, $potential, $result_comment, $default_text_failed, $default_text_partial, $default_text_success, $report_title);
 
 	/**
 	 * updates settings entries
@@ -59,12 +58,12 @@ interface DB {
 	 * @return array[] int => string
 	 */
 	public function getCareerGoalsOptions();
-	
+
 	/**
 	 * @return array[] int => string
 	 */
 	public function getVenueOptions();
-	
+
 	/**
 	 * @return array[] int => string
 	 */
