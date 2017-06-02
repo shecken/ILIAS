@@ -1153,7 +1153,7 @@ class gevDecentralTrainingGUI
 
 
 		foreach ($schedule as $day => $period) {
-			$ti = new ilDateTimeInputGUI('dt'.$day, 'schedule_starts_'.$day);
+			$ti = new ilDateTimeInputGUI(sprintf($this->lng->txt('gev_dct_day_no_period'), $day + 1), 'schedule_starts_'.$day);
 			$ti->setShowDate(false);
 			$ti->setShowTime(true);
 			if ($a_fill) {
@@ -1667,7 +1667,7 @@ class gevDecentralTrainingGUI
 				$time_e_m = (int)$time_s_h * 60 + $time_s_m + $duration_m;
 				if ($time_e_m > 1440) { //session would last into the next day
 					$over = $time_e_m - 1440;
-					ilUtil::sendFailure(sprintf($this->lng->txt("gev_dec_training_to_long_on_day_set_back"), $day+1, 1440), false);
+					ilUtil::sendFailure(sprintf($this->lng->txt("gev_dec_training_to_long_on_day_set_back"), $day+1, $over), false);
 					return false;
 				}
 			}
