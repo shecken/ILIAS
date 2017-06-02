@@ -9,21 +9,24 @@
 * @version	$Id$
 */
 
-class gevDecentralTrainingCreationRequestDB {
+class gevDecentralTrainingCreationRequestDB
+{
 	const TABLE_NAME = "dct_creation_requests";
+	const TABLE_NAME_PERIODS = "dct_creation_periods";
 	const ARRAY_DELIM = ";";
-	
-	public function __construct() {
-		
+
+	public function __construct()
+	{
 	}
-	
-	public function createRequest(gevDecentralTrainingCreationRequest $a_request) {
+
+	public function createRequest(gevDecentralTrainingCreationRequest $a_request)
+	{
 		$ilDB = $this->getDB();
 		$request_id = $ilDB->nextId(self::TABLE_NAME);
 		$settings = $a_request->settings();
 		$requested_ts = $a_request->requestedTS();
 		$finished_ts = $a_request->finishedTS();
-		
+		$this->createPeriods($request_id, $settings->periods());
 		$ilDB->manipulate(
 			"INSERT INTO ".self::TABLE_NAME."\n".
 			"       (request_id, user_id, template_obj_id, requested_ts,\n".
@@ -56,12 +59,14 @@ class gevDecentralTrainingCreationRequestDB {
 			"        , ".$ilDB->quote($settings->gdvTopic(), "text")."\n".
 			"        , ".$ilDB->quote($settings->tmpPathString(), "text")."\n".
 			"        , ".$ilDB->quote(serialize($settings->addedFiles()), "text")."\n".
+
 			"        )\n"
 		);
 		return $request_id;
 	}
-	
-	public function updateRequest(gevDecentralTrainingCreationRequest $a_request) {
+
+	public function updateRequest(gevDecentralTrainingCreationRequest $a_request)
+	{
 		$ilDB = $this->getDB();
 		if ($a_request->requestId() === null) {
 			$this->throwException("Can't update request without id.");
@@ -69,6 +74,7 @@ class gevDecentralTrainingCreationRequestDB {
 		$settings = $a_request->settings();
 		$requested_ts = $a_request->requestedTS();
 		$finished_ts = $a_request->finishedTS();
+		$this->updatePeriods($a_request->requestId(), $settings->periods());
 		$ilDB->manipulate(
 			"UPDATE ".self::TABLE_NAME."\n".
 			" SET   user_id = ".$ilDB->quote($a_request->userId(), "integer")."\n".
@@ -99,62 +105,73 @@ class gevDecentralTrainingCreationRequestDB {
 			" WHERE request_id = ".$ilDB->quote($a_request->requestId(), "integer")."\n"
 		);
 	}
-	
-	public function deleteRequest(gevDecentralTrainingCreationRequest $a_request) {
+
+	protected function createPeriods($a_request_id, $a_periods)
+	{
+		if ($a_periods === null) {
+			return;
+		}
+		$ilDB = $this->getDB();
+		foreach (array_unique($a_periods) as $day => $period) {
+			$ilDB->manipulate(
+				'INSERT INTO '.self::TABLE_NAME_PERIODS.'(row_id,request_id,day,periods)'
+				.'	VALUES ('.$ilDB->nextId(self::TABLE_NAME_PERIODS)
+							.','.$ilDB->quote($a_request_id, 'integer')
+							.','.$ilDB->quote($day, 'integer')
+				.','.$ilDB->quote($period, 'text').')'
+			);
+		}
+	}
+
+	protected function updatePeriods($a_request_id, $a_periods)
+	{
+		$this->deletePeriods($a_request_id);
+		$this->createPeriods($a_request_id, $a_periods);
+	}
+
+	public function deleteRequest(gevDecentralTrainingCreationRequest $a_request)
+	{
 		$ilDB = $this->getDB();
 		if ($a_request->requestId() === null) {
 			$this->throwException("Can't delete request without id.");
 		}
-		
+		$this->deletePeriods($request_id);
 		$ilDB->manipulate(
 			"DELETE FROM ".self::TABLE_NAME."\n".
 			" WHERE request_id = ".$ilDB->quote($a_request->requestId(), "integer")
 		);
 	}
-	
-	public function request($a_request_id) {
+
+	protected function deletePeriods($a_request_id)
+	{
+		$ilDB = $this->getDB();
+		$ilDB->manipulate(
+			'DELETE FROM '.self::TABLE_NAME_PERIODS
+			.'	WHERE request_id = '.$ilDB->quote($a_request_id, "integer")
+		);
+	}
+
+	public function request($a_request_id)
+	{
 		assert(is_int($a_request_id));
 		$ilDB = $this->getDB();
 		$query = "SELECT * FROM ".self::TABLE_NAME." WHERE request_id = ".$ilDB->quote($a_request_id, "integer");
 		$res = $ilDB->query($query);
 		if ($rec = $ilDB->fetchAssoc($res)) {
-			$settings = $this->newSettings( new ilDateTime($rec["start_dt"], IL_CAL_DATETIME)
-										  , new ilDateTime($rec["end_dt"], IL_CAL_DATETIME)
-										  , $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null
-										  , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
-										  , $rec["venue_text"] ? $rec["venue_text"] : null
-										  , $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null
-										  , $rec["description"] ? $rec["description"] : ""
-										  , $rec["orga_info"] ? $rec["orga_info"] : ""
-										  , $rec["webinar_link"]
-										  , $rec["webinar_password"]
-										  , $rec["title"] ? $rec["title"] : null
-										  , $rec["vc_type"] ? $rec["vc_type"] : null
-										  , unserialize($rec["training_category"])
-										  , unserialize($rec["target_group"])
-										  , $rec["gdv_topic"] ? $rec["gdv_topic"] : null
-										  , $rec["tmp_path_string"] ? $rec["tmp_path_string"] : null
-										  , ($rec["added_files"] === null) ? null : unserialize($rec["added_files"])
-										  );
-			$trainer_ids = array_map(function($v) {return (int)$v;}, explode(self::ARRAY_DELIM, $rec["trainer_ids"]));
-			$request = $this->newCreationRequest( (int)$rec["user_id"]
-												, (int)$rec["template_obj_id"]
-												, $trainer_ids
-												, $settings
-												, (int)$a_request_id
-												, $rec["session_id"]
-												, $rec["requested_ts"] ? new ilDateTime($rec["requested_ts"], IL_CAL_DATETIME) : null
-												, $rec["finished_ts"] ? new ilDateTime($rec["finished_ts"], IL_CAL_DATETIME) : null
-												, $rec["created_obj_id"] ? (int)$rec["created_obj_id"] : null
-												);
+			$periods = $this->getPeriodsForRequestId($a_request_id);
+			$settings = $this->newSettings(new ilDateTime($rec["start_dt"], IL_CAL_DATETIME), new ilDateTime($rec["end_dt"], IL_CAL_DATETIME), $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null, $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null, $rec["venue_text"] ? $rec["venue_text"] : null, $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null, $rec["description"] ? $rec["description"] : "", $rec["orga_info"] ? $rec["orga_info"] : "", $rec["webinar_link"], $rec["webinar_password"], $rec["title"] ? $rec["title"] : null, $rec["vc_type"] ? $rec["vc_type"] : null, unserialize($rec["training_category"]), unserialize($rec["target_group"]), $rec["gdv_topic"] ? $rec["gdv_topic"] : null, $rec["tmp_path_string"] ? $rec["tmp_path_string"] : null, ($rec["added_files"] === null) ? null : unserialize($rec["added_files"]), ($periods === null) ? null : $periods);
+			$trainer_ids = array_map(function ($v) {
+				return (int)$v;
+			}, explode(self::ARRAY_DELIM, $rec["trainer_ids"]));
+			$request = $this->newCreationRequest((int)$rec["user_id"], (int)$rec["template_obj_id"], $trainer_ids, $settings, (int)$a_request_id, $rec["session_id"], $rec["requested_ts"] ? new ilDateTime($rec["requested_ts"], IL_CAL_DATETIME) : null, $rec["finished_ts"] ? new ilDateTime($rec["finished_ts"], IL_CAL_DATETIME) : null, $rec["created_obj_id"] ? (int)$rec["created_obj_id"] : null);
 			return $request;
-		}
-		else {
+		} else {
 			$this->throwException("Unknown request: $a_request_id");
 		}
 	}
 
-	public function openRequestsOfUser($a_user_id) {
+	public function openRequestsOfUser($a_user_id)
+	{
 		assert(is_int($a_user_id));
 		assert(ilObject::_lookupType($a_user_id) == "usr");
 		$ilDB = $this->getDB();
@@ -165,42 +182,21 @@ class gevDecentralTrainingCreationRequestDB {
 				 ;
 		$res = $ilDB->query($query);
 		$returns = array();
-		while($rec = $ilDB->fetchAssoc($res)) {
-			$settings = $this->newSettings( new ilDateTime($rec["start_dt"], IL_CAL_DATETIME)
-										  , new ilDateTime($rec["end_dt"], IL_CAL_DATETIME)
-										  , $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null
-										  , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
-										  , $rec["venue_text"] ? $rec["venue_text"] : null
-										  , $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null
-										  , $rec["description"] ? $rec["description"] : ""
-										  , $rec["orga_info"] ? $rec["orga_info"] : ""
-										  , $rec["webinar_link"]
-										  , $rec["webinar_password"]
-										  , $rec["title"] ? $rec["title"] : null
-										  , $rec["vc_type"] ? $rec["vc_type"] : null
-										  , unserialize($rec["training_category"])
-										  , unserialize($rec["target_group"])
-										  , $rec["gdv_topic"] ? $rec["gdv_topic"] : null
-										  , $rec["tmp_path_string"] ? $rec["tmp_path_string"] : null
-										  , ($rec["added_files"] === null) ? null : unserialize($rec["added_files"])
-										  );
-			$trainer_ids = array_map(function($v) {return (int)$v;}, explode(self::ARRAY_DELIM, $rec["trainer_ids"]));
-			$request = $this->newCreationRequest( (int)$rec["user_id"]
-												, (int)$rec["template_obj_id"]
-												, $trainer_ids
-												, $settings
-												, (int)$rec["request_id"]
-												, $rec["session_id"]
-												, $rec["requested_ts"] ? new ilDateTime($rec["requested_ts"], IL_CAL_DATETIME) : null
-												, $rec["finished_ts"] ? new ilDateTime($rec["finished_ts"], IL_CAL_DATETIME) : null
-												, $rec["created_obj_id"] ? (int)$rec["created_obj_id"] : null
-												);
+		while ($rec = $ilDB->fetchAssoc($res)) {
+			$request_id = $rec['request_id'];
+			$periods = $this->getPeriodsForRequestId($request_id);
+			$settings = $this->newSettings(new ilDateTime($rec["start_dt"], IL_CAL_DATETIME), new ilDateTime($rec["end_dt"], IL_CAL_DATETIME), $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null, $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null, $rec["venue_text"] ? $rec["venue_text"] : null, $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null, $rec["description"] ? $rec["description"] : "", $rec["orga_info"] ? $rec["orga_info"] : "", $rec["webinar_link"], $rec["webinar_password"], $rec["title"] ? $rec["title"] : null, $rec["vc_type"] ? $rec["vc_type"] : null, unserialize($rec["training_category"]), unserialize($rec["target_group"]), $rec["gdv_topic"] ? $rec["gdv_topic"] : null, $rec["tmp_path_string"] ? $rec["tmp_path_string"] : null, ($rec["added_files"] === null) ? null : unserialize($rec["added_files"]), ($periods === null) ? null : $periods);
+			$trainer_ids = array_map(function ($v) {
+				return (int)$v;
+			}, explode(self::ARRAY_DELIM, $rec["trainer_ids"]));
+			$request = $this->newCreationRequest((int)$rec["user_id"], (int)$rec["template_obj_id"], $trainer_ids, $settings, (int)$rec["request_id"], $rec["session_id"], $rec["requested_ts"] ? new ilDateTime($rec["requested_ts"], IL_CAL_DATETIME) : null, $rec["finished_ts"] ? new ilDateTime($rec["finished_ts"], IL_CAL_DATETIME) : null, $rec["created_obj_id"] ? (int)$rec["created_obj_id"] : null);
 			$returns[] = $request;
 		}
 		return $returns;
 	}
-	
-	public function nextOpenRequest() {
+
+	public function nextOpenRequest()
+	{
 		$ilDB = $this->getDB();
 		$query = "SELECT * FROM ".self::TABLE_NAME.
 				 " WHERE NOT requested_ts IS NULL".
@@ -209,52 +205,47 @@ class gevDecentralTrainingCreationRequestDB {
 				 ;
 		$res = $ilDB->query($query);
 		if ($rec = $ilDB->fetchAssoc($res)) {
-			$settings = $this->newSettings( new ilDateTime($rec["start_dt"], IL_CAL_DATETIME)
-										  , new ilDateTime($rec["end_dt"], IL_CAL_DATETIME)
-										  , $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null
-										  , $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null
-										  , $rec["venue_text"] ? $rec["venue_text"] : null
-										  , $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null
-										  , $rec["description"] ? $rec["description"] : ""
-										  , $rec["orga_info"] ? $rec["orga_info"] : ""
-										  , $rec["webinar_link"]
-										  , $rec["webinar_password"]
-										  , $rec["title"] ? $rec["title"] : null
-										  , $rec["vc_type"] ? $rec["vc_type"] : null
-										  , unserialize($rec["training_category"])
-										  , unserialize($rec["target_group"])
-										  , $rec["gdv_topic"] ? $rec["gdv_topic"] : null
-										  , $rec["tmp_path_string"] ? $rec["tmp_path_string"] : null
-										  , ($rec["added_files"] === null) ? null : unserialize($rec["added_files"])
-										  );
-			$trainer_ids = array_map(function($v) {return (int)$v;}, explode(self::ARRAY_DELIM, $rec["trainer_ids"]));
-			$request = $this->newCreationRequest( (int)$rec["user_id"]
-												, (int)$rec["template_obj_id"]
-												, $trainer_ids
-												, $settings
-												, (int)$rec["request_id"]
-												, $rec["session_id"]
-												, $rec["requested_ts"] ? new ilDateTime($rec["requested_ts"], IL_CAL_DATETIME) : null
-												, $rec["finished_ts"] ? new ilDateTime($rec["finished_ts"], IL_CAL_DATETIME) : null
-												, $rec["created_obj_id"] ? (int)$rec["created_obj_id"] : null
-												);
+			$request_id = $rec['request_id'];
+			$periods = $this->getPeriodsForRequestId($request_id);
+			$settings = $this->newSettings(new ilDateTime($rec["start_dt"], IL_CAL_DATETIME), new ilDateTime($rec["end_dt"], IL_CAL_DATETIME), $rec["venue_obj_id"] ? (int)$rec["venue_obj_id"] : null, $rec["venue_room_nr"] ? $rec["venue_room_nr"] : null, $rec["venue_text"] ? $rec["venue_text"] : null, $rec["orgu_ref_id"] ? (int)$rec["orgu_ref_id"] : null, $rec["description"] ? $rec["description"] : "", $rec["orga_info"] ? $rec["orga_info"] : "", $rec["webinar_link"], $rec["webinar_password"], $rec["title"] ? $rec["title"] : null, $rec["vc_type"] ? $rec["vc_type"] : null, unserialize($rec["training_category"]), unserialize($rec["target_group"]), $rec["gdv_topic"] ? $rec["gdv_topic"] : null, $rec["tmp_path_string"] ? $rec["tmp_path_string"] : null, ($rec["added_files"] === null) ? null : unserialize($rec["added_files"]), ($periods === null) ? null : $periods);
+			$trainer_ids = array_map(function ($v) {
+				return (int)$v;
+			}, explode(self::ARRAY_DELIM, $rec["trainer_ids"]));
+			$request = $this->newCreationRequest((int)$rec["user_id"], (int)$rec["template_obj_id"], $trainer_ids, $settings, (int)$rec["request_id"], $rec["session_id"], $rec["requested_ts"] ? new ilDateTime($rec["requested_ts"], IL_CAL_DATETIME) : null, $rec["finished_ts"] ? new ilDateTime($rec["finished_ts"], IL_CAL_DATETIME) : null, $rec["created_obj_id"] ? (int)$rec["created_obj_id"] : null);
 			return $request;
-		}
-		else {
+		} else {
 			return null;
 		}
 	}
-	
-	public function waitingTimeInMinuteEstimate() {
+
+	protected function getPeriodsForRequestId($request_id)
+	{
 		$ilDB = $this->getDB();
-		
+		$query = 	'SELECT periods FROM '.self::TABLE_NAME_PERIODS
+					.'	WHERE request_id = '.$ilDB->quote($request_id, 'integer')
+					.'	ORDER BY day';
+		$res = $ilDB->query($query);
+		$return = [];
+		while ($rec = $ilDB->fetchAssoc($res)) {
+			$return[] = $rec['periods'];
+		}
+		if (count($return) === 0) {
+			return null;
+		}
+		return $return;
+	}
+
+	public function waitingTimeInMinuteEstimate()
+	{
+		$ilDB = $this->getDB();
+
 		$query = "SELECT CEIL(AVG(TIME_TO_SEC(TIMEDIFF(finished_ts, requested_ts)) / 60)) min_avg\n"
 				."  FROM ".self::TABLE_NAME."\n"
 				." WHERE NOT finished_ts IS NULL";
 		$res = $ilDB->query($query);
 		$rec = $ilDB->fetchAssoc($res);
 		$min_avg = $rec["min_avg"];
-		
+
 		$query = "SELECT COUNT(*) cnt\n"
 				."  FROM ".self::TABLE_NAME."\n"
 				." WHERE finished_ts IS NULL"
@@ -262,16 +253,17 @@ class gevDecentralTrainingCreationRequestDB {
 		$res = $ilDB->query($query);
 		$rec = $ilDB->fetchAssoc($res);
 		$open_requests = $rec["cnt"];
-		
+
 		return $min_avg * $open_requests;
 	}
-	
-	public function lastCreatedTrainingOfUser($a_user_id) {
+
+	public function lastCreatedTrainingOfUser($a_user_id)
+	{
 		assert(is_int($a_user_id));
 		assert(ilObject::_lookupType($a_user_id) == "usr");
-		
+
 		$ilDB = $this->getDB();
-		
+
 		$query = "SELECT created_obj_id\n"
 				."  FROM ".self::TABLE_NAME."\n"
 				." WHERE NOT finished_ts IS NULL\n"
@@ -282,7 +274,7 @@ class gevDecentralTrainingCreationRequestDB {
 				."                     WHERE NOT finished_ts IS NULL\n"
 				."                         AND NOT created_obj_id IS NULL\n"
 				."                         AND created_obj_id > 0\n"
-				."                         AND user_id = ".$ilDB->quote($a_user_id,"integer").")\n";
+				."                         AND user_id = ".$ilDB->quote($a_user_id, "integer").")\n";
 
 		$res = $ilDB->query($query);
 		if ($rec = $ilDB->fetchAssoc($res)) {
@@ -290,67 +282,44 @@ class gevDecentralTrainingCreationRequestDB {
 		}
 		return null;
 	}
-	
+
 	// HELPERS
-	
-	protected function throwException($msg) {
+
+	protected function throwException($msg)
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingException.php");
 		throw new gevDecentralTrainingException($msg);
 	}
-	
-	protected function newSettings( ilDateTime $a_start_datetime
-							   , ilDateTime $a_end_datetime
-							   , $a_venue_obj_id
-							   , $a_venue_room_nr
-							   , $a_venue_text
-							   , $a_orgu_ref_id
-							   , $a_description
-							   , $a_orga_info
-							   , $a_webinar_link
-							   , $a_webinar_password
-							   , $a_title
-							   , $a_vc_type
-							   , $a_training_category
-							   , $a_target_group
-							   , $a_gdv_topic
-							   , $a_tmp_path_string
-							   , $a_added_files
-								  ) {
+
+	protected function newSettings( ilDateTime $a_start_datetime, ilDateTime $a_end_datetime, $a_venue_obj_id, $a_venue_room_nr, $a_venue_text, $a_orgu_ref_id, $a_description, $a_orga_info, $a_webinar_link, $a_webinar_password, $a_title, $a_vc_type, $a_training_category, $a_target_group, $a_gdv_topic, $a_tmp_path_string, $a_added_files, $periods
+								  )
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingSettings.php");
-		return new gevDecentralTrainingSettings( $a_start_datetime, $a_end_datetime, $a_venue_obj_id, $a_venue_room_nr, $a_venue_text
-											   , $a_orgu_ref_id, $a_description, $a_orga_info, $a_webinar_link
-											   , $a_webinar_password,$a_title,$a_vc_type,$a_training_category,$a_target_group,$a_gdv_topic
-											   , $a_tmp_path_string, $a_added_files);
+		return new gevDecentralTrainingSettings($a_start_datetime, $a_end_datetime, $a_venue_obj_id, $a_venue_room_nr, $a_venue_text, $a_orgu_ref_id, $a_description, $a_orga_info, $a_webinar_link, $a_webinar_password, $a_title, $a_vc_type, $a_training_category, $a_target_group, $a_gdv_topic, $a_tmp_path_string, $a_added_files, $periods);
 	}
-	
-	protected function newCreationRequest( $a_user_id
-										 , $a_template_obj_id
-										 , array $a_trainer_ids
-										 , gevDecentralTrainingSettings $a_settings
-										 , $a_request_id
-										 , $a_session_id
-										 , ilDateTime $a_requested_ts = null
-										 , ilDateTime $a_finished_ts = null
-										 , $a_created_obj_id = null) {
+
+	protected function newCreationRequest($a_user_id, $a_template_obj_id, array $a_trainer_ids, gevDecentralTrainingSettings $a_settings, $a_request_id, $a_session_id, ilDateTime $a_requested_ts = null, ilDateTime $a_finished_ts = null, $a_created_obj_id = null)
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCreationRequest.php");
-		return new gevDecentralTrainingCreationRequest( $this, $a_user_id, $a_template_obj_id, $a_trainer_ids, $a_settings
-													  , $a_request_id, $a_session_id, $a_requested_ts, $a_finished_ts, $a_created_obj_id);
+		return new gevDecentralTrainingCreationRequest($this, $a_user_id, $a_template_obj_id, $a_trainer_ids, $a_settings, $a_request_id, $a_session_id, $a_requested_ts, $a_finished_ts, $a_created_obj_id);
 	}
-	
+
 	// GETTERS FOR GLOBALS
-	
-	protected function getDB() {
+
+	protected function getDB()
+	{
 		global $ilDB;
 		return $ilDB;
 	}
-	
+
 	// Installation
-	
-	static public function install_step1(ilDB $ilDB) {
-		if( $ilDB->tableExists(self::TABLE_NAME) ) {
+
+	public static function install_step1(ilDB $ilDB)
+	{
+		if ($ilDB->tableExists(self::TABLE_NAME)) {
 			throw new ilException("Database ".self::TABLE_NAME." already exists.");
 		}
-		
+
 		$ilDB->createTable(self::TABLE_NAME, array(
 			'request_id' => array(
 				'type' => 'integer',
@@ -435,27 +404,30 @@ class gevDecentralTrainingCreationRequestDB {
 				'default' => null
 			)
 		));
-			
+
 		$ilDB->addPrimaryKey(self::TABLE_NAME, array('request_id'));
 		$ilDB->createSequence(self::TABLE_NAME);
 	}
-	
-	static public function install_step2(ilDB $ilDB) {
+
+	public static function install_step2(ilDB $ilDB)
+	{
 		$ilDB->addTableColumn(self::TABLE_NAME, 'session_id', array(
 			"type" => "text",
 			"length" => 250,
 			"notnull" => true
 		));
 	}
-	
-	static public function install_step3(ilDB $ilDB) {
+
+	public static function install_step3(ilDB $ilDB)
+	{
 		$ilDB->modifyTableColumn(self::TABLE_NAME, "requested_ts", array(
 			'type' => 'timestamp',
 			'notnull' => false
 		));
 	}
 
-	static public function install_step4(ilDB $ilDB) {
+	public static function install_step4(ilDB $ilDB)
+	{
 		$ilDB->addTableColumn(self::TABLE_NAME, 'title', array(
 			"type" => "text",
 			"length" => 100,
@@ -486,8 +458,9 @@ class gevDecentralTrainingCreationRequestDB {
 			"notnull" => false
 		));
 	}
-	
-	static public function install_step5(ilDB $ilDB) {
+
+	public static function install_step5(ilDB $ilDB)
+	{
 		$ilDB->modifyTableColumn(self::TABLE_NAME, 'session_id', array(
 			"type" => "text",
 			"length" => 250,
@@ -495,16 +468,17 @@ class gevDecentralTrainingCreationRequestDB {
 		));
 	}
 
-	static public function install_step6(ilDB $ilDB) {
-		if(!$ilDB->tableColumnExists(self::TABLE_NAME, 'tmp_path_string')) {
+	public static function install_step6(ilDB $ilDB)
+	{
+		if (!$ilDB->tableColumnExists(self::TABLE_NAME, 'tmp_path_string')) {
 			$ilDB->addTableColumn(self::TABLE_NAME, 'tmp_path_string', array(
 				"type" => "text",
 				"length" => 250,
 				"notnull" => false
 			));
 		}
-		
-		if(!$ilDB->tableColumnExists(self::TABLE_NAME, 'added_files')) {
+
+		if (!$ilDB->tableColumnExists(self::TABLE_NAME, 'added_files')) {
 			$ilDB->addTableColumn(self::TABLE_NAME, 'added_files', array(
 				"type" => "text",
 				"length" => 4000,
@@ -513,11 +487,52 @@ class gevDecentralTrainingCreationRequestDB {
 		}
 	}
 
-	static public function install_step7(ilDB $ilDB) {
+	public static function install_step7(ilDB $ilDB)
+	{
 		$ilDB->addTableColumn(self::TABLE_NAME, 'venue_room_nr', array(
 			"type" => "text",
 			"length" => 250,
 			"notnull" => false
 		));
+	}
+
+	public static function install_step8(ilDB $ilDB)
+	{
+		if (!$ilDB->tableExists(self::TABLE_NAME_PERIODS)) {
+			$ilDB->createTable(self::TABLE_NAME_PERIODS, array(
+				'row_id' => array(
+					'type' => 'integer',
+					'length' => 4,
+					'notnull' => true
+				),
+				'request_id' => array(
+					'type' => 'integer',
+					'length' => 4,
+					'notnull' => true
+				),
+				'periods' => array(
+					"type" => "text",
+					"length" => 250,
+					"notnull" => false
+				)
+			));
+			$ilDB->addPrimaryKey(self::TABLE_NAME_PERIODS, array('row_id'));
+			$ilDB->createSequence(self::TABLE_NAME_PERIODS);
+		}
+	}
+
+	public static function install_step9(ilDB $ilDB)
+	{
+		if (!$ilDB->tableColumnExists(self::TABLE_NAME_PERIODS, 'day')) {
+			$ilDB->addTableColumn(
+				self::TABLE_NAME_PERIODS,
+				'day',
+				array(
+					'type' => 'integer',
+					'length' => 4,
+					'notnull' => true
+				)
+			);
+		}
 	}
 }
