@@ -238,8 +238,8 @@ class gevDecentralTrainingSettings
 		if (is_array($this->periods)) { // course with new logic, just use periods from db.
 			$crs_utils->setSchedule($this->periods);
 		} else { // course with old logic. calculate periods youself.
-			$time_s = explode(':', $start);
-			$time_e = explode(':', $end);
+			$time_s = explode(':', $start[1]);
+			$time_e = explode(':', $end[1]);
 			$crs_utils->setSchedule([$time_s[0].':'.$time_s[1].'-'.$time_e[0].':'.$time_e[1]]);
 		}
 
