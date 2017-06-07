@@ -4869,6 +4869,7 @@ common#:#system_style_settings#:#Einstellungen für System-Styles
 common#:#system_styles#:#System-Styles
 common#:#systemcheck_cron#:#System Check per Cron-Job
 common#:#systemcheck_cronform#:#Aktivierung des System Checks im Cron-Job
+common#:#documentation#:#Dokumentation
 common#:#table_mail_import#:#Import von Mails
 common#:#tabs#:#Reiter
 common#:#tagging_my_tags#:#Meine Tags

@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
 	'Whoops\\' => array($vendorDir . '/filp/whoops/src/Whoops'),
+	'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+	'ILIAS\\' => array($baseDir . '/../../src'),
 	'CaT\\Plugins\\TalentAssessment\\' => array($baseDir . '/../../Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes'),
 	'CaT\\Plugins\\ReportMaster\\' => array($baseDir . '/../../Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes'),
 	'CaT\\Plugins\\CareerGoal\\' => array($baseDir . '/../../Customizing/global/plugins/Services/Repository/RepositoryObject/CareerGoal/classes'),

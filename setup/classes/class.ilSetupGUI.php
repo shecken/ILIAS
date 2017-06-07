@@ -1106,6 +1106,18 @@ echo "<br>+".$client_id;
 		$ti = new ilTextInputGUI($lng->txt("clean_command"), "clean_command");
 		$this->form->addItem($ti);
 
+		// enabled system styles mangesment
+		$check = new ilCheckboxInputGUI($lng->txt('enable_system_styles_management'),'enable_system_styles_management');
+		$check->setInfo($lng->txt('enable_system_styles_management_info'));
+		$check->setValue(1);
+
+		// lessc command
+		$lessc = new ilTextInputGUI($lng->txt("lessc_path"), "lessc_path");
+		$lessc->setInfo($lng->txt("lessc_path_comment"));
+		$check->addSubItem($lessc);
+
+		$this->form->addItem($check);
+
 		if ($a_install)
 		{
 			$sh = new ilFormSectionHeaderGUI();
@@ -1162,6 +1174,8 @@ echo "<br>+".$client_id;
 		$values["fop_path"] = $this->setup->ini->readVariable("tools","fop");
 		$values["vscanner_type"] = $this->setup->ini->readVariable("tools", "vscantype");
 		$values["scan_command"] = $this->setup->ini->readVariable("tools", "scancommand");
+		$values["enable_system_styles_management"] = $this->setup->ini->readVariable("tools", "enable_system_styles_management");
+		$values["lessc_path"] = $this->setup->ini->readVariable("tools", "lessc");
 		$values["clean_command"] = $this->setup->ini->readVariable("tools", "cleancommand");
 		$values["log_path"] = $this->setup->ini->readVariable("log","path")."/".
 			$this->setup->ini->readVariable("log","file");
@@ -1186,7 +1200,7 @@ echo "<br>+".$client_id;
 			if (ilUtil::isWindows())
 			{
 				$fs = array("datadir_path", "log_path", "convert_path", "zip_path",
-					"unzip_path", "ghostscript_path", "java_path", "htmldoc_path", "ffmpeg_path");
+					"unzip_path", "ghostscript_path", "java_path", "htmldoc_path", "ffmpeg_path", "lessc_path");
 				foreach ($fs as $f)
 				{
 					$_POST[$f] = str_replace("\\", "/", $_POST[$f]);
@@ -1240,7 +1254,7 @@ echo "<br>+".$client_id;
 			if (ilUtil::isWindows())
 			{
 				$fs = array("datadir_path", "log_path", "convert_path", "zip_path",
-					"unzip_path", "ghostscript_path", "java_path", "htmldoc_path", "ffmpeg_path");
+					"unzip_path", "ghostscript_path", "java_path", "htmldoc_path", "ffmpeg_path", "lessc_path");
 				foreach ($fs as $f)
 				{
 					$_POST[$f] = str_replace("\\", "/", $_POST[$f]);
@@ -3358,6 +3372,9 @@ else
 		{
 			include_once './Services/Tree/classes/class.ilTree.php';
 			$GLOBALS['ilSetting'] = $set;
+			$GLOBALS["DIC"]["ilSetting"] = function($c) {
+				return $GLOBALS["ilSetting"];
+			};
 			$tree = new ilTree(1);
 			$tree->renumber(1);
 			
@@ -3422,6 +3439,9 @@ else
 
 		// referencing does not work in dbupdate-script
 		$GLOBALS["ilDB"] = $this->setup->getClient()->getDB();
+		$GLOBALS["DIC"]["ilDB"] = function($c) {
+			return $GLOBALS["ilDB"];
+		};
 // BEGIN WebDAV
 		// read module and service information into db
 		require_once "./setup/classes/class.ilModuleReader.php";

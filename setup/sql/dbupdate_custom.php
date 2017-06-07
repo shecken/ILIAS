@@ -6336,6 +6336,11 @@ foreach ($mass_refs as $mass_ref_id) {
 
 <#263>
 <?php
+	$ilCtrlStructureReader->getStructure();
+?>
+
+<#264>
+<?php
 	$query = "UPDATE object_data\n"
 		." SET title = 'OD-Betreuer', description = 'OD-Betreuer (lokal)'\n"
 		." WHERE type = 'role'\n"

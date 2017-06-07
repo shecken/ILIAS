@@ -585,3 +585,7 @@ tree_implementation_mp#:#Materialized-Path Model
 tree_implementation_switch_btn#:#Switch Tree Implementation
 tree_implementation_switched#:#The tree implementation type has been switched.
 feedback_recipient_info#:#Diese Adresse wird in der Fusszeile für den Link "Administration kontaktieren" genutzt.
+enable_system_styles_management#:#System Styles administrieren
+enable_system_styles_management_info#:#Verwalten (hinzufügen, editieren, löschen) von System Styles im Layout and Styles Bereich der Administration.
+lessc_path#:#Pfad zu lessc
+lessc_path_comment#:#Lessc wird benötigt, um Less-Dateien zu CSS zu kompilieren. Dies ist eine Voraussetzung um neue System Styles in der Administration via GUI zu erstellen.

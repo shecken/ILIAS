@@ -228,8 +228,8 @@ class CellValueFormatter
         $dateObj->setTime($hours, $minutes, $seconds);
 
         if ($this->shouldFormatDates) {
-            $styleNumberFormat = $this->styleHelper->getNumberFormat($cellStyleId);
-            $phpDateFormat = DateFormatHelper::toPHPDateFormat($styleNumberFormat);
+            $styleNumberFormatCode = $this->styleHelper->getNumberFormatCode($cellStyleId);
+            $phpDateFormat = DateFormatHelper::toPHPDateFormat($styleNumberFormatCode);
             return $dateObj->format($phpDateFormat);
         } else {
             return $dateObj;
@@ -257,8 +257,8 @@ class CellValueFormatter
             $dateObj->modify('+' . $secondsRemainder . 'seconds');
 
             if ($this->shouldFormatDates) {
-                $styleNumberFormat = $this->styleHelper->getNumberFormat($cellStyleId);
-                $phpDateFormat = DateFormatHelper::toPHPDateFormat($styleNumberFormat);
+                $styleNumberFormatCode = $this->styleHelper->getNumberFormatCode($cellStyleId);
+                $phpDateFormat = DateFormatHelper::toPHPDateFormat($styleNumberFormatCode);
                 return $dateObj->format($phpDateFormat);
             } else {
                 return $dateObj;
@@ -283,16 +283,16 @@ class CellValueFormatter
 
     /**
      * Returns a cell's PHP Date value, associated to the given stored nodeValue.
+     * @see ECMA-376 Part 1 - §18.17.4
      *
-     * @param string $nodeValue
-     * @return \DateTime|null The value associated with the cell or NULL if invalid date value
+     * @param string $nodeValue ISO 8601 Date string
+     * @return \DateTime|string|null The value associated with the cell or NULL if invalid date value
      */
     protected function formatDateCellValue($nodeValue)
     {
         // Mitigate thrown Exception on invalid date-time format (http://php.net/manual/en/datetime.construct.php)
         try {
-            $cellValue = new \DateTime($nodeValue);
-            return $cellValue;
+            return ($this->shouldFormatDates) ? $nodeValue : new \DateTime($nodeValue);
         } catch (\Exception $e) {
             return null;
         }

@@ -11,6 +11,14 @@ class ComposerStaticInitdf10d65404ae6ccf02b102f486e8e6ea
 		array (
 			'Whoops\\' => 7,
 		),
+		'I' => 
+		array (
+			'ILIAS\\' => 6,
+		),
+		'P' => 
+		array (
+			'Psr\\Log\\' => 8,
+		),
 		'C' =>
 		array (
 			'CaT\\Plugins\\TalentAssessment\\' => 29,
@@ -28,6 +36,14 @@ class ComposerStaticInitdf10d65404ae6ccf02b102f486e8e6ea
 		'Whoops\\' =>
 		array (
 			0 => __DIR__ . '/..' . '/filp/whoops/src/Whoops',
+		),
+		'Psr\\Log\\' => 
+		array (
+			0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+		),
+		'ILIAS\\' => 
+		array (
+			0 => __DIR__ . '/../..' . '/../../src',
 		),
 		'CaT\\Plugins\\TalentAssessment\\' =>
 		array (
@@ -52,6 +68,13 @@ class ComposerStaticInitdf10d65404ae6ccf02b102f486e8e6ea
 	);
 
 	public static $prefixesPsr0 = array (
+		'P' => 
+		array (
+			'Pimple' => 
+			array (
+				0 => __DIR__ . '/..' . '/pimple/pimple/src',
+			),
+		),
 		'E' =>
 		array (
 			'Eluceo\\iCal' =>
@@ -63,6 +86,7 @@ class ComposerStaticInitdf10d65404ae6ccf02b102f486e8e6ea
 
 	public static $classMap = array (
 		'EasyPeasyICS' => __DIR__ . '/..' . '/phpmailer/phpmailer/extras/EasyPeasyICS.php',
+		'GeSHi' => __DIR__ . '/..' . '/geshi/geshi/src/geshi.php',
 		'PHPMailer' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmailer.php',
 		'PHPMailerOAuth' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmaileroauth.php',
 		'PHPMailerOAuthGoogle' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmaileroauthgoogle.php',

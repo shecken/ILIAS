@@ -6822,7 +6822,7 @@ foreach($tables as $table)
 {
 	$ilDB->query("ALTER TABLE ".$table." ADD INDEX ('obj_id','rbac_id','obj_type')");
 }
-
+?>
 <#443>
 <?php
 $wd = getcwd();
@@ -8426,6 +8426,9 @@ $tree =& new ilTree(ROOT_FOLDER_ID);
 $GLOBALS['tree'] = $tree;
 $rbacadmin =& new ilRbacAdmin();
 $rbacreview =& new ilRbacReview();
+$GLOBALS["DIC"]["tree"] = function($c) {
+	return $GLOBALS["tree"];
+};
 
 $query = "SELECT obd.obj_id as objid,obr.ref_id as refid FROM object_data as obd,object_reference as obr ".
 	"WHERE obd.obj_id = obr.obj_id ".
@@ -8632,7 +8635,10 @@ $ilCtrlStructureReader->getStructure();
 <?php
 
 global $log;
-$GLOBALS['ilLog'] =& $log;
+$GLOBALS['ilLog'] = $log;
+$GLOBALS["DIC"]["ilLog"] = function($c) {
+	return $GLOBALS["ilLog"];
+};
 
 
   // add chat below ChatSettings for personal desktop chat

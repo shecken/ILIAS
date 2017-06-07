@@ -629,6 +629,9 @@ class ilInitialisation
 				if (class_exists("Collator"))
 				{
 					$GLOBALS["ilCollator"] = new Collator($first);
+					$GLOBALS["DIC"]["ilCollator"] = function($c) {
+						return $GLOBALS["ilCollator"];
+					};
 				}
 			}
 		}
@@ -876,6 +879,8 @@ class ilInitialisation
 	 */
 	protected static function initGlobal($a_name, $a_class, $a_source_file = null)
 	{
+		global $DIC;
+
 		if($a_source_file)
 		{
 			include_once $a_source_file;
@@ -885,6 +890,10 @@ class ilInitialisation
 		{
 			$GLOBALS[$a_name] = $a_class;
 		}
+
+		$DIC[$a_name] = function ($c) use ($a_name) {
+			return $GLOBALS[$a_name];
+		};
 	}
 			
 	/**
@@ -924,12 +933,77 @@ class ilInitialisation
 
 		include_once "include/inc.debug.php";
 	}
-	
+
+	protected static $already_initialized;
+
+	public static function reinitILIAS() {
+		self::$already_initialized = false;
+		self::initILIAS();
+	}
+
+	/**
+	 * init the ILIAS UI framework.
+	 */
+	protected static function initUIFramework(\ILIAS\DI\Container $c) {
+		$c["ui.factory"] = function ($c) {
+			return new ILIAS\UI\Implementation\Factory();
+		};
+		$c["ui.renderer"] = function($c) {
+			return new ILIAS\UI\Implementation\DefaultRenderer
+							( $c["ui.factory"]
+							, $c["ui.template_factory"]
+							, $c["ui.resource_registry"]
+							, $c["lng"]
+							, $c["ui.javascript_binding"]
+							);
+		};
+		$c["ui.template_factory"] = function($c) {
+			return new ILIAS\UI\Implementation\Render\ilTemplateWrapperFactory
+							( $c["tpl"]
+							);
+		};
+		$c["ui.resource_registry"] = function($c) {
+			return new ILIAS\UI\Implementation\Render\ilResourceRegistry($c["tpl"]);
+		};
+		$c["ui.javascript_binding"] = function($c) {
+			return new ILIAS\UI\Implementation\Render\ilJavaScriptBinding($c["tpl"]);
+		};
+	}
+
 	/**
 	 * ilias initialisation
 	 */
 	public static function initILIAS()
 	{
+		if (self::$already_initialized) 
+		{
+			// workaround for bug #17990
+			// big mess. we prevent double initialisations with ILIAS 5.1, which is good, but...
+			// the style service uses $_GET["ref_id"] to determine
+			// the context styles. $_GET["ref_id"] is "corrected" by the "goto" procedure and which calls
+			// initILIAS again.
+			// we need a mechanism that detemines our repository context and stores that in an information object
+			// usable by the style component afterwars. This needs new concepts and a refactoring.
+			if(ilContext::initClient())
+			{
+				global $tpl;
+				if (is_object($tpl))
+				{
+					// load style sheet depending on user's settings
+					$location_stylesheet = ilUtil::getStyleSheetLocation();
+					$tpl->setVariable("LOCATION_STYLESHEET", $location_stylesheet);
+				}
+			}
+
+			return;
+		}
+
+		$GLOBALS["DIC"] = new \ILIAS\DI\Container();
+		$GLOBALS["DIC"]["ilLoggerFactory"] = function($c) {
+			return ilLoggerFactory::getInstance();
+		};
+
+		self::$already_initialized = true;
 		global $tree;
 		
 		self::initCore();
@@ -1281,8 +1355,8 @@ class ilInitialisation
 		
 		// load style definitions
 		// use the init function with plugin hook here, too
-	    self::initStyle();
-
+		self::initStyle();
+		self::initUIFramework($GLOBALS["DIC"]);
 		// $tpl
 		$tpl = new ilTemplate("tpl.main.html", true, true);
 		self::initGlobal("tpl", $tpl);
@@ -1308,19 +1382,19 @@ class ilInitialisation
 		self::initGlobal("ilNavigationHistory", "ilNavigationHistory",
 				"Services/Navigation/classes/class.ilNavigationHistory.php");
 
-		self::initGlobal("ilBrowser", "ilBrowser", 
+		self::initGlobal("ilBrowser", "ilBrowser",
 			"./Services/Utilities/classes/class.ilBrowser.php");
 
-		self::initGlobal("ilHelp", "ilHelpGUI", 
+		self::initGlobal("ilHelp", "ilHelpGUI",
 			"Services/Help/classes/class.ilHelpGUI.php");
 
 		self::initGlobal("ilToolbar", "ilToolbarGUI", 
 			"./Services/UIComponent/Toolbar/classes/class.ilToolbarGUI.php");	
 
-		self::initGlobal("ilLocator", "ilLocatorGUI", 
+		self::initGlobal("ilLocator", "ilLocatorGUI",
 			"./Services/Locator/classes/class.ilLocatorGUI.php");
 
-		self::initGlobal("ilTabs", "ilTabsGUI", 
+		self::initGlobal("ilTabs", "ilTabsGUI",
 			"./Services/UIComponent/Tabs/classes/class.ilTabsGUI.php");
 
 		// $ilMainMenu

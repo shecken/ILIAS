@@ -24,14 +24,14 @@ class Sheet implements SheetInterface
     /**
      * @param string $filePath Path of the XLSX file being read
      * @param string $sheetDataXMLFilePath Path of the sheet data XML file as in [Content_Types].xml
-     * @param Helper\SharedStringsHelper Helper to work with shared strings
-     * @param bool $shouldFormatDates Whether date/time values should be returned as PHP objects or be formatted as strings
      * @param int $sheetIndex Index of the sheet, based on order in the workbook (zero-based)
      * @param string $sheetName Name of the sheet
+     * @param \Box\Spout\Reader\XLSX\ReaderOptions $options Reader's current options
+     * @param Helper\SharedStringsHelper Helper to work with shared strings
      */
-    public function __construct($filePath, $sheetDataXMLFilePath, $sharedStringsHelper, $shouldFormatDates, $sheetIndex, $sheetName)
+    public function __construct($filePath, $sheetDataXMLFilePath, $sheetIndex, $sheetName, $options, $sharedStringsHelper)
     {
-        $this->rowIterator = new RowIterator($filePath, $sheetDataXMLFilePath, $sharedStringsHelper, $shouldFormatDates);
+        $this->rowIterator = new RowIterator($filePath, $sheetDataXMLFilePath, $options, $sharedStringsHelper);
         $this->index = $sheetIndex;
         $this->name = $sheetName;
     }
