@@ -8913,9 +8913,9 @@ gev#:#dont_send_mail#:#keine Mail versenden
 gev#:#end_date#:#Enddatum
 gev#:#evg_email#:#E-Mail-Adresse
 gev#:#evg_mandatory#:#Sie müssen dieses Feld bestätigen, um sich registrieren zu können.
-gev#:#evg_toc#:#Ja, ich stimme der <a href='/Customizing/global/skin/genv/static/documents/GEV_NB_Finale_Nutzungsbedingungen.pdf' target='_blank' class='blue'>Nutzungsvereinbarung</a> zu, um auf die Generali Online Akademie zugreifen zu können.
+gev#:#evg_toc#:#Ja, ich stimme der <a href='/Customizing/global/skin/genv/static/documents/GEV_NB_Finale_Nutzungsbedingungen.pdf' target='_blank' class='blue'>Nutzungsvereinbarung</a> zu, um auf den SEEPEX Campus zugreifen zu können.
 gev#:#evg_wbd#:#Hiermit erteile ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_BDL_Auftrag_BDL.pdf' target='_blank' class='blue'>Einwilligung zur Eintragung von Weiterbildungspunkten und -maßnahmen</a> in die WBD.
-gev#:#gev_accept_book_cond#:#Hiermit akzeptiere ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_Allg_Trainingsinfos Praesenz.pdf' target='_blank'  class='blue'>Buchungs- und Stornierungsbedingungen</a> der Generali Online Akademie.
+gev#:#gev_accept_book_cond#:#Hiermit akzeptiere ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_Allg_Trainingsinfos Praesenz.pdf' target='_blank'  class='blue'>Buchungs- und Stornierungsbedingungen</a> des SEEPEX Campus.
 gev#:#gev_accomodation#:#Übernachtungsort
 gev#:#gev_accomodations#:#Übernachtungen
 gev#:#gev_accomodation_note#:#Sollten Sie Anpassungen an den von Ihnen gewählten Übernachtungen wünschen,<br>wenden Sie sich bitte an <a href="mailto:"seepex-campus@seepex.com">seepex-campus@seepex.com</a>
@@ -8930,7 +8930,7 @@ gev#:#gev_ad_title#:#AD-Titel
 gev#:#gev_agb_tgic#:#AGB der TGIC
 gev#:#gev_agb_wbd#:#AGB der WBD
 gev#:#gev_agent_key#:#Vermittlerschlüssel
-gev#:#gev_agent_registration#:#Registrierung: Generali Online Akademie
+gev#:#gev_agent_registration#:#Registrierung: SEEPEX Campus
 gev#:#gev_agent_registration_button#:#unabhängiger Vertriebspartner
 gev#:#gev_agent_registration_label#:#Erstregistrierung als:
 gev#:#gev_agent_registration_note#:#Bitte vervollständigen Sie Ihr Benutzerprofil.
@@ -9070,7 +9070,7 @@ gev#:#gev_employee_booking#:#Buchungen meiner Mitarbeiter
 gev#:#gev_employee_booking_desc#:#Hier sehen Sie alle aktuellen Buchungen Ihrer Mitarbeiter.
 gev#:#gev_entry_date#:#Eintrittsdatum
 gev#:#gev_event_title#:#Veranstaltungstitel
-gev#:#gev_evg_registration#:#Registrierung: Generali Online Akademie
+gev#:#gev_evg_registration#:#Registrierung: SEEPEX Campus
 gev#:#gev_evg_registration_header_note#:#Hier können Sie einen neuen Benutzer mit Ihren Daten aus der IV-Datenbank anlegen.
 gev#:#gev_evg_registration_not_found#:#Zu Ihrer Eingabe konnte kein passender Datensatz gefunden werden. Versuchen Sie es erneut oder wenden Sie sich an <a href="mailto: seepex-campus@seepex.com" class="blue">seepex-campus@seepex.com</a>.
 gev#:#gev_evg_registration_success#:#Ihre Eingabe konnte eindeutig zugeordnet werden.
@@ -9195,7 +9195,7 @@ gev#:#gev_period#:#Zeitraum:
 gev#:#gev_personal_data#:#Personendaten
 gev#:#gev_points#:#Punkte
 gev#:#gev_points_at_end_of_cert_year#:#voraussichtliche Punkte bis zum Ende des aktuellen Zertifizierungsjahres
-gev#:#gev_points_in_academy#:#Bildungspunkte in der Generali Online Akademie
+gev#:#gev_points_in_academy#:#Bildungspunkte im SEEPEX Campus
 gev#:#gev_points_in_five_years#:#Punkte im 5-Jahres-Zeitraum
 gev#:#gev_points_in_wbd#:#Bildungspunkte in der WBD<br><small>Die Angaben erfolgen ohne Gewähr. Die verbindliche Angabe Ihrer Weiterbildungspunkte erhalten Sie ausschließlich auf den Seiten der WBD.</small>
 gev#:#gev_points_in_wbd_cert_period#:#Punkte in der aktuellen Zertifizierungsperiode
@@ -9218,7 +9218,7 @@ gev#:#gev_provider#:#Anbieter
 gev#:#gev_quicklinks#:#Quicklinks
 gev#:#gev_quicklinks_desc#:#Greifen Sie hier schnell und unkompliziert auf weitere Informationen zu Ihren Trainings und auf Ihre persönliche Bildungsbiografie zu.
 gev#:#gev_refresh_attachments#:#Anhänge aktualisieren
-gev#:#gev_registration#:#Erstregistrierung: Generali Online Akademie
+gev#:#gev_registration#:#Erstregistrierung: SEEPEX Campus
 gev#:#gev_registration_install_note#:#Bitte melden Sie sich mit Ihrer E-Mail-Adresse an.
 gev#:#gev_registration_posttext#:#Bei Rückfragen wenden Sie sich an: <a href="seepex-campus@seepex.com" class="blue">seepex-campus@seepex.com</a>
 gev#:#gev_registration_pretext#:#Bitte treffen Sie Ihre Auswahl:
@@ -9249,7 +9249,7 @@ gev#:#gev_search_menu#:#Trainingssuche
 gev#:#gev_set_billing_data#:#Rechnungsdaten eingeben
 gev#:#gev_set_course_status_title#:#Teilnehmerstatus von Training "%s" setzen
 gev#:#gev_set_course_status_title_desc#:#Setzen Sie hier die Teilnehmerstatus.
-gev#:#gev_set_password_on_first_login#:#Bitte setzen Sie ein Passwort für Ihren Zugang zur Generali Online Akademie.
+gev#:#gev_set_password_on_first_login#:#Bitte setzen Sie ein Passwort für Ihren Zugang zum SEEPEX Campus.
 gev#:#gev_signature#:#Unterschrift
 gev#:#gev_spec_course_approval#:#Spezialistentraining genehmigen
 gev#:#gev_spec_course_check#:#Spezialistentraining überprüfen
@@ -9307,12 +9307,12 @@ gev#:#gev_wbd_registration_basic#:#WBD-Registrierung
 gev#:#gev_wbd_registration_basic_back#:#Zurück zur Eingabe der GDV Vermittler-ID
 gev#:#gev_wbd_registration_basic_header_note#:#Registrieren Sie sich bei der Weiterbildungsdatenbank.
 gev#:#gev_wbd_registration_cb_mandatory#:#Sie müssen dieses Feld bestätigen, um die WBD-Registrierung abschließen zu können.
-gev#:#gev_wbd_registration_create_bwv_id#:#Die Generali soll für mich ein Weiterbildungskonto eröffnen.
+gev#:#gev_wbd_registration_create_bwv_id#:#SEEPEX soll für mich ein Weiterbildungskonto eröffnen.
 gev#:#gev_wbd_registration_create_bwv_id_cmd#:#Kontoeröffnung
 gev#:#gev_wbd_registration_finished_create_bwv_id#:#Vielen Dank, wir werden für Sie ein Konto in der Weiterbildungsdatenbank (WBD) des BWV e.V. sowie ein Nutzerkonto bei der Trusted German Insurance Cloud (TGIC) eröffnen.<br />Dieser Prozess wird in den nächsten Tagen abgeschlossen werden.<br />Nach Eröffnung Ihres Kontos erhalten Sie von dort insgesamt 3 Systemmails mit Ihrer Benutzerkennung, Ihrem Passwort und Ihrer Vermittler-ID.
 gev#:#gev_wbd_registration_finished_has_bwv_id#:#Vielen Dank, wir werden Ihre bei uns erworbenen Weiterbildungspunkte unter dieser Vermittler-ID an die zentrale Weiterbildungsdatenbank melden.
 gev#:#gev_wbd_registration_finished_has_bwv_id_service#:#Vielen Dank, wir werden Ihre bei uns erworbenen Weiterbildungspunkte unter dieser Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto: seepex-campus@seepex.com">seepex-campus@seepex.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.
-gev#:#gev_wbd_registration_finished_no_bwv_id#:#Vielen Dank für die Anmeldung an der Generali Online Akademie. Wir werden Ihre bei uns erworbenen Weiterbildungspunkte in der Generali Online Akademie sammeln und nach Eingabe Ihrer GDV Vermittler-ID an die zentrale Weiterbildungsdatenbank (WBD) melden. <br><br>Bitte beachten Sie, daß die Weiterbildungspunkte verfallen, sofern Sie Ihre GDV Vermittler-ID nicht innerhalb von 12 Monaten in Ihren Profildaten ergänzen.
+gev#:#gev_wbd_registration_finished_no_bwv_id#:#Vielen Dank für die Anmeldung am SEEPEX Campus. Wir werden Ihre bei uns erworbenen Weiterbildungspunkte im SEEPEX Campus sammeln und nach Eingabe Ihrer GDV Vermittler-ID an die zentrale Weiterbildungsdatenbank (WBD) melden. <br><br>Bitte beachten Sie, daß die Weiterbildungspunkte verfallen, sofern Sie Ihre GDV Vermittler-ID nicht innerhalb von 12 Monaten in Ihren Profildaten ergänzen.
 gev#:#gev_wbd_registration_finished_no_bwv_id_service#:#Vielen Dank für die Anmeldung an dem SEEPEX Campus. Wir werden Ihre bei uns erworbenen Weiterbildungspunkte in dem SEEPEX Campus sammeln und nach Eingabe Ihrer GDV Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto: seepex-campus@seepex.com">seepex-campus@seepex.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.<br><br>Bitte beachten Sie, dass die Weiterbildungspunkte verfallen, sofern Sie Ihre GDV Vermittler-ID nicht innerhalb von 12 Monaten in Ihren Profildaten ergänzen.
 gev#:#gev_wbd_registration_has_bwv_id#:#Ich habe bereits eine GDV Vermittler-ID
 gev#:#gev_wbd_registration_has_bwv_id_cmd#:#Weiter
@@ -11870,15 +11870,15 @@ pwassist#:#pwassist_invalid_auth_mode#:#Der angegebene Benutzer wird nicht direk
 pwassist#:#pwassist_invalid_email#:#Bitte korrigieren Sie den Wert im Eingabefeld. Die E-Mail-Adresse, die Sie eingegeben haben, ist in der Datenbank nicht vorhanden.
 pwassist#:#pwassist_invalid_username_or_email#:#Bitte korrigieren Sie die Werte in den Eingabefeldern. Der Benutzername und die E-Mail-Adresse, die Sie eingegeben haben, sind in der Datenbank nicht vorhanden.
 pwassist#:#pwassist_login_not_match#:#Bitte geben Sie einen anderen Benutzernamen ein.\nDer Benutzername, den Sie eingegeben haben, stimmt nicht mit dem Benutzernamen überein, für den Sie Passwort-Unterstützung angefordert hatten.
-pwassist#:#pwassist_mail_body#:#Sehr geehrte Generali Online Akademie Nutzerin,\nsehr geehrter Generali Online Akademie Nutzer,\n\nSie haben soeben die Rücksetzung Ihres Passworts angefordert. Bitte öffnen Sie den folgenden Link, um Ihr neues Passwort zu vergeben:\n%1$s\n\nHinweis: Der Link besteht aus nur einer Zeile. Sollte er durch Ihr E-Mail-Programm auf mehrere Zeilen aufgeteilt sein, so entfernen Sie bitte die Zeilenumbrüche. Aus Sicherheitsgründen kann der Link nur einmal und innerhalb einer begrenzten Zeit aufgerufen werden. Danach wird der Link ungültig und Sie müssen die Passwort-Unterstützung erneut anfordern.\n\nDiese Nachricht wurde automatisch generiert von: %2$s\nIhr Benutzername lautet: %4$s\n\nSollten Sie versehentlich die Passwort-Unterstützung benutzt haben, so löschen Sie bitte diese Nachricht.\nSollten Sie keine Passwort-Unterstützung angefordert haben, so nehmen Sie bitte mit %5$s Kontakt auf.\n\nMit freundlichen Grüßen \nIhre Generali Online Akademie
+pwassist#:#pwassist_mail_body#:#Sehr geehrte SEEPEX Campus Nutzerin,\nsehr geehrter SEEPEX Campus Nutzer,\n\nSie haben soeben die Rücksetzung Ihres Passworts angefordert. Bitte öffnen Sie den folgenden Link, um Ihr neues Passwort zu vergeben:\n%1$s\n\nHinweis: Der Link besteht aus nur einer Zeile. Sollte er durch Ihr E-Mail-Programm auf mehrere Zeilen aufgeteilt sein, so entfernen Sie bitte die Zeilenumbrüche. Aus Sicherheitsgründen kann der Link nur einmal und innerhalb einer begrenzten Zeit aufgerufen werden. Danach wird der Link ungültig und Sie müssen die Passwort-Unterstützung erneut anfordern.\n\nDiese Nachricht wurde automatisch generiert von: %2$s\nIhr Benutzername lautet: %4$s\n\nSollten Sie versehentlich die Passwort-Unterstützung benutzt haben, so löschen Sie bitte diese Nachricht.\nSollten Sie keine Passwort-Unterstützung angefordert haben, so nehmen Sie bitte mit %5$s Kontakt auf.\n\nMit freundlichen Grüßen \nIhr SEEPEX Campus
 pwassist#:#pwassist_mail_sent#:#Wir haben soeben eine E-Mail an die Adresse %1$s versendet.\nWeitere Anweisungen entnehmen Sie bitte dieser Nachricht.
-pwassist#:#pwassist_mail_subject#:#Generali Online Akademie: Passwort-/Benutzernamen-Unterstützung
+pwassist#:#pwassist_mail_subject#:#SEEPEX Campus: Passwort-/Benutzernamen-Unterstützung
 pwassist#:#pwassist_not_permitted#:#Bitte geben Sie einen anderen Benutzernamen ein.\nPasswort-Unterstützung ist für den angegebenen Benutzer nicht erlaubt.
 pwassist#:#pwassist_no_email_found#:#Leider kann die Passwortunterstützung nicht genutzt werden, da für das angegebene Benutzerkonto keine E-Mail Adresse hinterlegt ist.
 pwassist#:#pwassist_password_assigned#:#Das Passwort wurde erfolgreich Ihrem Benutzernamen %1$s  zugewiesen.
 pwassist#:#pwassist_session_expired#:#Bitte füllen Sie das Formular erneut aus.\nDie Zeit für die Durchführung der Passwort-Unterstützung ist abgelaufen. Dies kann passiert sein, weil Sie versucht haben, die Adresse, die Ihnen per E-Mail zugesandt wurde, mehr als einmal zu verwenden, oder weil zu viel Zeit verstrichen ist, seit die Adresse zu Ihnen gesandt wurde.
 pwassist#:#pwassist_update_error#:#Bitte benachrichtigen Sie den System Administrator.\nDas Passwort konnte aufgrund eines Datenbank Fehlers nicht zugewiesen werden.
-pwassist#:#pwassist_username_mail_body#:#Sehr geehrte Generali Online Akademie Nutzerin,\nsehr geehrte Generali Online Akademie Nutzer,\n\nSie haben soeben Ihren Benutzernamen für die Generali Online Akademie angefragt. \n\nDies sind die aktiven Nutzernamen, die wir unter Ihrer E-Mail-Adresse registriert haben: \n%1$s\n\nDiese E-Mail ist automatisch generiert worden von: %2$s \nDie eingetragene E-Mail-Adresse lautet: %4$s \n\nMit freundlichen Grüßen \nIhre Generali Online Akademie
+pwassist#:#pwassist_username_mail_body#:#Sehr geehrte SEEPEX Campus Nutzerin,\nsehr geehrte SEEPEX Campus Nutzer,\n\nSie haben soeben Ihren Benutzernamen für den SEEPEX Campus angefragt. \n\nDies sind die aktiven Nutzernamen, die wir unter Ihrer E-Mail-Adresse registriert haben: \n%1$s\n\nDiese E-Mail ist automatisch generiert worden von: %2$s \nDie eingetragene E-Mail-Adresse lautet: %4$s \n\nMit freundlichen Grüßen \nIhr SEEPEX Campus
 rating#:#rating_activate_rating#:#Bewertung aktivieren
 rating#:#rating_activate_rating_info#:#Wenn aktiviert, können Benutzer dieses Objekt bewerten.
 rating#:#rating_add_category#:#Kategorie hinzufügen
