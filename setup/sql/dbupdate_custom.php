@@ -6336,11 +6336,22 @@ foreach ($mass_refs as $mass_ref_id) {
 
 <#263>
 <?php
+	$query = "UPDATE object_data\n"
+		." SET title = 'OD-Betreuer', description = 'OD-Betreuer (lokal)'\n"
+		." WHERE type = 'role'\n"
+		."     AND title = 'Key-Accounter'\n"
+		."     AND description = 'Key-Accounter (lokal)'";
+
+	$ilDB->manipulate($query);
+?>
+
+<#264>
+<?php
 require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCreationRequestDB.php");
 gevDecentralTrainingCreationRequestDB::install_step8($ilDB);
 ?>
 
-<#264>
+<#265>
 <?php
 require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCreationRequestDB.php");
 gevDecentralTrainingCreationRequestDB::install_step9($ilDB);
