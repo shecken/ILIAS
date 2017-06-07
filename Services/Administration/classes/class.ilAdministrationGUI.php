@@ -323,7 +323,7 @@ class ilAdministrationGUI
 
 		//gev-patch start #3036
 		//Teile in die Funktion verschoben
-		$elements = $this->getAdminMenuEntries($layout);
+		$elements = $this->getAdminMenuEntries();
 		$titems = $elements["titems"];
 		$groups = $elements["groups"];
 		//gev-patch end
@@ -395,7 +395,7 @@ class ilAdministrationGUI
 	 *
 	 * @return array
 	 */
-	public function getAdminMenuEntries($layout)
+	public function getAdminMenuEntries()
 	{
 		global $tree, $rbacsystem, $lng, $ilSetting, $objDefinition;
 
