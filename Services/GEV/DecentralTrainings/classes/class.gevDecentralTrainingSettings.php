@@ -9,34 +9,35 @@
 * @version	$Id$
 */
 
-class gevDecentralTrainingSettings {
+class gevDecentralTrainingSettings
+{
 	// @var ilDateTime		Datetime when the training starts.
 	protected $start_datetime;
-	
+
 	// @var ilDateTime		Datetime when training ends
 	protected $end_datetime;
-	
+
 	// @var int|null		Id of the Venue, where the training takes place.
-	protected $venue_obj_id; 
-	
+	protected $venue_obj_id;
+
 	// @var string|null     Roomnumber of the Venue
 	protected $venue_room_nr;
-        
+
 	// @var string|null		A free form Venue.
 	protected $venue_text;
-	
+
 	// @var int|null		Reference Id of the org unit the training is made for.
 	protected $orgu_ref_id;
-	
+
 	// @var string			Description to be used for the training.
 	protected $description;
-	
+
 	// @var string			Some info about orga to be send in an invitation.
 	protected $orga_info;
-	
+
 	// @var string|null		Link to a VC
 	protected $webinar_link;
-	
+
 	// @var string|null		Password to a VC
 	protected $webinar_password;
 
@@ -45,35 +46,22 @@ class gevDecentralTrainingSettings {
 
 	//@var array|null 		Added attachments
 	protected $added_files;
-	
-	public function __construct( ilDateTime $a_start_datetime
-							   , ilDateTime $a_end_datetime
-							   , $a_venue_obj_id
-							   , $a_venue_room_nr
-							   , $a_venue_text
-							   , $a_orgu_ref_id
-							   , $a_description
-							   , $a_orga_info
-							   , $a_webinar_link
-							   , $a_webinar_password
-							   , $a_title
-							   , $a_vc_type
-							   , $a_training_category
-							   , $a_target_group
-							   , $a_gdv_topic
-							   , $a_tmp_path_string
-							   , $a_added_files
-							   ) {
-		assert($a_start_datetime->get(IL_CAL_DATE) == $a_end_datetime->get(IL_CAL_DATE));
-		
+
+	//@var array			Schedule
+	protected $periods;
+
+	public function __construct( ilDateTime $a_start_datetime, ilDateTime $a_end_datetime, $a_venue_obj_id, $a_venue_room_nr, $a_venue_text, $a_orgu_ref_id, $a_description, $a_orga_info, $a_webinar_link, $a_webinar_password, $a_title, $a_vc_type, $a_training_category, $a_target_group, $a_gdv_topic, $a_tmp_path_string, $a_added_files, $a_periods = null
+							   )
+	{
+
 		assert($a_venue_obj_id === null || is_int($a_venue_obj_id));
 		assert($venue_room_nr == null || is_string($venue_room_nr));
 		assert($a_venue_text === null || is_string($a_venue_text));
 		assert($a_venue_obj_id === null || $a_venue_text === null);
-		
+
 		assert($a_orgu_ref_id === null || is_int($a_orgu_ref_id));
 		assert($a_orgu_ref_id === null || ilObject::_lookupType($a_orgu_ref_id, true) == "orgu");
-		
+
 		assert(is_string($a_description));
 		assert(is_string($a_orga_info));
 		assert($a_webinar_link === null || is_string($a_webinar_link));
@@ -88,9 +76,11 @@ class gevDecentralTrainingSettings {
 		assert($a_tmp_path_string === null || is_string($a_tmp_path_string));
 		assert($a_added_files === null || is_array($a_added_files));
 
+		assert(is_array($a_periods) || $a_periods === null);
+
 		$this->start_datetime = $a_start_datetime;
 		$this->end_datetime = $a_end_datetime;
-		$this->venue_obj_id = $a_venue_obj_id; 
+		$this->venue_obj_id = $a_venue_obj_id;
 		$this->venue_room_nr = $a_venue_room_nr;
 		$this->venue_text = $a_venue_text;
 		$this->trainer_ids = $a_trainer_ids;
@@ -108,117 +98,150 @@ class gevDecentralTrainingSettings {
 
 		$this->tmp_path_string = $a_tmp_path_string;
 		$this->added_files = $a_added_files;
+		$this->periods = $a_periods;
 	}
-	
-	protected function getCourseUtils($a_obj_id) {
+
+	protected function getCourseUtils($a_obj_id)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 		return gevCourseUtils::getInstance($a_obj_id);
 	}
-	
-	protected function throwException($msg) {
+
+	protected function throwException($msg)
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingException.php");
 		throw new gevDecentralTrainingException($msg);
 	}
-	
-	public function start() {
+
+	public function start()
+	{
 		return $this->start_datetime;
 	}
-	
-	public function end() {
+
+	public function end()
+	{
 		return $this->end_datetime;
 	}
 
-	public function setStart(ilDateTime $a_start_datetime) {
+	public function setStart(ilDateTime $a_start_datetime)
+	{
 		$this->start_datetime = $a_start_datetime;
 	}
 
-	public function setEnd(ilDateTime $a_end_datetime) {
+	public function setEnd(ilDateTime $a_end_datetime)
+	{
 		$this->end_datetime = $a_end_datetime;
 	}
 
-	public function venueObjId() {
+	public function venueObjId()
+	{
 		return $this->venue_obj_id;
 	}
-        
-	public function venueRoomNr() {
+
+	public function venueRoomNr()
+	{
 		return $this->venue_room_nr;
 	}
-	
-	public function venueText() {
+
+	public function venueText()
+	{
 		return $this->venue_text;
 	}
-	
-	public function orguRefId() {
+
+	public function orguRefId()
+	{
 		return $this->orgu_ref_id;
 	}
-	
-	public function description() {
+
+	public function description()
+	{
 		return $this->description;
 	}
-	
-	public function orgaInfo() {
+
+	public function orgaInfo()
+	{
 		return $this->orga_info;
 	}
-	
-	public function webinarLink() {
+
+	public function webinarLink()
+	{
 		return $this->webinar_link;
 	}
-	
-	public function webinarPassword() {
+
+	public function webinarPassword()
+	{
 		return $this->webinar_password;
 	}
 
-	public function title() {
+	public function title()
+	{
 		return $this->title;
 	}
 
-	public function vcType() {
+	public function vcType()
+	{
 		return $this->vc_type;
 	}
 
-	public function trainingCategory() {
+	public function trainingCategory()
+	{
 		return $this->training_category;
 	}
-	
-	public function targetGroup() {
+
+	public function targetGroup()
+	{
 		return $this->target_group;
 	}
 
-	public function gdvTopic() {
+	public function gdvTopic()
+	{
 		return $this->gdv_topic;
 	}
 
-	public function tmpPathString() {
+	public function tmpPathString()
+	{
 		return $this->tmp_path_string;
 	}
 
-	public function addedFiles() {
+	public function addedFiles()
+	{
 		return $this->added_files;
 	}
 
-	public function applyTo($a_obj_id) {
+	public function periods()
+	{
+		return $this->periods;
+	}
+
+	public function applyTo($a_obj_id)
+	{
 		assert(is_int($a_obj_id));
 		assert(ilObject::_lookupType($a_obj_id) == "crs");
-		
+
 		require_once("Services/Calendar/classes/class.ilDate.php");
 		$crs_utils = $this->getCourseUtils($a_obj_id);
 		$crs = $crs_utils->getCourse();
-		
+
 		if ($crs_utils->isFinalized()) {
 			$this->throwException("Training already finalized.");
 		}
-		
+
 		$crs_utils->setTEPOrguId($this->orguRefId());
 		$crs->setDescription($this->description());
-		
+
 		$start = explode(" ", $this->start()->get(IL_CAL_DATETIME));
 		$end = explode(" ", $this->end()->get(IL_CAL_DATETIME));
 		$crs_utils->setStartDate(new ilDate($start[0], IL_CAL_DATE));
 		$crs_utils->setEndDate(new ilDate($end[0], IL_CAL_DATE));
 
-		$start = explode(":", $start[1]);
-		$end = explode(":", $end[1]);
-		$crs_utils->setSchedule(array($start[0].":".$start[1]."-".$end[0].":".$end[1]));
+
+		if (is_array($this->periods)) { // course with new logic, just use periods from db.
+			$crs_utils->setSchedule($this->periods);
+		} else { // course with old logic. calculate periods youself.
+			$time_s = explode(':', $start[1]);
+			$time_e = explode(':', $end[1]);
+			$crs_utils->setSchedule([$time_s[0].':'.$time_s[1].'-'.$time_e[0].':'.$time_e[1]]);
+		}
 
 		$crs_utils->setVenueId($this->venueObjId());
 		$crs_utils->setVenueRoomNr($this->venueRoomNr());
@@ -242,7 +265,7 @@ class gevDecentralTrainingSettings {
 		if ($this->gdvTopic() !== null) {
 			$crs_utils->setGDVTopic($this->gdvTopic());
 		}
-		
+
 		$crs->update();
 	}
 }

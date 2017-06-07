@@ -6349,3 +6349,15 @@ foreach ($mass_refs as $mass_ref_id) {
 
 	$ilDB->manipulate($query);
 ?>
+
+<#264>
+<?php
+require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCreationRequestDB.php");
+gevDecentralTrainingCreationRequestDB::install_step8($ilDB);
+?>
+
+<#265>
+<?php
+require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCreationRequestDB.php");
+gevDecentralTrainingCreationRequestDB::install_step9($ilDB);
+?>
