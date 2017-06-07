@@ -40,4 +40,11 @@ class MenuItemCollection implements \Iterator
 	{
 		return count($this->menu_items) > $this->cnt;
 	}
+
+	public function sortByTitle()
+	{
+		usort($this->menu_items, function ($a, $b) {
+					return strcasecmp($a->title(), $b->title());
+		});
+	}
 }
