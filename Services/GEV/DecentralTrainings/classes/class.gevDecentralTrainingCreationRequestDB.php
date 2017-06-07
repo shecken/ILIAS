@@ -112,7 +112,7 @@ class gevDecentralTrainingCreationRequestDB
 			return;
 		}
 		$ilDB = $this->getDB();
-		foreach (array_unique($a_periods) as $day => $period) {
+		foreach ($a_periods as $day => $period) {
 			$ilDB->manipulate(
 				'INSERT INTO '.self::TABLE_NAME_PERIODS.'(row_id,request_id,day,periods)'
 				.'	VALUES ('.$ilDB->nextId(self::TABLE_NAME_PERIODS)
