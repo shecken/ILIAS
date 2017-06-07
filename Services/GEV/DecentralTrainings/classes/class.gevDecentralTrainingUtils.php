@@ -406,7 +406,6 @@ class gevDecentralTrainingUtils
 						$d_tpl->setVariable("BEGIN", $times[0]);
 						$d_tpl->setVariable("END", $times[1]);
 						if ($day < count($periods) - 1) {
-							$d_tpl->setVariable("DELIM", ', ');
 							$start_date->add(new DateInterval('P1D'));
 						}
 						$d_tpl->parseCurrentBlock();
