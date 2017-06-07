@@ -150,9 +150,8 @@ class ilObjReportWBDPoints extends ilObjReportBase
 			if (!empty($settings['wbd_types'])) {
 				$query .= "    AND " .$db->in('usr.wbd_type', $settings['wbd_types'], false, "text");
 			}
-		} else {
-			$query .= "     AND ((`usrcrs`.`begin_date` < '" .date("Y") ."-12-31' ) OR (`usrcrs`.`begin_date` = '".date("Y") ."-12-31' ) ) AND (('".date("Y") ."-01-01' < `usrcrs`.`begin_date` ) OR ('" .date("Y") ."-01-01' = `usrcrs`.`begin_date` ) )\n";
 		}
+
 		$query .= $this->queryOrder();
 
 		return $query;

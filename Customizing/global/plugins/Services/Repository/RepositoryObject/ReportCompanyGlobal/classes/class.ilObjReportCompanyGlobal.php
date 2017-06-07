@@ -14,7 +14,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 	protected $online;
 	protected $relevant_parameters = array();
 	protected static $participated = array('teilgenommen');
-	protected static $columns_to_sum = array('book_book' => 'book_book','part_book' => 'part_book','wp_part' => 'wp_part');
+	protected static $columns_to_sum = array('crs_cnt_book' => 'crs_cnt_book', 'book_book' => 'book_book', 'crs_cnt_part' => 'crs_cnt_part', 'part_book' => 'part_book','wp_part' => 'wp_part');
 	protected static $wbd_relevant = array('OKZ1','OKZ2','OKZ3');
 	protected $types;
 	protected $filter_orgus = array();
@@ -216,8 +216,10 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 	protected function buildTable($table)
 	{
 		$table  ->column('type', $this->plugin->txt('type'), true)
+				->column('crs_cnt_book', $this->plugin->txt('cnt_crs'), true)
 				->column('book_book', $this->plugin->txt('bookings'), true)
 				->column('book_user', $this->plugin->txt('members'), true)
+				->column('crs_cnt_part', $this->plugin->txt('cnt_crs'), true)
 				->column('part_book', $this->plugin->txt('participations'), true)
 				->column('wp_part', $this->plugin->txt('edu_points'), true)
 				->column('part_user', $this->plugin->txt('members'), true);
@@ -239,9 +241,15 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 
 	protected function getPartialQuery($has_participated)
 	{
-		$prefix = $has_participated ? 'part' : 'book';
+		if ($has_participated) {
+			$prefix = 'part';
+			$crs_cnt = 'COUNT(DISTINCT hc.crs_id) AS crs_cnt_part';
+		} else {
+			$prefix = 'book';
+			$crs_cnt = 'COUNT(DISTINCT hc.crs_id) AS crs_cnt_book';
+		}
 
-		$query = 'SELECT hc.type , COUNT(hucs.usr_id) '.self::$columns_to_sum[$prefix.'_book'].', COUNT(DISTINCT hucs.usr_id) '.$prefix.'_user' ;
+		$query = 'SELECT '.$crs_cnt.', count(hc.type) AS crs_cnt, hc.type , COUNT(hucs.usr_id) '.self::$columns_to_sum[$prefix.'_book'].', COUNT(DISTINCT hucs.usr_id) '.$prefix.'_user' ;
 		if ($has_participated) {
 			$query .= ', '.$this->countParticipated();
 		}
@@ -251,6 +259,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 		$query = $this->possiblyAddOrguFilterJoin($query); //ok
 		$query = $this->possiblyAddCourseTopicsFilterJoin($query); //ok
 		$query .= 	'	WHERE hc.hist_historic = 0'
+					.'		AND (hc.is_cancelled IS NULL OR hc.is_cancelled = '.$this->gIldb->quote('Nein', 'text').')'
 					.'		AND hucs.hist_historic = 0'
 					.'		AND hucs.booking_status = '.$this->gIldb->quote('gebucht', 'text')
 					.'		AND '.$this->gIldb->in('hc.type', $this->types, false, 'text');

@@ -137,7 +137,7 @@ class ilObjTalentAssessmentGUI extends ilObjectPluginGUI
 		$autocomplete_link = $this->gCtrl->getLinkTarget($this, self::CMD_AUTOCOMPLETE, "", true);
 		$org_unit_options = $db->getOrgUnitOptions();
 		$this->addSettingsFormItems($form, $career_goal_options, $venue_options, $org_unit_options, $autocomplete_link);
-
+		$form->getItemByPostVar(\CaT\Plugins\TalentAssessment\ilActions::F_REPORT_TITLE)->setValue($this->plugin->txt('report_title_default'));
 		return $form;
 	}
 

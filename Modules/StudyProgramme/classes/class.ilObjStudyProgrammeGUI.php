@@ -261,6 +261,27 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI
 						$cmd .= "Object";
 						$this->$cmd();
 						break;
+					case 'cut':
+						$this->tabs_gui->clearTargets();
+						$this->tabs_gui->setBackTarget($this->lng->txt("back"), $this->ctrl->getLinkTarget($this));
+						parent::cutObject();
+						break;
+					case 'clear':
+						parent::clearObject();
+						break;
+					case 'performPasteIntoMultipleObjects':
+						$this->tabs_gui->clearTargets();
+						parent::performPasteIntoMultipleObjectsObject();
+						break;
+					case 'cancelMoveLink':
+						parent::cancelMoveLinkObject();
+						break;
+					case 'keepObjectsInClipboard':
+						parent::keepObjectsInClipboardObject();
+						break;
+					case 'render':
+						$this->view();
+						break;
 					/*case 'editSettings':
 						$this->tabs_gui->setTabActive("settings");
 						$this->setSubTabsSettings('edit_settings');
@@ -581,8 +602,11 @@ class ilObjStudyProgrammeGUI extends ilContainerGUI
 				if ($this->checkAccess("write")) {
 					$this->tabs_gui->addSubTab(self::SUBTAB_VIEW_TREE, $this->lng->txt("prg_treeview"), $this->getLinkTarget(self::SUBTAB_VIEW_TREE));
 					// GEV-Patch Start 2790
-					$this->tabs_gui->addSubTab("sorting", $this->lng->txt("prg_ordering"),
-									$this->ctrl->getLinkTarget($this, "editOrder"));
+					$this->tabs_gui->addSubTab(
+						"sorting",
+						$this->lng->txt("prg_ordering"),
+						$this->ctrl->getLinkTarget($this, "editOrder")
+					);
 					// GEV-Patch End
 				}
 				break;
