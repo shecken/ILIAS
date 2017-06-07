@@ -112,3 +112,6 @@ xtad_edit_observator#:#Benutzer darf die Beobachter bearbeiten.
 xtas_write#:#Benutzer darf die Einstellungen des TA Termin bearbeiten.
 xtas_delete#:#Benutzer darf den TA Termin löschen.
 xtas_edit_permission#:#Benutzer darf die Rechte verwalten.
+report_title_default#:#Assessment Center für [KARRIEREZIEL]
+report_title#:#Titel des PDF-Reports
+report_title_info#:#Dieser Eintrag wird später im Titelbereich des PDF-Reports Angezeigt. Dabei können folgende Platzhalter verwenden:<br />[VORNAME], [NACHNAME], [KARRIEREZIEL].

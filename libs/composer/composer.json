@@ -16,7 +16,8 @@
 			"ILIAS\\" : "../../src",
 			"CaT\\" : "../../CaT/src",
 			"CaT\\Plugins\\CareerGoal\\" : "../../Customizing/global/plugins/Services/Repository/RepositoryObject/CareerGoal/classes",
-			"CaT\\Plugins\\TalentAssessment\\" : "../../Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes"
+			"CaT\\Plugins\\TalentAssessment\\" : "../../Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes",
+			"CaT\\Plugins\\ReportMaster\\" : "../../Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes"
 		}
 	},
 	"extra": {

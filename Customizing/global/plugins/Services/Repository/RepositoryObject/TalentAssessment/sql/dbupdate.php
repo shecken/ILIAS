@@ -89,3 +89,22 @@ $query = "UPDATE object_data\n"
 		."WHERE title = 'il_xtas_observator'";
 $ilDB->query($query);
 ?>
+
+<#10>
+<?php
+global $ilUser,$ilDB;
+$b = new \CaT\Plugins\CareerGoal\Settings\ilDB($ilDB, $ilUser);
+$settings_db = new \CaT\Plugins\TalentAssessment\Settings\ilDB($ilDB, $ilUser, $b);
+$settings_db->install();
+?>
+
+<#11>
+<?php
+	global $ilDB;
+	require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/TalentAssessment/classes/class.ilTalentAssessmentPlugin.php");
+	$plugin = new ilTalentAssessmentPlugin;
+	$plugin->updateLanguages();
+	$plugin->loadLanguageModule();
+	$ilDB->manipulate('UPDATE rep_obj_xtas SET report_title = '
+		.$ilDB->quote($plugin->txt('report_title_default'), 'text'));
+?>

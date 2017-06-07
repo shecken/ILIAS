@@ -19,6 +19,8 @@ require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportDiscovery/class.ilReportDiscovery.php';
+
 
 class gevMainMenuGUI extends ilMainMenuGUI
 {
@@ -48,16 +50,23 @@ class gevMainMenuGUI extends ilMainMenuGUI
 	 */
 	protected $gUser;
 
+	/**
+	 * @var ilReportDiscovery
+	 */
+	protected $report_discovery;
+
 	public function __construct()
 	{
 		parent::__construct($a_target, $a_use_start_template);
 
-		global $lng, $ilCtrl, $ilAccess, $ilUser;
+		global $lng, $ilCtrl, $ilAccess, $ilUser, $ilPluginAdmin;
 
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
 		$this->gAccess = $ilAccess;
 		$this->gUser = $ilUser;
+
+		$this->report_discovery = new ilReportDiscovery($ilPluginAdmin, $this->gAccess);
 
 		if ($this->gUser->getId() !== 0) {
 			$this->user_utils = gevUserUtils::getInstance($this->gUser->getId());
@@ -369,34 +378,26 @@ class gevMainMenuGUI extends ilMainMenuGUI
 	protected function getReportingMenuDropDown()
 	{
 		require_once("Services/Link/classes/class.ilLink.php");
-		require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php");
-		$entries = array();
+		$entries = [];
 
-		$visible_repo_reports = array_merge(ilObjReportBase2::getVisibleReportsObjectData($this->gUser));
+		$visible_repo_reports = $this->report_discovery->getVisibleReportItemsForUserUngrouped($this->gUser);
 
-		global $ilAccess;
-		foreach ($visible_repo_reports as $key => $visible_report) {
-			if ($visible_report["type"] == "xspo") {
-				foreach (ilObject::_getAllReferences($visible_report["obj_id"]) as $ref_id) {
-					if ($ilAccess->checkAccessOfUser($this->gUser->getId(), "read", null, $ref_id)) {
-						$sp_overview = ilObjectFactory::getInstanceByRefId($ref_id);
+		foreach ($visible_repo_reports as $visible_report) {
+			$type = $visible_report->linkParameter()['type'];
+			$ref_id = $visible_report->linkParameter()['ref_id'];
+			$title = $visible_report->title();
 
-						if ($sp_overview->isTrainerView()) {
-							if ($crs_title = $sp_overview->getParentCourseTitle()) {
-								$visible_repo_reports[] = ["ref_id" => $ref_id, "type" => "xspo", "title" => $sp_overview->getTitle()." (".$crs_title.")"];
-							}
-						} else {
-							$visible_repo_reports[] = ["ref_id" => $ref_id, "type" => "xspo", "title" => $sp_overview->getTitle()];
-						}
+			if ($type == "xspo") {
+				$sp_overview = ilObjectFactory::getInstanceByRefId($ref_id);
+				if ($sp_overview->isTrainerView()) {
+					if ($crs_title = $sp_overview->getParentCourseTitle()) {
+						$title = $sp_overview->getTitle()." (".$crs_title.")";
 					}
 				}
-				unset($visible_repo_reports[$key]);
 			}
+			$entries[] = array(true, ilLink::_getStaticLink($ref_id, $type),$title);
 		}
 
-		foreach ($visible_repo_reports as $info) {
-			$entries[] = array(true, ilLink::_getStaticLink($info["ref_id"], $info["type"]),$info["title"]);
-		}
 		// sort entries by title
 		uasort($entries, function ($el1, $el2) {
 			return strcasecmp($el1[2], $el2[2]);
@@ -414,9 +415,7 @@ class gevMainMenuGUI extends ilMainMenuGUI
 		$last_permission_calculation = ilSession::get("gev_has_reporting_menu_calculation_ts");
 		if ($has_reporting_menu === null
 		||   $last_permission_calculation + self::HAS_REPORTING_MENU_RECALCULATION_IN_SECS < time()) {
-			require_once("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBase.php");
-
-			$visible_repo_reports = ilObjReportBase::getVisibleReportsObjectData($this->gUser);
+			$visible_repo_reports = $this->report_discovery->getVisibleReportsObjectData($this->gUser);
 
 			$has_reporting_menu = (count($visible_repo_reports) > 0);
 			ilSession::set("gev_has_reporting_menu", $has_reporting_menu);
