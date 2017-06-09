@@ -675,11 +675,12 @@ class ilRbacReview
 			$field_id_end = $amd_utils->getFieldId(gevSettings::CRS_AMD_END_DATE);
 
 			$period_select = ", sd.value AS start_date, ed.value AS end_date\n";
-			$period_join = " JOIN rbac_pa ON object_data.obj_id = rbac_pa.rol_id\n".
-			 "JOIN object_reference ON rbac_pa.ref_id = object_reference.ref_id\n".
-			 "JOIN object_data od2 ON object_reference.obj_id = od2.obj_id AND od2.type = 'crs'\n".
-			 "LEFT JOIN adv_md_values_date sd ON od2.obj_id = sd.obj_id AND sd.field_id = ".$field_id_start."\n".
-			 "LEFT JOIN adv_md_values_date ed ON od2.obj_id = ed.obj_id AND ed.field_id = ".$field_id_end."\n";
+			$period_join = " JOIN object_reference ON rbac_fa.parent = object_reference.ref_id\n".
+			 " JOIN object_data od2 ON object_reference.obj_id = od2.obj_id\n".
+			 " LEFT JOIN object_data od3 ON od2.title = od3.obj_id AND od3.type = 'crs'\n".
+			 " LEFT JOIN adv_md_values_date sd ON od3.obj_id = sd.obj_id AND sd.field_id = ".$field_id_start."\n".
+			 " LEFT JOIN adv_md_values_date ed ON od3.obj_id = ed.obj_id AND ed.field_id = ".$field_id_end."\n";
+			$period_group = " GROUP BY object_data.obj_id";
 		}
 
 		$query = "SELECT object_data.*, rbac_fa.* ".$period_select." FROM object_data ".
@@ -1588,11 +1589,11 @@ class ilRbacReview
 			$field_id_end = $amd_utils->getFieldId(gevSettings::CRS_AMD_END_DATE);
 
 			$period_select = ", sd.value AS start_date, ed.value AS end_date\n";
-			$period_join = " JOIN rbac_pa ON object_data.obj_id = rbac_pa.rol_id\n".
-			 "JOIN object_reference ON rbac_pa.ref_id = object_reference.ref_id\n".
-			 "JOIN object_data od2 ON object_reference.obj_id = od2.obj_id AND od2.type = 'crs'\n".
-			 "LEFT JOIN adv_md_values_date sd ON od2.obj_id = sd.obj_id AND sd.field_id = ".$field_id_start."\n".
-			 "LEFT JOIN adv_md_values_date ed ON od2.obj_id = ed.obj_id AND ed.field_id = ".$field_id_end."\n";
+			$period_join = " JOIN object_reference ON rbac_fa.parent = object_reference.ref_id\n".
+			 " JOIN object_data od2 ON object_reference.obj_id = od2.obj_id\n".
+			 " LEFT JOIN object_data od3 ON od2.title = od3.obj_id AND od3.type = 'crs'\n".
+			 " LEFT JOIN adv_md_values_date sd ON od3.obj_id = sd.obj_id AND sd.field_id = ".$field_id_start."\n".
+			 " LEFT JOIN adv_md_values_date ed ON od3.obj_id = ed.obj_id AND ed.field_id = ".$field_id_end."\n";
 			$period_group = " GROUP BY object_data.obj_id";
 		}
 
