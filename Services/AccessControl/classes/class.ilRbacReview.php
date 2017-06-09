@@ -655,7 +655,7 @@ class ilRbacReview
 	* @param	boolean	if true fetch template roles too
 	* @return	array	set ids
 	*/
-	public function getAssignableRoles($a_templates = false, $a_internal_roles = false, $title_filter = '')
+	public function getAssignableRoles($a_templates = false, $a_internal_roles = false, $title_filter = '', $period_data = false)
 	{
 		global $ilDB;
 
@@ -663,8 +663,28 @@ class ilRbacReview
 
 		$where = $this->__setTemplateFilter($a_templates);
 
-		$query = "SELECT * FROM object_data ".
+		//gev-patch start #3033
+		$period_join = "";
+		$period_select = "";
+
+		if ($period_data) {
+			require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+			require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+			$amd_utils = gevAMDUtils::getInstance();
+			$field_id_start = $amd_utils->getFieldId(gevSettings::CRS_AMD_START_DATE);
+			$field_id_end = $amd_utils->getFieldId(gevSettings::CRS_AMD_END_DATE);
+
+			$period_select = ", sd.value AS start_date, ed.value AS end_date\n";
+			$period_join = " JOIN rbac_pa ON object_data.obj_id = rbac_pa.rol_id\n".
+			 "JOIN object_reference ON rbac_pa.ref_id = object_reference.ref_id\n".
+			 "JOIN object_data od2 ON object_reference.obj_id = od2.obj_id AND od2.type = 'crs'\n".
+			 "LEFT JOIN adv_md_values_date sd ON od2.obj_id = sd.obj_id AND sd.field_id = ".$field_id_start."\n".
+			 "LEFT JOIN adv_md_values_date ed ON od2.obj_id = ed.obj_id AND ed.field_id = ".$field_id_end."\n";
+		}
+
+		$query = "SELECT object_data.*, rbac_fa.* ".$period_select." FROM object_data ".
 			 "JOIN rbac_fa ON obj_id = rol_id ".
+			 $period_join.
 			 $where.
 			 "AND rbac_fa.assign = 'y' ";
 
@@ -675,6 +695,7 @@ class ilRbacReview
 				$title_filter.'%'
 			));
 		}
+
 		$res = $ilDB->query($query);
 
 		while ($row = $ilDB->fetchAssoc($res)) {
@@ -1522,7 +1543,7 @@ class ilRbacReview
 		switch ($a_filter) {
 			// all (assignable) roles
 			case self::FILTER_ALL:
-				return $this->getAssignableRoles(true, true, $title_filter);
+				return $this->getAssignableRoles(true, true, $title_filter, $period_data);
 				break;
 
 			// all (assignable) global roles
@@ -1554,10 +1575,11 @@ class ilRbacReview
 				break;
 		}
 
+		//gev-patch start #3033
 		$period_join = "";
 		$period_select = "";
+		$period_group = "";
 
-		//gev-patch start #3033
 		if ($period_data) {
 			require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
 			require_once("Services/GEV/Utils/classes/class.gevSettings.php");
@@ -1565,29 +1587,24 @@ class ilRbacReview
 			$field_id_start = $amd_utils->getFieldId(gevSettings::CRS_AMD_START_DATE);
 			$field_id_end = $amd_utils->getFieldId(gevSettings::CRS_AMD_END_DATE);
 
-			$query = "SELECT od.obj_id, sd.value AS start_date, ed.value AS end_date FROM object_data od\n".
-			 "JOIN rbac_fa ON od.obj_id = rbac_fa.rol_id\n".
-			 "JOIN rbac_pa ON od.obj_id = rbac_pa.rol_id\n".
+			$period_select = ", sd.value AS start_date, ed.value AS end_date\n";
+			$period_join = " JOIN rbac_pa ON object_data.obj_id = rbac_pa.rol_id\n".
 			 "JOIN object_reference ON rbac_pa.ref_id = object_reference.ref_id\n".
 			 "JOIN object_data od2 ON object_reference.obj_id = od2.obj_id AND od2.type = 'crs'\n".
 			 "LEFT JOIN adv_md_values_date sd ON od2.obj_id = sd.obj_id AND sd.field_id = ".$field_id_start."\n".
-			 "LEFT JOIN adv_md_values_date ed ON od2.obj_id = ed.obj_id AND ed.field_id = ".$field_id_end."\n".
-			 $where."\n".
-			 "AND rbac_fa.assign = ".$ilDB->quote($assign, 'text')." ";
-
-			$res = $ilDB->query($query);
-			while ($row = $ilDB->fetchAssoc($res)) {
-				$periods[$row["obj_id"]] = array("start_date"=>$row["start_date"], "end_date"=>$row["end_date"]);
-			}
+			 "LEFT JOIN adv_md_values_date ed ON od2.obj_id = ed.obj_id AND ed.field_id = ".$field_id_end."\n";
+			$period_group = " GROUP BY object_data.obj_id";
 		}
-		//gev-patch end
 
 		$roles = array();
 
-		$query = "SELECT * FROM object_data ".
-			 "JOIN rbac_fa ON obj_id = rol_id ".
+		$query = "SELECT object_data.*, rbac_fa.*".$period_select." FROM object_data ".
+			 "JOIN rbac_fa ON object_data.obj_id = rbac_fa.rol_id ".
+			 $period_join.
 			 $where.
-			 "AND rbac_fa.assign = ".$ilDB->quote($assign, 'text')." ";
+			 "AND rbac_fa.assign = ".$ilDB->quote($assign, 'text').
+			 $period_group;
+		//gev-patch end
 
 		if (strlen($title_filter)) {
 			$query .= (' AND '.$ilDB->like(
@@ -1613,15 +1630,6 @@ class ilRbacReview
 
 			$row["desc"] = $row["description"];
 			$row["user_id"] = $row["owner"];
-
-			//gev-patch start #3033
-			if ($period_data) {
-				if (array_key_exists($row["obj_id"], $periods)) {
-					$row["start_date"] = $periods[$row["obj_id"]]["start_date"];
-					$row["end_date"] = $periods[$row["obj_id"]]["end_date"];
-				}
-			}
-			//gev-patch end
 
 			$roles[] = $row;
 		}
