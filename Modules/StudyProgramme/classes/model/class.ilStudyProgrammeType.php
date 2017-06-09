@@ -445,6 +445,22 @@ class ilStudyProgrammeType extends ActiveRecord {
 		return self::$amd_records_available;
 	}
 
+	/**
+	 * Get AdvancedMDRecordId by Titel
+	 *
+	 * @param string 	$title
+	 * @return string
+	 */
+	public function getAdvancedMDRecordIdByTitle($title) {
+		assert('is_string($title)');
+
+		foreach ($this->getAvailableAdvancedMDRecords() as $record) {
+			if($record->getTitle() === trim($title)) {
+				return $record->getRecordId();
+			}
+		}
+	}
+
 
 	/**
 	 * Get IDs of all available AdvancedMDRecord objects for StudyProgramme/Types

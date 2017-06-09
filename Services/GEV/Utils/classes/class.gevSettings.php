@@ -820,6 +820,7 @@ class gevSettings
 
 	const VA_PASS_ACCOUNTABLE_FIELD_ID = "va_pass_accountable_field_id";
 	const VA_PASS_PASSING_TYPE_FIELD_ID = "va_pass_passing_type_field_id";
+	const VA_PASS_OPTIONAL_TYPE_ID = "va_pass_optional_type_id";
 
 	public function setVAPassAccountableFieldId($field_id)
 	{
@@ -839,5 +840,15 @@ class gevSettings
 	public function getVAPassPassingTypeFieldId()
 	{
 		return $this->settings->get(self::VA_PASS_PASSING_TYPE_FIELD_ID);
+	}
+
+	public function setVAPassOptionalTypeId($field_id)
+	{
+		$this->settings->set(self::VA_PASS_OPTIONAL_TYPE_ID);
+	}
+
+	public function getVAPassOptionalTypeId()
+	{
+		return $this->settings->get(self::VA_PASS_OPTIONAL_TYPE_ID);
 	}
 }

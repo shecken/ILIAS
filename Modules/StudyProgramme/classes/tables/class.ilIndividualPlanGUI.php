@@ -78,6 +78,7 @@ class ilIndividualPlanGUI
 		$this->success  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		$this->in_progress = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
 		$this->not_attemped = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
+		$this->optional = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
 	}
 
 	public function executeCommand()

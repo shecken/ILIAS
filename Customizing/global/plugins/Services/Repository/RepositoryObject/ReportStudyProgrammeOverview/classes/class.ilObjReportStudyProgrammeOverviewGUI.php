@@ -3,6 +3,7 @@
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseGUI.php';
 require_once "Customizing/global/plugins/Services/Repository/RepositoryObject/ReportStudyProgrammeOverview/classes/class.ilObjReportStudyProgrammeOverviewTableGUI.php";
 require_once("Services/CaTUIComponents/classes/class.catTableGUI.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
 /**
 * User Interface class for example repository object.
 * ...
@@ -15,6 +16,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	protected static $success_img;
 	protected static $in_progress_img;
 	protected static $not_yet_started_img;
+	protected static $optional_img;
 
 	/**
 	 * @var	\ilCtrl
@@ -41,6 +43,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		global $ilCtrl, $ilTabs;
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tabs = $ilTabs;
+		$this->amd_utils = gevAMDUtils::getInstance();
 	}
 
 	public function getType()
@@ -129,7 +132,8 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		$a_title->legend(catLegendGUI::create()
 					->item(self::$success_img, "rep_robj_xsp_passed")
 					->item(self::$in_progress_img, "rep_robj_xsp_in_progress")
-					->item(self::$not_yet_started_img, "rep_robj_xsp_not_yet_started"));
+					->item(self::$not_yet_started_img, "rep_robj_xsp_not_yet_started")
+					->item(self::$optional_img, "optional"));
 		return $a_title;
 	}
 
@@ -165,6 +169,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		self::$success_img  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		self::$in_progress_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
 		self::$not_yet_started_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
+		self::$optional_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
 		$this->object->prepareReport();
 		$this->title = $this->prepareTitle(catTitleGUI::create());
 		$this->spacer = $this->prepareSpacer(new catHSpacerGUI());

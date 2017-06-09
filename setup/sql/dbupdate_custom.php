@@ -6361,3 +6361,23 @@ gevDecentralTrainingCreationRequestDB::install_step8($ilDB);
 require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingCreationRequestDB.php");
 gevDecentralTrainingCreationRequestDB::install_step9($ilDB);
 ?>
+
+<#267>
+<?php
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+$gev_settings = gevSettings::getInstance();
+
+require_once("Modules/StudyProgramme/classes/model/class.ilStudyProgrammeType.php");
+$type = new ilStudyProgrammeType();
+$record_id = $type->getAdvancedMDRecordIdByTitle("Ausbildungspass für VAs");
+
+include_once('Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php');
+$field_definition = ilAdvancedMDFieldDefinition::getInstance(null, ilAdvancedMDFieldDefinition::TYPE_SELECT);
+$field_definition->setTitle("Optional, als Status für Studienprogramme");
+$options = array("Ja", "Nein");
+$field_definition->setOptions($options);
+$field_definition->setRecordId($record_id);
+$field_definition->save();
+$field_id = $field_definition->getFieldId();
+$gev_settings->setVAPassOptionalTypeId($field_id);
+?>

@@ -30,7 +30,6 @@ class ilIndividualPlanTableGUI extends catTableGUI
 		$this->setID("va_pass_member");
 
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
-
 		global $lng, $ilCtrl, $tree;
 
 		$this->g_lng = $lng;
@@ -51,9 +50,14 @@ class ilIndividualPlanTableGUI extends catTableGUI
 			$entry->setRefId($child->getRefId());
 			$entry->setHasLpChildren($child->hasLPChildren());
 			$entry->setHasChildren($child->hasChildren());
-
+			$optional = $this->getOptional($child->getId());
 			list($status, $finished) = $this->getLpStatusFor($child, $this->user_id);
 			$entry->setStatus($status);
+			if($optional === "Ja")
+			{	die("meintest");
+				$entry->setStatus("optional");
+			}
+
 			if($finished !== null) {
 				$entry->setFinished(new ilDate($finished, IL_CAL_DATE));
 			}
@@ -231,5 +235,11 @@ class ilIndividualPlanTableGUI extends catTableGUI
 	protected function currentFinishUntilIsLater(\ilDateTime $finish_until, \ilDateTime $startdate)
 	{
 		return $finish_until->get(IL_CAL_UNIX) > $startdate->get(IL_CAL_UNIX);
+	}
+
+	protected function isOptionalSet($id)
+	{
+		$s = gevSettings::getInstance();
+		return $s->getVAPassOptionalTypeId();
 	}
 }
