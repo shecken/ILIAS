@@ -365,7 +365,6 @@ abstract class ilObjReportBase2 extends ilObjectPlugin{
 	protected static function filterPlugins($plugins) {
 		return array_filter($plugins, function($plugin) {
 			if ($plugin instanceof ilReportBasePlugin
-				&& !($plugin instanceof ilReportExamBioPlugin)
 				&& !($plugin instanceof ilReportEduBioPlugin)
 				) {
 				return true;

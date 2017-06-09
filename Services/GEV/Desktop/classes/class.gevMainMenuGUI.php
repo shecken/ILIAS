@@ -392,6 +392,17 @@ class gevMainMenuGUI extends ilMainMenuGUI
 				}
 				unset($visible_repo_reports[$key]);
 			}
+
+			if ($visible_report["type"] == "xexb") {
+				foreach (ilObject::_getAllReferences($visible_report["obj_id"]) as $ref_id) {
+					if ($ilAccess->checkAccessOfUser($this->gUser->getId(), "read", null, $ref_id)) {
+						$xexb_overview = ilObjectFactory::getInstanceByRefId($ref_id);
+						if(!$xexb_overview->getSettingsData()['for_trainer']) {
+							unset($visible_repo_reports[$key]);
+						}
+					}
+				}
+			}
 		}
 
 		foreach ($visible_repo_reports as $info) {
