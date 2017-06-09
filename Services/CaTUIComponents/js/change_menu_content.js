@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$(document).on("click",'a[id^="expand_"]',"", function(e) {
-		element_id = e.target.id;
-		new_id = element_id.replace("expand_", "");
+		var element_id = e.target.id;
+		var new_id = element_id.replace("expand_", "");
 		$.ajax({
 			url:il.mainMenue,
 			type: 'POST',
@@ -14,8 +14,9 @@ $(document).ready(function() {
 	});
 
 	$(document).on("mouseover",'a[id^="sub_"]',"", function(e) {
-		element_id = e.target.id;
-		new_id = element_id.replace("sub_", "");
+		var element_id = e.target.id;
+		var new_id = element_id.replace("sub_", "");
+
 		$.ajax({
 			url:il.mainMenueExpand,
 			type: 'POST',
