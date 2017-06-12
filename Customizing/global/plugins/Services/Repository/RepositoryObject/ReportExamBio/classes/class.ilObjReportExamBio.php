@@ -369,4 +369,48 @@ class ilObjReportExamBio extends ilObjReportBase2
 		}
 		return $return;
 	}
+
+	protected function getParentCourseId()
+	{
+		$data = $this->gTree->getParentNodeData($this->getRefId());
+		while ("crs" !== $data['type'] && (string)ROOT_FOLDER_ID !== (string)$data['ref_id']) {
+			$data = $this->gTree->getParentNodeData($data['ref_id']);
+		}
+		return ( "crs" === $data['type'] )
+			? $data['obj_id'] : null;
+	}
+
+	public function getParentCourseTitle()
+	{
+		$crs_id = $this->getParentCourseId();
+
+		if (!$crs_id) {
+			return null;
+		}
+
+		$crs = ilObjectFactory::getInstanceByObjId($crs_id);
+		return $crs->getTitle();
+	}
+
+	/**
+	 * Return the title for Reportmenu entries.
+	 *
+	 * @return string
+	 */
+	public function getReportMenuTitle() {
+		if($crs_title = $this->getParentCourseTitle()) {
+			return $this->getTitle()." (".$crs_title.")";
+		}
+
+		return $this->getTitle();
+	}
+
+	/**
+	 * Should this single report be shown in report menu
+	 *
+	 * @return bool
+	 */
+	public function showInReportMenu() {
+		return $this->settings["for_trainer"];
+	}
 }
