@@ -79,9 +79,13 @@ class ilReportDiscovery
 			$obj_id = $report["obj_id"];
 			foreach (ilObject::_getAllReferences($report["obj_id"]) as $ref_id) {
 				if ($this->access->checkAccessOfUser($user->getId(), "read", null, $ref_id)) {
-					$report["ref_id"] = $ref_id;
-					$visible_reports[$key] = $report;
-					break;
+					$object = ilObjectFactory::getInstanceByRefId($ref_id);
+
+					if($object->showInReportMenu()) {
+						$report["title"] = $object->getReportMenuTitle();
+						$report["ref_id"] = $ref_id;
+						$visible_reports[$key] = $report;
+					}
 				}
 			}
 		}
@@ -200,7 +204,6 @@ class ilReportDiscovery
 	{
 		return array_filter($plugins, function ($plugin) {
 			if ($plugin instanceof ilReportBasePlugin
-				&& !($plugin instanceof ilReportExamBioPlugin)
 				&& !($plugin instanceof ilReportEduBioPlugin)
 				) {
 				return true;
