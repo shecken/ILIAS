@@ -464,4 +464,22 @@ abstract class ilObjReportBase extends ilObjectPlugin {
 			return false;
 		});
 	}
+
+	/**
+	 * Return the title for Reportmenu entries.
+	 *
+	 * @return string
+	 */
+	public function getReportMenuTitle() {
+		return $this->getTitle();
+	}
+
+	/**
+	 * Should this single report be shown in report menu
+	 *
+	 * @return bool
+	 */
+	public function showInReportMenu() {
+		return true;
+	}
 }
