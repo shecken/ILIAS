@@ -3031,15 +3031,7 @@ class ilObjUserGUI extends ilObjectGUI
 					//gev-patch start #3033
 					$obj_id = ilRbacReview::getObjectOfRole($role["rol_id"]);
 					if (ilObject::_lookupType($obj_id) == "crs") {
-						$path .= " (";
-						if ($role["start_date"]) {
-							$path .= date("d.m.Y", strtotime(date($role["start_date"])));
-						}
-
-						if ($role["end_date"]) {
-							$path .= " - ".date("d.m.Y", strtotime(date($role["end_date"])));
-						}
-						$path .= ")";
+						$path .= $this->getDatePart($role);
 					}
 					//gev-patch end
 				}
@@ -3598,6 +3590,49 @@ class ilObjUserGUI extends ilObjectGUI
 		global $ilToolbar;
 		$link = ilObjReportEduBio::getEduBioLinkFor($_GET["obj_id"]);
 		$ilToolbar->addButton($this->lng->txt('gev_edu_bio'), $link, "blank");
+	}
+	//gev-patch end
+
+	//gev-patch start #3033
+	/**
+	 * Get part with crs dates
+	 *
+	 * @param sring[]
+	 *
+	 * @return string
+	 */
+	protected function getDatePart($role) {
+		$start_date = $role["start_date"];
+		$end_date = $role["end_date"];
+
+		if (!$start_date && !$end_date) {
+			return "";
+		}
+
+		if($start_date && !$end_date) {
+			return " (".$this->getIsoDateString($start_date).")";
+		}
+
+		if(!$start_date && $end_date) {
+			return " (".$this->getIsoDateString($end_date).")";
+		}
+
+		if($start_date == $end_date) {
+			return " (".$this->getIsoDateString($start_date).")";
+		}
+
+		return " (".$this->getIsoDateString($start_date)." - ".$this->getIsoDateString($end_date).")";
+	}
+
+	/**
+	 * Form datestring to iso date
+	 *
+	 * @param string 	$date
+	 *
+	 * @return string
+	 */
+	protected function getIsoDateString($date) {
+		return date("d.m.Y", strtotime(date($date)));
 	}
 	//gev-patch end
 } // END class.ilObjUserGUI
