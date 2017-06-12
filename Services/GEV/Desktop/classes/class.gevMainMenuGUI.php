@@ -397,11 +397,16 @@ class gevMainMenuGUI extends ilMainMenuGUI
 				foreach (ilObject::_getAllReferences($visible_report["obj_id"]) as $ref_id) {
 					if ($ilAccess->checkAccessOfUser($this->gUser->getId(), "read", null, $ref_id)) {
 						$xexb_overview = ilObjectFactory::getInstanceByRefId($ref_id);
-						if(!$xexb_overview->getSettingsData()['for_trainer']) {
-							unset($visible_repo_reports[$key]);
+						if($xexb_overview->getSettingsData()['for_trainer']) {
+							if ($crs_title = $xexb_overview->getParentCourseTitle()) {
+								$visible_repo_reports[] = ["ref_id" => $ref_id, "type" => "xspo", "title" => $xexb_overview->getTitle()." (".$crs_title.")"];
+							} else {
+								$visible_repo_reports[] = ["ref_id" => $ref_id, "type" => "xspo", "title" => $xexb_overview->getTitle()];
+							}
 						}
 					}
 				}
+				unset($visible_repo_reports[$key]);
 			}
 		}
 
