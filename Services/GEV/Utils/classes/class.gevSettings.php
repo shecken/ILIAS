@@ -844,7 +844,7 @@ class gevSettings
 
 	public function setVAPassOptionalTypeId($field_id)
 	{
-		$this->settings->set(self::VA_PASS_OPTIONAL_TYPE_ID);
+		$this->settings->set(self::VA_PASS_OPTIONAL_TYPE_ID, $field_id);
 	}
 
 	public function getVAPassOptionalTypeId()

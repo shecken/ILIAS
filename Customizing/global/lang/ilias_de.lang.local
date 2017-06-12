@@ -1562,6 +1562,7 @@ gev#:#rep_robj_xsp_obj_xsp#:#Report Einzelansicht Ausbildungsstand zum Vertriebs
 gev#:#rep_robj_xsp_passed#:#abgeschlossen
 gev#:#rep_robj_xsp_in_progress#:#gebucht
 gev#:#rep_robj_xsp_not_yet_started#:#noch nicht gebucht
+gev#:#rep_robj_xsp_optional#:#optional
 gev#:#cron_wbd_relevant_title#:#Setzt Trainings auf WBD relevant.
 gev#:#cron_wbd_relevant_description#:#Wenn beim Benutzer das UDF Feld 'WBD Punkte nachmelden ab' einen Wert besitzt, werden alle Trainings deren Enddatum >= ist auf WBD relevant gestzt.
 gev#:#gev_attendance_list#:#Anwesenheitsliste

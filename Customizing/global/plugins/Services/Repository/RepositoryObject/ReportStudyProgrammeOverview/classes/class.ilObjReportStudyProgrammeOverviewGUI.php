@@ -132,8 +132,7 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		$a_title->legend(catLegendGUI::create()
 					->item(self::$success_img, "rep_robj_xsp_passed")
 					->item(self::$in_progress_img, "rep_robj_xsp_in_progress")
-					->item(self::$not_yet_started_img, "rep_robj_xsp_not_yet_started")
-					->item(self::$optional_img, "optional"));
+					->item(self::$not_yet_started_img, "rep_robj_xsp_not_yet_started"));
 		return $a_title;
 	}
 
@@ -169,7 +168,6 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		self::$success_img  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		self::$in_progress_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
 		self::$not_yet_started_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
-		self::$optional_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
 		$this->object->prepareReport();
 		$this->title = $this->prepareTitle(catTitleGUI::create());
 		$this->spacer = $this->prepareSpacer(new catHSpacerGUI());
