@@ -12,6 +12,7 @@ class ilIndividualPlanDetailEntry
 	protected $status;
 	protected $study_programme;
 	protected $course_where_user_is_member;
+	protected $optional;
 
 	// TODO: Add a constructor that takes all the attributes and checks them
 	// remove setters then.
@@ -95,5 +96,14 @@ class ilIndividualPlanDetailEntry
 
 	public function getCourseWhereUserIsMember() {
 		return $this->course_where_user_is_member;
+	}
+
+	public function setOptional($value) {
+		assert('is_bool($value)');
+		$this->optional = $value;
+	}
+
+	public function getOptional() {
+		return $this->optional;
 	}
 }
