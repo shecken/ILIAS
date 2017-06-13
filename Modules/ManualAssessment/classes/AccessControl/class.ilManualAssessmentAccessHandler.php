@@ -146,7 +146,6 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 		);
 	}
 
-
 	public function mayGradeUserIn($usr_id, ilObjManualAssessment $mass, $use_cache = false)
 	{
 		if ($use_cache) {
@@ -163,7 +162,33 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 		);
 	}
 
+	public function mayGradeUserIfNotFinalized($usr_id, ilObjManualAssessment $mass) {
+		if($this->usr_utils->isAdmin()) {
+			if($this->checkAccessToObj($mass, 'edit_learning_progress')) {
+				return true;
+			}
+		}
 
+		return $this->calcMayGradeUserIn(
+			$mass->getSettings()->superiorExaminate(),
+			in_array($usr_id, $this->usr_utils->getEmployees()),
+			$mass->getSettings()->gradeSelf(),
+			$usr_id
+		);
+	}
+
+	public function mayAmendGradeUserIn($usr_id, ilObjManualAssessment $mass) {
+		if ($this->checkAccessToObj($mass, 'amend_grading')) {
+			return true;
+		}
+
+		return $this->calcMayGradeUserIn(
+			$mass->getSettings()->superiorExaminate(),
+			in_array($usr_id, $this->usr_utils->getEmployees()),
+			$mass->getSettings()->gradeSelf(),
+			$usr_id
+		);
+	}
 
 	protected function fromCacheMayGradeUserIn($usr_id, ilObjManualAssessment $mass)
 	{
@@ -213,7 +238,6 @@ class ilManualAssessmentAccessHandler implements ManualAssessmentAccessHandler
 
 	protected function cacheSettingsAndEmployees($mass, $usr_utils)
 	{
-
 		$mass_id = $mass->getId();
 		if (!isset($this->mass_settings_cache[$mass_id])) {
 			$this->mass_settings_cache[$mass_id] = $mass->getSettings();

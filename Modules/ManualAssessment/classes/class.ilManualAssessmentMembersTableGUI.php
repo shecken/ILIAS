@@ -130,26 +130,32 @@ class ilManualAssessmentMembersTableGUI extends ilTable2GUI
 
 		$may_grade_this_user = $this->access->mayGradeUserIn($t_usr_id, $this->mass, true);
 		$may_view_this_user = $this->access->mayViewUserIn($t_usr_id, $this->mass, true);
-		$may_amend_grades = $this->access->checkAccessToObj($this->mass, 'amend_grading', true);
+		$may_grade_this_user_if_not_finalized = $this->access->mayGradeUserIfNotFinalized($t_usr_id, $this->mass, true);
+		$may_amend_grades = $this->access->mayAmendGradeUserIn($t_usr_id, $this->mass);
 		$may_edit_members = $this->access->checkAccessToObj($this->mass, 'edit_members', true);
+
 		if (($finalized && !$edited_by_other && $may_grade_this_user) || $may_view_this_user) {
 			$target = $this->ctrl->getLinkTargetByClass('ilManualAssessmentMemberGUI', 'view');
 			$l->addItem($this->lng->txt('mass_usr_view'), 'view', $target);
 		}
-		if (!$finalized && !$edited_by_other && $may_grade_this_user) {
+
+		if (!$finalized && ((!$edited_by_other && $may_grade_this_user) || $may_grade_this_user_if_not_finalized)) {
 			$target = $this->ctrl->getLinkTargetByClass('ilManualAssessmentMemberGUI', 'edit');
 			$l->addItem($this->lng->txt('mass_usr_edit'), 'edit', $target);
 		}
+
 		if (!$finalized && $may_edit_members) {
 			$this->ctrl->setParameter($this->parent_obj, 'usr_id', $t_usr_id);
 			$target = $this->ctrl->getLinkTarget($this->parent_obj, 'removeUserConfirmation');
 			$this->ctrl->setParameter($this->parent_obj, 'usr_id', null);
 			$l->addItem($this->lng->txt('mass_usr_remove'), 'removeUser', $target);
 		}
+
 		if ($finalized && $may_amend_grades) {
 			$target = $this->ctrl->getLinkTargetByClass('ilManualAssessmentMemberGUI', 'amend');
 			$l->addItem($this->lng->txt('mass_usr_amend'), 'amend', $target);
 		}
+
 		$this->ctrl->setParameterByClass('ilManualAssessmentMemberGUI', 'usr_id', null);
 		return $l->getHTML();
 	}
