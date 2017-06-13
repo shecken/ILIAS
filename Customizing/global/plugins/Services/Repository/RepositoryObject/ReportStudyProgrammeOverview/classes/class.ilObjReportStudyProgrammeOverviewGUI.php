@@ -3,7 +3,6 @@
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseGUI.php';
 require_once "Customizing/global/plugins/Services/Repository/RepositoryObject/ReportStudyProgrammeOverview/classes/class.ilObjReportStudyProgrammeOverviewTableGUI.php";
 require_once("Services/CaTUIComponents/classes/class.catTableGUI.php");
-require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
 /**
 * User Interface class for example repository object.
 * ...
