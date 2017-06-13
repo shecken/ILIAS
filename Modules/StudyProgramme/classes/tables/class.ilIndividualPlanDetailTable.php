@@ -33,6 +33,10 @@ class ilIndividualPlanDetailTable {
 		return $this->getGevSettings()->getVAPassPassingTypeFieldId();
 	}
 
+	public function getVAPassOptionalTypeId() {
+		return $this->getGevSettings()->getVAPassOptionalTypeId();
+	}
+
 
 	public function getAccountable($obj_id, $field_id) {
 		$query = "SELECT value \n"
@@ -51,5 +55,19 @@ class ilIndividualPlanDetailTable {
 				."   AND prg_id = " . $this->g_db->quote($obj_id, "integer");
 		$res = $this->g_db->query($query);
 		return  $this->g_db->fetchAssoc($res);
+	}
+
+	public function isOptional($obj_id, $field_id)
+	{
+		$query = "SELECT value\n"
+				."FROM adv_md_values_text\n"
+				."WHERE obj_id = " . $this->g_db->quote($obj_id, "integer") . "\n"
+				."   AND field_id = " . $this->g_db->quote($field_id, "integer");
+		$result = $this->g_db->query($query);
+		if($this->g_db->numRows($result) == 0) {
+			return false;
+		}
+		$row = $this->g_db->fetchAssoc($result);
+		return $row['value'] === "Ja";
 	}
 }

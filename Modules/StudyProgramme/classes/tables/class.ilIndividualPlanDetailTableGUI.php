@@ -18,6 +18,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 	const STATUS_NOT_ATTEMPTED = 1;
 	const STATUS_IN_PROGRESS = 3;
 	const STATUS_SUCCESS = 2;
+	const STATUS_OPTIONAL = 4;
 
 	/**
 	 * @var ilLanguage
@@ -67,6 +68,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		$this->success = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		$this->in_progress = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
 		$this->not_attemped = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
+		$this->optional = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-violet.png").'" />';
 
 		$this->settings = new ilSetting("gev");
 		$this->obj = new ilIndividualPlanDetailTable();
@@ -188,6 +190,9 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 		}
 		$crs = $this->getCourseWhereUserIsMember($sp);
 		if ($crs === null) {
+			if ($this->obj->isOptional($sp->getID(), $this->obj->getVAPassOptionalTypeId())) {
+				return [self::STATUS_OPTIONAL, null];
+			}
 			return [self::STATUS_NOT_ATTEMPTED, null];
 		}
 		return [self::STATUS_IN_PROGRESS, null];
@@ -493,6 +498,8 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 				return $this->in_progress;
 			case self::STATUS_SUCCESS:
 				return $this->success;
+			case self::STATUS_OPTIONAL:
+				return $this->optional;
 			default:
 				return "";
 		}
