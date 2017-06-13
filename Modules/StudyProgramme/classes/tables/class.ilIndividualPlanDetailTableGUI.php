@@ -172,10 +172,7 @@ class ilIndividualPlanDetailTableGUI extends catTableGUI
 
 	protected function getStatusAndDate(\ilObjStudyProgramme $sp)
 	{
-		$optional = false;
-		if ($this->obj->isOptional($sp->getID(), $this->obj->getVAPassOptionalTypeId())) {
-			$optional = true;
-		}
+		$optional = $this->obj->isOptional($sp->getID(), $this->obj->getVAPassOptionalTypeId());
 		$progress = $sp->getProgressForAssignment($this->assignment_id);
 		if ($progress->isAccredited() || $progress->isSuccessful()) {
 			$maybe_crs = $this->getPassedCourse($sp);
