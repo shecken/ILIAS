@@ -377,4 +377,15 @@ class ilObjReportStudyProgrammeOverview extends ilObjReportBase
 
 		return $return;
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getReportMenuTitle() {
+		if($crs_title = $this->getParentCourseTitle()) {
+			return $this->getTitle()." (".$crs_title.")";
+		}
+
+		return $this->getTitle();
+	}
 }

@@ -81,7 +81,6 @@ class ilReportDiscovery
 				if ($this->access->checkAccessOfUser($user->getId(), "read", null, $ref_id)) {
 					$report["ref_id"] = $ref_id;
 					$visible_reports[$key] = $report;
-					break;
 				}
 			}
 		}
@@ -158,15 +157,17 @@ class ilReportDiscovery
 		assert('is_string($type)');
 		$reports = [];
 
+		$coll = new RD\MenuItemCollection();
 		foreach ($this->getVisibleReportsObjectData($user) as $report_data) {
 			if ($type === $report_data['type']) {
-				$reports[] = $report_data;
+				$object = ilObjectFactory::getInstanceByRefId($report_data['ref_id']);
+
+				if($object->showInReportMenu()) {
+					$coll = $coll->withMenuItem(new RD\Report($object->getReportMenuTitle(), ['type' => $type, 'ref_id' => $report_data['ref_id']]));
+				}
 			}
 		}
-		$coll = new RD\MenuItemCollection();
-		foreach ($reports as $report) {
-			$coll = $coll->withMenuItem(new RD\Report($report['title'], ['type' => $type, 'ref_id' => $report['ref_id']]));
-		}
+
 		return $coll;
 	}
 
@@ -200,7 +201,6 @@ class ilReportDiscovery
 	{
 		return array_filter($plugins, function ($plugin) {
 			if ($plugin instanceof ilReportBasePlugin
-				&& !($plugin instanceof ilReportExamBioPlugin)
 				&& !($plugin instanceof ilReportEduBioPlugin)
 				) {
 				return true;
