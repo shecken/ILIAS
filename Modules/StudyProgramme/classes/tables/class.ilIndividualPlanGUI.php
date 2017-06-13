@@ -78,7 +78,7 @@ class ilIndividualPlanGUI
 		$this->success  = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-green.png").'" />';
 		$this->in_progress = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-orange.png").'" />';
 		$this->not_attemped = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-neutral.png").'" />';
-		$this->optional = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-violet.png").'" />';
+		$this->optional = '<span style="color:red;font-weight:bold;">*</span>';
 	}
 
 	public function executeCommand()
@@ -311,8 +311,6 @@ class ilIndividualPlanGUI
 				return $this->in_progress;
 			case ilLPStatus::LP_STATUS_COMPLETED_NUM:
 				return $this->success;
-			case ilLPStatus::LP_STATUS_OPTIONAL:
-				return $this->optional;
 			default:
 				return "";
 		}
