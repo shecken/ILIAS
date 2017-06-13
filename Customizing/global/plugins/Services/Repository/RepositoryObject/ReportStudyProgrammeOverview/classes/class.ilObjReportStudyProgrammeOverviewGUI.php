@@ -16,7 +16,6 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 	protected static $success_img;
 	protected static $in_progress_img;
 	protected static $not_yet_started_img;
-	protected static $optional_img;
 
 	/**
 	 * @var	\ilCtrl
