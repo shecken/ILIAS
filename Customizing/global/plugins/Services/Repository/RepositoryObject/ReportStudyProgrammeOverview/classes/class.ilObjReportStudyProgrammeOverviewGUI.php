@@ -43,7 +43,6 @@ class ilObjReportStudyProgrammeOverviewGUI extends ilObjReportBaseGUI
 		global $ilCtrl, $ilTabs;
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tabs = $ilTabs;
-		$this->amd_utils = gevAMDUtils::getInstance();
 	}
 
 	public function getType()

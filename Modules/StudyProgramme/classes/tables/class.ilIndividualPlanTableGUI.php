@@ -54,7 +54,7 @@ class ilIndividualPlanTableGUI extends catTableGUI
 			list($status, $finished) = $this->getLpStatusFor($child, $this->user_id);
 			$entry->setStatus($status);
 			if($optional === "Ja")
-			{	die("meintest");
+			{
 				$entry->setStatus("optional");
 			}
 
@@ -235,11 +235,5 @@ class ilIndividualPlanTableGUI extends catTableGUI
 	protected function currentFinishUntilIsLater(\ilDateTime $finish_until, \ilDateTime $startdate)
 	{
 		return $finish_until->get(IL_CAL_UNIX) > $startdate->get(IL_CAL_UNIX);
-	}
-
-	protected function isOptionalSet($id)
-	{
-		$s = gevSettings::getInstance();
-		return $s->getVAPassOptionalTypeId();
 	}
 }
