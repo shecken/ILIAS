@@ -5986,6 +5986,7 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", a
 
 <#247>
 <?php
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
 require_once "Customizing/class.ilCustomInstaller.php";
 ilCustomInstaller::maybeInitClientIni();
 ilCustomInstaller::maybeInitPluginAdmin();
@@ -6032,7 +6033,7 @@ $options = array("Vorgesetzter", "Trainer", "Mitarbeiter selbst");
 $field_definition->setOptions($options);
 $field_definition->setRecordId($record->getRecordId());
 $field_definition->save();
-$field_id = $field_definition->getFieldId();
+$field_id = gevAMDUtils::getInstance()->getFieldId(gevSettings::VA_PASS_ACCOUNTABLE_FIELD_ID);
 $gev_settings->setVAPassAccountableFieldId($field_id);
 $field_definition = ilAdvancedMDFieldDefinition::getInstance(null, ilAdvancedMDFieldDefinition::TYPE_SELECT);
 $field_definition->setTitle("Art des Bestehens");
@@ -6040,7 +6041,7 @@ $options = array("Teilnahme an Training", "Manueller Eintrag");
 $field_definition->setOptions($options);
 $field_definition->setRecordId($record->getRecordId());
 $field_definition->save();
-$field_id = $field_definition->getFieldId();
+$field_id = gevAMDUtils::getInstance()->getFieldId(gevSettings::VA_PASS_PASSING_TYPE_FIELD_ID);
 $gev_settings->setVAPassPassingTypeFieldId($field_id);
 ?>
 
@@ -6364,6 +6365,7 @@ gevDecentralTrainingCreationRequestDB::install_step9($ilDB);
 
 <#267>
 <?php
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
 require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 $gev_settings = gevSettings::getInstance();
 
@@ -6378,6 +6380,6 @@ $options = array("Ja", "Nein");
 $field_definition->setOptions($options);
 $field_definition->setRecordId($record_id);
 $field_definition->save();
-$field_id = $field_definition->getFieldId();
+$field_id = gevAMDUtils::getInstance()->getFieldId(gevSettings::VA_PASS_OPTIONAL_TYPE_ID);
 $gev_settings->setVAPassOptionalTypeId($field_id);
 ?>
