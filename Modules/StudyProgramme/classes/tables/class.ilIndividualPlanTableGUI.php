@@ -50,13 +50,8 @@ class ilIndividualPlanTableGUI extends catTableGUI
 			$entry->setRefId($child->getRefId());
 			$entry->setHasLpChildren($child->hasLPChildren());
 			$entry->setHasChildren($child->hasChildren());
-			$optional = $this->getOptional($child->getId());
 			list($status, $finished) = $this->getLpStatusFor($child, $this->user_id);
 			$entry->setStatus($status);
-			if($optional === "Ja")
-			{
-				$entry->setStatus("optional");
-			}
 
 			if($finished !== null) {
 				$entry->setFinished(new ilDate($finished, IL_CAL_DATE));
