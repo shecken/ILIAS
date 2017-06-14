@@ -5986,6 +5986,7 @@ gevOrgUnitUtils::grantPermissionsRecursivelyFor($a_start_ref, "Admin-Ansicht", a
 
 <#247>
 <?php
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
 require_once "Customizing/class.ilCustomInstaller.php";
 ilCustomInstaller::maybeInitClientIni();
 ilCustomInstaller::maybeInitPluginAdmin();
@@ -6025,6 +6026,7 @@ $obj_type[] = array(
 $record->setAssignedObjectTypes($obj_type);
 $record->save();
 $type->assignAdvancedMDRecord($record->getRecordId());
+
 include_once('Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php');
 $field_definition = ilAdvancedMDFieldDefinition::getInstance(null, ilAdvancedMDFieldDefinition::TYPE_SELECT);
 $field_definition->setTitle("Verantwortlich");
@@ -6032,16 +6034,13 @@ $options = array("Vorgesetzter", "Trainer", "Mitarbeiter selbst");
 $field_definition->setOptions($options);
 $field_definition->setRecordId($record->getRecordId());
 $field_definition->save();
-$field_id = $field_definition->getFieldId();
-$gev_settings->setVAPassAccountableFieldId($field_id);
+
 $field_definition = ilAdvancedMDFieldDefinition::getInstance(null, ilAdvancedMDFieldDefinition::TYPE_SELECT);
 $field_definition->setTitle("Art des Bestehens");
 $options = array("Teilnahme an Training", "Manueller Eintrag");
 $field_definition->setOptions($options);
 $field_definition->setRecordId($record->getRecordId());
 $field_definition->save();
-$field_id = $field_definition->getFieldId();
-$gev_settings->setVAPassPassingTypeFieldId($field_id);
 ?>
 
 <#248>
@@ -6364,9 +6363,6 @@ gevDecentralTrainingCreationRequestDB::install_step9($ilDB);
 
 <#267>
 <?php
-require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-$gev_settings = gevSettings::getInstance();
-
 require_once("Modules/StudyProgramme/classes/model/class.ilStudyProgrammeType.php");
 $type = new ilStudyProgrammeType();
 $record_id = $type->getAdvancedMDRecordIdByTitle("Ausbildungspass für VAs");
@@ -6378,6 +6374,32 @@ $options = array("Ja", "Nein");
 $field_definition->setOptions($options);
 $field_definition->setRecordId($record_id);
 $field_definition->save();
-$field_id = $field_definition->getFieldId();
-$gev_settings->setVAPassOptionalTypeId($field_id);
+?>
+
+<#268>
+<?php
+require_once("Modules/StudyProgramme/classes/model/class.ilStudyProgrammeType.php");
+$type = new ilStudyProgrammeType();
+$record_id = $type->getAdvancedMDRecordIdByTitle("Ausbildungspass für VAs");
+
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+$gev_settings = gevSettings::getInstance();
+
+include_once('Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php');
+$field_definitions = ilAdvancedMDFieldDefinition::getInstancesByRecordId($record_id);
+
+foreach ($field_definitions as $fd) {
+	$title = $fd->getTitle();
+	$field_id = $fd->getFieldId();
+
+	if($title == "Optional, als Status für Studienprogramme") {
+		$gev_settings->setVAPassOptionalTypeId($field_id);
+	}
+	if($title == "Verantwortlich") {
+		$gev_settings->setVAPassAccountableFieldId($field_id);
+	}
+	if($title == "Art des Bestehens") {
+		$gev_settings->setVAPassPassingTypeFieldId($field_id);
+	}
+}
 ?>
