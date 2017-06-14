@@ -455,7 +455,7 @@ class ilManualAssessmentMemberGUI
 	protected function mayBeAmended()
 	{
 		if ($this->isFinalized()
-				&& $this->userCanAmend() || $this->superiorCanGrade()) {
+				&& $this->userCanAmend()) {
 			return true;
 		}
 
