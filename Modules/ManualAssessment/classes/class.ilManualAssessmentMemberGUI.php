@@ -417,7 +417,7 @@ class ilManualAssessmentMemberGUI
 	protected function mayBeEdited()
 	{
 		if (!$this->isFinalized()
-				&& ($this->userCanGrade() || $this->superiorCanGrade() || $this->mayGradeSelf())
+				&& ($this->userCanGrade() || $this->superiorCanGrade() || $this->mayGradeSelf() || $this->adminCanGrade())
 		) {
 			return true;
 		}
@@ -455,7 +455,7 @@ class ilManualAssessmentMemberGUI
 	protected function mayBeAmended()
 	{
 		if ($this->isFinalized()
-				&& $this->userCanAmend()) {
+				&& $this->userCanAmend() || $this->superiorCanGrade() || $this->adminCanGrade()) {
 			return true;
 		}
 
@@ -469,7 +469,14 @@ class ilManualAssessmentMemberGUI
 
 	protected function superiorCanGrade()
 	{
-		return !$this->targetWasEditedByOtherUser($this->member) && $this->isSuperior($this->examiner->getId()) && $this->superior_examinate;
+		return $this->isSuperior($this->examiner->getId()) && $this->superior_examinate;
+	}
+
+	protected function adminCanGrade()
+	{
+		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		$examiner_id_utils = gevUserUtils::getInstance((int)$examiner_id);
+		return $examiner_id_utils->isAdmin() && $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress');
 	}
 
 	protected function userCanView()
