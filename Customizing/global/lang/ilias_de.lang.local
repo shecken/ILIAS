@@ -1792,10 +1792,10 @@ gev#:#gev_xsp_crs_type#:#Art des bestehens
 gev#:#gev_xsp_status#:#Status
 gev#:#gev_xsp_finish_until#:#zu erledigen bis
 gev#:#gev_xsp_type_of_passed#:#Art des Bestehens
-rbac#:#amend_grading#:#Dokumentation ändern
-mass#:#mass_usr_amend#:#Dokumentation ändern
+rbac#:#amend_grading#:#Dokumentation nach Finalisierung ändern
+mass#:#mass_usr_amend#:#Dokumentation nach Finalisierung ändern
 mass#:#mass_amend_saved#:#Prüfungsdaten wurden aktualisiert.
-rbac#:#mass_amend_grading#:#Benutzer darf die Prüfungsdaten nachträglich ändern.
+rbac#:#mass_amend_grading#:#Benutzer darf die Prüfungsdaten nach Finalisierung ändern.
 mass#:#mass_file_required#:#Verpflichtender Dateiupload
 mass#:#mass_file_required_info#:#In der Dokumentation zu einem Teilnehmer muss eine Datei hochgeladen werden.
 mass#:#mass_user_view_file#:#Dateieinsicht für Teilnehmer
