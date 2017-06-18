@@ -2,11 +2,12 @@
 
 /* Copyright (c) 2017 Alexander Killing <killing@leifos.de> Extended GPL, see docs/LICENSE */
 
-namespace ILIAS\UI\Implementation\Component\DropDown;
+namespace ILIAS\UI\Implementation\Component\Dropdown;
 
 use ILIAS\UI\Implementation\Render\AbstractComponentRenderer;
 use ILIAS\UI\Renderer as RendererInterface;
 use ILIAS\UI\Component;
+use ILIAS\UI\Implementation\Render\ResourceRegistry;
 
 class Renderer extends AbstractComponentRenderer {
 	/**
@@ -15,10 +16,10 @@ class Renderer extends AbstractComponentRenderer {
 	public function render(Component\Component $component, RendererInterface $default_renderer) {
 		$this->checkComponent($component);
 
-		return $this->renderDropDown($component, $default_renderer);
+		return $this->renderDropdown($component, $default_renderer);
 	}
 
-	protected function renderDropDown(Component\DropDown\DropDown $component, RendererInterface $default_renderer) {
+	protected function renderDropdown(Component\Dropdown\Dropdown $component, RendererInterface $default_renderer) {
 
 		// get template
 		$tpl_name = "tpl.standard.html";
@@ -29,12 +30,15 @@ class Renderer extends AbstractComponentRenderer {
 		if (count($items) == 0) {
 			return "";
 		}
-		$this->renderItems($items, $tpl);
+		$this->renderItems($items, $tpl, $default_renderer);
 
 		// render trigger button
 		$label = $component->getLabel();
 		if ($label !== null) {
 			$tpl->setVariable("LABEL", $component->getLabel());
+		}
+		else {
+			$tpl->setVariable("LABEL", "");
 		}
 
 		$this->maybeRenderId($component, $tpl, "with_id", "ID");
@@ -42,25 +46,16 @@ class Renderer extends AbstractComponentRenderer {
 	}
 
 	/**
-	 * @param DropDownItem[] $items
+	 * @param array $items
 	 * @param ilTemplate $tpl
 	 */
-	protected function renderItems($items, $tpl)
+	protected function renderItems($items, $tpl, $default_renderer)
 	{
+
 		foreach ($items as $item)
 		{
-			$this->maybeRenderId($item, $tpl, "with_item_id", "ITEM_ID");
-
-			$label = $item->getLabel();
-			$action = $item->getAction();
-
 			$tpl->setCurrentBlock("item");
-			$tpl->setVariable("ACTION", $action);
-			$tpl->setVariable("ITEM_HREF", $action);
-
-			if ($label !== null) {
-				$tpl->setVariable("ITEM_LABEL", $label);
-			}
+			$tpl->setVariable("ITEM", $default_renderer->render($item));
 			$tpl->parseCurrentBlock();
 		}
 	}
@@ -83,9 +78,17 @@ class Renderer extends AbstractComponentRenderer {
 	/**
 	 * @inheritdoc
 	 */
+	public function registerResources(ResourceRegistry $registry) {
+		parent::registerResources($registry);
+		$registry->register('./src/UI/templates/js/Dropdown/dropdown.js');
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	protected function getComponentInterfaceName() {
 		return array
-		(Component\DropDown\Standard::class
+		(Component\Dropdown\Standard::class
 		);
 	}
 }
