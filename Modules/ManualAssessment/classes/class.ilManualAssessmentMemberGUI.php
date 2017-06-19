@@ -475,7 +475,7 @@ class ilManualAssessmentMemberGUI
 	protected function adminCanGrade()
 	{
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
-		$examiner_id_utils = gevUserUtils::getInstance((int)$examiner_id);
+		$examiner_id_utils = gevUserUtils::getInstance($this->examiner->getId());
 		return $examiner_id_utils->isAdmin() && $this->object->accessHandler()->checkAccessToObj($this->object, 'edit_learning_progress');
 	}
 
