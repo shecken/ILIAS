@@ -277,7 +277,7 @@ class gevEffectivenessAnalysisDB {
 				."    AND ".$this->gDB->in("dued_eff_ana.user_id", $employees, false, "integer")."\n"
 				." AND hcrs.reason_for_training IN ('"
 				. join("', '", $reason_for_eff_analysis)
-				."')"
+				."')\n"
 				;
 		return $sql;
 	}
