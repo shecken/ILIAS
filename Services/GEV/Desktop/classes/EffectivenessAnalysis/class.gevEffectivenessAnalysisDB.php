@@ -152,10 +152,10 @@ class gevEffectivenessAnalysisDB {
 
 	/**
 	 * Get user id where superior should get first mail
-	 * 
+	 *
 	 * @param int[] 	$employees
 	 * @param int 		$superior_id
-	 * 
+	 *
 	 * @return int[]
 	 */
 	public function getUserIdsForFirstMail($employees, $superior_id) {
@@ -172,6 +172,7 @@ class gevEffectivenessAnalysisDB {
 				."     AND eff_log_first.type = 'first'\n"
 				." WHERE ".$this->gDB->in("eff_analysis_due_date.user_id", $employees, false, "integer")."\n"
 				."     AND eff_analysis_due_date.due_date <= DATE_SUB(CURDATE(), INTERVAL 15 DAY)\n"
+				."     AND eff_analysis_due_date.due_date != '0000-00-00'\n"
 				." GROUP BY eff_analysis_due_date.user_id, eff_analysis_due_date.crs_id\n"
 				." HAVING send_first = true AND eff_analysis.crs_id IS NULL\n";
 
@@ -185,10 +186,10 @@ class gevEffectivenessAnalysisDB {
 
 	/**
 	 * Get user id where superior should get second reminder
-	 * 
+	 *
 	 * @param int[] 	$employees
 	 * @param int 		$superior_id
-	 * 
+	 *
 	 * @return int[]
 	 */
 	public function getUserIdsForReminder($employees, $superior_id) {
@@ -213,6 +214,7 @@ class gevEffectivenessAnalysisDB {
 				."     AND eff_log_second.type = 'second'\n"
 				." WHERE ".$this->gDB->in("eff_analysis_due_date.user_id", $employees, false, "integer")."\n"
 				."     AND eff_analysis_due_date.due_date <= DATE_SUB(CURDATE(), INTERVAL 15 DAY)\n"
+				."     AND eff_analysis_due_date.due_date != '0000-00-00'\n"
 				." GROUP BY eff_analysis_due_date.user_id, eff_analysis_due_date.crs_id\n"
 				." HAVING send_second = true AND eff_analysis.crs_id IS NULL\n";
 
@@ -299,9 +301,9 @@ class gevEffectivenessAnalysisDB {
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysis.php");
 		$where = "";
 
-		if(!isset($filter[gevEffectivenessAnalysis::F_STATUS]) 
-			&& isset($filter[gevEffectivenessAnalysis::F_FINISHED]) 
-			&& $filter[gevEffectivenessAnalysis::F_FINISHED] == gevEffectivenessAnalysis::STATE_FILTER_OPEN) 
+		if(!isset($filter[gevEffectivenessAnalysis::F_STATUS])
+			&& isset($filter[gevEffectivenessAnalysis::F_FINISHED])
+			&& $filter[gevEffectivenessAnalysis::F_FINISHED] == gevEffectivenessAnalysis::STATE_FILTER_OPEN)
 		{
 			$where .= "     AND effa.finish_date IS NULL\n";
 		}
@@ -323,7 +325,7 @@ class gevEffectivenessAnalysisDB {
 
 		if(isset($filter[gevEffectivenessAnalysis::F_STATUS]) && !empty($filter[gevEffectivenessAnalysis::F_STATUS])) {
 			$status = $filter[gevEffectivenessAnalysis::F_STATUS];
-			
+
 			switch($status) {
 				case gevEffectivenessAnalysis::STATE_FILTER_FINISHED:
 					$where .= "     AND effa.finish_date IS NOT NULL\n";
