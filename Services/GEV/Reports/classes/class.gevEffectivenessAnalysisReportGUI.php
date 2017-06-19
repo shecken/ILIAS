@@ -13,7 +13,7 @@ require_once("Services/CaTUIComponents/classes/class.catTitleGUI.php");
 */
 class gevEffectivenessAnalysisReportGUI extends catBasicReportGUI {
 public function __construct() {
-		
+
 		parent::__construct();
 
 		require_once("Services/GEV/Desktop/classes/EffectivenessAnalysis/class.gevEffectivenessAnalysis.php");
@@ -62,7 +62,7 @@ public function __construct() {
 		if ($res !== null) {
 			return $res;
 		}
-		
+
 		switch ($cmd) {
 			case "exportxls":
 				$this->exportXLS();

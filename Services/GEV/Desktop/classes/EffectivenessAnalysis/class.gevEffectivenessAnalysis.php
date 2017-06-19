@@ -203,7 +203,17 @@ class gevEffectivenessAnalysis {
 	 */
 	protected function getOrgunitsOf($user_id, $filter_orgus) {
 		$user_utils = gevUserUtils::getInstance($user_id);
-		$orgus = $user_utils->getOrgUnitsWhereUserIsDirectSuperior();
+		//admins will see all OrgUs
+		if($user_utils->isAdmin()) {
+			require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
+			require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+			$orgus = gevOrgUnitUtils::getAllChildren(array(ilObjOrgUnit::getRootOrgRefId()));
+
+		//others will see their OrgUs recursively
+		} else {
+			$orgus = $user_utils->getOrgUnitsWhereUserIsSuperior();
+		}
+
 
 		$orgus = array_map(function($orgu) use ($filter_orgus) {
 			if(!empty($filter_orgus)) {
@@ -239,7 +249,7 @@ class gevEffectivenessAnalysis {
 				return ilObject::_lookupTitle($orgu["obj_id"]);
 			}, $orgus);
 		} else {
-			$orgus = $user_utils->getOrgUnitNamesWhereUserIsDirectSuperior();
+			$orgus = $user_utils->getOrgUnitNamesWhereUserIsSuperior();
 		}
 
 		return $orgus;
@@ -553,7 +563,7 @@ class gevEffectivenessAnalysis {
 		if(isset($filter_values[self::F_SUPERIOR])) {
 			return ilObjUser::_lookupId($filter_values[self::F_SUPERIOR]);
 		}
-		
+
 		return false;
 	}
 
