@@ -252,8 +252,7 @@ class gevEffectivenessAnalysisDB {
 	 */
 	protected function getSelectBase($employees, array $reason_for_eff_analysis) {
 		$today_date = date('Y-m-d');
-
-		return " FROM ".self::TABLE_DUED_EFF_ANA." dued_eff_ana\n"
+		$sql = " FROM ".self::TABLE_DUED_EFF_ANA." dued_eff_ana\n"
 				." JOIN hist_course hcrs\n"
 				."    ON hcrs.crs_id = dued_eff_ana.crs_id\n"
 				."        AND hcrs.hist_historic = 0\n"
@@ -276,7 +275,11 @@ class gevEffectivenessAnalysisDB {
 				."        AND effa.user_id = dued_eff_ana.user_id\n"
 				." WHERE dued_eff_ana.due_date <= ".$this->gDB->quote($today_date, "text")."\n"
 				."    AND ".$this->gDB->in("dued_eff_ana.user_id", $employees, false, "integer")."\n"
+				." AND hcrs.reason_for_training IN ('"
+				. join("', '", $reason_for_eff_analysis)
+				."')"
 				;
+		return $sql;
 	}
 
 	/**
