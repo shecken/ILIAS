@@ -319,7 +319,8 @@ class gevEffectivenessAnalysisDB {
 		}
 
 		if(isset($filter[gevEffectivenessAnalysis::F_TITLE]) && $filter[gevEffectivenessAnalysis::F_TITLE] != "") {
-			$where .= "     AND hcrs.title = ".$this->gDB->quote($filter[gevEffectivenessAnalysis::F_TITLE], "text")."\n";
+			$search_string = '%' .$filter[gevEffectivenessAnalysis::F_TITLE] .'%';
+			$where .= "     AND " .$this->gDB->like('hcrs.title','text', $search_string) ."\n";
 		}
 
 		if(isset($filter[gevEffectivenessAnalysis::F_RESULT]) && $filter[gevEffectivenessAnalysis::F_RESULT] != "") {
