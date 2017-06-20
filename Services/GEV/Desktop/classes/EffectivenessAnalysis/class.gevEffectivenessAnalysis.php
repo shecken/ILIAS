@@ -176,6 +176,7 @@ class gevEffectivenessAnalysis {
 	 */
 	protected function getMyEmployees($user_id, $filter_orgunit, $filter_user) {
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 		$user_utils = gevUserUtils::getInstance($user_id);
 
 		$login_id = -1;
@@ -184,8 +185,11 @@ class gevEffectivenessAnalysis {
 		}
 
 		$my_employees = array();
-		if($user_utils->isAdmin() && empty($filter_orgunit)) {
-			$my_employees = $this->getAllPeopleIn(array(ilObjOrgUnit::getRootOrgRefId()), $login_id);
+
+		if($user_utils->isAdmin()) {
+			$orgus = $this->getOrgunitsOf($user_id, $filter_orgunit);
+			$my_employees = $this->getAllPeopleIn($orgus, $login_id, true);
+
 		} else {
 			$my_employees = $this->getEmployeesOf($user_id, $filter_orgunit, $login_id);
 		}
@@ -197,7 +201,7 @@ class gevEffectivenessAnalysis {
 	 * Get orgunit where user is superior, filtered by orgu filter if needed
 	 *
 	 * @param int 		$user_id
-	 * @param string[] 	$$filter_orgus
+	 * @param string[] 	$filter_orgus
 	 *
 	 * @return int[]
 	 */
@@ -289,22 +293,22 @@ class gevEffectivenessAnalysis {
 	/**
 	 * Get all members of org unit
 	 *
-	 * @param int[] 		$org_unit_ref_id
-	 * @param int 		$login_id 			id of filtered user
+	 * @param int[] 	$org_unit_ref_ids
+	 * @param int 		$login_id 	id of filtered user
 	 *
 	 * @return int[]
 	 */
-	protected function getAllPeopleIn(array $org_unit_ref_id, $login_id) {
+	protected function getAllPeopleIn(array $org_unit_ref_ids, $login_id) {
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 
-		$empl = gevOrgUnitUtils::getAllEmployees($org_unit_ref_id);
+		$people = gevOrgUnitUtils::getAllPeopleIn($org_unit_ref_ids);
 
 		if($login_id != -1) {
-			$empl = $this->reduceToFilteredUser($empl, $login_id);
+			$people = $this->reduceToFilteredUser($people, $login_id);
 		}
 
-		return $empl;
+		return $people;
 	}
 
 	/**
