@@ -298,8 +298,21 @@ abstract class ilObjReportBase2 extends ilObjectPlugin
 	 *
 	 * @return string
 	 */
-	public function getReportMenuTitle() {
+	public function getReportMenuTitle()
+	{
 		return $this->titile();
+	}
+
+	protected static function filterPlugins($plugins)
+	{
+		return array_filter($plugins, function ($plugin) {
+			if ($plugin instanceof ilReportBasePlugin
+				&& !($plugin instanceof ilReportEduBioPlugin)
+				) {
+				return true;
+			}
+			return false;
+		});
 	}
 
 	/**
@@ -307,7 +320,8 @@ abstract class ilObjReportBase2 extends ilObjectPlugin
 	 *
 	 * @return bool
 	 */
-	public function showInReportMenu() {
+	public function showInReportMenu()
+	{
 		return true;
 	}
 }
