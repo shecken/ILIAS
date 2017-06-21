@@ -51,12 +51,30 @@ class Renderer extends AbstractComponentRenderer {
 	 */
 	protected function renderItems($items, $tpl, $default_renderer)
 	{
+		global $DIC;
+
+		$renderer = $DIC->ui()->renderer();
 
 		foreach ($items as $item)
 		{
 			$tpl->setCurrentBlock("item");
-			$tpl->setVariable("ITEM", $default_renderer->render($item));
+			$tpl->setVariable("ITEM", $renderer->render($item));
 			$tpl->parseCurrentBlock();
+
+			/*
+			$this->maybeRenderId($item, $tpl, "with_item_id", "ITEM_ID");
+
+			$label = $item->getLabel();
+			$action = $item->getAction();
+
+			$tpl->setCurrentBlock("item");
+			$tpl->setVariable("ACTION", $action);
+			$tpl->setVariable("ITEM_HREF", $action);
+
+			if ($label !== null) {
+				$tpl->setVariable("ITEM_LABEL", $label);
+			}
+			$tpl->parseCurrentBlock();*/
 		}
 	}
 
