@@ -51,14 +51,11 @@ class Renderer extends AbstractComponentRenderer {
 	 */
 	protected function renderItems($items, $tpl, $default_renderer)
 	{
-		global $DIC;
-
-		$renderer = $DIC->ui()->renderer();
 
 		foreach ($items as $item)
 		{
 			$tpl->setCurrentBlock("item");
-			$tpl->setVariable("ITEM", $renderer->render($item));
+			$tpl->setVariable("ITEM", $default_renderer->render($item));
 			$tpl->parseCurrentBlock();
 
 			/*
