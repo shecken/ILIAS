@@ -12,6 +12,7 @@ require_once "./Services/Container/classes/class.ilContainerGUI.php";
 * @version $Id$
 *
 * @ilCtrl_Calls ilObjCategoryGUI: ilPermissionGUI, ilContainerPageGUI, ilContainerLinkListGUI, ilObjUserGUI, ilObjUserFolderGUI
+* @ilCtrl_Calls ilObjCategoryGUI: gevLocalUserGUI
 * @ilCtrl_Calls ilObjCategoryGUI: ilInfoScreenGUI, ilObjStyleSheetGUI, ilCommonActionDispatcherGUI, ilObjectTranslationGUI
 * @ilCtrl_Calls ilObjCategoryGUI: ilColumnGUI, ilObjectCopyGUI, ilUserTableGUI, ilDidacticTemplateGUI, ilExportGUI
 * 
@@ -54,7 +55,7 @@ class ilObjCategoryGUI extends ilContainerGUI
 
 		$next_class = $this->ctrl->getNextClass($this);
 		$cmd = $this->ctrl->getCmd();
-		
+
 		// show repository tree
 		$this->showRepTree(true);
 		
@@ -77,6 +78,31 @@ class ilObjCategoryGUI extends ilContainerGUI
 					$ret =& $this->ctrl->forwardCommand($this->gui_obj);
 				}
 				
+				$ilTabs->clearTargets();
+				$ilTabs->setBackTarget($this->lng->txt('backto_lua'), $this->ctrl->getLinkTarget($this,'listUsers'));
+				global $ilHelp;
+				$ilHelp->setScreenIdComponent("cat");
+				$ilHelp->setScreenId("administrate_user");
+				$ilHelp->setSubScreenId($ilCtrl->getCmd());
+				break;
+
+			case "gevlocalusergui":
+				require_once 'Modules/OrgUnit/classes/LocalUser/class.gevLocalUserGUI.php';
+
+				$this->tabs_gui->setTabActive('administrate_users');
+				if(!$_GET['obj_id'])
+				{
+					$this->gui_obj = new gevLocalUserGUI("",$_GET['ref_id'],true, false);
+					$this->gui_obj->setCreationMode($this->creation_mode);
+					$ret =& $this->ctrl->forwardCommand($this->gui_obj);
+				}
+				else
+				{
+					$this->gui_obj = new gevLocalUserGUI("", $_GET['obj_id'],false, false);
+					$this->gui_obj->setCreationMode($this->creation_mode);
+					$ret =& $this->ctrl->forwardCommand($this->gui_obj);
+				}
+
 				$ilTabs->clearTargets();
 				$ilTabs->setBackTarget($this->lng->txt('backto_lua'), $this->ctrl->getLinkTarget($this,'listUsers'));
 				global $ilHelp;

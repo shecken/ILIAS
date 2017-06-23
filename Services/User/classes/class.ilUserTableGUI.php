@@ -544,15 +544,22 @@ class ilUserTableGUI extends ilTable2GUI
 
 		if ($this->getMode() == self::MODE_USER_FOLDER or $user['time_limit_owner'] == $this->getUserFolderId()) {
 			//gev-patch start
-			$class_name = "ilobjusergui";
+
 			if ($this->getMode() == self::MODE_LOCAL_USER) {
 				$class_name = "gevlocalusergui";
+				$ilCtrl->setParameterByClass($class_name, "obj_id", $user["usr_id"]);
+				$link = $ilCtrl->getLinkTargetByClass(array(get_class($this->parent_obj),$class_name), "view");
+
+			} else {
+				$class_name = "ilobjusergui";
+				$ilCtrl->setParameterByClass($class_name, "obj_id", $user["usr_id"]);
+				$link = $ilCtrl->getLinkTargetByClass($class_name, "view");
 			}
 			$this->tpl->setVariable("VAL_LOGIN", $user["login"]);
-			$ilCtrl->setParameterByClass($class_name, "obj_id", $user["usr_id"]);
+
 			$this->tpl->setVariable(
 				"HREF_LOGIN",
-				$ilCtrl->getLinkTargetByClass($class_name, "view")
+				$link
 			);
 			$ilCtrl->setParameterByClass($class_name, "obj_id", "");
 			//gev-patch end
