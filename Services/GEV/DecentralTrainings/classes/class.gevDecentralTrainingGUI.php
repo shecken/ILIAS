@@ -76,6 +76,7 @@ class gevDecentralTrainingGUI
 
 		$this->tpl->getStandardTemplate();
 		$this->tpl->addJavaScript('Services/GEV/DecentralTrainings/js/dct_date_duration_update.js');
+		$this->tpl->addJavaScript('Services/GEV/DecentralTrainings/js/dct_date_duration_update_adjust.js');
 		$this->tpl->addJavaScript("Services/GEV/DecentralTrainings/js/dct_disable_mail_preview.js");
 		$this->tpl->addJavaScript("Services/CaTUIComponents/js/colorbox-master/jquery.colorbox-min.js");
 		$this->tpl->addJavaScript("Services/CaTUIComponents/js/catDeleteUploadedFile.js");
@@ -299,8 +300,13 @@ class gevDecentralTrainingGUI
 		//trainer hinzufügen
 		$form_values["trainer_ids"] = $trainer_ids;
 		//datum hinzufügen
-		$form_values["date"] = ($this->date !== null) ? new ilDate($this->date, IL_CAL_DATE)
+		$form_values["start_date"] = ($this->date !== null) ? new ilDate($this->date, IL_CAL_DATE)
 															: new ilDate(date("Y-m-d"), IL_CAL_DATE);
+
+		$dt_end = DateTime::createFromFormat('Y-m-d', $form_values['start_date']->get(IL_CAL_DATE));
+
+		$dt_end->add(new DateInterval('P'.($form_values['duration'] - 1).'D'));
+		$form_values['end_date'] = new ilDate($dt_end->format('Y-m-d'), IL_CAL_DATE);
 
 		if ($is_flexible) {
 			$form_values["title"] = "";
@@ -1142,22 +1148,23 @@ class gevDecentralTrainingGUI
 		$duration_section = new ilFormSectionHeaderGUI();
 		$duration_section->setTitle($this->lng->txt("gev_dec_training_duration"));
 		$form->addItem($duration_section);
-
-		$date = new ilDateTimeInputGUI($this->lng->txt("date"), "date");
+		require_once 'Services/GEV/DecentralTrainings/classes/Form/class.ilFixedLengthPeriodInputGUI.php';
+		$date = new ilFixedLengthPeriodInputGUI($this->lng->txt("date"), "date");
 		$date->setShowTime(false);
 		if ($a_fill) {
-			$date->setDate($a_form_values["date"]);
+			$date->setStart($a_form_values["start_date"]);
+			$date->setEnd($a_form_values["end_date"]);
 		}
 		$date->setDisabled($a_form_values["no_changes_allowed"]);
 		$form->addItem($date);
 
-
 		foreach ($schedule as $day => $period) {
-			$ti = new ilDateTimeInputGUI(sprintf($this->lng->txt('gev_dct_day_no_period'), $day + 1), 'schedule_starts_'.$day);
+			$ti = new ilFixedLengthPeriodInputGUI(sprintf($this->lng->txt('gev_dct_day_no_period'), $day + 1), 'schedule_starts_'.$day);
 			$ti->setShowDate(false);
 			$ti->setShowTime(true);
 			if ($a_fill) {
-				$ti->setDate($a_form_values['schedule_starts_'.$day]);
+				$ti->setStart($a_form_values['schedule_starts_'.$day]);
+				$ti->setEnd($a_form_values['schedule_ends_'.$day]);
 			}
 			$form->addItem($ti);
 		}
@@ -1312,7 +1319,6 @@ class gevDecentralTrainingGUI
 				$this->tpl_date_auto_change = new ilTemplate("tpl.gev_dct_duration_update_js.html", false, false, "Services/GEV/DecentralTrainings");
 			}
 		}
-
 		return $form;
 	}
 
@@ -1745,6 +1751,7 @@ class gevDecentralTrainingGUI
 		$crs_utils = gevCourseUtils::getInstance($a_template_id);
 
 		$tmp = $crs_utils->getSchedule();
+		$training_info['duration'] = count($tmp);
 		$sched = explode("-", $tmp[0]);
 		$training_info["start_datetime"] = new ilDateTime("1970-01-01 ".$sched[0].":00", IL_CAL_DATETIME);
 		$training_info["end_datetime"] = new ilDateTime("1970-01-01 ".$sched[1].":00", IL_CAL_DATETIME);
@@ -1762,6 +1769,7 @@ class gevDecentralTrainingGUI
 			$training_info['schedule_durations_'.$day]
 				= (int)$aux_end[0] * 60 + (int)$aux_end[1] - ((int)$aux_begin[0] * 60 + (int)$aux_begin[1]);
 			$training_info['schedule_starts_'.$day] = new ilDateTime("1970-01-01 ".$aux_times[0].":00", IL_CAL_DATETIME);
+			$training_info['schedule_ends_'.$day] = new ilDateTime("1970-01-01 ".$aux_times[1].":00", IL_CAL_DATETIME);
 		}
 
 		$trainer_orgus = array();
@@ -1811,7 +1819,8 @@ class gevDecentralTrainingGUI
 			  "title" => $crs_utils->getTitle()
 			, "description" => $crs_utils->getSubtitle()
 			, "ltype" => $crs_utils->getType()
-			, "date" => $crs_utils->getStartDate()
+			, "start_date" => $crs_utils->getStartDate()
+			, "end_date" => $crs_utils->getEndDate()
 			, "start_datetime" => new ilDateTime("1970-01-01 ".$sched[0].":00", IL_CAL_DATETIME)
 			, "end_datetime" => new ilDateTime("1970-01-01 ".$sched[1].":00", IL_CAL_DATETIME)
 			, "time" => null
