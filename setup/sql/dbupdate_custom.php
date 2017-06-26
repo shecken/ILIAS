@@ -6403,3 +6403,8 @@ foreach ($field_definitions as $fd) {
 	}
 }
 ?>
+
+<#269>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
