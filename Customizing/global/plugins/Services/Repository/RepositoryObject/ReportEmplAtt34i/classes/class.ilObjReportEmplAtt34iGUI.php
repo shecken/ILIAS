@@ -165,7 +165,7 @@ class ilObjReportEmplAtt34iGUI extends ilObjReportBaseGUI
 				$rec['participation_status'] = 'begonnen';
 				break;
 			case 'teilgenommen':
-				$rec['participation_status'] = 'abegeschlossern';
+				$rec['participation_status'] = 'abgeschlossen';
 				break;
 		}
 
