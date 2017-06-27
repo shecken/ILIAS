@@ -1,0 +1,43 @@
+<!-- language file start -->
+obj_x34i#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i
+objs_x34i#:#Reports Teilnahme nach Mitarbeiter / Vertriebspartner
+obj_x34i_duplicate#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i kopieren
+objs_x34i_duplicate#:#Reports Teilnahme nach Mitarbeiter / Vertriebspartner 34i kopieren
+obj_x34i_select#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i auswählen
+x34i_add#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i hinzufügen
+x34i_new#:#Neuen Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i hinzufügen
+x34i_read#:#Lesezugriff zum Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i 
+x34i_write#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i bearbeiten
+x34i_delete#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i löschen
+x34i_visible#:#sichtbar
+x34i_edit_permission#:#schreibberechtigt
+crs_create_x34i#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i erzeugen
+grp_create_x34i#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i erzeugen
+fold_create_x34i#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i erzeugen
+root_create_x34i#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i erzeugen
+cat_create_x34i#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i erzeugen
+x34i_content#:#Report
+x34i_properties#:#Eigenschaften
+online#:#Online
+lastname#:#Nachname
+firstname#:#Vorname
+email#:#E-Mail
+adp_number#:#ADP-Nummer
+job_number#:#Vermittlernummer
+od_bd#:#OD/BD
+org_unit_short#:#Org.-Einheit
+roles#:#Rollen
+training_id#:#ID
+title#:#Trainingstitel
+location#:#Ort
+learning_type#:#Trainingstyp
+date#:#Datum
+credit_points#:#Bildungspunkte
+booking_status#:#Buchungsstatus
+participation_status#:#Teilnahmestatus
+period#:#Zeitraum:
+until#:#bis
+mobile_phone_nr#:#Telefon Mobil
+status#:#Status
+filter_no_wbd_imported#:#Keine Trainings aus der WBD
+is_local#:#Lokale Auswertung
