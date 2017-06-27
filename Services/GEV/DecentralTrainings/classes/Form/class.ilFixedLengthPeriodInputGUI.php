@@ -1,14 +1,10 @@
 <?php
 /* Copyright (c) 1998-2013 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-include_once 'Services/Table/interfaces/interface.ilTableFilterItem.php';
-require_once("Services/Form/classes/class.ilSubEnabledFormPropertyGUI.php");
-require_once("Services/Form/interfaces/interface.ilMultiValuesItem.php");
+require_once("Services/Form/classes/class.ilDateDurationInputGUI.php");
+
 /**
-* input GUI for a time span (start and end date)
-*
-* @author Stefan Meyer <smeyer.ilias@gmx.de>
-* @version $Id$
+* input GUI for a fixed time span (start and end date)
 *
 * @ingroup ServicesForm
 */
@@ -16,6 +12,40 @@ require_once("Services/Form/interfaces/interface.ilMultiValuesItem.php");
 class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 // gev-patch end
 {
+
+
+	public function setValueByArray($a_values)
+	{
+		global $ilUser;
+		if (isset($a_values[$this->getPostVar()]['start']['date'])) {
+			$start_date_string = $a_values[$this->getPostVar()]['start']['date'];
+		} else {
+			$start_date_string = '1970-01-01';
+		}
+
+		if (isset($a_values[$this->getPostVar()]['end']['date'])) {
+			$end_date_string = $a_values[$this->getPostVar()]['end']['date'];
+		} else {
+			$end_date_string = '1970-01-01';
+		}
+
+		if (isset($a_values[$this->getPostVar()]['start']['time'])
+			&& $a_values[$this->getPostVar()]['start']['time'] !== '00:00:00') {
+			$start_time_string = $a_values[$this->getPostVar()]['start']['time'];
+		} else {
+			$start_time_string = '00:00:01';
+		}
+
+		if (isset($a_values[$this->getPostVar()]['end']['time'])
+			&& $a_values[$this->getPostVar()]['end']['time'] !== '00:00:00') {
+			$end_time_string = $a_values[$this->getPostVar()]['end']['time'];
+		} else {
+			$end_time_string = '00:00:01';
+		}
+
+		$this->setStart(new ilDateTime($start_date_string.' '.$start_time_string, IL_CAL_DATETIME, $ilUser->getTimeZone()));
+		$this->setEnd(new ilDateTime($end_date_string.' '.$end_time_string, IL_CAL_DATETIME, $ilUser->getTimeZone()));
+	}
 
 	/**
 	* Insert property html
@@ -251,7 +281,7 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 		for ($month_aux = 1; $month_aux <= 12; $month_aux++) {
 			$tpl->setCurrentBlock('months');
 			$tpl->setVariable('VALUE', $month_aux);
-			$tpl->setVariable('TITLE', $lng->txt('month_'.$month_aux.'_long'));
+			$tpl->setVariable('TITLE', $lng->txt('month_'.str_pad($month_aux, 2, '0', STR_PAD_LEFT).'_long'));
 			if ($month_aux === $month) {
 				$tpl->setVariable('SELECTED', 'selected');
 			}
