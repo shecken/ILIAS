@@ -1,0 +1,42 @@
+<!-- BEGIN prop_date_activation -->
+			<input type="checkbox" name="{CHECK_ENABLED_DATE}" value="1" {CHECKED_ENABLED} {CHECKED_DISABLED}/> {TXT_DATE_ENABLED}<br />
+<!-- END prop_date_activation -->
+<!-- BEGIN toggle_fullday -->
+			<input type="checkbox" id="{FULLDAY_POSTVAR}_fulltime" onchange="ilToggleFullTime(this,'{FULLDAY_POSTVAR}');" name="{FULLDAY_TOGGLE_NAME}" value="1" {FULLDAY_TOGGLE_CHECKED} {FULLDAY_TOGGLE_DISABLED} />
+				<label for="{FULLDAY_POSTVAR}_fulltime">{TXT_TOGGLE_FULLDAY}</label>
+			<br /><br />
+<!-- END toggle_fullday -->
+
+			<table class="nobackground" datatable="0">
+				<tbody>
+					<tr>
+						<td style="text-align: right;vertical-align: top">
+							{TXT_START}&nbsp;
+						</td>
+						<td>
+							{START_SELECT} 
+							<!-- BEGIN show_start_time -->
+							<br />{START_TIME_SELECT} {TXT_START_TIME}
+							<!-- END show_start_time -->
+								</td>
+					</tr>
+					<tr>
+						<td style="text-align: right;vertical-align: top;padding-top: 1em">
+							{TXT_END}&nbsp;
+						</td>
+						<td style="padding-top: 1em">
+							{END_SELECT}
+							<!-- BEGIN show_end_time -->
+							<br />{END_TIME_SELECT} {TXT_END_TIME}
+							<!-- END show_end_time -->
+						</td>
+					</tr>
+					<!-- BEGIN weight_bl -->
+					<tr id="{POST_VAR}_weight">
+						<td colspan="2" style="padding-top: 1em">
+							{WEIGHT_SELECT}
+						<td></td>
+					</tr>			
+					<!-- END weight_bl -->
+				</tbody>
+			</table>

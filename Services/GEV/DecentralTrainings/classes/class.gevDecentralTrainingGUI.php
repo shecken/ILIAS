@@ -76,6 +76,7 @@ class gevDecentralTrainingGUI
 
 		$this->tpl->getStandardTemplate();
 		$this->tpl->addJavaScript('Services/GEV/DecentralTrainings/js/dct_date_duration_update.js');
+		$this->tpl->addJavaScript('Services/GEV/DecentralTrainings/js/dct_date_duration_update_adjust.js');
 		$this->tpl->addJavaScript("Services/GEV/DecentralTrainings/js/dct_disable_mail_preview.js");
 		$this->tpl->addJavaScript("Services/CaTUIComponents/js/colorbox-master/jquery.colorbox-min.js");
 		$this->tpl->addJavaScript("Services/CaTUIComponents/js/catDeleteUploadedFile.js");
@@ -299,8 +300,13 @@ class gevDecentralTrainingGUI
 		//trainer hinzufügen
 		$form_values["trainer_ids"] = $trainer_ids;
 		//datum hinzufügen
-		$form_values["date"] = ($this->date !== null) ? new ilDate($this->date, IL_CAL_DATE)
+		$form_values["start_date"] = ($this->date !== null) ? new ilDate($this->date, IL_CAL_DATE)
 															: new ilDate(date("Y-m-d"), IL_CAL_DATE);
+
+		$dt_end = DateTime::createFromFormat('Y-m-d', $form_values['start_date']->get(IL_CAL_DATE));
+
+		$dt_end->add(new DateInterval('P'.($form_values['duration'] - 1).'D'));
+		$form_values['end_date'] = new ilDate($dt_end->format('Y-m-d'), IL_CAL_DATE);
 
 		if ($is_flexible) {
 			$form_values["title"] = "";
@@ -390,7 +396,6 @@ class gevDecentralTrainingGUI
 
 		$trnrs = new ilHiddenInputGUI("trainer_ids");
 		$a_form->addItem($trnrs);
-
 		$a_form->setValuesByPost();
 
 		$form_tpl_id = $a_form->getInput("template_id");
@@ -445,14 +450,6 @@ class gevDecentralTrainingGUI
 
 
 		$form_prev = $this->buildTrainingOptionsForm(false, false, $form_values);
-
-		/**
-		 * This is necessary, since the ilDateTimeInputGUI still depends on parameters set below,
-		 * even if only the time is set and visible.
-		 */
-		foreach ($crs_utils->getSchedule() as $day => $period) {
-			$_POST['schedule_starts_'.$day]['date'] = ['d' => '1','m' => '1', 'y' => '1970'];
-		}
 
 
 		if (!$form_prev->checkInput()) {
@@ -822,10 +819,6 @@ class gevDecentralTrainingGUI
 			$is_flexible = true;
 		}
 
-
-		$start_date = $a_form->getInput("date");
-
-
 		if ($a_target->isPraesenztraining()) {
 			$venue = $a_form->getInput("venue");
 			$venue_obj_id = $venue ? $venue : null;
@@ -872,9 +865,8 @@ class gevDecentralTrainingGUI
 		$uploaded_files = ($this->added_files === null) ? array() : $this->added_files;
 
 		//GDV_TOPIC und TRAINING_CATEGORY JUST DISABLED
-
-
 		if ($is_flexible) {
+			$start_date = $a_form->getInput("date");
 			$time = $a_form->getInput("time");
 			$start_datetime = new ilDateTime($start_date["date"].' '.$time['start']['time'], IL_CAL_DATETIME);
 			$end_datetime = new ilDateTime($start_date["date"].' '.$time['end']['time'], IL_CAL_DATETIME);
@@ -895,13 +887,12 @@ class gevDecentralTrainingGUI
 			$gdv_topic = null; //($gdv_topic_temp != "0") ? $gdv_topic_temp : null;
 		} else {
 			// Set day durations.
-
+			$start_date_date = $a_form->getItemByPostvar("date")->getStart()->get(IL_CAL_DATE);
 			$periods = [];
-			$start_date_date = $start_date["date"];
 			foreach ($a_target->getSchedule() as $day => $tpl_duration) {
 				$unix_start = $a_form
 								->getItemByPostVar('schedule_starts_'.$day)
-								->getDate()
+								->getStart()
 								->getUnixTime();
 				$duration_m = $a_form->getInput('schedule_durations_'.$day);
 				$start = new DateTime();
@@ -1142,22 +1133,25 @@ class gevDecentralTrainingGUI
 		$duration_section = new ilFormSectionHeaderGUI();
 		$duration_section->setTitle($this->lng->txt("gev_dec_training_duration"));
 		$form->addItem($duration_section);
-
-		$date = new ilDateTimeInputGUI($this->lng->txt("date"), "date");
+		require_once 'Services/GEV/DecentralTrainings/classes/Form/class.ilFixedLengthPeriodInputGUI.php';
+		$date = new ilFixedLengthPeriodInputGUI($this->lng->txt("date_stable"), "date");
+		$date->setInfo($this->lng->txt('date_stable_desc'));
 		$date->setShowTime(false);
 		if ($a_fill) {
-			$date->setDate($a_form_values["date"]);
+			$date->setStart($a_form_values["start_date"]);
+			$date->setEnd($a_form_values["end_date"]);
 		}
 		$date->setDisabled($a_form_values["no_changes_allowed"]);
 		$form->addItem($date);
 
-
 		foreach ($schedule as $day => $period) {
-			$ti = new ilDateTimeInputGUI(sprintf($this->lng->txt('gev_dct_day_no_period'), $day + 1), 'schedule_starts_'.$day);
+			$ti = new ilFixedLengthPeriodInputGUI(sprintf($this->lng->txt('gev_dct_day_no_period'), $day + 1), 'schedule_starts_'.$day);
+			$ti->setInfo($this->lng->txt('gev_dct_day_no_period_desc'));
 			$ti->setShowDate(false);
 			$ti->setShowTime(true);
 			if ($a_fill) {
-				$ti->setDate($a_form_values['schedule_starts_'.$day]);
+				$ti->setStart($a_form_values['schedule_starts_'.$day]);
+				$ti->setEnd($a_form_values['schedule_ends_'.$day]);
 			}
 			$form->addItem($ti);
 		}
@@ -1312,7 +1306,6 @@ class gevDecentralTrainingGUI
 				$this->tpl_date_auto_change = new ilTemplate("tpl.gev_dct_duration_update_js.html", false, false, "Services/GEV/DecentralTrainings");
 			}
 		}
-
 		return $form;
 	}
 
@@ -1585,17 +1578,7 @@ class gevDecentralTrainingGUI
 
 	protected function checkDecentralTrainingConstraints(&$a_form, $a_template_id)
 	{
-		// Check date is before today
-		$tmp = $a_form->getInput("date");
-		$date = new ilDate($tmp["date"], IL_CAL_DATE);
-		$dateUnix = $date->get(IL_CAL_UNIX);
-		$now = new ilDate(date('Y-m-d'), IL_CAL_DATE);
-		$nowUnix = $now->get(IL_CAL_UNIX);
 
-		if ($dateUnix < $nowUnix) {
-			ilUtil::sendFailure($this->lng->txt("gev_dec_training_date_before_now"), false);
-			return false;
-		}
 		// end check date
 		$crs_utils = gevCourseUtils::getInstance($a_template_id);
 
@@ -1636,6 +1619,21 @@ class gevDecentralTrainingGUI
 
 		if ($a_template_id == $presence_flexible_tpl_id || $a_template_id == $webinar_flexible_tpl_id) {
 			// flexible training timechecks
+
+
+			// Check date is before today
+			$tmp = $a_form->getInput("date");
+			$date = new ilDate($tmp["date"], IL_CAL_DATE);
+			$dateUnix = $date->get(IL_CAL_UNIX);
+			$now = new ilDate(date('Y-m-d'), IL_CAL_DATE);
+			$nowUnix = $now->get(IL_CAL_UNIX);
+
+			if ($dateUnix < $nowUnix) {
+				ilUtil::sendFailure($this->lng->txt("gev_dec_training_date_before_now"), false);
+				return false;
+			}
+
+
 			$tmp = $a_form->getInput("time");
 			$start = split(":", $tmp["start"]["time"]);
 			$end = split(":", $tmp["end"]["time"]);
@@ -1657,6 +1655,17 @@ class gevDecentralTrainingGUI
 				return false;
 			}
 		} else {
+			// Check date is before today
+			$date = new ilDate($a_form->getItemByPostvar("date")->getStart()->get(IL_CAL_DATE), IL_CAL_DATE);
+			$dateUnix = $date->get(IL_CAL_UNIX);
+			$now = new ilDate(date('Y-m-d'), IL_CAL_DATE);
+			$nowUnix = $now->get(IL_CAL_UNIX);
+
+			if ($dateUnix < $nowUnix) {
+				ilUtil::sendFailure($this->lng->txt("gev_dec_training_date_before_now"), false);
+				return false;
+			}
+
 			// non flexible training timechecks
 			foreach ($crs_utils->getSchedule() as $day => $time_period) {
 				$duration_m = (int)$a_form->getInput('schedule_durations_'.$day);
@@ -1745,6 +1754,7 @@ class gevDecentralTrainingGUI
 		$crs_utils = gevCourseUtils::getInstance($a_template_id);
 
 		$tmp = $crs_utils->getSchedule();
+		$training_info['duration'] = count($tmp);
 		$sched = explode("-", $tmp[0]);
 		$training_info["start_datetime"] = new ilDateTime("1970-01-01 ".$sched[0].":00", IL_CAL_DATETIME);
 		$training_info["end_datetime"] = new ilDateTime("1970-01-01 ".$sched[1].":00", IL_CAL_DATETIME);
@@ -1762,6 +1772,7 @@ class gevDecentralTrainingGUI
 			$training_info['schedule_durations_'.$day]
 				= (int)$aux_end[0] * 60 + (int)$aux_end[1] - ((int)$aux_begin[0] * 60 + (int)$aux_begin[1]);
 			$training_info['schedule_starts_'.$day] = new ilDateTime("1970-01-01 ".$aux_times[0].":00", IL_CAL_DATETIME);
+			$training_info['schedule_ends_'.$day] = new ilDateTime("1970-01-01 ".$aux_times[1].":00", IL_CAL_DATETIME);
 		}
 
 		$trainer_orgus = array();
@@ -1811,7 +1822,8 @@ class gevDecentralTrainingGUI
 			  "title" => $crs_utils->getTitle()
 			, "description" => $crs_utils->getSubtitle()
 			, "ltype" => $crs_utils->getType()
-			, "date" => $crs_utils->getStartDate()
+			, "start_date" => $crs_utils->getStartDate()
+			, "end_date" => $crs_utils->getEndDate()
 			, "start_datetime" => new ilDateTime("1970-01-01 ".$sched[0].":00", IL_CAL_DATETIME)
 			, "end_datetime" => new ilDateTime("1970-01-01 ".$sched[1].":00", IL_CAL_DATETIME)
 			, "time" => null

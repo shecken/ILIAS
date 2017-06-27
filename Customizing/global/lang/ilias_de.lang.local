@@ -512,7 +512,8 @@ gev#:#gev_dev_training_book_users#:#Bitte buchen Sie Benutzer auf das Training.
 gev#:#gev_dec_training_creation#:#Dezentrales Training anlegen
 gev#:#gev_dec_training_creation_header_note#:#Hier können Sie ein neues dezentrales Training anlegen.
 gev#:#gev_dec_training_settings_header#:#Einstellungen für dezentrales Training
-gev#:#gev_dct_day_no_period#:#Trainingsbeginn am Tag %s des Trainings:
+gev#:#gev_dct_day_no_period#:#Trainingsablauf am Tag %s des Trainings:
+gev#:#gev_dct_day_no_period_desc#:#Feste Dauer. Trainingsende automatisch eingestellt.
 gev#:#gev_dec_training_to_long_on_day_set_back#:#Das Training fängt am Tag %s zu spät an. Bitte setzen sie an diesem Tag den Zeitplan um mindestens %s Minuten zurück.
 gev#:#gev_dec_training_settings_header_note#:#Hier können Sie für ein bestehendes dezentrales Training vornehmen.
 gev#:#gev_dec_training_settings#:#Trainingseinstellungen
@@ -532,6 +533,8 @@ gev#:#gev_com_email#:#Kommunikations E-Mail-Adresse
 gev#:#gev_employee_booking#:#Buchungen meiner Mitarbeiter / Vertriebspartner
 gev#:#gev_employee_booking_desc#:#Hier sehen Sie alle aktuellen Buchungen Ihrer Mitarbeiter / Vertriebspartner.
 gev#:#gev_entry_date#:#Eintrittsdatum
+gev#:#date_stable#:#Trainingstage
+gev#:#date_stable_desc#:#Feste Dauer. Letzter Tag automatisch eingestellt.
 gev#:#gev_event_title#:#Veranstaltungstitel
 gev#:#gev_evg_registration#:#Registrierung: Generali Online Akademie
 gev#:#gev_evg_registration_header_note#:#Hier können Sie einen neuen Benutzer mit Ihren Daten aus der IV-Datenbank anlegen.
