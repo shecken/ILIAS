@@ -45,63 +45,85 @@ function ilInitDurationDate(prefix)
 
 function ilUpdateEndTime(prefix)
 {
-	var start;	
-	var end;
+	var o_start_h;
+	var o_start_m;
+	var o_end_h;
+	var o_end_m;
 	var diff;
 
-	start_h = document.getElementById(prefix + "[start][time]_h").selectedIndex;
-	start_m = document.getElementById(prefix + "[start][time]_m").selectedIndex;
+	var start_h;
+	var start_m;
+	var end_h;
+	var end_m;
+	var start_h_i;
+	var start_m_i;
+
+
+
+	o_start_h = document.getElementById(prefix + "[start][time]_h");
+	o_start_m = document.getElementById(prefix + "[start][time]_m");
+	o_end_h =  document.getElementById(prefix + "[end][time]_h");
+	o_end_m =  document.getElementById(prefix + "[end][time]_m")
+
+
+	start_h_i = o_start_h.selectedIndex;
+	start_m_i = o_start_m.selectedIndex;
+
+	start_h = Number(o_start_h.options[start_h_i].value);
+	start_m = Number(o_start_m.options[start_m_i].value);
 			
 
-	end_h = document.getElementById(prefix + "[end][time]_h").selectedIndex;
-	end_m = document.getElementById(prefix + "[end][time]_m").selectedIndex;
+	end_h = Number(o_end_h.options[o_end_h.selectedIndex].value);
+	end_m = Number(o_end_m.options[o_end_m.selectedIndex].value);
+
 		
-		
-	diff_h = start_h - old_time[prefix]["h"];
-	diff_m = start_m - old_time[prefix]["m"];
+	diff_h = start_h - Number(o_start_h.options[old_time[prefix]["h"]].value);
+	diff_m = start_m - Number(o_start_m.options[old_time[prefix]["m"]].value);
 
 	//alert(end.toDateString());
-	var end_hours_index = end_h + diff_h;
-	var end_minute_index = end_m + diff_m;
+	var end_h_new = end_h + diff_h;
+	var end_m_new = end_m + diff_m;
 
-	if(end_minute_index > 59) {
-		end_minute_index = end_minute_index - 60;
-		end_hours_index++;
+	if(end_m_new > 59) {
+		end_m_new = end_m_new - 60;
+		end_h_new = end_h_new + 1;
 	}
 
-	if(end_hours_index > 23){
-		var hour = document.getElementById(prefix + "[start][time]_h");
-		hour.selectedIndex = old_time[prefix]["h"];
-		var minute = document.getElementById(prefix + "[start][time]_m");
-		minute.selectedIndex = old_time[prefix]["m"];
+	if(end_m_new < 0) {
+		end_m_new = end_m_new + 60;
+		end_h_new = end_h_new - 1;
+	}
+
+
+	if(end_h_new > 23){
+		o_start_h.selectedIndex = old_time[prefix]["h"];
+		o_start_m.selectedIndex = old_time[prefix]["m"];
 
 		alert('Die Trainings dürfen nicht in den nächsten Tag ragen.');
 		return;
 	}
 
-	var hour = document.getElementById(prefix + "[end][time]_h");
-	for(i = 0; i < hour.options.length;i++)
+	for(i = 0; i < o_end_h.options.length;i++)
 	{
-		if(i == end_hours_index)
+		if(Number(o_end_h.options[i].value) == end_h_new)
 		{
-			hour.selectedIndex = i;
+			o_end_h.selectedIndex = i;
 			break;
 		}
 	}
 	
-	var minute = document.getElementById(prefix + "[end][time]_m");
-	for(i = 0; i < minute.options.length;i++)
+	for(i = 0; i < o_end_m.options.length;i++)
 	{
-		if(i == end_minute_index)
+		if(Number(o_end_m.options[i].value) == end_m_new)
 		{
-			minute.selectedIndex = i;
+			o_end_m.selectedIndex = i;
 			break;
 		}
 	}
 
 	// Save current date
-	old_time[prefix]["h"] = start_h;
-	old_time[prefix]["m"] = start_m;
+	old_time[prefix]["h"] = start_h_i;
+	old_time[prefix]["m"] = start_m_i;
 }
 
 function ilUpdateEndDateFields(prefix)
