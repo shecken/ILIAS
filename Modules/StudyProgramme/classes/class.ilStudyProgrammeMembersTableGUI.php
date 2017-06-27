@@ -69,10 +69,10 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI
 
 		$this->determineLimit();
 		$this->determineOffsetAndOrder();
-		$oder = $this->getOrderField();
+		$order = $this->getOrderField();
 		$dir = $this->getOrderDirection();
 
-		$members_list = $this->fetchData($a_prg_obj_id, $this->getLimit(), $this->getOffset(), $this->getOrderField(), $this->getOrderDirection());
+		$members_list = $this->fetchData($a_prg_obj_id, $this->getLimit(), $this->getOffset(), $order, $dir);
 		$this->setMaxCount($this->countFetchData($a_prg_obj_id));
 		$this->setData($members_list);
 	}
@@ -134,10 +134,21 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI
 		return $this->getParentObject()->getLinkTargetForAction($a_action, $a_prgrs_id, $a_ass_id);
 	}
 
-	protected function fetchData($a_prg_id, $limit = null, $offset = null, $order_coloumn = null, $order_direction = null)
+	protected function orderDBColumnByTableColumn($order_column)
+	{
+		switch ($order_column) {
+			case 'name':
+				return 'lastname';
+			default:
+				return $order_column;
+		}
+	}
+
+	protected function fetchData($a_prg_id, $limit = null, $offset = null, $order_column = null, $order_direction = null)
 	{
 		// TODO: Reimplement this in terms of ActiveRecord when innerjoin
 		// supports the required rename functionality
+		$order_column = $this->orderDBColumnByTableColumn($order_column);
 		$query = "SELECT prgrs.id prgrs_id"
 				   ."     , pcp.firstname"
 				   ."     , pcp.lastname"
@@ -171,8 +182,8 @@ class ilStudyProgrammeMembersTableGUI extends ilTable2GUI
 		$query .= $this->getFrom();
 		$query .= $this->getWhere($a_prg_id);
 
-		if ($order_coloumn !== null) {
-			$query .= " ORDER BY $order_coloumn";
+		if ($order_column !== null) {
+			$query .= " ORDER BY $order_column";
 
 			if ($order_direction !== null) {
 				$query .= " $order_direction";
