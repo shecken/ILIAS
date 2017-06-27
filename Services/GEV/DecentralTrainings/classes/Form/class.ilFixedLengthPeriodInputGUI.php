@@ -13,10 +13,21 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 // gev-patch end
 {
 
+	protected $g_user;
+	protected $g_lng;
+
+	public function __construct($a_title = "", $a_postvar = "")
+	{
+		parent::__construct($a_title, $a_postvar);
+
+		global $ilUser, $lng;
+
+		$this->g_user = $ilUser;
+		$this->g_lng = $lng;
+	}
 
 	public function setValueByArray($a_values)
 	{
-		global $ilUser;
 		if (isset($a_values[$this->getPostVar()]['start']['date'])) {
 			$start_date_string = $a_values[$this->getPostVar()]['start']['date'];
 		} else {
@@ -43,8 +54,8 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 			$end_time_string = '00:00:01';
 		}
 
-		$this->setStart(new ilDateTime($start_date_string.' '.$start_time_string, IL_CAL_DATETIME, $ilUser->getTimeZone()));
-		$this->setEnd(new ilDateTime($end_date_string.' '.$end_time_string, IL_CAL_DATETIME, $ilUser->getTimeZone()));
+		$this->setStart(new ilDateTime($start_date_string.' '.$start_time_string, IL_CAL_DATETIME, $this->g_user->getTimeZone()));
+		$this->setEnd(new ilDateTime($end_date_string.' '.$end_time_string, IL_CAL_DATETIME, $this->g_user->getTimeZone()));
 	}
 
 	/**
@@ -53,11 +64,9 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 	*/
 	public function render()
 	{
-		global $lng,$ilUser;
-
 		// gev-patch start
 		if ($this->getShowDate()) {
-			$tpl = new ilTemplate("tpl.prop_datetime_duration.html", true, true, "Services/Form");
+			$tpl = new ilTemplate("tpl.prop_datetime_duration.html", true, true, "Services/GEV/DecentralTrainings");
 		} else {
 			$tpl = new ilTemplate("tpl.prop_datetime_duration_time_only.html", true, true, "Services/Form");
 		}
@@ -67,10 +76,10 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 		if (is_a($this->getStart(), 'ilDate')) {
 			$start_info = $this->getStart()->get(IL_CAL_FKT_GETDATE, '', 'UTC');
 		} elseif (is_a($this->getStart(), 'ilDateTime')) {
-			$start_info = $this->getStart()->get(IL_CAL_FKT_GETDATE, '', $ilUser->getTimeZone());
+			$start_info = $this->getStart()->get(IL_CAL_FKT_GETDATE, '', $this->g_user->getTimeZone());
 		} else {
 			$this->setStart(new ilDateTime(time(), IL_CAL_UNIX));
-			$start_info = $this->getStart()->get(IL_CAL_FKT_GETDATE, '', $ilUser->getTimeZone());
+			$start_info = $this->getStart()->get(IL_CAL_FKT_GETDATE, '', $this->g_user->getTimeZone());
 		}
 		// display invalid input again
 		if (is_array($this->invalid_input['start'])) {
@@ -83,10 +92,10 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 		if (is_a($this->getEnd(), 'ilDate')) {
 			$end_info = $this->getEnd()->get(IL_CAL_FKT_GETDATE, '', 'UTC');
 		} elseif (is_a($this->getEnd(), 'ilDateTime')) {
-			$end_info = $this->getEnd()->get(IL_CAL_FKT_GETDATE, '', $ilUser->getTimeZone());
+			$end_info = $this->getEnd()->get(IL_CAL_FKT_GETDATE, '', $this->g_user->getTimeZone());
 		} else {
 			$this->setEnd(new ilDateTime(time(), IL_CAL_UNIX));
-			$end_info = $this->getEnd()->get(IL_CAL_FKT_GETDATE, '', $ilUser->getTimeZone());
+			$end_info = $this->getEnd()->get(IL_CAL_FKT_GETDATE, '', $this->g_user->getTimeZone());
 		}
 		// display invalid input again
 		if (is_array($this->invalid_input['end'])) {
@@ -95,7 +104,7 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 			$end_info['mday'] = $this->invalid_input['end']['d'];
 		}
 
-		$lng->loadLanguageModule("jscalendar");
+		$this->g_lng->loadLanguageModule("jscalendar");
 		require_once("./Services/Calendar/classes/class.ilCalendarUtil.php");
 		ilCalendarUtil::initJSCalendar();
 
@@ -130,14 +139,6 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 		if ($this->getShowDate()) {// or 1)
 		// gev-patch end
 			$tpl->setVariable('POST_VAR', $this->getPostVar());
-			$tpl->setVariable("IMG_START_CALENDAR", ilUtil::getImagePath("calendar.png"));
-			$tpl->setVariable("TXT_START_CALENDAR", $lng->txt("open_calendar"));
-			$tpl->setVariable("START_ID", $this->getPostVar());
-			$tpl->setVariable("DATE_ID_START", $this->getPostVar());
-
-			$tpl->setVariable("INPUT_FIELDS_START", $this->getPostVar()."[start][date]");
-			include_once './Services/Calendar/classes/class.ilCalendarUserSettings.php';
-			$tpl->setVariable('DATE_FIRST_DAY', ilCalendarUserSettings::_getInstance()->getWeekStart());
 
 			$tpl->setVariable(
 				"START_SELECT",
@@ -153,11 +154,6 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 				)
 			);
 
-			$tpl->setVariable("IMG_END_CALENDAR", ilUtil::getImagePath("calendar.png"));
-			$tpl->setVariable("TXT_END_CALENDAR", $lng->txt("open_calendar"));
-			$tpl->setVariable("END_ID", $this->getPostVar());
-			$tpl->setVariable("DATE_ID_END", $this->getPostVar());
-			$tpl->setVariable("INPUT_FIELDS_END", $this->getPostVar()."[end][date]");
 
 			$tpl->setVariable(
 				"END_SELECT",
@@ -187,8 +183,8 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 			);
 
 			$tpl->setVariable("TXT_START_TIME", $this->getShowSeconds()
-				? "(".$lng->txt("hh_mm_ss").")"
-				: "(".$lng->txt("hh_mm").")");
+				? "(".$this->g_lng->txt("hh_mm_ss").")"
+				: "(".$this->g_lng->txt("hh_mm").")");
 			$tpl->parseCurrentBlock();
 
 			$tpl->setCurrentBlock("show_end_time");
@@ -204,8 +200,8 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 			);
 
 			$tpl->setVariable("TXT_END_TIME", $this->getShowSeconds()
-				? "(".$lng->txt("hh_mm_ss").")"
-				: "(".$lng->txt("hh_mm").")");
+				? "(".$this->g_lng->txt("hh_mm_ss").")"
+				: "(".$this->g_lng->txt("hh_mm").")");
 			$tpl->parseCurrentBlock();
 		}
 
@@ -224,7 +220,7 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 			);
 			$tpl->setVariable(
 				"WEIGHT_SELECT",
-				sprintf($lng->txt("tep_weighing_input"), $weight_select)
+				sprintf($this->g_lng->txt("tep_weighing_input"), $weight_select)
 			);
 		}
 		// patch generali end
@@ -277,11 +273,11 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 			$tpl->parseCurrentBlock();
 		}
 
-		global $lng;
+
 		for ($month_aux = 1; $month_aux <= 12; $month_aux++) {
 			$tpl->setCurrentBlock('months');
 			$tpl->setVariable('VALUE', $month_aux);
-			$tpl->setVariable('TITLE', $lng->txt('month_'.str_pad($month_aux, 2, '0', STR_PAD_LEFT).'_long'));
+			$tpl->setVariable('TITLE', $this->g_lng->txt('month_'.str_pad($month_aux, 2, '0', STR_PAD_LEFT).'_long'));
 			if ($month_aux === $month) {
 				$tpl->setVariable('SELECTED', 'selected');
 			}
