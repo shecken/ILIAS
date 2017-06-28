@@ -274,10 +274,15 @@ class ilObjReportEmplAtt extends ilObjReportBase
 			$end = date('Y').'-12-31';
 		}
 		return
-			'	AND ( ('
-			.'		(`usrcrs`.`end_date` >= '.$this->gIldb->quote($start, 'date').' OR `usrcrs`.`end_date` = \'0000-00-00\' OR `usrcrs`.`end_date` = \'-empty-\' )'
-			.' 			AND `usrcrs`.`begin_date` <= '.$this->gIldb->quote($end, 'date').' )'
-			.' 		OR usrcrs.hist_historic IS NULL )';
+			' AND ('
+			.'		( '.$this->gIldb->in('usrcrs.end_date', ['-empty-','0000-00-00'], true, 'text').' AND usrcrs.end_date IS NOT NULL '
+			.' 			AND `usrcrs`.`begin_date` <= '.$this->gIldb->quote($end, 'date')
+			.'			AND `usrcrs`.`end_date` >= '.$this->gIldb->quote($start, 'date').')'
+			.'	OR 	(	`usrcrs`.`begin_date` <= '.$this->gIldb->quote($end, 'date')
+			.'			AND `usrcrs`.`begin_date` >= '.$this->gIldb->quote($start, 'date').')'
+			.'	OR	(	('.$this->gIldb->in('usrcrs.end_date', ['-empty-','0000-00-00'], false, 'text').' OR usrcrs.end_date IS NULL )'
+			.'			AND ('.$this->gIldb->in('usrcrs.begin_date', ['-empty-','0000-00-00'], false, 'text').' OR usrcrs.begin_date IS NULL ))'
+			.')';
 	}
 
 	/**

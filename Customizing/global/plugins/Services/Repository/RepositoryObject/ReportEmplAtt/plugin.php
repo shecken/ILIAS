@@ -2,7 +2,7 @@
 
 $id = "xrea";
 
-$version = "0.0.6";
+$version = "0.0.7";
 
 
 $ilias_min_version = "4.2.0";
