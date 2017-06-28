@@ -176,12 +176,18 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 	protected function getSubMenuDropDown()
 	{
+		$needed = $_POST["needed"];
+		$last_call = ilSession::get('gev_last_report_menu_build_ts_'.$needed);
+		$cached = ilSession::get('gev_last_report_menu_build_'.$needed);
+		if (time() - (int)$last_call < 300 && $cached) {
+			return $cached;
+		}
 		require_once("Services/Link/classes/class.ilLink.php");
 
 		$tpl = new ilTemplate("tpl.gev_main_menu_report_entries.html", true, true, "Services/GEV/Desktop");
 		$tpl->setVariable("MAIN_MENU_EXPAND_AJAX", "ilias.php?baseClass=gevMainMenuGUI&cmd=getSubEntries&cmdMode=asynch");
 
-		$needed = $_POST["needed"];
+
 		$visible_repo_reports = $this->report_discovery->getVisibleReportItemsByType($needed, $this->gUser);
 		$visible_repo_reports->sortByTitle();
 
@@ -203,8 +209,10 @@ class gevMainMenuGUI extends ilMainMenuGUI
 			$tpl->setVariable("ENTRY", $n_tpl->get());
 			$tpl->parseCurrentBlock();
 		}
-
-		return $tpl->get();
+		$out = $tpl->get();
+		ilSession::set('gev_last_report_menu_build_'.$needed, $out);
+		ilSession::set('gev_last_report_menu_build_ts_'.$needed, time());
+		return $out;
 	}
 
 	public function renderMainMenuListEntries($a_tpl, $a_call_get = true)
@@ -471,6 +479,11 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 	protected function getReportingMenuDropDown()
 	{
+		$last_call = ilSession::get('gev_last_report_menu_build_ts');
+		$cached = ilSession::get('gev_last_report_menu_build');
+		if (time() - (int)$last_call < 300 && $cached) {
+			return $cached;
+		}
 		require_once("Services/Link/classes/class.ilLink.php");
 		$entries = [];
 
@@ -511,7 +524,10 @@ class gevMainMenuGUI extends ilMainMenuGUI
 			}
 		}
 
-		return $tpl->get();
+		$out = $tpl->get();
+		ilSession::set('gev_last_report_menu_build', $out);
+		ilSession::set('gev_last_report_menu_build_ts', time());
+		return $out;
 	}
 
 	// Stores the info whether a user has a reporting menu in the session of the user to
