@@ -6392,13 +6392,13 @@ foreach ($field_definitions as $fd) {
 	$title = $fd->getTitle();
 	$field_id = $fd->getFieldId();
 
-	if($title == "Optional, als Status für Studienprogramme") {
+	if ($title == "Optional, als Status für Studienprogramme") {
 		$gev_settings->setVAPassOptionalTypeId($field_id);
 	}
-	if($title == "Verantwortlich") {
+	if ($title == "Verantwortlich") {
 		$gev_settings->setVAPassAccountableFieldId($field_id);
 	}
-	if($title == "Art des Bestehens") {
+	if ($title == "Art des Bestehens") {
 		$gev_settings->setVAPassPassingTypeFieldId($field_id);
 	}
 }
@@ -6407,4 +6407,30 @@ foreach ($field_definitions as $fd) {
 <#269>
 <?php
 	$ilCtrlStructureReader->getStructure();
+?>
+
+<#270>
+<?php
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::maybeInitClientIni();
+ilCustomInstaller::maybeInitPluginAdmin();
+ilCustomInstaller::maybeInitObjDefinition();
+ilCustomInstaller::maybeInitAppEventHandler();
+ilCustomInstaller::maybeInitTree();
+ilCustomInstaller::maybeInitRBAC();
+ilCustomInstaller::maybeInitObjDataCache();
+ilCustomInstaller::maybeInitUserToRoot();
+ilCustomInstaller::maybeInitSettings();
+
+require_once 'Modules/StudyProgramme/classes/model/class.ilStudyProgrammeType.php';
+
+//get all prgs having amd_responsible set to Trainer or Vorgesetzter.
+foreach (ilStudyProgrammeType::getAllTypes() as $type) {
+	if ($type->getTitle() === 'VA-Ausbildung') {
+		$type->setTitle("Ausbildungspass");
+		$type->update();
+		break;
+	}
+}
+
 ?>
