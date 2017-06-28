@@ -307,7 +307,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 		$na_quali_ref_id = gevSettings::getInstance()->getNAQualiCourseRefId();
 		if ($na_quali_ref_id !== null && $this->gAccess->checkAccess("visible", "", $na_quali_ref_id)) {
 			$link = $this->buildNAQualiLink($na_quali_ref_id);
-			$items['na_qualification'] = array($this->gLng->txt("jill_na_link_label"),$link);
+			$items['na_qualification'] = array($this->gLng->txt("na_link_label_cockpit"),$link);
 		}
 
 		return $items;
