@@ -71,13 +71,16 @@ class ilConditionHandler
 	const OPERATOR_NOT_MEMBER = 'not_member';
 	const OPERATOR_FAILED = 'failed';
 	const OPERATOR_LP = 'learning_progress';
-	
+	// cat-tms-patch start
+	const OPERATOR_ACCREDITED_OR_PASSED = 'accredited_or_passed';
+	// cat-tms-patch end
+
 	const UNIQUE_CONDITIONS = 1;
 	const SHARED_CONDITIONS = 0;
-	
+
 	var $db;
 	var $lng;
-	
+
 
 	var $error_message;
 
@@ -90,7 +93,7 @@ class ilConditionHandler
 	var $operator;
 	var $value;
 	var $validation;
-	
+
 
 	private $obligatory = true;
 	private $hidden_status = FALSE;
@@ -433,8 +436,11 @@ class ilConditionHandler
 	function getTriggerTypes()
 	{
 		global $objDefinition;
-		
-		$trigger_types =  array('crs','exc','tst','sahs', 'svy', 'lm', 'iass');
+
+		// cat-tms-patch start
+		//$trigger_types =  array('crs','exc','tst','sahs', 'svy', 'lm', 'iass');
+		$trigger_types =  array('crs','exc','tst','sahs', 'svy', 'lm', 'iass', 'prg');
+		// cat-tms-patch end
 
 		foreach($objDefinition->getPlugins() as $p_type => $p_info)
 		{
@@ -442,8 +448,8 @@ class ilConditionHandler
 			{
 				include_once './Services/AccessControl/interfaces/interface.ilConditionHandling.php';
 				$name = 'ilObj'.$p_info['class_name'].'Access';
-				$refection = new ReflectionClass($name);
-				if($refection->implementsInterface('ilConditionHandling'))
+				$reflection = new ReflectionClass($name);
+				if($reflection->implementsInterface('ilConditionHandling'))
 				{
 					$trigger_types[] = $p_type;
 				}
