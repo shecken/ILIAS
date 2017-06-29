@@ -40,12 +40,6 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->setImage("GEV_img/ico-head-my-training-deployments.png");
 		$this->setFormAction($ilCtrl->getFormAction($a_parent_obj, "view"));
 
-		$na_quali_ref_id = gevSettings::getInstance()->getNAQualiCourseRefId();
-		if ($na_quali_ref_id !== null && $ilAccess->checkAccess("visible", "", $na_quali_ref_id)) {
-			$link = $this->buildNAQualiLink($na_quali_ref_id);
-			$this->setSpecialButton($link, $this->gLng->txt("jill_na_link_label"));
-		}
-
 		$data = $user_util->getBookedAndWaitingCourseInformation();
 
 		$cnt = count($data);
@@ -205,19 +199,5 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 	public function numericOrdering($a_field)
 	{
 		return $a_field == "fee";
-	}
-
-	protected function buildNAQualiLink($ref_id)
-	{
-		$backlink = $this->gCtrl->getLinkTarget($this->parent_obj, $this->parent_cmd, "", true);
-		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", $ref_id);
-		$this->gCtrl->setParameterByClass("ilObjJillGUI", "referrer", base64_encode($backlink));
-		$link = $this->gCtrl->getLinkTargetByClass(
-			array("ilObjPluginDispatchGUI", "ilObjJillGUI"),
-			"xView"
-		);
-		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", null);
-		$this->gCtrl->setParameterByClass("ilObjJillGUI", "referrer");
-		return $link;
 	}
 }

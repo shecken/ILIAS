@@ -81,6 +81,9 @@ ul.catSubMenu a {
 #catSubMenuItem_search_wbt {
 	background-image: url("images/GEV_SubMenueImg5.png");
 }
+#catSubMenuItem_na_qualification {
+	background-image: url("images/GEV_SubMenueImg6.png");
+}
 
 .catScrollLeft, .catScrollRight {
   width: 30px;

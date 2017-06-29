@@ -303,7 +303,29 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 					= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
 			}
 		}
+
+		$na_quali_ref_id = gevSettings::getInstance()->getNAQualiCourseRefId();
+		if ($na_quali_ref_id !== null && $this->gAccess->checkAccess("visible", "", $na_quali_ref_id)) {
+			$link = $this->buildNAQualiLink($na_quali_ref_id);
+			$items['na_qualification'] = array($this->gLng->txt("na_link_label_cockpit"),$link);
+		}
+
 		return $items;
+	}
+
+	protected function buildNAQualiLink($ref_id)
+	{
+		$backlink = basename($_SERVER["REQUEST_URI"]);
+
+		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", $ref_id);
+		$this->gCtrl->setParameterByClass("ilObjJillGUI", "referrer", base64_encode($backlink));
+		$link = $this->gCtrl->getLinkTargetByClass(
+			array("ilObjPluginDispatchGUI", "ilObjJillGUI"),
+			"xView"
+		);
+		$this->gCtrl->setParameterByClass("ilObjJillGUI", "ref_id", null);
+		$this->gCtrl->setParameterByClass("ilObjJillGUI", "referrer", null);
+		return $link;
 	}
 
 	protected function getSearchItems()
