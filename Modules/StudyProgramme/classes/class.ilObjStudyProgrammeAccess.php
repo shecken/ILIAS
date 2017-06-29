@@ -5,7 +5,7 @@
 require_once('./Services/Object/classes/class.ilObjectAccess.php');
 require_once('./Services/User/classes/class.ilUserAccountSettings.php');
 // cat-tms-patch start
-require_once './Services/AccessControl/interfaces/interface.ilConditionHandling.php';
+require_once('./Services/AccessControl/interfaces/interface.ilConditionHandling.php');
 // cat-tms-patch end
 
 /**
