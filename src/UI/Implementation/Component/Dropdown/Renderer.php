@@ -51,7 +51,6 @@ class Renderer extends AbstractComponentRenderer {
 	 */
 	protected function renderItems($items, $tpl, $default_renderer)
 	{
-
 		foreach ($items as $item)
 		{
 			$tpl->setCurrentBlock("item");

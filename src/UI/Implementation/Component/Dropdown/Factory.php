@@ -14,5 +14,4 @@ class Factory implements D\Factory {
 	public function standard($items) {
 		return new Standard($items);
 	}
-
 }
