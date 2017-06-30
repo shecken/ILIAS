@@ -31,7 +31,7 @@ class ilStudyProgrammeAcknowledgeCompletedCoursesTableGUI extends ilTable2GUI
 
 		$this->setData($a_completed_courses);
 
-		$this->formname = 'acknowledge_completed_courses';
+		$this->setFormName('acknowledge_completed_courses');
 	}
 
 	/**
