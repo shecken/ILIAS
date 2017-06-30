@@ -34,7 +34,11 @@ class Renderer extends AbstractComponentRenderer {
 		if ($component instanceof Component\Button\Standard) {
 			$tpl_name = "tpl.standard.html";
 		}
-		
+
+		if ($component instanceof Component\Button\Shy) {
+			$tpl_name = "tpl.shy.html";
+		}
+
 		$tpl = $this->getTemplate($tpl_name, true, true);
 		$action = $component->getAction();
 		// The action is always put in the data-action attribute to have it available
@@ -81,9 +85,11 @@ class Renderer extends AbstractComponentRenderer {
 	 */
 	protected function getComponentInterfaceName() {
 		return array
-			( Component\Button\Primary::class
-			, Component\Button\Standard::class
-			, Component\Button\Close::class
-			);
+
+		(Component\Button\Primary::class
+		, Component\Button\Standard::class
+		, Component\Button\Close::class
+		, Component\Button\Shy::class
+		);
 	}
 }
