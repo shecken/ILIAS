@@ -362,6 +362,7 @@ class ilPluginAdmin
 		return $this->data[$a_ctype][$a_cname][$a_slot_id][$a_pname]["supports_export"];
 	}
 
+	// cat-tms-patch start
 	/**
 	 * Get info for all plugins.
 	 *
@@ -369,7 +370,7 @@ class ilPluginAdmin
 	 */
 	public static function getAllPlugins() {
 		$cached_component = ilCachedComponentData::getInstance();
-		return $cached_component->getIlPluginByName();
+		return $cached_component->getIlPluginById();
 	}
 
 	/**
@@ -397,12 +398,12 @@ class ilPluginAdmin
 		assert('is_string($id)');
 		$cached_component = ilCachedComponentData::getInstance();
 		$plugs = $cached_component->getIlPluginById();
-		if(array_key_exists($id, $plugs) &&	$plugs[$id]['active']) {
+		if(array_key_exists($id, $plugs) && $plugs[$id]['active']) {
 			return true;
 		}
 		return false;
 	}
-
+	// cat-tms-patch end
 
 }
 
