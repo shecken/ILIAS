@@ -234,6 +234,12 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			}
 		}
 
+		$na_quali_ref_id = gevSettings::getInstance()->getNAQualiCourseRefId();
+		if ($na_quali_ref_id !== null && $this->gAccess->checkAccess("visible", "", $na_quali_ref_id)) {
+			$link = $this->buildNAQualiLink($na_quali_ref_id);
+			$items['na_qualification'] = array($this->gLng->txt("na_link_label_cockpit"),$link);
+		}
+
 		$items["profile"]
 			= array($this->gLng->txt("gev_user_profile"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyProfile");
 
@@ -304,11 +310,6 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			}
 		}
 
-		$na_quali_ref_id = gevSettings::getInstance()->getNAQualiCourseRefId();
-		if ($na_quali_ref_id !== null && $this->gAccess->checkAccess("visible", "", $na_quali_ref_id)) {
-			$link = $this->buildNAQualiLink($na_quali_ref_id);
-			$items['na_qualification'] = array($this->gLng->txt("na_link_label_cockpit"),$link);
-		}
 
 		return $items;
 	}
