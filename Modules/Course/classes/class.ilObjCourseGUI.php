@@ -1110,35 +1110,36 @@ class ilObjCourseGUI extends ilContainerGUI
 			$vactions = $venues->getActions();
 			//get all available venues
 			$venues = $vactions->getAllVenues('name', 'ASC');
-
-
+			$voptions = array();
+			foreach ($venues as $v) {
+				$voptions[$v->getId()] = $v->getName() .', ' .$v->getCity();
+			}
+			//build options for select-input
 			$venue_opts = new ilRadioGroupInputGUI($this->lng->txt('crs_venue_source'), 'venue_source');
 
-			$venue_opts->setValue((true) ? VENUE_FROM_TEXT : VENUE_FROM_LIST);
-			//($this->object->getSubscriptionLimitationType() != IL_CRS_SUBSCRIPTION_DEACTIVATED)
 
 			$venue_opt_text = new ilRadioOption($this->lng->txt('crs_venue_source_text'), ilCourseConstants::VENUE_FROM_TEXT);
 			$venue_opt_text_inp = new ilTextAreaInputGUI($this->lng->txt('crs_venue_text'),'venue_text');
-			//$opt_text_inp->setValue($this->object->getImportantInformation());
 			$venue_opt_text_inp->setRows(6);
 			$venue_opt_text_inp->setCols(80);
 			$venue_opt_text->addSubItem($venue_opt_text_inp);
 
 			$venue_opt_list = new ilRadioOption($this->lng->txt('crs_venue_source_list'), ilCourseConstants::VENUE_FROM_LIST);
 			$venue_opt_list_inp = new ilSelectInputGUI($this->lng->txt('crs_venue_list'),'venue_list');
-			//fill with options
-			//and select the current one
+			$venue_opt_list_inp->setOptions($voptions);
 			$venue_opt_list->addSubItem($venue_opt_list_inp);
 
+			//set values
+				////($this->object->getSubscriptionLimitationType() != IL_CRS_SUBSCRIPTION_DEACTIVATED)
+			//$venue_opts->setValue((true) ? VENUE_FROM_TEXT : VENUE_FROM_LIST);
+			//$venue_opt_text_inp->setValue();
+			//$venue_opt_list_inp->setValue($this->object->getImportantInformation());
 
 			//add options to form
 			$venue_opts->addOption($venue_opt_text);
 			$venue_opts->addOption($venue_opt_list);
 			$form->addItem($venue_opts);
 		}
-
-
-
 
 		// cat-tms-patch end
 
