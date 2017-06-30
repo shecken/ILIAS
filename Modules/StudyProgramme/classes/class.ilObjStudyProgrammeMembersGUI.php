@@ -196,6 +196,7 @@ class ilObjStudyProgrammeMembersGUI
 			$tpl->setVariable("FIRSTNAME", $names["firstname"]);
 			$tpl->setVariable("LASTNAME", $names["lastname"]);
 			$table = new ilStudyProgrammeAcknowledgeCompletedCoursesTableGUI($this, $user_id, $completed_courses);
+			$table->setSelectAllCheckbox('courses['.$user_id.'][]');
 			$tpl->setVariable("TABLE", $table->getHTML());
 			$tpl->parseCurrentBlock();
 		}
