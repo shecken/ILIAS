@@ -54,36 +54,37 @@ ul.catSubMenu a {
 #catSubMenuItem_edubio {
 	background-image: url("images/GEV_SubMenueImg2.png");
 }
-#catSubMenuItem_profile {
+#catSubMenuItem_na_qualification {
 	background-image: url("images/GEV_SubMenueImg3.png");
+}
+#catSubMenuItem_profile {
+	background-image: url("images/GEV_SubMenueImg4.png");
 }
 #catSubMenuItem_tep {
-	background-image: url("images/GEV_SubMenueImg4.png");
+	background-image: url("images/GEV_SubMenueImg5.png");
 }
 #catSubMenuItem_trainer_ops {
-	background-image: url("images/GEV_SubMenueImg5.png");
+	background-image: url("images/GEV_SubMenueImg6.png");
 }
 #catSubMenuItem_training_admin {
-	background-image: url("images/GEV_SubMenueImg6.png");
-}
-#catSubMenuItem_search {
 	background-image: url("images/GEV_SubMenueImg1.png");
 }
-#catSubMenuItem_search_all {
+#catSubMenuItem_search {
 	background-image: url("images/GEV_SubMenueImg2.png");
 }
-#catSubMenuItem_search_onside {
+#catSubMenuItem_search_all {
 	background-image: url("images/GEV_SubMenueImg3.png");
 }
-#catSubMenuItem_search_webinar {
+#catSubMenuItem_search_onside {
 	background-image: url("images/GEV_SubMenueImg4.png");
 }
-#catSubMenuItem_search_wbt {
+#catSubMenuItem_search_webinar {
 	background-image: url("images/GEV_SubMenueImg5.png");
 }
-#catSubMenuItem_na_qualification {
+#catSubMenuItem_search_wbt {
 	background-image: url("images/GEV_SubMenueImg6.png");
 }
+
 
 .catScrollLeft, .catScrollRight {
   width: 30px;
