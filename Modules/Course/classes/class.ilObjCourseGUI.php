@@ -989,6 +989,75 @@ class ilObjCourseGUI extends ilContainerGUI
 			return $this->editObject($form);
 		}
 
+		// cat-tms-patch start
+
+		// venues (plugin)
+		if(ilPluginAdmin::isPluginActive('venues')) {
+
+			$vplug_data = ilPluginAdmin::getAllPlugins()['venues'];
+			$vplug = ilPluginAdmin::getPluginObject(
+				$vplug_data['component_type'],
+				$vplug_data['component_name'],
+				$vplug_data['slot_id'],
+				$vplug_data['name']
+			);
+			$vactions = $vplug->getActions();
+
+			$vassignment = $vactions->getAssignment((int)$this->object->getId());
+
+			//deal with venues
+			switch($form->getInput("venue_source")) {
+				case ilCourseConstants::VENUE_FROM_TEXT:
+					$venue_type = ilCourseConstants::VENUE_FROM_TEXT;
+
+					if($vassignment) {
+						if($vassignment->getVenueType() === $venue_type) {
+							//update text venue
+							$tv = $vactions->getTextVenue($vassignment->getVenueId())
+								->withText($form->getInput("venue_text"));
+							$vactions->updateTextVenue($tv);
+						} else {
+							//create new text venue
+							$tv = $vactions->createTextVenue($form->getInput("venue_text"));
+						}
+					}
+
+					$venue_id = $tv->getId();
+					break;
+
+				case ilCourseConstants::VENUE_FROM_LIST:
+					$venue_type = ilCourseConstants::VENUE_FROM_LIST;
+
+					if($vassignment && $vassignment->getVenueType() === ilCourseConstants::VENUE_FROM_TEXT) {
+						//delete text venue
+						$vactions->removeTextVenue($vassignment->getVenueId());
+					}
+
+					$venue_id = $form->getInput("venue_list");
+					break;
+			}
+
+			// store the assignment
+			if($vassignment === false) {
+				//insert/create
+				$vactions->createAssignment(
+					(int)$this->object->getId(),
+					(int)$venue_id,
+					(int)$venue_type
+				);
+			} else {
+				//update
+				$vassignment = $vassignment
+					->withVenueId((int)$venue_id)
+					->withVenueType((int)$venue_type);
+
+				$vactions->updateAssignment($vassignment);
+			}
+
+		}
+
+		// cat-tms-patch end
+
 		return $this->afterUpdate();
 	}
 
@@ -1099,25 +1168,25 @@ class ilObjCourseGUI extends ilContainerGUI
 		if(ilPluginAdmin::isPluginActive('venues')) {
 
 			//get the plugin data
-			$vplug = ilPluginAdmin::getAllPlugins()['venues'];
+			$vplug_data = ilPluginAdmin::getAllPlugins()['venues'];
 			//get the plugin object
-			$venues = ilPluginAdmin::getPluginObject(
-				$vplug['component_type'],
-				$vplug['component_name'],
-				$vplug['slot_id'],
-				$vplug['name']
+			$vplug = ilPluginAdmin::getPluginObject(
+				$vplug_data['component_type'],
+				$vplug_data['component_name'],
+				$vplug_data['slot_id'],
+				$vplug_data['name']
 			);
-			$vactions = $venues->getActions();
 			//get all available venues
+			$vactions = $vplug->getActions();
 			$venues = $vactions->getAllVenues('name', 'ASC');
+			//build options for select-input
 			$voptions = array();
 			foreach ($venues as $v) {
 				$voptions[$v->getId()] = $v->getName() .', ' .$v->getCity();
 			}
-			//build options for select-input
 			$venue_opts = new ilRadioGroupInputGUI($this->lng->txt('crs_venue_source'), 'venue_source');
 
-
+			//create inputs
 			$venue_opt_text = new ilRadioOption($this->lng->txt('crs_venue_source_text'), ilCourseConstants::VENUE_FROM_TEXT);
 			$venue_opt_text_inp = new ilTextAreaInputGUI($this->lng->txt('crs_venue_text'),'venue_text');
 			$venue_opt_text_inp->setRows(6);
@@ -1130,10 +1199,25 @@ class ilObjCourseGUI extends ilContainerGUI
 			$venue_opt_list->addSubItem($venue_opt_list_inp);
 
 			//set values
-				////($this->object->getSubscriptionLimitationType() != IL_CRS_SUBSCRIPTION_DEACTIVATED)
-			//$venue_opts->setValue((true) ? VENUE_FROM_TEXT : VENUE_FROM_LIST);
-			//$venue_opt_text_inp->setValue();
-			//$venue_opt_list_inp->setValue($this->object->getImportantInformation());
+			$vassignment = $vactions->getAssignment((int)$this->object->getId());
+			$vassignment_type = ($vassignment === false) ? ilCourseConstants::VENUE_FROM_TEXT : $vassignment->getVenueType();
+
+			$venue_opts->setValue($vassignment_type);
+
+			if($vassignment !== false) {
+				$vassignment_id = $vassignment->getVenueId();
+
+				switch($vassignment_type) {
+					case ilCourseConstants::VENUE_FROM_TEXT:
+						$venue = $vactions->getTextVenue($vassignment_id);
+						$venue_opt_text_inp->setValue($venue->getText());
+						break;
+					case ilCourseConstants::VENUE_FROM_LIST:
+						$venue_vals = $vactions->getVenueValues($vassignment_id);
+						$venue_opt_list_inp->setValue($vassignment_id);
+						break;
+				}
+			}
 
 			//add options to form
 			$venue_opts->addOption($venue_opt_text);
