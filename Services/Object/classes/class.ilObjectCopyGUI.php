@@ -191,7 +191,15 @@ class ilObjectCopyGUI
 		//
 		include_once("./Services/Repository/classes/class.ilRepositorySelectorExplorerGUI.php");
 		$exp = new ilRepositorySelectorExplorerGUI($this, "showTargetSelectionTree");
-		$exp->setTypeWhiteList(array("root", "cat", "grp", "crs", "fold"));
+		// gev patch 3236 start
+		// limit target types for prg being the copy object
+		$target_types = array("root", "cat", "grp", "crs", "fold");
+		if($this->getType() === 'prg')
+		{
+			$target_types = array('prg','cat','root');
+		}
+		$exp->setTypeWhiteList($target_types);
+		// gev patch 3236 end
 		$exp->setSelectMode("target", false);
 		if ($exp->handleCommand())
 		{
@@ -406,6 +414,18 @@ class ilObjectCopyGUI
 				return false;
 			}
 
+			// gev patch 3236 start
+			// check if target is a twig, i.e. a branch carrying leafs
+			if($this->getType() === 'prg' && ilObject::_lookupType($this->getTarget() ,true) === 'prg')
+			{
+				require_once 'Modules/StudyProgramme/classes/class.ilObjStudyProgramme.php';
+				if(ilObjStudyProgramme::getInstanceByRefId($this->getTarget())->hasLPChildren()) {
+					ilUtil::sendFailure($this->lng->txt("msg_may_not_copy_prg_into_twig"));
+					$this->showTargetSelectionTree();
+					return false;
+				}
+			}
+			// gev patch end
 			$this->showItemSelection();
 		}
 		else
