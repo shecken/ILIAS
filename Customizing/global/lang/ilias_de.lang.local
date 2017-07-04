@@ -1035,6 +1035,7 @@ rbac#:#crs_write_reduced_settings#:#Kleine Trainingseinstellungen ändern
 search#:#search_add_members_from_container_crs#:#Benutzer aus aktuellem Training hinzufügen
 search#:#search_crs_title#:#Trainingsname
 search#:#search_for_crs_members#:#Nach Trainingsteilnehmern suchen
+search#:#msg_may_not_copy_prg_into_twig#:#Einfügen nicht möglich. Ein Studienprogramm mit einer Kursreferenz darf keine anderen Studienprogramme enthalten.
 survey#:#survey_notification_target_group_parent_course#:#Alle Teilnehmer des/der übergeordnete(n) Trainings/Gruppe
 survey#:#survey_notification_target_group_parent_course_inactive#:#Kein(e) übergeordnete(s) Training/Gruppe - keine Erinnerung möglich!
 survey#:#survey_notification_tutor_recipients#:#Trainer (Benutzername[n])
