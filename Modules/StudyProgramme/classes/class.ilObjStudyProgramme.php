@@ -116,6 +116,35 @@ class ilObjStudyProgramme extends ilContainer
 		return $obj;
 	}
 
+	// gev patch start 3236
+	/**
+	 * Method invoked by the ilObjCopyGUI while copying in repository.
+	 *
+	 * @param	int	$a_target_id
+	 * @param	int	$a_copy_id
+	 * @return	ilObjStudyProgramme
+	 */
+	public function cloneObject($a_target_id, $a_copy_id = 0)
+	{
+		assert('is_int($a_target_id)');
+		assert('is_int($a_copy_id)');
+		$new_obj = parent::cloneObject($a_target_id, $a_copy_id);
+
+		$this
+			->cloneSettings($new_obj->settings, $this->settings)
+			->update();
+
+		$this->cloneMetaData($new_obj);
+		return $new_obj;
+	}
+	// gev patch end 3236
+	protected function cloneSettings(ilStudyProgramme $target, ilStudyProgramme $source)
+	{
+		$target->setSubtypeId($source->getSubtypeId());
+		return $target->setPoints($source->getPoints())
+			->setLPMode($source->getLPMode());
+	}
+
 
 	////////////////////////////////////
 	// CRUD
