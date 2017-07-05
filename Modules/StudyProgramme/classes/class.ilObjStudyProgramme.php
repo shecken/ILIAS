@@ -4,6 +4,7 @@
 require_once("./Services/Container/classes/class.ilContainer.php");
 require_once('./Services/Container/classes/class.ilContainerSorting.php');
 require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgramme.php");
+require_once("./Modules/StudyProgramme/classes/model/class.ilStudyProgrammeType.php");
 require_once("./Modules/StudyProgramme/classes/class.ilObjectFactoryWrapper.php");
 require_once("./Modules/StudyProgramme/classes/interfaces/interface.ilStudyProgrammeLeaf.php");
 require_once("./Modules/StudyProgramme/classes/exceptions/class.ilStudyProgrammeTreeException.php");
@@ -135,6 +136,7 @@ class ilObjStudyProgramme extends ilContainer
 			->update();
 
 		$this->cloneMetaData($new_obj);
+		$new_obj->updateCustomIcon();
 		return $new_obj;
 	}
 	// gev patch end 3236
