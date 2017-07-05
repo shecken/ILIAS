@@ -403,6 +403,31 @@ class ilPluginAdmin
 		}
 		return false;
 	}
+
+	/**
+	 * Get a plugin-object by id
+	 *
+	 * @param 	string 	$id 	id of the plugin
+	 * @throws 	InvalidArgumentException 	if no plugin with that id is found
+	 * @return 	ilPlugin
+	 */
+	public static function getPluginObjectById($id) {
+		assert('is_string($id)');
+		$plugs = self::getAllPlugins();
+		if( ! array_key_exists($id, $plugs)) {
+			throw new \InvalidArgumentException("Plugin does not exist: " .$id, 1);
+		}
+
+		$pdata = $plugs[$id];
+
+		return self::getPluginObject(
+			$pdata['component_type'],
+			$pdata['component_name'],
+			$pdata['slot_id'],
+			$pdata['name']
+		);
+	}
+
 	// cat-tms-patch end
 
 }
