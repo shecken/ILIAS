@@ -240,6 +240,12 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			$items['na_qualification'] = array($this->gLng->txt("na_link_label_cockpit"),$link);
 		}
 
+		$bol_ref_id = gevSettings::getInstance()->getBOLCourseRefId();
+		if ($bol_ref_id !== null && $this->gAccess->checkAccess("visible", "", $bol_ref_id)) {
+			$link = $this->buildNAQualiLink($bol_ref_id);
+			$items['bol_qualification'] = array($this->gLng->txt("bol_link_label_cockpit"),$link);
+		}
+
 		$items["profile"]
 			= array($this->gLng->txt("gev_user_profile"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyProfile");
 
