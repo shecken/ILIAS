@@ -318,8 +318,8 @@ class ilFixedLengthPeriodInputGUI extends ilDateDurationInputGUI
 		if ($hour > 23 || $hour < 0) {
 			$minute = 0;
 		}
-		$tpl->setVariable('SELECTED_M_'.$minute, 'selected="selected";');
-		$tpl->setVariable('SELECTED_H_'.$hour, 'selected="selected";');
+		$tpl->setVariable('SELECTED_M_'.$minute, 'selected="selected"');
+		$tpl->setVariable('SELECTED_H_'.$hour, 'selected="selected"');
 		$add = '';
 		foreach ($additonal as $attribute => $value) {
 			$add .= $attribute.'="'.$value.'" ';
