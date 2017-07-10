@@ -851,4 +851,16 @@ class gevSettings
 	{
 		return $this->settings->get(self::VA_PASS_OPTIONAL_TYPE_ID);
 	}
+
+	const CRS_BOL_REF_ID = "crs_bol_ref_id";
+	public function setBOLCourseRefId($ref_id)
+	{
+		$this->settings->set(self::CRS_BOL_REF_ID, $ref_id);
+	}
+
+	public function getBOLCourseRefId()
+	{
+		return $this->settings->get(self::CRS_BOL_REF_ID);
+	}
+
 }

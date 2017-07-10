@@ -236,8 +236,14 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 
 		$na_quali_ref_id = gevSettings::getInstance()->getNAQualiCourseRefId();
 		if ($na_quali_ref_id !== null && $this->gAccess->checkAccess("visible", "", $na_quali_ref_id)) {
-			$link = $this->buildNAQualiLink($na_quali_ref_id);
+			$link = $this->buildJillInstanceLink($na_quali_ref_id);
 			$items['na_qualification'] = array($this->gLng->txt("na_link_label_cockpit"),$link);
+		}
+
+		$bol_ref_id = gevSettings::getInstance()->getBOLCourseRefId();
+		if ($bol_ref_id !== null && $this->gAccess->checkAccess("visible", "", $bol_ref_id)) {
+			$link = $this->buildJillInstanceLink($bol_ref_id);
+			$items['bol_qualification'] = array($this->gLng->txt("bol_link_label_cockpit"),$link);
 		}
 
 		$items["profile"]
@@ -314,7 +320,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 		return $items;
 	}
 
-	protected function buildNAQualiLink($ref_id)
+	protected function buildJillInstanceLink($ref_id)
 	{
 		$backlink = basename($_SERVER["REQUEST_URI"]);
 
