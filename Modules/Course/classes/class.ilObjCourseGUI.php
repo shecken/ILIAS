@@ -30,9 +30,9 @@ class ilObjCourseGUI extends ilContainerGUI
 {
 
 	// cat-tms-patch start
-	const INPT_VENUE_SOURCE = "venue_source";
-	const INPT_VENUE_TEXT = "venue_text";
-	const INPT_VENUE_LIST = "venue_list";
+	const INPUT_VENUE_SOURCE = "venue_source";
+	const INPUT_VENUE_TEXT = "venue_text";
+	const INPUT_VENUE_LIST = "venue_list";
 	// cat-tms-patch end
 
 	/**
@@ -1005,11 +1005,11 @@ class ilObjCourseGUI extends ilContainerGUI
 
 			$vassignment = $vactions->getAssignment((int)$this->object->getId());
 
-			switch($form->getInput(self::INPT_VENUE_SOURCE)) {
+			switch($form->getInput(self::INPUT_VENUE_SOURCE)) {
 
 				case ilCourseConstants::VENUE_FROM_TEXT:
 					if($vassignment && $vassignment->isCustomAssignment()) {
-						$vassignment = $vassignment->withVenueText($form->getInput(self::INPT_VENUE_TEXT));
+						$vassignment = $vassignment->withVenueText($form->getInput(self::INPUT_VENUE_TEXT));
 
 
 						$vactions->updateAssignment($vassignment);
@@ -1017,20 +1017,20 @@ class ilObjCourseGUI extends ilContainerGUI
 						$vactions->removeAssignment((int)$this->object->getId());
 						$vassignment = $vactions->createCustomVenueAssignment(
 							(int)$this->object->getId(),
-							$form->getInput(self::INPT_VENUE_TEXT)
+							$form->getInput(self::INPUT_VENUE_TEXT)
 						);
 					}
 					break;
 
 				case ilCourseConstants::VENUE_FROM_LIST:
 					if($vassignment && $vassignment->isListAssignment()) {
-						$vassignment = $vassignment->withVenueId((int)$form->getInput(self::INPT_VENUE_LIST));
+						$vassignment = $vassignment->withVenueId((int)$form->getInput(self::INPUT_VENUE_LIST));
 						$vactions->updateAssignment($vassignment);
 					} else {
 						$vactions->removeAssignment((int)$this->object->getId());
 						$vassignment = $vactions->createListVenueAssignment(
 							(int)$this->object->getId(),
-							(int)$form->getInput(self::INPT_VENUE_LIST)
+							(int)$form->getInput(self::INPUT_VENUE_LIST)
 						);
 					}
 					break;
@@ -1158,17 +1158,17 @@ class ilObjCourseGUI extends ilContainerGUI
 			foreach ($venues as $v) {
 				$voptions[$v->getId()] = $v->getName() .', ' .$v->getCity();
 			}
-			$venue_opts = new ilRadioGroupInputGUI($this->lng->txt('crs_venue_source'), self::INPT_VENUE_SOURCE);
+			$venue_opts = new ilRadioGroupInputGUI($this->lng->txt('crs_venue_source'), self::INPUT_VENUE_SOURCE);
 
 			//create inputs
 			$venue_opt_text = new ilRadioOption($this->lng->txt('crs_venue_source_text'), ilCourseConstants::VENUE_FROM_TEXT);
-			$venue_opt_text_inp = new ilTextAreaInputGUI($this->lng->txt('crs_venue_text'), self::INPT_VENUE_TEXT);
+			$venue_opt_text_inp = new ilTextAreaInputGUI($this->lng->txt('crs_venue_text'), self::INPUT_VENUE_TEXT);
 			$venue_opt_text_inp->setRows(6);
 			$venue_opt_text_inp->setCols(80);
 			$venue_opt_text->addSubItem($venue_opt_text_inp);
 
 			$venue_opt_list = new ilRadioOption($this->lng->txt('crs_venue_source_list'), ilCourseConstants::VENUE_FROM_LIST);
-			$venue_opt_list_inp = new ilSelectInputGUI($this->lng->txt('crs_venue_list'), self::INPT_VENUE_LIST);
+			$venue_opt_list_inp = new ilSelectInputGUI($this->lng->txt('crs_venue_list'), self::INPUT_VENUE_LIST);
 			$venue_opt_list_inp->setOptions($voptions);
 			$venue_opt_list->addSubItem($venue_opt_list_inp);
 
