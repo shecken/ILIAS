@@ -50,13 +50,18 @@ class ilCourseConstants
 	const CRS_ADMIN = 1;
 	const CRS_MEMBER = 2;
 	const CRS_TUTOR = 3;
-	
+
 	const SUBSCRIPTION_DEACTIVATED = 0;
 	const SUBSCRIPTION_UNLIMITED = 1;
 	const SUBSCRIPTION_LIMITED = 2;
-	
+
 	const MAIL_ALLOWED_ALL = 1;
 	const MAIL_ALLOWED_TUTORS = 2;
+
+	// cat-tms-patch start
+	const VENUE_FROM_TEXT = 0;
+	const VENUE_FROM_LIST = 1;
+	// cat-tms-patch end
 }
 
 ?>
