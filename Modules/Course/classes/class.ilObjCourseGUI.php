@@ -1153,7 +1153,7 @@ class ilObjCourseGUI extends ilContainerGUI
 			$vactions = $vplug->getActions();
 
 			//build options for select-input
-			$venues = $vactions->getAllVenues('name', 'ASC');
+			$venues = $vactions->getAllVenues('name', 'ASC', null);
 			$voptions = array();
 			foreach ($venues as $v) {
 				$voptions[$v->getId()] = $v->getName() .', ' .$v->getCity();
