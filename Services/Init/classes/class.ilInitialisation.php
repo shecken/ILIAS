@@ -251,8 +251,9 @@ class ilInitialisation
 			$client_id = $ilIliasIniFile->readVariable("clients","default");
 			ilUtil::setCookie("ilClientId", $client_id);
 		}
-		if (!defined("IL_PHPUNIT_TEST"))
+		if (!defined("IL_PHPUNIT_TEST") && ilContext::supportsPersistentSessions())
 		{
+			
 			define ("CLIENT_ID", $_COOKIE["ilClientId"]);
 		}
 		else
@@ -310,7 +311,7 @@ class ilInitialisation
 			}
 			else
 			{
-				self::abortAndDie("Invalid client");
+				self::abortAndDie("Fatal Error: ilInitialisation::initClientIniFile initializing client ini file abborted with: ". $ilClientIniFile->ERROR);
 			}
 		}
 		
@@ -433,47 +434,54 @@ class ilInitialisation
 			}
 		}				
 	}
-	
+
 	/**
-	 * set session cookie params for path, domain, etc.
+	 * 
 	 */
-	protected static function setCookieParams()
+	protected static function setCookieConstants()
 	{
-		global $ilSetting;
-		
 		include_once 'Services/Authentication/classes/class.ilAuthFactory.php';
-		if(ilAuthFactory::getContext() == ilAuthFactory::CONTEXT_HTTP) 
+		if(ilAuthFactory::getContext() == ilAuthFactory::CONTEXT_HTTP)
 		{
 			$cookie_path = '/';
 		}
-		elseif ($GLOBALS['COOKIE_PATH'])
+		else if($GLOBALS['COOKIE_PATH'])
 		{
 			// use a predefined cookie path from WebAccessChecker
-	        $cookie_path = $GLOBALS['COOKIE_PATH'];
-	    }
+			$cookie_path = $GLOBALS['COOKIE_PATH'];
+		}
 		else
 		{
 			$cookie_path = dirname( $_SERVER['PHP_SELF'] );
 		}
-		
+
 		/* if ilias is called directly within the docroot $cookie_path
 		is set to '/' expecting on servers running under windows..
 		here it is set to '\'.
 		in both cases a further '/' won't be appended due to the following regex
 		*/
 		$cookie_path .= (!preg_match("/[\/|\\\\]$/", $cookie_path)) ? "/" : "";
-		
+
 		if($cookie_path == "\\") $cookie_path = '/';
-		
+
+		define('IL_COOKIE_HTTPONLY', true); // Default Value
+		define('IL_COOKIE_EXPIRE', 0);
+		define('IL_COOKIE_PATH', $cookie_path);
+		define('IL_COOKIE_DOMAIN', '');
+	}
+	
+	/**
+	 * set session cookie params
+	 */
+	protected static function setSessionCookieParams()
+	{
+		global $ilSetting;
+
+		// TODO: Has to be revised/moved
 		include_once './Services/Http/classes/class.ilHTTPS.php';
 		$cookie_secure = !$ilSetting->get('https', 0) && ilHTTPS::getInstance()->isDetected();
-		
-		define('IL_COOKIE_EXPIRE',0);
-		define('IL_COOKIE_PATH',$cookie_path);
-		define('IL_COOKIE_DOMAIN','');
 		define('IL_COOKIE_SECURE', $cookie_secure); // Default Value
 
-		define('IL_COOKIE_HTTPONLY',true); // Default Value
 		session_set_cookie_params(
 			IL_COOKIE_EXPIRE, IL_COOKIE_PATH, IL_COOKIE_DOMAIN, IL_COOKIE_SECURE, IL_COOKIE_HTTPONLY
 		);
@@ -653,6 +661,12 @@ class ilInitialisation
 			// goto will check if target is accessible or redirect to login
 			self::redirect("goto.php?target=".$_GET["target"]);			
 		}
+		
+		// check access of root folder otherwise redirect to login
+		#if(!$GLOBALS['DIC']->rbac()->system()->checkAccess('read', ROOT_FOLDER_ID))
+		#{
+		#	return self::goToLogin();
+		#}
 		
 		// we do not know if ref_id of request is accesible, so redirecting to root
 		$_GET["ref_id"] = ROOT_FOLDER_ID;
@@ -950,8 +964,10 @@ class ilInitialisation
 	 */
 	protected static function initClient()
 	{
-		global $https, $ilias; 
-		
+		global $https, $ilias;
+
+		self::setCookieConstants();
+
 		self::determineClient();
 
 		self::initClientIniFile();
@@ -1026,7 +1042,7 @@ class ilInitialisation
 		self::initGlobal("ilCtrl", "ilCtrl",
 				"./Services/UICore/classes/class.ilCtrl.php");
 
-		self::setCookieParams();
+		self::setSessionCookieParams();
 	}
 	
 	/**
@@ -1052,6 +1068,11 @@ class ilInitialisation
 	 */
 	public static function resumeUserSession()
 	{
+		include_once './Services/Authentication/classes/class.ilAuthUtils.php';
+		if(ilAuthUtils::handleForcedAuthentication())
+		{
+		}
+		
 		if(
 			!$GLOBALS['DIC']['ilAuthSession']->isAuthenticated() or
 			$GLOBALS['DIC']['ilAuthSession']->isExpired()

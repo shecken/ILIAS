@@ -1743,6 +1743,10 @@ class ilUtil
 	*/
 	public static function unzip($a_file, $overwrite = false, $a_flat = false)
 	{
+		global $DIC;
+
+		$log = $DIC->logger()->root();
+
 		if (!is_file($a_file))
 		{
 			return;
@@ -1817,7 +1821,23 @@ class ilUtil
 		ilUtil::execQuoted($unzip, $unzipcmd);
 
 		chdir($cdir);
-		
+
+		// remove all sym links
+		clearstatcache();			// prevent is_link from using cache
+		$dir_realpath = realpath($dir);
+		foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir)) as $name => $f)
+		{
+			if (is_link($name))
+			{
+				$target = readlink($name);
+				if (substr($target, 0, strlen($dir_realpath)) != $dir_realpath)
+				{
+					unlink($name);
+					$log->info("Removed symlink " . $name);
+				}
+			}
+		}
+
 		// if flat, get all files and move them to original directory
 		if ($a_flat)
 		{
@@ -3083,6 +3103,32 @@ class ilUtil
 		$a_str = str_replace("\\", "&#92;", $a_str);
 		return $a_str;
 	}
+
+	/**
+	 * Prepare secure href attribute
+	 *
+	 * @param
+	 * @return
+	 */
+	static function secureUrl($url)
+	{
+		// check if url is valid (absolute or relative)
+		if (filter_var($url, FILTER_VALIDATE_URL) === false &&
+			filter_var("http://".$url, FILTER_VALIDATE_URL) === false &&
+			filter_var("http:".$url, FILTER_VALIDATE_URL) === false &&
+			filter_var("http://de.de".$url, FILTER_VALIDATE_URL) === false &&
+			filter_var("http://de.de/".$url, FILTER_VALIDATE_URL) === false)
+		{
+			return "";
+		}
+		if (trim(strtolower(parse_url($url, PHP_URL_SCHEME))) == "javascript")
+		{
+			return "";
+		}
+		$url = htmlspecialchars($url, ENT_QUOTES);
+		return $url;
+	}
+
 
 
 	/**
@@ -4884,6 +4930,11 @@ class ilUtil
 		// Temporary fix for feed.php 
 		if(!(bool)$a_set_cookie_invalid) $expire = 0;
 		else $expire = time() - (365*24*60*60);
+		
+		if(!defined('IL_COOKIE_SECURE'))
+		{
+			define('IL_COOKIE_SECURE', false);
+		}
 
 		setcookie( $a_cookie_name, $a_cookie_value, $expire,
 			IL_COOKIE_PATH, IL_COOKIE_DOMAIN, IL_COOKIE_SECURE, IL_COOKIE_HTTPONLY

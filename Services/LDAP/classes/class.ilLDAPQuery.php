@@ -43,6 +43,10 @@ class ilLDAPQuery
 {
 	private $ldap_server_url = null;
 	private $settings = null;
+	
+	/**
+	 * @var ilLogger
+	 */
 	private $log = null;
 	
 	private $user_fields = array();
@@ -96,7 +100,8 @@ class ilLDAPQuery
 	 */
 	public function fetchUser($a_name)
 	{
-		$this->user_fields = array_merge(array($this->settings->getUserAttribute()),$this->mapping->getFields());
+		// this reduces the available fields. #0020337
+		// $this->user_fields = array_merge(array($this->settings->getUserAttribute()),$this->mapping->getFields());
 		
 		if(!$this->readUserData($a_name))
 		{
@@ -402,8 +407,16 @@ class ilLDAPQuery
 				}
 			}
 			
-			$user_ext = $user_data[strtolower($this->settings->getUserAttribute())];
-
+			$account = $user_data[strtolower($this->settings->getUserAttribute())];
+			if(is_array($account))
+			{
+				$user_ext = strtolower(array_shift($account));
+			}
+			else
+			{
+				$user_ext = strtolower($account);
+			}
+			
 			// auth mode depends on ldap server settings
 			$auth_mode = $this->settings->getAuthenticationMappingKey();
 			$user_data['ilInternalAccount'] = ilObjUser::_checkExternalAuthAccount($auth_mode,$user_ext);

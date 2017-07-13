@@ -41,7 +41,7 @@ class ilTemplate extends HTML_Template_ITX
 	private $addFooter; // creates an output of the ILIAS footer
 
 	protected static $il_cache = array();
-	protected $message = "";
+	protected $message = array();
 	
 	protected $title_desc = "";	
 	protected $title_url = "";
@@ -894,8 +894,11 @@ class ilTemplate extends HTML_Template_ITX
 				
 		if (DEVMODE)
 		{
-			$link_items[ilUtil::appendUrlParameterString($_SERVER["REQUEST_URI"], "do_dev_validate=xhtml")] = array("Validate", true);
-			$link_items[ilUtil::appendUrlParameterString($_SERVER["REQUEST_URI"], "do_dev_validate=accessibility")] = array("Accessibility", true);			
+			if (function_exists("tidy_parse_string"))
+			{
+				$link_items[ilUtil::appendUrlParameterString($_SERVER["REQUEST_URI"], "do_dev_validate=xhtml")] = array("Validate", true);
+				$link_items[ilUtil::appendUrlParameterString($_SERVER["REQUEST_URI"], "do_dev_validate=accessibility")] = array("Accessibility", true);
+			}
 		}
 
         // output translation link
@@ -2556,7 +2559,7 @@ class ilTemplate extends HTML_Template_ITX
 			}
 		}
 		// personal workspace
-		else if ($_GET["wsp_id"] != "")
+		else if ($_GET["wsp_id"] != "" && $_GET["wsp_id"] > 0)
 		{
 			include_once "Services/PersonalWorkspace/classes/class.ilWorkspaceTree.php";			
 			$tree = new ilWorkspaceTree($ilUser->getId());									

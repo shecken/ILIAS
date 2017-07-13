@@ -274,19 +274,21 @@ class ilAccountRegistrationGUI
 
 		
 		// custom validation
-				
 		$valid_code = $valid_role = false;
 		 		
-		// code		
+		// code	
 		if($this->code_enabled)
 		{
 			$code = $this->form->getInput('usr_registration_code');			
 			// could be optional
-			if($code)
+			if(
+				$this->registration_settings->registrationCodeRequired() ||
+				strlen($code)
+			)
 			{				
 				// code validation
-				include_once './Services/Registration/classes/class.ilRegistrationCode.php';										
-				if(!ilRegistrationCode::isUnusedCode($code))
+				include_once './Services/Registration/classes/class.ilRegistrationCode.php';
+				if(!ilRegistrationCode::isValidRegistrationCode($code))
 				{
 					$code_obj = $this->form->getItemByPostVar('usr_registration_code');
 					$code_obj->setAlert($lng->txt('registration_code_not_valid'));
@@ -303,7 +305,7 @@ class ilAccountRegistrationGUI
 						$valid_role = $role_id;
 					}
 				}
-			}			
+			}
 		}
 		
 		// valid codes override email domain check
@@ -494,16 +496,10 @@ class ilAccountRegistrationGUI
 		$this->userObj->setFullName();
 
 		$birthday_obj = $this->form->getItemByPostVar("usr_birthday");
-		if ($birthday_obj)
+		if($birthday_obj)
 		{
 			$birthday = $this->form->getInput("usr_birthday");
-			$birthday = $birthday["date"];
-
-			// when birthday was not set, array will not be substituted with string by ilBirthdayInputGui
-			if(!is_array($birthday))
-			{
-				$this->userObj->setBirthday($birthday);
-			}
+			$this->userObj->setBirthday($birthday);
 		}
 
 		$this->userObj->setTitle($this->userObj->getFullname());
