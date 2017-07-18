@@ -1151,6 +1151,7 @@ class ilObjCourseGUI extends ilContainerGUI
 		if(ilPluginAdmin::isPluginActive('venues')) {
 			$vplug = ilPluginAdmin::getPluginObjectById('venues');
 			$vactions = $vplug->getActions();
+			$plugin_txt = $vplug->txtClosure();
 
 			//build options for select-input
 			$venues = $vactions->getAllVenues('name', 'ASC', null);
@@ -1158,22 +1159,22 @@ class ilObjCourseGUI extends ilContainerGUI
 			foreach ($venues as $v) {
 				$voptions[$v->getId()] = $v->getName() .', ' .$v->getCity();
 			}
-			$venue_opts = new ilRadioGroupInputGUI($this->lng->txt('crs_venue_source'), self::INPUT_VENUE_SOURCE);
+			$venue_opts = new ilRadioGroupInputGUI($plugin_txt('crs_venue_source'), self::INPUT_VENUE_SOURCE);
 
 			//create inputs
-			$venue_opt_text = new ilRadioOption($this->lng->txt('crs_venue_source_text'), ilCourseConstants::VENUE_FROM_TEXT);
-			$venue_opt_text_inp = new ilTextAreaInputGUI($this->lng->txt('crs_venue_text'), self::INPUT_VENUE_TEXT);
+			$venue_opt_text = new ilRadioOption($plugin_txt('crs_venue_source_text'), ilCourseConstants::VENUE_FROM_TEXT);
+			$venue_opt_text_inp = new ilTextAreaInputGUI($plugin_txt('crs_venue_text'), self::INPUT_VENUE_TEXT);
 			$venue_opt_text_inp->setRows(6);
 			$venue_opt_text_inp->setCols(80);
 			$venue_opt_text->addSubItem($venue_opt_text_inp);
 
-			$venue_opt_list = new ilRadioOption($this->lng->txt('crs_venue_source_list'), ilCourseConstants::VENUE_FROM_LIST);
-			$venue_opt_list_inp = new ilSelectInputGUI($this->lng->txt('crs_venue_list'), self::INPUT_VENUE_LIST);
+			$venue_opt_list = new ilRadioOption($plugin_txt('crs_venue_source_list'), ilCourseConstants::VENUE_FROM_LIST);
+			$venue_opt_list_inp = new ilSelectInputGUI($plugin_txt('crs_venue_list'), self::INPUT_VENUE_LIST);
 			$venue_opt_list_inp->setOptions($voptions);
 			$venue_opt_list->addSubItem($venue_opt_list_inp);
 
 			//set values
-			$vassignment_type = ilCourseConstants::VENUE_FROM_TEXT; //default
+			$vassignment_type = ilCourseConstants::VENUE_FROM_LIST; //default
 			$vassignment = $vactions->getAssignment((int)$this->object->getId());
 
 			if($vassignment) {
