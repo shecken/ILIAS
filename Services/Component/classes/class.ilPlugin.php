@@ -534,6 +534,34 @@ abstract class ilPlugin
 		return $lng->txt($prefix."_".$a_lang_var, $prefix);
 	}
 
+	// cat-tms-patch start
+	/**
+	 * Lookup language text by id
+	 */
+	static function lookupTxtById($pluginId, $a_lang_var)
+	{
+		global $lng;
+		$pl = ilPluginAdmin::getPluginObjectById($pluginId);
+		$pl->loadLanguageModule();
+		return $lng->txt($pl->getPrefix()."_".$a_lang_var, $pl->getPrefix());
+	}
+
+	/**
+	 * Is searched lang var available in plugin lang files
+	 * 
+	 * @param int 		$pluginId
+	 * @param string 	$langVar
+	 *
+	 * @return bool
+	 */
+	static function langExitsById($pluginId, $langVar) {
+		global $lng;
+		$pl = ilPluginAdmin::getPluginObjectById($pluginId);
+		$pl->loadLanguageModule();
+		return $lng->exists($pl->getPrefix()."_".$langVar);
+	}
+	// cat-tms-patch end
+
 
 	/**
 	 * Get template from plugin
