@@ -537,11 +537,16 @@ abstract class ilPlugin
 	// cat-tms-patch start
 	/**
 	 * Lookup language text by id
+	 *
+	 * @param string 	$plugin_id
+	 * @param string 	$a_lang_var
+	 *
+	 * @return string
 	 */
-	static function lookupTxtById($pluginId, $a_lang_var)
+	static function lookupTxtById($plugin_id, $a_lang_var)
 	{
 		global $lng;
-		$pl = ilPluginAdmin::getPluginObjectById($pluginId);
+		$pl = ilPluginAdmin::getPluginObjectById($plugin_id);
 		$pl->loadLanguageModule();
 		return $lng->txt($pl->getPrefix()."_".$a_lang_var, $pl->getPrefix());
 	}
@@ -549,14 +554,14 @@ abstract class ilPlugin
 	/**
 	 * Is searched lang var available in plugin lang files
 	 * 
-	 * @param int 		$pluginId
+	 * @param int 		$plugin_id
 	 * @param string 	$langVar
 	 *
 	 * @return bool
 	 */
-	static function langExitsById($pluginId, $langVar) {
+	static function langExitsById($plugin_id, $langVar) {
 		global $lng;
-		$pl = ilPluginAdmin::getPluginObjectById($pluginId);
+		$pl = ilPluginAdmin::getPluginObjectById($plugin_id);
 		$pl->loadLanguageModule();
 		return $lng->exists($pl->getPrefix()."_".$langVar);
 	}
