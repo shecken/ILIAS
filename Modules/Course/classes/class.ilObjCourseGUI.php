@@ -1157,7 +1157,7 @@ class ilObjCourseGUI extends ilContainerGUI
 			$venues = $vactions->getAllVenues('name', 'ASC', null);
 			$voptions = array();
 			foreach ($venues as $v) {
-				$voptions[$v->getId()] = $v->getName() .', ' .$v->getCity();
+				$voptions[$v->getGeneral()->getId()] = $v->getGeneral()->getName() .', ' .$v->getAddress()->getCity();
 			}
 			$venue_opts = new ilRadioGroupInputGUI($plugin_txt('crs_venue_source'), self::INPUT_VENUE_SOURCE);
 
