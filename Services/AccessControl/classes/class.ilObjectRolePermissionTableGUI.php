@@ -284,8 +284,10 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 			return true;
 		}
 
+		// cat-tms-patch start
 		foreach((array) $row['roles'] as $role_id => $role_info)
 		{
+			$perm = "";
 			$this->tpl->setCurrentBlock('role_td');
 			$this->tpl->setVariable('PERM_ROLE_ID',$role_id);
 			$this->tpl->setVariable('PERM_PERM_ID',$row['perm']['ops_id']);
@@ -305,16 +307,24 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 			}
 			else
 			{
-				if($this->lng->exists($this->getObjType().'_'.$row['perm']['operation'].'_short'))
-				{
-					$perm = $this->lng->txt($this->getObjType().'_'.$row['perm']['operation'].'_short');
+				if($objDefinition->isPlugin($this->getObjType())) {
+					if(ilPlugin::langExitsById($this->getObjType(), $row['perm']['operation'])) {
+						$perm = ilPlugin::lookupTxtById($this->getObjType(), $row['perm']['operation']);
+					}
 				}
-				else
-				{
-					$perm = $this->lng->txt($row['perm']['operation']);
+				if(!$perm) {
+					if($this->lng->exists($this->getObjType().'_'.$row['perm']['operation'].'_short'))
+					{
+						$perm = $this->lng->txt($this->getObjType().'_'.$row['perm']['operation'].'_short');
+					}
+					else
+					{
+						$perm = $this->lng->txt($row['perm']['operation']);
+					}
 				}
 			}
-			
+			// cat-tms-patch end
+
 			$this->tpl->setVariable('TXT_PERM',$perm);
 			
 			if ($objDefinition->isPlugin($this->getObjType()))
@@ -343,7 +353,6 @@ class ilObjectRolePermissionTableGUI extends ilTable2GUI
 			$this->tpl->parseCurrentBlock();
 		}
 	}
-	
 	
 	/**
 	 * Parse 
