@@ -1001,7 +1001,6 @@ class ilObjCourseGUI extends ilContainerGUI
 		// venues (plugin)
 		if(ilPluginAdmin::isPluginActive('venues')) {
 			$vplug = ilPluginAdmin::getPluginObjectById('venues');
-
 			$vactions = $vplug->getActions();
 
 			$vassignment = $vactions->getAssignment((int)$this->object->getId());
