@@ -27,11 +27,11 @@ class ilTree
 	const POS_FIRST_NODE = -1;
 	
 	
-	const RELATION_NONE = 0;
 	const RELATION_CHILD = 1;		// including grand child
 	const RELATION_PARENT = 2;		// including grand child
 	const RELATION_SIBLING = 3;
 	const RELATION_EQUALS = 4;
+	const RELATION_NONE = 5;
 	
 	
 	/**
@@ -1385,7 +1385,7 @@ class ilTree
 			throw new InvalidArgumentException('Missing or empty parameter $a_node_id: '. $a_node_id);
 		}
 		
-		$query = 'SELECT * FROM tree '.
+		$query = 'SELECT * FROM '.$this->table_tree.' '.
 				'WHERE child = '.$ilDB->quote($a_node_id,'integer');
 		$res = $ilDB->query($query);
 		while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
