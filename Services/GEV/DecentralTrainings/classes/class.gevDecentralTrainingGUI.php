@@ -1842,6 +1842,16 @@ class gevDecentralTrainingGUI
 			, "added_files" => $crs_utils->getCustomAttachments()
 			);
 
+		foreach ($tmp as $day => $time_period) {
+			$aux_times = explode('-', $time_period);
+			$aux_begin = explode(':', $aux_times[0]);
+			$aux_end = explode(':', $aux_times[1]);
+			$training_info['schedule_durations_'.$day]
+				= (int)$aux_end[0] * 60 + (int)$aux_end[1] - ((int)$aux_begin[0] * 60 + (int)$aux_begin[1]);
+			$training_info['schedule_starts_'.$day] = new ilDateTime("1970-01-01 ".$aux_times[0].":00", IL_CAL_DATETIME);
+			$training_info['schedule_ends_'.$day] = new ilDateTime("1970-01-01 ".$aux_times[1].":00", IL_CAL_DATETIME);
+		}
+
 		return $training_info;
 	}
 
