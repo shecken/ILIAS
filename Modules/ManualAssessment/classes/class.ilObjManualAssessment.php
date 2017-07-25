@@ -193,9 +193,11 @@ class ilObjManualAssessment extends ilObject
 		$new_obj->settings_storage->updateInfoSettings($new_info_settings);
 
 		$fstorage = $this->getFileStorage();
-		$n_fstorage = $new_obj->getFileStorage();
-		$n_fstorage->create();
-		$fstorage->_copyDirectory($fstorage->getAbsolutePath(), $n_fstorage->getAbsolutePath());
+		if(count($fstorage->readDir()) > 0) {
+			$n_fstorage = $new_obj->getFileStorage();
+			$n_fstorage->create();
+			$fstorage->_copyDirectory($fstorage->getAbsolutePath(), $n_fstorage->getAbsolutePath());
+		}
 		return $new_obj;
 	}
 
