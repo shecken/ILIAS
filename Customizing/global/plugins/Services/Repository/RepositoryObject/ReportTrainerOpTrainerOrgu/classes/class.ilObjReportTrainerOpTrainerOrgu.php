@@ -7,7 +7,7 @@ set_time_limit(0);
 
 class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase
 {
-	const MIN_ROW = "0";
+	const MIN_ROW = "3991";
 	const SHIFT = '<div class = "inline_block">&nbsp;&nbsp;</div>';
 	protected $categories;
 	protected $relevant_parameters = array();
