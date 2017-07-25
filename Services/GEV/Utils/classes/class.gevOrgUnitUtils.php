@@ -689,7 +689,9 @@ class gevOrgUnitUtils {
 		$res = $ilDB->query(
 			 "SELECT DISTINCT od.obj_id obj_id, c.child ref_id "
 			." FROM tree p"
-			." RIGHT JOIN tree c ON c.lft > p.lft AND c.rgt < p.rgt AND c.tree = p.tree"
+			." RIGHT JOIN tree c"
+			."	ON LOCATE(CONCAT(p.path,'.'),c.path) = 1"
+			."		AND c.tree = p.tree"
 			." LEFT JOIN object_reference oref ON oref.ref_id = c.child"
 			." LEFT JOIN object_data od ON od.obj_id = oref.obj_id"
 			." WHERE ".$ilDB->in("p.child", $a_ref_ids, false, "integer")
@@ -709,7 +711,9 @@ class gevOrgUnitUtils {
 		$res = $ilDB->query(
 			 "SELECT DISTINCT od.obj_id obj_id, od.title title "
 			." FROM tree p"
-			." RIGHT JOIN tree c ON c.lft > p.lft AND c.rgt < p.rgt AND c.tree = p.tree"
+			." RIGHT JOIN tree c"
+			."	ON LOCATE(CONCAT(p.path,'.'),c.path) = 1"
+			."		AND c.tree = p.tree"
 			." LEFT JOIN object_reference oref ON oref.ref_id = c.child"
 			." LEFT JOIN object_data od ON od.obj_id = oref.obj_id"
 			." WHERE ".$ilDB->in("p.child", $a_ref_ids, false, "integer")
@@ -729,7 +733,9 @@ class gevOrgUnitUtils {
 		$res = $ilDB->query(
 			 "SELECT DISTINCT od.title title "
 			." FROM tree p"
-			." RIGHT JOIN tree c ON c.lft > p.lft AND c.rgt < p.rgt AND c.tree = p.tree"
+			." RIGHT JOIN tree c"
+			."	ON LOCATE(CONCAT(p.path,'.'),c.path) = 1"
+			."		AND c.tree = p.tree"
 			." LEFT JOIN object_reference oref ON oref.ref_id = c.child"
 			." LEFT JOIN object_data od ON od.obj_id = oref.obj_id"
 			." WHERE ".$ilDB->in("p.child", $a_ref_ids, false, "integer")
