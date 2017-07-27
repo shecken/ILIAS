@@ -141,7 +141,8 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			}
 			if ($_GET["cmdClass"] == "ilobjreportstudyprogrammegui"
 			||  $_GET["cmdClass"] == "ilindividualplangui") {
-				return "va_pass";
+				$ref_id = $_GET["ref_id"];
+				return "va_pass_".$ref_id;
 			}
 		}
 		if ($this->isSearch()) {
@@ -213,8 +214,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 					$this->gCtrl->setParameterByClass($gui, "ref_id", $ref_id);
 					$link = $this->gCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", $gui, 'ilindividualplangui'), "showContent");
 					$this->gCtrl->setParameterByClass($gui, "ref_id", null);
-					$items["va_pass"] = array($object->getTitle(), $link);
-					break;
+					$items["va_pass_".$ref_id] = array($object->getTitle(), $link);
 				}
 			}
 		}
