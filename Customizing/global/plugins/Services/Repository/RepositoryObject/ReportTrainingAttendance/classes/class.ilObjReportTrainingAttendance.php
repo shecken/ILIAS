@@ -163,16 +163,16 @@ class ilObjReportTrainingAttendance extends ilObjReportBase
 			return $rec["ref_id"];
 		}, gevOrgUnitUtils::getAllChildren($org_ref_ids));
 		$all_orgu_ref_ids = array_merge($org_ref_ids, $all_orgu_ref_ids);
-		$users = gevOrgUnitUtils::getAllPeopleIn($all_orgu_ref_ids);
+		$orgu_users = gevOrgUnitUtils::getAllPeopleIn($all_orgu_ref_ids);
 
 		require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
 		$ru = gevRoleUtils::getInstance();
-		$users = array();
+		$role_users = array();
 		foreach ($settings["role_ids"] as $role_id) {
-			$users = array_merge($ru->usersHavingRoleId($role_id), $users);
+			$role_users = array_merge($ru->usersHavingRoleId($role_id), $role_users);
 		}
 
-		$users = array_unique($users);
+		$users = array_unique(array_intersect($role_users, $orgu_users));
 
 		$usr_ids = array_intersect($this->user_utils->getEmployeesWhereUserCanViewEduBios(), $users);
 
