@@ -33,6 +33,10 @@ class ilObjCourseGUI extends ilContainerGUI
 	const INPUT_VENUE_SOURCE = "venue_source";
 	const INPUT_VENUE_TEXT = "venue_text";
 	const INPUT_VENUE_LIST = "venue_list";
+
+	const INPUT_PROVIDER_SOURCE = "provider_source";
+	const INPUT_PROVIDER_TEXT = "provider_text";
+	const INPUT_PROVIDER_LIST = "provider_list";
 	// cat-tms-patch end
 
 	/**
@@ -727,6 +731,61 @@ class ilObjCourseGUI extends ilContainerGUI
 		$area->setCols(80);
 		$form->addItem($area);
 
+		// cat-tms-patch start
+		// provider (plugin)
+		if(ilPluginAdmin::isPluginActive('trainingprovider')) {
+			$section = new ilFormSectionHeaderGUI();
+			$section->setTitle($this->lng->txt('crs_info_provider'));
+			$form->addItem($section);
+
+			$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
+			$pactions = $pplug->getActions();
+			$plugin_txt = $pplug->txtClosure();
+
+			//build options for select-input
+			$provider = $pactions->getAllProviders('name', 'ASC');
+			$poptions = array();
+			foreach ($provider as $p) {
+				$poptions[$p->getId()] = $p->getName() .', ' .$p->getAddress1();
+			}
+			$provider_opts = new ilRadioGroupInputGUI($plugin_txt('crs_provider_source'), self::INPUT_PROVIDER_SOURCE);
+
+			//create inputs
+			$provider_opt_text = new ilRadioOption($plugin_txt('crs_provider_source_text'), ilCourseConstants::PROVIDER_FROM_TEXT);
+			$provider_opt_text_inp = new ilTextAreaInputGUI($plugin_txt('crs_provider_text'), self::INPUT_PROVIDER_TEXT);
+			$provider_opt_text_inp->setRows(6);
+			$provider_opt_text_inp->setCols(80);
+			$provider_opt_text->addSubItem($provider_opt_text_inp);
+
+			$provider_opt_list = new ilRadioOption($plugin_txt('crs_provider_source_list'), ilCourseConstants::PROVIDER_FROM_LIST);
+			$provider_opt_list_inp = new ilSelectInputGUI($plugin_txt('crs_provider_list'), self::INPUT_PROVIDER_LIST);
+			$provider_opt_list_inp->setOptions($poptions);
+			$provider_opt_list->addSubItem($provider_opt_list_inp);
+
+			//set values
+			$passignment_type = ilCourseConstants::PROVIDER_FROM_LIST; //default
+			$passignment = $pactions->getAssignment((int)$this->object->getId());
+
+			if($passignment) {
+				if($passignment->isCustomAssignment()) {
+						$passignment_type = ilCourseConstants::PROVIDER_FROM_TEXT;
+						$provider_opt_text_inp->setValue($passignment->getProviderText());
+				}
+
+				if($passignment->isListAssignment()) {
+						$passignment_type = ilCourseConstants::PROVIDER_FROM_LIST;
+						$provider_opt_list_inp->setValue($passignment->getProviderId());
+				}
+			}
+			$provider_opts->setValue($passignment_type);
+
+			//add options to form
+			$provider_opts->addOption($provider_opt_text);
+			$provider_opts->addOption($provider_opt_list);
+			$form->addItem($provider_opts);
+		}
+		// cat-tms-patch end
+
 		include_once('Services/AdvancedMetaData/classes/class.ilAdvancedMDRecordGUI.php');
 		$this->record_gui = new ilAdvancedMDRecordGUI(ilAdvancedMDRecordGUI::MODE_EDITOR,'crs',$this->object->getId());
 		$this->record_gui->setPropertyForm($form);
@@ -795,6 +854,46 @@ class ilObjCourseGUI extends ilContainerGUI
 		$file_obj->create();
 		$this->record_gui->writeEditForm();
 
+		// cat-tms-patch start
+		// provider (plugin)
+		if(ilPluginAdmin::isPluginActive('trainingprovider')) {
+			$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
+			$pactions = $pplug->getActions();
+
+			$passignment = $pactions->getAssignment((int)$this->object->getId());
+
+			switch($form->getInput(self::INPUT_PROVIDER_SOURCE)) {
+
+				case ilCourseConstants::PROVIDER_FROM_TEXT:
+					if($passignment && $passignment->isCustomAssignment()) {
+						$passignment = $passignment->withProviderText($form->getInput(self::INPUT_PROVIDER_TEXT));
+
+
+						$pactions->updateAssignment($passignment);
+					} else {
+						$pactions->removeAssignment((int)$this->object->getId());
+						$passignment = $pactions->createCustomProviderAssignment(
+							(int)$this->object->getId(),
+							$form->getInput(self::INPUT_PROVIDER_TEXT)
+						);
+					}
+					break;
+
+				case ilCourseConstants::PROVIDER_FROM_LIST:
+					if($passignment && $passignment->isListAssignment()) {
+						$passignment = $passignment->withProviderId((int)$form->getInput(self::INPUT_PROVIDER_LIST));
+						$pactions->updateAssignment($passignment);
+					} else {
+						$pactions->removeAssignment((int)$this->object->getId());
+						$passignment = $pactions->createListProviderAssignment(
+							(int)$this->object->getId(),
+							(int)$form->getInput(self::INPUT_PROVIDER_LIST)
+						);
+					}
+					break;
+			}
+		}
+		// cat-tms-patch end
 
 		// Update ecs content
 		include_once 'Modules/Course/classes/class.ilECSCourseSettings.php';
