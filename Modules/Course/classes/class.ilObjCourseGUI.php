@@ -33,6 +33,10 @@ class ilObjCourseGUI extends ilContainerGUI
 	const INPUT_VENUE_SOURCE = "venue_source";
 	const INPUT_VENUE_TEXT = "venue_text";
 	const INPUT_VENUE_LIST = "venue_list";
+
+	const INPUT_PROVIDER_SOURCE = "provider_source";
+	const INPUT_PROVIDER_TEXT = "provider_text";
+	const INPUT_PROVIDER_LIST = "provider_list";
 	// cat-tms-patch end
 
 	/**
@@ -728,57 +732,57 @@ class ilObjCourseGUI extends ilContainerGUI
 		$form->addItem($area);
 
 		// cat-tms-patch start
-		// venues (plugin)
-		if(ilPluginAdmin::isPluginActive('venues')) {
+		// provider (plugin)
+		if(ilPluginAdmin::isPluginActive('trainingprovider')) {
 			$section = new ilFormSectionHeaderGUI();
-			$section->setTitle($this->lng->txt('crs_info_venue'));
+			$section->setTitle($this->lng->txt('crs_info_provider'));
 			$form->addItem($section);
 
-			$vplug = ilPluginAdmin::getPluginObjectById('venues');
-			$vactions = $vplug->getActions();
-			$plugin_txt = $vplug->txtClosure();
+			$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
+			$pactions = $pplug->getActions();
+			$plugin_txt = $pplug->txtClosure();
 
 			//build options for select-input
-			$venues = $vactions->getAllVenues('name', 'ASC', null);
-			$voptions = array();
-			foreach ($venues as $v) {
-				$voptions[$v->getGeneral()->getId()] = $v->getGeneral()->getName() .', ' .$v->getAddress()->getCity();
+			$provider = $pactions->getAllProvider('name', 'ASC');
+			$poptions = array();
+			foreach ($provider as $p) {
+				$poptions[$p->getId()] = $p->getName() .', ' .$p->getAddress()->getCity();
 			}
-			$venue_opts = new ilRadioGroupInputGUI($plugin_txt('crs_venue_source'), self::INPUT_VENUE_SOURCE);
+			$provider_opts = new ilRadioGroupInputGUI($plugin_txt('crs_provider_source'), self::INPUT_PROVIDER_SOURCE);
 
 			//create inputs
-			$venue_opt_text = new ilRadioOption($plugin_txt('crs_venue_source_text'), ilCourseConstants::VENUE_FROM_TEXT);
-			$venue_opt_text_inp = new ilTextAreaInputGUI($plugin_txt('crs_venue_text'), self::INPUT_VENUE_TEXT);
-			$venue_opt_text_inp->setRows(6);
-			$venue_opt_text_inp->setCols(80);
-			$venue_opt_text->addSubItem($venue_opt_text_inp);
+			$provider_opt_text = new ilRadioOption($plugin_txt('crs_provider_source_text'), ilCourseConstants::PROVIDER_FROM_TEXT);
+			$provider_opt_text_inp = new ilTextAreaInputGUI($plugin_txt('crs_provider_text'), self::INPUT_PROVIDER_TEXT);
+			$provider_opt_text_inp->setRows(6);
+			$provider_opt_text_inp->setCols(80);
+			$provider_opt_text->addSubItem($provider_opt_text_inp);
 
-			$venue_opt_list = new ilRadioOption($plugin_txt('crs_venue_source_list'), ilCourseConstants::VENUE_FROM_LIST);
-			$venue_opt_list_inp = new ilSelectInputGUI($plugin_txt('crs_venue_list'), self::INPUT_VENUE_LIST);
-			$venue_opt_list_inp->setOptions($voptions);
-			$venue_opt_list->addSubItem($venue_opt_list_inp);
+			$provider_opt_list = new ilRadioOption($plugin_txt('crs_provider_source_list'), ilCourseConstants::PROVIDER_FROM_LIST);
+			$provider_opt_list_inp = new ilSelectInputGUI($plugin_txt('crs_provider_list'), self::INPUT_PROVIDER_LIST);
+			$provider_opt_list_inp->setOptions($poptions);
+			$provider_opt_list->addSubItem($provider_opt_list_inp);
 
 			//set values
-			$vassignment_type = ilCourseConstants::VENUE_FROM_LIST; //default
-			$vassignment = $vactions->getAssignment((int)$this->object->getId());
+			$passignment_type = ilCourseConstants::PROVIDER_FROM_LIST; //default
+			$passignment = $pactions->getAssignment((int)$this->object->getId());
 
-			if($vassignment) {
-				if($vassignment->isCustomAssignment()) {
-						$vassignment_type = ilCourseConstants::VENUE_FROM_TEXT;
-						$venue_opt_text_inp->setValue($vassignment->getVenueText());
+			if($passignment) {
+				if($passignment->isCustomAssignment()) {
+						$passignment_type = ilCourseConstants::PROVIDER_FROM_TEXT;
+						$provider_opt_text_inp->setValue($passignment->getVenueText());
 				}
 
-				if($vassignment->isListAssignment()) {
-						$vassignment_type = ilCourseConstants::VENUE_FROM_LIST;
-						$venue_opt_list_inp->setValue($vassignment->getVenueId());
+				if($passignment->isListAssignment()) {
+						$passignment_type = ilCourseConstants::PROVIDER_FROM_LIST;
+						$provider_opt_list_inp->setValue($passignment->getVenueId());
 				}
 			}
-			$venue_opts->setValue($vassignment_type);
+			$provider_opts->setValue($passignment_type);
 
 			//add options to form
-			$venue_opts->addOption($venue_opt_text);
-			$venue_opts->addOption($venue_opt_list);
-			$form->addItem($venue_opts);
+			$provider_opts->addOption($provider_opt_text);
+			$provider_opts->addOption($provider_opt_list);
+			$form->addItem($provider_opts);
 		}
 		// cat-tms-patch end
 
@@ -850,47 +854,46 @@ class ilObjCourseGUI extends ilContainerGUI
 		$file_obj->create();
 		$this->record_gui->writeEditForm();
 
-		// // cat-tms-patch start
+		// cat-tms-patch start
+		// provider (plugin)
+		if(ilPluginAdmin::isPluginActive('trainingprovider')) {
+			$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
+			$pactions = $pplug->getActions();
 
-		// venues (plugin)
-		if(ilPluginAdmin::isPluginActive('venues')) {
-			$vplug = ilPluginAdmin::getPluginObjectById('venues');
-			$vactions = $vplug->getActions();
+			$passignment = $pactions->getAssignment((int)$this->object->getId());
 
-			$vassignment = $vactions->getAssignment((int)$this->object->getId());
+			switch($form->getInput(self::INPUT_PROVIDER_SOURCE)) {
 
-			switch($form->getInput(self::INPUT_VENUE_SOURCE)) {
-
-				case ilCourseConstants::VENUE_FROM_TEXT:
-					if($vassignment && $vassignment->isCustomAssignment()) {
-						$vassignment = $vassignment->withVenueText($form->getInput(self::INPUT_VENUE_TEXT));
+				case ilCourseConstants::PROVIDER_FROM_TEXT:
+					if($passignment && $passignment->isCustomAssignment()) {
+						$passignment = $passignment->withVenueText($form->getInput(self::INPUT_PROVIDER_TEXT));
 
 
-						$vactions->updateAssignment($vassignment);
+						$pactions->updateAssignment($passignment);
 					} else {
-						$vactions->removeAssignment((int)$this->object->getId());
-						$vassignment = $vactions->createCustomVenueAssignment(
+						$pactions->removeAssignment((int)$this->object->getId());
+						$passignment = $pactions->createCustomVenueAssignment(
 							(int)$this->object->getId(),
-							$form->getInput(self::INPUT_VENUE_TEXT)
+							$form->getInput(self::INPUT_PROVIDER_TEXT)
 						);
 					}
 					break;
 
-				case ilCourseConstants::VENUE_FROM_LIST:
-					if($vassignment && $vassignment->isListAssignment()) {
-						$vassignment = $vassignment->withVenueId((int)$form->getInput(self::INPUT_VENUE_LIST));
-						$vactions->updateAssignment($vassignment);
+				case ilCourseConstants::PROVIDER_FROM_LIST:
+					if($passignment && $passignment->isListAssignment()) {
+						$passignment = $passignment->withVenueId((int)$form->getInput(self::INPUT_PROVIDER_LIST));
+						$pactions->updateAssignment($passignment);
 					} else {
-						$vactions->removeAssignment((int)$this->object->getId());
-						$vassignment = $vactions->createListVenueAssignment(
+						$pactions->removeAssignment((int)$this->object->getId());
+						$passignment = $pactions->createListVenueAssignment(
 							(int)$this->object->getId(),
-							(int)$form->getInput(self::INPUT_VENUE_LIST)
+							(int)$form->getInput(self::INPUT_PROVIDER_LIST)
 						);
 					}
 					break;
 			}
 		}
-
+		// cat-tms-patch end
 
 		// Update ecs content
 		include_once 'Modules/Course/classes/class.ilECSCourseSettings.php';

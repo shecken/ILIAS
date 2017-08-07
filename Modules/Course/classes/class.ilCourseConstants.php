@@ -61,6 +61,9 @@ class ilCourseConstants
 	// cat-tms-patch start
 	const VENUE_FROM_TEXT = 0;
 	const VENUE_FROM_LIST = 1;
+
+	const PROVIDER_FROM_TEXT = 0;
+	const PROVIDER_FROM_LIST = 1;
 	// cat-tms-patch end
 }
 
