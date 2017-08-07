@@ -80,7 +80,7 @@ class ilReportDiscovery
 			foreach (ilObject::_getAllReferences($report["obj_id"]) as $ref_id) {
 				if ($this->access->checkAccessOfUser($user->getId(), "read", null, $ref_id)) {
 					$report["ref_id"] = $ref_id;
-					$visible_reports[$key] = $report;
+					$visible_reports[$key.'.'.$ref_id] = $report;
 				}
 			}
 		}
@@ -162,7 +162,7 @@ class ilReportDiscovery
 			if ($type === $report_data['type']) {
 				$object = ilObjectFactory::getInstanceByRefId($report_data['ref_id']);
 
-				if($object->showInReportMenu()) {
+				if ($object->showInReportMenu()) {
 					$coll = $coll->withMenuItem(new RD\Report($object->getReportMenuTitle(), ['type' => $type, 'ref_id' => $report_data['ref_id']]));
 				}
 			}
