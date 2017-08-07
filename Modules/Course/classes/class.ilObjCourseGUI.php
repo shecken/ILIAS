@@ -743,10 +743,10 @@ class ilObjCourseGUI extends ilContainerGUI
 			$plugin_txt = $pplug->txtClosure();
 
 			//build options for select-input
-			$provider = $pactions->getAllProvider('name', 'ASC');
+			$provider = $pactions->getAllProviders('name', 'ASC');
 			$poptions = array();
 			foreach ($provider as $p) {
-				$poptions[$p->getId()] = $p->getName() .', ' .$p->getAddress()->getCity();
+				$poptions[$p->getId()] = $p->getName() .', ' .$p->getAddress1();
 			}
 			$provider_opts = new ilRadioGroupInputGUI($plugin_txt('crs_provider_source'), self::INPUT_PROVIDER_SOURCE);
 
@@ -769,12 +769,12 @@ class ilObjCourseGUI extends ilContainerGUI
 			if($passignment) {
 				if($passignment->isCustomAssignment()) {
 						$passignment_type = ilCourseConstants::PROVIDER_FROM_TEXT;
-						$provider_opt_text_inp->setValue($passignment->getVenueText());
+						$provider_opt_text_inp->setValue($passignment->getProviderText());
 				}
 
 				if($passignment->isListAssignment()) {
 						$passignment_type = ilCourseConstants::PROVIDER_FROM_LIST;
-						$provider_opt_list_inp->setValue($passignment->getVenueId());
+						$provider_opt_list_inp->setValue($passignment->getProviderId());
 				}
 			}
 			$provider_opts->setValue($passignment_type);
@@ -866,13 +866,13 @@ class ilObjCourseGUI extends ilContainerGUI
 
 				case ilCourseConstants::PROVIDER_FROM_TEXT:
 					if($passignment && $passignment->isCustomAssignment()) {
-						$passignment = $passignment->withVenueText($form->getInput(self::INPUT_PROVIDER_TEXT));
+						$passignment = $passignment->withProviderText($form->getInput(self::INPUT_PROVIDER_TEXT));
 
 
 						$pactions->updateAssignment($passignment);
 					} else {
 						$pactions->removeAssignment((int)$this->object->getId());
-						$passignment = $pactions->createCustomVenueAssignment(
+						$passignment = $pactions->createCustomProviderAssignment(
 							(int)$this->object->getId(),
 							$form->getInput(self::INPUT_PROVIDER_TEXT)
 						);
@@ -881,11 +881,11 @@ class ilObjCourseGUI extends ilContainerGUI
 
 				case ilCourseConstants::PROVIDER_FROM_LIST:
 					if($passignment && $passignment->isListAssignment()) {
-						$passignment = $passignment->withVenueId((int)$form->getInput(self::INPUT_PROVIDER_LIST));
+						$passignment = $passignment->withProviderId((int)$form->getInput(self::INPUT_PROVIDER_LIST));
 						$pactions->updateAssignment($passignment);
 					} else {
 						$pactions->removeAssignment((int)$this->object->getId());
-						$passignment = $pactions->createListVenueAssignment(
+						$passignment = $pactions->createListProviderAssignment(
 							(int)$this->object->getId(),
 							(int)$form->getInput(self::INPUT_PROVIDER_LIST)
 						);
