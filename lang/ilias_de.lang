@@ -6493,6 +6493,7 @@ crs#:#crs_header_remove_from_waiting_list#:#Warteliste: Benutzer austragen###dep
 crs#:#crs_html#:#HTML
 crs#:#crs_import#:#Kurs importieren
 crs#:#crs_important_info#:#Wichtige Informationen
+crs#:#crs_info_venue#:#Veranstalter
 crs#:#crs_info_agree#:#Ich bin damit einverstanden, dass die oben angegebenen Daten von Kursadministratoren eingesehen werden können.
 crs#:#crs_info_agreement#:#Die folgenden Daten können von Kursadministratoren eingesehen werden:
 crs#:#crs_info_download#:#Dateien zum Herunterladen
