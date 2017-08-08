@@ -734,13 +734,13 @@ class ilObjCourseGUI extends ilContainerGUI
 		// cat-tms-patch start
 		// provider (plugin)
 		if(ilPluginAdmin::isPluginActive('trainingprovider')) {
-			$section = new ilFormSectionHeaderGUI();
-			$section->setTitle($this->lng->txt('crs_info_provider'));
-			$form->addItem($section);
-
 			$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
 			$pactions = $pplug->getActions();
 			$plugin_txt = $pplug->txtClosure();
+
+			$section = new ilFormSectionHeaderGUI();
+			$section->setTitle($plugin_txt('crs_info_provider'));
+			$form->addItem($section);
 
 			//build options for select-input
 			$provider = $pactions->getAllProviders('name', 'ASC');
