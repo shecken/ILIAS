@@ -744,7 +744,7 @@ class ilObjCourseGUI extends ilContainerGUI
 
 			//build options for select-input
 			$provider = $pactions->getAllProviders('name', 'ASC');
-			$poptions = array();
+			$poptions = array(null => $plugin_txt("please_select"));
 			foreach ($provider as $p) {
 				$poptions[$p->getId()] = $p->getName() .', ' .$p->getAddress1();
 			}
@@ -1254,7 +1254,7 @@ class ilObjCourseGUI extends ilContainerGUI
 
 			//build options for select-input
 			$venues = $vactions->getAllVenues('name', 'ASC', null);
-			$voptions = array();
+			$voptions = array(null => $plugin_txt("please_select"));
 			foreach ($venues as $v) {
 				$voptions[$v->getGeneral()->getId()] = $v->getGeneral()->getName() .', ' .$v->getAddress()->getCity();
 			}
