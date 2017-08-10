@@ -1,5 +1,5 @@
 <?php
-
+require_once("./Services/GlobalCache/classes/class.ilGlobalCache.php");
 /**
  * Class ilCachedCtrl
  *
