@@ -64,7 +64,7 @@ class gevDecentralTrainingsCleanupJob extends ilCronJob {
 				."	JOIN tree t1 "
 				."		ON t1.child = ore.ref_id "
 				."	JOIN tree t2 "
-				."		ON t1.lft < t2.lft AND t1.rgt > t2.rgt "
+				."		ON LOCATE(CONCAT(t1.path,'.'),t2.path) = 1"
 				."	JOIN object_reference ore2 "
 				."		ON t2.child = ore2.ref_id "
 				."	JOIN object_data od2 "

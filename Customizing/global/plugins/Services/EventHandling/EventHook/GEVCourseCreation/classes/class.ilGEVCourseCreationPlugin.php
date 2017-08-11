@@ -114,14 +114,15 @@ class ilGEVCourseCreationPlugin extends ilEventHookPlugin
 				."  RIGHT JOIN tree ttree2 ON ttree2.lft > ttree.lft AND ttree2.rgt < ttree.rgt "
 				." WHERE tod.type = 'crs'"
 				;*/
-		$query =  "SELECT cpm.target_ref_id, cpm.source_ref_id"
-				 ."  FROM tree t"
-				 ."  JOIN tree ttree ON ttree.lft > t.lft"
-				 ."   AND ttree.rgt < t.rgt"
-				 ."  JOIN object_reference ref ON ref.ref_id = ttree.child"
-				 ."  JOIN object_data od ON od.obj_id = ref.obj_id"
-				 ."  JOIN copy_mappings cpm ON cpm.target_ref_id = ttree.child"
-				 ." WHERE t.child = ".$ilDB->quote($a_target_ref_id, "integer");
+		$query =
+				"SELECT cpm.target_ref_id, cpm.source_ref_id"
+				."	FROM tree t"
+				."	JOIN tree ttree ON"
+				."		LOCATE(CONCAT(t.path,'.'),ttree.path) = 1"
+				."	JOIN object_reference ref ON ref.ref_id = ttree.child"
+				."	JOIN object_data od ON od.obj_id = ref.obj_id"
+				."	JOIN copy_mappings cpm ON cpm.target_ref_id = ttree.child"
+				."	WHERE t.child = ".$ilDB->quote($a_target_ref_id, "integer");
 		
 		$ilLog->write($query);
 		
@@ -129,9 +130,10 @@ class ilGEVCourseCreationPlugin extends ilEventHookPlugin
 		
 		$ret = array();
 		while($rec = $ilDB->fetchAssoc($res)) {
+			$ilLog->dump($rec);
 			$this->clonedCourse($rec["source_ref_id"], $rec["target_ref_id"]);
 		}
-		
+
 		global $ilLog;
 		$ilLog->write("Cloned category ".$target_ref_id." from category ". $source_ref_id);		
 	}

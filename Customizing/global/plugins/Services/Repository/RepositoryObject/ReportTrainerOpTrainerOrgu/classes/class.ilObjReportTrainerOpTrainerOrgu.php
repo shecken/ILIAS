@@ -287,12 +287,11 @@ class ilObjReportTrainerOpTrainerOrgu extends ilObjReportBase
 				."	JOIN object_reference ore "
 				."		ON ore.ref_id = t1.child "
 				."	LEFT JOIN tree t2 "
-				." 		ON t1.lft > t2.lft AND t1.rgt < t2.rgt "
+				."		ON LOCATE(CONCAT(t2.path,'.'),t1.path ) = 1"
 				."		AND ".$this->gIldb->in("t2.child", $all_sup_orgus_ref, false, "text")
 				." WHERE ".$this->gIldb->in("t1.child", $all_sup_orgus_ref, false, "text")
 				."		AND ore.deleted IS NULL "
 				." HAVING t2.child IS NULL";
-
 		$top_sup_orgus = array();
 		$res = $this->gIldb->query($sql);
 
