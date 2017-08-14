@@ -880,16 +880,23 @@ class ilObjCourseGUI extends ilContainerGUI
 					break;
 
 				case ilCourseConstants::PROVIDER_FROM_LIST:
-					if($passignment && $passignment->isListAssignment()) {
-						$passignment = $passignment->withProviderId((int)$form->getInput(self::INPUT_PROVIDER_LIST));
-						$pactions->updateAssignment($passignment);
-					} else {
+					$selected_provider = $form->getInput(self::INPUT_PROVIDER_LIST);
+
+					if($selected_provider === "") {
 						$pactions->removeAssignment((int)$this->object->getId());
-						$passignment = $pactions->createListProviderAssignment(
-							(int)$this->object->getId(),
-							(int)$form->getInput(self::INPUT_PROVIDER_LIST)
-						);
+					} else {
+						if($passignment && $passignment->isListAssignment()) {
+							$passignment = $passignment->withProviderId((int)$selected_provider);
+							$pactions->updateAssignment($passignment);
+						} else {
+							$pactions->removeAssignment((int)$this->object->getId());
+							$passignment = $pactions->createListProviderAssignment(
+								(int)$this->object->getId(),
+								(int)$selected_provider
+							);
+						}
 					}
+
 					break;
 			}
 		}
@@ -1109,8 +1116,6 @@ class ilObjCourseGUI extends ilContainerGUI
 				case ilCourseConstants::VENUE_FROM_TEXT:
 					if($vassignment && $vassignment->isCustomAssignment()) {
 						$vassignment = $vassignment->withVenueText($form->getInput(self::INPUT_VENUE_TEXT));
-
-
 						$vactions->updateAssignment($vassignment);
 					} else {
 						$vactions->removeAssignment((int)$this->object->getId());
@@ -1122,16 +1127,22 @@ class ilObjCourseGUI extends ilContainerGUI
 					break;
 
 				case ilCourseConstants::VENUE_FROM_LIST:
-					if($vassignment && $vassignment->isListAssignment()) {
-						$vassignment = $vassignment->withVenueId((int)$form->getInput(self::INPUT_VENUE_LIST));
-						$vactions->updateAssignment($vassignment);
-					} else {
+					$selected_assignment = $form->getInput(self::INPUT_VENUE_LIST);
+					if($selected_assignment === "") {
 						$vactions->removeAssignment((int)$this->object->getId());
-						$vassignment = $vactions->createListVenueAssignment(
-							(int)$this->object->getId(),
-							(int)$form->getInput(self::INPUT_VENUE_LIST)
-						);
+					} else {
+						if($vassignment && $vassignment->isListAssignment()) {
+							$vassignment = $vassignment->withVenueId((int)$selected_assignment);
+							$vactions->updateAssignment($vassignment);
+						} else {
+							$vactions->removeAssignment((int)$this->object->getId());
+							$vassignment = $vactions->createListVenueAssignment(
+								(int)$this->object->getId(),
+								(int)$selected_assignment
+							);
+						}
 					}
+
 					break;
 			}
 
