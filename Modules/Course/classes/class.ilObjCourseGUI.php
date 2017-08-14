@@ -886,13 +886,13 @@ class ilObjCourseGUI extends ilContainerGUI
 						$pactions->removeAssignment((int)$this->object->getId());
 					} else {
 						if($passignment && $passignment->isListAssignment()) {
-							$passignment = $passignment->withProviderId((int));
+							$passignment = $passignment->withProviderId((int)$selected_provider);
 							$pactions->updateAssignment($passignment);
 						} else {
 							$pactions->removeAssignment((int)$this->object->getId());
 							$passignment = $pactions->createListProviderAssignment(
 								(int)$this->object->getId(),
-								(int)$form->getInput(self::INPUT_PROVIDER_LIST)
+								(int)$selected_provider
 							);
 						}
 					}
