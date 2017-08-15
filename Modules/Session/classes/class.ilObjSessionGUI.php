@@ -1686,19 +1686,19 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$tutor_phone->setSize(20);
 		$tutor_phone->setMaxLength(70);
 
-		$tutor_opt_text = new ilRadioOption($this->lng->txt('tutor_source_manually'), \ilObjSession::TUTOR_CFG_MANUALLY);
+		$tutor_opt_text = new ilRadioOption($this->lng->txt('event_tutor_source_manually'), \ilObjSession::TUTOR_CFG_MANUALLY);
 		$tutor_opt_text->addSubItem($tutor_name);
 		$tutor_opt_text->addSubItem($tutor_email);
 		$tutor_opt_text->addSubItem($tutor_phone);
 
-		$tutor_opts = new ilRadioGroupInputGUI($this->lng->txt('tutor_source'), self::INPUT_TUTOR_SOURCE);
+		$tutor_opts = new ilRadioGroupInputGUI($this->lng->txt('event_tutor_source'), self::INPUT_TUTOR_SOURCE);
 		$tutor_opts->addOption($tutor_opt_text);
 
 
 		//parent tutors
 		if($a_mode !== 'create') {
 
-			$tutor_list = new ilCheckboxGroupInputGUI($this->lng->txt('tutor_selection'), self::INPUT_TUTOR_SELECTION);
+			$tutor_list = new ilCheckboxGroupInputGUI($this->lng->txt('event_tutor_selection'), self::INPUT_TUTOR_SELECTION);
 			$crs_tutors = $this->object->getParentCourseTutors();
 			foreach ($crs_tutors as $t) {
 				$name = $t->getFullName();
@@ -1707,7 +1707,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				$tutor_list->addOption(new ilCheckboxOption("$name ($login)", $id));
 			}
 			$tutor_list->setValue($this->object->getAssignedTutorsIds());
-			$tutor_opt_list = new ilRadioOption($this->lng->txt('tutor_source_from_course'), \ilObjSession::TUTOR_CFG_FROMCOURSE);
+			$tutor_opt_list = new ilRadioOption($this->lng->txt('event_tutor_source_from_course'), \ilObjSession::TUTOR_CFG_FROMCOURSE);
 			$tutor_opt_list->addSubItem($tutor_list);
 
 			$tutor_opts->addOption($tutor_opt_list);
