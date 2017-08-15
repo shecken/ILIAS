@@ -682,11 +682,21 @@ class ilObjCourseGUI extends ilContainerGUI
 		$area->setCols(80);
 		$form->addItem($area);
 
-		$area = new ilTextAreaInputGUI($this->lng->txt('crs_syllabus'),'syllabus');
-		$area->setValue($this->object->getSyllabus());
-		$area->setRows(6);
-		$area->setCols(80);
-		$form->addItem($area);
+		// cat-tms-patch start
+		// course classification (plugin)
+		global $tree;
+		$cc_instances = $tree->getChildsByType(
+			$this->object->getRefId(),
+			'xccl'
+		);
+		if(count($cc_instances)===0 || ilPluginAdmin::isPluginActive('xccl') === false) {
+			$area = new ilTextAreaInputGUI($this->lng->txt('crs_syllabus'),'syllabus');
+			$area->setValue($this->object->getSyllabus());
+			$area->setRows(6);
+			$area->setCols(80);
+			$form->addItem($area);
+		}
+		// cat-tms-patch end
 
 		$section = new ilFormSectionHeaderGUI();
 		$section->setTitle($this->lng->txt('crs_info_download'));
@@ -696,40 +706,45 @@ class ilObjCourseGUI extends ilContainerGUI
 		$file->enableFileNameSelection('file_name');
 		$form->addItem($file);
 
-		$section = new ilFormSectionHeaderGUI();
-		$section->setTitle($this->lng->txt('crs_contact'));
-		$form->addItem($section);
+		// cat-tms-patch start
+		// course classification (plugin)
+		if(count($cc_instances)===0 || ilPluginAdmin::isPluginActive('xccl') === false) {
+			$section = new ilFormSectionHeaderGUI();
+			$section->setTitle($this->lng->txt('crs_contact'));
+			$form->addItem($section);
 
-		$text = new ilTextInputGUI($this->lng->txt('crs_contact_name'),'contact_name');
-		$text->setValue($this->object->getContactName());
-		$text->setSize(40);
-		$text->setMaxLength(70);
-		$form->addItem($text);
+			$text = new ilTextInputGUI($this->lng->txt('crs_contact_name'),'contact_name');
+			$text->setValue($this->object->getContactName());
+			$text->setSize(40);
+			$text->setMaxLength(70);
+			$form->addItem($text);
 
-		$text = new ilTextInputGUI($this->lng->txt('crs_contact_responsibility'),'contact_responsibility');
-		$text->setValue($this->object->getContactResponsibility());
-		$text->setSize(40);
-		$text->setMaxLength(70);
-		$form->addItem($text);
+			$text = new ilTextInputGUI($this->lng->txt('crs_contact_responsibility'),'contact_responsibility');
+			$text->setValue($this->object->getContactResponsibility());
+			$text->setSize(40);
+			$text->setMaxLength(70);
+			$form->addItem($text);
 
-		$text = new ilTextInputGUI($this->lng->txt('crs_contact_phone'),'contact_phone');
-		$text->setValue($this->object->getContactPhone());
-		$text->setSize(40);
-		$text->setMaxLength(40);
-		$form->addItem($text);
+			$text = new ilTextInputGUI($this->lng->txt('crs_contact_phone'),'contact_phone');
+			$text->setValue($this->object->getContactPhone());
+			$text->setSize(40);
+			$text->setMaxLength(40);
+			$form->addItem($text);
 
-		$text = new ilTextInputGUI($this->lng->txt('crs_contact_email'),'contact_email');
-		$text->setValue($this->object->getContactEmail());
-		$text->setInfo($this->lng->txt('crs_contact_email_info'));
-		$text->setSize(40);
-		$text->setMaxLength(255);
-		$form->addItem($text);
+			$text = new ilTextInputGUI($this->lng->txt('crs_contact_email'),'contact_email');
+			$text->setValue($this->object->getContactEmail());
+			$text->setInfo($this->lng->txt('crs_contact_email_info'));
+			$text->setSize(40);
+			$text->setMaxLength(255);
+			$form->addItem($text);
 
-		$area = new ilTextAreaInputGUI($this->lng->txt('crs_contact_consultation'),'contact_consultation');
-		$area->setValue($this->object->getContactConsultation());
-		$area->setRows(6);
-		$area->setCols(80);
-		$form->addItem($area);
+			$area = new ilTextAreaInputGUI($this->lng->txt('crs_contact_consultation'),'contact_consultation');
+			$area->setValue($this->object->getContactConsultation());
+			$area->setRows(6);
+			$area->setCols(80);
+			$form->addItem($area);
+		}
+		// cat-tms-patch end
 
 		// cat-tms-patch start
 		// provider (plugin)
