@@ -24,6 +24,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 {
 	// cat-tms-patch start
 	const INPUT_TUTOR_SOURCE = "tutor_source";
+	const INPUT_TUTOR_SELECTION = "tutor_selection";
 	// cat-tms-patch end
 
 	/**
@@ -1674,16 +1675,20 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$tutor_opt_text->addSubItem($tutor_email);
 		$tutor_opt_text->addSubItem($tutor_phone);
 
-		$tutor_opt_list = new ilRadioOption($this->lng->txt('tutor_source_from_course'), \ilObjSession::TUTOR_CFG_FROMCOURSE);
 
 		//parent tutors
+		$tutor_list = new ilCheckboxGroupInputGUI($this->lng->txt('tutor_selection'), self::INPUT_TUTOR_SELECTION);
 		$crs_tutors = $this->object->getParentCourseTutors();
 		foreach ($crs_tutors as $t) {
 			$name = $t->getFullName();
 			$id = $t->getId();
 			$login = $t->getLogin();
-			$tutor_opt_list->addSubItem(new ilCheckboxInputGUI("$name ($login)", $id));
+			$tutor_list->addOption(new ilCheckboxOption("$name ($login)", $id));
 		}
+		$tutor_list->setValue($this->object->getAssignedTutorsIds());
+		$tutor_opt_list = new ilRadioOption($this->lng->txt('tutor_source_from_course'), \ilObjSession::TUTOR_CFG_FROMCOURSE);
+		$tutor_opt_list->addSubItem($tutor_list);
+
 
 		$tutor_opts = new ilRadioGroupInputGUI($this->lng->txt('tutor_source'), self::INPUT_TUTOR_SOURCE);
 		$tutor_opts->addOption($tutor_opt_text);
@@ -1771,6 +1776,10 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		// cat-tms-patch start
 		$this->object->setTutorSource((int)ilUtil::stripSlashes($_POST[self::INPUT_TUTOR_SOURCE]));
+		if($this->object->getTutorSource() === \ilObjSession::TUTOR_CFG_FROMCOURSE) {
+			$tids = $_POST[self::INPUT_TUTOR_SELECTION];
+			$this->object->setAssignedTutors($tids);
+		}
 		// cat-tms-patch end
 
 		$this->object->setRegistrationType((int) $_POST['registration_type']);

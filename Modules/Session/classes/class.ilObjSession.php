@@ -43,10 +43,16 @@ class ilObjSession extends ilObject
 	protected $files = array();
 
 	// cat-tms-patch start
+	/**
+	 * @var int TUTOR_CFG_MANUALLY|TUTOR_CFG_FROMCOURSE
+	 */
 	protected $tutor_source;
+
+	/**
+	 * @var array<int,ilObjUser>
+	 */
+	protected $assigned_tutors=array();
 	// cat-tms-patch end
-
-
 
 	/**
 	* Constructor
@@ -595,6 +601,14 @@ class ilObjSession extends ilObject
 			"WHERE obj_id = ".$this->db->quote($this->getId() ,'integer')." ";
 		$res = $ilDB->manipulate($query);
 
+		// cat-tms-patch start
+		if($this->getTutorSource() === self::TUTOR_CFG_FROMCOURSE) {
+			$this->storeTutorReferences();
+		}
+		// cat-tms-patch end
+
+
+
 		$ilAppEventHandler->raise('Modules/Session',
 			'update',
 			array('object' => $this,
@@ -679,10 +693,15 @@ class ilObjSession extends ilObject
 			$this->setTutorSource((int)$row->tutor_source);
 			// cat-tms-patch end
 		}
+		// cat-tms-patch start
+		$tids = $this->readTutorReferences();
+		$this->setAssignedTutors($tids);
+		// cat-tms-patch end
 
 		$this->initAppointments();
 		$this->initFiles();
 	}
+
 
 	/**
 	 * init appointments
@@ -801,6 +820,7 @@ class ilObjSession extends ilObject
 		}
 		$this->tutor_source = $tutor_source;
 	}
+
 	/**
 	 * How are the tutors configured?
 	 *
@@ -830,27 +850,76 @@ class ilObjSession extends ilObject
 	}
 
 	/**
+	 * Add a tutor.
 	 *
-	 *
-	 * @return ilObjUser[]
+	 * @param int $usr_id
 	 */
-	public function setAssignedTutors() {
+	public function addAssignedTutor($usr_id) {
+		assert('is_integer($usr_id)');
+		$this->assigned_tutors[$usr_id] = \ilObjectFactory::getInstanceByObjId($usr_id, false);
 	}
 
 	/**
+	 * Re-set tutors.
 	 *
-	 *
-	 * @return ilObjUser[]
+	 * @param int[] $usr_ids
 	 */
-	public function getAssignedTutorIds() {
+	public function setAssignedTutors(array $usr_ids) {
+		$this->assigned_tutors = array();
+		foreach ($usr_ids as $usr_id) {
+			$this->addAssignedTutor((int)$usr_id);
+		}
 	}
 
 	/**
-	 *
+	 * Get all assigned tutors.
 	 *
 	 * @return ilObjUser[]
 	 */
 	public function getAssignedTutors() {
+		return array_values($this->assigned_tutors);
+	}
+	/**
+	 * Get ids of all assigned tutors.
+	 *
+	 * @return int[]
+	 */
+	public function getAssignedTutorsIds() {
+		return array_keys($this->assigned_tutors);
+	}
+
+	/**
+	 * Get assigned tutors from DB.
+	 *
+	 * @return int[]
+	 */
+	private function readTutorReferences() {
+		$tids = array();
+		$query = "SELECT usr_id FROM event_tutors WHERE ".
+			"obj_id = ".$this->db->quote($this->getId() ,'integer')." ";
+		$res = $this->db->query($query);
+		while($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT)) {
+			$tids[] = (int)$row->usr_id;
+		}
+	return $tids;
+	}
+
+	/**
+	 * Store assigned tutors in DB
+	 */
+	private function storeTutorReferences() {
+		global $ilDB;
+		$query = "DELETE FROM event_tutors WHERE obj_id = ".$this->db->quote($this->getId() ,'integer');
+		$this->db->manipulate($query);
+
+		foreach ($this->getAssignedTutors() as $usr) {
+			$query = "INSERT INTO  event_tutors (id, obj_id, usr_id) VALUES ("
+				.$ilDB->nextId('event_tutors')
+				.', '.$this->db->quote($this->getId() ,'integer')
+				.', '.$this->db->quote($usr->getId() ,'integer')
+				.")";
+			$this->db->manipulate($query);
+		}
 	}
 	// cat-tms-patch end
 }
