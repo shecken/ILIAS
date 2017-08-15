@@ -16,9 +16,14 @@ include_once './Services/Membership/classes/class.ilMembershipRegistrationSettin
 class ilObjSession extends ilObject
 {
 	const CAL_REG_START = 1;
-	
+
+	// cat-tms-patch start
+	const TUTOR_CFG_MANUALLY = 0;
+	const TUTOR_CFG_FROMCOURSE = 1;
+	// cat-tms-patch end
+
 	protected $db;
-	
+
 	protected $location;
 	protected $name;
 	protected $phone;
@@ -26,7 +31,7 @@ class ilObjSession extends ilObject
 	protected $details;
 	protected $registration;
 	protected $event_id;
-	
+
 	protected $reg_type = ilMembershipRegistrationSettings::TYPE_NONE;
 	protected $reg_limited = 0;
 	protected $reg_min_users = 0;
@@ -36,9 +41,13 @@ class ilObjSession extends ilObject
 
 	protected $appointments;
 	protected $files = array();
-	
 
-	
+	// cat-tms-patch start
+	protected $tutor_source;
+	// cat-tms-patch end
+
+
+
 	/**
 	* Constructor
 	* @access	public
@@ -53,7 +62,7 @@ class ilObjSession extends ilObject
 		$this->type = "sess";
 		parent::__construct($a_id,$a_call_by_reference);
 	}
-	
+
 	/**
 	 * lookup registration enabled
 	 *
@@ -65,7 +74,7 @@ class ilObjSession extends ilObject
 	public static function _lookupRegistrationEnabled($a_obj_id)
 	{
 		global $ilDB;
-		
+
 		$query = "SELECT reg_type FROM event ".
 			"WHERE obj_id = ".$ilDB->quote($a_obj_id ,'integer')." ";
 		$res = $ilDB->query($query);
@@ -75,16 +84,16 @@ class ilObjSession extends ilObject
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Get session data
 	 * @param object $a_obj_id
-	 * @return 
+	 * @return
 	 */
 	public static function lookupSession($a_obj_id)
 	{
 		global $ilDB;
-		
+
 		$query = "SELECT * FROM event ".
 			"WHERE obj_id = ".$ilDB->quote($a_obj_id);
 		$res = $ilDB->query($query);
@@ -95,10 +104,13 @@ class ilObjSession extends ilObject
 			$data['name']		= $row->tutor_name ? $row->tutor_name : '';
 			$data['email']		= $row->tutor_email ? $row->tutor_email : '';
 			$data['phone']		= $row->tutor_phone ? $row->tutor_phone : '';
+			// cat-tms-patch start
+			$data['tutor_source'] = $row->tutor_source;
+			// cat-tms-patch end
 		}
 		return (array) $data;
 	}
-	
+
 	/**
 	 * get title
 	 * (overwritten from base class)
@@ -111,17 +123,17 @@ class ilObjSession extends ilObject
 		$date = new ilDate($this->getFirstAppointment()->getStart()->getUnixTime(),IL_CAL_UNIX);
 		if($this->getTitle())
 		{
-			return ilDatePresentation::formatDate($this->getFirstAppointment()->getStart()).': '.$this->getTitle();			
+			return ilDatePresentation::formatDate($this->getFirstAppointment()->getStart()).': '.$this->getTitle();
 		}
 		else
 		{
-			return ilDatePresentation::formatDate($date);			
+			return ilDatePresentation::formatDate($date);
 		}
 
 	}
-	
-	
-	
+
+
+
 	/**
 	 * sget event id
 	 *
@@ -132,9 +144,9 @@ class ilObjSession extends ilObject
 	{
 		return $this->event_id;
 	}
-	
+
 	/**
-	 * set location 
+	 * set location
 	 *
 	 * @access public
 	 * @param string location
@@ -143,7 +155,7 @@ class ilObjSession extends ilObject
 	{
 		$this->location = $a_location;
 	}
-	
+
 	/**
 	 * get location
 	 *
@@ -154,7 +166,7 @@ class ilObjSession extends ilObject
 	{
 		return $this->location;
 	}
-	
+
 	/**
 	 * set name
 	 *
@@ -165,7 +177,7 @@ class ilObjSession extends ilObject
 	{
 		$this->name = $a_name;
 	}
-	
+
 	/**
 	 * get name
 	 *
@@ -176,9 +188,9 @@ class ilObjSession extends ilObject
 	{
 		return $this->name;
 	}
-	
+
 	/**
-	 * set phone 
+	 * set phone
 	 *
 	 * @access public
 	 * @param string phone
@@ -187,7 +199,7 @@ class ilObjSession extends ilObject
 	{
 		$this->phone = $a_phone;
 	}
-	
+
 	/**
 	 * get phone
 	 *
@@ -198,7 +210,7 @@ class ilObjSession extends ilObject
 	{
 		return $this->phone;
 	}
-	
+
 	/**
 	 * set email
 	 *
@@ -210,7 +222,7 @@ class ilObjSession extends ilObject
 	{
 		$this->email = $a_email;
 	}
-	
+
 	/**
 	 * get email
 	 *
@@ -221,7 +233,7 @@ class ilObjSession extends ilObject
 	{
 		return $this->email;
 	}
-	
+
 	/**
 	 * check if there any tutor settings
 	 *
@@ -229,12 +241,14 @@ class ilObjSession extends ilObject
 	 */
 	public function hasTutorSettings()
 	{
-		return strlen($this->getName()) or 
+		return strlen($this->getName()) or
 			strlen($this->getEmail()) or
-			strlen($this->getPhone());
+			strlen($this->getPhone())
+		// cat-tms-patch start
+			or $this->getTutorSource() === self::TUTOR_CFG_FROMCOURSE;
+		// cat-tms-patch end
 	}
-	
-	
+
 	/**
 	 * set details
 	 *
@@ -245,7 +259,7 @@ class ilObjSession extends ilObject
 	{
 		$this->details = $a_details;
 	}
-	
+
 	/**
 	 * get details
 	 *
@@ -256,67 +270,67 @@ class ilObjSession extends ilObject
 	{
 		return $this->details;
 	}
-	
+
 	public function setRegistrationType($a_type)
 	{
 		$this->reg_type = $a_type;
 	}
-	
+
 	public function getRegistrationType()
 	{
 		return $this->reg_type;
 	}
-	
+
 	public function isRegistrationUserLimitEnabled()
 	{
 		return $this->reg_limited;
 	}
-	
+
 	public function enableRegistrationUserLimit($a_limit)
 	{
 		$this->reg_limited = $a_limit;
 	}
-	
+
 	public function getRegistrationMinUsers()
 	{
 		return $this->reg_min_users;
 	}
-	
+
 	public function setRegistrationMinUsers($a_users)
 	{
 		$this->reg_min_users = $a_users;
 	}
-	
+
 	public function getRegistrationMaxUsers()
 	{
 		return $this->reg_limited_users;
 	}
-	
+
 	public function setRegistrationMaxUsers($a_users)
 	{
 		$this->reg_limited_users = $a_users;
 	}
-	
+
 	public function isRegistrationWaitingListEnabled()
 	{
 		return $this->reg_waiting_list;
 	}
-	
+
 	public function enableRegistrationWaitingList($a_stat)
 	{
 		$this->reg_waiting_list = $a_stat;
 	}
-	
+
 	public function setWaitingListAutoFill($a_value)
 	{
 		$this->reg_waiting_list_autofill = (bool)$a_value;
 	}
-	
+
 	public function hasWaitingListAutoFill()
 	{
 		return (bool)$this->reg_waiting_list_autofill;
 	}
-	
+
 	/**
 	 * is registration enabled
 	 *
@@ -327,18 +341,18 @@ class ilObjSession extends ilObject
 	{
 		return $this->reg_type != ilMembershipRegistrationSettings::TYPE_NONE;
 	}
-	
+
 	/**
 	 * get appointments
 	 *
 	 * @access public
-	 * @return array 
+	 * @return array
 	 */
 	public function getAppointments()
 	{
 		return $this->appointments ? $this->appointments : array();
 	}
-	
+
 	/**
 	 * add appointment
 	 *
@@ -350,7 +364,7 @@ class ilObjSession extends ilObject
 	{
 		$this->appointments[] = $appointment;
 	}
-	
+
 	/**
 	 * set appointments
 	 *
@@ -373,7 +387,7 @@ class ilObjSession extends ilObject
 	{
 		return is_object($this->appointments[0]) ? $this->appointments[0] : ($this->appointments[0] = new ilSessionAppointment());
 	}
-	
+
 	/**
 	 * get files
 	 *
@@ -385,7 +399,7 @@ class ilObjSession extends ilObject
 	{
 		return $this->files ? $this->files : array();
 	}
-	
+
 	/**
 	 * validate
 	 *
@@ -396,37 +410,37 @@ class ilObjSession extends ilObject
 	public function validate()
 	{
 		global $ilErr;
-		
+
 		// #17114
 		if($this->isRegistrationUserLimitEnabled() &&
 			!$this->getRegistrationMaxUsers())
-		{			
+		{
 			$ilErr->appendMessage($this->lng->txt("sess_max_members_needed"));
 			return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Clone course (no member data)
 	 *
 	 * @access public
 	 * @param int target ref_id
 	 * @param int copy id
-	 * 
+	 *
 	 */
 	public function cloneObject($a_target_id,$a_copy_id = 0, $a_omit_tree = false)
 	{
 		global $ilDB,$ilUser,$ilAppEventHandler;
-		
+
 	 	$new_obj = parent::cloneObject($a_target_id,$a_copy_id, $a_omit_tree);
-	 	
+
 	 	$this->read();
-	 	
+
 		// Copy settings
 		$this->cloneSettings($new_obj);
-		
+
 		// Clone appointment
 		$new_app = $this->getFirstAppointment()->cloneObject($new_obj->getId());
 		$new_obj->setAppointments(array($new_app));
@@ -437,20 +451,20 @@ class ilObjSession extends ilObject
 		{
 			$file->cloneFiles($new_obj->getEventId());
 		}
-		
+
 		// Raise update forn new appointments
-		
-		
-	
+
+
+
 		// Copy learning progress settings
 		include_once('Services/Tracking/classes/class.ilLPObjSettings.php');
 		$obj_settings = new ilLPObjSettings($this->getId());
 		$obj_settings->cloneSettings($new_obj->getId());
 		unset($obj_settings);
-		
+
 		return $new_obj;
 	}
-	
+
 	/**
 	 * clone settings
 	 *
@@ -460,28 +474,28 @@ class ilObjSession extends ilObject
 	 */
 	public function cloneSettings(ilObjSession $new_obj)
 	{
-		// @var 
+		// @var
 		$new_obj->setLocation($this->getLocation());
 		$new_obj->setName($this->getName());
 		$new_obj->setPhone($this->getPhone());
 		$new_obj->setEmail($this->getEmail());
 		$new_obj->setDetails($this->getDetails());
-		
+
 		$new_obj->setRegistrationType($this->getRegistrationType());
 		$new_obj->enableRegistrationUserLimit($this->isRegistrationUserLimitEnabled());
 		$new_obj->enableRegistrationWaitingList($this->isRegistrationWaitingListEnabled());
 		$new_obj->setWaitingListAutoFill($this->hasWaitingListAutoFill());
 		$new_obj->setRegistrationMinUsers($this->getRegistrationMinUsers());
 		$new_obj->setRegistrationMaxUsers($this->getRegistrationMaxUsers());
-		
+
 		$new_obj->update();
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Clone dependencies
-	 *  
+	 *
 	 * @param int target id ref_id of new session
 	 * @param int copy_id
 	 * @return
@@ -489,20 +503,20 @@ class ilObjSession extends ilObject
 	public function cloneDependencies($a_target_id,$a_copy_id)
 	{
 		global $ilObjDataCache;
-		
+
 		parent::cloneDependencies($a_target_id,$a_copy_id);
 
 		$target_obj_id = $ilObjDataCache->lookupObjId($a_target_id);
-		
+
 		include_once('./Modules/Session/classes/class.ilEventItems.php');
 		$session_materials = new ilEventItems($target_obj_id);
 		$session_materials->cloneItems($this->getId(),$a_copy_id);
 
 		return true;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * create new session
 	 *
@@ -512,9 +526,9 @@ class ilObjSession extends ilObject
 	{
 		global $ilDB;
 		global $ilAppEventHandler;
-	
+
 		parent::create();
-		
+
 		$next_id = $ilDB->nextId('event');
 		$query = "INSERT INTO event (event_id,obj_id,location,tutor_name,tutor_phone,tutor_email,details,registration, ".
 			'reg_type, reg_limit_users, reg_limited, reg_waiting_list, reg_min_users, reg_auto_wait) '.
@@ -536,7 +550,7 @@ class ilObjSession extends ilObject
 			")";
 		$res = $ilDB->manipulate($query);
 		$this->event_id = $next_id;
-		
+
 		$ilAppEventHandler->raise('Modules/Session',
 			'create',
 			array('object' => $this,
@@ -545,7 +559,7 @@ class ilObjSession extends ilObject
 
 		return $this->getId();
 	}
-	
+
 	/**
 	 * update object
 	 *
@@ -574,10 +588,13 @@ class ilObjSession extends ilObject
 			"reg_limit_users = ".$this->db->quote($this->getRegistrationMaxUsers() ,'integer').", ".
 			"reg_min_users = ".$this->db->quote($this->getRegistrationMinUsers() ,'integer').", ".
 			"reg_waiting_list = ".$this->db->quote($this->isRegistrationWaitingListEnabled(),'integer').", ".
-			"reg_auto_wait = ".$this->db->quote($this->hasWaitingListAutoFill(),'integer')." ".
+			"reg_auto_wait = ".$this->db->quote($this->hasWaitingListAutoFill(),'integer').", ".
+			// cat-tms-patch start
+			"tutor_source = ".$this->db->quote($this->getTutorSource(),'integer')." ".
+			// cat-tms-patch end
 			"WHERE obj_id = ".$this->db->quote($this->getId() ,'integer')." ";
 		$res = $ilDB->manipulate($query);
-		
+
 		$ilAppEventHandler->raise('Modules/Session',
 			'update',
 			array('object' => $this,
@@ -585,7 +602,7 @@ class ilObjSession extends ilObject
 				'appointments' => $this->prepareCalendarAppointments('update')));
 		return true;
 	}
-	
+
 	/**
 	 * delete session and all related data
 	 *
@@ -596,7 +613,7 @@ class ilObjSession extends ilObject
 	{
 		global $ilDB;
 		global $ilAppEventHandler;
-		
+
 		if(!parent::delete())
 		{
 			return false;
@@ -604,31 +621,31 @@ class ilObjSession extends ilObject
 		$query = "DELETE FROM event ".
 			"WHERE obj_id = ".$this->db->quote($this->getId() ,'integer')." ";
 		$res = $ilDB->manipulate($query);
-		
+
 		include_once('./Modules/Session/classes/class.ilSessionAppointment.php');
 		ilSessionAppointment::_deleteBySession($this->getId());
-		
+
 		include_once('./Modules/Session/classes/class.ilEventItems.php');
 		ilEventItems::_delete($this->getId());
-		
+
 		include_once('./Modules/Session/classes/class.ilEventParticipants.php');
 		ilEventParticipants::_deleteByEvent($this->getId());
-		
+
 		foreach($this->getFiles() as $file)
 		{
 			$file->delete();
 		}
-		
+
 		$ilAppEventHandler->raise('Modules/Session',
 			'delete',
 			array('object' => $this,
 				'obj_id' => $this->getId(),
 				'appointments' => $this->prepareCalendarAppointments('delete')));
-		
-		
+
+
 		return true;
 	}
-	
+
 	/**
 	 * read session data
 	 *
@@ -639,11 +656,11 @@ class ilObjSession extends ilObject
 	public function read()
 	{
 		parent::read();
-		
+
 		$query = "SELECT * FROM event WHERE ".
 			"obj_id = ".$this->db->quote($this->getId() ,'integer')." ";
 		$res = $this->db->query($query);
-		
+
 		while($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT))
 		{
 			$this->setLocation($row->location);
@@ -658,12 +675,15 @@ class ilObjSession extends ilObject
 			$this->setRegistrationMaxUsers($row->reg_limit_users);
 			$this->setRegistrationMinUsers($row->reg_min_users);
 			$this->event_id = $row->event_id;
+			// cat-tms-patch start
+			$this->setTutorSource((int)$row->tutor_source);
+			// cat-tms-patch end
 		}
 
 		$this->initAppointments();
 		$this->initFiles();
 	}
-	
+
 	/**
 	 * init appointments
 	 *
@@ -677,7 +697,7 @@ class ilObjSession extends ilObject
 		include_once('./Modules/Session/classes/class.ilSessionAppointment.php');
 		$this->appointments = ilSessionAppointment::_readAppointmentsBySession($this->getId());
 	}
-	
+
 	/**
 	 * init files
 	 *
@@ -690,8 +710,8 @@ class ilObjSession extends ilObject
 		include_once('./Modules/Session/classes/class.ilSessionFile.php');
 		$this->files = ilSessionFile::_readFilesByEvent($this->getEventId());
 	}
-	
-	
+
+
 	/**
 	 * Prepare calendar appointments
 	 *
@@ -702,7 +722,7 @@ class ilObjSession extends ilObject
 	public function prepareCalendarAppointments($a_mode = 'create')
 	{
 		include_once('./Services/Calendar/classes/class.ilCalendarAppointmentTemplate.php');
-		
+
 		switch($a_mode)
 		{
 			case 'create':
@@ -712,7 +732,7 @@ class ilObjSession extends ilObject
 				$app->setTranslationType(IL_CAL_TRANSLATION_NONE);
 				$app->setTitle($this->getTitle() ? $this->getTitle() : $this->lng->txt('obj_sess'));
 				$app->setDescription($this->getLongDescription());
-				
+
 				$sess_app = $this->getFirstAppointment();
 				$app->setFullday($sess_app->isFullday());
 				$app->setStart($sess_app->getStart());
@@ -720,27 +740,27 @@ class ilObjSession extends ilObject
 				$apps[] = $app;
 
 				return $apps;
-				
+
 			case 'delete':
 				// Nothing to do: The category and all assigned appointments will be deleted.
 				return array();
 		}
 	}
-	
+
 	public function handleAutoFill()
-	{	
+	{
 		if($this->isRegistrationWaitingListEnabled() &&
 			$this->hasWaitingListAutoFill())
-		{					
+		{
 			// :TODO: what about ilSessionParticipants?
-			
-			include_once './Modules/Session/classes/class.ilEventParticipants.php'; 
-			$part_obj = new ilEventParticipants($this->getId());			
+
+			include_once './Modules/Session/classes/class.ilEventParticipants.php';
+			$part_obj = new ilEventParticipants($this->getId());
 			$all_reg = $part_obj->getRegistered();
 			$now = sizeof($all_reg);
 			$max = $this->getRegistrationMaxUsers();
 			if($max > $now)
-			{				
+			{
 				include_once('./Modules/Session/classes/class.ilSessionWaitingList.php');
 				$waiting_list = new ilSessionWaitingList($this->getId());
 
@@ -754,8 +774,8 @@ class ilObjSession extends ilObject
 					{
 						continue;
 					}
-					
-					ilEventParticipants::_register($user_id, $this->getId());					
+
+					ilEventParticipants::_register($user_id, $this->getId());
 					$waiting_list->removeFromList($user_id);
 
 					$now++;
@@ -765,8 +785,74 @@ class ilObjSession extends ilObject
 					}
 				}
 			}
-		}		
+		}
 	}
+
+	// cat-tms-patch start
+	/**
+	 * How should the tutors be configured?
+	 *
+	 * @param int $tutor_source
+	 */
+	public function setTutorSource($tutor_source) {
+		if($tutor_source !== self::TUTOR_CFG_MANUALLY
+			&& $tutor_source !== self::TUTOR_CFG_FROMCOURSE) {
+			throw new \InvalidArgumentException('ilObjSession::setTutorSource - invalid source: ' .$tutor_source);
+		}
+		$this->tutor_source = $tutor_source;
+	}
+	/**
+	 * How are the tutors configured?
+	 *
+	 * @return int
+	 */
+	public function getTutorSource() {
+		return $this->tutor_source;
+	}
+
+	/**
+	 * Get a list of users that are assigned as tutors at the course
+	 * this session lives in.
+	 *
+	 * @global type $tree
+	 * @return ilObjUser[]
+	 */
+	public function getParentCourseTutors() {
+		global $tree;
+		$parent = $tree->getParentNodeData($this->getRefId());
+		$crs = ilObjectFactory::getInstanceByObjId($parent['obj_id'],false);
+		$members = $crs->getMembersObject();
+		$tutors = array();
+		foreach($members->getTutors() as $user_id) {
+			$tutors[] = ilObjectFactory::getInstanceByObjId($user_id,false);
+		}
+		return $tutors;
+	}
+
+	/**
+	 *
+	 *
+	 * @return ilObjUser[]
+	 */
+	public function setAssignedTutors() {
+	}
+
+	/**
+	 *
+	 *
+	 * @return ilObjUser[]
+	 */
+	public function getAssignedTutorIds() {
+	}
+
+	/**
+	 *
+	 *
+	 * @return ilObjUser[]
+	 */
+	public function getAssignedTutors() {
+	}
+	// cat-tms-patch end
 }
 
 ?>

@@ -22,14 +22,9 @@ require_once('./Modules/Course/classes/class.ilObjCourse.php');
 */
 class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 {
-
-
 	// cat-tms-patch start
-	const INPUT_LECTURER_SOURCE = "lecturer_source";
-	const INPUT_LECTURER_MANUALLY = "lecturer_manually";
-	const INPUT_LECTURER_FROMCOURSE = "lecturer_fromcourse";
+	const INPUT_TUTOR_SOURCE = "tutor_source";
 	// cat-tms-patch end
-
 
 	/**
 	 * @var ilLogger
@@ -593,7 +588,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	}
 
 	/**
-	 * Save and assign sessoin materials
+	 * Save and assign session materials
 	 *
 	 * @access protected
 	 */
@@ -1674,16 +1669,15 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$tutor_phone->setSize(20);
 		$tutor_phone->setMaxLength(70);
 
-		$tutor_opt_text = new ilRadioOption($this->lng->txt('tutor_source_manually'), self::INPUT_LECTURER_MANUALLY);
+		$tutor_opt_text = new ilRadioOption($this->lng->txt('tutor_source_manually'), \ilObjSession::TUTOR_CFG_MANUALLY);
 		$tutor_opt_text->addSubItem($tutor_name);
 		$tutor_opt_text->addSubItem($tutor_email);
 		$tutor_opt_text->addSubItem($tutor_phone);
 
-		$tutor_opt_list = new ilRadioOption($this->lng->txt('tutor_source_from_course'), self::INPUT_LECTURER_FROMCOURSE);
+		$tutor_opt_list = new ilRadioOption($this->lng->txt('tutor_source_from_course'), \ilObjSession::TUTOR_CFG_FROMCOURSE);
 
 		//parent tutors
-		//$crs_tutors = array('nh'=>'Nils Haagen', 'r'=> "user, root");
-		$crs_tutors = $this->getParentCourseTutors();
+		$crs_tutors = $this->object->getParentCourseTutors();
 		foreach ($crs_tutors as $t) {
 			$name = $t->getFullName();
 			$id = $t->getId();
@@ -1691,9 +1685,10 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$tutor_opt_list->addSubItem(new ilCheckboxInputGUI("$name ($login)", $id));
 		}
 
-		$tutor_opts = new ilRadioGroupInputGUI($this->lng->txt('tutor_source'), self::INPUT_LECTURER_SOURCE);
+		$tutor_opts = new ilRadioGroupInputGUI($this->lng->txt('tutor_source'), self::INPUT_TUTOR_SOURCE);
 		$tutor_opts->addOption($tutor_opt_text);
 		$tutor_opts->addOption($tutor_opt_list);
+		$tutor_opts->setValue($this->object->getTutorSource());
 		$this->form->addItem($tutor_opts);
 		// cat-tms-patch end
 
@@ -1773,6 +1768,10 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$this->object->setPhone(ilUtil::stripSlashes($_POST['tutor_phone']));
 		$this->object->setEmail(ilUtil::stripSlashes($_POST['tutor_email']));
 		$this->object->setDetails(ilUtil::stripSlashes($_POST['details']));
+
+		// cat-tms-patch start
+		$this->object->setTutorSource((int)ilUtil::stripSlashes($_POST[self::INPUT_TUTOR_SOURCE]));
+		// cat-tms-patch end
 
 		$this->object->setRegistrationType((int) $_POST['registration_type']);
 		// $this->object->setRegistrationMinUsers((int) $_POST['registration_min_members']);
@@ -2387,28 +2386,5 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		$ilCtrl->redirectByClass("ilrepositorygui", "");
 	}
-
-
-	// cat-tms-patch start
-	/**
-	 * Get a list of users that are assigned as tutors at the course
-	 * this session lives in.
-	 *
-	 * @global type $tree
-	 * @return ilObjUser[]
-	 */
-	protected function getParentCourseTutors() {
-		global $tree;
-		$parent = $tree->getParentNodeData($this->getCurrentObject()->getRefId());
-		$crs = ilObjectFactory::getInstanceByObjId($parent['obj_id'],false);
-		$members = $crs->getMembersObject();
-		$tutors = array();
-
-		foreach($members->getTutors() as $user_id) {
-			$tutors[] = ilObjectFactory::getInstanceByObjId($user_id,false);
-		}
-		return $tutors;
-	}
-	// cat-tms-patch end
 }
 ?>

@@ -18262,8 +18262,8 @@ $ilDB->manipulate('delete from obj_members where admin = '.
 <#5073>
 <?php
 	// cat-tms-patch start
-	if (!$ilDB->tableColumnExists('event', 'tutor_from_course')){
-		$ilDB->addTableColumn('event', 'tutor_from_course', array(
+	if (!$ilDB->tableColumnExists('event', 'tutor_source')){
+		$ilDB->addTableColumn('event', 'tutor_source', array(
 			"type" => "integer",
 			'length' => 1,
 			"notnull" => true,
