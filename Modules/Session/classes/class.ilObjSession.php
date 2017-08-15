@@ -112,6 +112,9 @@ class ilObjSession extends ilObject
 			$data['phone']		= $row->tutor_phone ? $row->tutor_phone : '';
 			// cat-tms-patch start
 			$data['tutor_source'] = $row->tutor_source;
+			if($row->tutor_source === self::TUTOR_CFG_FROMCOURSE) {
+				$data['tutor_ids'] = self::lookupTutorReferences($a_obj_id);
+			}
 			// cat-tms-patch end
 		}
 		return (array) $data;
@@ -839,6 +842,9 @@ class ilObjSession extends ilObject
 	 */
 	public function getParentCourseTutors() {
 		global $tree;
+		if(!$this->getRefId()) {
+			return array();
+		}
 		$parent = $tree->getParentNodeData($this->getRefId());
 		$crs = ilObjectFactory::getInstanceByObjId($parent['obj_id'],false);
 		$members = $crs->getMembersObject();
@@ -894,10 +900,21 @@ class ilObjSession extends ilObject
 	 * @return int[]
 	 */
 	private function readTutorReferences() {
+		return self::lookupTutorReferences($this->getId());
+	}
+
+	/**
+	 * Get assigned tutors from DB.
+	 *
+	 * @param int $a_obj_id
+	 * @return int[]
+	 */
+	private static function lookupTutorReferences($a_obj_id) {
+		global $ilDB;
 		$tids = array();
 		$query = "SELECT usr_id FROM event_tutors WHERE ".
-			"obj_id = ".$this->db->quote($this->getId() ,'integer')." ";
-		$res = $this->db->query($query);
+			"obj_id = ".$ilDB->quote($a_obj_id,'integer')." ";
+		$res = $ilDB->query($query);
 		while($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT)) {
 			$tids[] = (int)$row->usr_id;
 		}
