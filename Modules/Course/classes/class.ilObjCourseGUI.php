@@ -761,7 +761,7 @@ class ilObjCourseGUI extends ilContainerGUI
 			$provider = $pactions->getAllProviders('name', 'ASC');
 			$poptions = array(null => $plugin_txt("please_select"));
 			foreach ($provider as $p) {
-				$poptions[$p->getId()] = $p->getName() .', ' .$p->getAddress1();
+				$poptions[$p->getId()] = $p->getName() .', ' .$p->getCity();
 			}
 			$provider_opts = new ilRadioGroupInputGUI($plugin_txt('crs_provider_source'), self::INPUT_PROVIDER_SOURCE);
 
