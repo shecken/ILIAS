@@ -639,6 +639,12 @@ class ilObjSession extends ilObject
 			"WHERE obj_id = ".$this->db->quote($this->getId() ,'integer')." ";
 		$res = $ilDB->manipulate($query);
 
+		// cat-tms-patch start
+		$query = "DELETE FROM event_tutors ".
+			"WHERE obj_id = ".$this->db->quote($this->getId() ,'integer')." ";
+		$res = $ilDB->manipulate($query);
+		// cat-tms-patch end
+
 		include_once('./Modules/Session/classes/class.ilSessionAppointment.php');
 		ilSessionAppointment::_deleteBySession($this->getId());
 
@@ -845,7 +851,13 @@ class ilObjSession extends ilObject
 		if(!$this->getRefId()) {
 			return array();
 		}
-		$parent = $tree->getParentNodeData($this->getRefId());
+		$parent = array(
+			'type'=>'none',
+			'ref_id' => $this->getRefId()
+		);
+		while($parent['type'] !== 'crs') {
+			$parent = $tree->getParentNodeData($parent['ref_id']);
+		}
 		$crs = ilObjectFactory::getInstanceByObjId($parent['obj_id'],false);
 		$members = $crs->getMembersObject();
 		$tutors = array();
