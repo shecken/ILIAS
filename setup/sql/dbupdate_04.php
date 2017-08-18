@@ -18259,3 +18259,30 @@ $ilDB->manipulate('delete from obj_members where admin = '.
 <?php
 	$ilCtrlStructureReader->getStructure();
 ?>
+<#5073>
+<?php
+if (!$ilDB->tableColumnExists('iass_settings', 'event_time_place_required')) {
+	$ilDB->addTableColumn('iass_settings', 'event_time_place_required', array(
+	"type" => "integer",
+	"length" => 1,
+	"notnull" => true,
+	"default" => 0
+	));
+}
+?>
+<#5099>
+<?php
+if (!$ilDB->tableColumnExists('iass_members', 'place')) {
+	$ilDB->addTableColumn('iass_members', 'place', array(
+	"type" => "text",
+	"length" => 255
+	));
+}
+
+if (!$ilDB->tableColumnExists('iass_members', 'event_time')) {
+	$ilDB->addTableColumn('iass_members', 'event_time', array(
+	"type" => "integer",
+	"length" => 8
+	));
+}
+?>
