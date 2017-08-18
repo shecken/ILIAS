@@ -5,20 +5,28 @@ include_once('./Services/Object/classes/class.ilObjectGUI.php');
 include_once('./Modules/Session/classes/class.ilObjSession.php');
 include_once('./Modules/Session/classes/class.ilSessionFile.php');
 include_once './Services/PersonalDesktop/interfaces/interface.ilDesktopItemHandling.php';
+// cat-tms-patch start
+require_once('./Modules/Course/classes/class.ilObjCourse.php');
+// cat-tms-patch end
 
 /**
 *
 * @author Stefan Meyer <smeyer.ilias@gmx.de>
 * @version $Id$
-* 
+*
 * @ilCtrl_Calls ilObjSessionGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI
 * @ilCtrl_Calls ilObjSessionGUI: ilExportGUI, ilCommonActionDispatcherGUI, ilMembershipMailGUI
 * @ilCtrl_Calls ilObjSessionGUI:  ilLearningProgressGUI
 *
-* @ingroup ModulesSession 
+* @ingroup ModulesSession
 */
 class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 {
+	// cat-tms-patch start
+	const INPUT_TUTOR_SOURCE = "tutor_source";
+	const INPUT_TUTOR_SELECTION = "tutor_selection";
+	// cat-tms-patch end
+
 	/**
 	 * @var ilLogger
 	 */
@@ -28,10 +36,10 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public $lng;
 	public $ctrl;
 	public $tpl;
-	
+
 	protected $container_ref_id = 0;
 	protected $container_obj_id = 0;
-	
+
 	protected $files = array();
 
 	/**
@@ -44,24 +52,24 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function __construct($a_data, $a_id, $a_call_by_reference, $a_prepare_output = true)
 	{
 		global $ilCtrl, $lng, $tpl;
-		
+
 		$this->type = "sess";
 		parent::__construct($a_data,$a_id,$a_call_by_reference,$a_prepare_output);
-		
+
 		$this->lng = $lng;
 		$this->lng->loadLanguageModule("event");
 		$this->lng->loadLanguageModule('crs');
 		$this->lng->loadLanguageModule('trac');
 		$this->lng->loadLanguageModule('sess');
-		
+
 
 		$this->tpl = $tpl;
 		$this->ctrl = $ilCtrl;
-		
+
 		$this->logger = $GLOBALS['DIC']->logger()->sess();
 	}
-	
-	
+
+
 	/**
 	 * execute command
 	 *
@@ -71,11 +79,11 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function executeCommand()
 	{
   		global $ilUser,$ilCtrl;
-  
+
 		$next_class = $this->ctrl->getNextClass($this);
 		$cmd = $this->ctrl->getCmd();
 
-		
+
 		$this->prepareOutput();
   		switch($next_class)
 		{
@@ -90,14 +98,14 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				$perm_gui = new ilPermissionGUI($this);
 				$ret = $this->ctrl->forwardCommand($perm_gui);
 				break;
-		
+
 			case 'ilobjectcopygui':
 				include_once './Services/Object/classes/class.ilObjectCopyGUI.php';
 				$cp = new ilObjectCopyGUI($this);
 				$cp->setType('sess');
 				$this->ctrl->forwardCommand($cp);
 				break;
-				
+
 			case "ilexportgui":
 //				$this->prepareOutput();
 				$this->tabs_gui->setTabActive("export");
@@ -113,14 +121,14 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				$gui = ilCommonActionDispatcherGUI::getInstanceFromAjaxCall();
 				$this->ctrl->forwardCommand($gui);
 				break;
-			
-			case 'ilmembershipgui':				
+
+			case 'ilmembershipgui':
 				$this->ctrl->setReturn($this,'members');
 				include_once './Services/Membership/classes/class.ilMembershipMailGUI.php';
 				$mem = new ilMembershipMailGUI($this);
 				$this->ctrl->forwardCommand($mem);
 				break;
-			
+
 			case "illearningprogressgui":
 				include_once './Services/Tracking/classes/class.ilLearningProgressGUI.php';
 				$new_gui = new ilLearningProgressGUI(ilLearningProgressGUI::LP_CONTEXT_REPOSITORY,
@@ -129,7 +137,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				$this->ctrl->forwardCommand($new_gui);
 				$this->tabs_gui->setTabActive('learning_progress');
 				break;
-		
+
 			default:
 				if(!$cmd)
 				{
@@ -145,15 +153,15 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 					$this->checkPermission("visible");
 				}
 				$this->$cmd();
-	
+
 			break;
 		}
-		
+
 		$this->addHeaderAction();
-		
+
   		return true;
 	}
-	
+
 	/**
 	 * Get session object
 	 * @return ilObjSession
@@ -162,18 +170,18 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	{
 		return $this->object;
 	}
-	
+
     /**
      * @see ilObjectGUI::prepareOutput()
      */
     public function prepareOutput($a_show_subobjects = true)
     {
         parent::prepareOutput($a_show_subobjects);
-		
+
 		if (!$this->getCreationMode())
 		{
-			$title = strlen($this->object->getTitle()) ? (': '.$this->object->getTitle()) : ''; 
-			
+			$title = strlen($this->object->getTitle()) ? (': '.$this->object->getTitle()) : '';
+
 			include_once './Modules/Session/classes/class.ilSessionAppointment.php';
 			$this->tpl->setTitle(
 				$this->object->getFirstAppointment()->appointmentToString().$title);
@@ -192,14 +200,14 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		global $ilUser;
 
 		$this->checkPermission('read');
-		
+
 		include_once './Services/Membership/classes/class.ilParticipants.php';
 		$part = ilParticipants::getInstanceByObjId($this->getCurrentObject()->getId());
 
 		include_once './Modules/Session/classes/class.ilEventParticipants.php';
 		$event_part = new ilEventParticipants($this->getCurrentObject()->getId());
 		if(
-			$this->getCurrentObject()->isRegistrationUserLimitEnabled() and 
+			$this->getCurrentObject()->isRegistrationUserLimitEnabled() and
 			$this->getCurrentObject()->getRegistrationMaxUsers() and
 			(count($event_part->getRegistered()) >= $this->getCurrentObject()->getRegistrationMaxUsers())
 		)
@@ -211,20 +219,20 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$this->ctrl->redirect($this,'infoScreen');
 			return TRUE;
 		}
-		
-		
+
+
 		switch($this->getCurrentObject()->getRegistrationType())
 		{
 			case ilMembershipRegistrationSettings::TYPE_NONE:
 				$this->ctrl->redirect($this,'info');
 				break;
-			
+
 			case ilMembershipRegistrationSettings::TYPE_DIRECT:
 				$part->add($ilUser->getId());
 				ilUtil::sendSuccess($this->lng->txt('event_registered'),true);
 				$this->ctrl->redirect($this,'infoScreen');
 				break;
-			
+
 			case ilMembershipRegistrationSettings::TYPE_REQUEST:
 				ilUtil::sendSuccess($this->lng->txt('sess_registered_confirm'),true);
 				$part->addSubscriber($ilUser->getId());
@@ -232,24 +240,24 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				break;
 		}
 	}
-	
+
 	/**
 	 * Called from info screen
-	 * @return 
+	 * @return
 	 */
 	public function joinObject()
 	{
 		global $ilUser;
-		
+
 		$this->checkPermission('read');
 
 		if($ilUser->isAnonymous())
 		{
 			$this->ctrl->redirect($this,'infoScreen');
 		}
-		
+
 		include_once './Modules/Session/classes/class.ilEventParticipants.php';
-			
+
 		if(ilEventParticipants::_isRegistered($ilUser->getId(),$this->object->getId()))
 		{
 			$_SESSION['sess_hide_info'] = true;
@@ -261,10 +269,10 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			ilEventParticipants::_register($ilUser->getId(),$this->object->getId());
 			ilUtil::sendSuccess($this->lng->txt('event_registered'),true);
 		}
-		
+
 		$this->ctrl->redirect($this,'infoScreen');
 	}
-	
+
 	/**
 	 * unregister from session
 	 *
@@ -274,7 +282,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function unregisterObject()
 	{
 		global $ilUser;
-		
+
 		include_once './Modules/Session/classes/class.ilSessionParticipants.php';
 		$part = ilSessionParticipants::getInstanceByObjId($this->object->getId());
 		if($part->isSubscriber($ilUser->getId()))
@@ -284,14 +292,14 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		include_once './Modules/Session/classes/class.ilEventParticipants.php';
 		ilEventParticipants::_unregister($ilUser->getId(),$this->object->getId());
-		
+
 		include_once './Modules/Session/classes/class.ilSessionWaitingList.php';
 		ilSessionWaitingList::deleteUserEntry($ilUser->getId(), $this->getCurrentObject()->getId());
 
 		ilUtil::sendSuccess($this->lng->txt('event_unregistered'),true);
 		$this->ctrl->returnToParent($this);
 	}
-	
+
 	/**
 	 * goto
 	 *
@@ -303,14 +311,14 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public static function _goto($a_target)
 	{
 		global $ilAccess,$ilErr,$lng;
-		
+
 		if($ilAccess->checkAccess('visible', "", $a_target))
 		{
 			ilObjectGUI::_gotoRepositoryNode($a_target, "infoScreen");
 		}
 		$ilErr->raiseError($lng->txt("msg_no_perm_read"), $ilErr->FATAL);
 	}
-	
+
     /**
      * @see ilDesktopItemHandling::addToDesk()
      */
@@ -320,7 +328,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	 	ilDesktopItemGUI::addToDesktop();
 		$this->infoScreenObject();
     }
-    
+
     /**
      * @see ilDesktopItemHandling::removeFromDesk()
      */
@@ -330,8 +338,8 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	 	ilDesktopItemGUI::removeFromDesktop();
 		$this->infoScreenObject();
     }
-	
-	
+
+
 	/**
 	* this one is called from the info button in the repository
 	* not very nice to set cmdClass/Cmd manually, if everything
@@ -357,43 +365,43 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		// if folder is in a course, modify item list gui according to course requirements
 		if ($course_ref_id = $tree->checkForParentType($this->object->getRefId(),'crs'))
-		{			
+		{
 			// #10611
 			include_once "Services/Object/classes/class.ilObjectActivation.php";
-			ilObjectActivation::addListGUIActivationProperty($a_item_list_gui, $a_item_data);		
-						
+			ilObjectActivation::addListGUIActivationProperty($a_item_list_gui, $a_item_data);
+
 			include_once("./Modules/Course/classes/class.ilObjCourse.php");
-			include_once("./Modules/Course/classes/class.ilObjCourseGUI.php");			
+			include_once("./Modules/Course/classes/class.ilObjCourseGUI.php");
 			$course_obj_id = ilObject::_lookupObjId($course_ref_id);
 			ilObjCourseGUI::_modifyItemGUI(
 				$a_item_list_gui,
-				get_class($this), 
-				$a_item_data, 
+				get_class($this),
+				$a_item_data,
 				$a_show_path,
 				ilObjCourse::_lookupAboStatus($course_obj_id),
-				$course_ref_id, 
+				$course_ref_id,
 				$course_obj_id,
 				$this->object->getRefId());
 		}
 	}
-	
+
 	/**
 	 * show join request
 	 */
 	protected function showJoinRequestButton()
 	{
 		global $ilToolbar, $ilUser;
-		
+
 		if(!$this->getCurrentObject()->enabledRegistration() || $ilUser->isAnonymous())
 		{
 			return FALSE;
 		}
-		
+
 		include_once './Modules/Session/classes/class.ilSessionWaitingList.php';
-		
+
 		include_once './Services/Membership/classes/class.ilParticipants.php';
 		$part = ilParticipants::getInstanceByObjId($this->getCurrentObject()->getId());
-		
+
 		include_once './Modules/Session/classes/class.ilEventParticipants.php';
 		if(ilEventParticipants::_isRegistered($ilUser->getId(), $this->getCurrentObject()->getId()))
 		{
@@ -413,11 +421,11 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$ilToolbar->setFormAction($this->ctrl->getFormAction($this));
 			return TRUE;
 		}
-		
+
 		$event_part = new ilEventParticipants($this->getCurrentObject()->getId());
 
 		if(
-			$this->getCurrentObject()->isRegistrationUserLimitEnabled() and 
+			$this->getCurrentObject()->isRegistrationUserLimitEnabled() and
 			$this->getCurrentObject()->getRegistrationMaxUsers() and
 			(count($event_part->getRegistered()) >= $this->getCurrentObject()->getRegistrationMaxUsers())
 		)
@@ -446,8 +454,8 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			}
 		}
 	}
-		
-		
+
+
 
 	/**
 	 * info screen
@@ -469,7 +477,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$info = new ilInfoScreenGUI($this);
 
 		$this->showJoinRequestButton();
-		
+
 		// Session information
 		if(strlen($this->object->getLocation()) or strlen($this->object->getDetails()))
 		{
@@ -485,53 +493,69 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$info->addProperty($this->lng->txt('event_details_workflow'),
 							   nl2br($this->object->getDetails()));
 		}
-		
+
 		// Tutor information
 		if($this->object->hasTutorSettings())
 		{
 			$info->addSection($this->lng->txt('event_tutor_data'));
-			if(strlen($fullname = $this->object->getName()))
-			{
-				$info->addProperty($this->lng->txt('event_lecturer'),
-								   $fullname);
+
+			// cat-tms-patch start
+			if($this->object->getTutorSource() === \ilObjSession::TUTOR_CFG_FROMCOURSE) {
+				foreach ($this->object->getAssignedTutors() as $tutor_obj) {
+					$info->addProperty($this->lng->txt('event_lecturer'),
+										   $tutor_obj->getFullName());
+					$info->addProperty($this->lng->txt('tutor_email'),
+										   $tutor_obj->getEmail());
+					$info->addProperty($this->lng->txt('tutor_phone'),
+										   $tutor_obj->getPhoneOffice());
+
+				}
+			} else {
+
+				if(strlen($fullname = $this->object->getName()))
+				{
+					$info->addProperty($this->lng->txt('event_lecturer'),
+									   $fullname);
+				}
+				if(strlen($email = $this->object->getEmail()))
+				{
+					$info->addProperty($this->lng->txt('tutor_email'),
+									   $email);
+				}
+				if(strlen($phone = $this->object->getPhone()))
+				{
+					$info->addProperty($this->lng->txt('tutor_phone'),
+									   $phone);
+				}
 			}
-			if(strlen($email = $this->object->getEmail()))
-			{
-				$info->addProperty($this->lng->txt('tutor_email'),
-								   $email);
-			}
-			if(strlen($phone = $this->object->getPhone()))
-			{
-				$info->addProperty($this->lng->txt('tutor_phone'),
-								   $phone);
-			}
+			// cat-tms-patch end
 		}
-		
-				
-		$html = '';		
-			
-		include_once './Services/Object/classes/class.ilObjectActivation.php';		
-		include_once './Services/Container/classes/class.ilContainerSorting.php';	
+
+
+		$html = '';
+
+		include_once './Services/Object/classes/class.ilObjectActivation.php';
+		include_once './Services/Container/classes/class.ilContainerSorting.php';
 		include_once './Modules/Session/classes/class.ilSessionObjectListGUIFactory.php';
-		
-		$eventItems = ilObjectActivation::getItemsByEvent($this->object->getId());			
+
+		$eventItems = ilObjectActivation::getItemsByEvent($this->object->getId());
 		$parent_id = $tree->getParentId($this->object->getRefId());
-		$parent_id = ilObject::_lookupObjId($parent_id);				
+		$parent_id = ilObject::_lookupObjId($parent_id);
 		$eventItems = ilContainerSorting::_getInstance($parent_id)->sortSubItems(
 			'sess',
 			$this->object->getId(),
 			$eventItems
-		);			
-		
-		$lng->loadLanguageModule("cntr");// #14158		
-		
+		);
+
+		$lng->loadLanguageModule("cntr");// #14158
+
 		foreach($eventItems as $item)
-		{						
+		{
 			$list_gui = ilSessionObjectListGUIFactory::factory($item['type']);
 			$list_gui->setContainerObject($this);
-			
+
 			$this->modifyItemGUI($list_gui, $item, false);
-			
+
 			$html .= $list_gui->getListItemHTML(
 				$item['ref_id'],
 				$item['obj_id'],
@@ -539,7 +563,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				$item['description']
 			);
 		}
-		
+
 		if(strlen($html))
 		{
 			$info->addSection($this->lng->txt('event_materials'));
@@ -550,13 +574,13 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		// forward the command
 		$this->ctrl->forwardCommand($info);
-		
+
 		// store read event
 		require_once 'Services/Tracking/classes/class.ilChangeEvent.php';
 		ilChangeEvent::_recordReadEvent($this->object->getType(), $this->object->getRefId(),
 			$this->object->getId(), $ilUser->getId());
 	}
-	
+
 	/**
 	 * send file
 	 *
@@ -565,11 +589,11 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function sendFileObject()
 	{
 		$file = new ilSessionFile((int) $_GET['file_id']);
-		
+
 		ilUtil::deliverFile($file->getAbsolutePath(),$file->getFileName(),$file->getFileType());
 		return true;
 	}
-	
+
 	protected function initCreateForm($a_new_type)
 	{
 		if(!is_object($this->object))
@@ -581,21 +605,21 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	}
 
 	/**
-	 * Save and assign sessoin materials
-	 *  
-	 * @access protected 
+	 * Save and assign session materials
+	 *
+	 * @access protected
 	 */
 	public function saveAndAssignMaterialsObject()
 	{
 		global $ilLog;
-		
+
 		$this->saveObject(false);
-		
+
 		$this->ctrl->setParameter($this,'ref_id',$this->object->getRefId());
 		$this->ctrl->setParameter($this,'new_type', '');
 		$this->ctrl->redirect($this,'materials');
 	}
-		
+
 	/**
 	 * save object
 	 *
@@ -606,21 +630,21 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function saveObject($a_redirect_on_success = true)
 	{
 		global $ilErr,$ilUser;
-		
+
 		$this->object = new ilObjSession();
-		
+
 		$this->ctrl->saveParameter($this, "new_type");
-		
+
 		$this->initForm('create');
 		$ilErr->setMessage('');
 		if(!$this->form->checkInput())
 		{
 			$ilErr->setMessage($this->lng->txt('err_check_input'));
 		}
-		
+
 		$this->load();
 		$this->loadRecurrenceSettings();
-				
+
 		$this->object->validate();
 		$this->object->getFirstAppointment()->validate();
 
@@ -636,38 +660,38 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$this->object->createReference();
 		$this->object->putInTree($_GET["ref_id"]);
 		$this->object->setPermissions($_GET["ref_id"]);
-				
+
 		// #14547 - active is default
 		if(!$this->form->getInput("lp_preset"))
 		{
 			include_once "Services/Tracking/classes/class.ilLPObjSettings.php";
 			$lp_obj_settings = new ilLPObjSettings($this->object->getId());
-			$lp_obj_settings->setMode(ilLPObjSettings::LP_MODE_DEACTIVATED);	
+			$lp_obj_settings->setMode(ilLPObjSettings::LP_MODE_DEACTIVATED);
 			$lp_obj_settings->update(false);
 		}
-		
+
 		// create appointment
 		$this->object->getFirstAppointment()->setSessionId($this->object->getId());
 		$this->object->getFirstAppointment()->create();
 
 		$this->handleFileUpload();
-		
+
 		$this->createRecurringSessions($this->form->getInput("lp_preset"));
 
-		if($a_redirect_on_success) 
+		if($a_redirect_on_success)
 		{
-			ilUtil::sendInfo($this->lng->txt('event_add_new_event'),true);	
+			ilUtil::sendInfo($this->lng->txt('event_add_new_event'),true);
 			$this->ctrl->returnToParent($this);
 		}
-		
+
 		return true;
-	
+
 	}
-	
+
 	public function handleFileUpload()
 	{
 		global $tree;
-		
+
 		include_once './Modules/Session/classes/class.ilEventItems.php';
 		$ev = new ilEventItems($this->object->getId());
 		$items = $ev->getItems();
@@ -684,7 +708,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				$counter++;
 				continue;
 			}
-			
+
 			include_once './Modules/File/classes/class.ilObjFile.php';
 			$file = new ilObjFile();
 			$file->setTitle(ilUtil::stripSlashes($_FILES['files']['name'][$counter]));
@@ -701,18 +725,18 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				$_FILES['files']['tmp_name'][$counter],
 				$_FILES['files']['name'][$counter]
 			);
-			
+
 			$items[] = $new_ref_id;
 			$counter++;
-			
+
 		}
-		
+
 		$ev->setItems($items);
-		$ev->update();			
+		$ev->update();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * create recurring sessions
 	 *
@@ -723,29 +747,29 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	protected function createRecurringSessions($a_activate_lp = true)
 	{
 		global $tree;
-		
+
 		if(!$this->rec->getFrequenceType())
 		{
 			return true;
 		}
 		include_once('./Services/Calendar/classes/class.ilCalendarRecurrenceCalculator.php');
 		$calc = new ilCalendarRecurrenceCalculator($this->object->getFirstAppointment(),$this->rec);
-		
+
 		$period_start = clone $this->object->getFirstAppointment()->getStart();
-		
-		
+
+
 		$period_end = clone $this->object->getFirstAppointment()->getStart();
 		$period_end->increment(IL_CAL_YEAR,5);
 		$date_list = $calc->calculateDateList($period_start,$period_end);
-		
-		$period_diff = $this->object->getFirstAppointment()->getEnd()->get(IL_CAL_UNIX) - 
+
+		$period_diff = $this->object->getFirstAppointment()->getEnd()->get(IL_CAL_UNIX) -
 			$this->object->getFirstAppointment()->getStart()->get(IL_CAL_UNIX);
 		$parent_id = $tree->getParentId($this->object->getRefId());
-		
+
 		include_once './Modules/Session/classes/class.ilEventItems.php';
 		$evi = new ilEventItems($this->object->getId());
-		$eitems = $evi->getItems(); 
-		
+		$eitems = $evi->getItems();
+
 		$counter = 0;
 		foreach($date_list->get() as $date)
 		{
@@ -753,30 +777,30 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			{
 				continue;
 			}
-			
+
 			$new_obj = $this->object->cloneObject($parent_id);
 			$new_obj->read();
 			$new_obj->getFirstAppointment()->setStartingTime($date->get(IL_CAL_UNIX));
 			$new_obj->getFirstAppointment()->setEndingTime($date->get(IL_CAL_UNIX) + $period_diff);
 			$new_obj->getFirstAppointment()->update();
 			$new_obj->update();
-			
+
 			// #14547 - active is default
 			if(!$a_activate_lp)
 			{
 				include_once "Services/Tracking/classes/class.ilLPObjSettings.php";
 				$lp_obj_settings = new ilLPObjSettings($new_obj->getId());
-				$lp_obj_settings->setMode(ilLPObjSettings::LP_MODE_DEACTIVATED);	
+				$lp_obj_settings->setMode(ilLPObjSettings::LP_MODE_DEACTIVATED);
 				$lp_obj_settings->update(false);
 			}
-			
+
 			$new_evi = new ilEventItems($new_obj->getId());
 			$new_evi->setItems($eitems);
 			$new_evi->update();
-		}	
+		}
 	}
-	
-	
+
+
 	/**
 	 * edit object
 	 *
@@ -787,12 +811,12 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function editObject()
 	{
 		$this->tabs_gui->setTabActive('settings');
-		
+
 		$this->initForm('edit');
 		$this->tpl->addBlockFile('ADM_CONTENT','adm_content','tpl.sess_edit.html','Modules/Session');
 		$this->tpl->setVariable('EVENT_EDIT_TABLE',$this->form->getHTML());
-		
-		if(!count($this->object->getFiles()))		
+
+		if(!count($this->object->getFiles()))
 		{
 			return true;
 		}
@@ -803,10 +827,10 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$table_data['filename'] = $file->getFileName();
 			$table_data['filetype'] = $file->getFileType();
 			$table_data['filesize'] = $file->getFileSize();
-			
-			$rows[] = $table_data; 
+
+			$rows[] = $table_data;
 		}
-		
+
 		include_once("./Modules/Session/classes/class.ilSessionFileTableGUI.php");
 		$table_gui = new ilSessionFileTableGUI($this, "edit");
 		$table_gui->setTitle($this->lng->txt("event_files"));
@@ -818,7 +842,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		return true;
 	}
-	
+
 	/**
 	 * update object
 	 *
@@ -829,18 +853,18 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function updateObject()
 	{
 		global $ilErr;
-		
+
 		$old_autofill = $this->object->hasWaitingListAutoFill();
-				
-		$this->initForm('edit');		
+
+		$this->initForm('edit');
 		$ilErr->setMessage('');
 		if(!$this->form->checkInput())
 		{
 			$ilErr->setMessage($this->lng->txt('err_check_input'));
 		}
-		
+
 		$this->load();
-		
+
 		$this->object->validate();
 		$this->object->getFirstAppointment()->validate();
 
@@ -852,24 +876,24 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		}
 		// Update event
 		$this->object->update();
-		$this->object->getFirstAppointment()->update();				
-		
+		$this->object->getFirstAppointment()->update();
+
 		$this->handleFileUpload();
-		
+
 		// if autofill has been activated trigger process
 		if(!$old_autofill &&
 			$this->object->hasWaitingListAutoFill())
 		{
 			$this->object->handleAutoFill();
 		}
-		
+
 		ilUtil::sendSuccess($this->lng->txt('event_updated'),true);
 		$this->ctrl->redirect($this,'edit');
 		#$this->object->initFiles();
 		#$this->editObject();
 		return true;
 	}
-	
+
 	/**
 	 * confirm delete files
 	 *
@@ -887,10 +911,10 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$this->editObject();
 			return false;
 		}
-		
+
 		include_once("Services/Utilities/classes/class.ilConfirmationGUI.php");
 		$c_gui = new ilConfirmationGUI();
-		
+
 		// set confirm/cancel commands
 		$c_gui->setFormAction($this->ctrl->getFormAction($this, "deleteFiles"));
 		$c_gui->setHeaderText($this->lng->txt("info_delete_sure"));
@@ -909,11 +933,11 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			}
 			$c_gui->addItem("file_id[]", $file_id, $file->getFileName());
 		}
-		
+
 		$this->tpl->setContent($c_gui->getHTML());
-		return true;	
+		return true;
 	}
-	
+
 	/**
 	 * delete files
 	 *
@@ -936,15 +960,15 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		}
 		$this->object->initFiles();
 		$this->editObject();
-		return true;	
+		return true;
 	}
-	
+
 	protected function initContainer($a_init_participants = false)
 	{
 		global $tree;
-		
+
 		$is_course = $is_group = false;
-		
+
 		// #13178
 		$this->container_ref_id = $tree->checkForParentType($this->object->getRefId(),'grp');
 		if($this->container_ref_id)
@@ -958,14 +982,14 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			{
 				$is_course = true;
 			}
-		}		
+		}
 		if(!$this->container_ref_id)
 		{
 			ilUtil::sendFailure('No container object found. Aborting');
 			return true;
 		}
 		$this->container_obj_id = ilObject::_lookupObjId($this->container_ref_id);
-		
+
 		if($a_init_participants && $this->container_obj_id)
 		{
 			if($is_course)
@@ -979,9 +1003,9 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				return ilGroupParticipants::_getInstanceByObjId($this->container_obj_id);
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * show material assignment
 	 *
@@ -994,15 +1018,15 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		global $tree, $objDefinition;
 
 		$this->tabs_gui->setTabActive('crs_materials');
-		
+
 		// #11337 - support ANY parent container (crs, grp, fld)
 		$parent_ref_id = $tree->getParentId($this->object->getRefId());
-		
+
 		include_once "Services/Object/classes/class.ilObjectAddNewItemGUI.php";
 		$gui = new ilObjectAddNewItemGUI($parent_ref_id);
 		$gui->setDisabledObjectTypes(array("itgr", "sess"));
 		$gui->setAfterCreationCallback($this->ref_id);
-		$gui->render();		
+		$gui->render();
 
 		include_once 'Modules/Session/classes/class.ilEventItems.php';
 		$this->event_items = new ilEventItems($this->object->getId());
@@ -1018,7 +1042,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		$this->tpl->setContent($tbl->getHTML());
 	}
-	
+
 	/**
 	 * save material assignment
 	 *
@@ -1029,7 +1053,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function saveMaterialsObject()
 	{
 		include_once './Modules/Session/classes/class.ilEventItems.php';
-		
+
 		$this->event_items = new ilEventItems($this->object->getId());
 
 		$list_items = is_array($_POST['all_items']) ? $_POST['all_items'] : array();
@@ -1050,34 +1074,34 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		ilUtil::sendSuccess($this->lng->txt('settings_saved'), true);
 		$this->ctrl->redirect($this,'materials');
 	}
-	
+
 	/**
 	 * Show participants table
-	 * @return void 
+	 * @return void
 	 */
 	protected function membersObject()
 	{
 		global $tree,$ilUser;
-		
+
 		$this->checkPermission('write');
 		$this->tabs_gui->setTabActive('event_edit_members');
-		
+
 		$this->tpl->addBlockFile('ADM_CONTENT', 'adm_content', 'tpl.sess_members.html', 'Modules/Session');
-		
+
 		include_once './Services/UIComponent/Toolbar/classes/class.ilToolbarGUI.php';
-		$toolbar = new ilToolbarGUI();		
+		$toolbar = new ilToolbarGUI();
 		$toolbar->addButton($this->lng->txt('crs_print_list'),
-			$this->ctrl->getLinkTarget($this,'attendanceList'));		
-		
+			$this->ctrl->getLinkTarget($this,'attendanceList'));
+
 		$this->tpl->setVariable('ACTION_BUTTONS',$toolbar->getHTML());
 
 		$members_obj = $this->initContainer(true);
-				
-		include_once './Modules/Session/classes/class.ilEventParticipants.php';	
-		
-		// Save hide/show table settings		
+
+		include_once './Modules/Session/classes/class.ilEventParticipants.php';
+
+		// Save hide/show table settings
 		$this->setShowHidePrefs();
-		
+
 		// Waiting list table
 		include_once('./Modules/Session/classes/class.ilSessionWaitingList.php');
 		$waiting_list = new ilSessionWaitingList($this->object->getId());
@@ -1104,7 +1128,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$table_gui->setTitle($this->lng->txt('grp_header_waiting_list'),'icon_usr.svg',$this->lng->txt('group_new_registrations'));
 			$this->tpl->setVariable('TABLE_WAIT',$table_gui->getHTML());
 		}
-		
+
 		// subscribers
 		// Subscriber table
 		include_once './Services/Membership/classes/class.ilParticipants.php';
@@ -1132,8 +1156,8 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$table_gui->setTitle($this->lng->txt('sess_new_registrations'),'icon_usr.svg',$this->lng->txt('sess_new_registrations'));
 			$this->tpl->setVariable('TABLE_SUB',$table_gui->getHTML());
 		}
-		
-		
+
+
 		// Admins
 		if(count($admins = $members_obj->getAdmins()))
 		{
@@ -1162,7 +1186,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$table->parse();
 			$this->tpl->setVariable('ADMINS',$table->getHTML());
 		}
-		
+
 		// Tutors
 		if(count($tutors = $members_obj->getTutors()))
 		{
@@ -1218,15 +1242,15 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$table->parse();
 			$this->tpl->setVariable('MEMBERS',$table->getHTML());
 		}
-		
-		
+
+
 		$GLOBALS['lng']->loadLanguageModule('mmbr');
 		$this->tpl->setVariable('FORMACTION',$this->ctrl->getFormAction($this));
 		$this->tpl->setVariable('TXT_SELECTED_USER',$this->lng->txt('mmbr_selected_users'));
 		$this->tpl->setVariable('BTN_FOOTER_MAIL',$this->lng->txt('mmbr_btn_mail_selected_users'));
 		$this->tpl->setVariable('ARROW_DOWN',ilUtil::getImagePath('arrow_downright.svg'));
 	}
-	
+
 	/**
 	 * set preferences (show/hide tabel content)
 	 *
@@ -1236,7 +1260,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function setShowHidePrefs()
 	{
 		global $ilUser;
-		
+
 		if(isset($_GET['admin_hide']))
 		{
 			$ilUser->writePref('sess_admin_hide',(int) $_GET['admin_hide']);
@@ -1250,7 +1274,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$ilUser->writePref('sess_member_hide',(int) $_GET['member_hide']);
 		}
 	}
-	
+
 	/**
 	 * update participants
 	 *
@@ -1261,13 +1285,13 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function updateMembersObject()
 	{
 		global $tree;
-		
+
 		$this->checkPermission('write');
 
-		
+
 
 		$this->initContainer();
-		
+
 		$_POST['participants'] = is_array($_POST['participants']) ? $_POST['participants'] : array();
 		$_POST['registered'] = is_array($_POST['registered']) ? $_POST['registered'] : array();
 
@@ -1287,7 +1311,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		ilUtil::sendSuccess($this->lng->txt('settings_saved'));
 		$this->membersObject();
 	}
-	
+
 	/**
 	 * show attendance list selection
 	 *
@@ -1297,72 +1321,72 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function attendanceListObject()
 	{
 		global $tpl,$ilTabs;
-		
-		$this->checkPermission('write');		
-		$ilTabs->setTabActive('event_edit_members');	
-		
+
+		$this->checkPermission('write');
+		$ilTabs->setTabActive('event_edit_members');
+
 		$list = $this->initAttendanceList();
 		$form = $list->initForm('printAttendanceList');
-		$tpl->setContent($form->getHTML());		
+		$tpl->setContent($form->getHTML());
 	}
-	
+
 	/**
 	 * Init attendance list object
-	 * 
-	 * @return ilAttendanceList 
+	 *
+	 * @return ilAttendanceList
 	 */
 	protected function initAttendanceList()
 	{
 		$members_obj = $this->initContainer(true);
-		
+
 		include_once 'Services/Membership/classes/class.ilAttendanceList.php';
 		$list = new ilAttendanceList(
-			$this, 
+			$this,
 			$this->object,
-			$members_obj);	
+			$members_obj);
 		$list->setId('sessattlst');
-		
-		$event_app = $this->object->getFirstAppointment();				 
+
+		$event_app = $this->object->getFirstAppointment();
 		ilDatePresentation::setUseRelativeDates(false);
 		$desc = ilDatePresentation::formatPeriod($event_app->getStart(),$event_app->getEnd());
-		ilDatePresentation::setUseRelativeDates(true);		
-		$desc .= " ".$this->object->getTitle();	
-		$list->setTitle($this->lng->txt('sess_attendance_list'), $desc);		
-		
+		ilDatePresentation::setUseRelativeDates(true);
+		$desc .= " ".$this->object->getTitle();
+		$list->setTitle($this->lng->txt('sess_attendance_list'), $desc);
+
 		$list->addPreset('mark', $this->lng->txt('trac_mark'), true);
-		$list->addPreset('comment', $this->lng->txt('trac_comment'), true);		
+		$list->addPreset('comment', $this->lng->txt('trac_comment'), true);
 		if($this->object->enabledRegistration())
 		{
-			$list->addPreset('registered', $this->lng->txt('event_tbl_registered'), true);			
-		}	
-		$list->addPreset('participated', $this->lng->txt('event_tbl_participated'), true);		
+			$list->addPreset('registered', $this->lng->txt('event_tbl_registered'), true);
+		}
+		$list->addPreset('participated', $this->lng->txt('event_tbl_participated'), true);
 		$list->addBlank($this->lng->txt('sess_signature'));
-		
+
 		$list->addUserFilter('registered', $this->lng->txt('event_list_registered_only'));
-		
+
 		return $list;
 	}
-		
+
 	/**
 	 * print attendance list
 	 *
 	 * @access protected
 	 */
 	protected function printAttendanceListObject()
-	{		
+	{
 		$this->checkPermission('write');
-													
-		$list = $this->initAttendanceList();		
-		$list->initFromForm();					
+
+		$list = $this->initAttendanceList();
+		$list->initFromForm();
 		$list->setCallback(array($this, 'getAttendanceListUserData'));
-		
+
 		include_once 'Modules/Session/classes/class.ilEventParticipants.php';
-		$this->event_part = new ilEventParticipants($this->object->getId());	
-		
+		$this->event_part = new ilEventParticipants($this->object->getId());
+
 		echo $list->getFullscreenHTML();
 		exit();
-	}	
-	
+	}
+
 	/**
 	 * Get user data for attendance list
 	 * @param int $a_user_id
@@ -1370,27 +1394,27 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	 * @param bool $a_is_tutor
 	 * @param bool $a_is_member
 	 * @param array $a_filters
-	 * @return array 
+	 * @return array
 	 */
 	public function getAttendanceListUserData($a_user_id, $a_filters)
-	{			
-		$data = $this->event_part->getUser($a_user_id);	
-		
+	{
+		$data = $this->event_part->getUser($a_user_id);
+
 		if($a_filters && $a_filters["registered"] && !$data["registered"])
 		{
 			return;
 		}
-		
-		$data['registered'] = $data['registered'] ? 
-			$this->lng->txt('yes') : 
+
+		$data['registered'] = $data['registered'] ?
+			$this->lng->txt('yes') :
 			$this->lng->txt('no');
-		$data['participated'] = $data['participated'] ? 
-			$this->lng->txt('yes') : 
-			$this->lng->txt('no');		
-		
+		$data['participated'] = $data['participated'] ?
+			$this->lng->txt('yes') :
+			$this->lng->txt('no');
+
 		return $data;
 	}
-	
+
 	/**
 	 * list sessions of all user
 	 *
@@ -1406,101 +1430,101 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		{
 			$ilErr->raiseError($this->lng->txt('msg_no_perm_read'),$ilErr->MESSAGE);
 		}
-		
+
 		$this->tpl->addBlockFile('ADM_CONTENT','adm_content','tpl.sess_list.html','Modules/Session');
 		$this->__showButton($this->ctrl->getLinkTarget($this,'exportCSV'),$this->lng->txt('event_csv_export'));
-				
+
 		include_once 'Modules/Session/classes/class.ilEventParticipants.php';
-		
+
 		$this->tpl->addBlockfile("EVENTS_TABLE","events_table", "tpl.table.html");
 		$this->tpl->addBlockfile('TBL_CONTENT','tbl_content','tpl.sess_list_row.html','Modules/Session');
-		
+
 		$members_obj = $this->initContainer(true);
 		$members = $members_obj->getParticipants();
-		$members = ilUtil::_sortIds($members,'usr_data','lastname','usr_id');		
-		
-		// Table 
+		$members = ilUtil::_sortIds($members,'usr_data','lastname','usr_id');
+
+		// Table
 		$tbl = new ilTableGUI();
 		$tbl->setTitle($this->lng->txt("event_overview"),
 					   'icon_usr.svg',
 					   $this->lng->txt('obj_usr'));
-		$this->ctrl->setParameter($this,'offset',(int) $_GET['offset']);	
-		
+		$this->ctrl->setParameter($this,'offset',(int) $_GET['offset']);
+
 		$course_ref_id = $tree->checkForParentType($this->object->getRefId(),'crs');
 		$events = array();
 		foreach($tree->getSubtree($tree->getNodeData($course_ref_id),false,'sess') as $event_id)
 		{
 			$tmp_event = ilObjectFactory::getInstanceByRefId($event_id,false);
-			if(!is_object($tmp_event) or $tmp_event->getType() != 'sess') 
+			if(!is_object($tmp_event) or $tmp_event->getType() != 'sess')
 			{
 				continue;
 			}
 			$events[] = $tmp_event;
 		}
-		
+
 		$headerNames = array();
 		$headerVars = array();
 		$colWidth = array();
-		
-		$headerNames[] = $this->lng->txt('name');		
-		$headerVars[] = "name";		
-		$colWidth[] = '20%';		
-					
+
+		$headerNames[] = $this->lng->txt('name');
+		$headerVars[] = "name";
+		$colWidth[] = '20%';
+
 		for ($i = 1; $i <= count($events); $i++)
 		{
 			$headerNames[] = $i;
 			$headerVars[] = "event_".$i;
-			$colWidth[] = 80/count($events)."%";	
-		}		
-		
+			$colWidth[] = 80/count($events)."%";
+		}
+
 		$this->tpl->setVariable("FORMACTION",$this->ctrl->getFormAction($this));
 		$tbl->setHeaderNames($headerNames);
 		$tbl->setHeaderVars($headerVars, $this->ctrl->getParameterArray($this,'eventsList'));
-		$tbl->setColumnWidth($colWidth);		
+		$tbl->setColumnWidth($colWidth);
 
 		$tbl->setOrderColumn($_GET["sort_by"]);
 		$tbl->setOrderDirection($_GET["sort_order"]);
-		$tbl->setOffset($_GET["offset"]);				
+		$tbl->setOffset($_GET["offset"]);
 		$tbl->setLimit($ilUser->getPref("hits_per_page"));
 		$tbl->setMaxCount(count($members));
 		$tbl->setFooter("tblfooter",$this->lng->txt("previous"),$this->lng->txt("next"));
-		
+
 		$sliced_users = array_slice($members,$_GET['offset'],$_SESSION['tbl_limit']);
 		$tbl->disable('sort');
 		$tbl->render();
-		
+
 		$counter = 0;
 		foreach($sliced_users as $user_id)
-		{			
+		{
 			foreach($events as $event_obj)
-			{								
+			{
 				$this->tpl->setCurrentBlock("eventcols");
-							
-				$event_part = new ilEventParticipants($this->object->getId());														
-										
-				{			
-					$this->tpl->setVariable("IMAGE_PARTICIPATED", $event_part->hasParticipated($user_id) ? 
+
+				$event_part = new ilEventParticipants($this->object->getId());
+
+				{
+					$this->tpl->setVariable("IMAGE_PARTICIPATED", $event_part->hasParticipated($user_id) ?
 											ilUtil::getImagePath('icon_ok.svg') :
 											ilUtil::getImagePath('icon_not_ok.svg'));
-					
+
 					$this->tpl->setVariable("PARTICIPATED", $event_part->hasParticipated($user_id) ?
 										$this->lng->txt('event_participated') :
 										$this->lng->txt('event_not_participated'));
-				}						
-				
-				$this->tpl->parseCurrentBlock();				
-			}			
-			
+				}
+
+				$this->tpl->parseCurrentBlock();
+			}
+
 			$this->tpl->setCurrentBlock("tbl_content");
 			$name = ilObjUser::_lookupName($user_id);
 			$this->tpl->setVariable("CSS_ROW",ilUtil::switchColor($counter++,'tblrow1','tblrow2'));
 			$this->tpl->setVariable("LASTNAME",$name['lastname']);
 			$this->tpl->setVariable("FIRSTNAME",$name['firstname']);
-			$this->tpl->setVariable("LOGIN",ilObjUser::_lookupLogin($user_id));				
-			$this->tpl->parseCurrentBlock();			
-		}		
-		
-		$this->tpl->setVariable("HEAD_TXT_LEGEND", $this->lng->txt("legend"));		
+			$this->tpl->setVariable("LOGIN",ilObjUser::_lookupLogin($user_id));
+			$this->tpl->parseCurrentBlock();
+		}
+
+		$this->tpl->setVariable("HEAD_TXT_LEGEND", $this->lng->txt("legend"));
 		$this->tpl->setVariable("HEAD_TXT_DIGIT", $this->lng->txt("event_digit"));
 		$this->tpl->setVariable("HEAD_TXT_EVENT", $this->lng->txt("event"));
 		$this->tpl->setVariable("HEAD_TXT_LOCATION", $this->lng->txt("event_location"));
@@ -1512,32 +1536,32 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$this->tpl->setVariable("LEGEND_CSS_ROW",ilUtil::switchColor($counter++,'tblrow1','tblrow2'));
 			$this->tpl->setVariable("LEGEND_DIGIT", $i++);
 			$this->tpl->setVariable("LEGEND_EVENT_TITLE", $event_obj->getTitle());
-			$this->tpl->setVariable("LEGEND_EVENT_DESCRIPTION", $event_obj->getDescription());	
+			$this->tpl->setVariable("LEGEND_EVENT_DESCRIPTION", $event_obj->getDescription());
 			$this->tpl->setVariable("LEGEND_EVENT_LOCATION", $event_obj->getLocation());
-			$this->tpl->setVariable("LEGEND_EVENT_APPOINTMENT", $event_obj->getFirstAppointment()->appointmentToString());		
+			$this->tpl->setVariable("LEGEND_EVENT_APPOINTMENT", $event_obj->getFirstAppointment()->appointmentToString());
 			$this->tpl->parseCurrentBlock();
 		}
-	
+
 	}
 
 	/**
-	 * Init Form 
+	 * Init Form
 	 *
 	 * @access protected
 	 */
 	protected function initForm($a_mode)
 	{
 		global $ilUser;
-		
+
 		if(is_object($this->form))
 		{
 			return true;
 		}
-	
+
 		$this->lng->loadLanguageModule('dateplaner');
-	
+
 		include_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
-		
+
 		include_once('./Services/YUI/classes/class.ilYuiUtil.php');
 		ilYuiUtil::initDomEvent();
 
@@ -1546,7 +1570,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$this->form->setTableWidth('600px');
 		$this->form->setFormAction($this->ctrl->getFormAction($this));
 		$this->form->setMultipart(true);
-		
+
 		/*
 		$full = new ilCheckboxInputGUI('','fulltime');
 		$full->setChecked($this->object->getFirstAppointment()->enabledFulltime() ? true : false);
@@ -1554,21 +1578,21 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$full->setAdditionalAttributes('onchange="ilToggleSessionTime(this);"');
 		#$this->form->addItem($full);
 		*/
-		
+
 		$this->lng->loadLanguageModule('dateplaner');
 		include_once './Services/Form/classes/class.ilDateDurationInputGUI.php';
 		$dur = new ilDateDurationInputGUI($this->lng->txt('cal_fullday'),'event');
 		$dur->setRequired(true);
 		$dur->enableToggleFullTime(
 			$this->lng->txt('event_fulltime_info'),
-			$this->object->getFirstAppointment()->enabledFulltime() ? true : false 
+			$this->object->getFirstAppointment()->enabledFulltime() ? true : false
 		);
 		$dur->setShowTime(true);
 		$dur->setStart($this->object->getFirstAppointment()->getStart());
 		$dur->setEnd($this->object->getFirstAppointment()->getEnd());
-		
+
 		$this->form->addItem($dur);
-		
+
 		/*
 		// start
 		$start = new ilDateTimeInputGUI($this->lng->txt('event_start_date'),'start');
@@ -1576,7 +1600,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$start->setDate($this->object->getFirstAppointment()->getStart());
 		$start->setShowTime(true);
 		#$this->form->addItem($start);
-		
+
 		// end
 		$end = new ilDateTimeInputGUI($this->lng->txt('event_end_date'),'end');
 		$end->setMinuteStepSize(5);
@@ -1616,14 +1640,14 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$title->setSize(50);
 		$title->setMaxLength(70);
 		$this->form->addItem($title);
-		
+
 		// desc
 		$desc = new ilTextAreaInputGUI($this->lng->txt('event_desc'),'desc');
 		$desc->setValue($this->object->getLongDescription());
 		$desc->setRows(4);
 		$desc->setCols(50);
 		$this->form->addItem($desc);
-		
+
 		// location
 		$desc = new ilTextAreaInputGUI($this->lng->txt('event_location'),'location');
 		$desc->setValue($this->object->getLocation());
@@ -1631,7 +1655,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$desc->setCols(50);
 		$this->form->addItem($desc);
 
-		// workflow		
+		// workflow
 		$details = new ilTextAreaInputGUI($this->lng->txt('event_details_workflow'),'details');
 		$details->setValue($this->object->getDetails());
 		$details->setCols(50);
@@ -1642,28 +1666,58 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$section = new ilFormSectionHeaderGUI();
 		$section->setTitle($this->lng->txt('event_tutor_data'));
 		$this->form->addItem($section);
-		
+
+		// cat-tms-patch start
+		// select lecturer from course tutors
+
 		// name
 		$tutor_name = new ilTextInputGUI($this->lng->txt('tutor_name'),'tutor_name');
 		$tutor_name->setValue($this->object->getName());
 		$tutor_name->setSize(20);
 		$tutor_name->setMaxLength(70);
-		$this->form->addItem($tutor_name);
-		
 		// email
 		$tutor_email = new ilTextInputGUI($this->lng->txt('tutor_email'),'tutor_email');
 		$tutor_email->setValue($this->object->getEmail());
 		$tutor_email->setSize(20);
 		$tutor_email->setMaxLength(70);
-		$this->form->addItem($tutor_email);
-
 		// phone
 		$tutor_phone = new ilTextInputGUI($this->lng->txt('tutor_phone'),'tutor_phone');
 		$tutor_phone->setValue($this->object->getPhone());
 		$tutor_phone->setSize(20);
 		$tutor_phone->setMaxLength(70);
-		$this->form->addItem($tutor_phone);
-		
+
+		$tutor_opt_text = new ilRadioOption($this->lng->txt('event_tutor_source_manually'), \ilObjSession::TUTOR_CFG_MANUALLY);
+		$tutor_opt_text->addSubItem($tutor_name);
+		$tutor_opt_text->addSubItem($tutor_email);
+		$tutor_opt_text->addSubItem($tutor_phone);
+
+		$tutor_opts = new ilRadioGroupInputGUI($this->lng->txt('event_tutor_source'), self::INPUT_TUTOR_SOURCE);
+		$tutor_opts->addOption($tutor_opt_text);
+
+
+		//parent tutors
+		if($a_mode !== 'create') {
+
+			$tutor_list = new ilCheckboxGroupInputGUI($this->lng->txt('event_tutor_selection'), self::INPUT_TUTOR_SELECTION);
+			$crs_tutors = $this->object->getParentCourseTutors();
+			foreach ($crs_tutors as $t) {
+				$name = $t->getFullName();
+				$id = $t->getId();
+				$login = $t->getLogin();
+				$tutor_list->addOption(new ilCheckboxOption("$name ($login)", $id));
+			}
+			$tutor_list->setValue($this->object->getAssignedTutorsIds());
+			$tutor_opt_list = new ilRadioOption($this->lng->txt('event_tutor_source_from_course'), \ilObjSession::TUTOR_CFG_FROMCOURSE);
+			$tutor_opt_list->addSubItem($tutor_list);
+
+			$tutor_opts->addOption($tutor_opt_list);
+		}
+
+		$tutor_opts->setValue($this->object->getTutorSource());
+		$this->form->addItem($tutor_opts);
+		// cat-tms-patch end
+
+
 		$section = new ilFormSectionHeaderGUI();
 		$section->setTitle($this->lng->txt('sess_section_reg'));
 		$this->form->addItem($section);
@@ -1686,11 +1740,11 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$section = new ilFormSectionHeaderGUI();
 		$section->setTitle($this->lng->txt('event_assign_files'));
 		$this->form->addItem($section);
-		
+
 		$files = new ilFileWizardInputGUI($this->lng->txt('objs_file'),'files');
 		$files->setFilenames(array(0 => ''));
 		$this->form->addItem($files);
-				
+
 		switch($a_mode)
 		{
 			case 'create':
@@ -1699,20 +1753,20 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				$this->form->addCommandButton('save',$this->lng->txt('event_btn_add'));
 				$this->form->addCommandButton('saveAndAssignMaterials',$this->lng->txt('event_btn_add_edit'));
 				$this->form->addCommandButton('cancelEdit',$this->lng->txt('cancel'));
-		
+
 				return true;
-			
+
 			case 'edit':
 				$this->form->setTitle($this->lng->txt('event_table_update'));
 
 				$this->form->addCommandButton('update',$this->lng->txt('save'));
 				$this->form->addCommandButton('cancelEdit',$this->lng->txt('cancel'));
-				
+
 				return true;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * load settings
 	 *
@@ -1721,17 +1775,17 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	 * @return
 	 */
 	protected function load()
-	{		
+	{
 		$event = $this->form->getItemByPostVar('event');
 		if($event->getStart() && $event->getEnd())
 		{
 			$this->object->getFirstAppointment()->setStartingTime($event->getStart()->get(IL_CAL_UNIX));
 			$this->object->getFirstAppointment()->setEndingTime($event->getStart()->get(IL_CAL_UNIX));
 			$this->object->getFirstAppointment()->setStart($event->getStart());
-			$this->object->getFirstAppointment()->setEnd($event->getEnd());			
+			$this->object->getFirstAppointment()->setEnd($event->getEnd());
 			$this->object->getFirstAppointment()->toggleFulltime($event->getStart() instanceof ilDate);
 		}
-		
+
 		$this->object->setTitle(ilUtil::stripSlashes($_POST['title']));
 		$this->object->setDescription(ilUtil::stripSlashes($_POST['desc']));
 		$this->object->setLocation(ilUtil::stripSlashes($_POST['location']));
@@ -1739,24 +1793,32 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$this->object->setPhone(ilUtil::stripSlashes($_POST['tutor_phone']));
 		$this->object->setEmail(ilUtil::stripSlashes($_POST['tutor_email']));
 		$this->object->setDetails(ilUtil::stripSlashes($_POST['details']));
-		
+
+		// cat-tms-patch start
+		$this->object->setTutorSource((int)ilUtil::stripSlashes($_POST[self::INPUT_TUTOR_SOURCE]));
+		if($this->object->getTutorSource() === \ilObjSession::TUTOR_CFG_FROMCOURSE) {
+			$tids = $_POST[self::INPUT_TUTOR_SELECTION];
+			$this->object->setAssignedTutors($tids);
+		}
+		// cat-tms-patch end
+
 		$this->object->setRegistrationType((int) $_POST['registration_type']);
 		// $this->object->setRegistrationMinUsers((int) $_POST['registration_min_members']);
 		$this->object->setRegistrationMaxUsers((int) $_POST['registration_max_members']);
-		$this->object->enableRegistrationUserLimit((int) $_POST['registration_membership_limited']);		
-		
+		$this->object->enableRegistrationUserLimit((int) $_POST['registration_membership_limited']);
+
 		switch((int) $_POST['waiting_list'])
 		{
 			case 2:
 				$this->object->enableRegistrationWaitingList(true);
 				$this->object->setWaitingListAutoFill(true);
 				break;
-			
+
 			case 1:
 				$this->object->enableRegistrationWaitingList(true);
 				$this->object->setWaitingListAutoFill(false);
 				break;
-			
+
 			default:
 				$this->object->enableRegistrationWaitingList(false);
 				$this->object->setWaitingListAutoFill(false);
@@ -1774,21 +1836,21 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	{
 		include_once('./Modules/Session/classes/class.ilSessionRecurrence.php');
 		$this->rec = new ilSessionRecurrence();
-		
+
 		switch($_POST['frequence'])
 		{
 			case IL_CAL_FREQ_DAILY:
 				$this->rec->setFrequenceType($_POST['frequence']);
 				$this->rec->setInterval((int) $_POST['count_DAILY']);
 				break;
-			
+
 			case IL_CAL_FREQ_WEEKLY:
 				$this->rec->setFrequenceType($_POST['frequence']);
 				$this->rec->setInterval((int) $_POST['count_WEEKLY']);
 				if(is_array($_POST['byday_WEEKLY']))
 				{
 					$this->rec->setBYDAY(ilUtil::stripSlashes(implode(',',$_POST['byday_WEEKLY'])));
-				}				
+				}
 				break;
 
 			case IL_CAL_FREQ_MONTHLY:
@@ -1799,7 +1861,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 					case 0:
 						// nothing to do;
 						break;
-					
+
 					case 1:
 						switch((int) $_POST['monthly_byday_day'])
 						{
@@ -1808,24 +1870,24 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 								$this->rec->setBYSETPOS((int) $_POST['monthly_byday_num']);
 								$this->rec->setBYDAY('MO,TU,WE,TH,FR');
 								break;
-								
+
 							case 9:
 								// Day of month
 								$this->rec->setBYMONTHDAY((int) $_POST['monthly_byday_num']);
 								break;
-								
+
 							default:
 								$this->rec->setBYDAY((int) $_POST['monthly_byday_num'].$_POST['monthly_byday_day']);
 								break;
 						}
 						break;
-					
+
 					case 2:
 						$this->rec->setBYMONTHDAY((int) $_POST['monthly_bymonthday']);
 						break;
 				}
-				break;			
-			
+				break;
+
 			case IL_CAL_FREQ_YEARLY:
 				$this->rec->setFrequenceType($_POST['frequence']);
 				$this->rec->setInterval((int) $_POST['count_YEARLY']);
@@ -1834,20 +1896,20 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 					case 0:
 						// nothing to do;
 						break;
-					
+
 					case 1:
 						$this->rec->setBYMONTH((int) $_POST['yearly_bymonth_byday']);
 						$this->rec->setBYDAY((int) $_POST['yearly_byday_num'].$_POST['yearly_byday']);
 						break;
-					
+
 					case 2:
 						$this->rec->setBYMONTH((int) $_POST['yearly_bymonth_by_monthday']);
 						$this->rec->setBYMONTHDAY((int) $_POST['yearly_bymonthday']);
 						break;
 				}
-				break;			
+				break;
 		}
-		
+
 		// UNTIL
 		switch((int) $_POST['until_type'])
 		{
@@ -1855,12 +1917,12 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				$this->rec->setFrequenceUntilDate(null);
 				// nothing to do
 				break;
-				
+
 			case 2:
 				$this->rec->setFrequenceUntilDate(null);
 				$this->rec->setFrequenceUntilCount((int) $_POST['count']);
 				break;
-				
+
 			case 3:
 				$frequence = $this->form->getItemByPostVar('frequence');
 				$end = $frequence->getRecurrence()->getFrequenceUntilDate();
@@ -1869,10 +1931,10 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 				break;
 		}
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 *
 	 * @access protected
 	 * @param
@@ -1887,45 +1949,45 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	 * Add session locator
 	 *
 	 * @access public
-	 * 
+	 *
 	 */
 	public function addLocatorItems()
 	{
 		global $ilLocator;
-		
+
 		if (!$this->getCreationMode())
-		{						
+		{
 			// see prepareOutput()
 			include_once './Modules/Session/classes/class.ilSessionAppointment.php';
-			$title = strlen($this->object->getTitle()) ? (': '.$this->object->getTitle()) : ''; 
+			$title = strlen($this->object->getTitle()) ? (': '.$this->object->getTitle()) : '';
 			$title = $this->object->getFirstAppointment()->appointmentToString().$title;
-		
+
 			$ilLocator->addItem($title, $this->ctrl->getLinkTarget($this, "infoScreen"), "", $_GET["ref_id"]);
 		}
 	}
-	
+
 	/**
 	 * Build tabs
 	 *
 	 * @access public
-	 * 
+	 *
 	 */
 	public function getTabs()
 	{
 	 	global $ilAccess, $ilTabs, $tree, $ilCtrl, $ilHelp;
 
 	 	$ilHelp->setScreenIdComponent("sess");
-	 	
+
 		$parent_id = $tree->getParentId($this->object->getRefId());
-		
+
 		// #11650
-		$parent_type = ilObject::_lookupType($parent_id, true);		
+		$parent_type = ilObject::_lookupType($parent_id, true);
 
 		$ilCtrl->setParameterByClass("ilrepositorygui", "ref_id", $parent_id);
 		$this->tabs_gui->setBackTarget($this->lng->txt('back_to_'.$parent_type.'_content'),
 			$ilCtrl->getLinkTargetByClass("ilrepositorygui", ""));
 		$ilCtrl->setParameterByClass("ilrepositorygui", "ref_id", $_GET["ref_id"]);
-		
+
 		$this->tabs_gui->addTarget('info_short',
 							 $this->ctrl->getLinkTarget($this,'infoScreen'));
 
@@ -1938,7 +2000,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$this->tabs_gui->addTarget('event_edit_members',
 								 $this->ctrl->getLinkTarget($this,'members'));
 	 	}
-		
+
 		// learning progress
 		include_once './Services/Tracking/classes/class.ilLearningProgressAccess.php';
 		if(ilLearningProgressAccess::checkAccess($this->object->getRefId()))
@@ -1963,16 +2025,16 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$this->tabs_gui->addTarget("perm_settings",
 				$this->ctrl->getLinkTargetByClass("ilpermissiongui", "perm"), array("perm","info","owner"), 'ilpermissiongui');
 		}
-	 	
+
 	}
-	
+
 	/**
 	 * Custom callback after object is created (in parent containert
-	 * 
-	 * @param ilObject $a_obj 
-	 */	
+	 *
+	 * @param ilObject $a_obj
+	 */
 	public function afterSaveCallback(ilObject $a_obj)
-	{		
+	{
 		// add new object to materials
 		include_once './Modules/Session/classes/class.ilEventItems.php';
 		$event_items = new ilEventItems($this->object->getId());
@@ -1983,8 +2045,8 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		ilUtil::sendSuccess($this->lng->txt("object_added"), true);
 		$this->ctrl->redirect($this, "materials");
 		*/
-	}	
-	
+	}
+
 	/**
 	 * Send mail to selected users
 	 */
@@ -1996,7 +2058,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$mem = new ilMembershipMailGUI($this);
 		$GLOBALS['ilCtrl']->forwardCommand($mem);
 	}
-	
+
 	/**
 	 * Used for waiting list
 	 */
@@ -2009,9 +2071,9 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		}
 		return $tmp_data;
 	}
-	
+
 	/**
-	 * add from waiting list 
+	 * add from waiting list
 	 *
 	 * @access public
 	 * @param
@@ -2020,17 +2082,17 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function assignFromWaitingListObject()
 	{
 		$this->checkPermission('write');
-		
+
 		if(!count($_POST["waiting"]))
 		{
 			ilUtil::sendFailure($this->lng->txt("no_checkbox"));
 			$this->membersObject();
 			return false;
 		}
-		
+
 		include_once('./Modules/Session/classes/class.ilSessionWaitingList.php');
 		$waiting_list = new ilSessionWaitingList($this->object->getId());
-		
+
 		include_once './Modules/Session/classes/class.ilEventParticipants.php';
 		$part = new ilEventParticipants($this->object->getId());
 
@@ -2046,7 +2108,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$noti->setRecipients(array($user_id));
 			$noti->setType(ilSessionMembershipMailNotification::TYPE_ACCEPTED_SUBSCRIPTION_MEMBER);
 			$noti->send();
-			
+
 			++$added_users;
 		}
 		if($added_users)
@@ -2063,7 +2125,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			return false;
 		}
 	}
-	
+
 	/**
 	 * refuse from waiting list
 	 *
@@ -2073,35 +2135,35 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	public function refuseFromListObject()
 	{
 		$this->checkPermission('write');
-		
+
 		if(!count($_POST['waiting']))
 		{
 			ilUtil::sendFailure($this->lng->txt('no_checkbox'));
 			$this->membersObject();
 			return false;
 		}
-		
+
 		include_once('./Modules/Session/classes/class.ilSessionWaitingList.php');
 		$waiting_list = new ilSessionWaitingList($this->object->getId());
 
 		foreach($_POST["waiting"] as $user_id)
 		{
 			$waiting_list->removeFromList($user_id);
-			
+
 			include_once './Modules/Session/classes/class.ilSessionMembershipMailNotification.php';
 			$noti = new ilSessionMembershipMailNotification();
 			$noti->setRefId($this->object->getRefId());
 			$noti->setRecipients(array($user_id));
 			$noti->setType(ilSessionMembershipMailNotification::TYPE_REFUSED_SUBSCRIPTION_MEMBER);
 			$noti->send();
-			
+
 		}
-		
+
 		ilUtil::sendSuccess($this->lng->txt('sess_users_removed_from_list'));
 		$this->membersObject();
 		return true;
 	}
-	
+
 	/**
 	 * assign subscribers
 	 *
@@ -2113,17 +2175,17 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		global $lng,$ilUser;
 
 		$this->checkPermission('write');
-		
+
 		if(!count($_POST['subscribers']))
 		{
 			ilUtil::sendFailure($this->lng->txt('no_checkbox'));
 			$this->membersObject();
 			return false;
 		}
-		
+
 		include_once './Services/Membership/classes/class.ilParticipants.php';
 		$part = ilParticipants::getInstanceByObjId($this->object->getId());
-		
+
 		foreach($_POST['subscribers'] as $usr_id)
 		{
 			$part->add($usr_id);
@@ -2140,7 +2202,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$this->ctrl->redirect($this,'members');
 		return true;
 	}
-	
+
 	/**
 	 * refuse subscribers
 	 *
@@ -2152,20 +2214,20 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		global $lng;
 
 		$this->checkPermission('write');
-		
+
 		if(!count($_POST['subscribers']))
 		{
 			ilUtil::sendFailure($this->lng->txt('no_checkbox'));
 			$this->membersObject();
 			return false;
 		}
-		
+
 		include_once './Services/Membership/classes/class.ilParticipants.php';
 		$part = ilParticipants::getInstanceByObjId($this->object->getId());
 		foreach($_POST['subscribers'] as $usr_id)
 		{
 			$part->deleteSubscriber($usr_id);
-			
+
 			include_once './Modules/Session/classes/class.ilSessionMembershipMailNotification.php';
 			$noti = new ilSessionMembershipMailNotification();
 			$noti->setRefId($this->object->getRefId());
@@ -2176,7 +2238,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		ilUtil::sendSuccess($this->lng->txt("sess_msg_applicants_removed"));
 		$this->membersObject();
 		return true;
-		
+
 	}
 	/**
 	 * container ref id
@@ -2346,13 +2408,12 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	protected function cancelEditObject()
 	{
 		global $ilCtrl, $tree;
-		
+
 		$parent_id = $tree->getParentId((int) $_REQUEST['ref_id']);
-		
+
 		$ilCtrl->setParameterByClass("ilrepositorygui", "ref_id", $parent_id);
 
 		$ilCtrl->redirectByClass("ilrepositorygui", "");
 	}
-
 }
 ?>
