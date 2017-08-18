@@ -18248,7 +18248,6 @@ while(TRUE);
 
 <#5071>
 <?php
-
 $ilDB->manipulate('delete from obj_members where admin = '.
 	$ilDB->quote(0,'integer').' and tutor = '.
 	$ilDB->quote(0,'integer').' and member = '.
@@ -18261,6 +18260,35 @@ $ilDB->manipulate('delete from obj_members where admin = '.
 ?>
 <#5073>
 <?php
+if (!$ilDB->tableColumnExists('iass_settings', 'event_time_place_required')) {
+	$ilDB->addTableColumn('iass_settings', 'event_time_place_required', array(
+	"type" => "integer",
+	"length" => 1,
+	"notnull" => true,
+	"default" => 0
+	));
+}
+?>
+<#5074>
+<?php
+if (!$ilDB->tableColumnExists('iass_members', 'place')) {
+	$ilDB->addTableColumn('iass_members', 'place', array(
+	"type" => "text",
+	"length" => 255
+	));
+}
+?>
+<#5075>
+<?php
+if (!$ilDB->tableColumnExists('iass_members', 'event_time')) {
+	$ilDB->addTableColumn('iass_members', 'event_time', array(
+	"type" => "integer",
+	"length" => 8
+	));
+}
+?>
+<#5076>
+<?php
 	// cat-tms-patch start
 	if (!$ilDB->tableColumnExists('event', 'tutor_source')){
 		$ilDB->addTableColumn('event', 'tutor_source', array(
@@ -18272,7 +18300,7 @@ $ilDB->manipulate('delete from obj_members where admin = '.
 	}
 	// cat-tms-patch end
 ?>
-<#5074>
+<#5077>
 <?php
 	// cat-tms-patch start
 	$table_name = 'event_tutors';
@@ -18303,10 +18331,9 @@ $ilDB->manipulate('delete from obj_members where admin = '.
 	}
 	// cat-tms-patch end
 ?>
-<#5075>
+<#5078>
 <?php
 	// cat-tms-patch start
 	$ilDB->addPrimaryKey('event_tutors', array("id"));
 	// cat-tms-patch end
 ?>
-

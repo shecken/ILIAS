@@ -848,19 +848,21 @@ class ilObjSession extends ilObject
 	 */
 	public function getParentCourseTutors() {
 		global $tree;
-		if(!$this->getRefId()) {
-			return array();
-		}
+		$tutors = array();
 		$parent = array(
 			'type'=>'none',
 			'ref_id' => $this->getRefId()
 		);
+
 		while($parent['type'] !== 'crs') {
+			if(! $parent['ref_id'] || $parent['type']=='root') {
+				return $tutors;
+			}
 			$parent = $tree->getParentNodeData($parent['ref_id']);
 		}
+
 		$crs = ilObjectFactory::getInstanceByObjId($parent['obj_id'],false);
 		$members = $crs->getMembersObject();
-		$tutors = array();
 		foreach($members->getTutors() as $user_id) {
 			$tutors[] = ilObjectFactory::getInstanceByObjId($user_id,false);
 		}
