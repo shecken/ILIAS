@@ -18270,7 +18270,7 @@ if (!$ilDB->tableColumnExists('iass_settings', 'event_time_place_required')) {
 	));
 }
 ?>
-<#5099>
+<#5074>
 <?php
 if (!$ilDB->tableColumnExists('iass_members', 'place')) {
 	$ilDB->addTableColumn('iass_members', 'place', array(
@@ -18278,7 +18278,9 @@ if (!$ilDB->tableColumnExists('iass_members', 'place')) {
 	"length" => 255
 	));
 }
-
+?>
+<#5075>
+<?php
 if (!$ilDB->tableColumnExists('iass_members', 'event_time')) {
 	$ilDB->addTableColumn('iass_members', 'event_time', array(
 	"type" => "integer",
