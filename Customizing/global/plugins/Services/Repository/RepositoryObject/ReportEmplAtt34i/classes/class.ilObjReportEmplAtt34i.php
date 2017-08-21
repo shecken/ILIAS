@@ -101,8 +101,7 @@ class ilObjReportEmplAtt34i extends ilObjReportBase
 				->on("orgu_filter.usr_id = usr.user_id "
 					." 	AND ".$this->gIldb->in('orgu_filter.orgu_id', $this->getSelectedAndRecursiveOrgus(), false, 'integer')
 					."	AND orgu_filter.action >=0 "
-					."	AND orgu_filter.hist_historic = 0 "
-					."	AND orgu_filter.rol_title = ".$this->gIldb->quote("Mitarbeiter", "text"));
+					."	AND orgu_filter.hist_historic = 0 ");
 		}
 		$query
 			->group_by("usr.user_id")
@@ -202,19 +201,18 @@ class ilObjReportEmplAtt34i extends ilObjReportBase
 		$filter_courses_conditions = '';
 		if ($this->settings['is_local']) {
 			$sub_course_tpls = $this->filterTemplates($this->getSubtreeTypeIdsBelowParentType('crs', 'cat'));
-
 			$filter_courses_conditions
 				= '		AND '.$this->gIldb->in('crs.template_obj_id', $sub_course_tpls, false, 'integer');
 		}
+		$visible_users = array_unique($this->user_utils->getEmployeesWhereUserCanViewEduBios());
 		return '	WHERE'.PHP_EOL
 				.'		usr.hist_historic = 0'
-				.'		AND '.$this->gIldb->in("usr.user_id", $this->user_utils->getEmployeesWhereUserCanViewEduBios(), false, "integer")
+				.'		AND '.$this->gIldb->in("usr.user_id", $visible_users, false, "integer")
 				.'		AND usrcrs.booking_status = \'gebucht\''
 				.'		AND usrcrs.participation_status IS NOT NULL'
 				.'		AND '.$this->gIldb->in('usrcrs.participation_status', ['teilgenommen','nicht gesetzt'], false, 'text')
 				.'		AND orgu_all.action >= 0'
 				.'		AND orgu_all.hist_historic = 0'
-				.'		AND orgu_all.rol_title = \'Mitarbeiter\''
 				.'		AND role.action = 1'
 				.'		AND role.hist_historic = 0'
 				.'		'.$filter_courses_conditions
