@@ -891,11 +891,7 @@ abstract class ilPlugin
 					" WHERE module = ".$ilDB->quote($prefix, "text"));
 			}
 
-			// clear the event listening
-			include_once("Services/Component/classes/class.ilPluginReader.php");
-			$reader = new ilPluginReader($this->getDirectory() . '/plugin.xml',
-				$this->getComponentType(), $this->getComponentName(), $this->getSlotId(), $this->getPluginName());
-			$reader->clearEvents();
+			$this->clearEventListening();
 
 			// db version is kept in il_plugin - will be deleted, too						
 			
@@ -954,12 +950,7 @@ abstract class ilPlugin
 		$ilCtrl->insertCtrlCalls("ilobjcomponentsettingsgui", ilPlugin::getConfigureClassName($this->getPluginName()),
 			$this->getPrefix());
 
-		// read the plugin.xml to get the event listening
-		include_once("Services/Component/classes/class.ilPluginReader.php");
-		$reader = new ilPluginReader($this->getDirectory() . '/plugin.xml',
-			$this->getComponentType(), $this->getComponentName(), $this->getSlotId(), $this->getPluginName());
-		$reader->clearEvents();
-		$reader->startParsing();
+		$this->readEventListening();
 
 		// set last update version to current version
 		if ($result === true)
@@ -975,6 +966,28 @@ abstract class ilPlugin
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Read the event listening definitions from the plugin.xml (if file exists)
+	 */
+	protected function readEventListening()
+	{
+		$reader = new ilPluginReader($this->getDirectory() . '/plugin.xml',
+			$this->getComponentType(), $this->getComponentName(), $this->getSlotId(), $this->getPluginName());
+		$reader->clearEvents();
+		$reader->startParsing();
+	}
+
+
+	/**
+	 * Clear the entries of this plugin in the event handling table
+	 */
+	protected function clearEventListening()
+	{
+		$reader = new ilPluginReader($this->getDirectory() . '/plugin.xml',
+			$this->getComponentType(), $this->getComponentName(), $this->getSlotId(), $this->getPluginName());
+		$reader->clearEvents();
 	}
 
 	/**
