@@ -5,9 +5,9 @@
 include_once './Services/Authentication/classes/class.ilSession.php';
 
 /**
- * 
  *
- * @author Stefan Meyer <smeyer.ilias@gmx.de> 
+ *
+ * @author Stefan Meyer <smeyer.ilias@gmx.de>
  *
  */
 class ilAuthSession
@@ -15,16 +15,16 @@ class ilAuthSession
 	const SESSION_AUTH_AUTHENTICATED = '_authsession_authenticated';
 	const SESSION_AUTH_USER_ID = '_authsession_user_id';
 	const SESSION_AUTH_EXPIRED = '_authsession_expired';
-	
+
 	private static $instance = null;
-	
+
 	private $logger = null;
-	
+
 	private $id = '';
 	private $user_id = 0;
 	private $expired = false;
 	private $authenticated = false;
-	
+
 	/**
 	 * Consctructor
 	 */
@@ -32,7 +32,7 @@ class ilAuthSession
 	{
 		$this->logger = ilLoggerFactory::getLogger('auth');
 	}
-	
+
 	/**
 	 * Get instance
 	 * @return ilAuthSession
@@ -45,7 +45,7 @@ class ilAuthSession
 		}
 		return self::$instance = new self();
 	}
-	
+
 	/**
 	 * @return ilLogger
 	 */
@@ -53,17 +53,21 @@ class ilAuthSession
 	{
 		return $this->logger;
 	}
-	
+
 	/**
 	 * Start auth session
 	 * @return boolean
 	 */
 	public function init()
 	{
+		// Do not run in unit testing context
+		if (stripos($_SERVER["SCRIPT_NAME"], "phpunit") !== false) {
+			return true;
+		}
 		session_start();
-		
+
 		$this->setId(session_id());
-		
+
 		$user_id = (int) ilSession::get(self::SESSION_AUTH_USER_ID);
 
 		if($user_id)
@@ -72,7 +76,7 @@ class ilAuthSession
 			$this->setUserId(ilSession::get(self::SESSION_AUTH_USER_ID));
 			$this->expired = (int) ilSession::get(self::SESSION_AUTH_EXPIRED);
 			$this->authenticated = (int) ilSession::get(self::SESSION_AUTH_AUTHENTICATED);
-			
+
 			$this->validateExpiration();
 		}
 		else
@@ -84,7 +88,7 @@ class ilAuthSession
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Check if current session is valid (authenticated and not expired)
 	 * @return bool
@@ -93,7 +97,7 @@ class ilAuthSession
 	{
 		return !$this->isExpired() && $this->isAuthenticated();
 	}
-	
+
 	/**
 	 * Regenerate id
 	 */
@@ -104,7 +108,7 @@ class ilAuthSession
 		$this->setId(session_id());
 		$this->getLogger()->info('Session regenrate id: ['.substr($old_session_id,0,5).'] -> ['.  substr($this->getId(),0,5).']');
 	}
-	
+
 	/**
 	 * Logout user => stop session
 	 */
@@ -115,7 +119,7 @@ class ilAuthSession
 		session_regenerate_id(true);
 		session_destroy();
 	}
-	
+
 	/**
 	 * Check if session is authenticated
 	 */
@@ -123,7 +127,7 @@ class ilAuthSession
 	{
 		return $this->authenticated;
 	}
-	
+
 	/**
 	 * Set authenticated
 	 * @param authentication status $a_status
@@ -137,7 +141,7 @@ class ilAuthSession
 		ilSession::set(self::SESSION_AUTH_USER_ID, (int) $a_user_id);
 		$this->setExpired(false);
 	}
-	
+
 	/**
 	 * Check if current is or was expired in last request.
 	 * @return type
@@ -146,7 +150,7 @@ class ilAuthSession
 	{
 		return (bool) $this->expired;
 	}
-	
+
 	/**
 	 * Set session expired
 	 * @param type $a_status
@@ -156,7 +160,7 @@ class ilAuthSession
 		$this->expired = $a_status;
 		ilSession::set(self::SESSION_AUTH_EXPIRED, (int) $a_status);
 	}
-	
+
 	/**
 	 * Set authenticated user id
 	 * @param type $a_id
@@ -165,16 +169,16 @@ class ilAuthSession
 	{
 		$this->user_id = $a_id;
 	}
-	
+
 	/**
-	 * Get authenticated user id 
+	 * Get authenticated user id
 	 * @return int
 	 */
 	public function getUserId()
 	{
 		return $this->user_id;
 	}
-	
+
 	/**
 	 * Check expired value of session
 	 * @return bool
@@ -186,7 +190,7 @@ class ilAuthSession
 			// keep status
 			return false;
 		}
-		
+
 		if(time() > ilSession::lookupExpireTime($this->getId()))
 		{
 			$this->setExpired(true);
@@ -194,16 +198,16 @@ class ilAuthSession
 		}
 		return true;
 	}
-	
+
 	public function setId($a_id)
 	{
 		$this->id = $a_id;
 	}
-	
+
 	public function getId()
 	{
 		return $this->id;
 	}
-	
+
 }
 ?>
