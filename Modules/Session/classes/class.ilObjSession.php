@@ -114,7 +114,7 @@ class ilObjSession extends ilObject
 			$data['tutor_source'] = $row->tutor_source;
 			if($row->tutor_source == self::TUTOR_CFG_FROMCOURSE) {
 				$data['tutor_ids'] = self::lookupTutorReferences($a_obj_id);
-				self::getTutorData($data);
+				self::addTutorInformation($data);
 			}
 			// cat-tms-patch end
 		}
@@ -126,7 +126,7 @@ class ilObjSession extends ilObject
 	 *
 	 * @param array 	$data
 	 */
-	protected static function getTutorData(&$data)
+	protected static function addTutorInformation(&$data)
 	{
 		foreach ($data['tutor_ids'] as $tutor_id) {
 			$tutor = new ilObjUser($tutor_id);
