@@ -33,12 +33,19 @@ class ilMailPreviewGUI {
 		$tpl->setVariable("SUBJECT_LABEL", "Betreff");
 		$tpl->setVariable("SUBJECT", $this->template->getSubject());
 		$tpl->setVariable("MESSAGE_LABLE", "Nachricht");
-		$tpl->setVariable("MESSAGE", $this->placeholder($this->template->getMessage()));
+		$tpl->setVariable("MESSAGE", $this->populatePlaceholder($this->template->getMessage()));
 
 		return $tpl->get();
 	}
 
-	protected function placeholder($message) {
+	/**
+	 * Replace placeholders with default values
+	 *
+	 * @param string 	$message
+	 *
+	 * @return string
+	 */
+	protected function populatePlaceholder($message) {
 		$context_class_preview = $this->getPreviewClassNameFromContext();
 		require_once "Services/Mail/classes/Preview/class.".$context_class_preview.".php";
 		$context_preview = new $context_class_preview();
@@ -49,6 +56,11 @@ class ilMailPreviewGUI {
 		return $message;
 	}
 
+	/**
+	 * Get name of preview context by template context
+	 *
+	 * @return string
+	 */
 	protected function getPreviewClassNameFromContext() {
 		require_once 'Services/Mail/classes/class.ilMailTemplatePlaceholderResolver.php';
 		$context = ilMailTemplateService::getTemplateContextById($this->template->getContext());
