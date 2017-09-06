@@ -112,13 +112,28 @@ class ilObjSession extends ilObject
 			$data['phone']		= $row->tutor_phone ? $row->tutor_phone : '';
 			// cat-tms-patch start
 			$data['tutor_source'] = $row->tutor_source;
-			if($row->tutor_source === self::TUTOR_CFG_FROMCOURSE) {
+			if($row->tutor_source == self::TUTOR_CFG_FROMCOURSE) {
 				$data['tutor_ids'] = self::lookupTutorReferences($a_obj_id);
+				self::getTutorData($data);
 			}
 			// cat-tms-patch end
 		}
 		return (array) $data;
 	}
+	// cat-tms-patch start
+	/**
+	 * Get tutor data from event_tutor
+	 *
+	 * @param array 	$data
+	 */
+	protected static function getTutorData(&$data)
+	{
+		foreach ($data['tutor_ids'] as $tutor_id) {
+			$tutor = new ilObjUser($tutor_id);
+			$data['tutor']["name"][] = $tutor->getFullName();
+		}
+	}
+	// cat-tms-patch end
 
 	/**
 	 * get title
