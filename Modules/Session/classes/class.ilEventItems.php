@@ -96,8 +96,10 @@ class ilEventItems
 	{
 		return ilEventItems::_delete($this->getEventId());
 	}
-	
-	function _delete($a_event_id)
+
+	// cat-tms-patch start
+	public static function _delete($a_event_id)
+	// cat-tms-patch end
 	{
 		global $ilDB;
 
