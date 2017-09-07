@@ -973,6 +973,7 @@ abstract class ilPlugin
 	 */
 	protected function readEventListening()
 	{
+		require_once("Services/Component/classes/class.ilPluginReader.php");
 		$reader = new ilPluginReader($this->getDirectory() . '/plugin.xml',
 			$this->getComponentType(), $this->getComponentName(), $this->getSlotId(), $this->getPluginName());
 		$reader->clearEvents();
