@@ -21,3 +21,5 @@ selected_study_prg#:#Id des Studienprogramms
 trainer_view#:#Traineransicht
 no_prg_warning#:#Es konnte kein Studienprogramm mit der angegebenen Id gefunden werden.
 user_no_prg_warning#:#Der Report kann im Moment nicht angezeigt werden - Fehler in der Konfiguration
+obj_xspo_duplicate#:#Ausbildungs- und Qualifizierungspässe kopieren
+xspo_copy#:#Ausbildungs- und Qualifizierungspässe kopieren
