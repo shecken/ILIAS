@@ -19,6 +19,7 @@ class ilMailPreviewGUI {
 	public function __construct(ilMailTemplate $template) {
 		global $DIC;
 		$this->g_user = $DIC->user();
+		$this->g_lng = $DIC->language();
 		$this->template = $template;
 	}
 
@@ -28,14 +29,30 @@ class ilMailPreviewGUI {
 	 * @return string
 	 */
 	public function getHTML() {
-		$tpl = new ilTemplate("tpl.mail_preview.html", true, true, "Services/Mail");
-		$tpl->setVariable("PREVIEW_TITLE", "Vorschau für: ".$this->template->getTitle());
-		$tpl->setVariable("SUBJECT_LABEL", "Betreff");
-		$tpl->setVariable("SUBJECT", $this->template->getSubject());
-		$tpl->setVariable("MESSAGE_LABLE", "Nachricht");
-		$tpl->setVariable("MESSAGE", $this->populatePlaceholder($this->template->getMessage()));
+		require_once 'Services/Form/classes/class.ilPropertyFormGUI.php';
+		$form = new ilPropertyFormGUI();
+		$form->setPreventDoubleSubmission(false);
+		$form->setTableWidth('100%');
+		$form->setTitle("Vorschau für: ".$this->template->getTitle());
 
-		return $tpl->get();
+		require_once("Services/Mail/classes/class.ilMail.php");
+		$from = new ilCustomInputGUI($this->g_lng->txt('from'));
+		$from->setHtml(ilUtil::img(ilUtil::getImagePath('HeaderIconAvatar.svg'), ilMail::_getIliasMailerName()) . '<br />' . ilMail::_getIliasMailerName());
+		$form->addItem($from);
+
+		$to = new ilCustomInputGUI($this->g_lng->txt('mail_to'));
+		$to->setHtml(ilUtil::htmlencodePlainString($this->g_lng->txt('user'), false));
+		$form->addItem($to);
+
+		$subject = new ilCustomInputGUI($this->g_lng->txt('subject'));
+		$subject->setHtml(ilUtil::htmlencodePlainString($this->template->getSubject(), true));
+		$form->addItem($subject);
+
+		$message = new ilCustomInputGUI($this->g_lng->txt('message'));
+		$message->setHtml($this->populatePlaceholder($this->template->getMessage()));
+		$form->addItem($message);
+
+		return $form->getHtml();
 	}
 
 	/**
