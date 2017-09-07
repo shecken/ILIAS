@@ -4,19 +4,19 @@ lastname#:#Nachname
 orgunit#:#Org-Einheit
 entrydate#:#Eintrittsdatum
 status#:#Gesamtstatus
-obj_xspo#:#Übersicht über Studienprogramm
-xspo_new#:#Neuen Übersicht über Studienprogramm
-objs_xspo_duplicate#:#Übersicht über Studienprogramm kopieren
-xspo_add#:#Übersicht über Studienprogramm hinzufügen
+obj_xspo#:#Ausbildungs- und Qualifizierungspässe
+xspo_new#:#Neuen Ausbildungs- und Qualifizierungspässe
+objs_xspo_duplicate#:#Ausbildungs- und Qualifizierungspässe kopieren
+xspo_add#:#Ausbildungs- und Qualifizierungspässe hinzufügen
 period#:#Zeitraum
 xspo_content#:#Inhalt
 xspo_properties#:#Eigenschaften
-objs_xspo#:#Übersicht über Studienprogramm
+objs_xspo#:#Ausbildungs- und Qualifizierungspässe
 xspo_visible#:#sichtbar
-xspo_read#:#Lesezugriff auf Übersicht über Studienprogramm
-xspo_write#:#Übersicht über Studienprogramm bearbeiten
-xspo_delete#:#Übersicht über Studienprogramm löschen
-xspo_edit_permission#:#Rechte zu Übersicht über Studienprogramm bearbeiten
+xspo_read#:#Lesezugriff auf Ausbildungs- und Qualifizierungspässe
+xspo_write#:#Ausbildungs- und Qualifizierungspässe bearbeiten
+xspo_delete#:#Ausbildungs- und Qualifizierungspässe löschen
+xspo_edit_permission#:#Rechte zu Ausbildungs- und Qualifizierungspässe bearbeiten
 selected_study_prg#:#Id des Studienprogramms
 trainer_view#:#Traineransicht
 no_prg_warning#:#Es konnte kein Studienprogramm mit der angegebenen Id gefunden werden.
