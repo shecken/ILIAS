@@ -84,6 +84,19 @@ class ilObjReportStudyProgrammeGUI extends ilObjectPluginGUI
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	public function afterSave($newObj)
+	{
+		$sp_node_ref_id = $_POST['sp_node_ref_id'];
+		$settings = $newObj->getSettings()->withSPNodeRefId($sp_node_ref_id);
+		$newObj->setSettings($settings);
+		$newObj->update();
+		parent::afterSave($newObj);
+	}
+
+
+	/**
 	 * After object has been created -> jump to this command
 	 */
 	public function getAfterCreationCmd()

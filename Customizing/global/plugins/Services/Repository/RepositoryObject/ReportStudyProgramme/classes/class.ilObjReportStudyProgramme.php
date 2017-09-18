@@ -44,8 +44,7 @@ class ilObjReportStudyProgramme extends ilObjectPlugin
 	 */
 	public function doCreate()
 	{
-		$post = $_POST;
-		$this->xsp_pass_settings = $this->getActions()->create($post);
+		$this->xsp_pass_settings = $this->getActions()->create();
 	}
 
 	/**
@@ -77,7 +76,8 @@ class ilObjReportStudyProgramme extends ilObjectPlugin
 	 */
 	public function doCloneObject($new_obj, $a_target_id, $a_copy_id)
 	{
-		$new_obj->setSettings($this->xsp_pass_settings->withOnline(false));
+		$settings = $new_obj->getSettings()->withOnline(true)->withSPNodeRefId($this->getSettings()->getSPNodeRefId());
+		$new_obj->setSettings($settings);
 		$new_obj->update();
 	}
 
