@@ -76,7 +76,7 @@ class ilObjReportStudyProgramme extends ilObjectPlugin
 	 */
 	public function doCloneObject($new_obj, $a_target_id, $a_copy_id)
 	{
-		$settings = $new_obj->getSettings()->withOnline(true)->withSPNodeRefId($this->getSettings()->getSPNodeRefId());
+		$settings = $new_obj->getSettings()->withOnline(false)->withSPNodeRefId($this->getSettings()->getSPNodeRefId());
 		$new_obj->setSettings($settings);
 		$new_obj->update();
 	}
