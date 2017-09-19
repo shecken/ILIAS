@@ -17,10 +17,8 @@ class ilActions
 		$this->db = $db;
 	}
 
-	public function create(array $post)
+	public function create($sp_node_ref_id)
 	{
-		$sp_node_ref_id = $post[self::F_SP_NODE_REF_ID];
-
 		$new_xsp = new Settings\ReportStudyProgramme($this->obj_id, $sp_node_ref_id);
 		$this->db->insert($new_xsp);
 

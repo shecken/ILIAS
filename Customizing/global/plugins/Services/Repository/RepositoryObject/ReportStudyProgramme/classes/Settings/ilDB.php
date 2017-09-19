@@ -113,4 +113,18 @@ class ilDB implements DB
 			$this->db->createTable(self::XSP_TABLE, $fields);
 		}
 	}
+
+	public function update1()
+	{
+		if ($this->db->tableColumnExists(self::XSP_TABLE, "sp_node_ref_id")) {
+			$this->db->modifyTableColumn(self::XSP_TABLE, "sp_node_ref_id", array('type' => 'integer',
+																				  'length' => 4,
+																				  'notnull' => false));
+		}
+		if ($this->db->tableColumnExists(self::XSP_TABLE, "is_online")) {
+			$this->db->modifyTableColumn(self::XSP_TABLE, "is_online", array('type' => 'integer',
+																			 'length' => 1,
+																			 "notnull" => "false"));
+		}
+	}
 }

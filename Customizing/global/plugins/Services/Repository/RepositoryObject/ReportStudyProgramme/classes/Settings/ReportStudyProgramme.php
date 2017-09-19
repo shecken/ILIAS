@@ -87,7 +87,7 @@ class ReportStudyProgramme
 	{
 		assert('is_int($sp_node_ref_id)');
 		$clone = clone $this;
-		$clone->sp_node_ref_id;
+		$clone->sp_node_ref_id = $sp_node_ref_id;
 		return $clone;
 	}
 }
