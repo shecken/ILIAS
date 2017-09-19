@@ -112,13 +112,28 @@ class ilObjSession extends ilObject
 			$data['phone']		= $row->tutor_phone ? $row->tutor_phone : '';
 			// cat-tms-patch start
 			$data['tutor_source'] = $row->tutor_source;
-			if($row->tutor_source === self::TUTOR_CFG_FROMCOURSE) {
+			if($row->tutor_source == self::TUTOR_CFG_FROMCOURSE) {
 				$data['tutor_ids'] = self::lookupTutorReferences($a_obj_id);
+				self::addTutorInformation($data);
 			}
 			// cat-tms-patch end
 		}
 		return (array) $data;
 	}
+	// cat-tms-patch start
+	/**
+	 * Get tutor data from event_tutor
+	 *
+	 * @param array 	$data
+	 */
+	protected static function addTutorInformation(&$data)
+	{
+		foreach ($data['tutor_ids'] as $tutor_id) {
+			$tutor = new ilObjUser($tutor_id);
+			$data['tutor']["name"][] = $tutor->getFullName();
+		}
+	}
+	// cat-tms-patch end
 
 	/**
 	 * get title
@@ -540,7 +555,9 @@ class ilObjSession extends ilObject
 
 		$next_id = $ilDB->nextId('event');
 		$query = "INSERT INTO event (event_id,obj_id,location,tutor_name,tutor_phone,tutor_email,details,registration, ".
-			'reg_type, reg_limit_users, reg_limited, reg_waiting_list, reg_min_users, reg_auto_wait) '.
+			// cat-tms-patch start
+			//'reg_type, reg_limit_users, reg_limited, reg_waiting_list, reg_min_users, reg_auto_wait) '.
+			'reg_type, reg_limit_users, reg_limited, reg_waiting_list, reg_min_users, reg_auto_wait, tutor_source) '.
 			"VALUES( ".
 			$ilDB->quote($next_id,'integer').", ".
 			$this->db->quote($this->getId() ,'integer').", ".
@@ -555,9 +572,20 @@ class ilObjSession extends ilObject
 			$this->db->quote($this->isRegistrationUserLimitEnabled(),'integer').', '.
 			$this->db->quote($this->isRegistrationWaitingListEnabled(),'integer').', '.
 			$this->db->quote($this->getRegistrationMinUsers(),'integer').', '.
-			$this->db->quote($this->hasWaitingListAutoFill(),'integer').' '.
+			// cat-tms-patch start
+			//$this->db->quote($this->hasWaitingListAutoFill(),'integer').' '.
+			$this->db->quote($this->hasWaitingListAutoFill(),'integer').', '.
+			$this->db->quote($this->getTutorSource(),'integer')." ".
+			// cat-tms-patch end
 			")";
 		$res = $ilDB->manipulate($query);
+
+		// cat-tms-patch start
+		if($this->getTutorSource() === self::TUTOR_CFG_FROMCOURSE) {
+			$this->storeTutorReferences();
+		}
+		// cat-tms-patch end
+
 		$this->event_id = $next_id;
 
 		$ilAppEventHandler->raise('Modules/Session',
@@ -849,10 +877,14 @@ class ilObjSession extends ilObject
 	public function getParentCourseTutors() {
 		global $tree;
 		$tutors = array();
-		$parent = array(
-			'type'=>'none',
-			'ref_id' => $this->getRefId()
-		);
+
+		$ref_id = $this->getRefId();
+		//during creation:
+		if(! $ref_id) {
+			$ref_id = $_GET['ref_id'];
+		}
+
+		$parent = $tree->getNodeData($ref_id);
 
 		while($parent['type'] !== 'crs') {
 			if(! $parent['ref_id'] || $parent['type']=='root') {

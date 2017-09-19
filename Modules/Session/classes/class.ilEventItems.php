@@ -96,8 +96,8 @@ class ilEventItems
 	{
 		return ilEventItems::_delete($this->getEventId());
 	}
-	
-	function _delete($a_event_id)
+
+	public static function _delete($a_event_id)
 	{
 		global $ilDB;
 

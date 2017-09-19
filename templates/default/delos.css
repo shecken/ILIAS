@@ -8724,10 +8724,6 @@ img.ilIcon {
   height: 0px;
   display: none;
 }
-.il_VAccordionContentDef > div,
-.il_HAccordionContentDef > div {
-  overflow: auto;
-}
 div.ilc_va_icont_VAccordICont {
   overflow: visible !important;
 }
@@ -8790,9 +8786,37 @@ select.form-control {
   color: #4d4d4d;
   font-size: 100%;
 }
+.form-horizontal .control-label {
+  padding-top: 0;
+  line-height: 24px;
+}
 .form-horizontal .control-label.col-sm-3.il_textarea {
   text-align: left;
   width: 100%;
+}
+.form-horizontal .form-group .col-sm-9 {
+  line-height: 24px;
+}
+.form-horizontal .radio,
+.form-horizontal .checkbox,
+.form-horizontal .radio-inline,
+.form-horizontal .checkbox-inline {
+  padding-top: 0;
+  line-height: 24px;
+}
+.form-horizontal .help-block {
+  line-height: normal;
+}
+.radio input[type="radio"],
+.radio-inline input[type="radio"],
+.checkbox input[type="checkbox"],
+.checkbox-inline input[type="checkbox"] {
+  position: static;
+  margin-left: -20px;
+  margin-top: 0;
+  min-height: 24px;
+  vertical-align: top;
+  line-height: 24px;
 }
 [dir="rtl"] .form-horizontal .control-label {
   text-align: left;
@@ -12627,7 +12651,7 @@ div.ilPCMyCoursesPath {
   display: block;
   height: 14px;
   width: 14px;
-  background: url("../../Services/OnScreenChat/templates/default/images/emoticons_trigger.png") no-repeat;
+  background: url("images/emoticons_trigger.png") no-repeat;
   background-size: cover;
   z-index: 1000;
 }
