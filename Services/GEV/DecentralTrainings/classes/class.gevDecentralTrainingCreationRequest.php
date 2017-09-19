@@ -260,7 +260,9 @@ class gevDecentralTrainingCreationRequest {
 		$res = $db->query(
 			 "SELECT DISTINCT c.child ref_id, od.type "
 			." FROM tree p"
-			." RIGHT JOIN tree c ON c.lft > p.lft AND c.rgt < p.rgt AND c.tree = p.tree"
+			." RIGHT JOIN tree c"
+			."	ON LOCATE(CONCAT(p.path,'.'),c.path) = 1"
+			."	AND c.tree = p.tree"
 			." LEFT JOIN object_reference oref ON oref.ref_id = c.child"
 			." LEFT JOIN object_data od ON od.obj_id = oref.obj_id"
 			." WHERE p.child = ".$db->quote($info["ref_id"], "integer")

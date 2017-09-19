@@ -1541,10 +1541,10 @@ class gevUserUtils
 			$ds_ous[] = $ou["ref_id"];
 		}
 
-		$lr_res = $this->db->query("SELECT lft, rgt FROM tree WHERE ".$this->db->in("child", $ds_ous, false, "integer"));
+		$lr_res = $this->db->query("SELECT path FROM tree WHERE ".$this->db->in("child", $ds_ous, false, "integer"));
 
 		while ($lr_rec = $this->db->fetchAssoc($lr_res)) {
-			$where[] = "(tr.lft > ".$this->db->quote($lr_rec["lft"])." AND tr.rgt < ".$this->db->quote($lr_rec["rgt"]).")";
+			$where[] = "(LOCATE(CONCAT(".$this->db->quote($lr_rec["path"],'text').",'.'),tr.path) = 1)";
 		}
 		$where = implode(" OR ", $where);
 
