@@ -27,11 +27,11 @@ class ilTree
 	const POS_FIRST_NODE = -1;
 	
 	
-	const RELATION_NONE = 0;
 	const RELATION_CHILD = 1;		// including grand child
 	const RELATION_PARENT = 2;		// including grand child
 	const RELATION_SIBLING = 3;
 	const RELATION_EQUALS = 4;
+	const RELATION_NONE = 5;
 	
 	
 	/**
@@ -1385,7 +1385,7 @@ class ilTree
 			throw new InvalidArgumentException('Missing or empty parameter $a_node_id: '. $a_node_id);
 		}
 		
-		$query = 'SELECT * FROM tree '.
+		$query = 'SELECT * FROM '.$this->table_tree.' '.
 				'WHERE child = '.$ilDB->quote($a_node_id,'integer');
 		$res = $ilDB->query($query);
 		while($row = $res->fetchRow(DB_FETCHMODE_ASSOC))
@@ -2620,16 +2620,18 @@ class ilTree
 	{
 		$old_parent_id = $this->getParentId($a_source_id);
 		$this->getTreeImplementation()->moveTree($a_source_id,$a_target_id,$a_location);
-		$GLOBALS['ilAppEventHandler']->raise(
-				"Services/Tree", 
-				"moveTree", 
-				array(
-					'tree'		=> $this->table_tree,
-					'source_id' => $a_source_id, 
-					'target_id' => $a_target_id,
-					'old_parent_id'	=> $old_parent_id
-					)
-		);
+		if (isset($GLOBALS["ilAppEventHandler"]) && $this->__isMainTree()) {
+			$GLOBALS['ilAppEventHandler']->raise(
+					"Services/Tree",
+					"moveTree",
+					array(
+						'tree'		=> $this->table_tree,
+						'source_id' => $a_source_id,
+						'target_id' => $a_target_id,
+						'old_parent_id'	=> $old_parent_id
+						)
+			);
+		}
 		return true;
 	}
 	
