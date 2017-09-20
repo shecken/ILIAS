@@ -496,8 +496,9 @@ class ilMailTemplateGUI
 		}
 
 		require_once 'Services/Mail/classes/Preview/class.ilMailPreviewGUI.php';
+		require_once("Services/Mail/classes/Preview/ilPreviewFactory.php");
 		$template = $this->provider->getTemplateById((int)$get['tpl_id']);
-		$gui = new ilMailPreviewGUI($template);
+		$gui = new ilMailPreviewGUI($template, new ilPreviewFactory());
 
 		$this->tpl->setContent($gui->getHTML());
 	}
