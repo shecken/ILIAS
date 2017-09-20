@@ -14,7 +14,6 @@ class ilCourseMailTemplateTutorContextPreview extends ilCourseMailTemplateTutorC
 	const ID = 'crs_context_tutor_manual_preview';
 
 	const DEFAULT_COURSE_TITLE = "preview_crs_title";
-	const DEFAULT_COURSE_LINK = "preview_crs_link";
 	const DEFAULT_COURSE_STATUS = "preview_crs_status";
 	const DEFAULT_COURSE_MARK = "preview_crs_mark";
 	const DEFAULT_COURSE_TIME_SPENT = "3671";
@@ -50,7 +49,6 @@ class ilCourseMailTemplateTutorContextPreview extends ilCourseMailTemplateTutorC
 				$ret = $this->g_lng->txt(self::DEFAULT_COURSE_TITLE);
 				break;
 			case 'crs_link':
-				echo "LINKKKK";
 				require_once './Services/Link/classes/class.ilLink.php';
 				$ret = ilLink::_getLink($context_parameters['ref_id'], 'crs');;
 				break;
