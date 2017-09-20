@@ -50,7 +50,9 @@ class ilCourseMailTemplateTutorContextPreview extends ilCourseMailTemplateTutorC
 				$ret = $this->g_lng->txt(self::DEFAULT_COURSE_TITLE);
 				break;
 			case 'crs_link':
-				$ret = $this->g_lng->txt(self::DEFAULT_COURSE_LINK);
+				echo "LINKKKK";
+				require_once './Services/Link/classes/class.ilLink.php';
+				$ret = ilLink::_getLink($context_parameters['ref_id'], 'crs');;
 				break;
 			case 'crs_status':
 				$ret = $this->g_lng->txt(self::DEFAULT_COURSE_STATUS);

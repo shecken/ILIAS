@@ -68,6 +68,8 @@ class ilMailPreviewGUI {
 		$context_preview = $this->preview_factory->getPreviewForContext($this->template->getContext());
 		require_once 'Services/Mail/classes/class.ilMailTemplatePlaceholderResolver.php';
 		$processor = new ilMailTemplatePlaceholderResolver($context_preview, $message);
-		$message = $processor->resolve($this->g_user, array(), false);
+		$message = $processor->resolve($this->g_user, array("ref_id"=>""), false);
+
+		return $message;
 	}
 }
