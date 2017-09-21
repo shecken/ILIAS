@@ -15940,11 +15940,12 @@ rbac#:#book_copy#:#Buchungspool kopieren
 exc#:#exc_settings_feedback_mail_info#:#Tutoren geben ihre Rückmeldungen zur Abgabe in ein Mail-Formular ein. Die Mail wird dem entsprechenden Teilnehmer gesendet.
 exc#:#exc_settings_feedback_file_info#:#Tutoren laden ihre Datei hoch. Der jeweilige Teilnehmer erhält eine Benachrichtigung und die Datei wird ihm in der Übungseinheiten-Übersicht angezeigt.
 exc#:#exc_settings_feedback_text_info#:#Tutoren geben ihre Rückmeldungen in ein Textfeld ein. Der jeweilige Teilnehmer erhält eine Benachrichtigung und der Text wird ihm in der Übungseinheiten-Übersicht angezeigt.
-<<<<<<< HEAD
 iass#:#iass_event_time_place_required#:#Verpflichtende Angabe von Datum und Ort
 iass#:#iass_event_time_place_required_info#:#In der Dokumentation zu einem Teilnehmer müssen Datum und Ort angegeben werden.
 iass#:#iass_place#:#Ort der Durchführung
 iass#:#iass_event_time#:#Datum der Durchführung
-=======
+sess#:#preview_crs_title#:#Beispielkurs
+sess#:#preview_crs_status#:#In Bearbeitung
+sess#:#preview_crs_mark#:#Unbekannt
+sess#:#preview_crs_time_spent#:#1 Stunde und 10 Minuten
 chatroom#:#chat_deletion_interval_run_at#:#Time###25 08 2017 new variable
->>>>>>> 4de73c2b2c460fc8e545c010ea6f6fca6cb31c2e
