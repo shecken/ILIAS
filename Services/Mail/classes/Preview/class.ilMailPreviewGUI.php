@@ -39,7 +39,7 @@ class ilMailPreviewGUI {
 
 		require_once("Services/Mail/classes/class.ilMail.php");
 		$from = new ilCustomInputGUI($this->g_lng->txt('from'));
-		$from->setHtml(ilUtil::img(ilUtil::getImagePath('HeaderIconAvatar.svg'), ilMail::_getIliasMailerName()) . '<br />' . ilMail::_getIliasMailerName());
+		$from->setHtml($this->g_user->getFullName());
 		$form->addItem($from);
 
 		$to = new ilCustomInputGUI($this->g_lng->txt('mail_to'));
