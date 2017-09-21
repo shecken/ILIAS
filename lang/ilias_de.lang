@@ -9912,6 +9912,7 @@ search#:#search_user_simple#:#Einfache Benutzersuche###deprecated
 search#:#search_users#:#Benutzer suchen
 search#:#until#:#bis
 sess#:#sess_import#:#Sitzung importieren
+sess#:#sess_no_tutor_select#:#Es wurde kein Tutor ausgewählt.
 shib#:#shib_add_missing#:#Fehlende Rollen zuordnen
 shib#:#shib_add_remove#:#Rollen hinzufügen/entfernen
 shib#:#shib_assignment_type#:#Art der Zuordnung

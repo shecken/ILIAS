@@ -1797,6 +1797,11 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$this->object->setTutorSource((int)ilUtil::stripSlashes($_POST[self::INPUT_TUTOR_SOURCE]));
 		if($this->object->getTutorSource() === \ilObjSession::TUTOR_CFG_FROMCOURSE) {
 			$tids = $_POST[self::INPUT_TUTOR_SELECTION];
+			if(!is_array($tids))
+			{
+				ilUtil::sendFailure($this->lng->txt('sess_no_tutor_select'),TRUE);
+				$this->ctrl->redirect($this,'edit');
+			}
 			$this->object->setAssignedTutors($tids);
 		}
 		// cat-tms-patch end
