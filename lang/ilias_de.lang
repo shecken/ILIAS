@@ -9069,13 +9069,8 @@ prtf#:#prtf_exercise_submitted_info#:#Sie haben Ihr Portfolio am %s eingereicht.
 prtf#:#prtf_existing_portfolio#:#Vorhandenes Portfolio
 prtf#:#prtf_finalize_portfolio#:#Portfolio abschließen und abgeben
 prtf#:#prtf_finalized#:#Das Portfolio wurde abgegeben.
-<<<<<<< HEAD
-prtf#:#prtf_first_page_title#:#Typ der 1. Seite
-prtf#:#prtf_font_color#:#Schriftfarbe###deprecated
-=======
 prtf#:#prtf_first_page_title#:#Beginnt mit:
 prtf#:#prtf_font_color#:#Schriftfarbe###deprecated 
->>>>>>> 4de73c2b2c460fc8e545c010ea6f6fca6cb31c2e
 prtf#:#prtf_new_portfolio#:#Neues Portfolio
 prtf#:#prtf_no_blogs_info#:#Wenn Sie im Bereich "%s" einen Blog anlegen, können Sie dieses auch als Teil Ihres Portfolios verwenden.
 prtf#:#prtf_page_created#:#Seite wurde hinzugefügt
