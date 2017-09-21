@@ -15952,4 +15952,4 @@ chatroom#:#chat_deletion_interval_run_at#:#Time###25 08 2017 new variable
 crs#:#crs_mail_context_invitation_title#:#Einladungsmail an Kurs-Mitglieder
 crs#:#crs_mail_context_invitation_info#:#Wird beim Beitritt zu einem Kurs verschickt.
 crs#:#crs_mail_context_automatic_title#:#Automatische Mail an Kurs-Mitglieder
-crs#:#crs_mail_context_automatic_info#:#Weitere, automatische Mails im Kontext des Kurses (Autritt, Absage, Storno, etc.)
+crs#:#crs_mail_context_automatic_info#:#Weitere, automatische Mails im Kontext des Kurses (Austritt, Absage, Storno, etc.)
