@@ -2,11 +2,14 @@
 /* Copyright (c) 2017 Nils Haagen <nils.haagen@concepts-and-training.de> Extended GPL, see docs/LICENSE */
 namespace ILIAS\UI\Component\ViewControl;
 
-use \ILIAS\UI\Component\Component;
+
+use \ILIAS\UI\Component as C;
+use ILIAS\UI\Component\JavaScriptBindable;
+use ILIAS\UI\Component\Triggerer;
 /**
  * This describes a Sortation Control
  */
-interface Sortation extends Component {
+interface Sortation extends C\Component, JavaScriptBindable, Triggerer {
 
 	/**
 	 * Set the initial, non-functional entry
@@ -25,16 +28,26 @@ interface Sortation extends Component {
 	public function getLabel();
 
 	/**
-	 * Set the parameter name to something other than "sortation".
+	 * Get a Sortation with this target-url.
+	 * Shy-Buttons in this control will link to this url
+	 * and add $parameter_name with the selected value.
 	 *
-	 * @param 	string 	$param
+	 * @param 	string 	$url
+	 * @param 	string 	$paramer_name
 	 *
 	 * @return \Sortation
 	 */
-	public function withParameterName($param);
+	public function withTargetURL($url, $paramter_name);
 
 	/**
-	 * Get the parameter name.
+	 * Get the url this instance should trigger.
+	 *
+	 * @return 	string
+	 */
+	public function getTargetURL();
+
+	/**
+	 * Get the identifier of this instance.
 	 *
 	 * @return 	string
 	 */
@@ -47,4 +60,20 @@ interface Sortation extends Component {
 	 */
 	public function getOptions();
 
+	/**
+	 * Get a component like this, triggering a signal of another component.
+	 *
+	 * @param Signal $signal A signal of another component
+	 *
+	 * @return $this
+	 */
+	public function withOnSort(C\Signal $signal);
+
+
+	/**
+	 * Get the Signal for the selection of a option
+	 *
+	 * @return Signal
+	 */
+	public function getSelectSignal();
 }

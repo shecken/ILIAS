@@ -10,12 +10,6 @@ use ILIAS\UI\Component;
 use ILIAS\UI\Implementation\Render\ResourceRegistry;
 
 class Renderer extends AbstractComponentRenderer {
-
-	/**
-	 * @var string
-	 */
-	private $class_name = 'dropdown';
-
 	/**
 	 * @inheritdoc
 	 */
@@ -30,8 +24,6 @@ class Renderer extends AbstractComponentRenderer {
 		// get template
 		$tpl_name = "tpl.standard.html";
 		$tpl = $this->getTemplate($tpl_name, true, true);
-
-		$tpl->setVariable("CLASSNAME", $this->class_name);
 
 		// render items
 		$items = $component->getItems();
@@ -50,6 +42,7 @@ class Renderer extends AbstractComponentRenderer {
 		}
 
 		$this->maybeRenderId($component, $tpl, "with_id", "ID");
+
 		return $tpl->get();
 	}
 
@@ -71,11 +64,6 @@ class Renderer extends AbstractComponentRenderer {
 
 	protected function maybeRenderId(Component\Component $component, $tpl, $block, $template_var) {
 		$id = $this->bindJavaScript($component);
-		// Check if the component is acting as triggerer
-		if ($component instanceof Component\Triggerer && count($component->getTriggeredSignals())) {
-			$id = ($id === null) ? $this->createId() : $id;
-			$this->triggerRegisteredSignals($component, $id);
-		}
 		if ($id !== null) {
 			$tpl->setCurrentBlock($block);
 			$tpl->setVariable($template_var, $id);
@@ -85,16 +73,16 @@ class Renderer extends AbstractComponentRenderer {
 
 
 	/**
-	 * Append classname and return cloned instance
+	 * Append a block to touch during rendering and return cloned instance
 	 *
-	 * @param string 	$class_name
+	 * @param string 	$block
 	 *
 	 * @return Renderer
 	 */
-	public function withAdditionalClassname($class_name) {
-		assert('is_string($class_name)');
+	public function withBlocksToBeTouched($block) {
+		assert('is_string($block)');
 		$clone = clone $this;
-		$clone->class_name = $clone->class_name .' ' .$class_name;
+		$clone->touch_blocks[] = $block;
 		return $clone;
 	}
 

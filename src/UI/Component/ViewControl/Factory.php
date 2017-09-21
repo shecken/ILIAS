@@ -4,6 +4,7 @@
 
 namespace ILIAS\UI\Component\ViewControl;
 use ILIAS\UI\Component\Button\Button;
+use ILIAS\UI\Component\Component;
 
 /**
  * This is how the factory for UI elements looks.
@@ -57,12 +58,12 @@ interface Factory {
 	 * ---
 	 *
 	 * @param   \ILIAS\UI\Component\Button\Button $previous_action Button to be placed in the left.
-	 * @param   \ILIAS\UI\Component\Button\Button $button Button to be placed in the middle (Month Button or Default Button).
+	 * @param   \ILIAS\UI\Component\Button\Button|\ILIAS\UI\Component\Button\Month $button Button to be placed in the middle (Month Button or Default Button).
 	 * @param   \ILIAS\UI\Component\Button\Button $next_action Button to be placed in the right.
 	 *
 	 * @return \ILIAS\UI\Component\ViewControl\Section
 	 */
-	public function section(Button $previous_action, Button $button, Button $next_action);
+	public function section(Button $previous_action, \ILIAS\UI\Component\Component $button, Button $next_action);
 
 	/**
 	 * ---
@@ -70,22 +71,19 @@ interface Factory {
 	 *   purpose: >
 	 *      The sortation view control enables users to change the order in which
 	 *      some data is presented.
-	 *      The common table-sorting mechanism, e.g., in which a column header is clicked,
-	 *      requires the column to be visible. Visibility and sorting can be decoupled
-	 *      by a control next to the actual table.
+	 *      This control applies to all sorts of _structured_ data, like tables and lists.
 	 *   composition: >
 	 *      Sortation uses a Dropdown to display a collection of shy-buttons.
 	 *   effect: >
-	 *      A click on an option will change the ordering of the associated data-list.
-	 *      by calling the current page with the parameter "sortation" and its
-	 *      value according to the selected option.
+	 *      A click on an option will change the ordering of the associated data-list
+	 *      by calling a page with a parameter according to the selected option or triggering a signal.
 	 *      The label displayed in the dropdown will be set to the selected sorting.
 	 *
 	 * rules:
 	 *   usage:
 	 *      1: A Sortation MUST NOT be used standalone.
 	 *      2: Sortations MUST BE visually close to the list or table their operation will have effect upon.
-	 *      3: There SHOULD NOT be more than one Sortation per page.
+	 *      3: There SHOULD NOT be more than one Sortation per view.
 	 *   accessibility:
 	 *      1: Sortation MUST be operable via keyboard only.
 	 *

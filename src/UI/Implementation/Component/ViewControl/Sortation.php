@@ -5,19 +5,34 @@ namespace ILIAS\UI\Implementation\Component\ViewControl;
 
 use ILIAS\UI\Component as C;
 use ILIAS\UI\Implementation\Component\ComponentHelper;
+use ILIAS\UI\Implementation\Component\SignalGeneratorInterface;
+use ILIAS\UI\Implementation\Component\Triggerer;
+use ILIAS\UI\Implementation\Component\JavaScriptBindable;
 
-class Sortation implements C\ViewControl\Sortation {
+class Sortation implements C\ViewControl\Sortation  {
 	use ComponentHelper;
+	use JavaScriptBindable;
+	use Triggerer;
+
+	/**
+	 * @var Signal
+	 */
+	protected $select_signal;
 
 	/**
 	 * @var string
 	 */
-	protected $label="Sort By";
+	protected $label = '';
 
 	/**
 	 * @var string
 	 */
-	protected $parameter_name="sortation";
+	protected $target_url;
+
+	/**
+	 * @var string
+	 */
+	protected $paramter_name="sortation";
 
 	/**
 	 * @var string
@@ -30,8 +45,27 @@ class Sortation implements C\ViewControl\Sortation {
 	protected $options=array();
 
 
-	public function __construct(array $options) {
+	public function __construct(array $options, SignalGeneratorInterface $signal_generator) {
 		$this->options = $options;
+
+		$this->signal_generator = $signal_generator;
+		$this->initSignals();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withResetSignals() {
+		$clone = clone $this;
+		$clone->initSignals();
+		return $clone;
+	}
+
+	/**
+	 * Set the signals for this component
+	 */
+	protected function initSignals() {
+		$this->select_signal = $this->signal_generator->create();
 	}
 
 	/**
@@ -54,18 +88,27 @@ class Sortation implements C\ViewControl\Sortation {
 	/**
 	 * @inheritdoc
 	 */
-	public function withParameterName($param) {
-		$this->checkStringArg("param", $param);
+	public function withTargetURL($url, $paramter_name) {
+		$this->checkStringArg("url", $url);
+		$this->checkStringArg("paramter_name", $paramter_name);
 		$clone = clone $this;
-		$clone->parameter_name = $param;
+		$clone->target_url = $url;
+		$clone->paramter_name = $paramter_name;
 		return $clone;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
+	public function getTargetURL() {
+		return $this->target_url;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getParameterName() {
-		return $this->parameter_name;
+		return $this->paramter_name;
 	}
 
 	/**
@@ -73,6 +116,21 @@ class Sortation implements C\ViewControl\Sortation {
 	 */
 	public function getOptions() {
 		return $this->options;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withOnSort(C\Signal $signal) {
+		return $this->addTriggeredSignal($signal, 'sort');
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getSelectSignal() {
+		return $this->select_signal;
 	}
 
 }
