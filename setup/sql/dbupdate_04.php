@@ -18337,3 +18337,25 @@ if (!$ilDB->tableColumnExists('iass_members', 'event_time')) {
 	$ilDB->addPrimaryKey('event_tutors', array("id"));
 	// cat-tms-patch end
 ?>
+<#5079>
+<?php
+	// cat-tms-patch start
+	$query ="INSERT INTO mail_tpl_ctx VALUES (\n"
+	."'crs_context_invitation'"
+	.", 'Modules/Course'"
+	.", 'ilCourseMailTemplateInvitationContext'"
+	.", NULL)";
+	$ilDB->manipulate($query);
+	// cat-tms-patch end
+?>
+<#5080>
+<?php
+	// cat-tms-patch start
+	$query ="INSERT INTO mail_tpl_ctx VALUES (\n"
+	."'crs_context_automatic'"
+	.", 'Modules/Course'"
+	.", 'ilCourseMailTemplateAutomaticContext'"
+	.", NULL)";
+	$ilDB->manipulate($query);
+	// cat-tms-patch end
+?>
