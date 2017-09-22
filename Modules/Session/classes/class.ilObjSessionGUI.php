@@ -1591,7 +1591,48 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$dur->setStart($this->object->getFirstAppointment()->getStart());
 		$dur->setEnd($this->object->getFirstAppointment()->getEnd());
 
-		$this->form->addItem($dur);
+		// cat-tms-patch start
+		// Start dirty
+		$get = $_GET;
+		$ref_id = $this->object->getRefId();
+		if($ref_id === null)
+		{
+			$ref_id = $get['ref_id'];
+		}
+		// End dirty
+
+		if($this->object->isCourseOrCourseChild($ref_id) !== null)
+		{
+			$datetime_opt = new ilRadioGroupInputGUI($this->lng->txt('Zeit'), "radisschen");
+			$datetime_opt_list = new ilRadioOption($this->lng->txt('event_static_date'), "reg");
+
+			$datetime_opt_list->addSubItem($dur);
+			$datetime_opt->addOption($datetime_opt_list);
+
+			$datetime_opt_list = new ilRadioOption($this->lng->txt('event_relativ_to_crs_date'), "stiel");
+
+			$ti = new ilTextInputGUI("Tage", "jdj");
+			$ti->setMaxLength(5);
+			$datetime_opt_list->addSubItem($ti);
+
+			$dur = new ilDurationInputGUI($this->lng->txt('event_start_time'),'event_start_time');
+			$dur->setShowMonths(false);
+			$dur->setShowDays(false);
+			$datetime_opt_list->addSubItem($dur);
+
+			$dur = new ilDurationInputGUI($this->lng->txt('event_end_time'),'event_end_time');
+			$dur->setShowMonths(false);
+			$dur->setShowDays(false);
+			$datetime_opt_list->addSubItem($dur);
+
+			$datetime_opt->addOption($datetime_opt_list);
+			$this->form->addItem($datetime_opt);
+		}
+		else
+		{
+			$this->form->addItem($dur);
+		}
+		// cat-tms-patch end
 
 		/*
 		// start
