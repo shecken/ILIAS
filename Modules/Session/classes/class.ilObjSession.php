@@ -933,6 +933,12 @@ class ilObjSession extends ilObject
 		return [$start, $end];
 	}
 
+	/**
+	 * Normalize datetime
+	 *
+	 * @param 	ilDateTime 	$dt
+	 * @return 	ilDateTime
+	 */
 	private function normalizeDateTime(ilDateTime $dt) {
 		$p = $dt->get(IL_CAL_FKT_GETDATE);
 		$dt->increment("HOURS", -1 * $p["hours"]);
