@@ -18359,3 +18359,17 @@ if (!$ilDB->tableColumnExists('iass_members', 'event_time')) {
 	$ilDB->manipulate($query);
 	// cat-tms-patch end
 ?>
+<#5081>
+<?php
+	// cat-tms-patch start
+	if (!$ilDB->tableColumnExists("event_appointment", "days_offset"))
+	{
+		$ilDB->addTableColumn("event_appointment", "days_offset", array(
+			"type" => "integer",
+			"notnull" => false,
+			"length" => 1,
+			"default" => null));
+	}
+	// cat-tms-patch end
+?>
+
