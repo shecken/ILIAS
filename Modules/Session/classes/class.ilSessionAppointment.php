@@ -26,7 +26,7 @@ class ilSessionAppointment implements ilDatePeriod
 	/**
 	 * @var int
 	 */
-	protected $days_offset;
+	protected $days_offset = null;
 	// cat-tms-patch end
 
 	var $starting_time = null;
@@ -200,12 +200,12 @@ class ilSessionAppointment implements ilDatePeriod
 	/**
 	 * Set days offset
 	 *
-	 * @param 	int 		$value
+	 * @param 	int|null 		$value
 	 * @return 	void
 	 */
 	public function setDaysOffset($value)
 	{
-		assert('is_int($value)');
+		assert('is_int($value) || is_null($value)');
 		$this->days_offset = $value;
 	}
 	// cat-tms-patch end
