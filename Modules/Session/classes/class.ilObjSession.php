@@ -858,6 +858,10 @@ class ilObjSession extends ilObject
 		$tree = array_reverse($g_tree->getPathFull($ref_id));
 		foreach ($tree as $leaf)
 		{
+			if($leaf['type'] === "grp")
+			{
+				return null;
+			}
 			if($leaf['type'] === "crs")
 			{
 				return $leaf['ref_id'];
