@@ -849,7 +849,7 @@ class ilObjSession extends ilObject
 	 * Checks whether this object is a child element of a course object.
 	 * If there is an group object first in tree it returns false.
 	 *
-	 * @return bool
+	 * @return int | null
 	 */
 	public function isCourseOrCourseChild($ref_id)
 	{
@@ -864,6 +864,61 @@ class ilObjSession extends ilObject
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Calculate the start and endtime of a session object
+	 * depending on parent course and offset
+	 *
+	 * @param int $offset - 1 means first day of course
+	 * @return 	ilDateTime[]
+	 */
+	public function getCourseDateTime($offset)
+	{
+		$ref_id = $this->getRefId();
+		//during creation:
+		if(! $ref_id) {
+			$ref_id = $_GET['ref_id'];
+		}
+		$crs_id = $this->isCourseOrCourseChild($ref_id);
+		$crs = ilObjectFactory::getInstanceByRefId($crs_id);
+		$start = $crs->getCourseStart();
+		$end = $crs->getCourseEnd();
+		if($crs->getCourseStart() === null)
+		{
+			$start = new ilDateTime(time(), IL_CAL_UNIX);
+		}
+		if($crs->getCourseEnd() === null)
+		{
+			$end = new ilDateTime(time(), IL_CAL_UNIX);
+		}
+		return $this->calcCourseDateTime($start, $end, $offset);
+	}
+
+	/**
+	 * Calculate the start and endtime of a session object
+	 * depending on days_offset
+	 *
+	 * @param 	ilDateTime 	$start
+	 * @param 	ilDateTime 	$end
+	 * @param int $offset - 1 means first day of course
+	 * @return 	ilDateTime[]
+	 */
+	private function calcCourseDateTime(ilDateTime $start, ilDateTime $end, $offset)
+	{
+		$offset--;
+
+		$start = new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX);
+		$end = new ilDateTime($end->get(IL_CAL_UNIX), IL_CAL_UNIX);
+
+		if ($offset == 0) {
+			return [$start, $end];
+		}
+
+		$start->increment("day", $offset);
+		$end->increment("day", $offset);
+
+		return [$start, $end];
 	}
 
 	/**
