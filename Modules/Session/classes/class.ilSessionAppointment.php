@@ -378,7 +378,7 @@ class ilSessionAppointment implements ilDatePeriod
 			list($start, $end) = $session->getCourseDateTime($this->getDaysOffset());
 		}
 		else {
-			$offset = "NULL";
+			$offset = "-1";
 			$start = $this->getStart()->get(IL_CAL_DATETIME,'','UTC');
 			$end = $this->getEnd()->get(IL_CAL_DATETIME,'','UTC');
 		}
@@ -408,11 +408,18 @@ class ilSessionAppointment implements ilDatePeriod
 		{
 			return false;
 		}
+		if ($this->days_offset == null) {
+			$days_offset = "-1";
+		}
+		else {
+			$days_offset = $ilDB->quote($this->days_offset, "integer");
+		}
 		$query = "UPDATE event_appointment ".
 			"SET event_id = ".$ilDB->quote($this->getSessionId() ,'integer').", ".
 			"e_start = ".$ilDB->quote($this->getStart()->get(IL_CAL_DATETIME,'','UTC') ,'timestamp').", ".
 			"e_end = ".$ilDB->quote($this->getEnd()->get(IL_CAL_DATETIME,'','UTC'), 'timestamp').", ".
-			"fulltime = ".$ilDB->quote($this->enabledFullTime() ,'integer')." ".
+			"fulltime = ".$ilDB->quote($this->enabledFullTime() ,'integer').", ".
+			"days_offset = $days_offset ".
 			"WHERE appointment_id = ".$ilDB->quote($this->getAppointmentId() ,'integer')." ";
 		$res = $ilDB->manipulate($query);
 		return true;
@@ -500,7 +507,13 @@ class ilSessionAppointment implements ilDatePeriod
 				$this->end = new ilDateTime($row->e_end,IL_CAL_DATETIME,'UTC');
 			}
 			$this->starting_time = $this->start->getUnixTime();
-			$this->ending_time = $this->end->getUnixTime();			
+			$this->ending_time = $this->end->getUnixTime();
+			if ($row->day_offset == -1) {
+				$this->days_offset = null;
+			}
+			else {
+				$this->days_offset = $row->days_offset;
+			}
 		}
 		return true;
 	}
