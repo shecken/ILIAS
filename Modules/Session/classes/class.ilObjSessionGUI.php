@@ -1622,11 +1622,23 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$dur = new ilDurationInputGUI($this->lng->txt('event_start_time'),'event_start_time');
 			$dur->setShowMonths(false);
 			$dur->setShowDays(false);
+			if ($app) {
+				$start = $app->getStart();
+				$p = $start->get(IL_CAL_FKT_GETDATE);
+				$dur->setHours($p["hours"]);
+				$dur->setMinutes($p["minutes"]);
+			}
 			$datetime_opt_list->addSubItem($dur);
 
 			$dur = new ilDurationInputGUI($this->lng->txt('event_end_time'),'event_end_time');
 			$dur->setShowMonths(false);
 			$dur->setShowDays(false);
+			if ($app) {
+				$end = $app->getEnd();
+				$p = $end->get(IL_CAL_FKT_GETDATE);
+				$dur->setHours($p["hours"]);
+				$dur->setMinutes($p["minutes"]);
+			}
 			$datetime_opt_list->addSubItem($dur);
 
 			$datetime_opt->addOption($datetime_opt_list);
@@ -1845,7 +1857,13 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		else
 		{
 			$offset = $_POST['event_days_offset'];
-			list($start, $end) = $this->object->getStartAndEndtimeDependingOnCourse($offset);
+			$event_start_time = $_POST["event_start_time"];
+			$hour_start = (int)$event_start_time["hh"];
+			$minute_start = (int)$event_start_time["mm"];
+			$event_end_time = $_POST["event_end_time"];
+			$hour_end = (int)$event_end_time["hh"];
+			$minute_end = (int)$event_end_time["mm"];
+			list($start, $end) = $this->object->getStartAndEndtimeDependingOnCourse($offset, $hour_start, $minute_start, $hour_end, $minute_end);
 			$this->object->getFirstAppointment()->setDaysOffset((int)$offset);
 			$this->object->getFirstAppointment()->setStart($start);
 			$this->object->getFirstAppointment()->setEnd($end);
