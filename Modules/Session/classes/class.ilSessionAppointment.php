@@ -408,6 +408,7 @@ class ilSessionAppointment implements ilDatePeriod
 		{
 			return false;
 		}
+		// cat-tms patch start
 		if ($this->days_offset == null) {
 			$days_offset = "-1";
 		}
@@ -422,6 +423,7 @@ class ilSessionAppointment implements ilDatePeriod
 			"days_offset = $days_offset ".
 			"WHERE appointment_id = ".$ilDB->quote($this->getAppointmentId() ,'integer')." ";
 		$res = $ilDB->manipulate($query);
+		// cat-tms patch end
 		return true;
 	}
 
@@ -508,12 +510,14 @@ class ilSessionAppointment implements ilDatePeriod
 			}
 			$this->starting_time = $this->start->getUnixTime();
 			$this->ending_time = $this->end->getUnixTime();
+			// cat-tms patch start
 			if ($row->days_offset == -1) {
 				$this->days_offset = null;
 			}
 			else {
 				$this->days_offset = $row->days_offset;
 			}
+			// cat-tms patch end
 		}
 		return true;
 	}
