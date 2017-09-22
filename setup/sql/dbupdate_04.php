@@ -18340,22 +18340,27 @@ if (!$ilDB->tableColumnExists('iass_members', 'event_time')) {
 <#5079>
 <?php
 	// cat-tms-patch start
-	$query ="INSERT INTO mail_tpl_ctx VALUES (\n"
-	."'crs_context_invitation'"
-	.", 'Modules/Course'"
-	.", 'ilCourseMailTemplateInvitationContext'"
-	.", NULL)";
-	$ilDB->manipulate($query);
+	$ilDB->insert(
+		'mail_tpl_ctx',
+		array(
+			'id' => array('text', 'crs_context_invitation'),
+			'component' => array('text', 'Modules/Course'),
+			'class' => array('text', 'ilCourseMailTemplateInvitationContext')
+		)
+	);
 	// cat-tms-patch end
 ?>
 <#5080>
 <?php
 	// cat-tms-patch start
-	$query ="INSERT INTO mail_tpl_ctx VALUES (\n"
-	."'crs_context_automatic'"
-	.", 'Modules/Course'"
-	.", 'ilCourseMailTemplateAutomaticContext'"
-	.", NULL)";
-	$ilDB->manipulate($query);
+	$ilDB->insert(
+		'mail_tpl_ctx',
+		array(
+			'id' => array('text', 'crs_context_automatic'),
+			'component' => array('text', 'Modules/Course'),
+			'class' => array('text', 'ilCourseMailTemplateAutomaticContext')
+		)
+	);
 	// cat-tms-patch end
 ?>
+
