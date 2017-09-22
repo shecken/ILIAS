@@ -508,7 +508,7 @@ class ilSessionAppointment implements ilDatePeriod
 			}
 			$this->starting_time = $this->start->getUnixTime();
 			$this->ending_time = $this->end->getUnixTime();
-			if ($row->day_offset == -1) {
+			if ($row->days_offset == -1) {
 				$this->days_offset = null;
 			}
 			else {
