@@ -375,7 +375,7 @@ class ilSessionAppointment implements ilDatePeriod
 		{
 			$session = ilObjectFactory::getInstanceByObjId($this->getSessionId());
 			$offset = $ilDB->quote($this->getDaysOffset(), 'integer');
-			list($start, $end) = $session->getCourseDateTime($this->getDaysOffset());
+			list($start, $end) = $session->getStartAndEndtimeDependingOnCourse($this->getDaysOffset());
 		}
 		else {
 			$offset = "-1";

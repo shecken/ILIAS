@@ -873,7 +873,7 @@ class ilObjSession extends ilObject
 	 * @param int $offset - 1 means first day of course
 	 * @return 	ilDateTime[]
 	 */
-	public function getCourseDateTime($offset)
+	public function getStartAndEndtimeDependingOnCourse($offset, )
 	{
 		$ref_id = $this->getRefId();
 		//during creation:

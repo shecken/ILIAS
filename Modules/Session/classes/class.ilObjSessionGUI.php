@@ -1845,7 +1845,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		else
 		{
 			$offset = $_POST['event_days_offset'];
-			list($start, $end) = $this->object->getCourseDateTime($offset);
+			list($start, $end) = $this->object->getStartAndEndtimeDependingOnCourse($offset);
 			$this->object->getFirstAppointment()->setDaysOffset((int)$offset);
 			$this->object->getFirstAppointment()->setStart($start);
 			$this->object->getFirstAppointment()->setEnd($end);
