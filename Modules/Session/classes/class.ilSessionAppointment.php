@@ -364,48 +364,41 @@ class ilSessionAppointment implements ilDatePeriod
 	function create()
 	{
 		global $ilDB;
-		
 		if(!$this->getSessionId())
 		{
 			return false;
 		}
 		$next_id = $ilDB->nextId('event_appointment');
-		$query = "INSERT INTO event_appointment (appointment_id,event_id,e_start,e_end,fulltime) ".
+
+		// cat-tms-patch start
+		if($this->getDaysOffset() !== null)
+		{
+			$session = ilObjectFactory::getInstanceByObjId($this->getSessionId());
+			$offset = $ilDB->quote($this->getDaysOffset(), 'integer');
+			list($start, $end) = $session->getCourseDateTime($this->getDaysOffset());
+		}
+		else {
+			$offset = "NULL";
+			$start = $this->getStart()->get(IL_CAL_DATETIME,'','UTC');
+			$end = $this->getEnd()->get(IL_CAL_DATETIME,'','UTC');
+		}
+
+		$query = "INSERT INTO event_appointment (appointment_id,event_id,e_start,e_end,fulltime,days_offset) ".
 			"VALUES( ".
 			$ilDB->quote($next_id,'integer').", ".
 			$ilDB->quote($this->getSessionId() ,'integer').", ".
-			$ilDB->quote($this->getStart()->get(IL_CAL_DATETIME,'','UTC') ,'timestamp').", ".
-			$ilDB->quote($this->getEnd()->get(IL_CAL_DATETIME,'','UTC') ,'timestamp').", ".
-			$ilDB->quote($this->enabledFullTime() ,'integer')." ".
+			$ilDB->quote($start, 'timestamp').", ".
+			$ilDB->quote($end,'timestamp').", ".
+			$ilDB->quote($this->enabledFullTime() ,'integer').", ".
+			$offset." ".
 			")";
+		// cat-tms-patch end
+
 		$this->appointment_id = $next_id;
 		$res = $ilDB->manipulate($query);
 		
 		return true;
 	}
-
-	// cat-tms-patch start
-	/**
-	 * Calculate the start and endtime of a session object
-	 * depending on days_offset
-	 *
-	 * @param 	ilDateTime 	$start
-	 * @param 	ilDateTime 	$end
-	 * @return 	ilDateTime
-	 */
-	public function calcCourseDateTime(ilDateTime $start, ilDateTime $end)
-	{
-		$start = $start->increment("day", $this->getDaysOffset());
-		$start = new ilDateTime($start, IL_CAL_UNIX);
-		$ret['start'] = $start->get(IL_CAL_DATETIME,'','UTC');
-
-		$end = $end->increment("day", $this->getDaysOffset());
-		$end = new ilDateTime($end, IL_CAL_UNIX);
-		$ret['end'] = $end->get(IL_CAL_DATETIME,'','UTC');
-
-		return $ret;
-	}
-	// cat-tms-patch end
 
 	function update()
 	{
