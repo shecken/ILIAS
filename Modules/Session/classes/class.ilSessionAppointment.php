@@ -361,6 +361,7 @@ class ilSessionAppointment implements ilDatePeriod
 		return $new_app;
 	}
 
+	// cat-tms-patch start
 	function create($hour_start = 8, $minute_start = 0, $hour_end = 16, $minute_end = 0)
 	{
 		global $ilDB;
@@ -370,7 +371,6 @@ class ilSessionAppointment implements ilDatePeriod
 		}
 		$next_id = $ilDB->nextId('event_appointment');
 
-		// cat-tms-patch start
 		if($this->getDaysOffset() !== null)
 		{
 			$session = ilObjectFactory::getInstanceByObjId($this->getSessionId());
