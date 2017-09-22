@@ -1619,7 +1619,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 			$app = $this->object->getFirstAppointment();
 
-			$ti = new ilNumberInputGUI("event_days_offset", "event_days_offset");
+			$ti = new ilNumberInputGUI($this->lng->txt("event_days_offset"), "event_days_offset");
 			if ($app && $app->getDaysOffset()) {
 				$ti->setValue($app->getDaysOffset());
 			}
