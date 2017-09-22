@@ -361,7 +361,7 @@ class ilSessionAppointment implements ilDatePeriod
 		return $new_app;
 	}
 
-	function create()
+	function create($hour_start = 8, $minute_start = 0, $hour_end = 16, $minute_end = 0)
 	{
 		global $ilDB;
 		if(!$this->getSessionId())
@@ -375,7 +375,7 @@ class ilSessionAppointment implements ilDatePeriod
 		{
 			$session = ilObjectFactory::getInstanceByObjId($this->getSessionId());
 			$offset = $ilDB->quote($this->getDaysOffset(), 'integer');
-			list($start, $end) = $session->getStartAndEndtimeDependingOnCourse($this->getDaysOffset());
+			list($start, $end) = $session->getStartAndEndtimeDependingOnCourse($this->getDaysOffset(), $hour_start, $minute_start, $hour_end, $minute_end);
 		}
 		else {
 			$offset = "-1";

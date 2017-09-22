@@ -672,7 +672,13 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 
 		// create appointment
 		$this->object->getFirstAppointment()->setSessionId($this->object->getId());
-		$this->object->getFirstAppointment()->create();
+		$event_start_time = $_POST["event_start_time"];
+		$hour_start = (int)$event_start_time["hh"];
+		$minute_start = (int)$event_start_time["mm"];
+		$event_end_time = $_POST["event_end_time"];
+		$hour_end = (int)$event_end_time["hh"];
+		$minute_end = (int)$event_end_time["mm"];
+		$this->object->getFirstAppointment()->create($hour_start, $minute_start, $hour_end, $minute_end);
 
 		$this->handleFileUpload();
 
