@@ -22,6 +22,13 @@ class ilSessionAppointment implements ilDatePeriod
 	protected $start = null;
 	protected $end = null;
 
+	// cat-tms-patch start
+	/**
+	 * @var int
+	 */
+	protected $days_offset;
+	// cat-tms-patch end
+
 	var $starting_time = null;
 	var $ending_time = null;
 
@@ -178,7 +185,31 @@ class ilSessionAppointment implements ilDatePeriod
 	{
 		return $this->enabledFullTime();
 	}
-	
+
+	// cat-tms-patch start
+	/**
+	 * Get days offset
+	 *
+	 * @return int | null
+	 */
+	public function getDaysOffset()
+	{
+		return $this->days_offset;
+	}
+
+	/**
+	 * Set days offset
+	 *
+	 * @param 	int 		$value
+	 * @return 	void
+	 */
+	public function setDaysOffset($value)
+	{
+		assert('is_int($value)');
+		$this->days_offset = $value;
+	}
+	// cat-tms-patch end
+
 	/**
 	 * get start
 	 *
@@ -352,6 +383,29 @@ class ilSessionAppointment implements ilDatePeriod
 		
 		return true;
 	}
+
+	// cat-tms-patch start
+	/**
+	 * Calculate the start and endtime of a session object
+	 * depending on days_offset
+	 *
+	 * @param 	ilDateTime 	$start
+	 * @param 	ilDateTime 	$end
+	 * @return 	ilDateTime
+	 */
+	public function calcCourseDateTime(ilDateTime $start, ilDateTime $end)
+	{
+		$start = $start->increment("day", $this->getDaysOffset());
+		$start = new ilDateTime($start, IL_CAL_UNIX);
+		$ret['start'] = $start->get(IL_CAL_DATETIME,'','UTC');
+
+		$end = $end->increment("day", $this->getDaysOffset());
+		$end = new ilDateTime($end, IL_CAL_UNIX);
+		$ret['end'] = $end->get(IL_CAL_DATETIME,'','UTC');
+
+		return $ret;
+	}
+	// cat-tms-patch end
 
 	function update()
 	{
