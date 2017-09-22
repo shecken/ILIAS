@@ -846,6 +846,27 @@ class ilObjSession extends ilObject
 
 	// cat-tms-patch start
 	/**
+	 * Checks whether this object is a child element of a course object.
+	 * If there is an group object first in tree it returns false.
+	 *
+	 * @return bool
+	 */
+	public function isCourseOrCourseChild($ref_id)
+	{
+		global $DIC;
+		$g_tree = $DIC->repositoryTree();
+		$tree = array_reverse($g_tree->getPathFull($ref_id));
+		foreach ($tree as $leaf)
+		{
+			if($leaf['type'] === "crs")
+			{
+				return $leaf['ref_id'];
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * How should the tutors be configured?
 	 *
 	 * @param int $tutor_source
