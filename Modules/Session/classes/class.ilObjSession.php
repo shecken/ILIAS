@@ -871,9 +871,13 @@ class ilObjSession extends ilObject
 	 * depending on parent course and offset
 	 *
 	 * @param int $offset - 1 means first day of course
+	 * @param int $hour_start
+	 * @param int $minute_start
+	 * @param int $hour_end
+	 * @param int $minute_end
 	 * @return 	ilDateTime[]
 	 */
-	public function getStartAndEndtimeDependingOnCourse($offset, )
+	public function getStartAndEndtimeDependingOnCourse($offset, $hour_start, $minute_start, $hour_end, $minute_end)
 	{
 		$ref_id = $this->getRefId();
 		//during creation:
@@ -892,7 +896,7 @@ class ilObjSession extends ilObject
 		{
 			$end = new ilDateTime(time(), IL_CAL_UNIX);
 		}
-		return $this->calcCourseDateTime($start, $end, $offset);
+		return $this->calcCourseDateTime($start, $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end);
 	}
 
 	/**
@@ -904,21 +908,32 @@ class ilObjSession extends ilObject
 	 * @param int $offset - 1 means first day of course
 	 * @return 	ilDateTime[]
 	 */
-	private function calcCourseDateTime(ilDateTime $start, ilDateTime $end, $offset)
+	private function calcCourseDateTime(ilDateTime $start, ilDateTime $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end)
 	{
 		$offset--;
 
-		$start = new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX);
-		$end = new ilDateTime($end->get(IL_CAL_UNIX), IL_CAL_UNIX);
+		$start = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX));
+		$end = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX));
 
-		if ($offset == 0) {
-			return [$start, $end];
+		if ($offset != 0) {
+			$start->increment("day", $offset);
 		}
-
-		$start->increment("day", $offset);
-		$end->increment("day", $offset);
+		$start->increment("hour", $hour_start);
+		$start->increment("minute", $minute_start);
+		if ($offset != 0) {
+			$end->increment("day", $offset);
+		}
+		$end->increment("hour", $hour_end);
+		$end->increment("minute", $minute_end);
 
 		return [$start, $end];
+	}
+
+	private function normalizeDateTime(ilDateTime $dt) {
+		$p = $dt->get(IL_CAL_FKT_GETDATE);
+		$dt->increment("HOURS", -1 * $p["hours"]);
+		$dt->increment("MINUTES", -1 * $p["minutes"]);
+		return $dt;
 	}
 
 	/**
