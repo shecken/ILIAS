@@ -916,8 +916,8 @@ class ilObjSession extends ilObject
 	{
 		$offset--;
 
-		$start = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX));
-		$end = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX));
+		$start = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_DATETIME), IL_CAL_DATETIME));
+		$end = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_DATETIME), IL_CAL_DATETIME));
 
 		if ($offset != 0) {
 			$start->increment("day", $offset);
