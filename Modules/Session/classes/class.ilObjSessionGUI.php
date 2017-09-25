@@ -1836,6 +1836,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		return true;
 	}
 
+	// cat-tms-patch start
 	/**
 	 * load settings
 	 *
@@ -1873,6 +1874,8 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$this->object->getFirstAppointment()->setDaysOffset((int)$offset);
 			$this->object->getFirstAppointment()->setStart($start);
 			$this->object->getFirstAppointment()->setEnd($end);
+			$this->object->getFirstAppointment()->setStartingTime($start->getUnixTime());
+			$this->object->getFirstAppointment()->setEndingTime($end->getUnixTime());
 			$this->object->getFirstAppointment()->toggleFulltime(false);
 		}
 
@@ -1884,7 +1887,6 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$this->object->setEmail(ilUtil::stripSlashes($_POST['tutor_email']));
 		$this->object->setDetails(ilUtil::stripSlashes($_POST['details']));
 
-		// cat-tms-patch start
 		$this->object->setTutorSource((int)ilUtil::stripSlashes($_POST[self::INPUT_TUTOR_SOURCE]));
 		if($this->object->getTutorSource() === \ilObjSession::TUTOR_CFG_FROMCOURSE) {
 			$tids = $_POST[self::INPUT_TUTOR_SELECTION];
