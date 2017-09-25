@@ -22,6 +22,13 @@ class ilSessionAppointment implements ilDatePeriod
 	protected $start = null;
 	protected $end = null;
 
+	// cat-tms-patch start
+	/**
+	 * @var int
+	 */
+	protected $days_offset = null;
+	// cat-tms-patch end
+
 	var $starting_time = null;
 	var $ending_time = null;
 
@@ -178,7 +185,31 @@ class ilSessionAppointment implements ilDatePeriod
 	{
 		return $this->enabledFullTime();
 	}
-	
+
+	// cat-tms-patch start
+	/**
+	 * Get days offset
+	 *
+	 * @return int | null
+	 */
+	public function getDaysOffset()
+	{
+		return $this->days_offset;
+	}
+
+	/**
+	 * Set days offset
+	 *
+	 * @param 	int|null 		$value
+	 * @return 	void
+	 */
+	public function setDaysOffset($value)
+	{
+		assert('is_int($value) || is_null($value)');
+		$this->days_offset = $value;
+	}
+	// cat-tms-patch end
+
 	/**
 	 * get start
 	 *
@@ -330,23 +361,39 @@ class ilSessionAppointment implements ilDatePeriod
 		return $new_app;
 	}
 
-	function create()
+	// cat-tms-patch start
+	function create($hour_start = 8, $minute_start = 0, $hour_end = 16, $minute_end = 0)
 	{
 		global $ilDB;
-		
 		if(!$this->getSessionId())
 		{
 			return false;
 		}
 		$next_id = $ilDB->nextId('event_appointment');
-		$query = "INSERT INTO event_appointment (appointment_id,event_id,e_start,e_end,fulltime) ".
+
+		if($this->getDaysOffset() !== null)
+		{
+			$session = ilObjectFactory::getInstanceByObjId($this->getSessionId());
+			$offset = $ilDB->quote($this->getDaysOffset(), 'integer');
+			list($start, $end) = $session->getStartAndEndtimeDependingOnCourse($this->getDaysOffset(), $hour_start, $minute_start, $hour_end, $minute_end);
+		}
+		else {
+			$offset = "-1";
+			$start = $this->getStart()->get(IL_CAL_DATETIME,'','UTC');
+			$end = $this->getEnd()->get(IL_CAL_DATETIME,'','UTC');
+		}
+
+		$query = "INSERT INTO event_appointment (appointment_id,event_id,e_start,e_end,fulltime,days_offset) ".
 			"VALUES( ".
 			$ilDB->quote($next_id,'integer').", ".
 			$ilDB->quote($this->getSessionId() ,'integer').", ".
-			$ilDB->quote($this->getStart()->get(IL_CAL_DATETIME,'','UTC') ,'timestamp').", ".
-			$ilDB->quote($this->getEnd()->get(IL_CAL_DATETIME,'','UTC') ,'timestamp').", ".
-			$ilDB->quote($this->enabledFullTime() ,'integer')." ".
+			$ilDB->quote($start, 'timestamp').", ".
+			$ilDB->quote($end,'timestamp').", ".
+			$ilDB->quote($this->enabledFullTime() ,'integer').", ".
+			$offset." ".
 			")";
+		// cat-tms-patch end
+
 		$this->appointment_id = $next_id;
 		$res = $ilDB->manipulate($query);
 		
@@ -361,13 +408,22 @@ class ilSessionAppointment implements ilDatePeriod
 		{
 			return false;
 		}
+		// cat-tms patch start
+		if ($this->days_offset == null) {
+			$days_offset = "-1";
+		}
+		else {
+			$days_offset = $ilDB->quote($this->days_offset, "integer");
+		}
 		$query = "UPDATE event_appointment ".
 			"SET event_id = ".$ilDB->quote($this->getSessionId() ,'integer').", ".
 			"e_start = ".$ilDB->quote($this->getStart()->get(IL_CAL_DATETIME,'','UTC') ,'timestamp').", ".
 			"e_end = ".$ilDB->quote($this->getEnd()->get(IL_CAL_DATETIME,'','UTC'), 'timestamp').", ".
-			"fulltime = ".$ilDB->quote($this->enabledFullTime() ,'integer')." ".
+			"fulltime = ".$ilDB->quote($this->enabledFullTime() ,'integer').", ".
+			"days_offset = $days_offset ".
 			"WHERE appointment_id = ".$ilDB->quote($this->getAppointmentId() ,'integer')." ";
 		$res = $ilDB->manipulate($query);
+		// cat-tms patch end
 		return true;
 	}
 
@@ -453,7 +509,15 @@ class ilSessionAppointment implements ilDatePeriod
 				$this->end = new ilDateTime($row->e_end,IL_CAL_DATETIME,'UTC');
 			}
 			$this->starting_time = $this->start->getUnixTime();
-			$this->ending_time = $this->end->getUnixTime();			
+			$this->ending_time = $this->end->getUnixTime();
+			// cat-tms patch start
+			if ($row->days_offset == -1) {
+				$this->days_offset = null;
+			}
+			else {
+				$this->days_offset = $row->days_offset;
+			}
+			// cat-tms patch end
 		}
 		return true;
 	}

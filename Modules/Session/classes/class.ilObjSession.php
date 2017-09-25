@@ -846,6 +846,107 @@ class ilObjSession extends ilObject
 
 	// cat-tms-patch start
 	/**
+	 * Checks whether this object is a child element of a course object.
+	 * If there is an group object first in tree it returns false.
+	 *
+	 * @return int | null
+	 */
+	public function isCourseOrCourseChild($ref_id)
+	{
+		global $DIC;
+		$g_tree = $DIC->repositoryTree();
+		$tree = array_reverse($g_tree->getPathFull($ref_id));
+		foreach ($tree as $leaf)
+		{
+			if($leaf['type'] === "grp")
+			{
+				return null;
+			}
+			if($leaf['type'] === "crs")
+			{
+				return $leaf['ref_id'];
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Calculate the start and endtime of a session object
+	 * depending on parent course and offset
+	 *
+	 * @param int $offset - 1 means first day of course
+	 * @param int $hour_start
+	 * @param int $minute_start
+	 * @param int $hour_end
+	 * @param int $minute_end
+	 * @return 	ilDateTime[]
+	 */
+	public function getStartAndEndtimeDependingOnCourse($offset, $hour_start, $minute_start, $hour_end, $minute_end)
+	{
+		$ref_id = $this->getRefId();
+		//during creation:
+		if(! $ref_id) {
+			$ref_id = $_GET['ref_id'];
+		}
+		$crs_id = $this->isCourseOrCourseChild($ref_id);
+		$crs = ilObjectFactory::getInstanceByRefId($crs_id);
+		$start = $crs->getCourseStart();
+		$end = $crs->getCourseEnd();
+		if($crs->getCourseStart() === null)
+		{
+			$start = new ilDateTime(time(), IL_CAL_UNIX);
+		}
+		if($crs->getCourseEnd() === null)
+		{
+			$end = new ilDateTime(time(), IL_CAL_UNIX);
+		}
+		return $this->calcCourseDateTime($start, $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end);
+	}
+
+	/**
+	 * Calculate the start and endtime of a session object
+	 * depending on days_offset
+	 *
+	 * @param 	ilDateTime 	$start
+	 * @param 	ilDateTime 	$end
+	 * @param int $offset - 1 means first day of course
+	 * @return 	ilDateTime[]
+	 */
+	private function calcCourseDateTime(ilDateTime $start, ilDateTime $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end)
+	{
+		$offset--;
+
+		$start = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX));
+		$end = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX));
+
+		if ($offset != 0) {
+			$start->increment("day", $offset);
+		}
+		$start->increment("hour", $hour_start);
+		$start->increment("minute", $minute_start);
+		if ($offset != 0) {
+			$end->increment("day", $offset);
+		}
+		$end->increment("hour", $hour_end);
+		$end->increment("minute", $minute_end);
+
+		return [$start, $end];
+	}
+
+	/**
+	 * Normalize datetime
+	 *
+	 * @param 	ilDateTime 	$dt
+	 * @return 	ilDateTime
+	 */
+	private function normalizeDateTime(ilDateTime $dt) {
+		$p = $dt->get(IL_CAL_FKT_GETDATE);
+		$dt->increment("HOURS", -1 * $p["hours"]);
+		$dt->increment("MINUTES", -1 * $p["minutes"]);
+		return $dt;
+	}
+
+	/**
 	 * How should the tutors be configured?
 	 *
 	 * @param int $tutor_source
