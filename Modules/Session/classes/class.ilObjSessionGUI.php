@@ -1630,7 +1630,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$datetime_opt_list->addSubItem($ti);
 
 			$sess_dur = new ilSessionDurationInputGUI($this->lng->txt('event_start_time'),'event_start_time');
-			$sess_dur->setMinuteStepSize(15);
+			$sess_dur->setMinuteStepSize(5);
 			$sess_dur->setShowMonths(false);
 			$sess_dur->setShowDays(false);
 			if ($app) {
@@ -1642,7 +1642,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$datetime_opt_list->addSubItem($sess_dur);
 
 			$sess_dur = new ilSessionDurationInputGUI($this->lng->txt('event_end_time'),'event_end_time');
-			$sess_dur->setMinuteStepSize(15);
+			$sess_dur->setMinuteStepSize(5);
 			$sess_dur->setShowMonths(false);
 			$sess_dur->setShowDays(false);
 			if ($app) {
