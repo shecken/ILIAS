@@ -906,11 +906,12 @@ class ilObjSession extends ilObject
 	/**
 	 * Get start and end date of today
 	 *
-	 * @param string 	$hour_start
-	 * @param string 	$minute_start
-	 * @param string 	$hour_end
-	 * @param string 	$minute_end
-	 * 
+	 * @param int 	$hour_start
+	 * @param int 	$minute_start
+	 * @param int 	$hour_end
+	 * @param int 	$minute_end
+	 *
+	 * @return ilDateTime[]
 	 */
 	protected function getTodayWithTimes($hour_start, $minute_start, $hour_end, $minute_end) {
 		$start = $this->getDateWithTime(date("Y-m-d"), $hour_start, $minute_start);
@@ -923,10 +924,15 @@ class ilObjSession extends ilObject
 	 * Calculate the start and endtime of a session object
 	 * depending on days_offset
 	 *
-	 * @param 	ilDateTime 	$start
-	 * @param 	ilDateTime 	$end
+	 * @param ilDateTime 	$start
+	 * @param ilDateTime 	$end
 	 * @param int $offset - 1 means first day of course
-	 * @return 	ilDateTime[]
+	 * @param int 	$hour_start
+	 * @param int 	$minute_start
+	 * @param int 	$hour_end
+	 * @param int 	$minute_end
+	 *
+	 * @return ilDateTime[]
 	 */
 	private function calcCourseDateTime(ilDateTime $start, ilDateTime $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end)
 	{
@@ -947,8 +953,8 @@ class ilObjSession extends ilObject
 	 * Create a datetime with times
 	 *
 	 * @param string 	$date
-	 * @param string 	$hour
-	 * @param string 	$minute
+	 * @param int 	$hour
+	 * @param int 	$minute
 	 *
 	 * @return ilDateTime
 	 */
@@ -960,13 +966,13 @@ class ilObjSession extends ilObject
 	/**
 	 * Adds leading 0
 	 *
-	 * @param string 	$value
+	 * @param string | int	$value
 	 * @param string 	$leading
 	 *
 	 * @return string
 	 */
 	protected function addLeading($value) {
-		return str_pad($value, 2, "0", STR_PAD_LEFT);
+		return str_pad((string)$value, 2, "0", STR_PAD_LEFT);
 	}
 	// cat-tms-patch end
 
