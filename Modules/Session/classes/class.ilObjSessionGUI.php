@@ -7,6 +7,7 @@ include_once('./Modules/Session/classes/class.ilSessionFile.php');
 include_once './Services/PersonalDesktop/interfaces/interface.ilDesktopItemHandling.php';
 // cat-tms-patch start
 require_once('./Modules/Course/classes/class.ilObjCourse.php');
+require_once('./Modules/Session/classes/class.ilSessionDurationInputGUI.php');
 // cat-tms-patch end
 
 /**
@@ -51,7 +52,8 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	 */
 	public function __construct($a_data, $a_id, $a_call_by_reference, $a_prepare_output = true)
 	{
-		global $ilCtrl, $lng, $tpl;
+		// cat-tms-patch start
+		global $ilCtrl, $lng, $tpl, $DIC;
 
 		$this->type = "sess";
 		parent::__construct($a_data,$a_id,$a_call_by_reference,$a_prepare_output);
@@ -67,6 +69,8 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 		$this->ctrl = $ilCtrl;
 
 		$this->logger = $GLOBALS['DIC']->logger()->sess();
+		$this->g_user = $DIC->user();
+		// cat-tms-patch end
 	}
 
 
@@ -1625,27 +1629,29 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			}
 			$datetime_opt_list->addSubItem($ti);
 
-			$dur = new ilDurationInputGUI($this->lng->txt('event_start_time'),'event_start_time');
-			$dur->setShowMonths(false);
-			$dur->setShowDays(false);
+			$sess_dur = new ilSessionDurationInputGUI($this->lng->txt('event_start_time'),'event_start_time');
+			$sess_dur->setMinuteStepSize(15);
+			$sess_dur->setShowMonths(false);
+			$sess_dur->setShowDays(false);
 			if ($app) {
 				$start = $app->getStart();
-				$p = $start->get(IL_CAL_FKT_GETDATE,'',ilTimeZone::_getDefaultTimeZone());
-				$dur->setHours($p["hours"]);
-				$dur->setMinutes($p["minutes"]);
+				$p = $start->get(IL_CAL_FKT_GETDATE,'',$this->g_user->getTimeZone());
+				$sess_dur->setHours($p["hours"]);
+				$sess_dur->setMinutes($p["minutes"]);
 			}
-			$datetime_opt_list->addSubItem($dur);
+			$datetime_opt_list->addSubItem($sess_dur);
 
-			$dur = new ilDurationInputGUI($this->lng->txt('event_end_time'),'event_end_time');
-			$dur->setShowMonths(false);
-			$dur->setShowDays(false);
+			$sess_dur = new ilSessionDurationInputGUI($this->lng->txt('event_end_time'),'event_end_time');
+			$sess_dur->setMinuteStepSize(15);
+			$sess_dur->setShowMonths(false);
+			$sess_dur->setShowDays(false);
 			if ($app) {
 				$end = $app->getEnd();
-				$p = $end->get(IL_CAL_FKT_GETDATE,'',ilTimeZone::_getDefaultTimeZone());
-				$dur->setHours($p["hours"]);
-				$dur->setMinutes($p["minutes"]);
+				$p = $end->get(IL_CAL_FKT_GETDATE,'',$this->g_user->getTimeZone());
+				$sess_dur->setHours($p["hours"]);
+				$sess_dur->setMinutes($p["minutes"]);
 			}
-			$datetime_opt_list->addSubItem($dur);
+			$datetime_opt_list->addSubItem($sess_dur);
 
 			$datetime_opt->addOption($datetime_opt_list);
 			if ($app && $app->getDaysOffset() !== null) {
@@ -1846,11 +1852,10 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	 */
 	protected function load()
 	{
-		$event = $this->form->getItemByPostVar('event');
 		$radio_grp = $_POST['event_radio_grp'];
-
 		if($radio_grp === "event_radio_btn_static")
 		{
+			$event = $this->form->getItemByPostVar('event');
 			if($event->getStart() && $event->getEnd())
 			{
 				$this->object->getFirstAppointment()->setDaysOffset(null);
