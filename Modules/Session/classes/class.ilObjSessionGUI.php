@@ -1630,7 +1630,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$dur->setShowDays(false);
 			if ($app) {
 				$start = $app->getStart();
-				$p = $start->get(IL_CAL_FKT_GETDATE);
+				$p = $start->get(IL_CAL_FKT_GETDATE,'',ilTimeZone::_getDefaultTimeZone());
 				$dur->setHours($p["hours"]);
 				$dur->setMinutes($p["minutes"]);
 			}
@@ -1641,7 +1641,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$dur->setShowDays(false);
 			if ($app) {
 				$end = $app->getEnd();
-				$p = $end->get(IL_CAL_FKT_GETDATE);
+				$p = $end->get(IL_CAL_FKT_GETDATE,'',ilTimeZone::_getDefaultTimeZone());
 				$dur->setHours($p["hours"]);
 				$dur->setMinutes($p["minutes"]);
 			}
@@ -1874,8 +1874,8 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$this->object->getFirstAppointment()->setDaysOffset((int)$offset);
 			$this->object->getFirstAppointment()->setStart($start);
 			$this->object->getFirstAppointment()->setEnd($end);
-			$this->object->getFirstAppointment()->setStartingTime($start->getUnixTime());
-			$this->object->getFirstAppointment()->setEndingTime($end->getUnixTime());
+			$this->object->getFirstAppointment()->setStartingTime($start->getUnixTime()+$start->getUTCOffset());
+			$this->object->getFirstAppointment()->setEndingTime($end->getUnixTime()+$end->getUTCOffset());
 			$this->object->getFirstAppointment()->toggleFulltime(false);
 		}
 
