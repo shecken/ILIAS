@@ -62,11 +62,14 @@ class ilObjSession extends ilObject
 	*/
 	public function __construct($a_id = 0,$a_call_by_reference = true)
 	{
-		global $ilDB;
+		// cat-tms-patch start
+		global $ilDB,$DIC;
 
 		$this->db = $ilDB;
 		$this->type = "sess";
+		$this->g_user = $DIC->user();
 		parent::__construct($a_id,$a_call_by_reference);
+		// cat-tms-patch end
 	}
 
 	/**
@@ -894,11 +897,11 @@ class ilObjSession extends ilObject
 		$end = $crs->getCourseEnd();
 		if($crs->getCourseStart() === null)
 		{
-			$start = new ilDateTime(time(), IL_CAL_UNIX);
+			$start = new ilDateTime(time(), IL_CAL_DATETIME, $this->g_user->getTimeZone());
 		}
 		if($crs->getCourseEnd() === null)
 		{
-			$end = new ilDateTime(time(), IL_CAL_UNIX);
+			$end = new ilDateTime(time(), IL_CAL_DATETIME, $this->g_user->getTimeZone());
 		}
 		return $this->calcCourseDateTime($start, $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end);
 	}
@@ -916,8 +919,8 @@ class ilObjSession extends ilObject
 	{
 		$offset--;
 
-		$start = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX));
-		$end = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_UNIX), IL_CAL_UNIX));
+		$start = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_DATETIME), IL_CAL_DATETIME));
+		$end = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_DATETIME), IL_CAL_DATETIME));
 
 		if ($offset != 0) {
 			$start->increment("day", $offset);
@@ -940,7 +943,7 @@ class ilObjSession extends ilObject
 	 * @return 	ilDateTime
 	 */
 	private function normalizeDateTime(ilDateTime $dt) {
-		$p = $dt->get(IL_CAL_FKT_GETDATE);
+		$p = $dt->get(IL_CAL_FKT_GETDATE,'',$this->g_user->getTimeZone());
 		$dt->increment("HOURS", -1 * $p["hours"]);
 		$dt->increment("MINUTES", -1 * $p["minutes"]);
 		return $dt;
