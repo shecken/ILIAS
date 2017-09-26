@@ -898,13 +898,11 @@ class ilObjSession extends ilObject
 		if($crs->getCourseStart() === null)
 		{
 			$start_datetime = date("Y-m-d ".str_pad($hour_start,2,0,STR_PAD_LEFT).":".str_pad($minute_start,2,0,STR_PAD_LEFT).":00");
-			var_dump($start_datetime);
 			$start = new ilDateTime($start_datetime, IL_CAL_DATETIME, $this->g_user->getTimeZone());
 		}
 		if($crs->getCourseEnd() === null)
 		{
 			$end_datetime = date("Y-m-d ".str_pad($hour_end,2,0,STR_PAD_LEFT).":".str_pad($minute_end,2,0,STR_PAD_LEFT).":00");
-			var_dump($end_datetime);
 			$end = new ilDateTime($end_datetime, IL_CAL_DATETIME, $this->g_user->getTimeZone());
 		}
 		return $this->calcCourseDateTime($start, $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end);
