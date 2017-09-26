@@ -965,6 +965,11 @@ class ilObjSession extends ilObject
 	 * @return int
 	 */
 	public function getTutorSource() {
+		// cat-tms-patch start
+		if(is_null($this->tutor_source)) {
+			$this->setTutorSource(self::TUTOR_CFG_MANUALLY);
+		}
+		// cat-tms-patch end
 		return $this->tutor_source;
 	}
 
