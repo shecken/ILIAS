@@ -38,14 +38,17 @@ class ilSessionAppointment implements ilDatePeriod
 	 */
 	public function __construct($a_appointment_id = null)
 	{
-		global $ilErr,$ilDB,$lng,$tree;
+		// cat-tms-patch start
+		global $ilErr,$ilDB,$lng,$tree,$DIC;
 
 		$this->ilErr = $ilErr;
 		$this->db  = $ilDB;
 		$this->lng = $lng;
 
+		$this->g_user = $DIC->user();
 		$this->appointment_id = $a_appointment_id;
 		$this->__read();
+		// cat-tms-patch end
 	}
 	
 	/**
@@ -57,7 +60,8 @@ class ilSessionAppointment implements ilDatePeriod
 	 */
 	public static function _lookupAppointment($a_obj_id)
 	{
-		global $ilDB;
+		global $ilDB,$DIC;
+		$user = $DIC->user();;
 		
 		$query = "SELECT * FROM event_appointment ".
 			"WHERE event_id = ".$ilDB->quote($a_obj_id ,'integer')." ";
@@ -67,9 +71,9 @@ class ilSessionAppointment implements ilDatePeriod
 			$info['fullday'] = $row->fulltime;
 			
 			// cat-tms-patch start
-			$date = new ilDateTime($row->e_start,IL_CAL_DATETIME,ilTimeZone::_getDefaultTimeZone());
+			$date = new ilDateTime($row->e_start,IL_CAL_DATETIME,$user->getTimeZone());
 			$info['start'] =  $date->getUnixTime();
-			$date = new ilDateTime($row->e_end,IL_CAL_DATETIME,ilTimeZone::_getDefaultTimeZone());
+			$date = new ilDateTime($row->e_end,IL_CAL_DATETIME,$user->getTimeZone());
 			$info['end'] = $date->getUnixTime();
 			// cat-tms-patch end
 			return $info;
@@ -361,7 +365,6 @@ class ilSessionAppointment implements ilDatePeriod
 		$new_app->create();
 		return $new_app;
 	}
-
 	// cat-tms-patch start
 	function create($hour_start = 8, $minute_start = 0, $hour_end = 16, $minute_end = 0)
 	{
@@ -374,14 +377,15 @@ class ilSessionAppointment implements ilDatePeriod
 
 		if($this->getDaysOffset() !== null)
 		{
+
 			$session = ilObjectFactory::getInstanceByObjId($this->getSessionId());
 			$offset = $ilDB->quote($this->getDaysOffset(), 'integer');
 			list($start, $end) = $session->getStartAndEndtimeDependingOnCourse($this->getDaysOffset(), $hour_start, $minute_start, $hour_end, $minute_end);
 		}
 		else {
 			$offset = "-1";
-			$start = $this->getStart()->get(IL_CAL_DATETIME,'',ilTimeZone::_getDefaultTimeZone());
-			$end = $this->getEnd()->get(IL_CAL_DATETIME,'',ilTimeZone::_getDefaultTimeZone());
+			$start = $this->getStart()->get(IL_CAL_DATETIME,'',$this->g_user->getTimeZone());
+			$end = $this->getEnd()->get(IL_CAL_DATETIME,'',$this->g_user->getTimeZone());
 		}
 
 		$query = "INSERT INTO event_appointment (appointment_id,event_id,e_start,e_end,fulltime,days_offset) ".
@@ -484,8 +488,8 @@ class ilSessionAppointment implements ilDatePeriod
 	// PRIVATE
 	function __read()
 	{
-		global $ilDB;
-		
+		global $ilDB,$DIC;
+		$user = $DIC->user();
 		if(!$this->getAppointmentId())
 		{
 			return null;
@@ -507,8 +511,8 @@ class ilSessionAppointment implements ilDatePeriod
 			// cat-tms patch start
 			else
 			{
-				$this->start = new ilDateTime($row->e_start,IL_CAL_DATETIME,ilTimeZone::_getDefaultTimeZone());
-				$this->end = new ilDateTime($row->e_end,IL_CAL_DATETIME,ilTimeZone::_getDefaultTimeZone());
+				$this->start = new ilDateTime($row->e_start,IL_CAL_DATETIME,$user->getTimeZone());
+				$this->end = new ilDateTime($row->e_end,IL_CAL_DATETIME,$user->getTimeZone());
 			}
 			$this->starting_time = $this->start->getUnixTime();
 			$this->ending_time = $this->end->getUnixTime();
