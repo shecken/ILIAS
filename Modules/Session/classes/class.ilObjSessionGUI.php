@@ -1853,7 +1853,7 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 	protected function load()
 	{
 		$radio_grp = $_POST['event_radio_grp'];
-		if($radio_grp === "event_radio_btn_static")
+		if($radio_grp === null || $radio_grp === "event_radio_btn_static")
 		{
 			$event = $this->form->getItemByPostVar('event');
 			if($event->getStart() && $event->getEnd())
