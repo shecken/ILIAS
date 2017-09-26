@@ -925,15 +925,15 @@ class ilObjSession extends ilObject
 		$end = $this->normalizeDateTime(new ilDateTime($end->get(IL_CAL_DATETIME), IL_CAL_DATETIME));
 
 		if ($offset != 0) {
-			$start->increment("day", $offset);
+			$start->increment(ilDateTime::DAY, $offset);
 		}
-		$start->increment("hour", $hour_start);
-		$start->increment("minute", $minute_start);
+		$start->increment(ilDateTime::HOUR, $hour_start);
+		$start->increment(ilDateTime::MINUTE, $minute_start);
 		if ($offset != 0) {
-			$end->increment("day", $offset);
+			$end->increment(ilDateTime::DAY, $offset);
 		}
-		$end->increment("hour", $hour_end);
-		$end->increment("minute", $minute_end);
+		$end->increment(ilDateTime::HOUR, $hour_end);
+		$end->increment(ilDateTime::MINUTE, $minute_end);
 
 		return [$start, $end];
 	}
