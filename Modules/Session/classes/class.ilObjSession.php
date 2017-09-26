@@ -897,11 +897,13 @@ class ilObjSession extends ilObject
 		$end = $crs->getCourseEnd();
 		if($crs->getCourseStart() === null)
 		{
-			$start = new ilDateTime(time(), IL_CAL_DATETIME, $this->g_user->getTimeZone());
+			$start_datetime = date("Y-m-d ".str_pad($hour_start,2,0,STR_PAD_LEFT).":".str_pad($minute_start,2,0,STR_PAD_LEFT).":00");
+			$start = new ilDateTime($start_datetime, IL_CAL_DATETIME, $this->g_user->getTimeZone());
 		}
 		if($crs->getCourseEnd() === null)
 		{
-			$end = new ilDateTime(time(), IL_CAL_DATETIME, $this->g_user->getTimeZone());
+			$end_datetime = date("Y-m-d ".str_pad($hour_end,2,0,STR_PAD_LEFT).":".str_pad($minute_end,2,0,STR_PAD_LEFT).":00");
+			$end = new ilDateTime($end_datetime, IL_CAL_DATETIME, $this->g_user->getTimeZone());
 		}
 		return $this->calcCourseDateTime($start, $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end);
 	}
@@ -920,18 +922,18 @@ class ilObjSession extends ilObject
 		$offset--;
 
 		$start = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_DATETIME), IL_CAL_DATETIME));
-		$end = $this->normalizeDateTime(new ilDateTime($start->get(IL_CAL_DATETIME), IL_CAL_DATETIME));
+		$end = $this->normalizeDateTime(new ilDateTime($end->get(IL_CAL_DATETIME), IL_CAL_DATETIME));
 
 		if ($offset != 0) {
-			$start->increment("day", $offset);
+			$start->increment(ilDateTime::DAY, $offset);
 		}
-		$start->increment("hour", $hour_start);
-		$start->increment("minute", $minute_start);
+		$start->increment(ilDateTime::HOUR, $hour_start);
+		$start->increment(ilDateTime::MINUTE, $minute_start);
 		if ($offset != 0) {
-			$end->increment("day", $offset);
+			$end->increment(ilDateTime::DAY, $offset);
 		}
-		$end->increment("hour", $hour_end);
-		$end->increment("minute", $minute_end);
+		$end->increment(ilDateTime::HOUR, $hour_end);
+		$end->increment(ilDateTime::MINUTE, $minute_end);
 
 		return [$start, $end];
 	}
@@ -944,8 +946,8 @@ class ilObjSession extends ilObject
 	 */
 	private function normalizeDateTime(ilDateTime $dt) {
 		$p = $dt->get(IL_CAL_FKT_GETDATE,'',$this->g_user->getTimeZone());
-		$dt->increment("HOURS", -1 * $p["hours"]);
-		$dt->increment("MINUTES", -1 * $p["minutes"]);
+		$dt->increment(ilDateTime::HOUR, -1 * $p["hours"]);
+		$dt->increment(ilDateTime::MINUTE, -1 * $p["minutes"]);
 		return $dt;
 	}
 
