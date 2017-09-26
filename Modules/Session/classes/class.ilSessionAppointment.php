@@ -66,11 +66,12 @@ class ilSessionAppointment implements ilDatePeriod
 		{
 			$info['fullday'] = $row->fulltime;
 			
-			$date = new ilDateTime($row->e_start,IL_CAL_DATETIME,'UTC');
+			// cat-tms-patch start
+			$date = new ilDateTime($row->e_start,IL_CAL_DATETIME,ilTimeZone::_getDefaultTimeZone());
 			$info['start'] =  $date->getUnixTime();
-			$date = new ilDateTime($row->e_end,IL_CAL_DATETIME,'UTC');
+			$date = new ilDateTime($row->e_end,IL_CAL_DATETIME,ilTimeZone::_getDefaultTimeZone());
 			$info['end'] = $date->getUnixTime();
-			
+			// cat-tms-patch end
 			return $info;
 		}
 		return array();
@@ -379,8 +380,8 @@ class ilSessionAppointment implements ilDatePeriod
 		}
 		else {
 			$offset = "-1";
-			$start = $this->getStart()->get(IL_CAL_DATETIME,'','UTC');
-			$end = $this->getEnd()->get(IL_CAL_DATETIME,'','UTC');
+			$start = $this->getStart()->get(IL_CAL_DATETIME,'',ilTimeZone::_getDefaultTimeZone());
+			$end = $this->getEnd()->get(IL_CAL_DATETIME,'',ilTimeZone::_getDefaultTimeZone());
 		}
 
 		$query = "INSERT INTO event_appointment (appointment_id,event_id,e_start,e_end,fulltime,days_offset) ".
@@ -503,14 +504,14 @@ class ilSessionAppointment implements ilDatePeriod
 				$this->start = new ilDate($row->e_start,IL_CAL_DATETIME);
 				$this->end = new ilDate($row->e_end,IL_CAL_DATETIME);
 			}
+			// cat-tms patch start
 			else
 			{
-				$this->start = new ilDateTime($row->e_start,IL_CAL_DATETIME,'UTC');
-				$this->end = new ilDateTime($row->e_end,IL_CAL_DATETIME,'UTC');
+				$this->start = new ilDateTime($row->e_start,IL_CAL_DATETIME,ilTimeZone::_getDefaultTimeZone());
+				$this->end = new ilDateTime($row->e_end,IL_CAL_DATETIME,ilTimeZone::_getDefaultTimeZone());
 			}
 			$this->starting_time = $this->start->getUnixTime();
 			$this->ending_time = $this->end->getUnixTime();
-			// cat-tms patch start
 			if ($row->days_offset == -1) {
 				$this->days_offset = null;
 			}
