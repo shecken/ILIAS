@@ -968,6 +968,7 @@ class ilObjSession extends ilObject
 	protected function addLeading($value) {
 		return str_pad($value, 2, "0", STR_PAD_LEFT);
 	}
+	// cat-tms-patch end
 
 	/**
 	 * How should the tutors be configured?
