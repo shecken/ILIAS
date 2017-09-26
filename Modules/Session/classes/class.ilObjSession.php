@@ -894,11 +894,11 @@ class ilObjSession extends ilObject
 		$end = $crs->getCourseEnd();
 		if($crs->getCourseStart() === null)
 		{
-			$start = new ilDateTime(time(), IL_CAL_UNIX);
+			$start = new ilDateTime(time(), IL_CAL_DATETIME, ilTimeZone::_getDefaultTimeZone());
 		}
 		if($crs->getCourseEnd() === null)
 		{
-			$end = new ilDateTime(time(), IL_CAL_UNIX);
+			$end = new ilDateTime(time(), IL_CAL_DATETIME, ilTimeZone::_getDefaultTimeZone());
 		}
 		return $this->calcCourseDateTime($start, $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end);
 	}
@@ -940,7 +940,7 @@ class ilObjSession extends ilObject
 	 * @return 	ilDateTime
 	 */
 	private function normalizeDateTime(ilDateTime $dt) {
-		$p = $dt->get(IL_CAL_FKT_GETDATE);
+		$p = $dt->get(IL_CAL_FKT_GETDATE,'',ilTimeZone::_getDefaultTimeZone());
 		$dt->increment("HOURS", -1 * $p["hours"]);
 		$dt->increment("MINUTES", -1 * $p["minutes"]);
 		return $dt;
