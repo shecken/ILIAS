@@ -18,5 +18,6 @@
 		<event type="raise" id="delete" />
 		<event type="raise" id="addToWaitingList" />
 		<event type="raise" id="addSubscriber" />
+		<event type="listen" id="Modules/Course" />
 	</events>
 </module>
