@@ -18376,3 +18376,9 @@ if (!$ilDB->tableColumnExists('iass_members', 'event_time')) {
 	}
 	// cat-tms-patch end
 ?>
+<#5082>
+<?php
+	// cat-tms-patch start
+	$ilCtrlStructureReader->getStructure();
+	// cat-tms-patch end
+?>
