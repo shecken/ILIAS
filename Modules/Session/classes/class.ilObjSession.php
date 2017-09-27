@@ -884,7 +884,7 @@ class ilObjSession extends ilObject
 	 * @param int $minute_end
 	 * @return 	ilDateTime[]
 	 */
-	public function getStartAndEndtimeDependingOnCourse($offset, $hour_start, $minute_start, $hour_end, $minute_end)
+	public function getStartTimeDependingOnCourse($offset, $hour_start, $minute_start, $hour_end, $minute_end)
 	{
 		$ref_id = $this->getRefId();
 		//during creation:
@@ -894,13 +894,11 @@ class ilObjSession extends ilObject
 		$crs_id = $this->isCourseOrCourseChild($ref_id);
 		$crs = ilObjectFactory::getInstanceByRefId($crs_id);
 		$start = $crs->getCourseStart();
-		$end = $crs->getCourseEnd();
-
 		if($start === null)
 		{
 			return $this->getTodayWithTimes($hour_start, $minute_start, $hour_end, $minute_end);
 		}
-		return $this->calcCourseDateTime($start, $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end);
+		return $this->calcCourseDateTime($start, $offset, $hour_start, $minute_start, $hour_end, $minute_end);
 	}
 
 	/**
@@ -934,12 +932,12 @@ class ilObjSession extends ilObject
 	 *
 	 * @return ilDateTime[]
 	 */
-	private function calcCourseDateTime(ilDateTime $start, ilDateTime $end, $offset, $hour_start, $minute_start, $hour_end, $minute_end)
+	private function calcCourseDateTime(ilDateTime $start, $offset, $hour_start, $minute_start, $hour_end, $minute_end)
 	{
 		$offset--;
 
 		$start = $this->getDateWithTime($start->get(IL_CAL_FKT_DATE, "Y-m-d"), $hour_start, $minute_start);
-		$end = $this->getDateWithTime($end->get(IL_CAL_FKT_DATE, "Y-m-d"), $hour_end, $minute_end);
+		$end = $this->getDateWithTime($start->get(IL_CAL_FKT_DATE, "Y-m-d"), $hour_end, $minute_end);
 
 		if ($offset != 0) {
 			$start->increment(ilDateTime::DAY, $offset);
