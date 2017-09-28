@@ -91,6 +91,7 @@ class ilIndividualAssessmentMemberGUI {
 			if($form->checkInput()) {
 				$member = $this->updateDataInMemberByArray($this->member,$_POST);
 				if($member->mayBeFinalized()) {
+					$this->parent_gui->setScreenId("iass", "member", "finalizeConfirmation");
 					include_once './Services/Utilities/classes/class.ilConfirmationGUI.php';
 					$confirm = new ilConfirmationGUI();
 					$confirm->addHiddenItem('record', $_POST['record']);
@@ -146,8 +147,9 @@ class ilIndividualAssessmentMemberGUI {
 		return !$this->member->finalized() && !$this->targetWasEditedByOtherUser($this->member);
 	}
 
-	protected function  edit() {
+	protected function edit() {
 		if($this->mayBeEdited()) {
+			$this->parent_gui->setScreenId("iass", "member", "edit");
 			$form = $this->fillForm($this->initGradingForm(),$this->member);
 			$this->renderForm($form);
 		} else {
@@ -160,12 +162,14 @@ class ilIndividualAssessmentMemberGUI {
 	}
 
 	protected function view() {
+		$this->parent_gui->setScreenId("iass", "member", "view");
 		$form = $this->fillForm($this->initGradingForm(false),$this->member);
 		$this->renderForm($form);
 	}
 
 	protected function save() {
 		if($this->mayBeEdited()) {
+			$this->parent_gui->setScreenId("iass", "member", "save");
 			$form = $this->initGradingForm();
 			$form->setValuesByArray($_POST);
 			if($form->checkInput()) {

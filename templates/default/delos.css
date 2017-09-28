@@ -9790,6 +9790,20 @@ a.ilCOPageSection {
 #ilAdvSelListAnchorText_char_style_selection > span {
   min-width: auto;
 }
+div.ilc_answers.answer-table div.ilc_qanswer_Answer {
+  display: table-row;
+}
+div.ilc_answers.answer-table div.ilc_qanswer_Answer > div {
+  display: table-cell;
+}
+div.ilc_question_SingleChoice .answertext > p,
+div.ilc_question_MultipleChoice .answertext > p {
+  margin: 0 !important;
+}
+div.ilc_question_SingleChoice .ilc_qanswer_Answer > div:first-child,
+div.ilc_question_MultipleChoice .ilc_qanswer_Answer > div:first-child {
+  padding-right: 10px;
+}
 /* Services/Calendar */
 td.even {
   color: #222;
@@ -9842,19 +9856,20 @@ ul.ilCalSel li {
   border-bottom: 1px solid #f0f0f0;
   min-height: 25px;
 }
-span.ilCalColSpan {
-  padding: 2px 0;
-  display: block;
-  margin-left: -48px;
-  width: 24px;
-  height: 25px;
-  float: left;
-}
 ul.ilCalSel li img {
   margin-top: 6px;
   display: block;
   float: left;
   margin-left: -20px;
+}
+span.ilCalColSpan {
+  float: left;
+  display: inline-block;
+  width: 24px;
+  height: 25px;
+  margin-left: -48px;
+  padding: 2px 0;
+  text-align: center;
 }
 div.ilCalSelTitle {
   padding: 5px 3px 3px;
