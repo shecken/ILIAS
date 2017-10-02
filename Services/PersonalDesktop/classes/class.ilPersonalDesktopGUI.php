@@ -21,6 +21,10 @@ include_once 'Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvance
 * @ilCtrl_Calls ilPersonalDesktopGUI: ilPortfolioRepositoryGUI, ilPersonalSkillsGUI, ilObjChatroomGUI
 * @ilCtrl_Calls ilPersonalDesktopGUI: ilBadgeProfileGUI
 *
+* cat-tms-patch start
+* @ilCtrl_Calls ilPersonalDesktopGUI: ilTrainingSearchGUI
+* cat-tms-patch end
+*
 */
 class ilPersonalDesktopGUI
 {
@@ -88,6 +92,14 @@ class ilPersonalDesktopGUI
 
 		switch($next_class)
 		{
+			//cat-tms-patch start
+			case "iltrainingsearchgui":
+				include_once("./Services/TMS/TrainingSearch/classes/class.ilTrainingSearchGUI.php");
+				$training_search_gui = new ilTrainingSearchGUI($this);
+				$this->getStandardTemplates();
+				$ret = $this->ctrl->forwardCommand($training_search_gui);
+				break;
+			//cat-tms-patch end
 			case "ilbookmarkadministrationgui":
 				if ($ilSetting->get('disable_bookmarks'))
 				{
@@ -237,6 +249,10 @@ class ilPersonalDesktopGUI
 				break;
 
 			default:
+				//cat-tms-patch start
+				$this->redirectTrainingSearch();
+				break;
+				//cat-tms-patch end
 				$this->getStandardTemplates();
 				$this->setTabs();
 				$cmd = $this->ctrl->getCmd("show");
@@ -246,6 +262,25 @@ class ilPersonalDesktopGUI
 		$ret = null;
 		return $ret;
 	}
+
+	//cat-tms-patch start
+	/**
+	 * Redirects to the tms training search
+	 *
+	 * @return void
+	 */
+	protected function redirectTrainingSearch() {
+		require_once("Services/TMS/TrainingSearch/classes/class.ilTrainingSearchGUI.php");
+		$link = $this->ctrl->getLinkTargetByClass(
+			array("ilPersonalDesktopGUI", "ilTrainingSearchGUI"),
+			"show",
+			"",
+			false,
+			false
+		);
+		ilUtil::redirect($link);
+	}
+	//cat-tms-patch end
 	
 	/**
 	 * directly redirects a call
@@ -760,7 +795,10 @@ class ilPersonalDesktopGUI
 								'ilpdnotesgui',
 								'ilcalendarpresentationgui',
 								'ilbookmarkadministrationgui',
-								'illearningprogressgui');
+								'illearningprogressgui',
+								/* cat-tms-patch start */
+								'iltrainingsearchgui'
+								/* cat-tms-patch end */);
 
 		if(isset($_SESSION['il_pd_history']) and in_array($_SESSION['il_pd_history'],$stored_classes))
 		{
