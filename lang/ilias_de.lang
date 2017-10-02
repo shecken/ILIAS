@@ -15963,3 +15963,4 @@ crs#:#crs_mail_context_invitation_title#:#Einladungsmail an Kurs-Mitglieder
 crs#:#crs_mail_context_invitation_info#:#Einladungsmail für die Mitglieder eines Kurses.
 crs#:#crs_mail_context_automatic_title#:#Automatische Mail an Kurs-Mitglieder
 crs#:#crs_mail_context_automatic_info#:#Weitere, automatische Mails im Kontext des Kurses (Austritt, Absage, Storno, etc.)
+common#:#training_search#:#Trainingssuche
