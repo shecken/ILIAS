@@ -16,7 +16,8 @@
 		"tecnickcom/tcpdf": "^6.2.12",
 		"pimple/pimple" : "^3.0",
 		"symfony/yaml": "^3.1",
-		"moment/moment": "^2.14.1"
+		"moment/moment": "^2.14.1",
+		"cat/ente" : "v1.0.2"
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "^1.6",
@@ -26,6 +27,10 @@
 	"autoload": {
 		"psr-4" : { "ILIAS\\" : "../../src" }
 	},
+    "repositories" : [{
+        "type" : "vcs",
+        "url": "git@github.com:/conceptsandtraining/lib-ente.git"
+    }],
 	"extra": {
 		"cweagans/composer-patches" : {
 			"source" : "https://github.com/cweagans/composer-patches",

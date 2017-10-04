@@ -4,8 +4,34 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "04a539bda756592f74e9ea34ef2eb3fa",
+    "content-hash": "3a294f58d5e4e15136e839816e3acdd9",
     "packages": [
+        {
+            "name": "cat/ente",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:/conceptsandtraining/lib-ente.git",
+                "reference": "edb0d97f39825dcd8a26ed3fdac237dfc80deaf1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "CaT\\Ente\\": "src"
+                }
+            },
+            "license": [
+                "GPLv3"
+            ],
+            "authors": [
+                {
+                    "name": "Richard Klees",
+                    "email": "richard.klees@concepts-and-training.de"
+                }
+            ],
+            "description": "An entity component framework for PHP.",
+            "time": "2017-10-04T12:53:54+00:00"
+        },
         {
             "name": "cweagans/composer-patches",
             "version": "1.5.0",
@@ -443,6 +469,7 @@
                 "metadata",
                 "tags"
             ],
+            "abandoned": "james-heinrich/getid3",
             "time": "2012-12-04T17:31:30+00:00"
         },
         {
