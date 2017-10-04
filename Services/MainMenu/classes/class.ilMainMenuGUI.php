@@ -433,7 +433,7 @@ class ilMainMenuGUI
 
 			$link = $DIC->ctrl()->getLinkTargetByClass(
 				array("ilPersonalDesktopGUI", "ilTrainingSearchGUI"),
-				"show",
+				"",
 				"",
 				false,
 				false
