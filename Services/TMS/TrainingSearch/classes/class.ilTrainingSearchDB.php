@@ -5,8 +5,9 @@
  */
 require_once("Services/Component/classes/class.ilPluginAdmin.php");
 require_once("Services/TMS/TrainingSearch/classes/class.ilTrainingSearchGUI.php");
+require_once("Services/TMS/TrainingSearch/classes/TrainingSearchDB.php");
 
-class ilTrainingSearchDB {
+class ilTrainingSearchDB implements TrainingSearchDB {
 	const UNLIMITED_MEMBER_SPOTS = "∞";
 
 	public function __construct() {
@@ -17,11 +18,7 @@ class ilTrainingSearchDB {
 	}
 
 	/**
-	 * Get courses user can book
-	 *
-	 * @param int 	$user_id
-	 *
-	 * @return array<int, ilObjCourse | ilObjBookingModalities[] | ilObjCourseClassification>
+	 * @inheritdoc
 	 */
 	public function getBookableTrainingsFor($user_id) {
 		$crs_infos = array();
@@ -47,21 +44,7 @@ class ilTrainingSearchDB {
 	}
 
 	/**
-	 * Create new bookable course
-	 *
-	 * @param string 	$crs_title
-	 * @param string 	$type
-	 * @param string 	$start_date_str
-	 * @param int 	$bookings_available
-	 * @param string[] 	$target_group
-	 * @param string 	$goals
-	 * @param string[] 	$topics
-	 * @param string 	$end_date_str
-	 * @param string 	$city
-	 * @param string 	$address
-	 * @param string 	$costs
-	 *
-	 * @return BookableCourse
+	 * @inheritdoc
 	 */
 	public function getBookableCourse($crs_title,
 				$type,

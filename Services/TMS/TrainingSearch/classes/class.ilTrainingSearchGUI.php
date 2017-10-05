@@ -43,11 +43,11 @@ class ilTrainingSearchGUI {
 	protected $parent;
 
 	/**
-	 * @var ilTrainingSearchDB
+	 * @var TrainingSearchDB
 	 */
 	protected $db;
 
-	public function __construct(ilPersonalDesktopGUI $parent, ilTrainingSearchDB $db, Helper $helper, ilBookableFilter $filter) {
+	public function __construct(ilPersonalDesktopGUI $parent, TrainingSearchDB $db, Helper $helper, ilBookableFilter $filter) {
 		global $DIC;
 
 		$this->g_tpl = $DIC->ui()->mainTemplate();
