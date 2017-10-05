@@ -19,6 +19,20 @@ namespace ILIAS\TMS\Booking;
  */
 interface Step {
 	/**
+	 * Get a label for this step in the process.
+	 *
+	 * @return	string
+	 */
+	public function getLabel();
+
+	/**
+	 * Get a description for this step in the process.
+	 *
+	 * @return	string
+	 */
+	public function getDescription();
+
+	/**
 	 * Get the priority of the step.
 	 *
 	 * Lesser priorities means the step should be performed earlier.

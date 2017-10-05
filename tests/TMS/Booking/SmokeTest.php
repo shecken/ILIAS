@@ -5,6 +5,8 @@
 use ILIAS\TMS\Booking;
 
 class DummyStep implements Booking\Step {
+	public function getLabel() {}
+	public function getDescription() {}
 	public function getPriority() {}
 	public function getForm(array $post = null) {}
 	public function getData(\ilPropertyForm $form) {}
