@@ -195,7 +195,7 @@ class ilTrainingSearchGUI {
 				continue;
 			}
 
-			list($max_member, $booking_start_date, $booking_end_date, $waiting_list, $min_member) = $this->helper->getBestBkmValues($value["xbkm"], $start_date);
+			list($max_member, $booking_start_date, $booking_end_date, $waiting_list, $min_member, $bookings_available) = $this->helper->getBestBkmValues($value["xbkm"], $start_date);
 			list($venue_id, $city, $address) = $this->helper->getVenueInfos($crs->getId());
 			list($type_id,$type,$target_group_ids,$target_group,$goals,$topic_ids,$topics) = $this->helper->getCourseClassificationValues($value["xccl"]);
 			list($provider_id) = $this->helper->getProviderInfos($crs->getId());
