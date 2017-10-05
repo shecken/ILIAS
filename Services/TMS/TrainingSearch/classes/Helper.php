@@ -1,7 +1,7 @@
 <?php
 
 class Helper {
-	const UNLIMITED_MEMBER_SPOTS = "∞";
+	const UNLIMITED_MEMBER_SPOTS = "&infin;";
 
 	/**
 	 * @var ilObjUser
@@ -48,7 +48,7 @@ class Helper {
 			$bookings_available = $max_member - $crs_member_count;
 		}
 
-		return array($max_member, $booking_start_date, $booking_end_date, $waiting_list, $min_member);
+		return array($max_member, $booking_start_date, $booking_end_date, $waiting_list, $min_member, $bookings_available);
 	}
 
 	/**
