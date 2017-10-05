@@ -15964,3 +15964,23 @@ crs#:#crs_mail_context_invitation_info#:#Einladungsmail für die Mitglieder eine
 crs#:#crs_mail_context_automatic_title#:#Automatische Mail an Kurs-Mitglieder
 crs#:#crs_mail_context_automatic_info#:#Weitere, automatische Mails im Kontext des Kurses (Austritt, Absage, Storno, etc.)
 common#:#training_search#:#Trainingssuche
+tsearch#:#header#:#Trainingssuche
+tsearch#:#available_slots#:#freie Plätze
+tsearch#:#target_groups#:#Zielgruppen
+tsearch#:#goals#:#Ziele und Nutzen
+tsearch#:#topics#:#Trainingsthemen
+tsearch#:#detail_information#:#Details
+tsearch#:#location#:#Ort
+tsearch#:#date#:#Datum
+tsearch#:#fee#:#Kosten
+tsearch#:#book_course#:#Buchen
+tsearch#:#title#:#Titel
+tsearch#:#type#:#Trainingstyp
+tsearch#:#topic#:#Trainingsthema
+tsearch#:#target_group#:#Zielgruppe
+tsearch#:#city#:#Ort
+tsearch#:#provider#:#Anbieter
+tsearch#:#duration#:#Zeitraum
+tsearch#:#not_min_member#:#Nur Trainings anzeigen, deren Mindestteilnehmerzahl noch nicht erreicht wurde.
+tsearch#:#filter#:#Erweiterte Suche
+tsearch#:#search#:#Suchen
