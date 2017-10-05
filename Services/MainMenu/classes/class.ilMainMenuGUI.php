@@ -428,9 +428,6 @@ class ilMainMenuGUI
 		// personal desktop
 		if ($GLOBALS['DIC']['ilUser']->getId() != ANONYMOUS_USER_ID)
 		{
-			// $this->renderEntry($a_tpl, "desktop",
-			// 	$lng->txt("personal_desktop"), "#");
-
 			$link = $DIC->ctrl()->getLinkTargetByClass(
 				array("ilPersonalDesktopGUI", "ilTrainingSearchGUI"),
 				"",
