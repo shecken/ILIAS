@@ -201,7 +201,6 @@ class ilTrainingSearchGUI {
 			list($provider_id) = $this->helper->getProviderInfos($crs->getId());
 
 			if(!$this->filter->isInBookingPeriod($booking_start_date, $booking_end_date)) {
-				echo "booking";
 				unset($crs_infos[$key]);
 				continue;
 			}
