@@ -20,4 +20,10 @@ class TMS_Booking_SmokeTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertInstanceOf(Booking\Step::class, $step);
 	}
+
+	public function test_instantiatePlayer() {
+		$player = new Booking\Player([], 0);
+
+		$this->assertInstanceOf(Booking\Player::class, $player);
+	}
 }

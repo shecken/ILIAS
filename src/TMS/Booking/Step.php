@@ -2,9 +2,9 @@
 
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de> */
 
-use CaT\Ente\Component;
-
 namespace ILIAS\TMS\Booking;
+
+use CaT\Ente\Component;
 
 /**
  * This is one step in the booking process of the user. It is provided as
@@ -60,9 +60,10 @@ interface Step {
 	 *
 	 * If null is returned, the form was not displayed correctly and needs to
 	 *
+	 * @param	\ilPropertyFormGUI	$form
 	 * @return	mixed|null
 	 */
-	public function getData(\ilPropertyForm $form);
+	public function getData(\ilPropertyFormGUI $form);
 
 	/**
 	 * Use the data to append a short summary of the step data to the form.
@@ -70,10 +71,10 @@ interface Step {
 	 * The data must be the same as the component return via getData.
 	 *
 	 * @param	mixed		$data
-	 * @param	\ilPropertyForm	$form
+	 * @param	\ilPropertyFormGUI	$form
 	 * @return	void
 	 */
-	public function appendOverview($data, \ilPropertyForm $form);
+	public function appendOverview($data, \ilPropertyFormGUI $form);
 
 	/**
 	 * Process the data to perform the actions in the system that are required
