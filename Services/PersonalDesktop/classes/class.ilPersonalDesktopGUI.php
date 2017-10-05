@@ -94,9 +94,11 @@ class ilPersonalDesktopGUI
 		{
 			//cat-tms-patch start
 			case "iltrainingsearchgui":
-				include_once("./Services/TMS/TrainingSearch/classes/class.ilTrainingSearchGUI.php");
-				include_once("./Services/TMS/TrainingSearch/classes/class.ilTrainingSearchDB.php");
-				$training_search_gui = new ilTrainingSearchGUI($this, new ilTrainingSearchDB());
+				require_once("./Services/TMS/TrainingSearch/classes/class.ilTrainingSearchGUI.php");
+				require_once("./Services/TMS/TrainingSearch/classes/class.ilTrainingSearchDB.php");
+				require_once("Services/TMS/TrainingSearch/classes/Helper.php");
+				require_once("Services/TMS/TrainingSearch/classes/class.ilBookableFilter.php");
+				$training_search_gui = new ilTrainingSearchGUI($this, new ilTrainingSearchDB(), new Helper(), new ilBookableFilter());
 				$this->getStandardTemplates();
 				$ret = $this->ctrl->forwardCommand($training_search_gui);
 				break;
