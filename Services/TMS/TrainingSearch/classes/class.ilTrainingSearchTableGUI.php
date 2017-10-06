@@ -4,7 +4,7 @@
  * cat-tms-patch start
  */
 
-require_once("Services/TMS/TrainingSearch/classes/class.Helper.php");
+require_once("Services/TMS/TrainingSearch/classes/Helper.php");
 
 /**
  * Table gui to present cokable courses

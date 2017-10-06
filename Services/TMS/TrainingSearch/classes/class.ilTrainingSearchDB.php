@@ -6,7 +6,7 @@
 require_once("Services/Component/classes/class.ilPluginAdmin.php");
 require_once("Services/TMS/TrainingSearch/classes/class.ilTrainingSearchGUI.php");
 require_once("Services/TMS/TrainingSearch/classes/TrainingSearchDB.php");
-require_once("Services/TMS/TrainingSearch/classes/class.Helper.php");
+require_once("Services/TMS/TrainingSearch/classes/Helper.php");
 
 class ilTrainingSearchDB implements TrainingSearchDB {
 	/**
