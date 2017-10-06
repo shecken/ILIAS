@@ -1,7 +1,14 @@
 <?php
 
 class Helper {
-	const UNLIMITED_MEMBER_SPOTS = "&infin;";
+	const F_TITLE = "f_title";
+	const F_TYPE = "f_type";
+	const F_TOPIC = "f_topic";
+	const F_TARGET_GROUP = "f_target";
+	const F_CITY = "f_city";
+	const F_PROVIDER = "f_provider";
+	const F_NOT_MIN_MEMBER = "f_not_min_member";
+	const F_DURATION = "f_duration";
 
 	/**
 	 * @var ilObjUser
@@ -22,33 +29,8 @@ class Helper {
 	 * @return array<intger, int | ilDateTime | string>
 	 */
 	public function getBestBkmValues(array $bkms, ilDateTime $crs_start_date) {
-		$first = array_shift($bkms);
-		$max_member = $first->getMember()->getMax();
-		$min_member = $first->getMember()->getMin();
-		$booking_start = $first->getBooking()->getBeginning();
-		$booking_end = $first->getBooking()->getDeadline();
-		$waiting_list = $first->getWaitinglist()->getModus();
-
-		foreach ($bkms as $key => $bkm) {
-			$max_member = $bkm->getMember()->compareMax($max_member);
-			$min_member = $bkm->getMember()->compareMin($min_member);
-			$booking_start = $bkm->getBooking()->compareBebeginning($booking_start);
-			$booking_end = $bkm->getBooking()->compareDeadline($booking_end);
-			$waiting_list = $first->getWaitinglist()->compareWaitingList($waiting_list);
-		}
-
-		$booking_start_date = clone $crs_start_date;
-		$booking_start_date->increment(ilDateTime::DAY, -1 * $booking_start);
-
-		$booking_end_date = clone $crs_start_date;
-		$booking_end_date->increment(ilDateTime::DAY, -1 * $booking_end);
-
-		$bookings_available = self::UNLIMITED_MEMBER_SPOTS;
-		if($max_member) {
-			$bookings_available = $max_member - $crs_member_count;
-		}
-
-		return array($max_member, $booking_start_date, $booking_end_date, $waiting_list, $min_member, $bookings_available);
+		$plugin = ilPluginAdmin::getPluginObjectById('xbkm');
+		return $plugin->getBestBkmValues($bkms, $crs_start_date);
 	}
 
 	/**
@@ -59,26 +41,12 @@ class Helper {
 	 * @return string[]
 	 */
 	public function getVenueInfos($crs_id) {
-		$vplug = ilPluginAdmin::getPluginObjectById('venues');
-		$vactions = $vplug->getActions();
-		$vassignment = $vactions->getAssignment((int)$crs_id);
-
-		if($vassignment) {
-			if($vassignment->isCustomAssignment()) {
-				$venue_id = -1;
-				$city = $vassignment->getVenueText();
-				$address = "";
-			}
-
-			if($vassignment->isListAssignment()) {
-				$venue_id = $vassignment->getVenueId();
-				$venue = $vactions->getVenue($venue_id);
-				$city = $venue->getAddress()->getCity();
-				$address = $venue->getAddress()->getAddress1();
-			}
+		$plugin = ilPluginAdmin::getPluginObjectById('venues');
+		if(!$plugin) {
+			return array(-1,"", "");
 		}
 
-		return array($venue_id, $city, $address);
+		return $plugins->getVenueInfos($crs_id);
 	}
 
 	/**
@@ -89,18 +57,12 @@ class Helper {
 	 * @return string[]
 	 */
 	public function getProviderInfos($crs_id) {
-		$vplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
-		$pactions = $vplug->getActions();
-		$passignment = $pactions->getAssignment((int)$crs_id);
-		$provider_id = -1;
-
-		if($passignment) {
-			if($passignment->isListAssignment()) {
-				$provider_id = $passignment->getProviderId();
-			}
+		$plugin = ilPluginAdmin::getPluginObjectById('trainingprovider');
+		if(!$plugin) {
+			return array(-1);
 		}
 
-		return array($provider_id);
+		return $plugin->getProviderInfos($crs_id);
 	}
 
 	/**
@@ -122,36 +84,149 @@ class Helper {
 			);
 		}
 
-		$actions = $ccl->getActions();
-		$settings = $ccl->getCourseClassification();
+		return $ccl->getCourseClassificationValues();
+	}
 
-		$target_group = array();
-		$topics = array();
-		$type = "";
+	/**
+	 * Prepare the filter modal
+	 *
+	 * @return string
+	 */
+	protected function prepareModal()
+	{
+		require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
+		require_once('./Services/Form/classes/class.ilTextInputGUI.php');
+		require_once('./Services/Form/classes/class.ilDateDurationInputGUI.php');
+		require_once("Services/Component/classes/class.ilPluginAdmin.php");
 
-		$target_group_ids = $settings->getTargetGroup();
-		if($target_group_ids !== null) {
-			$target_group = $actions->getTargetGroupNames($target_group_ids);
+		// Build the form
+		$form = new ilPropertyFormGUI();
+		$form->setId(uniqid('form'));
+		$form->setFormAction($this->g_ctrl->getFormAction($this, self::CMD_FILTER));
+
+		$item = new ilTextInputGUI($this->g_lng->txt('title'), self::F_TITLE);
+		$form->addItem($item);
+
+		if(ilPluginAdmin::isPluginActive('xccl')) {
+			$plugin = ilPluginAdmin::getPluginObjectById('xccl');
+			$actions = $plugin->getActions();
+
+			$item = new ilSelectInputGUI($this->g_lng->txt('type'), self::F_TYPE);
+			$options = array(-1 => "Alle") + $actions->getTypeOptions();
+			$item->setOptions($options);
+			$form->addItem($item);
+
+			$item = new ilSelectInputGUI($this->g_lng->txt('topic'), self::F_TOPIC);
+			$options = array(-1 => "Alle") + $actions->getTopicOptions();
+			$item->setOptions($options);
+			$form->addItem($item);
+
+			$item = new ilSelectInputGUI($this->g_lng->txt('target_group'), self::F_TARGET_GROUP);
+			$options = array(-1 => "Alle") + $actions->getTargetGroupOptions();
+			$item->setOptions($options);
+			$form->addItem($item);
 		}
 
-		$topic_ids = $settings->getTopics();
-		if($topic_ids !== null) {
-			$topics = $actions->getTopicsNames($topic_ids);
+		if(ilPluginAdmin::isPluginActive('venues')) {
+			$plugin = ilPluginAdmin::getPluginObjectById('venues');
+			$actions = $plugin->getActions();
+
+			$item = new ilSelectInputGUI($this->g_lng->txt('city'), self::F_CITY);
+			$options = array(-1 => "Alle") + $actions->getVenueOptions();
+			$item->setOptions($options);
+			$form->addItem($item);
 		}
 
-		$type_id = $settings->getType();
-		if($type_id !== null) {
-			$type = array_shift($actions->getTypeName($type_id));
+		if(ilPluginAdmin::isPluginActive('trainingprovider')) {
+			$plugin = ilPluginAdmin::getPluginObjectById('trainingprovider');
+			$actions = $plugin->getActions();
+
+			$item = new ilSelectInputGUI($this->g_lng->txt('provider'), self::F_PROVIDER);
+			$options = array(-1 => "Alle") + $actions->getProviderOptions();
+			$item->setOptions($options);
+			$form->addItem($item);
 		}
 
-		return array($type_id,
-			$type,
-			$target_group_ids,
-			$target_group,
-			(string)$settings->getGoals(),
-			$topic_ids,
-			$topics
-		);
+		$item = new ilDateDurationInputGUI($this->g_lng->txt('duration'), self::F_DURATION);
+		$item->setStart(new ilDateTime(date("Y-01-01 00:00:00"), IL_CAL_DATETIME));
+		$item->setEnd(new ilDateTime(date("Y-12-31 23:59:59"), IL_CAL_DATETIME));
+		$form->addItem($item);
+
+		$item = new ilCheckboxInputGUI("", self::F_NOT_MIN_MEMBER);
+		$item->setInfo($this->g_lng->txt('not_min_member'));
+		$item->setValue(1);
+		$form->addItem($item);
+
+		$item = new ilHiddenInputGUI('cmd');
+		$item->setValue('submit');
+		$form->addItem($item);
+
+
+		if (isset($_POST['cmd']) && $_POST['cmd'] == 'submit') {
+			$form->setValuesByPost();
+		}
+
+		// Build a submit button (action button) for the modal footer
+		$form_id = 'form_' . $form->getId();
+		$submit = $this->g_factory->button()->primary($this->g_lng->txt('search'), "#")->withOnLoadCode(function($id) use ($form_id) {
+			return "$('#{$id}').click(function() { $('#{$form_id}').submit(); return false; });";
+		});
+ 
+
+		$modal = $this->g_factory->modal()->roundtrip($this->g_lng->txt('filter'), $this->g_factory->legacy($form->getHTML()))
+			->withActionButtons([$submit]);
+
+		$button1 = $this->g_factory->button()->standard($this->g_lng->txt('search'), '#')
+			->withOnClick($modal->getShowSignal());
+
+		return $this->g_renderer->render([$button1, $modal]);
+	}
+
+	/**
+	 * Parse port array for filter values
+	 *
+	 * @return string[]
+	 */
+	protected function getFilterValuesFrom(array $values) {
+		$filter = array();
+		$title = trim($values[self::F_TITLE]);
+		if($title != "") {
+			$filter[self::F_TITLE] = $title;
+		}
+
+		$type = $values[self::F_TYPE];
+		if($type != -1) {
+			$filter[self::F_TYPE] = $type;
+		}
+
+		$topic = $values[self::F_TOPIC];
+		if($topic != -1) {
+			$filter[self::F_TOPIC] = $topic;
+		}
+
+		$target_group = $values[self::F_TARGET_GROUP];
+		if($target_group != -1) {
+			$filter[self::F_TARGET_GROUP] = $target_group;
+		}
+
+		$city = $values[self::F_CITY];
+		if($city != -1) {
+			$filter[self::F_CITY] = $city;
+		}
+
+		$provider = $values[self::F_PROVIDER];
+		if($provider != -1) {
+			$filter[self::F_PROVIDER] = $provider;
+		}
+
+		$not_min_member = $values[self::F_NOT_MIN_MEMBER];
+		if($not_min_member && $not_min_member == "1") {
+			$filter[self::F_NOT_MIN_MEMBER] = $not_min_member;
+		}
+
+		$filter[self::F_DURATION] = $values[self::F_DURATION];
+
+		return $filter;
 	}
 
 	/**
@@ -162,7 +237,7 @@ class Helper {
 	 *
 	 * @return string
 	 */
-	public function formatDate($dat, $use_time=false) {
+	public function formatDate($dat, $use_time = false) {
 		require_once("Services/Calendar/classes/class.ilCalendarUtil.php");
 		$out_format = ilCalendarUtil::getUserDateFormat($use_time, true);
 		$ret = $dat->get(IL_CAL_FKT_DATE, $out_format, $this->g_user->getTimeZone());
