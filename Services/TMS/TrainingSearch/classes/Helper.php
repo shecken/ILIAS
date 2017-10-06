@@ -50,7 +50,7 @@ class Helper {
 			return array(-1,"", "");
 		}
 
-		return $plugins->getVenueInfos($crs_id);
+		return $plugin->getVenueInfos($crs_id);
 	}
 
 	/**
