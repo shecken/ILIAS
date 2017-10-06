@@ -13,7 +13,7 @@ interface TrainingSearchDB {
 	 *
 	 * @return BookableCourse[]
 	 */
-	public function getBookableTrainingsFor($user_id, $filter);
+	public function getBookableTrainingsFor($user_id, array $filter);
 
 	/**
 	 * Create new bookable course
