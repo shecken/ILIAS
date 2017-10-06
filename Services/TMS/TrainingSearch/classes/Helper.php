@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * cat-tms-patch start
+ */
+
 class Helper {
 	const F_TITLE = "f_title";
 	const F_TYPE = "f_type";
@@ -248,3 +252,7 @@ class Helper {
 		return $ret;
 	}
 }
+
+/**
+ * cat-tms-patch end
+ */
