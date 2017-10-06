@@ -16,7 +16,7 @@ class BookableCourse {
 	protected $type;
 
 	/**
-	 * @var string
+	 * @var ilDateTime
 	 */
 	protected $begin_date;
 
@@ -41,9 +41,9 @@ class BookableCourse {
 	protected $topics;
 
 	/**
-	 * @var string
+	 * @var ilDateTime
 	 */
-	protected $date;
+	protected $end_date;
 
 	/**
 	 * @var string
@@ -62,24 +62,22 @@ class BookableCourse {
 
 	public function __construct($title,
 		$type,
-		$begin_date,
+		ilDateTime $begin_date,
 		$bookings_available,
 		array $target_group,
 		$goals,
 		array $topics,
-		$date,
+		ilDateTime $end_date,
 		$location,
 		$address,
 		$fee
 	) {
 		assert('is_string($title)');
 		assert('is_string($type)');
-		assert('is_string($begin_date)');
 		assert('is_string($bookings_available)');
 		assert('is_array($target_group)');
 		assert('is_string($goals)');
 		assert('is_array($topics)');
-		assert('is_string($date)');
 		assert('is_string($location)');
 		assert('is_string($address)');
 		assert('is_string($fee)');
@@ -91,7 +89,7 @@ class BookableCourse {
 		$this->target_group = $target_group;
 		$this->goals = $goals;
 		$this->topics = $topics;
-		$this->date = $date;
+		$this->end_date = $end_date;
 		$this->location = $location;
 		$this->address = $address;
 		$this->fee = $fee;
@@ -125,8 +123,8 @@ class BookableCourse {
 		return $this->topics;
 	}
 
-	public function getDate() {
-		return $this->date;
+	public function getEndDate() {
+		return $this->end_date;
 	}
 
 	public function getLocation() {
