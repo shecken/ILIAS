@@ -6,38 +6,38 @@
 require_once("Services/Component/classes/class.ilPluginAdmin.php");
 require_once("Services/TMS/TrainingSearch/classes/class.ilTrainingSearchGUI.php");
 require_once("Services/TMS/TrainingSearch/classes/TrainingSearchDB.php");
+require_once("Services/TMS/TrainingSearch/classes/class.Helper.php");
 
 class ilTrainingSearchDB implements TrainingSearchDB {
-	const UNLIMITED_MEMBER_SPOTS = "∞";
+	/**
+	 * @var ilObjBookingModalitiesPlugin
+	 */
+	protected $xbkm;
 
-	public function __construct() {
+	public function __construct(ilBookableFilter $filter, Helper $helper) {
 		global $DIC;
 
 		$this->g_db = $DIC->database();
 		$this->g_tree = $DIC->repositoryTree();
+
+		$this->filter = $filter;
+		$this->helper = $helper;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getBookableTrainingsFor($user_id) {
+	public function getBookableTrainingsFor($user_id, array $filter) {
 		$crs_infos = array();
 
 		if(ilPluginAdmin::isPluginActive('xbkm') && ilPluginAdmin::isPluginActive('xccl')) {
-			$crs_infos =  $this->getBookingModalitiesWithPermissionFor($user_id);
+			$this->xbkm = ilPluginAdmin::getPluginObjectById('xbkm');
+
+			$crs_infos = $this->getBookingModalitiesWithPermissionFor($user_id);
 			$crs_infos = $this->addCourseIfUserIsNotBooked($crs_infos, $user_id);
 			$crs_infos = $this->transformBkmToCourse($crs_infos);
 			$crs_infos = $this->addCourseClassification($crs_infos);
-		}
-
-		return $crs_infos;
-	}
-
-	protected function addCourseClassification($crs_infos) {
-		foreach ($crs_infos as $key => &$crs_info) {
-			foreach($this->g_tree->getChildsByType($crs_info["crs"]->getRefId(), "xccl") as $cc_info) {
-				$crs_info["xccl"] = ilObjectFactory::getInstanceByRefId($cc_info["ref_id"]);
-			}
+			$crs_infos = $this->createBookableCourseByFilter($crs_infos);
 		}
 
 		return $crs_infos;
@@ -48,12 +48,12 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 */
 	public function getBookableCourse($crs_title,
 				$type,
-				$start_date_str,
+				ilDateTime $start_date,
 				$bookings_available,
 				array $target_group,
 				$goals,
 				array $topics,
-				$end_date_str,
+				ilDateTime $end_date,
 				$city,
 				$address,
 				$costs = "KOSTEN"
@@ -62,16 +62,33 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 		return new BookableCourse(
 				$crs_title,
 				$type,
-				$start_date_str,
+				$start_date,
 				(string)$bookings_available,
 				$target_group,
 				$goals,
 				$topics,
-				$start_date_str." - ".$end_date_str,
+				$end_date,
 				$city,
 				$address,
 				$costs
 			);
+	}
+
+	/**
+	 * Add first course classification of course
+	 *
+	 * @param array<int, ilObjCourse | ilObjBookingModalities[]>
+	 *
+	 * @return array<int, ilObjCourse | ilObjBookingModalities[] | ilObjCourseClassification>
+	 */
+	protected function addCourseClassification($crs_infos) {
+		foreach ($crs_infos as $key => &$crs_info) {
+			foreach($this->g_tree->getChildsByType($crs_info["crs"]->getRefId(), "xccl") as $cc_info) {
+				$crs_info["xccl"] = ilObjectFactory::getInstanceByRefId($cc_info["ref_id"]);
+			}
+		}
+
+		return $crs_infos;
 	}
 
 	/**
@@ -155,6 +172,112 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			}
 
 			$ret[$crs_ref_id]["xbkm"][] = $value["xbkm"];
+		}
+
+		return $ret;
+	}
+
+		/**
+	 * Perform filter on all course informations
+	 *
+	 * @param array<int, ilObjCourse | ilObjBookingModalities[] | ilObjCourseClassification>
+	 * @param array<int, string | int>
+	 *
+	 * @return BookableCourse[]
+	 */
+	protected function createBookableCourseByFilter(array $crs_infos, array $filter) {
+		$ret = array();
+
+		foreach ($crs_infos as $key => $value) {
+			$crs = $value["crs"];
+
+			$start_date = $crs->getCourseStart();
+			$end_date = $crs->getCourseEnd();
+			$title = $crs->getTitle();
+
+			if($start_date === null) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			list($max_member, $booking_start_date, $booking_end_date, $waiting_list, $min_member, $bookings_available) = $this->helper->getBestBkmValues($value["xbkm"], $start_date);
+			list($venue_id, $city, $address) = $this->helper->getVenueInfos($crs->getId());
+			list($type_id,$type,$target_group_ids,$target_group,$goals,$topic_ids,$topics) = $this->helper->getCourseClassificationValues($value["xccl"]);
+			list($provider_id) = $this->helper->getProviderInfos($crs->getId());
+
+			if(!$this->filter->isInBookingPeriod($booking_start_date, $booking_end_date)) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			if(array_key_exists(self::F_DURATION, $filter)
+				&& !$this->filter->courseInFilterPeriod($start_date, $filter[self::F_DURATION]["start"], $filter[self::F_DURATION]["end"])
+			) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			if(array_key_exists(self::F_TARGET_GROUP, $filter)
+				&& !$this->filter->courseHasTargetGroups($target_group_ids, $filter[self::F_TARGET_GROUP])
+			) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			if(array_key_exists(self::F_TOPIC, $filter)
+				&& !$this->filter->courseHasTopics($topic_ids, $filter[self::F_TOPIC])
+			) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			if(array_key_exists(self::F_TYPE, $filter)
+				&& !$this->filter->courseHasType($type_id, $filter[self::F_TYPE])
+			) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			if(array_key_exists(self::F_TITLE, $filter)
+				&& !$this->filter->crsTitleStartsWith($title, $filter[self::F_TITLE])
+			) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			if(array_key_exists(self::F_NOT_MIN_MEMBER, $filter)
+				&& $this->filter->minMemberReached($crs->getRefId(), $min_member)
+			) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			if(array_key_exists(self::F_CITY, $filter)
+				&& $venue_id != -1
+				&& !$this->filter->courseHasVenue($venue_id, $filter[self::F_CITY])
+			) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			if(array_key_exists(self::F_PROVIDER, $filter)
+				&& !$this->filter->courseHasProvider($provider_id, (int)$filter[self::F_PROVIDER])
+			) {
+				unset($crs_infos[$key]);
+				continue;
+			}
+
+			$ret[] = $this->getBookableCourse($title,
+				$type,
+				$start_date,
+				$bookings_available,
+				$target_group,
+				$goals,
+				$topics,
+				$end_date,
+				$city,
+				$address
+			);
 		}
 
 		return $ret;
