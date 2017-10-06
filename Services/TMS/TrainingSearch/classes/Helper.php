@@ -22,6 +22,10 @@ class Helper {
 	public function __construct() {
 		global $DIC;
 		$this->g_user = $DIC->user();
+		$this->g_ctrl = $DIC->ctrl();
+		$this->g_lng = $DIC->language();
+		$this->g_factory = $DIC->ui()->factory();
+		$this->g_renderer = $DIC->ui()->renderer();
 	}
 
 	/**
@@ -94,19 +98,15 @@ class Helper {
 	/**
 	 * Prepare the filter modal
 	 *
+	 * @param ilPropertyFormGUI $form
+	 *
 	 * @return string
 	 */
-	public function prepareModal()
+	public function prepareModal(ilPropertyFormGUI $form)
 	{
-		require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
 		require_once('./Services/Form/classes/class.ilTextInputGUI.php');
 		require_once('./Services/Form/classes/class.ilDateDurationInputGUI.php');
 		require_once("Services/Component/classes/class.ilPluginAdmin.php");
-
-		// Build the form
-		$form = new ilPropertyFormGUI();
-		$form->setId(uniqid('form'));
-		$form->setFormAction($this->g_ctrl->getFormAction($this, self::CMD_FILTER));
 
 		$item = new ilTextInputGUI($this->g_lng->txt('title'), self::F_TITLE);
 		$form->addItem($item);
