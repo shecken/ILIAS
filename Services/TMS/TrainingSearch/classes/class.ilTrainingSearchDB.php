@@ -37,7 +37,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			$crs_infos = $this->addCourseIfUserIsNotBooked($crs_infos, $user_id);
 			$crs_infos = $this->transformBkmToCourse($crs_infos);
 			$crs_infos = $this->addCourseClassification($crs_infos);
-			$crs_infos = $this->createBookableCourseByFilter($crs_infos);
+			$crs_infos = $this->createBookableCourseByFilter($crs_infos, $filter);
 		}
 
 		return $crs_infos;
@@ -210,58 +210,58 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 				continue;
 			}
 
-			if(array_key_exists(self::F_DURATION, $filter)
-				&& !$this->filter->courseInFilterPeriod($start_date, $filter[self::F_DURATION]["start"], $filter[self::F_DURATION]["end"])
+			if(array_key_exists(Helper::F_DURATION, $filter)
+				&& !$this->filter->courseInFilterPeriod($start_date, $filter[Helper::F_DURATION]["start"], $filter[Helper::F_DURATION]["end"])
 			) {
 				unset($crs_infos[$key]);
 				continue;
 			}
 
-			if(array_key_exists(self::F_TARGET_GROUP, $filter)
-				&& !$this->filter->courseHasTargetGroups($target_group_ids, $filter[self::F_TARGET_GROUP])
+			if(array_key_exists(Helper::F_TARGET_GROUP, $filter)
+				&& !$this->filter->courseHasTargetGroups($target_group_ids, $filter[Helper::F_TARGET_GROUP])
 			) {
 				unset($crs_infos[$key]);
 				continue;
 			}
 
-			if(array_key_exists(self::F_TOPIC, $filter)
-				&& !$this->filter->courseHasTopics($topic_ids, $filter[self::F_TOPIC])
+			if(array_key_exists(Helper::F_TOPIC, $filter)
+				&& !$this->filter->courseHasTopics($topic_ids, $filter[Helper::F_TOPIC])
 			) {
 				unset($crs_infos[$key]);
 				continue;
 			}
 
-			if(array_key_exists(self::F_TYPE, $filter)
-				&& !$this->filter->courseHasType($type_id, $filter[self::F_TYPE])
+			if(array_key_exists(Helper::F_TYPE, $filter)
+				&& !$this->filter->courseHasType($type_id, $filter[Helper::F_TYPE])
 			) {
 				unset($crs_infos[$key]);
 				continue;
 			}
 
-			if(array_key_exists(self::F_TITLE, $filter)
-				&& !$this->filter->crsTitleStartsWith($title, $filter[self::F_TITLE])
+			if(array_key_exists(Helper::F_TITLE, $filter)
+				&& !$this->filter->crsTitleStartsWith($title, $filter[Helper::F_TITLE])
 			) {
 				unset($crs_infos[$key]);
 				continue;
 			}
 
-			if(array_key_exists(self::F_NOT_MIN_MEMBER, $filter)
+			if(array_key_exists(Helper::F_NOT_MIN_MEMBER, $filter)
 				&& $this->filter->minMemberReached($crs->getRefId(), $min_member)
 			) {
 				unset($crs_infos[$key]);
 				continue;
 			}
 
-			if(array_key_exists(self::F_CITY, $filter)
+			if(array_key_exists(Helper::F_CITY, $filter)
 				&& $venue_id != -1
-				&& !$this->filter->courseHasVenue($venue_id, $filter[self::F_CITY])
+				&& !$this->filter->courseHasVenue($venue_id, $filter[Helper::F_CITY])
 			) {
 				unset($crs_infos[$key]);
 				continue;
 			}
 
-			if(array_key_exists(self::F_PROVIDER, $filter)
-				&& !$this->filter->courseHasProvider($provider_id, (int)$filter[self::F_PROVIDER])
+			if(array_key_exists(Helper::F_PROVIDER, $filter)
+				&& !$this->filter->courseHasProvider($provider_id, (int)$filter[Helper::F_PROVIDER])
 			) {
 				unset($crs_infos[$key]);
 				continue;
