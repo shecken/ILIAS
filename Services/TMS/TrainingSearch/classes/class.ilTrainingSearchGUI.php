@@ -48,8 +48,6 @@ class ilTrainingSearchGUI {
 		$this->g_user = $DIC->user();
 		$this->g_lng = $DIC->language();
 		$this->g_toolbar = $DIC->toolbar();
-		$this->g_factory = $DIC->ui()->factory();
-		$this->g_renderer = $DIC->ui()->renderer();
 
 		$this->parent = $parent;
 		$this->db = $db;
@@ -109,9 +107,25 @@ class ilTrainingSearchGUI {
 		$table = new ilTrainingSearchTableGUI($this, $this->helper);
 		$table->setData($bookable_trainings);
 
-		$modal = $this->helper->prepareModal();
+		$modal = $this->prepareModal();
 		$this->g_tpl->setContent($modal."<br \><br \><br \>".$table->render());
 		$this->g_tpl->show();
+	}
+
+	/**
+	 * Prepare the filter modal
+	 *
+	 * @param ilPropertyFormGUI $form
+	 *
+	 * @return string
+	 */
+	public function prepareModal() {
+		require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
+		$form = new ilPropertyFormGUI();
+		$form->setId(uniqid('form'));
+		$form->setFormAction($this->g_ctrl->getFormAction($this, self::CMD_FILTER));
+
+		return $this->helper->prepareModal($form);
 	}
 
 	/**
