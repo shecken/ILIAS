@@ -30,7 +30,17 @@ class NoUIFactory implements Factory {
 	public function legacy($content) {}
 	public function panel() {}
 	public function divider() {}
+	public function link() {}
+	public function dropzone() {}
 	public function dropdown() {}
+	public function item() {}
+	public function icon() {}
+	public function viewControl() {}
+	public function breadcrumbs(array $crumbs) {}
+	public function chart() {}
+	public function table() {}
+	public function modal() {}
+	public function popover() {}
 }
 
 class LoggingRegistry implements ResourceRegistry {
@@ -62,6 +72,9 @@ class LoggingJavaScriptBinding implements JavaScriptBinding {
 	public $on_load_code = array();
 	public function addOnLoadCode($code) {
 		$this->on_load_code[] = $code;
+	}
+	public function getOnLoadCodeAsync() {
+		throw new \LogicException("NYI");
 	}
 }
 
