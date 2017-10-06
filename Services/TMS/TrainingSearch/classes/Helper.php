@@ -96,7 +96,7 @@ class Helper {
 	 *
 	 * @return string
 	 */
-	protected function prepareModal()
+	public function prepareModal()
 	{
 		require_once('./Services/Form/classes/class.ilPropertyFormGUI.php');
 		require_once('./Services/Form/classes/class.ilTextInputGUI.php');
@@ -191,7 +191,7 @@ class Helper {
 	 *
 	 * @return string[]
 	 */
-	protected function getFilterValuesFrom(array $values) {
+	public function getFilterValuesFrom(array $values) {
 		$filter = array();
 		$title = trim($values[self::F_TITLE]);
 		if($title != "") {
