@@ -98,7 +98,11 @@ class ilPersonalDesktopGUI
 				require_once("./Services/TMS/TrainingSearch/classes/class.ilTrainingSearchDB.php");
 				require_once("Services/TMS/TrainingSearch/classes/Helper.php");
 				require_once("Services/TMS/TrainingSearch/classes/class.ilBookableFilter.php");
-				$training_search_gui = new ilTrainingSearchGUI($this, new ilTrainingSearchDB(), new Helper(), new ilBookableFilter());
+				$helper = new Helper();
+				$filter = new ilBookableFilter();
+				$search_db = new ilTrainingSearchDB($filter, $helper);
+
+				$training_search_gui = new ilTrainingSearchGUI($this, $search_db, $helper);
 				$this->getStandardTemplates();
 				$ret = $this->ctrl->forwardCommand($training_search_gui);
 				break;
