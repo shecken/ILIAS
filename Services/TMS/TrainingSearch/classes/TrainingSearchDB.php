@@ -9,22 +9,23 @@ interface TrainingSearchDB {
 	 * Get courses user can book
 	 *
 	 * @param int 	$user_id
+	 * @param array<int, int | string | string[]>
 	 *
-	 * @return array<int, ilObjCourse | ilObjBookingModalities[] | ilObjCourseClassification>
+	 * @return BookableCourse[]
 	 */
-	public function getBookableTrainingsFor($user_id);
+	public function getBookableTrainingsFor($user_id, $filter);
 
 	/**
 	 * Create new bookable course
 	 *
 	 * @param string 	$crs_title
 	 * @param string 	$type
-	 * @param string 	$start_date_str
+	 * @param ilDateTime 	$start_date
 	 * @param int 	$bookings_available
 	 * @param string[] 	$target_group
 	 * @param string 	$goals
 	 * @param string[] 	$topics
-	 * @param string 	$end_date_str
+	 * @param ilDateTime 	$end_date
 	 * @param string 	$city
 	 * @param string 	$address
 	 * @param string 	$costs
@@ -33,12 +34,12 @@ interface TrainingSearchDB {
 	 */
 	public function getBookableCourse($crs_title,
 				$type,
-				$start_date_str,
+				ilDateTime $start_date,
 				$bookings_available,
 				array $target_group,
 				$goals,
 				array $topics,
-				$end_date_str,
+				ilDateTime $end_date,
 				$city,
 				$address,
 				$costs = "KOSTEN"
