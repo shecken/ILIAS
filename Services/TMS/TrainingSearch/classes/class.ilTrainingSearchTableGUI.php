@@ -4,6 +4,8 @@
  * cat-tms-patch start
  */
 
+require_once("Services/TMS/TrainingSearch/classes/class.Helper.php");
+
 /**
  * Table gui to present cokable courses
  *
@@ -21,11 +23,14 @@ class ilTrainingSearchTableGUI {
 	 */
 	protected $g_lng;
 
-	public function __construct(ilTrainingSearchGUI $parent) {
+	public function __construct(ilTrainingSearchGUI $parent, Helper $helper) {
 		$this->parent = $parent;
 
 		global $DIC;
 		$this->g_lng = $DIC->language();
+
+		$this->helper = $helper;
+
 		$this->g_lng->loadLanguageModule('tsearch');
 	}
 
@@ -69,7 +74,7 @@ class ilTrainingSearchTableGUI {
 					->withSubTitle($record->getType())
 					->withImportantFields(
 						array(
-							$record->getBeginDate(),
+							$this->helper->formatDate($record->getBeginDate()),
 							$record->getLocation(),
 							$this->g_lng->txt("available_slots") => $record->getBookingsAvailable()
 						)
@@ -88,7 +93,7 @@ class ilTrainingSearchTableGUI {
 						array(
 							$this->g_lng->txt("location") => $record->getLocation(),
 							$record->getAddress(),
-							$this->g_lng->txt("date") => $record->getDate(),
+							$this->g_lng->txt("date") => $this->helper->formatDate($record->getBeginDate())." - ".$this->helper->formatDate($record->getEndDate()),
 							$this->g_lng->txt("available_slots") => $record->getBookingsAvailable(),
 							$this->g_lng->txt("fee") => $record->getFee()
 						)
