@@ -81,7 +81,7 @@ class Player {
 	 * @return 	Step[]
 	 */
 	protected function getSortedSteps() {
-		$steps = $this->getComponentsOfType(Step::class);
+		$steps = $this->getApplicableSteps();
 		usort($steps, function (Step $a, Step $b) {
 			if ($a->getPriority() < $b->getPriority()) {
 				return -1;
