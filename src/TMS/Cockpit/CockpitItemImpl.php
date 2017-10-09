@@ -5,8 +5,6 @@
  */
 
 namespace ILIAS\TMS\Cockpit;
-use ILIAS\TMS\Cockpit\CockpitItem;
-
 use CaT\Ente;
 
 class CockpitItemImpl implements CockpitItem {
