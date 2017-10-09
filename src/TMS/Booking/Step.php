@@ -42,6 +42,15 @@ interface Step {
 	public function getPriority();
 
 	/**
+	 * Find out if this step is applicable for the booking process of the
+	 * given user.
+	 *
+	 * @param	int	$usr_id
+	 * @return	bool
+	 */
+	public function isApplicableFor($usr_id);
+
+	/**
 	 * Get the form to prompt the user.
 	 *
 	 * If $post is supplied, the form should be filled with the supplied values.

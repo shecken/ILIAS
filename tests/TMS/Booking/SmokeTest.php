@@ -9,6 +9,7 @@ class DummyStep implements Booking\Step {
 	public function getDescription() {}
 	public function getPriority() {}
 	public function getForm(array $post = null) {}
+	public function isApplicableFor($usr_id) {}
 	public function getData(\ilPropertyFormGUI $form) {}
 	public function appendOverview($data, \ilPropertyFormGUI $form) {}
 	public function	processStep($data) {}
@@ -22,7 +23,7 @@ class TMS_Booking_SmokeTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_instantiatePlayer() {
-		$player = new Booking\Player([], 0);
+		$player = new Booking\Player([], 0, 0);
 
 		$this->assertInstanceOf(Booking\Player::class, $player);
 	}
