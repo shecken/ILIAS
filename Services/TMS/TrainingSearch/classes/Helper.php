@@ -34,7 +34,7 @@ class Helper {
 	 * @param ilObjBookingModalities[] 	$bms
 	 * @param ilDateTime 	$crs_start_date
 	 *
-	 * @return array<intger, int | ilDateTime | string>
+	 * @return array<integer, int | ilDateTime | string>
 	 */
 	public function getBestBkmValues(array $bkms, ilDateTime $crs_start_date) {
 		$plugin = ilPluginAdmin::getPluginObjectById('xbkm');
