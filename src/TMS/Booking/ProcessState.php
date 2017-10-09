@@ -1,0 +1,63 @@
+<?php
+
+/* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de> */
+
+namespace ILIAS\TMS\Booking;
+
+use CaT\Ente\ILIAS\ilHandlerObjectHelper;
+
+/**
+ * Has state information about one booking process.
+ */
+class ProcessState {
+	/**
+	 * @var	int
+	 */
+	protected $crs_id;
+
+	/**
+	 * @var	int
+	 */
+	protected $usr_id;
+
+	/**
+	 * @var	int
+	 */
+	protected $step_number;
+
+	public function __construct($crs_id, $usr_id, $step_number) {
+		assert('is_int($crs_id)');
+		assert('is_int($usr_id)');
+		assert('is_int($step_number)');
+		$this->crs_id = $crs_id;
+		$this->usr_id = $usr_id;
+		$this->step_number = $step_number;
+	}
+
+	/**
+	 * Get the id of the course the booking is made for.
+	 *
+	 * @return	int
+	 */
+	public function getCourseId() {
+		return $this->crs_id;
+	}
+
+	/**
+	 * Get the id of the user the booking is made for.
+	 *
+	 * @return	int
+	 */
+	public function getUserId() {
+		return $this->usr_id;
+	}
+
+	/**
+	 * Get the number of the step the user currently is in.
+	 *
+	 * @return	int
+	 */
+	public function getStepNumber() {
+		return $this->step_number;
+	}
+}

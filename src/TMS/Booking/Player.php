@@ -64,6 +64,23 @@ class Player {
 	}
 
 	/**
+	 * Build the view for the current step in the booking process.
+	 *
+	 * @param	array|null	$post
+	 * @return	string
+	 */
+	public function buildView(array $post = null) {
+	}
+
+	/**
+	 * Get the state information about the booking process.
+	 *
+	 * @return	ProcessState
+	 */
+	protected function getProcessState() {
+	}
+
+	/**
 	 * Get the steps that are applicable for a given user.
 	 *
 	 * @return	Step[]
