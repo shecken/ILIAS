@@ -55,7 +55,7 @@ interface Step {
 	 *
 	 * If $post is supplied, the form should be filled with the supplied values.
 	 *
-	 * @param	array	$post
+	 * @param	array|null	$post
 	 * @return \ilPropertyFormGUI
 	 */
 	public function getForm(array $post = null);
