@@ -13,6 +13,8 @@ use CaT\Ente\ILIAS\ilHandlerObjectHelper;
 class Player {
 	use ilHandlerObjectHelper;
 
+	const START_WITH_STEP = 0;
+
 	/**
 	 * @var	\ArrayAccess
 	 */
@@ -29,17 +31,23 @@ class Player {
 	protected $usr_id;
 
 	/**
+	 * @var	ProcessStateDB
+	 */
+	protected $process_db;
+
+	/**
 	 * @param	\ArrayAccess|array $dic
 	 * @param	int	$crs_ref_id 	course that should get booked
 	 * @param	int	$usr_id			the usr the booking is made for
 	 */
-	public function __construct($dic, $crs_ref_id, $usr_id) {
+	public function __construct($dic, $crs_ref_id, $usr_id, ProcessStateDB $process_db) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_int($crs_ref_id)');
 		assert('is_int($usr_id)');
 		$this->dic = $dic;
 		$this->crs_ref_id = $crs_ref_id;
 		$this->usr_id = $usr_id;
+		$this->process_db = $process_db;
 	}
 
 	/**
@@ -78,6 +86,11 @@ class Player {
 	 * @return	ProcessState
 	 */
 	protected function getProcessState() {
+		$state = $this->process_db->load($this->crs_ref_id, $this->usr_id);
+		if ($state !== null) {
+			return $state;
+		}
+		return new ProcessState($this->crs_ref_id, $this->usr_id, self::START_WITH_STEP);
 	}
 
 	/**

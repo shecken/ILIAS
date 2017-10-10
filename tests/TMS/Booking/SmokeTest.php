@@ -23,7 +23,8 @@ class TMS_Booking_SmokeTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_instantiatePlayer() {
-		$player = new Booking\Player([], 0, 0);
+		$db = $this->createMock(Booking\ProcessStateDB::class);
+		$player = new Booking\Player([], 0, 0, $db);
 
 		$this->assertInstanceOf(Booking\Player::class, $player);
 	}

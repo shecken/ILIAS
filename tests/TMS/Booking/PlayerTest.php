@@ -16,12 +16,16 @@ class BookingPlayerForTest extends Booking\Player {
 	public function _getUserId() {
 		return $this->getUserId();
 	}
+	public function _getProcessState() {
+		return $this->getProcessState();
+	}
 }
 
 class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 	public function test_getUserId() {
 		$user_id = 42;
-		$player = new BookingPlayerForTest([], 0, $user_id);
+		$db = $this->createMock(Booking\ProcessStateDB::class);
+		$player = new BookingPlayerForTest([], 0, $user_id, $db);
 		$this->assertEquals($user_id, $player->_getUserId());
 	}
 
@@ -101,12 +105,40 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals([$component1, $component3], $steps);
 	}
 
-	public function test_getProcessState() {
-		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+	public function test_getProcessState_existing() {
+		$course_id = 42;
+		$user_id = 23;
+		$db = $this->createMock(Booking\ProcessStateDB::class);
+		$state = $this->getMockBuilder(Booking\ProcessState::class)
 			->disableOriginalConstructor()
 			->getMock();
+		$player = new BookingPlayerForTest([], $course_id, $user_id, $db);
 
-		$db = $this->createMock(Booking\ProcessStateDB);
+		$db
+			->expects($this->once())
+			->method("load")
+			->with($course_id, $user_id)
+			->willReturn($state);
+
+		$state2 = $player->_getProcessState();
+		$this->assertEquals($state, $state2);
+	}
+
+	public function test_getProcessState_new() {
+		$course_id = 42;
+		$user_id = 23;
+		$db = $this->createMock(Booking\ProcessStateDB::class);
+		$player = new BookingPlayerForTest([], $course_id, $user_id, $db);
+
+		$db
+			->expects($this->once())
+			->method("load")
+			->with($course_id, $user_id)
+			->willReturn(null);
+
+		$state = $player->_getProcessState();
+		$expected = new Booking\ProcessState($course_id, $user_id, 0);
+		$this->assertEquals($expected, $state);
 	}
 
 	public function test_buildView() {
