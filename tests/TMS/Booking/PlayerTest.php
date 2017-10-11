@@ -19,6 +19,9 @@ class BookingPlayerForTest extends Booking\Player {
 	public function _getProcessState() {
 		return $this->getProcessState();
 	}
+	public function _saveProcessState($state) {
+		return $this->saveProcessState($state);
+	}
 }
 
 class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
@@ -139,6 +142,22 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$state = $player->_getProcessState();
 		$expected = new Booking\ProcessState($course_id, $user_id, 0);
 		$this->assertEquals($expected, $state);
+	}
+
+	public function test_saveProcessState() {
+		$course_id = 42;
+		$user_id = 23;
+		$db = $this->createMock(Booking\ProcessStateDB::class);
+		$player = new BookingPlayerForTest([], $course_id, $user_id, $db);
+		$state = $this->createMock(Booking\ProcessState::class);
+
+		$db
+			->expects($this->once())
+			->method("save")
+			->with($state)
+			->willReturn(null);
+
+		$player->_saveProcessState($state);
 	}
 
 	public function test_buildView_data_not_ok() {

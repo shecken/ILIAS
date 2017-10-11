@@ -117,6 +117,16 @@ class Player {
 	}
 
 	/**
+	 * Save the state information about the booking process.
+	 *
+	 * @param	ProcessState
+	 * @return	void
+	 */
+	protected function saveProcessState(ProcessState $state) {
+		$this->process_db->save($state);
+	}
+
+	/**
 	 * Get the steps that are applicable for a given user.
 	 *
 	 * @return	Step[]

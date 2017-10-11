@@ -16,4 +16,10 @@ interface ProcessStateDB {
 	 * @return	ProcessState|null
 	 */
 	public function load($crs_id, $usr_id);
+
+	/**
+	 * @param	ProcessState
+	 * @return	void
+	 */
+	public function save(ProcessState $state);
 }
