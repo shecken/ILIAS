@@ -141,7 +141,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expected, $state);
 	}
 
-	public function test_buildView() {
+	public function test_buildView_data_not_ok() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
 			->setMethods(["getSortedSteps", "getProcessState"])
 			->disableOriginalConstructor()
@@ -175,7 +175,155 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getSortedSteps")
 			->willReturn([$step1, $step2, $step3]);
 
+		$post = ["foo" => "bar"];
 		$step2
+			->expects($this->once())
+			->method("getForm")
+			->with($post)
+			->willReturn($form);
+
+		$step2
+			->expects($this->once())
+			->method("getData")
+			->with($form)
+			->willReturn(null);
+
+		$html = "HTML OUTPUT STEP 2";
+		$form
+			->expects($this->once())
+			->method("getHTML")
+			->willReturn($html);
+
+		$view = $player->buildView($post);
+
+		$this->assertEquals($html, $view);
+	}
+
+	public function test_buildView_data_ok() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getSortedSteps", "getProcessState"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$form_step2 = $this->createMock(\ilPropertyFormGUI::class);
+		$form_step3 = $this->createMock(\ilPropertyFormGUI::class);
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 1;
+		$state = new Booking\ProcessState($crs_id, $usr_id, $step_number);
+
+		$step1 = $this->createMock(Booking\Step::class);
+		$step2 = $this->createMock(Booking\Step::class);
+		$step3 = $this->createMock(Booking\Step::class);
+
+		$step1
+			->expects($this->never())
+			->method($this->anything());
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$player
+			->expects($this->once())
+			->method("getSortedSteps")
+			->willReturn([$step1, $step2, $step3]);
+
+		$post = ["foo" => "bar"];
+		$step2
+			->expects($this->once())
+			->method("getForm")
+			->with($post)
+			->willReturn($form_step2);
+
+		$data = ["bar" => "baz"];
+		$step2
+			->expects($this->once())
+			->method("getData")
+			->with($form_step2)
+			->willReturn($data);
+
+		$step3
+			->expects($this->once())
+			->method("getForm")
+			->with(null)
+			->willReturn($form_step3);
+
+		$html = "HTML OUTPUT STEP 3";
+		$form_step3
+			->expects($this->once())
+			->method("getHTML")
+			->willReturn($html);
+
+		$view = $player->buildView($post);
+
+		$this->assertEquals($html, $view);
+	}
+
+	public function test_buildView_expects_post_on_further_steps() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getSortedSteps", "getProcessState"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 1;
+		$state = new Booking\ProcessState($crs_id, $usr_id, $step_number);
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$catched = false;
+		try {
+			$view = $player->buildView();
+			$this->assertFalse("This should not happen.");
+		}
+		catch (\LogicException $e) {
+			$catched = true;		
+		}
+		$this->assertTrue($catched);
+	}
+
+	public function test_buildView_first() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getSortedSteps", "getProcessState"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$form = $this->createMock(\ilPropertyFormGUI::class);
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 0;
+		$state = new Booking\ProcessState($crs_id, $usr_id, $step_number);
+
+		$step1 = $this->createMock(Booking\Step::class);
+		$step2 = $this->createMock(Booking\Step::class);
+		$step3 = $this->createMock(Booking\Step::class);
+
+		$step2
+			->expects($this->never())
+			->method($this->anything());
+		$step3
+			->expects($this->never())
+			->method($this->anything());
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$player
+			->expects($this->once())
+			->method("getSortedSteps")
+			->willReturn([$step1, $step2, $step3]);
+
+		$step1
 			->expects($this->once())
 			->method("getForm")
 			->with(null)
@@ -186,5 +334,9 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->expects($this->once())
 			->method("getHTML")
 			->willReturn($html);
+
+		$view = $player->buildView();
+
+		$this->assertEquals($html, $view);
 	}
 }

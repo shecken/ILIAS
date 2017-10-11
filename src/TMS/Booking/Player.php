@@ -75,9 +75,32 @@ class Player {
 	 * Build the view for the current step in the booking process.
 	 *
 	 * @param	array|null	$post
+	 * @throws	\LogicException		in case post was required but not supplied
 	 * @return	string
 	 */
 	public function buildView(array $post = null) {
+		$state = $this->getProcessState();
+		$steps = $this->getSortedSteps();
+		$step_number = $state->getStepNumber();
+		$current_step = $steps[$step_number];
+		if ($step_number > 0) {
+			if ($post === null) {
+				throw new \LogicException("Missing POST.");
+			}
+			$form = $current_step->getForm($post);
+			$data = $current_step->getData($form);
+			if ($data === null) {
+				return $form->getHtml();
+			}
+		}
+		if ($step_number > 0) {
+			$next_step = $steps[$step_number+1];
+		}
+		else {
+			$next_step = $steps[0];
+		}
+		$form = $next_step->getForm();
+		return $form->getHtml();
 	}
 
 	/**
