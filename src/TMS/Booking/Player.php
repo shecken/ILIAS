@@ -122,6 +122,13 @@ abstract class Player {
 	 * @return	\ilPropertyFormGUI
 	 */
 	protected function buildOverviewForm(ProcessState $state) {
+		$steps = $this->getSortedSteps();
+		$form = $this->getForm();
+		for($i = 0; $i < count($steps); $i++) {
+			$data = $state->getStepData($i);
+			$steps[$i]->appendToOverview($data, $form);
+		}
+		return $form;
 	}
 
 	/**

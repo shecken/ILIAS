@@ -22,8 +22,11 @@ class BookingPlayerForTest extends Booking\Player {
 	public function _saveProcessState($state) {
 		return $this->saveProcessState($state);
 	}
-	public function getForm() {
+	protected function getForm() {
 		throw new \LogicException("Mock me!");
+	}
+	public function _buildOverviewForm($state) {
+		return $this->buildOverviewForm($state);
 	}
 }
 
@@ -479,5 +482,57 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$view = $player->process($post);
 
 		$this->assertEquals($html, $view);
+	}
+
+	public function test_buildOverviewForm() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getSortedSteps", "getProcessState", "getForm"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$form = $this->createMock(\ilPropertyFormGUI::class);
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 3;
+		$data1 = "DATA 1";
+		$data2 = "DATA 2";
+		$data3 = "DATA 3";
+		$state = (new Booking\ProcessState($crs_id, $usr_id, $step_number))
+			->withStepData(0, $data1)
+			->withStepData(1, $data2)
+			->withStepData(2, $data3);
+
+		$step1 = $this->createMock(Booking\Step::class);
+		$step2 = $this->createMock(Booking\Step::class);
+		$step3 = $this->createMock(Booking\Step::class);
+
+		$player
+			->expects($this->atLeastOnce())
+			->method("getSortedSteps")
+			->willReturn([$step1, $step2, $step3]);
+
+		$player
+			->expects($this->once())
+			->method("getForm")
+			->willReturn($form);
+
+		$step1
+			->expects($this->once())
+			->method("appendToOverview")
+			->with($data1, $form);
+
+		$step2
+			->expects($this->once())
+			->method("appendToOverview")
+			->with($data2, $form);
+
+		$step3
+			->expects($this->once())
+			->method("appendToOverview")
+			->with($data3, $form);
+
+		$form2 = $player->_buildOverviewForm($state);
+		$this->assertSame($form, $form2);
 	}
 }

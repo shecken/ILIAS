@@ -83,7 +83,7 @@ interface Step {
 	 * @param	\ilPropertyFormGUI	$form
 	 * @return	void
 	 */
-	public function appendOverview($data, \ilPropertyFormGUI $form);
+	public function appendToOverview($data, \ilPropertyFormGUI $form);
 
 	/**
 	 * Process the data to perform the actions in the system that are required
