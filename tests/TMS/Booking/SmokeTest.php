@@ -15,6 +15,12 @@ class DummyStep implements Booking\Step {
 	public function	processStep($data) {}
 }
 
+class DummyPlayer extends Booking\Player {
+	public function getOverviewForm() {
+		throw new \LogicException("Mock me!");
+	}
+}
+
 class TMS_Booking_SmokeTest extends PHPUnit_Framework_TestCase {
 	public function test_instantiateStep() {
 		$step = new DummyStep();
@@ -24,7 +30,7 @@ class TMS_Booking_SmokeTest extends PHPUnit_Framework_TestCase {
 
 	public function test_instantiatePlayer() {
 		$db = $this->createMock(Booking\ProcessStateDB::class);
-		$player = new Booking\Player([], 0, 0, $db);
+		$player = new DummyPlayer([], 0, 0, $db);
 
 		$this->assertInstanceOf(Booking\Player::class, $player);
 	}

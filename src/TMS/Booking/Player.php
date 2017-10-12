@@ -10,7 +10,7 @@ use CaT\Ente\ILIAS\ilHandlerObjectHelper;
  * Displays the steps for the booking of one spefic course in a row, gathers user
  * input and afterwards completes the booking.
  */
-class Player {
+abstract class Player {
 	use ilHandlerObjectHelper;
 
 	const START_WITH_STEP = 0;
@@ -92,16 +92,41 @@ class Player {
 			if ($data === null) {
 				return $form->getHtml();
 			}
+			$state = $state
+				->withNextStep()
+				->withStepData($step_number, $data);
+			$this->saveProcessState($state);
 		}
-		if ($step_number > 0) {
-			$next_step = $steps[$step_number+1];
+		if ($step_number+1 == count($steps)) {
+			$form = $this->buildOverviewForm($state);
 		}
 		else {
-			$next_step = $steps[0];
+			if ($step_number > 0) {
+				$next_step = $steps[$step_number+1];
+			}
+			else {
+				$next_step = $steps[0];
+			}
+			$form = $next_step->getForm();
 		}
-		$form = $next_step->getForm();
 		return $form->getHtml();
 	}
+
+	/**
+ 	 * Build the final overview form.
+	 *
+	 * @param	ProcessState $state
+	 * @return	\ilPropertyFormGUI
+	 */
+	protected function buildOverviewForm(ProcessState $state) {
+	}
+
+	/**
+	 * Get a form for the overview.
+	 *
+	 * @return \ilPropertyFormGUI
+	 */
+	abstract protected function getOverviewForm();
 
 	/**
 	 * Get the state information about the booking process.
