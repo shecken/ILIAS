@@ -72,42 +72,45 @@ abstract class Player {
 	}
 
 	/**
-	 * Build the view for the current step in the booking process.
+	 * Build the view for the booking process.
 	 *
 	 * @param	array|null	$post
-	 * @throws	\LogicException		in case post was required but not supplied
 	 * @return	string
 	 */
 	public function buildView(array $post = null) {
 		$state = $this->getProcessState();
+		return $this->buildStep($state, $post);
+	}
+
+	/**
+	 * Build the view for the current step in the booking process.
+	 *
+	 * @param	ProcessState	$state
+	 * @param	array|null	$post
+	 * @return	string
+	 */
+	protected function buildStep(ProcessState $state, array $post = null) {
 		$steps = $this->getSortedSteps();
 		$step_number = $state->getStepNumber();
+
+		if ($step_number == count($steps)) {
+			assert('is_null($post)');
+			return $this
+				->buildOverviewForm($state)
+				->getHtml();
+		}
+
 		$current_step = $steps[$step_number];
-		if ($step_number > 0) {
-			if ($post === null) {
-				throw new \LogicException("Missing POST.");
-			}
-			$form = $current_step->getForm($post);
+		$form = $current_step->getForm($post);
+		if ($post) {
 			$data = $current_step->getData($form);
-			if ($data === null) {
-				return $form->getHtml();
+			if ($data !== null) {
+				$state = $state
+					->withStepData($step_number, $data)
+					->withNextStep();
+				$this->saveProcessState($state);
+				return $this->buildStep($state);
 			}
-			$state = $state
-				->withNextStep()
-				->withStepData($step_number, $data);
-			$this->saveProcessState($state);
-		}
-		if ($step_number+1 == count($steps)) {
-			$form = $this->buildOverviewForm($state);
-		}
-		else {
-			if ($step_number > 0) {
-				$next_step = $steps[$step_number+1];
-			}
-			else {
-				$next_step = $steps[0];
-			}
-			$form = $next_step->getForm();
 		}
 		return $form->getHtml();
 	}
