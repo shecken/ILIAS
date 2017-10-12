@@ -103,8 +103,12 @@ abstract class Player {
 		}
 
 		$current_step = $steps[$step_number];
-		$form = $current_step->getForm($post);
+
+		$form = $this->getForm();
+		$current_step->appendToStepForm($form);
+
 		if ($post) {
+			$form->setValuesByArray($post);
 			$data = $current_step->getData($form);
 			if ($data !== null) {
 				$state = $state
@@ -132,7 +136,7 @@ abstract class Player {
 			$header->setTitle($step->getLabel());
 			$form->addItem($header);
 			$data = $state->getStepData($i);
-			$step->appendToOverview($data, $form);
+			$step->appendToOverviewForm($data, $form);
 		}
 		return $form;
 	}

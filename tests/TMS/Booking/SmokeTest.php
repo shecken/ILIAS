@@ -8,10 +8,10 @@ class DummyStep implements Booking\Step {
 	public function getLabel() {}
 	public function getDescription() {}
 	public function getPriority() {}
-	public function getForm(array $post = null) {}
+	public function appendToStepForm(\ilPropertyFormGUI $form) {}
 	public function isApplicableFor($usr_id) {}
 	public function getData(\ilPropertyFormGUI $form) {}
-	public function appendToOverview($data, \ilPropertyFormGUI $form) {}
+	public function appendToOverviewForm($data, \ilPropertyFormGUI $form) {}
 	public function	processStep($data) {}
 }
 

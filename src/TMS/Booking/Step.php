@@ -55,10 +55,10 @@ interface Step {
 	 *
 	 * If $post is supplied, the form should be filled with the supplied values.
 	 *
-	 * @param	array|null	$post
-	 * @return \ilPropertyFormGUI
+	 * @param	\ilPropertyFormGUI	$form
+	 * @return	void
 	 */
-	public function getForm(array $post = null);
+	public function appendToStepForm(\ilPropertyFormGUI $form);
 
 	/**
 	 * Get the data the step needs to store until the end of the process, based
@@ -83,7 +83,7 @@ interface Step {
 	 * @param	\ilPropertyFormGUI	$form
 	 * @return	void
 	 */
-	public function appendToOverview($data, \ilPropertyFormGUI $form);
+	public function appendToOverviewForm($data, \ilPropertyFormGUI $form);
 
 	/**
 	 * Process the data to perform the actions in the system that are required
