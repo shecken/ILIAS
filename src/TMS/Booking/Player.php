@@ -72,12 +72,12 @@ abstract class Player {
 	}
 
 	/**
-	 * Build the view for the booking process.
+	 * Process the user input and build the appropriate view.
 	 *
 	 * @param	array|null	$post
 	 * @return	string
 	 */
-	public function buildView(array $post = null) {
+	public function process(array $post = null) {
 		$state = $this->getProcessState();
 		return $this->buildStep($state, $post);
 	}

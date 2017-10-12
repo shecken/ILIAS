@@ -163,7 +163,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$player->_saveProcessState($state);
 	}
 
-	public function test_buildView_data_not_ok() {
+	public function test_process_data_not_ok() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
 			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState"])
 			->disableOriginalConstructor()
@@ -220,12 +220,12 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getHTML")
 			->willReturn($html);
 
-		$view = $player->buildView($post);
+		$view = $player->process($post);
 
 		$this->assertEquals($html, $view);
 	}
 
-	public function test_buildView_data_ok() {
+	public function test_process_data_ok() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
 			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState"])
 			->disableOriginalConstructor()
@@ -292,12 +292,12 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getHTML")
 			->willReturn($html);
 
-		$view = $player->buildView($post);
+		$view = $player->process($post);
 
 		$this->assertEquals($html, $view);
 	}
 
-	public function test_buildView_build_only_on_no_post() {
+	public function test_process_build_only_on_no_post() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
 			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState"])
 			->disableOriginalConstructor()
@@ -351,14 +351,14 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getHTML")
 			->willReturn($html);
 
-		$view = $player->buildView();
+		$view = $player->process();
 
 		$this->assertEquals($html, $view);
 
 
 	}
 
-	public function test_buildView_first() {
+	public function test_process_first() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
 			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState"])
 			->disableOriginalConstructor()
@@ -408,12 +408,12 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getHTML")
 			->willReturn($html);
 
-		$view = $player->buildView();
+		$view = $player->process();
 
 		$this->assertEquals($html, $view);
 	}
 
-	public function test_buildView_last() {
+	public function test_process_last() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
 			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState", "buildOverviewForm"])
 			->disableOriginalConstructor()
@@ -476,7 +476,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getHTML")
 			->willReturn($html);
 
-		$view = $player->buildView($post);
+		$view = $player->process($post);
 
 		$this->assertEquals($html, $view);
 	}
