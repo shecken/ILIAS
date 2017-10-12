@@ -129,7 +129,7 @@ abstract class Player {
 	 *
 	 * @return \ilPropertyFormGUI
 	 */
-	abstract protected function getOverviewForm();
+	abstract protected function getForm();
 
 	/**
 	 * Get the state information about the booking process.

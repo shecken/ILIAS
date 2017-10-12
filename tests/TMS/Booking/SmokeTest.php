@@ -16,7 +16,7 @@ class DummyStep implements Booking\Step {
 }
 
 class DummyPlayer extends Booking\Player {
-	public function getOverviewForm() {
+	public function getForm() {
 		throw new \LogicException("Mock me!");
 	}
 }

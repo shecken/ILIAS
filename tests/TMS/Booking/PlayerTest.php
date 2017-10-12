@@ -22,7 +22,7 @@ class BookingPlayerForTest extends Booking\Player {
 	public function _saveProcessState($state) {
 		return $this->saveProcessState($state);
 	}
-	public function getOverviewForm() {
+	public function getForm() {
 		throw new \LogicException("Mock me!");
 	}
 }
