@@ -521,16 +521,46 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->expects($this->once())
 			->method("appendToOverview")
 			->with($data1, $form);
+		$label1 = "LABEL 1";
+		$step1
+			->expects($this->once())
+			->method("getLabel")
+			->willReturn($label1);
 
 		$step2
 			->expects($this->once())
 			->method("appendToOverview")
 			->with($data2, $form);
+		$label2 = "LABEL 2";
+		$step2
+			->expects($this->once())
+			->method("getLabel")
+			->willReturn($label2);
 
 		$step3
 			->expects($this->once())
 			->method("appendToOverview")
 			->with($data3, $form);
+		$label3 = "LABEL 3";
+		$step3
+			->expects($this->once())
+			->method("getLabel")
+			->willReturn($label3);
+
+		$form
+			->expects($this->exactly(3))
+			->method("addItem")
+			->withConsecutive
+				([$this->callback(function($item) use ($label1) {
+						return ($item instanceof \ilFormSectionHeaderGUI) && ($item->getTitle() == $label1);
+					})]
+				,[$this->callback(function($item) use ($label2) {
+						return ($item instanceof \ilFormSectionHeaderGUI) && ($item->getTitle() == $label2);
+					})]
+				,[$this->callback(function($item) use ($label3) {
+						return ($item instanceof \ilFormSectionHeaderGUI) && ($item->getTitle() == $label3);
+					})]
+				);
 
 		$form2 = $player->_buildOverviewForm($state);
 		$this->assertSame($form, $form2);

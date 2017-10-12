@@ -4,6 +4,8 @@
 
 namespace ILIAS\TMS\Booking;
 
+require_once(__DIR__."/../../../Services/Form/classes/class.ilFormSectionHeaderGUI.php");
+
 use CaT\Ente\ILIAS\ilHandlerObjectHelper;
 
 /**
@@ -125,8 +127,12 @@ abstract class Player {
 		$steps = $this->getSortedSteps();
 		$form = $this->getForm();
 		for($i = 0; $i < count($steps); $i++) {
+			$step = $steps[$i];
+			$header = new \ilFormSectionHeaderGUI();
+			$header->setTitle($step->getLabel());
+			$form->addItem($header);
 			$data = $state->getStepData($i);
-			$steps[$i]->appendToOverview($data, $form);
+			$step->appendToOverview($data, $form);
 		}
 		return $form;
 	}
