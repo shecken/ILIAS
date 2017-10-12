@@ -79,7 +79,7 @@ abstract class Player {
 	 */
 	public function process(array $post = null) {
 		$state = $this->getProcessState();
-		return $this->buildStep($state, $post);
+		return $this->processStep($state, $post);
 	}
 
 	/**
@@ -89,7 +89,7 @@ abstract class Player {
 	 * @param	array|null	$post
 	 * @return	string
 	 */
-	protected function buildStep(ProcessState $state, array $post = null) {
+	protected function processStep(ProcessState $state, array $post = null) {
 		$steps = $this->getSortedSteps();
 		$step_number = $state->getStepNumber();
 
@@ -109,7 +109,7 @@ abstract class Player {
 					->withStepData($step_number, $data)
 					->withNextStep();
 				$this->saveProcessState($state);
-				return $this->buildStep($state);
+				return $this->processStep($state);
 			}
 		}
 		return $form->getHtml();
