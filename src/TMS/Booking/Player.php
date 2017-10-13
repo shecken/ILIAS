@@ -94,6 +94,10 @@ abstract class Player {
 		if ($cmd === self::COMMAND_NEXT || $cmd === null) {
 			return $this->processStep($state, $post);
 		}
+		if ($cmd === self::COMMAND_CONFIRM) {
+			$this->finishProcess($state);
+			return null;
+		}
 		throw new \LogicException("Unknown command: '$cmd'");
 	}
 
@@ -156,6 +160,24 @@ abstract class Player {
 			$step->appendToOverviewForm($data, $form);
 		}
 		return $form;
+	}
+
+	/**
+	 * Finish the process by actually processing the steps.
+	 *
+	 * @param	ProcessState	$state
+	 * @return	void
+	 */
+	public function finishProcess(ProcessState $state) {
+		$steps = $this->getSortedSteps();
+		assert('$step_number == count($steps)');
+		for ($i = 0; $i < count($steps); $i++) {
+			$step = $steps[$i];
+			$data = $state->getStepData($i);
+			$step->processStep($data);
+		}
+		$this->deleteProcessState($state);
+		$this->redirectToPreviousLocation($this->txt("done"));
 	}
 
 	/**
