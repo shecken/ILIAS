@@ -269,7 +269,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 				continue;
 			}
 
-			$ret[] = $this->getBookableCourse($course_info["ref_id"],
+			$ret[] = $this->getBookableCourse($crs->getRefId(),
 				$title,
 				$type,
 				$start_date,
