@@ -3,7 +3,8 @@
  * cat-tms-patch start
  */
 
-require_once("Services/TMS/TrainingSearch/classes/Helper.php");
+require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerGUI.php");
+require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php");
 
 /**
  * Displays the TMS booking 
@@ -51,7 +52,14 @@ class ilTMSBookingGUI {
 		// TODO: Check if current user may book course for other user here.
 		assert('$this->g_user->getId() === $_GET["usr_id"]');
 
+		global $DIC;
+		$process_db = new ilTMSBookingPlayerStateDB();
+		$player = new ilTMSBookingPlayerGUI($DIC, $_GET["crs_ref_id"], $_GET["usr_id"], $process_db);
 		$cmd = $this->g_ctrl->getCmd("next");
+		$content = $player->process($cmd, $_POST);
+		assert('is_string($content)');
+		$this->g_tpl->setContent($content);
+		$this->g_tpl->show();
 
 		switch($cmd) {
 			case "next": 
@@ -60,18 +68,6 @@ class ilTMSBookingGUI {
 			default:
 				throw new Exception("Unknown command: ".$cmd);
 		}
-	}
-
-	/**
-	 * Shows all bookable trainings
-	 *
-	 * @param string[] 	$filter
-	 *
-	 * @return void
-	 */
-	protected function show() {
-		$this->g_tpl->setContent("crs_ref_id: ".$_GET["crs_ref_id"]." user_id: ".$_GET["usr_id"]);
-		$this->g_tpl->show();
 	}
 }
 
