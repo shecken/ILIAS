@@ -76,10 +76,12 @@ abstract class Player {
 	/**
 	 * Process the user input and build the appropriate view.
 	 *
+	 * @param	string|null	$cmd
 	 * @param	array|null	$post
 	 * @return	string
 	 */
-	public function process(array $post = null) {
+	public function process($cmd = null, array $post = null) {
+		assert('is_null($cmd) || is_string($cmd)');
 		$state = $this->getProcessState();
 		return $this->processStep($state, $post);
 	}

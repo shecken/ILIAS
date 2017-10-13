@@ -236,7 +236,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 				, ["next", "lng_next"]
 				);
 
-		$player->process([]);
+		$player->process();
 	}
 
 	public function test_process_data_not_ok() {
@@ -305,7 +305,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getHTML")
 			->willReturn($html);
 
-		$view = $player->process($post);
+		$view = $player->process("next", $post);
 
 		$this->assertEquals($html, $view);
 	}
@@ -389,7 +389,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getHTML")
 			->willReturn($html);
 
-		$view = $player->process($post);
+		$view = $player->process("next", $post);
 
 		$this->assertEquals($html, $view);
 	}
@@ -588,7 +588,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getHTML")
 			->willReturn($html);
 
-		$view = $player->process($post);
+		$view = $player->process("next", $post);
 
 		$this->assertEquals($html, $view);
 	}
