@@ -788,6 +788,4 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$no_view = $player->process("confirm", []);
 		$this->assertNull($no_view);
 	}
-
-
 }
