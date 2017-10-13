@@ -595,7 +595,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_buildOverviewForm() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
-			->setMethods(["getSortedSteps", "getProcessState", "getForm"])
+			->setMethods(["getSortedSteps", "getProcessState", "getForm", "txt"])
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -669,6 +669,20 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 				,[$this->callback(function($item) use ($label3) {
 						return ($item instanceof \ilFormSectionHeaderGUI) && ($item->getTitle() == $label3);
 					})]
+				);
+
+		$player
+			->expects($this->exactly(2))
+			->method("txt")
+			->withConsecutive(["abort"], ["confirm"])
+			->will($this->onConsecutiveCalls("lng_abort", "lng_confirm"));
+
+		$form
+			->expects($this->exactly(2))
+			->method("addCommandButton")
+			->withConsecutive
+				( ["abort", "lng_abort"]
+				, ["confirm", "lng_confirm"]
 				);
 
 		$form2 = $player->_buildOverviewForm($state);

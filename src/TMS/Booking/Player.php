@@ -18,6 +18,7 @@ abstract class Player {
 	const START_WITH_STEP = 0;
 	const COMMAND_ABORT = "abort";
 	const COMMAND_NEXT	= "next";
+	const COMMAND_CONFIRM = "confirm";
 
 	/**
 	 * @var	\ArrayAccess
@@ -141,6 +142,8 @@ abstract class Player {
 	protected function buildOverviewForm(ProcessState $state) {
 		$steps = $this->getSortedSteps();
 		$form = $this->getForm();
+		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
+		$form->addCommandButton(self::COMMAND_CONFIRM, $this->txt("confirm"));
 		for($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
 			$header = new \ilFormSectionHeaderGUI();
