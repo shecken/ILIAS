@@ -16,6 +16,8 @@ abstract class Player {
 	use ilHandlerObjectHelper;
 
 	const START_WITH_STEP = 0;
+	const COMMAND_ABORT = "abort";
+	const COMMAND_NEXT	= "next";
 
 	/**
 	 * @var	\ArrayAccess
@@ -83,7 +85,7 @@ abstract class Player {
 	public function process($cmd = null, array $post = null) {
 		assert('is_null($cmd) || is_string($cmd)');
 		$state = $this->getProcessState();
-		if ($cmd === "abort") {
+		if ($cmd === self::COMMAND_ABORT) {
 			$this->deleteProcessState($state);
 			$this->redirectToPreviousLocation($this->txt("aborted"));
 			return null;
@@ -112,8 +114,8 @@ abstract class Player {
 		$current_step = $steps[$step_number];
 
 		$form = $this->getForm();
-		$form->addCommandButton("abort", $this->txt("abort"));
-		$form->addCommandButton("next", $this->txt("next"));
+		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
+		$form->addCommandButton(self::COMMAND_NEXT, $this->txt("next"));
 		$current_step->appendToStepForm($form);
 
 		if ($post) {
