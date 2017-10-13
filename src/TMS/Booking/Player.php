@@ -255,6 +255,9 @@ abstract class Player {
 	 */
 	protected function getSortedSteps() {
 		$steps = $this->getApplicableSteps();
+		if (count($steps) === 0) {
+			throw new \LogicException("No booking steps defined.");
+		}
 		usort($steps, function (Step $a, Step $b) {
 			if ($a->getPriority() < $b->getPriority()) {
 				return -1;
