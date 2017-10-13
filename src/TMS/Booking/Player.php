@@ -91,7 +91,10 @@ abstract class Player {
 			$this->redirectToPreviousLocation($this->txt("aborted"));
 			return null;
 		}
-		return $this->processStep($state, $post);
+		if ($cmd === self::COMMAND_NEXT || $cmd === null) {
+			return $this->processStep($state, $post);
+		}
+		throw new \LogicException("Unknown command: '$cmd'");
 	}
 
 	/**
