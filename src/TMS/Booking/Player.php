@@ -105,6 +105,8 @@ abstract class Player {
 		$current_step = $steps[$step_number];
 
 		$form = $this->getForm();
+		$form->addCommandButton("abort", $this->txt("abort"));
+		$form->addCommandButton("next", $this->txt("next"));
 		$current_step->appendToStepForm($form);
 
 		if ($post) {
@@ -147,6 +149,22 @@ abstract class Player {
 	 * @return \ilPropertyFormGUI
 	 */
 	abstract protected function getForm();
+
+	/**
+	 * I18n language string
+	 *
+	 * @param	string	$id
+	 * @return	string
+	 */
+	abstract protected function txt($id);
+
+	/**
+	 * Redirect to previous location with a message.
+	 *
+	 * @param	string	$message
+	 * @return	void
+	 */
+	abstract protected function redirectToPreviousLocation($message);
 
 	/**
 	 * Get the state information about the booking process.

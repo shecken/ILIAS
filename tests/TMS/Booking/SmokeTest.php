@@ -19,6 +19,12 @@ class DummyPlayer extends Booking\Player {
 	public function getForm() {
 		throw new \LogicException("Mock me!");
 	}
+	protected function txt($id) {
+		throw new \LogicException("Mock me!");
+	}
+	protected function redirectToPreviousLocation($message) {
+		throw new \LogicException("Mock me!");
+	}
 }
 
 class TMS_Booking_SmokeTest extends PHPUnit_Framework_TestCase {

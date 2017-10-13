@@ -25,6 +25,11 @@ class BookingPlayerForTest extends Booking\Player {
 	protected function getForm() {
 		throw new \LogicException("Mock me!");
 	}
+	protected function txt($id) {
+		return $id;
+	}
+	protected function redirectToPreviousLocation($message) {
+	}
 	public function _buildOverviewForm($state) {
 		return $this->buildOverviewForm($state);
 	}
@@ -164,6 +169,55 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn(null);
 
 		$player->_saveProcessState($state);
+	}
+
+	public function test_process_form_building() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState", "getForm", "txt"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$form = $this->createMock(\ilPropertyFormGUI::class);
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 1;
+		$state = new Booking\ProcessState($crs_id, $usr_id, $step_number);
+
+		$step1 = $this->createMock(Booking\Step::class);
+		$step2 = $this->createMock(Booking\Step::class);
+		$step3 = $this->createMock(Booking\Step::class);
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$player
+			->expects($this->atLeastOnce())
+			->method("getSortedSteps")
+			->willReturn([$step1, $step2, $step3]);
+
+		$player
+			->expects($this->once())
+			->method("getForm")
+			->willReturn($form);
+
+		$player
+			->expects($this->exactly(2))
+			->method("txt")
+			->withConsecutive(["abort"], ["next"])
+			->will($this->onConsecutiveCalls("lng_abort", "lng_next"));
+
+		$form
+			->expects($this->exactly(2))
+			->method("addCommandButton")
+			->withConsecutive
+				( ["abort", "lng_abort"]
+				, ["next", "lng_next"]
+				);
+
+		$player->process([]);
 	}
 
 	public function test_process_data_not_ok() {
