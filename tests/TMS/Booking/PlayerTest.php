@@ -22,6 +22,9 @@ class BookingPlayerForTest extends Booking\Player {
 	public function _saveProcessState($state) {
 		return $this->saveProcessState($state);
 	}
+	public function _deleteProcessState($state) {
+		return $this->deleteProcessState($state);
+	}
 	protected function getForm() {
 		throw new \LogicException("Mock me!");
 	}
@@ -169,6 +172,22 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn(null);
 
 		$player->_saveProcessState($state);
+	}
+
+	public function test_deleteProcessState() {
+		$course_id = 42;
+		$user_id = 23;
+		$db = $this->createMock(Booking\ProcessStateDB::class);
+		$player = new BookingPlayerForTest([], $course_id, $user_id, $db);
+		$state = $this->createMock(Booking\ProcessState::class);
+
+		$db
+			->expects($this->once())
+			->method("delete")
+			->with($state)
+			->willReturn(null);
+
+		$player->_deleteProcessState($state);
 	}
 
 	public function test_process_form_building() {

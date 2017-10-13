@@ -22,4 +22,10 @@ interface ProcessStateDB {
 	 * @return	void
 	 */
 	public function save(ProcessState $state);
+
+	/**
+	 * @param	ProcessState
+	 * @return	void
+	 */
+	public function delete(ProcessState $state);
 }

@@ -190,6 +190,16 @@ abstract class Player {
 	}
 
 	/**
+	 * Delete the state information about the booking process.
+	 *
+	 * @param	ProcessState
+	 * @return	void
+	 */
+	protected function deleteProcessState(ProcessState $state) {
+		$this->process_db->delete($state);
+	}
+
+	/**
 	 * Get the steps that are applicable for a given user.
 	 *
 	 * @return	Step[]
