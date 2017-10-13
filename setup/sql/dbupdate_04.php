@@ -18389,3 +18389,9 @@ if (!$ilDB->tableColumnExists('iass_members', 'event_time')) {
 	$ilCtrlStructureReader->getStructure();
 	// cat-tms-patch end
 ?>
+<#5083>
+<?php
+	// cat-tms-patch start
+	$ilCtrlStructureReader->getStructure();
+	// cat-tms-patch end
+?>
