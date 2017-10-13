@@ -78,11 +78,16 @@ abstract class Player {
 	 *
 	 * @param	string|null	$cmd
 	 * @param	array|null	$post
-	 * @return	string
+	 * @return	string|null
 	 */
 	public function process($cmd = null, array $post = null) {
 		assert('is_null($cmd) || is_string($cmd)');
 		$state = $this->getProcessState();
+		if ($cmd === "abort") {
+			$this->deleteProcessState($state);
+			$this->redirectToPreviousLocation($this->txt("aborted"));
+			return null;
+		}
 		return $this->processStep($state, $post);
 	}
 

@@ -674,4 +674,41 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$form2 = $player->_buildOverviewForm($state);
 		$this->assertSame($form, $form2);
 	}
+
+	public function test_process_abort() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getProcessState", "deleteProcessState", "redirectToPreviousLocation", "txt"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 2;
+		$state = new Booking\ProcessState($crs_id, $usr_id, $step_number);
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$player
+			->expects($this->once())
+			->method("deleteProcessState")
+			->willReturn($state);
+
+		$player
+			->expects($this->once())
+			->method("txt")
+			->with("aborted")
+			->willReturn("lng_aborted");
+
+		$player
+			->expects($this->once())
+			->method("redirectToPreviousLocation")
+			->with("lng_aborted");
+
+		$no_view = $player->process("abort", []);
+		$this->assertNull($no_view);
+	}
+
 }
