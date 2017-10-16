@@ -124,6 +124,11 @@ abstract class Player {
 		$form = $this->getForm();
 		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 		$form->addCommandButton(self::COMMAND_NEXT, $this->txt("next"));
+
+		$header = new \ilFormSectionHeaderGUI();
+		$header->setTitle($current_step->getLabel());
+		$form->addItem($header);
+
 		$current_step->appendToStepForm($form);
 
 		if ($post) {

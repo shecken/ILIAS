@@ -236,6 +236,27 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 				, ["next", "lng_next"]
 				);
 
+
+		$step2
+			->expects($this->once())
+			->method("appendToStepForm")
+			->with($form);
+		$label = "STEP LABEL";
+		$step2
+			->expects($this->once())
+			->method("getLabel")
+			->willReturn($label);
+
+		$form
+			->expects($this->once())
+			->method("addItem")
+			->withConsecutive
+				([$this->callback(function($item) use ($label) {
+						return ($item instanceof \ilFormSectionHeaderGUI) && ($item->getTitle() == $label);
+					})]
+				);
+
+
 		$player->process();
 	}
 
