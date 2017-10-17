@@ -158,7 +158,7 @@ class ilTrainingSearchGUI {
 	public function getBookingLink(BookableCourse $course) {
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "crs_ref_id", $course->getRefId());
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", $this->g_user->getId());
-		$link = $this->g_ctrl->getLinkTargetByClass("ilTMSBookingGUI", "next");
+		$link = $this->g_ctrl->getLinkTargetByClass("ilTMSBookingGUI", "start");
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "crs_ref_id", null);
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", null);
 		return $link;
