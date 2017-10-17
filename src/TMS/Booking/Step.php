@@ -17,7 +17,7 @@ use CaT\Ente\Component;
  * last confirmation based on the stored input. Afterwards the step needs
  * to process the stored input.
  */
-interface Step {
+interface Step extends Component {
 	/**
 	 * Get a label for this step in the process.
 	 *
