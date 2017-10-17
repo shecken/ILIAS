@@ -93,7 +93,7 @@ abstract class Player {
 		$state = $this->getProcessState();
 		if ($cmd === self::COMMAND_ABORT) {
 			$this->deleteProcessState($state);
-			$this->redirectToPreviousLocation($this->txt("aborted"));
+			$this->redirectToPreviousLocation($this->txt("aborted"), false);
 			return null;
 		}
 		if ($cmd === self::COMMAND_NEXT || $cmd === null) {
@@ -199,7 +199,7 @@ abstract class Player {
 			$step->processStep($data);
 		}
 		$this->deleteProcessState($state);
-		$this->redirectToPreviousLocation($this->txt("done"));
+		$this->redirectToPreviousLocation($this->txt("done"), true);
 	}
 
 	/**
@@ -221,9 +221,10 @@ abstract class Player {
 	 * Redirect to previous location with a message.
 	 *
 	 * @param	string	$message
+	 * @param	bool	$success
 	 * @return	void
 	 */
-	abstract protected function redirectToPreviousLocation($message);
+	abstract protected function redirectToPreviousLocation($message, $sucess);
 
 	/**
 	 * Get the state information about the booking process.

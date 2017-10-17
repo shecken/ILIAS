@@ -23,7 +23,7 @@ class DummyPlayer extends Booking\Player {
 	protected function txt($id) {
 		throw new \LogicException("Mock me!");
 	}
-	protected function redirectToPreviousLocation($message) {
+	protected function redirectToPreviousLocation($message, $success) {
 		throw new \LogicException("Mock me!");
 	}
 }

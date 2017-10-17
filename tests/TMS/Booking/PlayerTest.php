@@ -31,7 +31,7 @@ class BookingPlayerForTest extends Booking\Player {
 	protected function txt($id) {
 		return $id;
 	}
-	protected function redirectToPreviousLocation($message) {
+	protected function redirectToPreviousLocation($message, $success) {
 	}
 	public function _buildOverviewForm($state) {
 		return $this->buildOverviewForm($state);
@@ -795,7 +795,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$player
 			->expects($this->once())
 			->method("redirectToPreviousLocation")
-			->with("lng_aborted");
+			->with("lng_aborted", false);
 
 		$no_view = $player->process("abort", []);
 		$this->assertNull($no_view);
@@ -858,7 +858,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 		$player
 			->expects($this->once())
-			->method("redirectToPreviousLocation")
+			->method("redirectToPreviousLocation", true)
 			->with("lng_done");
 
 		$no_view = $player->process("confirm", []);
