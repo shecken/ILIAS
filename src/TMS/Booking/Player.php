@@ -11,6 +11,9 @@ use CaT\Ente\ILIAS\ilHandlerObjectHelper;
 /**
  * Displays the steps for the booking of one spefic course in a row, gathers user
  * input and afterwards completes the booking.
+ *
+ * TODO: This rather should take the abstract methods via an interface and be final
+ * instead of forcing to derive from this class. This will make the ugly init go away.
  */
 abstract class Player {
 	use ilHandlerObjectHelper;
