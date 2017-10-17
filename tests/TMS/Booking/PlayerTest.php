@@ -36,6 +36,9 @@ class BookingPlayerForTest extends Booking\Player {
 	public function _buildOverviewForm($state) {
 		return $this->buildOverviewForm($state);
 	}
+	public function _resetProcess() {
+		$this->resetProcess();
+	}
 }
 
 class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
@@ -708,6 +711,58 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 		$form2 = $player->_buildOverviewForm($state);
 		$this->assertSame($form, $form2);
+	}
+
+	public function test_process_reset() {
+		$db = $this->createMock(Booking\ProcessStateDB::class);
+		$crs_id = 42;
+		$usr_id = 23;
+		$player = new BookingPlayerForTest([], $crs_id, $usr_id, $db);
+		$state = $this->createMock(Booking\ProcessState::class);
+
+		$db
+			->expects($this->once())
+			->method("load")
+			->with($crs_id, $usr_id)
+			->willReturn($state);
+		$db
+			->expects($this->once())
+			->method("delete")
+			->with($state);
+
+		$player->_resetProcess();
+	}
+
+	public function test_process_start() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getProcessState", "resetProcess", "processStep"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$state = $this->createMock(Booking\ProcessState::class);
+
+		$player
+			->expects($this->once())
+			->method("resetProcess")
+			->willReturn($state);
+
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$post = ["foo" => "bar"];
+		$view = "VIEW";
+		$player
+			->expects($this->once())
+			->method("processStep")
+			->with($state, $post)
+			->willReturn($view);
+
+		$view2 = $player->process("start", $post);
+		$this->assertEquals($view, $view2);
+
 	}
 
 	public function test_process_abort() {

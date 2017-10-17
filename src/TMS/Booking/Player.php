@@ -16,6 +16,7 @@ abstract class Player {
 	use ilHandlerObjectHelper;
 
 	const START_WITH_STEP = 0;
+	const COMMAND_START = "start";
 	const COMMAND_ABORT = "abort";
 	const COMMAND_NEXT	= "next";
 	const COMMAND_CONFIRM = "confirm";
@@ -85,6 +86,10 @@ abstract class Player {
 	 */
 	public function process($cmd = null, array $post = null) {
 		assert('is_null($cmd) || is_string($cmd)');
+		if ($cmd == self::COMMAND_START) {
+			$this->resetProcess();
+			return $this->process(self::COMMAND_NEXT, $post);
+		}
 		$state = $this->getProcessState();
 		if ($cmd === self::COMMAND_ABORT) {
 			$this->deleteProcessState($state);
@@ -168,12 +173,24 @@ abstract class Player {
 	}
 
 	/**
+	 * Reset the process by erasing all process data.
+	 *
+	 * @return void
+	 */
+	protected function resetProcess() {
+		$state = $this->process_db->load($this->crs_ref_id, $this->usr_id);
+		if ($state !== null) {
+			$this->process_db->delete($state);
+		}
+	}
+
+	/**
 	 * Finish the process by actually processing the steps.
 	 *
 	 * @param	ProcessState	$state
 	 * @return	void
 	 */
-	public function finishProcess(ProcessState $state) {
+	protected function finishProcess(ProcessState $state) {
 		$steps = $this->getSortedSteps();
 		assert('$step_number == count($steps)');
 		for ($i = 0; $i < count($steps); $i++) {
