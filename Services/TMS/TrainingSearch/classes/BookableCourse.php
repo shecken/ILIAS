@@ -6,6 +6,11 @@
 
 class BookableCourse {
 	/**
+	 * @var	int
+	 */
+	protected $ref_id;
+
+	/**
 	 * @var string
 	 */
 	protected $title;
@@ -60,7 +65,9 @@ class BookableCourse {
 	 */
 	protected $fee;
 
-	public function __construct($title,
+	public function __construct
+		($ref_id,
+		$title,
 		$type,
 		ilDateTime $begin_date,
 		$bookings_available,
@@ -72,6 +79,7 @@ class BookableCourse {
 		$address,
 		$fee
 	) {
+		assert('is_int($ref_id)');
 		assert('is_string($title)');
 		assert('is_string($type)');
 		assert('is_string($bookings_available)');
@@ -82,6 +90,7 @@ class BookableCourse {
 		assert('is_string($address)');
 		assert('is_string($fee)');
 
+		$this->ref_id = $ref_id;
 		$this->title = $title;
 		$this->type = $type;
 		$this->begin_date = $begin_date;
@@ -93,6 +102,10 @@ class BookableCourse {
 		$this->location = $location;
 		$this->address = $address;
 		$this->fee = $fee;
+	}
+
+	public function getRefId() {
+		return $this->ref_id;
 	}
 
 	public function getTitle() {
