@@ -1,10 +1,14 @@
 <?php
 
+use CaT\Ente\ILIAS\ilHandlerObjectHelper;
+
 /**
  * cat-tms-patch start
  */
 
 class BookableCourse {
+
+
 	/**
 	 * @var	int
 	 */
@@ -150,6 +154,81 @@ class BookableCourse {
 
 	public function getFee() {
 		return $this->fee;
+	}
+
+	// TODO: this propably doesn't belong here. This might be removed or consolidated
+	// once the search logic is turned into a proper db-query.
+
+	use ilHandlerObjectHelper;
+
+	protected function getDIC() {
+		return $GLOBALS["DIC"];
+	}
+
+	protected function getEntityRefId() {
+		return $this->ref_id;
+	}
+
+	public function getTitleValue() {
+		return $this->getTitle();
+	}
+
+	public function getSubTitleValue() {
+		return $this->getType();
+	}
+
+	public function getImportantFields() {
+		global $DIC;
+		$lng = $DIC["lng"];
+		return
+			[ $this->formatDate($this->getBeginDate())
+			, $this->getLocation()
+			, $lng->txt("available_slots") => $this->getBookingsAvailable()
+			];
+	}
+
+	public function getFurtherFields() {
+		global $DIC;
+		$lng = $DIC["lng"];
+		return
+			[ $lng->txt("location") => $this->getLocation()
+			, $this->getAddress()
+			, $lng->txt("date") => $this->formatDate($this->getBeginDate())." - ".$this->formatDate($this->getEndDate())
+			, $lng->txt("available_slots") => $this->getBookingsAvailable()
+			, $lng->txt("fee") => $this->getFee()
+			];
+	}
+
+	public function getDetailFields() {
+		global $DIC;
+		$lng = $DIC["lng"];
+		$ui_factory = $DIC->ui()->factory();
+		return
+			[ $lng->txt("target_groups") => $ui_factory->listing()->unordered($this->getTargetGroup())
+			, $lng->txt("goals") => $this->getGoals()
+			, $lng->txt("topics") => $ui_factory->listing()->unordered($this->getTopics())
+			];
+	}
+
+	/**
+	 * Form date for gui as user timezone string
+	 *
+	 * @param ilDateTime 	$dat
+	 * @param bool 	$use_time
+	 *
+	 * @return string
+	 */
+	protected function formatDate($dat, $use_time = false) {
+		global $DIC;
+		$user = $DIC["ilUser"];
+		require_once("Services/Calendar/classes/class.ilCalendarUtil.php");
+		$out_format = ilCalendarUtil::getUserDateFormat($use_time, true);
+		$ret = $dat->get(IL_CAL_FKT_DATE, $out_format, $user->getTimeZone());
+		if(substr($ret, -5) === ':0000') {
+			$ret = substr($ret, 0, -5);
+		}
+
+		return $ret;
 	}
 }
 

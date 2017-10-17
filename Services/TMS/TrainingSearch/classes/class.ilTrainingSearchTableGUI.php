@@ -70,34 +70,12 @@ class ilTrainingSearchTableGUI {
 			array(),
 			function ($row, BookableCourse $record, $ui_factory, $environment) { //mapping-closure
 				return $row
-					->withTitle($record->getTitle())
-					->withSubTitle($record->getType())
-					->withImportantFields(
-						array(
-							$this->helper->formatDate($record->getBeginDate()),
-							$record->getLocation(),
-							$this->g_lng->txt("available_slots") => $record->getBookingsAvailable()
-						)
-					)
-					->withContent(
-						$ui_factory->listing()->descriptive(
-							array(
-								$this->g_lng->txt("target_groups") => $ui_factory->listing()->unordered($record->getTargetGroup()),
-								$this->g_lng->txt("goals") => $record->getGoals(),
-								$this->g_lng->txt("topics") => $ui_factory->listing()->unordered($record->getTopics())
-							)
-						)
-					)
+					->withTitle($record->getTitleValue())
+					->withSubTitle($record->getSubTitleValue())
+					->withImportantFields($record->getImportantFields())
+					->withContent($ui_factory->listing()->descriptive($record->getDetailFields()))
 					->withFurtherFieldsHeadline($this->g_lng->txt("detail_information"))
-					->withFurtherFields(
-						array(
-							$this->g_lng->txt("location") => $record->getLocation(),
-							$record->getAddress(),
-							$this->g_lng->txt("date") => $this->helper->formatDate($record->getBeginDate())." - ".$this->helper->formatDate($record->getEndDate()),
-							$this->g_lng->txt("available_slots") => $record->getBookingsAvailable(),
-							$this->g_lng->txt("fee") => $record->getFee()
-						)
-					)
+					->withFurtherFields($record->getFurtherFields())
 					->withButtons(
 						array(
 							$ui_factory->button()->standard
