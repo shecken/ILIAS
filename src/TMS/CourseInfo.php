@@ -23,7 +23,7 @@ interface CourseInfo extends Component {
 	/**
 	 * Get the value of this field.
 	 *
-	 * @return	string
+	 * @return	string|array<string,string>
 	 */
 	public function getValue();
 
