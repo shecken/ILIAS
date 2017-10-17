@@ -438,6 +438,17 @@ class ilMainMenuGUI
 
 			$this->renderEntry($a_tpl, "training_search",
 				$lng->txt("training_search"), $link);
+
+			require_once("Services/Component/classes/class.ilPluginAdmin.php");
+			if(ilPluginAdmin::isPluginActive('cockpit')) {
+				$plugin = ilPluginAdmin::getPluginObjectById('cockpit');
+				$basic_link = $plugin->getActions()->readBasicLink();
+
+				if($basic_link !== null && $basic_link != "") {
+					$this->renderEntry($a_tpl, "training_search",
+					$lng->txt("cockpit"), $basic_link);
+				}
+			}
 		}
 		// cat-tms-patch end
 
