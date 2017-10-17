@@ -18405,3 +18405,9 @@ if (!$ilDB->tableColumnExists('iass_members', 'event_time')) {
 	$provider_db = new CaT\Ente\ILIAS\ilProviderDB($DIC->database(), $tree, $cache);
 	$provider_db->createTables();
 ?>
+<#5085>
+<?php
+	// cat-tms-patch start
+	$ilCtrlStructureReader->getStructure();
+	// cat-tms-patch end
+?>
