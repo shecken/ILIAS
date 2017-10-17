@@ -63,7 +63,7 @@ class ilTrainingSearchGUI {
 		switch ($next_class) {
 			case "iltmsbookinggui":
 				require_once("Services/TMS/Booking/classes/class.ilTMSBookingGUI.php");
-				$gui = new ilTMSBookingGUI();
+				$gui = new ilTMSBookingGUI($this, self::CMD_SHOW);
 				$this->g_ctrl->forwardCommand($gui);
 				break;
 			default:
