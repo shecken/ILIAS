@@ -47,6 +47,15 @@ abstract class Player {
 	 * @param	int	$usr_id			the usr the booking is made for
 	 */
 	public function __construct($dic, $crs_ref_id, $usr_id, ProcessStateDB $process_db) {
+		$this->init($dic, $crs_ref_id, $usr_id, $process_db);
+	}
+
+	/**
+	 * @param	\ArrayAccess|array $dic
+	 * @param	int	$crs_ref_id 	course that should get booked
+	 * @param	int	$usr_id			the usr the booking is made for
+	 */
+	public function init($dic, $crs_ref_id, $usr_id, ProcessStateDB $process_db) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_int($crs_ref_id)');
 		assert('is_int($usr_id)');
