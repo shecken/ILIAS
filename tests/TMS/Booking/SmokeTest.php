@@ -12,7 +12,7 @@ class DummyStep implements Booking\Step {
 	public function isApplicableFor($usr_id) {}
 	public function getData(\ilPropertyFormGUI $form) {}
 	public function appendToOverviewForm($data, \ilPropertyFormGUI $form) {}
-	public function	processStep($data) {}
+	public function	processStep($crs_id, $usr_id, $data) {}
 	public function entity() {}
 }
 

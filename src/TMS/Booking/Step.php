@@ -91,9 +91,11 @@ interface Step extends Component {
 	 *
 	 * The data must be the same as the component return via getData.
 	 *
-	 * @param	mixed $data
+	 * @param	int     $crs_ref_id
+	 * @param	int     $usr_id
+	 * @param	mixed   $data
 	 * @return	void
 	 */
-	public function	processStep($data);
+	public function	processStep($crs_ref_id, $usr_id, $data);
 }
 

@@ -208,7 +208,7 @@ abstract class Player {
 		for ($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
 			$data = $state->getStepData($i);
-			$step->processStep($data);
+			$step->processStep($this->getEntityRefId(), $this->getUserId(), $data);
 		}
 		$this->deleteProcessState($state);
 		$this->redirectToPreviousLocation($this->txt("done"), true);
