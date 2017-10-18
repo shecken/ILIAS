@@ -31,7 +31,7 @@ trait CourseInfoHelper {
 			return $a->hasContext($context);
 		};
 		$info = array_filter($info, $filter_by_context);
-		
+
 		$sort_by_prio = function(CourseInfo $a, CourseInfo $b) {
 			$a_prio = $a->getPriority();
 			$b_prio = $b->getPriority();
