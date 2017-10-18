@@ -1,7 +1,7 @@
 <?php
 
 use CaT\Ente\ILIAS\ilHandlerObjectHelper;
-use	ILIAS\TMS\CourseInfo;
+use ILIAS\TMS\CourseInfo;
 
 /**
  * cat-tms-patch start
