@@ -1,5 +1,8 @@
 <?php
 
+use CaT\Ente\ILIAS\ilHandlerObjectHelper;
+use ILIAS\TMS\CourseInfo;
+
 /**
  * cat-tms-patch start
  */
@@ -150,6 +153,191 @@ class BookableCourse {
 
 	public function getFee() {
 		return $this->fee;
+	}
+
+	// TODO: this propably doesn't belong here. This might be removed or consolidated
+	// once the search logic is turned into a proper db-query. This also deserves tests.
+
+	use ilHandlerObjectHelper;
+
+	/**
+	 * @var	CourseInfo[]|null
+	 */
+	protected $short_info = null;
+
+	/**
+	 * @var	CourseInfo[]|null
+	 */
+	protected $detail_info = null;
+
+	protected function getDIC() {
+		return $GLOBALS["DIC"];
+	}
+
+	protected function getEntityRefId() {
+		return $this->ref_id;
+	}
+
+	protected function getShortInfo() {
+		if ($this->short_info === null) {
+			$this->getCourseInfo();
+		}
+		return $this->short_info;
+	}
+
+	protected function getDetailInfo() {
+		if ($this->detail_info === null) {
+			$this->getCourseInfo();
+		}
+		return $this->detail_info;
+	}
+
+	protected function getCourseInfo() {
+		$course_info = $this->getComponentsOfType(CourseInfo::class);
+		$this->short_info = [];
+		$this->detail_info = [];
+		foreach ($course_info as $info) {
+			if ($info->hasContext(CourseInfo::CONTEXT_SEARCH_SHORT_INFO)) {
+				$this->short_info[] = $info;
+			}
+			if ($info->hasContext(CourseInfo::CONTEXT_SEARCH_DETAIL_INFO)) {
+				$this->detail_info[] = $info;
+			}
+		}
+		$sort_by_prio = function(CourseInfo $a, CourseInfo $b) {
+			if ($a->getPriority() < $b->getPriority()) {
+				return -1;
+			}
+			if ($a->getPriority() > $b->getPriority()) {
+				return 1;
+			}
+			return 0;
+		};
+		usort($this->short_info, $sort_by_prio);
+		usort($this->detail_info, $sort_by_prio);
+	}
+
+	public function getTitleValue() {
+		// Take most important info as title
+		$short_info = $this->getShortInfo();
+		if (count($short_info) > 0) {
+			return $short_info[0]->getValue();
+		}
+		return $this->getUnknownString();
+	}
+
+	public function getSubTitleValue() {
+		// Take second most important info as subtitle
+		$short_info = $this->getShortInfo();
+		if (count($short_info) > 1) {
+			return $short_info[1]->getValue();
+		}
+		return $this->getUnknownString();
+	}
+
+	public function getImportantFields() {
+		// Take info 2-7 as fields in header line
+		$short_info = $this->getShortInfo();
+		return $this->unpackValue(array_slice($short_info, 2, 5));
+	}
+
+	public function getFurtherFields() {
+		// Take info 2 to end as fields in header line
+		$short_info = $this->getShortInfo();
+		return $this->unpackLabelAndValue(array_slice($short_info, 2));
+	}
+
+	public function getDetailFields() {
+		return $this->unpackLabelAndNestedValue($this->getDetailInfo());
+	}
+
+	/**
+	 * Get the UI-factory.
+	 *
+	 * @return ILIAS\UI\Factory
+	 */
+	public function getUIFactory() {
+		global $DIC;
+		return $DIC->ui()->factory();
+	}
+
+	/**
+	 * Form date for gui as user timezone string
+	 *
+	 * @param ilDateTime 	$dat
+	 * @param bool 	$use_time
+	 *
+	 * @return string
+	 */
+	protected function formatDate($dat, $use_time = false) {
+		global $DIC;
+		$user = $DIC["ilUser"];
+		require_once("Services/Calendar/classes/class.ilCalendarUtil.php");
+		$out_format = ilCalendarUtil::getUserDateFormat($use_time, true);
+		$ret = $dat->get(IL_CAL_FKT_DATE, $out_format, $user->getTimeZone());
+		if(substr($ret, -5) === ':0000') {
+			$ret = substr($ret, 0, -5);
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Get a string that is "unknown" in the users language.
+	 *
+	 * @return string
+	 */
+	protected function getUnknownString() {
+		global $DIC;
+		$lng = $DIC["lng"];
+		return $lng->txt("unknown");
+	}
+
+	/**
+	 * Unpacks CourseInfo to value.
+	 *
+	 * @param	CourseInfo[]	$info
+	 * @return  Generator<string,string>
+	 */
+	protected function unpackValue(array $info) {
+		$ret = [];
+		foreach ($info as $i) {
+			$ret[] = $i->getValue();
+		}
+		return $ret;
+	}
+
+	/**
+	 * Unpacks CourseInfo to label => value.
+	 *
+	 * @param	CourseInfo[]	$info
+	 * @return  Generator<string,string>
+	 */
+	protected function unpackLabelAndValue(array $info) {
+		$ret = [];
+		foreach ($info as $i) {
+			$ret[$i->getLabel()] = $i->getValue();
+		}
+		return $ret;
+	}
+
+	/**
+	 * Unpacks CourseInfo to label => value, where value might be array.
+	 *
+	 * @param	CourseInfo[]	$info
+	 * @return  Generator<string,string>
+	 */
+	protected function unpackLabelAndNestedValue(array $info) {
+		$ui_factory = $this->getUIFactory();
+		$ret = [];
+		foreach ($info as $i) {
+			$value = $i->getValue();
+			if (is_array($value)) {
+				$value = $ui_factory->listing()->unordered($value);
+			}
+			$ret[$i->getLabel()] = $value;
+		}
+		return $ret;
 	}
 }
 

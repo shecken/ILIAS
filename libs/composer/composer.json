@@ -17,7 +17,7 @@
 		"pimple/pimple" : "^3.0",
 		"symfony/yaml": "^3.1",
 		"moment/moment": "^2.14.1",
-		"cat/ente" : "v1.0.2"
+		"cat/ente" : "v2.0.0"
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "^1.6",
