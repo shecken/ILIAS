@@ -23,7 +23,7 @@ trait CourseInfoHelper {
 	 *
 	 * @return ILIAS\UI\Factory
 	 */
-	abstract public function getUIFactory(); 
+	abstract protected function getUIFactory();
 
 	/**
 	 * Get information for a certain context ordered by priority.
