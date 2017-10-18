@@ -19,6 +19,13 @@ trait CourseInfoHelper {
 	abstract public function getComponentsOfType($component_type);
 
 	/**
+	 * Get the UI-factory.
+	 *
+	 * @return ILIAS\UI\Factory
+	 */
+	abstract public function getUIFactory(); 
+
+	/**
 	 * Get information for a certain context ordered by priority.
 	 *
 	 * @param	mixed	$context	from CourseInfo
