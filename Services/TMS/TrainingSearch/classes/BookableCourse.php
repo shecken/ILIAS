@@ -270,53 +270,6 @@ class BookableCourse {
 		$lng = $DIC["lng"];
 		return $lng->txt("unknown");
 	}
-
-	/**
-	 * Unpacks CourseInfo to value.
-	 *
-	 * @param	CourseInfo[]	$info
-	 * @return  Generator<string,string>
-	 */
-	protected function unpackValue(array $info) {
-		$ret = [];
-		foreach ($info as $i) {
-			$ret[] = $i->getValue();
-		}
-		return $ret;
-	}
-
-	/**
-	 * Unpacks CourseInfo to label => value.
-	 *
-	 * @param	CourseInfo[]	$info
-	 * @return  Generator<string,string>
-	 */
-	protected function unpackLabelAndValue(array $info) {
-		$ret = [];
-		foreach ($info as $i) {
-			$ret[$i->getLabel()] = $i->getValue();
-		}
-		return $ret;
-	}
-
-	/**
-	 * Unpacks CourseInfo to label => value, where value might be array.
-	 *
-	 * @param	CourseInfo[]	$info
-	 * @return  Generator<string,string>
-	 */
-	protected function unpackLabelAndNestedValue(array $info) {
-		$ui_factory = $this->getUIFactory();
-		$ret = [];
-		foreach ($info as $i) {
-			$value = $i->getValue();
-			if (is_array($value)) {
-				$value = $ui_factory->listing()->unordered($value);
-			}
-			$ret[$i->getLabel()] = $value;
-		}
-		return $ret;
-	}
 }
 
 /**
