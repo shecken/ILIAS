@@ -32,7 +32,7 @@ class UnboundCourseProvider extends Base {
 					, $object->getTitle()
 					, ""
 					, 100
-					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO]
+					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO, CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
 					)
 				];
 		}

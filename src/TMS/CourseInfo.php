@@ -12,6 +12,7 @@ use CaT\Ente\Component;
 interface CourseInfo extends Component {
 	const CONTEXT_SEARCH_SHORT_INFO = 1;
 	const CONTEXT_SEARCH_DETAIL_INFO = 2;
+	const CONTEXT_BOOKING_DEFAULT_INFO = 3;
 
 	/**
 	 * Get a label for this step in the process.
