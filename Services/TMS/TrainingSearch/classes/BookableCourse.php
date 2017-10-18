@@ -2,6 +2,8 @@
 
 use CaT\Ente\ILIAS\ilHandlerObjectHelper;
 use ILIAS\TMS\CourseInfo;
+use ILIAS\TMS\CourseInfoHelper;
+
 
 /**
  * cat-tms-patch start
@@ -159,6 +161,7 @@ class BookableCourse {
 	// once the search logic is turned into a proper db-query. This also deserves tests.
 
 	use ilHandlerObjectHelper;
+	use CourseInfoHelper;
 
 	/**
 	 * @var	CourseInfo[]|null
@@ -180,41 +183,16 @@ class BookableCourse {
 
 	protected function getShortInfo() {
 		if ($this->short_info === null) {
-			$this->getCourseInfo();
+			$this->short_info = $this->getCourseInfo(CourseInfo::CONTEXT_SEARCH_SHORT_INFO);
 		}
 		return $this->short_info;
 	}
 
 	protected function getDetailInfo() {
 		if ($this->detail_info === null) {
-			$this->getCourseInfo();
+			$this->detail_info = $this->getCourseInfo(CourseInfo::CONTEXT_SEARCH_DETAIL_INFO);
 		}
 		return $this->detail_info;
-	}
-
-	protected function getCourseInfo() {
-		$course_info = $this->getComponentsOfType(CourseInfo::class);
-		$this->short_info = [];
-		$this->detail_info = [];
-		foreach ($course_info as $info) {
-			if ($info->hasContext(CourseInfo::CONTEXT_SEARCH_SHORT_INFO)) {
-				$this->short_info[] = $info;
-			}
-			if ($info->hasContext(CourseInfo::CONTEXT_SEARCH_DETAIL_INFO)) {
-				$this->detail_info[] = $info;
-			}
-		}
-		$sort_by_prio = function(CourseInfo $a, CourseInfo $b) {
-			if ($a->getPriority() < $b->getPriority()) {
-				return -1;
-			}
-			if ($a->getPriority() > $b->getPriority()) {
-				return 1;
-			}
-			return 0;
-		};
-		usort($this->short_info, $sort_by_prio);
-		usort($this->detail_info, $sort_by_prio);
 	}
 
 	public function getTitleValue() {
