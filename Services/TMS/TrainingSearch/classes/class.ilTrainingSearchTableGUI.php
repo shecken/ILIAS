@@ -74,7 +74,6 @@ class ilTrainingSearchTableGUI {
 					->withSubTitle($record->getSubTitleValue())
 					->withImportantFields($record->getImportantFields())
 					->withContent($ui_factory->listing()->descriptive($record->getDetailFields()))
-					->withFurtherFieldsHeadline($this->g_lng->txt("detail_information"))
 					->withFurtherFields($record->getFurtherFields())
 					->withButtons(
 						array(
