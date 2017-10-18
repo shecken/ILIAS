@@ -8,6 +8,11 @@ class CourseInfoHelperTest {
 	use TMS\CourseInfoHelper;
 
 	public function getComponentsOfType($component_type) {
+		throw new \LogicException("mock me");
+	}
+
+	public function getUIFactory() {
+		throw new \LogicException("mock me");
 	}
 }
 
