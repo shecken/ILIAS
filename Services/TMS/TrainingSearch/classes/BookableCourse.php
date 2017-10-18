@@ -1,14 +1,13 @@
 <?php
 
 use CaT\Ente\ILIAS\ilHandlerObjectHelper;
+use	ILIAS\TMS\CourseInfo;
 
 /**
  * cat-tms-patch start
  */
 
 class BookableCourse {
-
-
 	/**
 	 * @var	int
 	 */
@@ -157,9 +156,19 @@ class BookableCourse {
 	}
 
 	// TODO: this propably doesn't belong here. This might be removed or consolidated
-	// once the search logic is turned into a proper db-query.
+	// once the search logic is turned into a proper db-query. This also deserves tests.
 
 	use ilHandlerObjectHelper;
+
+	/**
+	 * @var	CourseInfo[]|null
+	 */
+	protected $short_info = null;
+
+	/**
+	 * @var	CourseInfo[]|null
+	 */
+	protected $detail_info = null;
 
 	protected function getDIC() {
 		return $GLOBALS["DIC"];
@@ -169,45 +178,87 @@ class BookableCourse {
 		return $this->ref_id;
 	}
 
+	protected function getShortInfo() {
+		if ($this->short_info === null) {
+			$this->getCourseInfo();
+		}
+		return $this->short_info;
+	}
+
+	protected function getDetailInfo() {
+		if ($this->detail_info === null) {
+			$this->getCourseInfo();
+		}
+		return $this->detail_info;
+	}
+
+	protected function getCourseInfo() {
+		$course_info = $this->getComponentsOfType(CourseInfo::class);
+		$this->short_info = [];
+		$this->detail_info = [];
+		foreach ($course_info as $info) {
+			if ($info->hasContext(CourseInfo::CONTEXT_SEARCH_SHORT_INFO)) {
+				$this->short_info[] = $info;
+			}
+			if ($info->hasContext(CourseInfo::CONTEXT_SEARCH_DETAIL_INFO)) {
+				$this->detail_info[] = $info;
+			}
+		}
+		$sort_by_prio = function(CourseInfo $a, CourseInfo $b) {
+			if ($a->getPriority() < $b->getPriority()) {
+				return -1;
+			}
+			if ($a->getPriority() > $b->getPriority()) {
+				return 1;
+			}
+			return 0;
+		};
+		usort($this->short_info, $sort_by_prio);
+		usort($this->detail_info, $sort_by_prio);
+	}
+
 	public function getTitleValue() {
-		return $this->getTitle();
+		// Take most important info as title
+		$short_info = $this->getShortInfo();
+		if (count($short_info) > 0) {
+			return $short_info[0]->getValue();
+		}
+		return $this->getUnknownString();
 	}
 
 	public function getSubTitleValue() {
-		return $this->getType();
+		// Take second most important info as subtitle
+		$short_info = $this->getShortInfo();
+		if (count($short_info) > 1) {
+			return $short_info[1]->getValue();
+		}
+		return $this->getUnknownString();
 	}
 
 	public function getImportantFields() {
-		global $DIC;
-		$lng = $DIC["lng"];
-		return
-			[ $this->formatDate($this->getBeginDate())
-			, $this->getLocation()
-			, $lng->txt("available_slots") => $this->getBookingsAvailable()
-			];
+		// Take info 2-7 as fields in header line
+		$short_info = $this->getShortInfo();
+		return $this->unpackValue(array_slice($short_info, 2, 5));
 	}
 
 	public function getFurtherFields() {
-		global $DIC;
-		$lng = $DIC["lng"];
-		return
-			[ $lng->txt("location") => $this->getLocation()
-			, $this->getAddress()
-			, $lng->txt("date") => $this->formatDate($this->getBeginDate())." - ".$this->formatDate($this->getEndDate())
-			, $lng->txt("available_slots") => $this->getBookingsAvailable()
-			, $lng->txt("fee") => $this->getFee()
-			];
+		// Take info 2 to end as fields in header line
+		$short_info = $this->getShortInfo();
+		return $this->unpackLabelAndValue(array_slice($short_info, 2));
 	}
 
 	public function getDetailFields() {
+		return $this->unpackLabelAndNestedValue($this->getDetailInfo());
+	}
+
+	/**
+	 * Get the UI-factory.
+	 *
+	 * @return ILIAS\UI\Factory
+	 */
+	public function getUIFactory() {
 		global $DIC;
-		$lng = $DIC["lng"];
-		$ui_factory = $DIC->ui()->factory();
-		return
-			[ $lng->txt("target_groups") => $ui_factory->listing()->unordered($this->getTargetGroup())
-			, $lng->txt("goals") => $this->getGoals()
-			, $lng->txt("topics") => $ui_factory->listing()->unordered($this->getTopics())
-			];
+		return $DIC->ui()->factory();
 	}
 
 	/**
@@ -228,6 +279,64 @@ class BookableCourse {
 			$ret = substr($ret, 0, -5);
 		}
 
+		return $ret;
+	}
+
+	/**
+	 * Get a string that is "unknown" in the users language.
+	 *
+	 * @return string
+	 */
+	protected function getUnknownString() {
+		global $DIC;
+		$lng = $DIC["lng"];
+		return $lng->txt("unknown");
+	}
+
+	/**
+	 * Unpacks CourseInfo to value.
+	 *
+	 * @param	CourseInfo[]	$info
+	 * @return  Generator<string,string>
+	 */
+	protected function unpackValue(array $info) {
+		$ret = [];
+		foreach ($info as $i) {
+			$ret[] = $i->getValue();
+		}
+		return $ret;
+	}
+
+	/**
+	 * Unpacks CourseInfo to label => value.
+	 *
+	 * @param	CourseInfo[]	$info
+	 * @return  Generator<string,string>
+	 */
+	protected function unpackLabelAndValue(array $info) {
+		$ret = [];
+		foreach ($info as $i) {
+			$ret[$i->getLabel()] = $i->getValue();
+		}
+		return $ret;
+	}
+
+	/**
+	 * Unpacks CourseInfo to label => value, where value might be array.
+	 *
+	 * @param	CourseInfo[]	$info
+	 * @return  Generator<string,string>
+	 */
+	protected function unpackLabelAndNestedValue(array $info) {
+		$ui_factory = $this->getUIFactory();
+		$ret = [];
+		foreach ($info as $i) {
+			$value = $i->getValue();
+			if (is_array($value)) {
+				$value = $ui_factory->listing()->unordered($value);
+			}
+			$ret[$i->getLabel()] = $value;
+		}
 		return $ret;
 	}
 }
