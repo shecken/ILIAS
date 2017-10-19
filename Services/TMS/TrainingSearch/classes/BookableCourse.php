@@ -195,6 +195,13 @@ class BookableCourse {
 		return $this->detail_info;
 	}
 
+	protected function getFurtherInfo() {
+		if ($this->small_detail_info === null) {
+			$this->small_detail_info = $this->getCourseInfo(CourseInfo::CONTEXT_SEARCH_FURTHER_INFO);
+		}
+		return $this->small_detail_info;
+	}
+
 	public function getTitleValue() {
 		// Take most important info as title
 		$short_info = $this->getShortInfo();
@@ -221,8 +228,7 @@ class BookableCourse {
 
 	public function getFurtherFields() {
 		// Take info 2 to end as fields in header line
-		$short_info = $this->getShortInfo();
-		return $this->unpackLabelAndValue(array_slice($short_info, 2));
+		return $this->unpackLabelAndNestedValue($this->getFurtherInfo());
 	}
 
 	public function getDetailFields() {
