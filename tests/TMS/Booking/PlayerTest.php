@@ -259,7 +259,6 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 					})]
 				);
 
-
 		$player->process();
 	}
 
@@ -313,11 +312,90 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("setValuesByArray")
 			->with($post);
 
+		$form
+			->expects($this->once())
+			->method("checkInput")
+			->willReturn(true);
+
 		$step2
 			->expects($this->once())
 			->method("getData")
 			->with($form)
 			->willReturn(null);
+
+		$player
+			->expects($this->never())
+			->method("saveProcessState");
+
+		$html = "HTML OUTPUT STEP 2";
+		$form
+			->expects($this->once())
+			->method("getHTML")
+			->willReturn($html);
+
+		$view = $player->process("next", $post);
+
+		$this->assertEquals($html, $view);
+	}
+
+	public function test_process_form_not_ok() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState", "getForm"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$form = $this->createMock(\ilPropertyFormGUI::class);
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 1;
+		$state = new Booking\ProcessState($crs_id, $usr_id, $step_number);
+
+		$step1 = $this->createMock(Booking\Step::class);
+		$step2 = $this->createMock(Booking\Step::class);
+		$step3 = $this->createMock(Booking\Step::class);
+
+		$step1
+			->expects($this->never())
+			->method($this->anything());
+		$step3
+			->expects($this->never())
+			->method($this->anything());
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$player
+			->expects($this->atLeastOnce())
+			->method("getSortedSteps")
+			->willReturn([$step1, $step2, $step3]);
+
+		$player
+			->expects($this->once())
+			->method("getForm")
+			->willReturn($form);
+
+		$step2
+			->expects($this->once())
+			->method("appendToStepForm")
+			->with($form);
+
+		$post = ["foo" => "bar"];
+		$form
+			->expects($this->once())
+			->method("setValuesByArray")
+			->with($post);
+
+		$form
+			->expects($this->once())
+			->method("checkInput")
+			->willReturn(false);
+
+		$step2
+			->expects($this->never())
+			->method("getData");
 
 		$player
 			->expects($this->never())
@@ -381,6 +459,11 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->expects($this->once())
 			->method("setValuesByArray")
 			->with($post);
+
+		$form_step2
+			->expects($this->once())
+			->method("checkInput")
+			->willReturn(true);
 
 		$data = ["bar" => "baz"];
 		$step2
@@ -583,6 +666,11 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->expects($this->once())
 			->method("setValuesByArray")
 			->with($post);
+
+		$form_step3
+			->expects($this->once())
+			->method("checkInput")
+			->willReturn(true);
 
 		$data3 = "DATA 3";
 		$step3

@@ -150,13 +150,15 @@ abstract class Player {
 
 		if ($post) {
 			$form->setValuesByArray($post);
-			$data = $current_step->getData($form);
-			if ($data !== null) {
-				$state = $state
-					->withStepData($step_number, $data)
-					->withNextStep();
-				$this->saveProcessState($state);
-				return $this->processStep($state);
+			if ($form->checkInput()) {
+				$data = $current_step->getData($form);
+				if ($data !== null) {
+					$state = $state
+						->withStepData($step_number, $data)
+						->withNextStep();
+					$this->saveProcessState($state);
+					return $this->processStep($state);
+				}
 			}
 		}
 		return $form->getHtml();
