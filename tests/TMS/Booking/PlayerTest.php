@@ -883,7 +883,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$player
 			->expects($this->once())
 			->method("redirectToPreviousLocation")
-			->with("lng_aborted", false);
+			->with(["lng_aborted"], false);
 
 		$no_view = $player->process("abort", []);
 		$this->assertNull($no_view);
