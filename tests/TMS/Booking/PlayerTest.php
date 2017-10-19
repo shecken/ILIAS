@@ -930,18 +930,23 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getUserId")
 			->willReturn($usr_id);
 
+		$conf1 = "CONFIRMATION 1";
 		$step1
 			->expects($this->once())
 			->method("processStep")
-			->with($crs_id, $usr_id, $data1);
+			->with($crs_id, $usr_id, $data1)
+			->willReturn($conf1);
 		$step2
 			->expects($this->once())
 			->method("processStep")
-			->with($crs_id, $usr_id, $data2);
+			->with($crs_id, $usr_id, $data2)
+			->willReturn(null);
+		$conf3 = "CONFIRMATION 3";
 		$step3
 			->expects($this->once())
 			->method("processStep")
-			->with($crs_id, $usr_id, $data3);
+			->with($crs_id, $usr_id, $data3)
+			->willReturn($conf3);
 
 		$player
 			->expects($this->once())
@@ -950,14 +955,8 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 		$player
 			->expects($this->once())
-			->method("txt")
-			->with("done")
-			->willReturn("lng_done");
-
-		$player
-			->expects($this->once())
 			->method("redirectToPreviousLocation", true)
-			->with("lng_done");
+			->with([$conf1, $conf3]);
 
 		$no_view = $player->process("confirm", []);
 		$this->assertNull($no_view);
