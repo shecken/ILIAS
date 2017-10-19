@@ -226,7 +226,7 @@ class BookableCourse {
 	}
 
 	public function getDetailFields() {
-		return $this->unpackLabelAndNestedValue($this->getDetailInfo());
+		return $this->unpackLabelAndNestedValue($this->getUIFactory(), $this->getDetailInfo());
 	}
 
 	/**

@@ -19,13 +19,6 @@ trait CourseInfoHelper {
 	abstract public function getComponentsOfType($component_type);
 
 	/**
-	 * Get the UI-factory.
-	 *
-	 * @return ILIAS\UI\Factory
-	 */
-	abstract protected function getUIFactory();
-
-	/**
 	 * Get information for a certain context ordered by priority.
 	 *
 	 * @param	mixed	$context	from CourseInfo
@@ -88,14 +81,16 @@ trait CourseInfoHelper {
 	}
 
 	/**
-	 * Unpacks CourseInfo to label => value, where value might be array.
+	 * Unpacks CourseInfo to label => value, where value might be array and will be
+	 * turned into an unordered listing.
 	 *
 	 * TODO: Test me!
 	 *
+	 * @param	\ILIAS\UI\Factory $ui_factory
 	 * @param	CourseInfo[]	$info
 	 * @return  array<string,string>
 	 */
-	protected function unpackLabelAndNestedValue(array $info) {
+	protected function unpackLabelAndNestedValue(\ILIAS\UI\Factory $ui_factory, array $info) {
 		$ui_factory = $this->getUIFactory();
 		$ret = [];
 		foreach ($info as $i) {
@@ -108,5 +103,27 @@ trait CourseInfoHelper {
 		return $ret;
 	}
 
+	/**
+	 * Unpacks CourseInfo to label => value, where value might be array and will be
+	 * rendered as an unordered listing.
+	 *
+	 * TODO: Test me!
+	 *
+	 * @param	\ILIAS\UI\Factory $ui_factory
+	 * @param	\ILIAS\UI\Renderer $ui_renderer
+	 * @param	CourseInfo[]	$info
+	 * @return  array<string,string>
+	 */
+	protected function unpackLabelAndNestedValueRendered(\ILIAS\UI\Factory $ui_factory, \ILIAS\UI\Renderer $ui_renderer, array $info) {
+		$ui_factory = $this->getUIFactory();
+		$ret = [];
+		foreach ($info as $i) {
+			$value = $i->getValue();
+			if (is_array($value)) {
+				$value = $ui_renderer->render($ui_factory->listing()->unordered($value));
+			}
+			$ret[$i->getLabel()] = $value;
+		}
+		return $ret;
+	}
 }
-
