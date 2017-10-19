@@ -44,7 +44,7 @@ class CourseInfoImpl implements CourseInfo {
 		$this->entity = $entity;
 		assert('is_string($label)');
 		$this->label = $label;
-		assert('is_string($value)');
+		assert('is_string($value) || is_array($value)');
 		$this->value = $value;
 		assert('is_string($description)');
 		$this->description = $description;
