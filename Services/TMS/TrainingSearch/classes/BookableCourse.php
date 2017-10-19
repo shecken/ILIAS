@@ -227,8 +227,7 @@ class BookableCourse {
 	}
 
 	public function getFurtherFields() {
-		// Take info 2 to end as fields in header line
-		return $this->unpackLabelAndNestedValue($this->getFurtherInfo());
+		return $this->unpackLabelAndNestedValue($this->getUIFactory(), $this->getFurtherInfo());
 	}
 
 	public function getDetailFields() {
