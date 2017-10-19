@@ -126,4 +126,25 @@ trait CourseInfoHelper {
 		}
 		return $ret;
 	}
+
+	/**
+	 * Add course info to a form in a NonEditableInputGUI via unpackLabelAndNestedValueRendered.
+	 *
+	 * TODO: Test me!
+	 *
+	 * @param	\ILIAS\UI\Factory $ui_factory
+	 * @param	\ILIAS\UI\Renderer $ui_renderer
+	 * @param	CourseInfo[]	$info
+	 * @param	\ilPropertyFormGUI $form
+	 * @return  void
+	 */
+	protected function appendToForm(\ILIAS\UI\Factory $ui_factory, \ILIAS\UI\Renderer $ui_renderer, array $info, \ilPropertyFormGUI $form) {
+		$info = $this->unpackLabelAndNestedValueRendered($ui_factory, $ui_renderer, $info);
+
+		foreach ($info as $key => $value) {
+			$item = new \ilNonEditableValueGUI($key);
+			$item->setValue($value);
+			$form->addItem($item);
+		}
+	}
 }
