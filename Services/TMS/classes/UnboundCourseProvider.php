@@ -33,14 +33,22 @@ class UnboundCourseProvider extends Base {
 					, ""
 					, 100
 					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO, CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
-					),
-				  new CourseInfoImpl
+					)
+				, new CourseInfoImpl
 					( $entity
 					, ""
 					, $this->formatDate($object->getCourseStart())
 					, ""
 					, 300
 					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO]
+					)
+				, new CourseInfoImpl
+					( $entity
+					, ""
+					, $this->formatDate($object->getCourseStart())." - ".$this->formatDate($object->getCourseEnd())
+					, ""
+					, 300
+					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO]
 					)
 				];
 
