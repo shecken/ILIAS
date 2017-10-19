@@ -803,7 +803,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_process_confirm() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
-			->setMethods(["getSortedSteps", "getProcessState", "deleteProcessState", "redirectToPreviousLocation", "txt"])
+			->setMethods(["getSortedSteps", "getProcessState", "deleteProcessState", "redirectToPreviousLocation", "txt", "getEntityRefId", "getUserId"])
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -832,18 +832,28 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getSortedSteps")
 			->willReturn([$step1, $step2, $step3]);
 
+		$player
+			->expects($this->atLeastOnce())
+			->method("getEntityRefId")
+			->willReturn($crs_id);
+
+		$player
+			->expects($this->atLeastOnce())
+			->method("getUserId")
+			->willReturn($usr_id);
+
 		$step1
 			->expects($this->once())
 			->method("processStep")
-			->with($data1);
+			->with($crs_id, $usr_id, $data1);
 		$step2
 			->expects($this->once())
 			->method("processStep")
-			->with($data2);
+			->with($crs_id, $usr_id, $data2);
 		$step3
 			->expects($this->once())
 			->method("processStep")
-			->with($data3);
+			->with($crs_id, $usr_id, $data3);
 
 		$player
 			->expects($this->once())
