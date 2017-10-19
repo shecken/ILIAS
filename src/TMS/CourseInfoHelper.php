@@ -139,6 +139,7 @@ trait CourseInfoHelper {
 	 * @return  void
 	 */
 	protected function appendToForm(\ILIAS\UI\Factory $ui_factory, \ILIAS\UI\Renderer $ui_renderer, array $info, \ilPropertyFormGUI $form) {
+		require_once("Services/Form/classes/class.ilNonEditableValueGUI.php");
 		$info = $this->unpackLabelAndNestedValueRendered($ui_factory, $ui_renderer, $info);
 
 		foreach ($info as $key => $value) {
