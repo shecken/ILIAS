@@ -91,10 +91,12 @@ interface Step extends Component {
 	 *
 	 * The data must be the same as the component return via getData.
 	 *
+	 * The returned string should be shown as a confirmation to the user.
+	 *
 	 * @param	int     $crs_ref_id
 	 * @param	int     $usr_id
 	 * @param	mixed   $data
-	 * @return	void
+	 * @return	string|null
 	 */
 	public function	processStep($crs_ref_id, $usr_id, $data);
 }

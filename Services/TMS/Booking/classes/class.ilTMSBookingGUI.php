@@ -106,23 +106,23 @@ class ilTMSBookingGUI  extends Booking\Player {
 		else if ($id == "aborted") {
 			$id = "booking_aborted";
 		}
-		else if ($id == "done") {
-			$id = "booking_done";
-		}
 		return $this->g_lng->txt($id);
 	}
 
 	/**
 	 * @inheritdocs
 	 */
-	protected function redirectToPreviousLocation($message, $success) {
+	protected function redirectToPreviousLocation($messages, $success) {
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "crs_ref_id", null);
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", null);
-		if ($success) {
-			ilUtil::sendSuccess($message, true);
-		}
-		else {
-			ilUtil::sendInfo($message, true);
+		if (count($messages)) {
+			$message = join("<br/>", $messages);
+			if ($success) {
+				ilUtil::sendSuccess($message, true);
+			}
+			else {
+				ilUtil::sendInfo($message, true);
+			}
 		}
 		$this->g_ctrl->redirect($this->parent_gui, $this->parent_cmd);
 	}

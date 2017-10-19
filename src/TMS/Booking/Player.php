@@ -207,13 +207,17 @@ abstract class Player {
 	protected function finishProcess(ProcessState $state) {
 		$steps = $this->getSortedSteps();
 		assert('$step_number == count($steps)');
+		$messages = [];
 		for ($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
 			$data = $state->getStepData($i);
-			$step->processStep($this->getEntityRefId(), $this->getUserId(), $data);
+			$message = $step->processStep($this->getEntityRefId(), $this->getUserId(), $data);
+			if ($message) {
+				$messages[] = $message;
+			}
 		}
 		$this->deleteProcessState($state);
-		$this->redirectToPreviousLocation($this->txt("done"), true);
+		$this->redirectToPreviousLocation($messages, true);
 	}
 
 	/**
@@ -234,11 +238,11 @@ abstract class Player {
 	/**
 	 * Redirect to previous location with a message.
 	 *
-	 * @param	string	$message
-	 * @param	bool	$success
+	 * @param	string[] $messages
+	 * @param	bool     $success
 	 * @return	void
 	 */
-	abstract protected function redirectToPreviousLocation($message, $sucess);
+	abstract protected function redirectToPreviousLocation($messages, $sucess);
 
 	/**
 	 * Get the state information about the booking process.
