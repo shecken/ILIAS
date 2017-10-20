@@ -140,8 +140,10 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			if($parent_crs = $bm->getParentCourse()) {
 				require_once("Modules/Course/classes/class.ilCourseParticipants.php");
 				require_once("Services/Membership/classes/class.ilWaitingList.php");
+				require_once("Modules/Course/classes/class.ilObjCourseAccess.php");
 				if(!ilCourseParticipants::_isParticipant($parent_crs->getRefId(), $user_id)
 					&& !ilWaitingList::_isOnList($user_id, $parent_crs->getId())
+					&& \ilObjCourseAccess::_isActivated($parent_crs->getId()) === true
 				) {
 					$value["crs"] = $parent_crs;
 					continue;
