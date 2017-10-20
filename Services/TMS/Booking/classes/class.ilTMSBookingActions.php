@@ -30,6 +30,7 @@ class ilTMSBookingActions implements Booking\Actions {
 	 * Make the user be a member of the course, if he does not already have a member role.
 	 *
 	 * @throws	\LogicException if user does have another role on the course than member
+	 * @throws	\LogicException if user could not booked or added to waitinglist
 	 * @param	\ilObjCourse    $course
 	 * @param	\ilObjUser      $user
 	 * @return	void
@@ -58,6 +59,8 @@ class ilTMSBookingActions implements Booking\Actions {
 				$course->waiting_list_obj->addToList((int)$user->getId());
 			}
 		}
+
+		throw new \LogicException("User can not be booked. Course and waitinglist are overbooked");
 	}
 
 	/**
