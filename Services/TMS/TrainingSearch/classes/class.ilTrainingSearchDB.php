@@ -34,7 +34,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			$this->xbkm = ilPluginAdmin::getPluginObjectById('xbkm');
 
 			$crs_infos = $this->getBookingModalitiesWithPermissionFor($user_id);
-			$crs_infos = $this->addCourseIfUserIsNotBooked($crs_infos, $user_id);
+			$crs_infos = $this->addCourseIfUserIsNotBookedOrOnWaitinglist($crs_infos, $user_id);
 			$crs_infos = $this->transformBkmToCourse($crs_infos);
 			$crs_infos = $this->addCourseClassification($crs_infos);
 			$crs_infos = $this->createBookableCourseByFilter($crs_infos, $filter);
@@ -133,13 +133,16 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 *
 	 * @return array<int, ilObjCourse | ilObjBookingModalities>
 	 */
-	protected function addCourseIfUserIsNotBooked(array $bms, $user_id) {
+	protected function addCourseIfUserIsNotBookedOrOnWaitinglist(array $bms, $user_id) {
 		foreach ($bms as $key => &$value) {
 			$bm = ilObjectFactory::getInstanceByRefId($value["xbkm"]->getRefId());
 
 			if($parent_crs = $bm->getParentCourse()) {
 				require_once("Modules/Course/classes/class.ilCourseParticipants.php");
-				if(!ilCourseParticipants::_isParticipant($parent_crs->getRefId(), $user_id)) {
+				require_once("Services/Membership/classes/class.ilWaitingList.php");
+				if(!ilCourseParticipants::_isParticipant($parent_crs->getRefId(), $user_id)
+					&& !ilWaitingList::_isOnList($user_id, $parent_crs->getId())
+				) {
 					$value["crs"] = $parent_crs;
 					continue;
 				}
