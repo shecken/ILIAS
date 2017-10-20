@@ -57,10 +57,13 @@ class ilTMSBookingActions implements Booking\Actions {
 
 			if($booked == false && $this->maybeAddOnWaitingList($course, $booking_modality)) {
 				$course->waiting_list_obj->addToList((int)$user->getId());
+				$booked = true;
 			}
 		}
 
-		throw new \LogicException("User can not be booked. Course and waitinglist are overbooked");
+		if(!$booked) {
+			throw new \LogicException("User can not be booked. Course and waitinglist are overbooked");
+		}
 	}
 
 	/**
@@ -73,7 +76,7 @@ class ilTMSBookingActions implements Booking\Actions {
 	 */
 	protected function maybeBookAsMember($crs_ref_id, \ilObjBookingModalities $booking_modality) {
 		require_once("Modules/Course/classes/class.ilCourseParticipants.php");
-		$max_member = $booking_modality->getBooking()->max();
+		$max_member = $booking_modality->getMember()->getMax();
 		$current_member = \ilCourseParticipants::lookupNumberOfMembers($crs_ref_id);
 
 		if($max_member === null || $current_member < $max_member){
@@ -93,7 +96,7 @@ class ilTMSBookingActions implements Booking\Actions {
 	 */
 	protected function maybeAddOnWaitingList(\ilObjCourse $course, \ilObjBookingModalities $booking_modality) {
 		$course->initWaitingList();
-		$max_waiting = $booking_modality->getWaiting()->max();
+		$max_waiting = $booking_modality->getWaiting()->getMax();
 		$current_waiting = $course->waiting_list_obj->getCountUsers();
 
 		if($max_waiting === null || $current_waiting < $max_waiting) {
@@ -114,9 +117,10 @@ class ilTMSBookingActions implements Booking\Actions {
 		global $DIC;
 		$g_tree = $DIC->repositoryTree();
 		$booking_modalities = $g_tree->getChildsByType($crs_ref_id, "xbkm");
+
 		if(count($booking_modalities) > 0) {
 			$booking_modality = $booking_modalities[0];
-			return ilObjectFactory::getInstanceByRefId($booking_modality["child"]);
+			return ilObjectFactory::getInstanceByRefId($booking_modality["ref_id"]);
 		}
 
 		return null;
