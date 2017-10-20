@@ -23,9 +23,7 @@ class ilTMSBookingActions implements Booking\Actions {
 		$user = ilObjectFactory::getInstanceByObjId($user_id);
 		assert('$user instanceof \ilObjUser');
 
-		$this->maybeMakeCourseMember($course, $user);
-
-		return Booking\Actions::STATE_BOOKED;
+		return $this->maybeMakeCourseMember($course, $user);
 	}
 
 	/**
@@ -35,13 +33,13 @@ class ilTMSBookingActions implements Booking\Actions {
 	 * @throws	\LogicException if user could not booked or added to waitinglist
 	 * @param	\ilObjCourse    $course
 	 * @param	\ilObjUser      $user
-	 * @return	void
+	 * @return	string
 	 */
 	protected function maybeMakeCourseMember(\ilObjCourse $course, \ilObjUser $user) {
 		require_once("Modules/Course/classes/class.ilCourseParticipant.php");
 		$participant = \ilCourseParticipant::_getInstancebyObjId($course->getId(), $user->getId());
 		if ($participant->isMember()) {
-			return;
+			return Booking\Actions::STATE_BOOKED;
 		}
 		if ($participant->isParticipant()) {
 			throw new \LogicException("User already has a local role on the course. Won't be able to make him a member.");
@@ -51,21 +49,19 @@ class ilTMSBookingActions implements Booking\Actions {
 
 		if($booking_modality) {
 			require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/BookingModalities/classes/class.ilObjBookingModalities.php");
-			$booked = false;
+
 			if($this->maybeBookAsMember((int)$course->getRefId(), $booking_modality)) {
 				$participant->add($user->getId(), IL_CRS_MEMBER);
-				$booked = true;
+				return Booking\Actions::STATE_BOOKED;
 			}
 
-			if($booked == false && $this->maybeAddOnWaitingList($course, $booking_modality)) {
+			if($this->maybeAddOnWaitingList($course, $booking_modality)) {
 				$course->waiting_list_obj->addToList((int)$user->getId());
-				$booked = true;
+				return Booking\Actions::STATE_WAITING_LIST;
 			}
 		}
 
-		if(!$booked) {
-			throw new \LogicException("User can not be booked. Course and waitinglist are overbooked");
-		}
+		throw new \LogicException("User can not be booked. Course and waitinglist are overbooked");
 	}
 
 	/**
