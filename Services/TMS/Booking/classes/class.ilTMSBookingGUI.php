@@ -90,6 +90,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 	protected function getForm() {
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->g_ctrl->getFormAction($this));
+		$form->setShowTopButtons(true);
 		return $form;
 	}
 
