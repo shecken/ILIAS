@@ -206,7 +206,7 @@ abstract class Player {
 	 */
 	protected function finishProcess(ProcessState $state) {
 		$steps = $this->getSortedSteps();
-		assert('$step_number == count($steps)');
+		assert('$state->getStepNumber() == count($steps)');
 		$messages = [];
 		for ($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
