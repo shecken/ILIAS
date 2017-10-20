@@ -139,8 +139,8 @@ abstract class Player {
 		$current_step = $steps[$step_number];
 
 		$form = $this->getForm();
-		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 		$form->addCommandButton(self::COMMAND_NEXT, $this->txt("next"));
+		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 
 		$header = new \ilFormSectionHeaderGUI();
 		$header->setTitle($current_step->getLabel());
