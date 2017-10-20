@@ -105,7 +105,7 @@ abstract class Player {
 		$state = $this->getProcessState();
 		if ($cmd === self::COMMAND_ABORT) {
 			$this->deleteProcessState($state);
-			$this->redirectToPreviousLocation($this->txt("aborted"), false);
+			$this->redirectToPreviousLocation([$this->txt("aborted")], false);
 			return null;
 		}
 		if ($cmd === self::COMMAND_NEXT || $cmd === null) {
