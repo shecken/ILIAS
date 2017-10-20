@@ -43,7 +43,80 @@ class ilTMSBookingActions implements Booking\Actions {
 		if ($participant->isParticipant()) {
 			throw new \LogicException("User already has a local role on the course. Won't be able to make him a member.");
 		}
-		$participant->add($user->getId(), IL_CRS_MEMBER);
+
+		$booking_modality = $this->getFirstBookingModalities((int)$course->getRefId());
+
+		if($booking_modality) {
+			require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/BookingModalities/classes/class.ilObjBookingModalities.php");
+			$booked = false;
+			if($this->maybeBookAsMember((int)$course->getRefId(), $booking_modality) {
+				$participant->add($user->getId(), IL_CRS_MEMBER);
+				$booked = true;
+			}
+
+			if($booked == false && $this->maybeAddOnWaitingList($course, $booking_modality) {
+				$course->waiting_list_obj->addToList((int)$user->getId());
+			}
+		}
+	}
+
+	/**
+	 * Check user can be booked as member
+	 *
+	 * @param int 	$crs_ref_id
+	 * @param $booking_modality
+	 *
+	 * @return bool
+	 */
+	protected function maybeBookAsMember($crs_ref_id, \ilObjBookingModalities $booking_modality) {
+		require_once("Modules/Course/classes/class.ilCourseParticipants.php");
+		$max_member = $booking_modality->getBooking()->max();
+		$current_member = \ilCourseParticipants::lookupNumberOfMembers($crs_ref_id);
+
+		if($max_member === null || $current_member < $max_member){
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Checks user can be added to waitinglist
+	 *
+	 * @param \ilObjCourse 	$course
+	 * @param $booking_modality
+	 *
+	 * @return bool
+	 */
+	protected function maybeAddOnWaitingList(\ilObjCourse $course, \ilObjBookingModalities $booking_modality) {
+		$course->initWaitingList();
+		$max_waiting = $booking_modality->getWaiting()->max();
+		$current_waiting = $course->waiting_list_obj->getCountUsers();
+
+		if($max_waiting === null || $current_waiting < $max_waiting) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the first booking modalities below crs
+	 *
+	 * @param int 	$crs_ref_id
+	 *
+	 * @return BookingModalities | null
+	 */
+	protected function getFirstBookingModalities($crs_ref_id) {
+		global $DIC;
+		$g_tree = $DIC->repositoryTree();
+		$booking_modalities = $g_tree->getChildsByType($crs_ref_id, "xbkm");
+		if(count($booking_modalities) > 0) {
+			$booking_modality = $booking_modalities[0]
+			return ilObjectFactory::getInstanceByRefId($booking_modality["child"]);
+		}
+
+		return null;
 	}
 }
 
