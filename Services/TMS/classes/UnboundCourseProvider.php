@@ -36,19 +36,11 @@ class UnboundCourseProvider extends Base {
 					)
 				, new CourseInfoImpl
 					( $entity
-					, ""
-					, $this->formatDate($object->getCourseStart())
-					, ""
-					, 300
-					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO]
-					)
-				, new CourseInfoImpl
-					( $entity
-					, ""
-					, $this->formatDate($object->getCourseStart())." - ".$this->formatDate($object->getCourseEnd())
+					, $lng->txt("date")
+					, $this->formatPeriod($object->getCourseStart(), $object->getCourseEnd())
 					, ""
 					, 300
-					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO]
+					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO, CourseInfo::CONTEXT_SEARCH_FURTHER_INFO, CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
 					)
 				];
 
@@ -60,24 +52,36 @@ class UnboundCourseProvider extends Base {
 	}
 
 	/**
-	 * Form date for gui as user timezone string
+	 * Form date.
 	 *
 	 * @param ilDateTime 	$dat
 	 * @param bool 	$use_time
 	 *
 	 * @return string
 	 */
-	protected function formatDate($dat) {
+	protected function formatDate(\ilDateTime $date) {
 		global $DIC;
 		$g_user = $DIC->user();
 		require_once("Services/Calendar/classes/class.ilCalendarUtil.php");
 		$out_format = ilCalendarUtil::getUserDateFormat($use_time, true);
-		$ret = $dat->get(IL_CAL_FKT_DATE, $out_format, $g_user->getTimeZone());
+		$ret = $date->get(IL_CAL_FKT_DATE, $out_format, $g_user->getTimeZone());
 		if(substr($ret, -5) === ':0000') {
 			$ret = substr($ret, 0, -5);
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Form date period.
+	 *
+	 * @param ilDateTime 	$dat
+	 * @param bool 	$use_time
+	 *
+	 * @return string
+	 */
+	protected function formatPeriod(\ilDateTime $date1, \ilDateTime $date2) {
+		return $this->formatDate($date1)." - ".$this->formatDate($date2);
 	}
 
 	/**
@@ -109,11 +113,11 @@ class UnboundCourseProvider extends Base {
 			if($address != "") {
 				$ret[] = new CourseInfoImpl
 				( $entity
-				, $txt("city")
-				, $address
+				, $txt("address")
+				, $address.", ".$city
 				, ""
-				, 100
-				, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO]
+				, 350
+				, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO, CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
 				);
 			}
 		}

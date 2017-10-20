@@ -24,6 +24,8 @@ class ilTMSBookingActions implements Booking\Actions {
 		assert('$user instanceof \ilObjUser');
 
 		$this->maybeMakeCourseMember($course, $user);
+
+		return Booking\Actions::STATE_BOOKED;
 	}
 
 	/**
