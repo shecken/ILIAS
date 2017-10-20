@@ -95,7 +95,8 @@ class UnboundCourseProvider extends Base {
 			$txt = $vplug->txtClosure();
 			list($venue_id, $city, $address) = $vplug->getVenueInfos($crs_id);
 
-			$ret[] = new CourseInfoImpl
+			if($city != "") {
+				$ret[] = new CourseInfoImpl
 				( $entity
 				, ""
 				, $city
@@ -103,8 +104,10 @@ class UnboundCourseProvider extends Base {
 				, 400
 				, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO]
 				);
+			}
 
-			$ret[] = new CourseInfoImpl
+			if($address != "") {
+				$ret[] = new CourseInfoImpl
 				( $entity
 				, $txt("city")
 				, $address
@@ -112,6 +115,7 @@ class UnboundCourseProvider extends Base {
 				, 100
 				, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO]
 				);
+			}
 		}
 		return $ret;
 	}
