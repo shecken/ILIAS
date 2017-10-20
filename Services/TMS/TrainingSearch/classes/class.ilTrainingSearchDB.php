@@ -254,14 +254,6 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 				continue;
 			}
 
-			if(array_key_exists(Helper::F_CITY, $filter)
-				&& $venue_id != -1
-				&& !$this->filter->courseHasVenue($venue_id, $filter[Helper::F_CITY])
-			) {
-				unset($crs_infos[$key]);
-				continue;
-			}
-
 			if(array_key_exists(Helper::F_PROVIDER, $filter)
 				&& !$this->filter->courseHasProvider($provider_id, (int)$filter[Helper::F_PROVIDER])
 			) {
