@@ -142,10 +142,7 @@ abstract class Player {
 		$form->addCommandButton(self::COMMAND_NEXT, $this->txt("next"));
 		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 
-		$header = new \ilFormSectionHeaderGUI();
-		$header->setTitle($current_step->getLabel());
-		$form->addItem($header);
-
+		$form->setTitle($current_step->getLabel());
 		$current_step->appendToStepForm($form);
 
 		if ($post) {
@@ -175,6 +172,7 @@ abstract class Player {
 		$form = $this->getForm();
 		$form->addCommandButton(self::COMMAND_CONFIRM, $this->txt("confirm"));
 		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
+		$form->setTitle($this->txt("overview_header"));
 
 		for($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
