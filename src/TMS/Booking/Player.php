@@ -59,7 +59,7 @@ abstract class Player {
 	 * @param	int	$usr_id			the usr the booking is made for
 	 */
 	public function init($dic, $crs_ref_id, $usr_id, ProcessStateDB $process_db) {
-		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
+		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_int($crs_ref_id)');
 		assert('is_int($usr_id)');
 		$this->dic = $dic;
