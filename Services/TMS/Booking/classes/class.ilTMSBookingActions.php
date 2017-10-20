@@ -49,12 +49,12 @@ class ilTMSBookingActions implements Booking\Actions {
 		if($booking_modality) {
 			require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/BookingModalities/classes/class.ilObjBookingModalities.php");
 			$booked = false;
-			if($this->maybeBookAsMember((int)$course->getRefId(), $booking_modality) {
+			if($this->maybeBookAsMember((int)$course->getRefId(), $booking_modality)) {
 				$participant->add($user->getId(), IL_CRS_MEMBER);
 				$booked = true;
 			}
 
-			if($booked == false && $this->maybeAddOnWaitingList($course, $booking_modality) {
+			if($booked == false && $this->maybeAddOnWaitingList($course, $booking_modality)) {
 				$course->waiting_list_obj->addToList((int)$user->getId());
 			}
 		}
@@ -112,7 +112,7 @@ class ilTMSBookingActions implements Booking\Actions {
 		$g_tree = $DIC->repositoryTree();
 		$booking_modalities = $g_tree->getChildsByType($crs_ref_id, "xbkm");
 		if(count($booking_modalities) > 0) {
-			$booking_modality = $booking_modalities[0]
+			$booking_modality = $booking_modalities[0];
 			return ilObjectFactory::getInstanceByRefId($booking_modality["child"]);
 		}
 
