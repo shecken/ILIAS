@@ -173,8 +173,9 @@ abstract class Player {
 	protected function buildOverviewForm(ProcessState $state) {
 		$steps = $this->getSortedSteps();
 		$form = $this->getForm();
-		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 		$form->addCommandButton(self::COMMAND_CONFIRM, $this->txt("confirm"));
+		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
+
 		for($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
 			$header = new \ilFormSectionHeaderGUI();
