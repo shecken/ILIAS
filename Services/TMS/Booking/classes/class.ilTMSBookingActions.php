@@ -98,7 +98,7 @@ class ilTMSBookingActions implements Booking\Actions {
 	 */
 	protected function maybeAddOnWaitingList(\ilObjCourse $course, \ilObjBookingModalities $booking_modality) {
 		$course->initWaitingList();
-		$max_waiting = $booking_modality->getWaiting()->getMax();
+		$max_waiting = $booking_modality->getWaitinglist()->getMax();
 		$current_waiting = $course->waiting_list_obj->getCountUsers();
 
 		if($max_waiting === null || $current_waiting < $max_waiting) {
