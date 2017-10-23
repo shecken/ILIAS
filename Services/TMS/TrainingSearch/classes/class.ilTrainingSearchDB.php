@@ -34,7 +34,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			$this->xbkm = ilPluginAdmin::getPluginObjectById('xbkm');
 
 			$crs_infos = $this->getBookingModalitiesWithPermissionFor($user_id);
-			$crs_infos = $this->addCourseIfUserIsNotBooked($crs_infos, $user_id);
+			$crs_infos = $this->addCourseIfUserIsNotBookedOrOnWaitinglist($crs_infos, $user_id);
 			$crs_infos = $this->transformBkmToCourse($crs_infos);
 			$crs_infos = $this->addCourseClassification($crs_infos);
 			$crs_infos = $this->createBookableCourseByFilter($crs_infos, $filter);
@@ -133,13 +133,18 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 *
 	 * @return array<int, ilObjCourse | ilObjBookingModalities>
 	 */
-	protected function addCourseIfUserIsNotBooked(array $bms, $user_id) {
+	protected function addCourseIfUserIsNotBookedOrOnWaitinglist(array $bms, $user_id) {
 		foreach ($bms as $key => &$value) {
 			$bm = ilObjectFactory::getInstanceByRefId($value["xbkm"]->getRefId());
 
 			if($parent_crs = $bm->getParentCourse()) {
 				require_once("Modules/Course/classes/class.ilCourseParticipants.php");
-				if(!ilCourseParticipants::_isParticipant($parent_crs->getRefId(), $user_id)) {
+				require_once("Services/Membership/classes/class.ilWaitingList.php");
+				require_once("Modules/Course/classes/class.ilObjCourseAccess.php");
+				if(!ilCourseParticipants::_isParticipant($parent_crs->getRefId(), $user_id)
+					&& !ilWaitingList::_isOnList($user_id, $parent_crs->getId())
+					&& \ilObjCourseAccess::_isActivated($parent_crs->getId()) === true
+				) {
 					$value["crs"] = $parent_crs;
 					continue;
 				}
@@ -249,14 +254,6 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 
 			if(array_key_exists(Helper::F_NOT_MIN_MEMBER, $filter)
 				&& $this->filter->minMemberReached($crs->getRefId(), $min_member)
-			) {
-				unset($crs_infos[$key]);
-				continue;
-			}
-
-			if(array_key_exists(Helper::F_CITY, $filter)
-				&& $venue_id != -1
-				&& !$this->filter->courseHasVenue($venue_id, $filter[Helper::F_CITY])
 			) {
 				unset($crs_infos[$key]);
 				continue;

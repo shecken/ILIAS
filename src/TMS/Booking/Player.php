@@ -59,7 +59,7 @@ abstract class Player {
 	 * @param	int	$usr_id			the usr the booking is made for
 	 */
 	public function init($dic, $crs_ref_id, $usr_id, ProcessStateDB $process_db) {
-		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
+		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_int($crs_ref_id)');
 		assert('is_int($usr_id)');
 		$this->dic = $dic;
@@ -139,13 +139,10 @@ abstract class Player {
 		$current_step = $steps[$step_number];
 
 		$form = $this->getForm();
-		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 		$form->addCommandButton(self::COMMAND_NEXT, $this->txt("next"));
+		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 
-		$header = new \ilFormSectionHeaderGUI();
-		$header->setTitle($current_step->getLabel());
-		$form->addItem($header);
-
+		$form->setTitle($current_step->getLabel());
 		$current_step->appendToStepForm($form);
 
 		if ($post) {
@@ -173,8 +170,10 @@ abstract class Player {
 	protected function buildOverviewForm(ProcessState $state) {
 		$steps = $this->getSortedSteps();
 		$form = $this->getForm();
-		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 		$form->addCommandButton(self::COMMAND_CONFIRM, $this->txt("confirm"));
+		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
+		$form->setTitle($this->txt("overview_header"));
+
 		for($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
 			$header = new \ilFormSectionHeaderGUI();
@@ -206,7 +205,7 @@ abstract class Player {
 	 */
 	protected function finishProcess(ProcessState $state) {
 		$steps = $this->getSortedSteps();
-		assert('$step_number == count($steps)');
+		assert('$state->getStepNumber() == count($steps)');
 		$messages = [];
 		for ($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
