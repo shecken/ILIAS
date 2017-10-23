@@ -44,7 +44,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 */
 	protected $parent_cmd;
 
-	public function __construct($parent_gui, $parent_cmd) {
+	public function __construct($parent_gui, $parent_cmd, $execute_show = true) {
 		global $DIC;
 
 		$this->g_tpl = $DIC->ui()->mainTemplate();
@@ -56,6 +56,13 @@ class ilTMSBookingGUI  extends Booking\Player {
 
 		$this->parent_gui = $parent_gui;
 		$this->parent_cmd = $parent_cmd;
+
+		/**
+		 * ToDo: Remove this flag.
+		 * It's realy ugly, but we need it. If we get here by a plugin parent
+		 * the plugin executes show by him self. So we don't need it here
+		 */
+		$this->execute_show = $execute_show;
 	}
 
 	public function executeCommand() {
@@ -79,7 +86,9 @@ class ilTMSBookingGUI  extends Booking\Player {
 		$content = $this->process($cmd, $_POST);
 		assert('is_string($content)');
 		$this->g_tpl->setContent($content);
-		$this->g_tpl->show();
+		if($this->execute_show) {
+			$this->g_tpl->show();
+		}
 	}
 
 	// STUFF FROM Booking\Player
