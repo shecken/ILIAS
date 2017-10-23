@@ -12,10 +12,7 @@ use ILIAS\TMS\Booking;
  */
 class ilTMSBookingActions implements Booking\Actions {
 	/**
-	 * Book the given user on the course. 
-	 *
-	 * @param	int		$crs_ref_id
-	 * @param	int		$user_id
+	 * @inheritdoc
 	 */
 	public function bookUser($crs_ref_id, $user_id) {
 		$course = ilObjectFactory::getInstanceByRefId($crs_ref_id);
@@ -27,12 +24,7 @@ class ilTMSBookingActions implements Booking\Actions {
 	}
 
 	/**
-	 * Removes a user from course or waiting list
-	 *
-	 * @param	int		$crs_ref_id
-	 * @param	int		$user_id
-	 *
-	 * @return string | null
+	 * @inheritdoc
 	 */
 	public function cancelUser($crs_ref_id, $user_id) {
 		require_once("Modules/Course/classes/class.ilCourseParticipants.php");
@@ -49,7 +41,7 @@ class ilTMSBookingActions implements Booking\Actions {
 			return Booking\Actions::STATE_REMOVED_FROM_WAITINGLIST;
 		}
 
-		return null;
+		throw new \LogicException("User can not be canceld. Not booked on course or waitinglist.");
 	}
 
 	/**
