@@ -27,6 +27,32 @@ class ilTMSBookingActions implements Booking\Actions {
 	}
 
 	/**
+	 * Removes a user from course or waiting list
+	 *
+	 * @param	int		$crs_ref_id
+	 * @param	int		$user_id
+	 *
+	 * @return string | null
+	 */
+	public function stornoUser($crs_ref_id, $user_id) {
+		require_once("Modules/Course/classes/class.ilCourseParticipants.php");
+		require_once("Services/Membership/classes/class.ilWaitingList.php");
+		$course = ilObjectFactory::getInstanceByRefId($crs_ref_id);
+		if(ilCourseParticipants::_isParticipant($course->getRefId(), $user_id)) {
+			$course->getMemberObject()->delete($user_id);
+			return Booking\Actions::STATE_REMOVED;
+		}
+
+		$crs_id = $course->getId();
+		if(ilWaitingList::_isOnList($user_id, $crs_id)) {
+			ilWaitingList::deleteUserEntry($user_id, $crs_id);
+			return Booking\Actions::STATE_REMOVED;
+		}
+
+		return null;
+	}
+
+	/**
 	 * Make the user be a member of the course, if he does not already have a member role.
 	 *
 	 * @throws	\LogicException if user does have another role on the course than member
