@@ -36,6 +36,6 @@ interface Actions {
 	 *
 	 * @return mixed	one of the STATEs
 	 */
-	public function cancelUser($crs_ref_id, $user_id) {
+	public function cancelUser($crs_ref_id, $user_id);
 }
 
