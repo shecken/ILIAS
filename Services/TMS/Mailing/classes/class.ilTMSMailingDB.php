@@ -25,7 +25,7 @@ class ilTMSMailingDB implements Mailing\MailingDB {
 		assert('is_string($title)');
 		$query = "SELECT tpl_id".PHP_EOL
 				." FROM ".self::TABLE_NAME.PHP_EOL
-				." WHERE title LIKE ".$this->getDB()->quote($title." -%", "text");
+				." WHERE title LIKE ".$this->getDB()->quote($title."%", "text");
 
 		$res = $this->getDB()->query($query);
 		if($this->getDB()->numRows($res) == 0) {
