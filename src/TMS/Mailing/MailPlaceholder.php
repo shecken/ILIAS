@@ -4,14 +4,14 @@
 
 namespace ILIAS\TMS\Mailing;
 
+use CaT\Ente;
+
 /**
  * This keeps placeholders for email templates.
  * It is provided as an ente-component, since there will be multiple plugins participating
  * in the process.
  */
 class MailPlaceholder implements Placeholder {
-	use ilHandlerObjectHelper;
-
 	/**
 	 * @var string
 	 */
@@ -22,7 +22,7 @@ class MailPlaceholder implements Placeholder {
 	 */
 	protected $description;
 
-	public function __construct(Entity $entity, callable $txt, $placeholder, $description)
+	public function __construct(Ente\Entity $entity, callable $txt, $placeholder, $description)
 	{
 		$this->entity = $entity;
 		$this->txt = $txt;
@@ -31,18 +31,21 @@ class MailPlaceholder implements Placeholder {
 	}
 
 	/**
-	 * Get the placeholder text
-	 *
-	 * @return string
+	 * @inheritdocs
+	 */
+	public function entity() {
+		return $this->entity;
+	}
+
+	/**
+	 * @inheritdocs
 	 */
 	public function getPlaceholder() {
 		return $this->placeholder;
 	}
 
 	/**
-	 * Get the description of placeholder
-	 *
-	 * @return string
+	 * @inheritdocs
 	 */
 	public function getDescription() {
 		return $this->description;
@@ -58,13 +61,5 @@ class MailPlaceholder implements Placeholder {
 	{
 		assert('is_string($id)');
 		return call_user_func($this->txt, $id);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected function getDIC()
-	{
-		return $GLOBALS["DIC"];
 	}
 }
