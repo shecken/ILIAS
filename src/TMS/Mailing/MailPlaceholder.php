@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2017 Stefan Hecken <stefan.hecken@concepts-and-training.de> */
 
-use ILIAS\TMS\Mailing;
+namespace ILIAS\TMS\Mailing;
 
 /**
  * This keeps placeholders for email templates.
