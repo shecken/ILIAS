@@ -23,6 +23,8 @@ class UnboundCourseProvider extends Base {
 	public function buildComponentsOf($component_type, Entity $entity) {
 		global $DIC;
 		$lng = $DIC["lng"];
+		$lng->loadLanguageModule("tms");
+		$user = $DIC->user();
 		$object = $entity->object();
 
 		if ($component_type === CourseInfo::class) {
@@ -51,6 +53,34 @@ class UnboundCourseProvider extends Base {
 					  ]
 					)
 				];
+
+			require_once("Modules/Course/classes/class.ilCourseParticipants.php");
+			require_once("Services/Membership/classes/class.ilWaitingList.php");
+			if(\ilCourseParticipants::_isParticipant($object->getRefId(), $user->getId())) {
+				$ret[] = new CourseInfoImpl
+						( $entity
+						, $lng->txt("status")
+						, $lng->txt("member")
+						, ""
+						, 600
+						, [
+							CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
+						  ]
+					);
+			}
+
+			if(\ilWaitingList::_isOnList($user->getId(), $object->getId())) {
+				$ret[] = new CourseInfoImpl
+						( $entity
+						, $lng->txt("status")
+						, $lng->txt("waitinglist")
+						, ""
+						, 600
+						, [
+							CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
+						  ]
+					);
+			}
 
 			$venue_components = $this->getVenueComponents($entity, (int)$object->getId());
 
