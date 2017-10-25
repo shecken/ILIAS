@@ -32,7 +32,10 @@ class UnboundCourseProvider extends Base {
 					, $object->getTitle()
 					, ""
 					, 100
-					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO, CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO,
+						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+						CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO
+					  ]
 					)
 				, new CourseInfoImpl
 					( $entity
@@ -40,7 +43,12 @@ class UnboundCourseProvider extends Base {
 					, $this->formatPeriod($object->getCourseStart(), $object->getCourseEnd())
 					, ""
 					, 300
-					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO, CourseInfo::CONTEXT_SEARCH_FURTHER_INFO, CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+					, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO,
+						CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
+						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+						CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO,
+						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
+					  ]
 					)
 				];
 
@@ -106,7 +114,9 @@ class UnboundCourseProvider extends Base {
 				, $city
 				, ""
 				, 400
-				, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO]
+				, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO,
+					CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO
+				  ]
 				);
 			}
 
@@ -117,7 +127,10 @@ class UnboundCourseProvider extends Base {
 				, $address.", ".$city
 				, ""
 				, 350
-				, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO, CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+				, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
+					CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+					CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
+				  ]
 				);
 			}
 		}
