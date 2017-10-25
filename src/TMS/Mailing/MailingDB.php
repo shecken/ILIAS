@@ -12,5 +12,5 @@ interface MailingDB {
 	 *
 	 * @return int
 	 */
-	public function getTemplateIdByTitle($title);
+	public function getTemplateIdAndContextByTitle($title);
 }
