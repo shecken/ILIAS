@@ -21,9 +21,9 @@ class ilTMSMailingDB implements Mailing\MailingDB {
 	 *
 	 * @return int
 	 */
-	public function getTemplateIdByTitle($title) {
+	public function getTemplateIdAndContextByTitle($title) {
 		assert('is_string($title)');
-		$query = "SELECT tpl_id".PHP_EOL
+		$query = "SELECT tpl_id, context".PHP_EOL
 				." FROM ".self::TABLE_NAME.PHP_EOL
 				." WHERE title LIKE ".$this->getDB()->quote($title."%", "text");
 
@@ -34,7 +34,7 @@ class ilTMSMailingDB implements Mailing\MailingDB {
 
 		$row = $this->getDB()->fetchAssoc($res);
 
-		return (int)$row["tpl_id"];
+		return array((int)$row["tpl_id"], $row["context"]);
 	}
 
 	/**
