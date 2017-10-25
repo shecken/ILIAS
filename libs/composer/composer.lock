@@ -4,16 +4,16 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "38b42b50431ce9ae2b283bbc3f658802",
-    "content-hash": "b53196496dfdb9af9288f93114cfcd45",
+    "hash": "9dcb928528cd5eb8a34661b788c317e7",
+    "content-hash": "1bcef3c4cba4e9bfc64d4452a47ed04d",
     "packages": [
         {
             "name": "cat/ente",
-            "version": "2.0.0",
+            "version": "2.1.0",
             "source": {
                 "type": "git",
                 "url": "git@github.com:/conceptsandtraining/lib-ente.git",
-                "reference": "39d631bff80213c962ae09f7052168584a53a69b"
+                "reference": "ea5cd9d588dc16b092e31daa31e935c8eef169e9"
             },
             "type": "library",
             "autoload": {
@@ -31,7 +31,7 @@
                 }
             ],
             "description": "An entity component framework for PHP.",
-            "time": "2017-10-17 18:23:40"
+            "time": "2017-10-25 08:13:36"
         },
         {
             "name": "cweagans/composer-patches",
@@ -191,7 +191,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GeSHi/geshi-1.0/zipball/ec918ac67f6d3e9008e1d41c4d22610a96f78755",
+                "url": "https://api.github.com/repos/GeSHi/geshi-1.0/zipball/ac5c9c1f26eba2e6d0a9e374dc3d8316b586cdcc",
                 "reference": "ac5c9c1f26eba2e6d0a9e374dc3d8316b586cdcc",
                 "shasum": ""
             },
