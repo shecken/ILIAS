@@ -31,7 +31,7 @@ class ilPersonalDesktopGUI
 	var $tpl;
 	var $lng;
 	var $ilias;
-	
+
 	var $cmdClass = '';
 
 	/**
@@ -45,32 +45,32 @@ class ilPersonalDesktopGUI
 	function __construct()
 	{
 		global $ilias, $tpl, $lng, $rbacsystem, $ilCtrl, $ilMainMenu, $ilUser, $tree;
-		
-		
+
+
 		$this->tpl = $tpl;
 		$this->lng = $lng;
 		$this->ilias = $ilias;
 		$this->ctrl = $ilCtrl;
-		
+
 		$ilCtrl->setContext($ilUser->getId(),
 				"user");
 
 		$ilMainMenu->setActive("desktop");
 		$this->lng->loadLanguageModule("pdesk");
 		$this->lng->loadLanguageModule("pd"); // #16813
-		
+
 		// catch hack attempts
 		if ($GLOBALS['DIC']['ilUser']->getId() == ANONYMOUS_USER_ID)
 		{
 			$this->ilias->raiseError($this->lng->txt("msg_not_available_for_anon"),$this->ilias->error_obj->MESSAGE);
 		}
 		$this->cmdClass = $_GET['cmdClass'];
-		
+
 		//$tree->useCache(false);
 
 		$this->action_menu = new ilAdvancedSelectionListGUI();
 	}
-	
+
 	/**
 	* execute command
 	*/
@@ -110,17 +110,17 @@ class ilPersonalDesktopGUI
 			case "ilbookmarkadministrationgui":
 				if ($ilSetting->get('disable_bookmarks'))
 				{
-					ilUtil::sendFailure($this->lng->txt('permission_denied'), true);					
+					ilUtil::sendFailure($this->lng->txt('permission_denied'), true);
 					ilUtil::redirect('ilias.php?baseClass=ilPersonalDesktopGUI');
 					return;
-				}				
+				}
 				include_once("./Services/Bookmarks/classes/class.ilBookmarkAdministrationGUI.php");
 				$bookmark_gui = new ilBookmarkAdministrationGUI();
 				$this->getStandardTemplates();
 				$this->setTabs();
 				$ret = $this->ctrl->forwardCommand($bookmark_gui);
 				break;
-			
+
 				// profile
 			case "ilpersonalprofilegui":
 				$this->getStandardTemplates();
@@ -129,7 +129,7 @@ class ilPersonalDesktopGUI
 				$profile_gui = new ilPersonalProfileGUI();
 				$ret = $this->ctrl->forwardCommand($profile_gui);
 				break;
-				
+
 			// settings
 			case "ilpersonalsettingsgui":
 				$this->getStandardTemplates();
@@ -138,14 +138,14 @@ class ilPersonalDesktopGUI
 				$settings_gui = new ilPersonalSettingsGUI();
 				$ret = $this->ctrl->forwardCommand($settings_gui);
 				break;
-			
+
 				// profile
 			case "ilobjusergui":
 				include_once('./Services/User/classes/class.ilObjUserGUI.php');
 				$user_gui = new ilObjUserGUI("",$_GET["user"], false, false);
 				$ret = $this->ctrl->forwardCommand($user_gui);
 				break;
-			
+
 			case 'ilcalendarpresentationgui':
 				$this->getStandardTemplates();
 				$this->displayHeader();
@@ -156,23 +156,23 @@ class ilPersonalDesktopGUI
 				$ret = $this->ctrl->forwardCommand($cal);
 				$this->tpl->show();
 				break;
-			
+
 				// pd notes
 			case "ilpdnotesgui":
 				if ($ilSetting->get('disable_notes') && $ilSetting->get('disable_comments'))
 				{
-					ilUtil::sendFailure($this->lng->txt('permission_denied'), true);					
+					ilUtil::sendFailure($this->lng->txt('permission_denied'), true);
 					ilUtil::redirect('ilias.php?baseClass=ilPersonalDesktopGUI');
 					return;
 				}
-				
+
 				$this->getStandardTemplates();
 				$this->setTabs();
 				include_once("./Services/Notes/classes/class.ilPDNotesGUI.php");
 				$pd_notes_gui = new ilPDNotesGUI();
 				$ret = $this->ctrl->forwardCommand($pd_notes_gui);
 				break;
-			
+
 			// pd news
 			case "ilpdnewsgui":
 				$this->getStandardTemplates();
@@ -188,8 +188,8 @@ class ilPersonalDesktopGUI
 				include_once './Services/Tracking/classes/class.ilLearningProgressGUI.php';
 				$new_gui = new ilLearningProgressGUI(ilLearningProgressGUI::LP_CONTEXT_PERSONAL_DESKTOP,0);
 				$ret = $this->ctrl->forwardCommand($new_gui);
-				
-				break;		
+
+				break;
 
 			case "ilcolumngui":
 				$this->getStandardTemplates();
@@ -215,25 +215,25 @@ class ilPersonalDesktopGUI
 				$this->ctrl->forwardCommand(new ilContactGUI());
 				break;
 
-			case 'ilpersonalworkspacegui':		
+			case 'ilpersonalworkspacegui':
 				// $this->getStandardTemplates();
 				// $this->setTabs();
 				include_once 'Services/PersonalWorkspace/classes/class.ilPersonalWorkspaceGUI.php';
 				$wsgui = new ilPersonalWorkspaceGUI();
-				$ret = $this->ctrl->forwardCommand($wsgui);								
+				$ret = $this->ctrl->forwardCommand($wsgui);
 				$this->tpl->show();
 				break;
-			
+
 			case 'ilportfoliorepositorygui':
 				$this->getStandardTemplates();
 				$this->setTabs();
 				include_once 'Modules/Portfolio/classes/class.ilPortfolioRepositoryGUI.php';
 				$pfgui = new ilPortfolioRepositoryGUI();
-				$ret = $this->ctrl->forwardCommand($pfgui);				
+				$ret = $this->ctrl->forwardCommand($pfgui);
 				$this->tpl->show();
 				break;
 
-			case 'ilpersonalskillsgui':				
+			case 'ilpersonalskillsgui':
 				$this->setTabs();
 				include_once './Services/Skill/classes/class.ilPersonalSkillsGUI.php';
 				$skgui = new ilPersonalSkillsGUI();
@@ -241,8 +241,8 @@ class ilPersonalDesktopGUI
 				$ret = $this->ctrl->forwardCommand($skgui);
 				$this->tpl->show();
 				break;
-			
-			case 'ilbadgeprofilegui':		
+
+			case 'ilbadgeprofilegui':
 				$this->getStandardTemplates();
 				$this->setTabs();
 				include_once './Services/Badge/classes/class.ilBadgeProfileGUI.php';
@@ -250,15 +250,29 @@ class ilPersonalDesktopGUI
 				$ret = $this->ctrl->forwardCommand($bgui);
 				$this->tpl->show();
 				break;
-			
+
 			case 'redirect':
 				$this->redirect();
 				break;
 
 			default:
 				//cat-tms-patch start
-				$this->redirectTrainingSearch();
-				break;
+				$base_class = strtolower($_GET["baseClass"]);
+				$cmd_class = strtolower($_GET["cmdClass"]);
+				$cmd = strtolower($_GET["cmd"]);
+				if($base_class == 'ilpersonaldesktopgui'
+					&& $cmd_class !== 'ilpersonalsettingsgui'
+					&& $cmd_class !== 'ilpersonalprofilegui'
+					&& $cmd_class !== 'illearningprogressgui'
+					&& $cmd_class !== 'illplistofprogressgui'
+					&& $cmd !== 'jumptosettings'
+					&& $cmd !== 'jumptoprofile'
+					&& $cmd !== 'jumptolp'
+					&& $cmd !== ''
+				) {
+					$this->redirectTrainingSearch();
+					break;
+				}
 				//cat-tms-patch end
 				$this->getStandardTemplates();
 				$this->setTabs();
@@ -288,7 +302,7 @@ class ilPersonalDesktopGUI
 		ilUtil::redirect($link);
 	}
 	//cat-tms-patch end
-	
+
 	/**
 	 * directly redirects a call
 	 */
@@ -297,7 +311,7 @@ class ilPersonalDesktopGUI
 		if(is_array($_GET))
 		{
 			foreach($_GET as $key => $val)
-			{				
+			{
 				if(substr($key, 0, strlen('param_')) == 'param_')
 				{
 					$this->ctrl->setParameterByClass($_GET['redirectClass'], substr($key, strlen('param_')), $val);
@@ -305,8 +319,8 @@ class ilPersonalDesktopGUI
 			}
 		}
 		ilUtil::redirect($this->ctrl->getLinkTargetByClass($_GET['redirectClass'], $_GET['redirectCmd'], '', true));
-	}	
-	
+	}
+
 	/**
 	* get standard templates
 	*/
@@ -314,7 +328,7 @@ class ilPersonalDesktopGUI
 	{
 		$this->tpl->getStandardTemplate();
 	}
-	
+
 	/**
 	* show desktop
 	*/
@@ -330,10 +344,10 @@ class ilPersonalDesktopGUI
 
 		// display infopanel if something happened
 		ilUtil::infoPanel();
-		
+
 		$this->tpl->setTitle($this->lng->txt("overview"));
 		$this->tpl->setVariable("IMG_SPACE", ilUtil::getImagePath("spacer.png", false));
-		
+
 		$this->tpl->setContent($this->getCenterColumnHTML());
 		$this->tpl->setRightContent($this->getRightColumnHTML());
 		$this->tpl->setLeftContent($this->getLeftColumnHTML());
@@ -361,18 +375,18 @@ class ilPersonalDesktopGUI
 
 			$tpl->setHeaderActionMenu($htpl->get());
 		}
-		
+
 		$this->tpl->show();
 	}
-	
-	
+
+
 	/**
 	* Display center column
 	*/
 	function getCenterColumnHTML()
 	{
 		global $ilCtrl, $ilPluginAdmin;
-		
+
 		include_once("Services/Block/classes/class.ilColumnGUI.php");
 		$column_gui = new ilColumnGUI("pd", IL_COL_CENTER);
 		$this->initColumn($column_gui);
@@ -406,7 +420,7 @@ class ilPersonalDesktopGUI
 				else
 				{
 					$html = "";
-				
+
 					// user interface plugin slot + default rendering
 					include_once("./Services/UIComponent/classes/class.ilUIHookProcessor.php");
 					$uip = new ilUIHookProcessor("Services/PersonalDesktop", "center_column",
@@ -429,7 +443,7 @@ class ilPersonalDesktopGUI
 	function getRightColumnHTML()
 	{
 		global $ilUser, $lng, $ilCtrl, $ilPluginAdmin;
-		
+
 		include_once("Services/Block/classes/class.ilColumnGUI.php");
 		$column_gui = new ilColumnGUI("pd", IL_COL_RIGHT);
 		$this->initColumn($column_gui);
@@ -450,7 +464,7 @@ class ilPersonalDesktopGUI
 			if (!$ilCtrl->isAsynch())
 			{
 				$html = "";
-				
+
 				// user interface plugin slot + default rendering
 				include_once("./Services/UIComponent/classes/class.ilUIHookProcessor.php");
 				$uip = new ilUIHookProcessor("Services/PersonalDesktop", "right_column",
@@ -493,7 +507,7 @@ class ilPersonalDesktopGUI
 			if (!$ilCtrl->isAsynch())
 			{
 				$html = "";
-				
+
 				// user interface plugin slot + default rendering
 				include_once("./Services/UIComponent/classes/class.ilUIHookProcessor.php");
 				$uip = new ilUIHookProcessor("Services/PersonalDesktop", "left_column",
@@ -514,7 +528,7 @@ class ilPersonalDesktopGUI
 		// add template for content
 		$this->pd_tpl = new ilTemplate("tpl.usr_personaldesktop.html", true, true, "Services/PersonalDesktop");
 		$this->tpl->getStandardTemplate();
-				
+
 		// display infopanel if something happened
 		ilUtil::infoPanel();
 
@@ -536,7 +550,7 @@ class ilPersonalDesktopGUI
 		}
 		$this->show();
 	}
-	
+
 	/**
 	* Display system messages.
 	*/
@@ -546,7 +560,7 @@ class ilPersonalDesktopGUI
 		$sys_block = new ilPDSysMessageBlockGUI("ilpersonaldesktopgui", "show");
 		return $sys_block->getHTML();
 	}
-	
+
 	/**
 	* Returns the multidimenstional sorted array
 	*
@@ -561,22 +575,22 @@ class ilPersonalDesktopGUI
 	{
 		if ($array) {
 			$key_sorta = explode(";", $key_sort);
-			
+
 			$multikeys = array_keys($array);
 			$keys = array_keys($array[$multikeys[0]]);
-			
+
 			for($m=0; $m < count($key_sorta); $m++) {
 				$nkeys[$m] = trim($key_sorta[$m]);
 			}
 			$n += count($key_sorta);
-			
+
 			for($i=0; $i < count($keys); $i++){
 				if(!in_array($keys[$i], $key_sorta)) {
 					$nkeys[$n] = $keys[$i];
 					$n += "1";
 				}
 			}
-			
+
 			for($u=0;$u<count($array); $u++) {
 				$arr = $array[$multikeys[$u]];
 				for($s=0; $s<count($nkeys); $s++) {
@@ -588,14 +602,14 @@ class ilPersonalDesktopGUI
 			return $output;
 		}
 	}
-	
+
 	/**
 	* set personal desktop tabs
 	*/
 	function setTabs()
 	{
 		global $ilHelp;
-		
+
 		$ilHelp->setScreenIdComponent("pd");
 	}
 
@@ -654,10 +668,10 @@ class ilPersonalDesktopGUI
 			$this->ctrl->setParameterByClass("ilportfoliorepositorygui", "shr_id", $_REQUEST["dsh"]);
 			$cmd = "showOther";
 		}
-		
+
 		// used for goto links
 		if($_GET["prt_id"])
-		{			
+		{
 			$this->ctrl->setParameterByClass("ilobjportfoliogui", "prt_id", (int)$_GET["prt_id"]);
 			$this->ctrl->setParameterByClass("ilobjportfoliogui", "gtp", (int)$_GET["gtp"]);
 			$this->ctrl->redirectByClass(array("ilportfoliorepositorygui", "ilobjportfoliogui"), "preview");
@@ -667,7 +681,7 @@ class ilPersonalDesktopGUI
 			$this->ctrl->redirectByClass("ilportfoliorepositorygui", $cmd);
 		}
 	}
-	
+
 	/**
 	 * workaround for menu in calendar only
 	 */
@@ -675,7 +689,7 @@ class ilPersonalDesktopGUI
 	{
 		$this->ctrl->redirectByClass("ilpersonalsettingsgui");
 	}
-	
+
 	/**
 	* workaround for menu in calendar only
 	*/
@@ -683,14 +697,14 @@ class ilPersonalDesktopGUI
 	{
 		if ($this->ilias->getSetting("disable_bookmarks"))
 		{
-			ilUtil::sendFailure($this->lng->txt('permission_denied'), true);					
+			ilUtil::sendFailure($this->lng->txt('permission_denied'), true);
 			ilUtil::redirect('ilias.php?baseClass=ilPersonalDesktopGUI');
 			return;
 		}
-		
+
 		$this->ctrl->redirectByClass("ilbookmarkadministrationgui");
 	}
-	
+
 	/**
 	* workaround for menu in calendar only
 	*/
@@ -698,12 +712,12 @@ class ilPersonalDesktopGUI
 	{
 		if ($this->ilias->getSetting('disable_notes'))
 		{
-			ilUtil::sendFailure($this->lng->txt('permission_denied'), true);					
+			ilUtil::sendFailure($this->lng->txt('permission_denied'), true);
 			ilUtil::redirect('ilias.php?baseClass=ilPersonalDesktopGUI');
 			return;
-		}		
-		
-		$this->ctrl->redirectByClass("ilpdnotesgui");			
+		}
+
+		$this->ctrl->redirectByClass("ilpdnotesgui");
 	}
 
 	/**
@@ -728,7 +742,7 @@ class ilPersonalDesktopGUI
 	{
 		$this->ctrl->redirectByClass("ilpdnewsgui");
 	}
-	
+
 	/**
 	* workaround for menu in calendar only
 	*/
@@ -765,20 +779,20 @@ class ilPersonalDesktopGUI
 			$this->ctrl->setParameterByClass("ilpersonalworkspacegui", "shr_id", $_REQUEST["dsh"]);
 			$cmd = "share";
 		}
-		
+
 		if($_REQUEST["wsp_id"])
 		{
 			$this->ctrl->setParameterByClass("ilpersonalworkspacegui", "wsp_id", (int)$_REQUEST["wsp_id"]);
 		}
-		
+
 		if($_REQUEST["gtp"])
 		{
 			$this->ctrl->setParameterByClass("ilpersonalworkspacegui", "gtp", (int)$_REQUEST["gtp"]);
 		}
-		
+
 		$this->ctrl->redirectByClass("ilpersonalworkspacegui", $cmd);
 	}
-	
+
 	/**
 	 * Jump to badges
 	 */
@@ -786,7 +800,7 @@ class ilPersonalDesktopGUI
 	{
 		$this->ctrl->redirectByClass("ilbadgeprofilegui");
 	}
-	
+
 	/**
 	 * Jump to personal skills
 	 */
@@ -794,7 +808,7 @@ class ilPersonalDesktopGUI
 	{
 		$this->ctrl->redirectByClass("ilpersonalskillsgui");
 	}
-	
+
 	function __loadNextClass()
 	{
 		$stored_classes = array('ilpersonaldesktopgui',
@@ -835,7 +849,7 @@ class ilPersonalDesktopGUI
 		}
 		$a_column_gui->setActionMenu($this->action_menu);
 	}
-	
+
 	/**
 	* display header and locator
 	*/
@@ -843,7 +857,7 @@ class ilPersonalDesktopGUI
 	{
 		$this->tpl->setTitle($this->lng->txt("personal_desktop"));
 	}
-	
+
 
 }
 ?>
