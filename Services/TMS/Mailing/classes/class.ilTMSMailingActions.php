@@ -5,6 +5,7 @@
 
 use ILIAS\TMS\Mailing;
 
+require_once("Services/Mail/classes/class.ilMailFormCall.php");
 require_once("Services/Mail/classes/class.ilFormatMail.php");
 /* Copyright (c) 2017 Stefan Hecken <stefan.Hecken@concepts-and-training.de> */
 
@@ -20,10 +21,11 @@ class ilTMSMailingActions implements Mailing\Actions {
 	 * Sends a mail for a course to the user.
 	 */
 	public function sendCourseMail($mail_id, $crs_ref_id, $user_id) {
-		$template_id = $this->getTemplateIdByTitle($mail_id);
+		list($template_id, $context) = $this->getTemplateIdAndContextByTitle($mail_id);
 		list($subject, $message) = $this->getTemplateInformations($template_id);
 		require_once("Services/User/classes/class.ilObjUser.php");
-		$to = ilObjUser::_lookupEmail($user_id);
+		ilMailFormCall::setContextParameters(array("ref_id" => $crs_ref_id, ilMailFormCall::CONTEXT_KEY => $context));
+		$to = ilObjUser::_lookupLogin($user_id);
 
 		if($errors = $this->umail->sendMail(
 				$to, // to
@@ -41,14 +43,10 @@ class ilTMSMailingActions implements Mailing\Actions {
 	}
 
 	/**
-	 * Get template id by template title
-	 *
-	 * @param string 	$title
-	 *
-	 * @return int
+	 * @inheritdoc
 	 */
-	protected function getTemplateIdByTitle($title) {
-		return $this->db->getTemplateIdByTitle($title);
+	protected function getTemplateIdAndContextByTitle($title) {
+		return $this->db->getTemplateIdAndContextByTitle($title);
 	}
 
 	/**
