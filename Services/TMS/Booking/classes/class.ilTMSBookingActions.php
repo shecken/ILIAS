@@ -131,12 +131,21 @@ class ilTMSBookingActions implements Booking\Actions {
 	 */
 	protected function getFirstBookingModalities($crs_ref_id) {
 		global $DIC;
-		$g_tree = $DIC->repositoryTree();
-		$booking_modalities = $g_tree->getChildsByType($crs_ref_id, "xbkm");
+		$tree = $DIC->repositoryTree();
+		$objDefinition = $DIC["objDefinition"];
 
-		if(count($booking_modalities) > 0) {
-			$booking_modality = $booking_modalities[0];
-			return ilObjectFactory::getInstanceByRefId($booking_modality["ref_id"]);
+		$childs = $tree->getChilds($crs_ref_id);
+		$ret = array();
+		foreach ($childs as $child) {
+			$type = $child["type"];
+			if($type == "xbkm") {
+				return \ilObjectFactory::getInstanceByRefId($child["child"]);
+				continue;
+			}
+
+			if($objDefinition->isContainer($type)) {
+				return $this->getFirstBookingModalities($child["child"]);
+			}
 		}
 
 		return null;

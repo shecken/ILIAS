@@ -17,6 +17,7 @@ interface CourseInfo extends Component {
 	const CONTEXT_USER_BOOKING_SHORT_INFO = 5;
 	const CONTEXT_USER_BOOKING_DETAIL_INFO = 6;
 	const CONTEXT_USER_BOOKING_FURTHER_INFO = 7;
+	const CONTEXT_USER_CAN_CANCEL = 8;
 
 	/**
 	 * Get a label for this step in the process.
