@@ -144,7 +144,7 @@ class ilTMSBookingActions implements Booking\Actions {
 			}
 
 			if($objDefinition->isContainer($type)) {
-				return $this->getBookingModalities($child["child"]);
+				return $this->getFirstBookingModalities($child["child"]);
 			}
 		}
 
