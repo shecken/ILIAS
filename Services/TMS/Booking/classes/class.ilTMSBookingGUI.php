@@ -81,7 +81,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 
 		$parallel_courses = $this->userHasParallelCourse();
 		if(count($parallel_courses) > 0) {
-			$message = $this->getParrelCourseMessage($parallel_courses);
+			$message = $this->getParallelCourseMessage($parallel_courses);
 			$this->redirectToPreviousLocation(array($message), false);
 		}
 
@@ -178,7 +178,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 *
 	 * @return string
 	 */
-	protected function getParrelCourseMessage(array $parallel_courses) {
+	protected function getParallelCourseMessage(array $parallel_courses) {
 		$tpl = new \ilTemplate("tpl.parallel_courses.html", true, true, "Services/TMS");
 		foreach ($parallel_courses as $key => $parallel_course) {
 			$course_start = $this->formatDate($parallel_course->getCourseStart());
