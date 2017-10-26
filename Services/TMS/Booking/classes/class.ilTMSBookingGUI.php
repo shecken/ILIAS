@@ -181,8 +181,8 @@ class ilTMSBookingGUI  extends Booking\Player {
 	protected function getParrelCourseMessage(array $parallel_courses) {
 		$tpl = new \ilTemplate("tpl.parallel_courses.html", true, true, "Services/TMS");
 		foreach ($parallel_courses as $key => $parallel_course) {
-			$course_start = $parallel_course->getCourseStart()->get(IL_CAL_DATE);
-			$course_end = $parallel_course->getCourseEnd()->get(IL_CAL_DATE);
+			$course_start = $this->formatDate($parallel_course->getCourseStart());
+			$course_end = $this->formatDate($parallel_course->getCourseEnd());
 
 			$tpl->setCurrentBlock("crs");
 			$tpl->setVariable("CRS_TITLE", $parallel_course->getTitle());
@@ -190,6 +190,27 @@ class ilTMSBookingGUI  extends Booking\Player {
 			$tpl->parseCurrentBlock();
 		}
 		return $tpl->get();
+	}
+
+	/**
+	 * Form date.
+	 *
+	 * @param ilDateTime 	$dat
+	 * @param bool 	$use_time
+	 *
+	 * @return string
+	 */
+	protected function formatDate(\ilDateTime $date) {
+		global $DIC;
+		$g_user = $DIC->user();
+		require_once("Services/Calendar/classes/class.ilCalendarUtil.php");
+		$out_format = ilCalendarUtil::getUserDateFormat($use_time, true);
+		$ret = $date->get(IL_CAL_FKT_DATE, $out_format, $g_user->getTimeZone());
+		if(substr($ret, -5) === ':0000') {
+			$ret = substr($ret, 0, -5);
+		}
+
+		return $ret;
 	}
 
 	// STUFF FROM Booking\Player
