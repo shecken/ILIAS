@@ -18431,9 +18431,3 @@ while($res = $db->fetchAssoc($query)) {
 }
 
 ?>
-<#5087>
-<?php
-	// cat-tms-patch start
-	$ilCtrlStructureReader->getStructure();
-	// cat-tms-patch end
-?>
