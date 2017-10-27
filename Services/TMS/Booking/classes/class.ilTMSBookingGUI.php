@@ -140,7 +140,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 		$ret = array();
 		require_once("Services/Membership/classes/class.ilParticipants.php");
 		foreach(\ilParticipants::_getMembershipByType($usr_id, "crs", true) as $crs_id) {
-			$ret[] = \ilObjectFactory::getInstanceByObjId($crs_obj_id);
+			$ret[] = \ilObjectFactory::getInstanceByObjId($crs_id);
 		}
 
 		return $ret;
