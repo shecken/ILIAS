@@ -9,7 +9,7 @@ require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php");
 
 /**
- * Displays the TMS booking 
+ * Displays the TMS booking
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
@@ -124,7 +124,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 		assert('is_int($crs_ref_id)');
 		assert('is_int($usr_id)');
 		$booked_courses = $this->getUserBookedCourses($crs_ref_id);
-		$try_to_book_course = \ilObjectFactory::getInstanceByRefId($this->crs_ref_id);
+		$try_to_book_course = \ilObjectFactory::getInstanceByRefId($crs_ref_id);
 		$parallel_courses = $this->getParallelCourses($try_to_book_course, $booked_courses);
 
 		return $parallel_courses;
