@@ -162,13 +162,9 @@ class ilTMSBookingGUI  extends Booking\Player {
 			$course_start = $course->getCourseStart()->get(IL_CAL_DATE);
 			$course_end = $course->getCourseEnd()->get(IL_CAL_DATE);
 
-			if($try_start <= $course_start && $try_end >= $course_start) {
-				return $course;
-			}
-
-			if($try_start >= $course_start && $try_start <= $course_end) {
-				return $course;
-			}
+			return
+				   ($try_start <= $course_start && $try_end >= $course_start)
+				|| ($try_start >= $course_start && $try_start <= $course_end);
 		});
 	}
 
