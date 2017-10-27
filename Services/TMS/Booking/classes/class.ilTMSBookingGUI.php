@@ -91,6 +91,125 @@ class ilTMSBookingGUI  extends Booking\Player {
 		}
 	}
 
+	/**
+	 * Redirects the user to the previous location with a message if he already has
+	 * booked a course in the period of the course in $_GET["crs_ref_id"].
+	 *
+	 * @return void
+	 */
+	public function redirectOnParallelCourses() {
+		assert('$this->g_user->getId() === $_GET["usr_id"]');
+
+		assert('is_numeric($_GET["crs_ref_id"])');
+		assert('is_numeric($_GET["usr_id"])');
+
+		$crs_ref_id = (int)$_GET["crs_ref_id"];
+		$usr_id = (int)$_GET["usr_id"];
+
+		$parallel_courses = $this->getParallelCoursesOfUser($crs_ref_id, $usr_id);
+		if (count($parallel_courses) > 0) {
+			$message = $this->getParallelCourseMessage($parallel_courses);
+			$this->redirectToPreviousLocation(array($message), false);
+		}
+	}
+
+	/**
+	 * Checks the user a parelle course to this he wants to book
+	 *
+	 * @param	int		$crs_ref_id
+	 * @param	int		$usr_id
+	 * @return	\ilObjCourse[]
+	 */
+	protected function getParallelCoursesOfUser($crs_ref_id, $usr_id) {
+		assert('is_int($crs_ref_id)');
+		assert('is_int($usr_id)');
+		$booked_courses = $this->getUserBookedCourses($crs_ref_id);
+		$try_to_book_course = \ilObjectFactory::getInstanceByRefId($this->crs_ref_id);
+		$parallel_courses = $this->getParallelCourses($try_to_book_course, $booked_courses);
+
+		return $parallel_courses;
+	}
+
+	/**
+	 * Get courses where user is booked
+	 *
+	 * @return	int	$usr_id
+	 * @return \ilObjCourse[]
+	 */
+	protected function getUserBookedCourses($usr_id) {
+		$ret = array();
+		require_once("Services/Membership/classes/class.ilParticipants.php");
+		foreach(\ilParticipants::_getMembershipByType($usr_id, "crs", true) as $crs_id) {
+			$ret[] = \ilObjectFactory::getInstanceByObjId($crs_id);
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Get courses running parallel
+	 *
+	 * @param \ilObjCourse 	$try_to_book_course
+	 * @param \ilObjCourse[] 	$booked_courses
+	 *
+	 * @return \ilObjCourse[]
+	 */
+	protected function getParallelCourses(\ilObjCourse $try_to_book_course, array $booked_courses) {
+		$try_start = $try_to_book_course->getCourseStart()->get(IL_CAL_DATE);
+		$try_end = $try_to_book_course->getCourseEnd()->get(IL_CAL_DATE);
+
+		return array_filter($booked_courses, function($course) use ($try_start, $try_end) {
+			$course_start = $course->getCourseStart()->get(IL_CAL_DATE);
+			$course_end = $course->getCourseEnd()->get(IL_CAL_DATE);
+
+			return
+				   ($try_start <= $course_start && $try_end >= $course_start)
+				|| ($try_start >= $course_start && $try_start <= $course_end);
+		});
+	}
+
+	/**
+	 * Get message to display
+	 *
+	 * @param \ilObjCourse[] 	$parallel_courses
+	 *
+	 * @return string
+	 */
+	protected function getParallelCourseMessage(array $parallel_courses) {
+		$tpl = new \ilTemplate("tpl.parallel_courses.html", true, true, "Services/TMS");
+		foreach ($parallel_courses as $key => $parallel_course) {
+			$course_start = $this->formatDate($parallel_course->getCourseStart());
+			$course_end = $this->formatDate($parallel_course->getCourseEnd());
+
+			$tpl->setCurrentBlock("crs");
+			$tpl->setVariable("CRS_TITLE", $parallel_course->getTitle());
+			$tpl->setVariable("CRD_PERIOD", $course_start." - ".$course_end);
+			$tpl->parseCurrentBlock();
+		}
+		return $tpl->get();
+	}
+
+	/**
+	 * Form date.
+	 *
+	 * @param ilDateTime 	$dat
+	 * @param bool 	$use_time
+	 *
+	 * @return string
+	 */
+	protected function formatDate(\ilDateTime $date) {
+		global $DIC;
+		$g_user = $DIC->user();
+		require_once("Services/Calendar/classes/class.ilCalendarUtil.php");
+		$out_format = ilCalendarUtil::getUserDateFormat($use_time, true);
+		$ret = $date->get(IL_CAL_FKT_DATE, $out_format, $g_user->getTimeZone());
+		if(substr($ret, -5) === ':0000') {
+			$ret = substr($ret, 0, -5);
+		}
+
+		return $ret;
+	}
+
 	// STUFF FROM Booking\Player
 
 	/**
