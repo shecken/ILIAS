@@ -134,34 +134,41 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 * @return array<int, ilObjCourse | ilObjBookingModalities>
 	 */
 	protected function addCourseIfUserIsNotBookedOrOnWaitinglist(array $bms, $user_id) {
-		foreach ($bms as $key => &$value) {
-			$bm = ilObjectFactory::getInstanceByRefId($value["xbkm"]->getRefId());
+		require_once("Modules/Course/classes/class.ilCourseParticipants.php");
+		require_once("Services/Membership/classes/class.ilWaitingList.php");
+		require_once("Modules/Course/classes/class.ilObjCourseAccess.php");
 
-			if($parent_crs = $bm->getParentCourse()) {
-				require_once("Modules/Course/classes/class.ilCourseParticipants.php");
-				require_once("Services/Membership/classes/class.ilWaitingList.php");
-				require_once("Modules/Course/classes/class.ilObjCourseAccess.php");
-				if(!ilCourseParticipants::_isParticipant($parent_crs->getRefId(), $user_id)
+		$ret = array();
+
+		$bms = array_map( //flatten
+			function($bm) {return $bm['xbkm'];}
+			,$bms
+		);
+
+		foreach ($bms as $bm) {
+			$parent_crs = $bm->getParentCourse();
+			if($parent_crs) {
+				if(	!ilCourseParticipants::_isParticipant($parent_crs->getRefId(), $user_id)
 					&& !ilWaitingList::_isOnList($user_id, $parent_crs->getId())
 					&& \ilObjCourseAccess::_isActivated($parent_crs->getId()) === true
 				) {
-					$value["crs"] = $parent_crs;
-					continue;
+					$ret_entry = array(
+						'xbkm' => $bm, //object(ilObjBookingModalities)
+						'crs' => $parent_crs //object(ilObjCourse)
+					);
+					$ret[] = $ret_entry;
 				}
 			}
 
-			unset($bms[$key]);
 		}
-
-		sort($bms);
-		return $bms;
+		return $ret;
 	}
 
 	/**
 	 * transform array to get bkm with same crs in a single array
 	 *
 	 * @param array<int, ilObjCourse | ilObjBookingModalities>
-	 * 
+	 *
 	 * @return array<int, ilObjCourse | ilObjBookingModalities[]>
 	 */
 	protected function transformBkmToCourse($bms) {
