@@ -123,7 +123,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 	protected function getParallelCoursesOfUser($crs_ref_id, $usr_id) {
 		assert('is_int($crs_ref_id)');
 		assert('is_int($usr_id)');
-		$booked_courses = $this->getUserBookedCourses($crs_ref_id);
+		$booked_courses = $this->getUserBookedCourses($usr_id);
 		$try_to_book_course = \ilObjectFactory::getInstanceByRefId($crs_ref_id);
 		$parallel_courses = $this->getParallelCourses($try_to_book_course, $booked_courses);
 
