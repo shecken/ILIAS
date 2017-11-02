@@ -271,6 +271,27 @@ class ilObjCourseGUI extends ilContainerGUI
 							   "<strong>".nl2br(
 							   ilUtil::makeClickable($this->object->getImportantInformation(), true)."</strong>"));
 		}
+
+		// cat-tms-patch start
+		// plugin (CourseClassification)
+		global $tree;
+		$cc_instances = $tree->getChildsByType(
+			$this->object->getRefId(),
+			'xccl'
+		);
+
+		if(count($cc_instances)!==0 || ilPluginAdmin::isPluginActive('xccl') !== false) {
+			$cc = array_shift($cc_instances);
+			$cc_object = ilObjectFactory::getInstanceByRefId($cc["child"]);
+			$txt = $cc_object->txtClosure();
+			;
+			$info->addProperty($txt('goals'),
+				nl2br(ilUtil::makeClickable ($cc_object->getCourseClassification()->getGoals(),
+					true))
+			);
+		}
+		// cat-tms-patch end
+
 		if(strlen($this->object->getSyllabus()))
 		{
 			$info->addProperty($this->lng->txt('crs_syllabus'), nl2br(
