@@ -54,7 +54,7 @@ class ilTrainingSearchGUI {
 		$this->db = $db;
 		$this->helper = $helper;
 
-		$this->g_lng->loadLanguageModule('tsearch');
+		$this->g_lng->loadLanguageModule('tms');
 	}
 
 	public function executeCommand() {
