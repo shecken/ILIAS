@@ -31,7 +31,7 @@ class ilTrainingSearchTableGUI {
 
 		$this->helper = $helper;
 
-		$this->g_lng->loadLanguageModule('tsearch');
+		$this->g_lng->loadLanguageModule('tms');
 	}
 
 	/**
