@@ -60,7 +60,7 @@ class UnboundCourseProvider extends Base {
 				$ret[] = new CourseInfoImpl
 						( $entity
 						, $lng->txt("status")
-						, $lng->txt("member")
+						, $lng->txt("booked_as_member")
 						, ""
 						, 600
 						, [
@@ -73,7 +73,7 @@ class UnboundCourseProvider extends Base {
 				$ret[] = new CourseInfoImpl
 						( $entity
 						, $lng->txt("status")
-						, $lng->txt("waitinglist")
+						, $lng->txt("booked_on_waitinglist")
 						, ""
 						, 600
 						, [

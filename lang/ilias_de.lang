@@ -15989,5 +15989,5 @@ common#:#cockpit#:#Cockpit
 tms#:#no_detail_infos#:#<strong><i>Leider liegen keine Detailinfos vor!</i></strong>
 tms#:#overview_header#:#Zusammenfassung
 tms#:#no_trainings_available#:#Derzeit stehen für Sie keine Trainings zur Buchung zur Verfügung.
-tms#:#waitinglist#:#Warteliste
-tms#:#member#:#Teilnehmer
+tms#:#booked_on_waitinglist#:#gebucht auf Warteliste
+tms#:#booked_as_member#:#gebucht
