@@ -150,7 +150,7 @@ class UnboundCourseProvider extends Base {
 				);
 			}
 
-			if($address != "") {
+			if($name != "") {
 				$ret[] = new CourseInfoImpl
 					( $entity
 					, $txt("title")
@@ -162,7 +162,9 @@ class UnboundCourseProvider extends Base {
 						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
 					  ]
 					);
+			}
 
+			if($address != "") {
 				$ret[] = new CourseInfoImpl
 					( $entity
 					, $txt("address")
@@ -174,7 +176,9 @@ class UnboundCourseProvider extends Base {
 						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
 					  ]
 					);
+			}
 
+			if($postcode != "" || $city != "") {
 				$ret[] = new CourseInfoImpl
 					( $entity
 					, ""
