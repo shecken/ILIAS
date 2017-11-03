@@ -135,7 +135,7 @@ class UnboundCourseProvider extends Base {
 		if(ilPluginAdmin::isPluginActive('venues')) {
 			$vplug = ilPluginAdmin::getPluginObjectById('venues');
 			$txt = $vplug->txtClosure();
-			list($venue_id, $city, $address) = $vplug->getVenueInfos($crs_id);
+			list($venue_id, $city, $address, $name, $postcode) = $vplug->getVenueInfos($crs_id);
 
 			if($city != "") {
 				$ret[] = new CourseInfoImpl
@@ -152,16 +152,40 @@ class UnboundCourseProvider extends Base {
 
 			if($address != "") {
 				$ret[] = new CourseInfoImpl
-				( $entity
-				, $txt("address")
-				, $address.", ".$city
-				, ""
-				, 350
-				, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
-					CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
-					CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
-				  ]
-				);
+					( $entity
+					, $txt("title")
+					, $name
+					, ""
+					, 350
+					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
+						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
+					  ]
+					);
+
+				$ret[] = new CourseInfoImpl
+					( $entity
+					, $txt("address")
+					, $address
+					, ""
+					, 360
+					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
+						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
+					  ]
+					);
+
+				$ret[] = new CourseInfoImpl
+					( $entity
+					, ""
+					, $postcode." ".$city
+					, ""
+					, 370
+					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
+						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
+					  ]
+					);
 			}
 		}
 		return $ret;
