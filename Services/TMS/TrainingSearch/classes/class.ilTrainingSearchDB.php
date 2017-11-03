@@ -17,6 +17,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	public function __construct(ilBookableFilter $filter, Helper $helper) {
 		global $DIC;
 
+		$this->g_objDefinition = $DIC["objDefinition"];
 		$this->g_db = $DIC->database();
 		$this->g_tree = $DIC->repositoryTree();
 
@@ -85,12 +86,38 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 */
 	protected function addCourseClassification($crs_infos) {
 		foreach ($crs_infos as $key => &$crs_info) {
-			foreach($this->g_tree->getChildsByType($crs_info["crs"]->getRefId(), "xccl") as $cc_info) {
-				$crs_info["xccl"] = ilObjectFactory::getInstanceByRefId($cc_info["ref_id"]);
-			}
+			$crs_info["xccl"] = $this->getFirstChildOfByType($crs_info["crs"]->getRefId(), "xccl");
 		}
 
 		return $crs_infos;
+	}
+
+	/**
+	 * Get first child by type recursive
+	 *
+	 * @param int 	$ref_id
+	 * @param string 	$search_type
+	 *
+	 * @return Object 	of search type
+	 */
+	protected function getFirstChildOfByType($ref_id, $search_type) {
+		$childs = $this->g_tree->getChilds($ref_id);
+
+		foreach ($childs as $child) {
+			$type = $child["type"];
+			if($type == $search_type) {
+				return \ilObjectFactory::getInstanceByRefId($child["child"]);
+			}
+
+			if($this->g_objDefinition->isContainer($type)) {
+				$ret = $this->getChildrenRefIdOfByType($child["child"], $search_type);
+				if(! is_null($ret)) {
+					return $ret;
+				}
+			}
+		}
+
+		return null;
 	}
 
 	/**
