@@ -293,13 +293,6 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 				continue;
 			}
 
-			if(array_key_exists(Helper::F_PROVIDER, $filter)
-				&& !$this->filter->courseHasProvider($provider_id, (int)$filter[Helper::F_PROVIDER])
-			) {
-				unset($crs_infos[$key]);
-				continue;
-			}
-
 			$ret[] = $this->getBookableCourse((int)$crs->getRefId(),
 				$title,
 				$type,

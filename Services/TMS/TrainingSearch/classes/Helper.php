@@ -131,26 +131,6 @@ class Helper {
 			$form->addItem($item);
 		}
 
-		if(ilPluginAdmin::isPluginActive('venues')) {
-			$plugin = ilPluginAdmin::getPluginObjectById('venues');
-			$actions = $plugin->getActions();
-
-			$item = new ilSelectInputGUI($this->g_lng->txt('city'), self::F_CITY);
-			$options = array(-1 => "Alle") + $actions->getVenueOptions();
-			$item->setOptions($options);
-			$form->addItem($item);
-		}
-
-		if(ilPluginAdmin::isPluginActive('trainingprovider')) {
-			$plugin = ilPluginAdmin::getPluginObjectById('trainingprovider');
-			$actions = $plugin->getActions();
-
-			$item = new ilSelectInputGUI($this->g_lng->txt('provider'), self::F_PROVIDER);
-			$options = array(-1 => "Alle") + $actions->getProviderOptions();
-			$item->setOptions($options);
-			$form->addItem($item);
-		}
-
 		$item = new ilDateDurationInputGUI($this->g_lng->txt('duration'), self::F_DURATION);
 		$item->setStart(new ilDateTime(date("Y-01-01 00:00:00"), IL_CAL_DATETIME));
 		$item->setEnd(new ilDateTime(date("Y-12-31 23:59:59"), IL_CAL_DATETIME));
