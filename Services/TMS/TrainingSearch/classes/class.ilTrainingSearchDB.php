@@ -110,7 +110,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			}
 
 			if($this->g_objDefinition->isContainer($type)) {
-				$ret = $this->getChildrenRefIdOfByType($child["child"], $search_type);
+				$ret = $this->getFirstChildOfByType($child["child"], $search_type);
 				if(! is_null($ret)) {
 					return $ret;
 				}
