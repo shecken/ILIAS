@@ -177,6 +177,11 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 */
 	protected function getParallelCourseMessage(array $parallel_courses) {
 		$tpl = new \ilTemplate("tpl.parallel_courses.html", true, true, "Services/TMS");
+
+		$tpl->setVariable("BOOKING_NOT_POSSIBLE", $this->g_lng->txt("booking_not_possible"));
+		$tpl->setVariable("CUTTING_TRAININGS", $this->g_lng->txt("cutting_trainings"));
+		$tpl->setVariable("INFO_CAN_STORNO", $this->g_lng->txt("info_can_storno"));
+
 		foreach ($parallel_courses as $key => $parallel_course) {
 			$course_start = $this->formatDate($parallel_course->getCourseStart());
 			$course_end = $this->formatDate($parallel_course->getCourseEnd());
