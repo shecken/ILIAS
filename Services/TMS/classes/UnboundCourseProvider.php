@@ -24,6 +24,7 @@ class UnboundCourseProvider extends Base {
 		global $DIC;
 		$lng = $DIC["lng"];
 		$lng->loadLanguageModule("tms");
+		$lng->loadLanguageModule("crs");
 		$user = $DIC->user();
 		$object = $entity->object();
 
@@ -83,8 +84,21 @@ class UnboundCourseProvider extends Base {
 			}
 
 			$venue_components = $this->getVenueComponents($entity, (int)$object->getId());
+			$ret = array_merge($ret, $venue_components);
 
-			return array_merge($ret, $venue_components);
+			$ret[] = new CourseInfoImpl
+						( $entity
+						, $lng->txt("crs_important_info")
+						, nl2br($object->getImportantInformation())
+						, ""
+						, 1000
+						, [
+							CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
+							CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
+						  ]
+					);
+
+			return $ret;
 		}
 		throw new \InvalidArgumentException("Unexpected component type '$component_type'");
 	}
