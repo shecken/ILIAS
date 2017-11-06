@@ -86,10 +86,12 @@ class UnboundCourseProvider extends Base {
 			$venue_components = $this->getVenueComponents($entity, (int)$object->getId());
 			$ret = array_merge($ret, $venue_components);
 
-			$ret[] = new CourseInfoImpl
+			$crs_important_info = nl2br(trim($object->getImportantInformation()));
+			if($crs_important_info != "") {
+				$ret[] = new CourseInfoImpl
 						( $entity
 						, $lng->txt("crs_important_info")
-						, nl2br($object->getImportantInformation())
+						, $crs_important_info
 						, ""
 						, 1000
 						, [
@@ -97,6 +99,8 @@ class UnboundCourseProvider extends Base {
 							CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
 						  ]
 					);
+			}
+			
 
 			return $ret;
 		}
