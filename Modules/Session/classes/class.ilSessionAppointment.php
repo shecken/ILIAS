@@ -71,9 +71,9 @@ class ilSessionAppointment implements ilDatePeriod
 			$info['fullday'] = $row->fulltime;
 			
 			// cat-tms-patch start
-			$date = new ilDateTime($row->e_start,IL_CAL_DATETIME,$user->getTimeZone());
+			$date = new ilDateTime($row->e_start,IL_CAL_DATETIME,'UTC');
 			$info['start'] =  $date->getUnixTime();
-			$date = new ilDateTime($row->e_end,IL_CAL_DATETIME,$user->getTimeZone());
+			$date = new ilDateTime($row->e_end,IL_CAL_DATETIME,'UTC');
 			$info['end'] = $date->getUnixTime();
 			// cat-tms-patch end
 			return $info;
