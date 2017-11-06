@@ -384,8 +384,8 @@ class ilSessionAppointment implements ilDatePeriod
 		}
 		else {
 			$offset = "-1";
-			$start = $this->getStart()->get(IL_CAL_DATETIME,'',$this->g_user->getTimeZone());
-			$end = $this->getEnd()->get(IL_CAL_DATETIME,'',$this->g_user->getTimeZone());
+			$start = $this->getStart()->get(IL_CAL_DATETIME,'','UTC');
+			$end = $this->getEnd()->get(IL_CAL_DATETIME,'','UTC');
 		}
 
 		$query = "INSERT INTO event_appointment (appointment_id,event_id,e_start,e_end,fulltime,days_offset) ".
