@@ -511,8 +511,8 @@ class ilSessionAppointment implements ilDatePeriod
 			// cat-tms patch start
 			else
 			{
-				$this->start = new ilDateTime($row->e_start,IL_CAL_DATETIME,$user->getTimeZone());
-				$this->end = new ilDateTime($row->e_end,IL_CAL_DATETIME,$user->getTimeZone());
+				$this->start = new ilDateTime($row->e_start,IL_CAL_DATETIME,'UTC');
+				$this->end = new ilDateTime($row->e_end,IL_CAL_DATETIME,'UTC');
 			}
 			$this->starting_time = $this->start->getUnixTime();
 			$this->ending_time = $this->end->getUnixTime();
