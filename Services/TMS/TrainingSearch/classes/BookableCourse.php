@@ -26,7 +26,7 @@ class BookableCourse {
 	protected $type;
 
 	/**
-	 * @var ilDateTime
+	 * @var ilDateTime | null
 	 */
 	protected $begin_date;
 
@@ -51,7 +51,7 @@ class BookableCourse {
 	protected $topics;
 
 	/**
-	 * @var ilDateTime
+	 * @var ilDateTime | null
 	 */
 	protected $end_date;
 
@@ -74,12 +74,12 @@ class BookableCourse {
 		($ref_id,
 		$title,
 		$type,
-		ilDateTime $begin_date,
+		ilDateTime $begin_date = null,
 		$bookings_available,
 		array $target_group,
 		$goals,
 		array $topics,
-		ilDateTime $end_date,
+		ilDateTime $end_date = null,
 		$location,
 		$address,
 		$fee
