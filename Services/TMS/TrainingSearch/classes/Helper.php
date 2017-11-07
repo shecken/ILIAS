@@ -13,6 +13,13 @@ class Helper {
 	const F_PROVIDER = "f_provider";
 	const F_NOT_MIN_MEMBER = "f_not_min_member";
 	const F_DURATION = "f_duration";
+	const F_SORT_VALUE = "f_sort_value";
+
+	const S_ALL = "s_all";
+	const S_TITLE = "s_title";
+	const S_PERIOD = "s_period";
+	const S_TYPE = "s_type";
+	const S_CITY = "s_city";
 
 	/**
 	 * @var ilObjUser
@@ -173,34 +180,29 @@ class Helper {
 	 */
 	public function getFilterValuesFrom(array $values) {
 		$filter = array();
-		$title = trim($values[self::F_TITLE]);
-		if($title != "") {
-			$filter[self::F_TITLE] = $title;
+
+		if(array_key_exists(self::F_TITLE, $values)
+			&& trim($values[self::F_TITLE]) != ""
+		) {
+			$filter[self::F_TITLE] = trim($values[self::F_TITLE]);
 		}
 
-		$type = $values[self::F_TYPE];
-		if($type != -1) {
-			$filter[self::F_TYPE] = $type;
+		if(array_key_exists(self::F_TYPE, $values)
+			&& (int)$values[self::F_TYPE] != -1
+		) {
+			$filter[self::F_TYPE] = (int)$values[self::F_TYPE];
 		}
 
-		$topic = $values[self::F_TOPIC];
-		if($topic != -1) {
-			$filter[self::F_TOPIC] = $topic;
+		if(array_key_exists(self::F_TOPIC, $values)
+			&& (int)$values[self::F_TOPIC] != -1
+		) {
+			$filter[self::F_TOPIC] = (int)$values[self::F_TOPIC];
 		}
 
-		$target_group = $values[self::F_TARGET_GROUP];
-		if($target_group != -1) {
-			$filter[self::F_TARGET_GROUP] = $target_group;
-		}
-
-		$city = $values[self::F_CITY];
-		if($city != -1) {
-			$filter[self::F_CITY] = $city;
-		}
-
-		$provider = $values[self::F_PROVIDER];
-		if($provider != -1) {
-			$filter[self::F_PROVIDER] = $provider;
+		if(array_key_exists(self::F_TARGET_GROUP, $values)
+			&& (int)$values[self::F_TARGET_GROUP] != -1
+		) {
+			$filter[self::F_TARGET_GROUP] = (int)$values[self::F_TARGET_GROUP];
 		}
 
 		$not_min_member = $values[self::F_NOT_MIN_MEMBER];
@@ -208,7 +210,9 @@ class Helper {
 			$filter[self::F_NOT_MIN_MEMBER] = $not_min_member;
 		}
 
-		$filter[self::F_DURATION] = $values[self::F_DURATION];
+		if(array_key_exists(self::F_DURATION, $values)) {
+			$filter[self::F_DURATION] = $values[self::F_DURATION];
+		}
 
 		return $filter;
 	}
@@ -230,6 +234,15 @@ class Helper {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Get the option for sorting of table
+	 *
+	 * @return string[]
+	 */
+	public function getSortOptions() {
+		return array(Helper::S_ALL, Helper::S_TITLE, Helper::S_PERIOD, Helper::S_TYPE, Helper::S_CITY);
 	}
 }
 
