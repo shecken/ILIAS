@@ -50,12 +50,12 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	public function getBookableCourse($ref_id,
 				$crs_title,
 				$type,
-				ilDateTime $start_date,
+				ilDateTime $start_date = null,
 				$bookings_available,
 				array $target_group,
 				$goals,
 				array $topics,
-				ilDateTime $end_date,
+				ilDateTime $end_date = null,
 				$city,
 				$address,
 				$costs = "KOSTEN"
@@ -236,26 +236,23 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			$end_date = $crs->getCourseEnd();
 			$title = $crs->getTitle();
 
-			if($start_date === null) {
-				unset($crs_infos[$key]);
-				continue;
-			}
-
-			list($max_member, $booking_start_date, $booking_end_date, $waiting_list, $min_member, $bookings_available) = $this->helper->getBestBkmValues($value["xbkm"], $start_date);
+			list($min_member, $max_member, $booking_start, $booking_end, $waiting_list) = $this->helper->getBestBkmValues($value["xbkm"]);
 			list($venue_id, $city, $address) = $this->helper->getVenueInfos($crs->getId());
 			list($type_id,$type,$target_group_ids,$target_group,$goals,$topic_ids,$topics) = $this->helper->getCourseClassificationValues($value["xccl"]);
 			list($provider_id) = $this->helper->getProviderInfos($crs->getId());
 
-			if(!$this->filter->isInBookingPeriod($booking_start_date, $booking_end_date)) {
-				unset($crs_infos[$key]);
-				continue;
-			}
+			if($start_date) {
+				if(!$this->filter->isInBookingPeriod($start_date, $booking_start, $booking_end)) {
+					unset($crs_infos[$key]);
+					continue;
+				}
 
-			if(array_key_exists(Helper::F_DURATION, $filter)
-				&& !$this->filter->courseInFilterPeriod($start_date, $filter[Helper::F_DURATION]["start"], $filter[Helper::F_DURATION]["end"])
-			) {
-				unset($crs_infos[$key]);
-				continue;
+				if(array_key_exists(Helper::F_DURATION, $filter)
+					&& !$this->filter->courseInFilterPeriod($start_date, $filter[Helper::F_DURATION]["start"], $filter[Helper::F_DURATION]["end"])
+				) {
+					unset($crs_infos[$key]);
+					continue;
+				}
 			}
 
 			if(array_key_exists(Helper::F_TARGET_GROUP, $filter)
@@ -301,7 +298,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 				$title,
 				$type,
 				$start_date,
-				$bookings_available,
+				"",
 				$target_group,
 				$goals,
 				$topics,
