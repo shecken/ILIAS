@@ -235,7 +235,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			}
 
 			if($this->g_objDefinition->isContainer($type)) {
-				$rec_ret = $this->getFirstChildOfByType($child["child"], $search_type);
+				$rec_ret = $this->getAllChildrenOfByType($child["child"], $search_type);
 				if(! is_null($rec_ret)) {
 					$ret = array_merge($ret, $rec_ret);
 				}
