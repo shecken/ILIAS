@@ -168,7 +168,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	}
 
 	/**
-	 * Cherck user has needed permissions to view the course
+	 * Check user has needed permissions to view the course
 	 *
 	 * @param int 	$user_id
 	 * @param int 	$crs_ref_id
