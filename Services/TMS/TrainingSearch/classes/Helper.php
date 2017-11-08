@@ -32,13 +32,12 @@ class Helper {
 	 * Get needed values from bkm. Just best for user
 	 *
 	 * @param ilObjBookingModalities[] 	$bms
-	 * @param ilDateTime 	$crs_start_date
 	 *
-	 * @return array<integer, int | ilDateTime | string>
+	 * @return array<integer, int | string>
 	 */
-	public function getBestBkmValues(array $bkms, ilDateTime $crs_start_date) {
-		$plugin = ilPluginAdmin::getPluginObjectById('xbkm');
-		return $plugin->getBestBkmValues($bkms, $crs_start_date);
+	public function getBestBkmValues(array $bkms) {
+		require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/BookingModalities/classes/class.ilBookingModalitiesPlugin.php");
+		return ilBookingModalitiesPlugin::bestValuesForUser($bkms);
 	}
 
 	/**
