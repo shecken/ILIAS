@@ -362,11 +362,15 @@ class ilSessionAppointment implements ilDatePeriod
 		$new_app->setStartingTime($this->getStartingTime());
 		$new_app->setEndingTime($this->getEndingTime());
 		$new_app->toggleFullTime($this->isFullday());
+		// cat-tms-patch start
+		$new_app->setDaysOffset($this->getDaysOffset());
+		// cat-tms-patch end
 		$new_app->create();
 		return $new_app;
 	}
+
 	// cat-tms-patch start
-	function create($hour_start = 8, $minute_start = 0, $hour_end = 16, $minute_end = 0)
+	function create()
 	{
 		global $ilDB;
 		if(!$this->getSessionId())
@@ -375,27 +379,19 @@ class ilSessionAppointment implements ilDatePeriod
 		}
 		$next_id = $ilDB->nextId('event_appointment');
 
-		if($this->getDaysOffset() !== null)
-		{
-
-			$session = ilObjectFactory::getInstanceByObjId($this->getSessionId());
-			$offset = $ilDB->quote($this->getDaysOffset(), 'integer');
-			list($start, $end) = $session->getStartTimeDependingOnCourse($this->getDaysOffset(), $hour_start, $minute_start, $hour_end, $minute_end);
-		}
-		else {
-			$offset = "-1";
-			$start = $this->getStart()->get(IL_CAL_DATETIME,'',$this->g_user->getTimeZone());
-			$end = $this->getEnd()->get(IL_CAL_DATETIME,'',$this->g_user->getTimeZone());
+		$days_offset = $this->getDaysOffset();
+		if($days_offset === null) {
+			$days_offset = -1;
 		}
 
 		$query = "INSERT INTO event_appointment (appointment_id,event_id,e_start,e_end,fulltime,days_offset) ".
 			"VALUES( ".
 			$ilDB->quote($next_id,'integer').", ".
 			$ilDB->quote($this->getSessionId() ,'integer').", ".
-			$ilDB->quote($start, 'timestamp').", ".
-			$ilDB->quote($end,'timestamp').", ".
+			$ilDB->quote($this->start->get(IL_CAL_DATETIME,'','UTC'), 'timestamp').", ".
+			$ilDB->quote($this->end->get(IL_CAL_DATETIME,'','UTC'),'timestamp').", ".
 			$ilDB->quote($this->enabledFullTime() ,'integer').", ".
-			$offset." ".
+			$ilDB->quote($days_offset ,'integer').
 			")";
 		// cat-tms-patch end
 
@@ -520,7 +516,7 @@ class ilSessionAppointment implements ilDatePeriod
 				$this->days_offset = null;
 			}
 			else {
-				$this->days_offset = $row->days_offset;
+				$this->days_offset = (int)$row->days_offset;
 			}
 			// cat-tms patch end
 		}
