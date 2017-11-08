@@ -36,8 +36,11 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			$this->xbkm = ilPluginAdmin::getPluginObjectById('xbkm');
 
 			$crss = $this->getAllCourses($user_id);
+			var_dump(count($crss));
 			$crss = $this->filterCoursesUserIsBookedTo($user_id, $crss);
-			$crss = $this->filterCoursesUserIsHaNoPermissionsTo($user_id, $crss);
+			var_dump(count($crss));
+			$crss = $this->filterCoursesUserHasNoPermissionsTo($user_id, $crss);
+			var_dump(count($crss));
 			$crss = $this->addBookingModalitiesOfCourses($crss);
 			$crss = $this->addCourseClassification($crss);
 			$crss = $this->createBookableCourseByFilter($crss, $filter);
@@ -112,17 +115,15 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 * @return array<ilObjCourse>
 	 */
 	protected function filterCoursesUserIsBookedTo($user_id, array $crss) {
-		foreach ($crss as $key => $value) {
+		return array_filter($crss, function ($value) use ($user_id) {
 			$crs = $value["crs"];
 
-			require_once("Modules/Course/classes/class.ilCourseParticipants.php");
-			require_once("Services/Membership/classes/class.ilWaitingList.php");
 			if($this->userIsOnCourse($user_id, $crs->getRefId(), $crs->getId())) {
-				unset($crss[$key]);
+				return false;
 			}
-		}
 
-		return $crss;
+			return true;
+		});
 	}
 
 	/**
@@ -154,16 +155,16 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 *
 	 * @return array<ilObjCourse>
 	 */
-	protected function filterCoursesUserIsHaNoPermissionsTo($user_id, array $crss) {
-		foreach ($crss as $key => $value) {
+	protected function filterCoursesUserHasNoPermissionsTo($user_id, array $crss) {
+		return array_filter($crss, function($value) use ($user_id) {
 			$crs = $value["crs"];
 
 			if(!$this->userHasPermissions($user_id, $crs->getRefId())) {
-				unset($crss[$key]);
+				return false;
 			}
-		}
 
-		return $crss;
+			return true;
+		});
 	}
 
 	/**
