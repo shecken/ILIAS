@@ -303,6 +303,11 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 					unset($crs_infos[$key]);
 					continue;
 				}
+
+				if($this->filter->courseIsExpired($start_date)) {
+					unset($crs_infos[$key]);
+					continue;
+				}
 			}
 
 			if(array_key_exists(Helper::F_TARGET_GROUP, $filter)
