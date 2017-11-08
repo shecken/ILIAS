@@ -36,11 +36,8 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			$this->xbkm = ilPluginAdmin::getPluginObjectById('xbkm');
 
 			$crss = $this->getAllCourses($user_id);
-			var_dump(count($crss));
 			$crss = $this->filterCoursesUserIsBookedTo($user_id, $crss);
-			var_dump(count($crss));
 			$crss = $this->filterCoursesUserHasNoPermissionsTo($user_id, $crss);
-			var_dump(count($crss));
 			$crss = $this->addBookingModalitiesOfCourses($crss);
 			$crss = $this->addCourseClassification($crss);
 			$crss = $this->createBookableCourseByFilter($crss, $filter);
@@ -291,17 +288,15 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			$end_date = $crs->getCourseEnd();
 			$title = $crs->getTitle();
 
-			list($min_member, $max_member, $booking_start, $booking_end, $waiting_list) = $this->helper->getBestBkmValues($value["xbkm"]);
+			if(count($value["xbkm"]) > 0) {
+				list($min_member, $max_member, $booking_start, $booking_end, $waiting_list) = $this->helper->getBestBkmValues($value["xbkm"]);
+			}
+
 			list($venue_id, $city, $address) = $this->helper->getVenueInfos($crs->getId());
 			list($type_id,$type,$target_group_ids,$target_group,$goals,$topic_ids,$topics) = $this->helper->getCourseClassificationValues($value["xccl"]);
 			list($provider_id) = $this->helper->getProviderInfos($crs->getId());
 
 			if($start_date) {
-				if(!$this->filter->isInBookingPeriod($start_date, $booking_start, $booking_end)) {
-					unset($crs_infos[$key]);
-					continue;
-				}
-
 				if(array_key_exists(Helper::F_DURATION, $filter)
 					&& !$this->filter->courseInFilterPeriod($start_date, $filter[Helper::F_DURATION]["start"], $filter[Helper::F_DURATION]["end"])
 				) {
@@ -342,7 +337,8 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 				continue;
 			}
 
-			if(array_key_exists(Helper::F_NOT_MIN_MEMBER, $filter)
+			if($min_member !== null
+				&& array_key_exists(Helper::F_NOT_MIN_MEMBER, $filter)
 				&& $this->filter->minMemberReached($crs->getRefId(), $min_member)
 			) {
 				unset($crs_infos[$key]);
