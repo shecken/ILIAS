@@ -260,7 +260,7 @@ class gevOrguSuperiorMailData extends ilMailData
 				return "dezentrales $a_type";
 			case "Grundausbildung (AD)":
 				return $a_type." (Grundausbildung)";
-			case "Azubi-Ausbildung":
+			case "Azubi-Ausbildung (AD)":
 				return $a_type." (Azubi-Ausbildung)";
 			default:
 				return $a_type;
