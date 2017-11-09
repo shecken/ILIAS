@@ -232,9 +232,6 @@ class gevCourseSearchGUI {
 		$title = new ilTextInputGUI($this->gLng->txt("title"), "title");
 		$form->addItem($title);
 		
-		$custom_id = new ilTextInputGUI($this->gLng->txt("gev_course_id"), "custom_id");
-		$form->addItem($custom_id);
-		
 		/*$type = new ilSelectInputGUI($this->gLng->txt("gev_course_type"), "type");
 		$type->setOptions(gevCourseUtils::getTypeOptions());
 		$form->addItem($type);*/
