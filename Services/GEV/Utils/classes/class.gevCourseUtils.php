@@ -3136,11 +3136,7 @@ class gevCourseUtils
 		$officer_contact = $this->getTrainingOfficerContactInfo();
 
 		$vals = array(
-			  array( $this->gLng->txt("gev_course_id")
-				   , true
-				   , $this->getCustomId()
-				   )
-			, array( $this->gLng->txt("gev_course_type")
+			  array( $this->gLng->txt("gev_course_type")
 				   , true
 				   , implode(", ", $this->getType())
 				   )
