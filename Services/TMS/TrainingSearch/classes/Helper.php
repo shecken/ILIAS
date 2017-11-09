@@ -9,7 +9,6 @@ class Helper {
 	const F_TYPE = "f_type";
 	const F_TOPIC = "f_topic";
 	const F_TARGET_GROUP = "f_target";
-	const F_NOT_MIN_MEMBER = "f_not_min_member";
 	const F_DURATION = "f_duration";
 
 	/**
@@ -131,11 +130,6 @@ class Helper {
 		$item = new ilDateDurationInputGUI($this->g_lng->txt('duration'), self::F_DURATION);
 		$item->setStart(new ilDateTime(date("Y-01-01 00:00:00"), IL_CAL_DATETIME));
 		$item->setEnd(new ilDateTime(date("Y-12-31 23:59:59"), IL_CAL_DATETIME));
-		$form->addItem($item);
-
-		$item = new ilCheckboxInputGUI("", self::F_NOT_MIN_MEMBER);
-		$item->setInfo($this->g_lng->txt('not_min_member'));
-		$item->setValue(1);
 		$form->addItem($item);
 
 		$item = new ilHiddenInputGUI('cmd');
