@@ -152,10 +152,24 @@ class Helper {
 		$submit = $this->g_factory->button()->primary($this->g_lng->txt('search'), "#")->withOnLoadCode(function($id) use ($form_id) {
 			return "$('#{$id}').click(function() { $('#{$form_id}').submit(); return false; });";
 		});
- 
+
+		$reset = $this->g_factory->button()->standard($this->g_lng->txt('reset'), "#")->withOnLoadCode(function($id) use ($form_id) {
+			$dur1 = '$("input[name=\'f_duration[start]\']").val("'.date("01.01.Y").'");';
+			$dur2 = '$("input[name=\'f_duration[end]\']").val("'.date("31.01.Y").'");';
+			return "$('#{$id}').click(function() { 
+				$('#f_title').val('');
+				$('#f_type').val(-1);
+				$('#f_topic').val(-1);
+				$('#f_target').val(-1);
+				$('#f_not_min_member').prop('checked', false );
+				".$dur1."
+				".$dur2."
+				return false; 
+			});";
+		});
 
 		$modal = $this->g_factory->modal()->roundtrip($this->g_lng->txt('filter'), $this->g_factory->legacy($form->getHTML()))
-			->withActionButtons([$submit]);
+			->withActionButtons([$reset, $submit]);
 
 		$button1 = $this->g_factory->button()->standard($this->g_lng->txt('search'), '#')
 			->withOnClick($modal->getShowSignal());
