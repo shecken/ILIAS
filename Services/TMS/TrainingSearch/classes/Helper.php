@@ -9,8 +9,6 @@ class Helper {
 	const F_TYPE = "f_type";
 	const F_TOPIC = "f_topic";
 	const F_TARGET_GROUP = "f_target";
-	const F_CITY = "f_city";
-	const F_PROVIDER = "f_provider";
 	const F_NOT_MIN_MEMBER = "f_not_min_member";
 	const F_DURATION = "f_duration";
 
