@@ -9,8 +9,6 @@ class Helper {
 	const F_TYPE = "f_type";
 	const F_TOPIC = "f_topic";
 	const F_TARGET_GROUP = "f_target";
-	const F_CITY = "f_city";
-	const F_PROVIDER = "f_provider";
 	const F_NOT_MIN_MEMBER = "f_not_min_member";
 	const F_DURATION = "f_duration";
 
@@ -154,10 +152,24 @@ class Helper {
 		$submit = $this->g_factory->button()->primary($this->g_lng->txt('search'), "#")->withOnLoadCode(function($id) use ($form_id) {
 			return "$('#{$id}').click(function() { $('#{$form_id}').submit(); return false; });";
 		});
- 
+
+		$reset = $this->g_factory->button()->standard($this->g_lng->txt('reset'), "#")->withOnLoadCode(function($id) use ($form_id) {
+			$dur1 = '$("input[name=\'f_duration[start]\']").val("'.date("01.01.Y").'");';
+			$dur2 = '$("input[name=\'f_duration[end]\']").val("'.date("31.01.Y").'");';
+			return "$('#{$id}').click(function() { 
+				$('#f_title').val('');
+				$('#f_type').val(-1);
+				$('#f_topic').val(-1);
+				$('#f_target').val(-1);
+				$('#f_not_min_member').prop('checked', false );
+				".$dur1."
+				".$dur2."
+				return false; 
+			});";
+		});
 
 		$modal = $this->g_factory->modal()->roundtrip($this->g_lng->txt('filter'), $this->g_factory->legacy($form->getHTML()))
-			->withActionButtons([$submit]);
+			->withActionButtons([$reset, $submit]);
 
 		$button1 = $this->g_factory->button()->standard($this->g_lng->txt('search'), '#')
 			->withOnClick($modal->getShowSignal());
@@ -190,16 +202,6 @@ class Helper {
 		$target_group = $values[self::F_TARGET_GROUP];
 		if($target_group != -1) {
 			$filter[self::F_TARGET_GROUP] = $target_group;
-		}
-
-		$city = $values[self::F_CITY];
-		if($city != -1) {
-			$filter[self::F_CITY] = $city;
-		}
-
-		$provider = $values[self::F_PROVIDER];
-		if($provider != -1) {
-			$filter[self::F_PROVIDER] = $provider;
 		}
 
 		$not_min_member = $values[self::F_NOT_MIN_MEMBER];

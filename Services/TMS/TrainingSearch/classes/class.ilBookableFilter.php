@@ -136,6 +136,24 @@ class ilBookableFilter {
 	}
 
 	/**
+	 * Check course is expired
+	 *
+	 * @param ilDateTime 	$start_date
+	 *
+	 * @return bool
+	 */
+	public function courseIsExpired(ilDateTime $start_date) {
+		$today = date("Y-m-d");
+		$start_date->increment(ilDateTime::DAY, 1);
+
+		if($today >= $start_date->get(IL_CAL_DATE)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Checks crs has selected target group
 	 *
 	 * @param int[] 	$target_group_ids
