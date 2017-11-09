@@ -6434,3 +6434,15 @@ foreach (ilStudyProgrammeType::getAllTypes() as $type) {
 }
 
 ?>
+
+<#271>
+<?php
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+$credit_points_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_CREDIT_POINTS);
+global $ilDB;
+$q = 'UPDATE adv_md_values_int'
+	.'	SET value = 3*value'
+	.'	WHERE field_id = '.$ilDB->quote($credit_points_field_id,'integer')
+	.'	AND value IS NOT NULL';
+$ilDB->manipulate($q);
+?>
