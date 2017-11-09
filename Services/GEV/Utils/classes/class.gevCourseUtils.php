@@ -4104,9 +4104,34 @@ class gevCourseUtils
 	 *
 	 * @return	int[string]
 	 */
-	public function getCreditedDurationOfCourse()
+	public function getCreditedDuration()
 	{
 		$c_p = (int)$this->getCreditPoints();
 		return self::convertCreditpointsToTime($c_p);
+	}
+
+	/**
+	 * Same as above, but formated.
+	 */
+	public static function convertCreditpointsToFormattedDuration($c_p)
+	{
+		assert('is_int($c_p) || is_null($c_p)');
+		global $lng;
+		$wb_time = self::convertCreditpointsToTime((int)$c_p);
+		$hours = $wb_time[gevCourseUtils::CREDITED_DURATION_HOURS];
+		$minutes = $wb_time[gevCourseUtils::CREDITED_DURATION_MINUTES];
+		$wb_time = '';
+		if($hours > 0) {
+			$wb_time .= $hours.' '.$lng->txt('hours').' ';
+		}
+		if($minutes > 0) {
+			$wb_time .= $minutes.' '.$lng->txt('minutes');
+		}
+		return $wb_time;
+	}
+	public function getCreditedDurationFormatted()
+	{
+		$c_p = (int)$this->getCreditPoints();
+		return self::convertCreditpointsToFormattedDuration($c_p);
 	}
 }
