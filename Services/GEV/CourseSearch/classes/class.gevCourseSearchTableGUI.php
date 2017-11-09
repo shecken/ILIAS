@@ -168,16 +168,8 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		if($a_set["cancel_date"]) {
 			$show_cancel_date = ilDateTime::_before($now, $a_set["cancel_date"]);;
 		}
-		$wb_time = gevCourseUtils::convertCreditpointsToTime((int)$a_set["points"]);
-		$hours = $wb_time[gevCourseUtils::CREDITED_DURATION_HOURS];
-		$minutes = $wb_time[gevCourseUtils::CREDITED_DURATION_MINUTES];
-		$wb_time = '';
-		if($hours > 0) {
-			$wb_time .= $hours.' '.$this->gLng->txt('hours').' ';
-		}
-		if($minutes > 0) {
-			$wb_time .= $minutes.' '.$this->gLng->txt('minutes');
-		}
+
+		$wb_time = gevCourseUtils::convertCreditpointsToFormattedDuration($a_set['points']);
 
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("STATUS", $status);
