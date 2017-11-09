@@ -124,11 +124,11 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				$f->multiselectsearch(
 					$txt("course_type"),
 					"",
-					array("(hc.edu_program = ".$db->quote("dezentrales Training", "text")." AND hc.dct_type = ".$db->quote("fixed", "text").')'
+					array("(hc.edu_program = ".$db->quote("dezentrales Training (AD)", "text")." AND hc.dct_type = ".$db->quote("fixed", "text").')'
 								=> $txt("dec_fixed")
-							,"(hc.edu_program = ".$db->quote("dezentrales Training", "text")." AND hc.dct_type = ".$db->quote("flexible", "text").')'
+							,"(hc.edu_program = ".$db->quote("dezentrales Training (AD)", "text")." AND hc.dct_type = ".$db->quote("flexible", "text").')'
 								=> $txt("dec_flexible")
-							,"hc.edu_program != ".$db->quote("dezentrales Training", "text")
+							,"hc.edu_program != ".$db->quote("dezentrales Training (AD)", "text")
 					=> $txt("non_dec"))
 				),
 				$f->multiselectsearch(

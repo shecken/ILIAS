@@ -256,7 +256,7 @@ class gevOrguSuperiorMailData extends ilMailData
 		switch ($a_edu_program) {
 			case "zentrales Training":
 				return "zentrales $a_type";
-			case "dezentrales Training":
+			case "dezentrales Training (AD)":
 				return "dezentrales $a_type";
 			case "Grundausbildung":
 				return $a_type." (Grundausbildung)";
