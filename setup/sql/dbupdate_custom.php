@@ -6446,3 +6446,23 @@ $q = 'UPDATE adv_md_values_int'
 	.'	AND value IS NOT NULL';
 $ilDB->manipulate($q);
 ?>
+
+<#272>
+<?php
+$q = 'UPDATE hist_course'
+	.'	SET max_credit_points = 3*max_credit_points'
+	.'	WHERE max_credit_points != '.$ilDB->quote('-empty-','text')
+	.'		AND max_credit_points IS NOT NULL'
+	.'		AND max_credit_points != '.$ilDB->quote(-1,'integer');
+$ilDB->manipulate($q);
+?>
+
+<#273>
+<?php
+$q = 'UPDATE hist_usercoursestatus'
+	.'	SET credit_points = 3*credit_points'
+	.'	WHERE credit_points != '.$ilDB->quote(-1,'integer')
+	.'		AND credit_points != '.$ilDB->quote('-empty-','text')
+	.'		AND credit_points IS NOT NULL';
+$ilDB->manipulate($q);
+?>
