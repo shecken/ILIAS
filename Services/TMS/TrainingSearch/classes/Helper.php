@@ -158,9 +158,9 @@ class Helper {
 			$dur2 = '$("input[name=\'f_duration[end]\']").val("'.date("31.01.Y").'");';
 			return "$('#{$id}').click(function() { 
 				$('#f_title').val('');
-				$('#f_type').val(-1);
-				$('#f_topic').val(-1);
-				$('#f_target').val(-1);
+				$('#f_type option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
+				$('#f_topic option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
+				$('#f_target option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
 				$('#f_not_min_member').prop('checked', false );
 				".$dur1."
 				".$dur2."
