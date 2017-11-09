@@ -4079,4 +4079,34 @@ class gevCourseUtils
 		$crs_ref->createReference();
 		$crs_ref->putInTree($ref_id);
 	}
+
+	const CREDITED_DURATION_HOURS = 'hours';
+	const CREDITED_DURATION_MINUTES = 'minutes';
+
+	/**
+	 * Convert the credit points to a time-duration.
+	 *
+	 * @param	int	$c_p
+	 * @return	int[string]
+	 */
+	public static function convertCreditpointsToTime($c_p)
+	{
+		assert('is_int($c_p) || is_null($c_p)');
+		$minutes_over_full_hours_equivalent = $c_p%4;
+		$full_hours_equivalent = $c_p - $minutes_over_full_hours_equivalent;
+
+		return [self::CREDITED_DURATION_HOURS => $full_hours_equivalent/4
+				,self::CREDITED_DURATION_MINUTES => $minutes_over_full_hours_equivalent*15];
+	}
+
+	/**
+	 * Get the time-creditpoints equivalent of this course.
+	 *
+	 * @return	int[string]
+	 */
+	public function getCreditedDurationOfCourse()
+	{
+		$c_p = (int)$this->getCreditPoints();
+		return self::convertCreditpointsToTime($c_p);
+	}
 }
