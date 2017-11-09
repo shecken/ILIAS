@@ -9,11 +9,6 @@ require_once("Services/TMS/TrainingSearch/classes/TrainingSearchDB.php");
 require_once("Services/TMS/TrainingSearch/classes/Helper.php");
 
 class ilTrainingSearchDB implements TrainingSearchDB {
-	/**
-	 * @var ilObjBookingModalitiesPlugin
-	 */
-	protected $xbkm;
-
 	public function __construct(ilBookableFilter $filter, Helper $helper) {
 		global $DIC;
 
@@ -32,13 +27,10 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	public function getBookableTrainingsFor($user_id, array $filter) {
 		$crs_infos = array();
 
-		if(ilPluginAdmin::isPluginActive('xbkm') && ilPluginAdmin::isPluginActive('xccl')) {
-			$this->xbkm = ilPluginAdmin::getPluginObjectById('xbkm');
-
+		if(ilPluginAdmin::isPluginActive('xccl')) {
 			$crss = $this->getAllCourses($user_id);
 			$crss = $this->filterCoursesUserIsBookedTo($user_id, $crss);
 			$crss = $this->filterCoursesUserHasNoPermissionsTo($user_id, $crss);
-			$crss = $this->addBookingModalitiesOfCourses($crss);
 			$crss = $this->addCourseClassification($crss);
 			$crss = $this->createBookableCourseByFilter($crss, $filter);
 		}
@@ -183,22 +175,6 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	}
 
 	/**
-	 * Add all booking modalities of courses
-	 *
-	 * @param array<ilObjCourse> 	$crss
-	 *
-	 * @return array<ilObjCourse>
-	 */
-	protected function addBookingModalitiesOfCourses(array $crss) {
-		foreach ($crss as $key => &$value) {
-			$crs = $value["crs"];
-			$value["xbkm"] = $this->getAllChildrenOfByType($crs->getRefId(), "xbkm");
-		}
-
-		return $crss;
-	}
-
-	/**
 	 * Add first course classification of course
 	 *
 	 * @param array<int, ilObjCourse | ilObjBookingModalities[]>
@@ -288,10 +264,6 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			$end_date = $crs->getCourseEnd();
 			$title = $crs->getTitle();
 
-			if(count($value["xbkm"]) > 0) {
-				list($min_member, $max_member, $booking_start, $booking_end, $waiting_list) = $this->helper->getBestBkmValues($value["xbkm"]);
-			}
-
 			list($venue_id, $city, $address) = $this->helper->getVenueInfos($crs->getId());
 			list($type_id,$type,$target_group_ids,$target_group,$goals,$topic_ids,$topics) = $this->helper->getCourseClassificationValues($value["xccl"]);
 			list($provider_id) = $this->helper->getProviderInfos($crs->getId());
@@ -337,14 +309,6 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 
 			if(array_key_exists(Helper::F_TITLE, $filter)
 				&& !$this->filter->crsTitleStartsWith($title, $filter[Helper::F_TITLE])
-			) {
-				unset($crs_infos[$key]);
-				continue;
-			}
-
-			if($min_member !== null
-				&& array_key_exists(Helper::F_NOT_MIN_MEMBER, $filter)
-				&& $this->filter->minMemberReached($crs->getRefId(), $min_member)
 			) {
 				unset($crs_infos[$key]);
 				continue;
