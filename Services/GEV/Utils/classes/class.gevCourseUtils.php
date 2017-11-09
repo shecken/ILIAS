@@ -26,7 +26,7 @@ class gevCourseUtils
 	const CREATOR_ROLE_TITLE = "Pool Trainingsersteller";
 	const RECIPIENT_MEMBER = "Mitglied";
 	const RECIPIENT_STANDARD = "standard";
-	const CRS_TYPE_COACHING = "Praxisbegleitung";
+	const CRS_TYPE_COACHING = "Praxisbegleitung (AD)";
 
 	protected function __construct($a_crs_id)
 	{

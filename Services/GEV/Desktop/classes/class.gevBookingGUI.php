@@ -249,7 +249,7 @@ class gevBookingGUI
 	protected function isCoachingCourse()
 	{
 		if ($this->is_coaching === null) {
-			$this->is_coaching = $this->crs_utils->getType() == "Praxisbegleitung";
+			$this->is_coaching = $this->crs_utils->getType() == "Praxisbegleitung (AD)";
 		}
 		return $this->is_coaching;
 	}
