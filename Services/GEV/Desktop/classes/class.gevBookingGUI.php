@@ -333,10 +333,6 @@ class gevBookingGUI
 				   , $desc
 				   , $desc
 				   )
-			, array( $this->lng->txt("gev_course_id")
-				   , true
-				   , $this->crs_utils->getCustomId()
-				   )
 			, array( $this->lng->txt("gev_target_group")
 				   , true
 				   , $this->crs_utils->getTargetGroupDesc()
