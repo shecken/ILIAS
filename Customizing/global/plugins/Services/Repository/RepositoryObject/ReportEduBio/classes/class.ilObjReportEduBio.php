@@ -121,7 +121,6 @@ class ilObjReportEduBio extends ilObjReportBase
 				->select("usrcrs.okz")
 				->select("usrcrs.bill_id")
 				->select("usrcrs.booking_status")
-				->select_raw("IF(usrcrs.wbd_cancelled != 1, usrcrs.wbd_booking_id, NULL) wbd_booking_id")
 				->select("usrcrs.certificate_filename")
 				->select("oref.ref_id")
 				->from("hist_usercoursestatus usrcrs")
