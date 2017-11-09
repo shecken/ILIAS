@@ -80,12 +80,11 @@ class gevMyTrainingsAdminTableGUI extends catAccordionTableGUI {
 		$this->addColumn("", "expand", "0px", false, "catTableExpandButton");
 
 		$this->addColumn($this->gLng->txt("title"), "title");
-		$this->addColumn($this->gLng->txt("gev_training_id"), "custom_id");
 		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
 		$this->addColumn($this->gLng->txt("gev_location"), "location");
 		$this->addColumn($this->gLng->txt("date"), "start_date", "112px");
 		$this->addColumn($this->gLng->txt("tutor"));
-		$this->addColumn($this->gLng->txt("gev_my_trainings_admin_credit_points"));
+		$this->addColumn($this->gLng->txt("wb_time"));
 		$this->addColumn($this->gLng->txt("mbrcount"));
 		$this->addColumn($this->gLng->txt("status"));
 		$this->addColumn($this->gLng->txt("action"));
@@ -143,16 +142,14 @@ class gevMyTrainingsAdminTableGUI extends catAccordionTableGUI {
 				.' / ' .$a_set['mbr_min'] .'-' .$a_set['mbr_max'];
 
 		$course_link = $this->getCourseLink($a_set["obj_id"], $a_set["crs_ref_id"]);
-
+		$wb_time = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$a_set["credit_points"]);
 		$this->tpl->setVariable("TITLE_LINK", $course_link);
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
-		$this->tpl->setVariable("CUSTOM_ID", $a_set["custom_id"]);
 		$this->tpl->setVariable("TYPE", $a_set["type"]);
-		//$this->tpl->setVariable("CATEGORY", $a_set["category"]);
 		$this->tpl->setVariable("LOCATION", ($a_set["location"] != "") ? $a_set["location"] : $a_set["location_free_text"]);
 		$this->tpl->setVariable("DATE", $date);
 		$this->tpl->setVariable("TUTOR", implode(", ", $a_set["tutor"]));
-		$this->tpl->setVariable("CREDIT_POINTS", $a_set["credit_points"]);
+		$this->tpl->setVariable("CREDIT_POINTS", $wb_time);
 		$this->tpl->setVariable("MBRS", $mbrs);
 		$this->tpl->setVariable("STATUS", $this->statusPicture($a_set["status"]));
 		$this->tpl->setVariable("ACTIONS", $this->addActionMenu($a_set));
