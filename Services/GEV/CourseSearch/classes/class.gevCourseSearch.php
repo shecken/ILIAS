@@ -249,7 +249,7 @@ class gevCourseSearch {
 				 "   \nAND cs.activation_end > ".time().
 				 "   \nAND oref.deleted IS NULL\n".
 				 "   AND is_template.value = ".$this->gDB->quote("Nein", "text").
-				 "   \nAND (  ( (ltype.value LIKE 'Pr_senztraining' OR ltype.value = 'Webinar' OR ltype.value = 'Virtuelles Training')\n".
+				 "   \nAND (  ( (ltype.value LIKE 'Pr_senztraining' OR ltype.value = 'Webinar')\n".
 				 "            AND start_date.value > ".$this->gDB->quote(date("Y-m-d"), "text").
 				 "\n		    )\n".
 				 "		 OR (".$this->gDB->in("ltype.value", array("Selbstlernkurs"), false, "text").
@@ -401,7 +401,6 @@ class gevCourseSearch {
 			case self::TAB_ALL:
 				$options["prae"] = "Präsenztraining";
 				$options["webinar"] = "Webinar";
-				$options["virt"] = "Virtuelles Training";
 				$options["self"] = "Selbstlernkurs";
 				break;
 			case self::TAB_PRAESENZ:
@@ -409,9 +408,6 @@ class gevCourseSearch {
 				break;
 			case self::TAB_WEBINAR:
 				$options["webinar"] = "Webinar";
-				break;
-			case self::TAB_VIRTUEL_TRAINING:
-				$options["virt"] = "Virtuelles Training";
 				break;
 			case self::TAB_SELF:
 				$options["self"] = "Selbstlernkurs";

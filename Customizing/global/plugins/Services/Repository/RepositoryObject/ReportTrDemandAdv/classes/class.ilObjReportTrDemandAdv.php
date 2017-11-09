@@ -151,7 +151,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase
 				$f->multiselectsearch(
 					$txt("training_type"),
 					"",
-					array('Webinar' => 'Webinar','Präsenztraining' => 'Präsenztraining','Virtuelles Training' => 'Virtuelles Training')
+					array('Webinar' => 'Webinar','Präsenztraining' => 'Präsenztraining')
 				),
 				/* END BLOCK - TRAINING TYPE */
 
@@ -217,7 +217,7 @@ class ilObjReportTrDemandAdv extends ilObjReportBase
 				."     AND crs.hist_historic = 0\n"
 				."     AND crs.is_template = 'Nein'\n"
 				."     AND crs.begin_date != '0000-00-00'\n"
-				."     AND crs.type IN ('Webinar','Präsenztraining','Virtuelles Training')\n"
+				."     AND crs.type IN ('Webinar','Präsenztraining')\n"
 				."     AND tpl.hist_historic = 0\n"
 				."     AND tpl.is_template = 'Ja'\n";
 
