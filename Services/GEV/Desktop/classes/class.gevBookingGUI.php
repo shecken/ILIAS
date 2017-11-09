@@ -394,9 +394,9 @@ class gevBookingGUI
 				   , $this->isWithPayment()
 				   , str_replace(".", ",", "".$this->crs_utils->getFormattedFee()) . " &euro;"
 				   )
-			, array( $this->lng->txt("gev_credit_points")
+			, array( $this->lng->txt("gev_wb_time")
 				   , true
-				   , $this->crs_utils->getCreditPoints()
+				   , $this->crs_utils->getCreditedDurationFormatted()
 				   )
 			//, array( $this->lng->txt("precondition")
 			//	   , true
