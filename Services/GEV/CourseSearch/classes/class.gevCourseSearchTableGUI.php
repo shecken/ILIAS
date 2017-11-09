@@ -57,7 +57,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
 		$this->addColumn($this->gLng->txt("gev_location"), "location");
 		$this->addColumn($this->gLng->txt("date"), "date");
-		$this->addColumn($this->gLng->txt("gev_points"), "points");
+		$this->addColumn($this->gLng->txt("gev_wb_time"), "points");
 		$this->addColumn("&euro;", "fee");
 		//$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "", "20px");
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', null, "20px", false);
@@ -168,14 +168,23 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		if($a_set["cancel_date"]) {
 			$show_cancel_date = ilDateTime::_before($now, $a_set["cancel_date"]);;
 		}
-
+		$wb_time = gevCourseUtils::convertCreditpointsToTime((int)$a_set["points"]);
+		$hours = $wb_time[gevCourseUtils::CREDITED_DURATION_HOURS];
+		$minutes = $wb_time[gevCourseUtils::CREDITED_DURATION_MINUTES];
+		$wb_time = '';
+		if($hours > 0) {
+			$wb_time .= $hours.' '.$this->gLng->txt('hours').' ';
+		}
+		if($minutes > 0) {
+			$wb_time .= $minutes.' '.$this->gLng->txt('minutes');
+		}
 
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("STATUS", $status);
 		$this->tpl->setVariable("TYPE", $a_set["type"]);
 		$this->tpl->setVariable("LOCATION", $a_set["location"]);
 		$this->tpl->setVariable("DATE", $date);
-		$this->tpl->setVariable("POINTS", $a_set["points"]);
+		$this->tpl->setVariable("POINTS", $wb_time);
 		$this->tpl->setVariable("FEE", gevCourseUtils::formatFee($a_set["fee"]));
 		$this->tpl->setVariable("ACTIONS", $action);
 		$this->tpl->setVariable("TARGET_GROUP", $a_set["target_group"]);
