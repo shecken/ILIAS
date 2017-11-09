@@ -483,7 +483,7 @@ class gevCourseUtils
 
 	public function isCentralTraining()
 	{
-		return $this->getEduProgramm() == "zentrales Training";
+		return $this->getEduProgramm() == "zentrales Training (AD)";
 	}
 
 	public function isFlexibleDecentrallTraining()
