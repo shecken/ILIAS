@@ -192,16 +192,6 @@ class Helper {
 			$filter[self::F_TARGET_GROUP] = $target_group;
 		}
 
-		$city = $values[self::F_CITY];
-		if($city != -1) {
-			$filter[self::F_CITY] = $city;
-		}
-
-		$provider = $values[self::F_PROVIDER];
-		if($provider != -1) {
-			$filter[self::F_PROVIDER] = $provider;
-		}
-
 		$not_min_member = $values[self::F_NOT_MIN_MEMBER];
 		if($not_min_member && $not_min_member == "1") {
 			$filter[self::F_NOT_MIN_MEMBER] = $not_min_member;
