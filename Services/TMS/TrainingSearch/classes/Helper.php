@@ -155,7 +155,7 @@ class Helper {
 
 		$reset = $this->g_factory->button()->standard($this->g_lng->txt('reset'), "#")->withOnLoadCode(function($id) use ($form_id) {
 			$dur1 = '$("input[name=\'f_duration[start]\']").val("'.date("01.01.Y").'");';
-			$dur2 = '$("input[name=\'f_duration[end]\']").val("'.date("31.01.Y").'");';
+			$dur2 = '$("input[name=\'f_duration[end]\']").val("'.date("31.12.Y").'");';
 			return "$('#{$id}').click(function() { 
 				$('#f_title').val('');
 				$('#f_type option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
@@ -184,32 +184,38 @@ class Helper {
 	 */
 	public function getFilterValuesFrom(array $values) {
 		$filter = array();
-		$title = trim($values[self::F_TITLE]);
-		if($title != "") {
-			$filter[self::F_TITLE] = $title;
+
+		if(array_key_exists(self::F_TITLE, $values)) {
+			$title = trim($values[self::F_TITLE]);
+			if($title != "") {
+				$filter[self::F_TITLE] = $title;
+			}
 		}
 
-		$type = $values[self::F_TYPE];
-		if($type != -1) {
-			$filter[self::F_TYPE] = $type;
+		if(array_key_exists(self::F_TYPE, $values)) {
+			$type = $values[self::F_TYPE];
+			if($type != -1) {
+				$filter[self::F_TYPE] = $type;
+			}
 		}
 
-		$topic = $values[self::F_TOPIC];
-		if($topic != -1) {
-			$filter[self::F_TOPIC] = $topic;
+		if(array_key_exists(self::F_TOPIC, $values)) {
+			$topic = $values[self::F_TOPIC];
+			if($topic != -1) {
+				$filter[self::F_TOPIC] = $topic;
+			}
 		}
 
-		$target_group = $values[self::F_TARGET_GROUP];
-		if($target_group != -1) {
-			$filter[self::F_TARGET_GROUP] = $target_group;
+		if(array_key_exists(self::F_TARGET_GROUP, $values)) {
+			$target_group = $values[self::F_TARGET_GROUP];
+			if($target_group != -1) {
+				$filter[self::F_TARGET_GROUP] = $target_group;
+			}
 		}
 
-		$not_min_member = $values[self::F_NOT_MIN_MEMBER];
-		if($not_min_member && $not_min_member == "1") {
-			$filter[self::F_NOT_MIN_MEMBER] = $not_min_member;
+		if(array_key_exists(self::F_DURATION, $values)) {
+			$filter[self::F_DURATION] = $values[self::F_DURATION];
 		}
-
-		$filter[self::F_DURATION] = $values[self::F_DURATION];
 
 		return $filter;
 	}
