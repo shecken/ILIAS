@@ -274,18 +274,20 @@ class ilObjCourseGUI extends ilContainerGUI
 
 		// cat-tms-patch start
 		// CourseClassification (plugin)
-		$cc_instances = $this->getChildrenOfByType(
-			$this->object->getRefId(),
-			'xccl'
-		);
-
-		if(count($cc_instances)!==0 || ilPluginAdmin::isPluginActive('xccl') !== false) {
-			$cc = array_shift($cc_instances);
-			$txt = $cc->txtClosure();
-			$info->addProperty($txt('goals'),
-				nl2br(ilUtil::makeClickable ($cc->getCourseClassification()->getGoals(),
-					true))
+		if(ilPluginAdmin::isPluginActive('xccl')) {
+			$cc_instances = $this->getChildrenOfByType(
+				$this->object->getRefId(),
+				'xccl'
 			);
+
+			if(count($cc_instances)!==0) {
+				$cc = array_shift($cc_instances);
+				$txt = $cc->txtClosure();
+				$info->addProperty($txt('goals'),
+					nl2br(ilUtil::makeClickable ($cc->getCourseClassification()->getGoals(),
+						true))
+				);
+			}
 		}
 		// cat-tms-patch end
 
