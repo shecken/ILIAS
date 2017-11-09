@@ -9,9 +9,6 @@ class Helper {
 	const F_TYPE = "f_type";
 	const F_TOPIC = "f_topic";
 	const F_TARGET_GROUP = "f_target";
-	const F_CITY = "f_city";
-	const F_PROVIDER = "f_provider";
-	const F_NOT_MIN_MEMBER = "f_not_min_member";
 	const F_DURATION = "f_duration";
 
 	/**
@@ -32,13 +29,12 @@ class Helper {
 	 * Get needed values from bkm. Just best for user
 	 *
 	 * @param ilObjBookingModalities[] 	$bms
-	 * @param ilDateTime 	$crs_start_date
 	 *
-	 * @return array<integer, int | ilDateTime | string>
+	 * @return array<integer, int | string>
 	 */
-	public function getBestBkmValues(array $bkms, ilDateTime $crs_start_date) {
-		$plugin = ilPluginAdmin::getPluginObjectById('xbkm');
-		return $plugin->getBestBkmValues($bkms, $crs_start_date);
+	public function getBestBkmValues(array $bkms) {
+		require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/BookingModalities/classes/class.ilBookingModalitiesPlugin.php");
+		return ilBookingModalitiesPlugin::bestValuesForUser($bkms);
 	}
 
 	/**
@@ -131,34 +127,9 @@ class Helper {
 			$form->addItem($item);
 		}
 
-		if(ilPluginAdmin::isPluginActive('venues')) {
-			$plugin = ilPluginAdmin::getPluginObjectById('venues');
-			$actions = $plugin->getActions();
-
-			$item = new ilSelectInputGUI($this->g_lng->txt('city'), self::F_CITY);
-			$options = array(-1 => "Alle") + $actions->getVenueOptions();
-			$item->setOptions($options);
-			$form->addItem($item);
-		}
-
-		if(ilPluginAdmin::isPluginActive('trainingprovider')) {
-			$plugin = ilPluginAdmin::getPluginObjectById('trainingprovider');
-			$actions = $plugin->getActions();
-
-			$item = new ilSelectInputGUI($this->g_lng->txt('provider'), self::F_PROVIDER);
-			$options = array(-1 => "Alle") + $actions->getProviderOptions();
-			$item->setOptions($options);
-			$form->addItem($item);
-		}
-
 		$item = new ilDateDurationInputGUI($this->g_lng->txt('duration'), self::F_DURATION);
 		$item->setStart(new ilDateTime(date("Y-01-01 00:00:00"), IL_CAL_DATETIME));
 		$item->setEnd(new ilDateTime(date("Y-12-31 23:59:59"), IL_CAL_DATETIME));
-		$form->addItem($item);
-
-		$item = new ilCheckboxInputGUI("", self::F_NOT_MIN_MEMBER);
-		$item->setInfo($this->g_lng->txt('not_min_member'));
-		$item->setValue(1);
 		$form->addItem($item);
 
 		$item = new ilHiddenInputGUI('cmd');
@@ -175,10 +146,24 @@ class Helper {
 		$submit = $this->g_factory->button()->primary($this->g_lng->txt('search'), "#")->withOnLoadCode(function($id) use ($form_id) {
 			return "$('#{$id}').click(function() { $('#{$form_id}').submit(); return false; });";
 		});
- 
+
+		$reset = $this->g_factory->button()->standard($this->g_lng->txt('reset'), "#")->withOnLoadCode(function($id) use ($form_id) {
+			$dur1 = '$("input[name=\'f_duration[start]\']").val("'.date("01.01.Y").'");';
+			$dur2 = '$("input[name=\'f_duration[end]\']").val("'.date("31.12.Y").'");';
+			return "$('#{$id}').click(function() { 
+				$('#f_title').val('');
+				$('#f_type option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
+				$('#f_topic option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
+				$('#f_target option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
+				$('#f_not_min_member').prop('checked', false );
+				".$dur1."
+				".$dur2."
+				return false; 
+			});";
+		});
 
 		$modal = $this->g_factory->modal()->roundtrip($this->g_lng->txt('filter'), $this->g_factory->legacy($form->getHTML()))
-			->withActionButtons([$submit]);
+			->withActionButtons([$reset, $submit]);
 
 		$button1 = $this->g_factory->button()->standard($this->g_lng->txt('search'), '#')
 			->withOnClick($modal->getShowSignal());
@@ -193,42 +178,38 @@ class Helper {
 	 */
 	public function getFilterValuesFrom(array $values) {
 		$filter = array();
-		$title = trim($values[self::F_TITLE]);
-		if($title != "") {
-			$filter[self::F_TITLE] = $title;
+
+		if(array_key_exists(self::F_TITLE, $values)) {
+			$title = trim($values[self::F_TITLE]);
+			if($title != "") {
+				$filter[self::F_TITLE] = $title;
+			}
 		}
 
-		$type = $values[self::F_TYPE];
-		if($type != -1) {
-			$filter[self::F_TYPE] = $type;
+		if(array_key_exists(self::F_TYPE, $values)) {
+			$type = $values[self::F_TYPE];
+			if($type != -1) {
+				$filter[self::F_TYPE] = $type;
+			}
 		}
 
-		$topic = $values[self::F_TOPIC];
-		if($topic != -1) {
-			$filter[self::F_TOPIC] = $topic;
+		if(array_key_exists(self::F_TOPIC, $values)) {
+			$topic = $values[self::F_TOPIC];
+			if($topic != -1) {
+				$filter[self::F_TOPIC] = $topic;
+			}
 		}
 
-		$target_group = $values[self::F_TARGET_GROUP];
-		if($target_group != -1) {
-			$filter[self::F_TARGET_GROUP] = $target_group;
+		if(array_key_exists(self::F_TARGET_GROUP, $values)) {
+			$target_group = $values[self::F_TARGET_GROUP];
+			if($target_group != -1) {
+				$filter[self::F_TARGET_GROUP] = $target_group;
+			}
 		}
 
-		$city = $values[self::F_CITY];
-		if($city != -1) {
-			$filter[self::F_CITY] = $city;
+		if(array_key_exists(self::F_DURATION, $values)) {
+			$filter[self::F_DURATION] = $values[self::F_DURATION];
 		}
-
-		$provider = $values[self::F_PROVIDER];
-		if($provider != -1) {
-			$filter[self::F_PROVIDER] = $provider;
-		}
-
-		$not_min_member = $values[self::F_NOT_MIN_MEMBER];
-		if($not_min_member && $not_min_member == "1") {
-			$filter[self::F_NOT_MIN_MEMBER] = $not_min_member;
-		}
-
-		$filter[self::F_DURATION] = $values[self::F_DURATION];
 
 		return $filter;
 	}

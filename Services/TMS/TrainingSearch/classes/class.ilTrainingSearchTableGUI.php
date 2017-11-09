@@ -31,7 +31,7 @@ class ilTrainingSearchTableGUI {
 
 		$this->helper = $helper;
 
-		$this->g_lng->loadLanguageModule('tsearch');
+		$this->g_lng->loadLanguageModule('tms');
 	}
 
 	/**
@@ -75,13 +75,7 @@ class ilTrainingSearchTableGUI {
 					->withImportantFields($record->getImportantFields())
 					->withContent($ui_factory->listing()->descriptive($record->getDetailFields()))
 					->withFurtherFields($record->getFurtherFields())
-					->withButtons(
-						array(
-							$ui_factory->button()->standard
-								( $this->g_lng->txt("book_course")
-								, $this->parent->getBookingLink($record)
-								)
-						)
+					->withButtons($record->getBookButton($this->g_lng->txt("book_course"), $this->parent->getBookingLink($record))
 					);
 			}
 		);

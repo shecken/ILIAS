@@ -54,7 +54,7 @@ class ilTrainingSearchGUI {
 		$this->db = $db;
 		$this->helper = $helper;
 
-		$this->g_lng->loadLanguageModule('tsearch');
+		$this->g_lng->loadLanguageModule('tms');
 	}
 
 	public function executeCommand() {
@@ -64,6 +64,7 @@ class ilTrainingSearchGUI {
 			case "iltmsbookinggui":
 				require_once("Services/TMS/Booking/classes/class.ilTMSBookingGUI.php");
 				$gui = new ilTMSBookingGUI($this, self::CMD_SHOW);
+				$gui->redirectOnParallelCourses();
 				$this->g_ctrl->forwardCommand($gui);
 				break;
 			default:
@@ -90,7 +91,11 @@ class ilTrainingSearchGUI {
 	 */
 	protected function show() {
 		$bookable_trainings = $this->getBookableTrainings(array());
-		$this->showTrainings($bookable_trainings);
+		if(count($bookable_trainings) > 0) {
+			$this->showTrainings($bookable_trainings);
+		} else {
+			$this->showNoAvailableTrainings();
+		}
 	}
 
 	/**
@@ -102,7 +107,12 @@ class ilTrainingSearchGUI {
 		$post = $_POST;
 		$filter = $this->helper->getFilterValuesFrom($post);
 		$bookable_trainings = $this->getBookableTrainings($filter);
-		$this->showTrainings($bookable_trainings);
+		if(count($bookable_trainings) > 0) {
+			$this->showTrainings($bookable_trainings);
+		} else {
+			$this->showNoAvailableTrainings();
+		}
+
 	}
 
 	/**
@@ -119,6 +129,18 @@ class ilTrainingSearchGUI {
 
 		$modal = $this->prepareModal();
 		$this->g_tpl->setContent($modal."<br \><br \><br \>".$table->render());
+		$this->g_tpl->show();
+	}
+
+	/**
+	 * Show empty search-results message
+	 *
+	 * @return void
+	 */
+	protected function showNoAvailableTrainings() {
+		$modal = $this->prepareModal();
+		$msg = $this->g_lng->txt('no_trainings_available');
+		$this->g_tpl->setContent($modal."<br \><br \><br \>".$msg);
 		$this->g_tpl->show();
 	}
 
