@@ -2081,14 +2081,14 @@
     },
     {
         "name": "cat/ente",
-        "version": "2.1.0",
-        "version_normalized": "2.1.0.0",
+        "version": "2.1.1",
+        "version_normalized": "2.1.1.0",
         "source": {
             "type": "git",
             "url": "git@github.com:/conceptsandtraining/lib-ente.git",
-            "reference": "ea5cd9d588dc16b092e31daa31e935c8eef169e9"
+            "reference": "885891ac7c914d9c5eadfb210e322d46c57daf94"
         },
-        "time": "2017-10-25 08:13:36",
+        "time": "2017-11-10 10:40:50",
         "type": "library",
         "installation-source": "source",
         "autoload": {
