@@ -272,7 +272,7 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 		$has_managment_menu = ($manage_courses || $search_courses || $manage_users || $manage_org_units
 							     || $manage_mails || $manage_competences || $manage_auto_user_admin_plugin)
-							&& ($this->user_utils && !$this->user_utils->hasRoleIn(array("OD/BD", "UA", "ID FK", "DBV UVG", "HA 84", "OD", "FD", "BD")))
+							&& ($this->user_utils && !$this->user_utils->hasRoleIn(array("OD/BD", "UA", "FK", "DBV UVG", "HA 84", "OD", "FD", "BD")))
 							;
 
 		require_once("Services/TEP/classes/class.ilTEPPermissions.php");

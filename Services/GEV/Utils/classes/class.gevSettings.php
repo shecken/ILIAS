@@ -393,7 +393,7 @@ class gevSettings
 		649 => array("OD/BD",		"Vorgesetzter"),
 		671 => array("FD",			"Vorgesetzter"),
 		674 => array("VP",			"Vorgesetzter"),
-		9100 => array("ID FK",		"Vorgesetzter")
+		9100 => array("FK",		"Vorgesetzter")
 
 	);
 
@@ -421,8 +421,8 @@ class gevSettings
 		, "Org PV 59"
 		, "PV 59"
 		, "Ausbildungsbeauftragter"
-		, "ID FK"
-		, "ID MA"
+		, "FK"
+		, "MA"
 		, "OD/FD/BD ID"
 		, "OD/FD ID"
 		, "BD ID"
@@ -457,8 +457,8 @@ class gevSettings
 		, "Org PV 59"
 		, "PV 59"
 		, "Ausbildungsbeauftragter"
-		, "ID FK"
-		, "ID MA"
+		, "FK"
+		, "MA"
 		, "OD/FD/BD ID"
 		, "OD/FD ID"
 		, "BD ID"
@@ -651,8 +651,8 @@ class gevSettings
 		, "VP"						=> "HGB §84"
 		, "AVL"						=> "HGB §84"
 		//, "Ausbildungsbeauftragter" => "nicht relevant"
-		, "ID FK"					=> "ID"
-		, "ID MA"					=> "ID"
+		, "FK"					=> "ID"
+		, "MA"						=> "ID"
 		, "OD/FD/BD ID"				=> "ID"
 		, "OD/FD ID"				=> "ID"
 		, "BD ID"					=> "ID"

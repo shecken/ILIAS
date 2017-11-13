@@ -3014,7 +3014,7 @@ if (!$ilDB->tableExists('hist_tep_individ_days')) {
 									  , "OD/BD"
 									  , "FD"
 									  , "UA"
-									  , "ID FK"
+									  , "FK"
 									  , "DBV UVG"
 									  );
 
