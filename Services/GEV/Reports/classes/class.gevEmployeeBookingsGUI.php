@@ -39,7 +39,6 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 						->column("entry_date", "gev_entry_date")
 						->column("od_bd", "gev_od_bd")
 						->column("org_unit", "gev_org_unit_short")
-						->column("custom_id", "gev_training_id")
 						->column("title", "title")
 						->column("type", "gev_learning_type")
 						->column("date", "date")
@@ -59,7 +58,6 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 						->select("usr.lastname")
 						->select("usr.adp_number")
 						->select("usr.entry_date")
-						->select("crs.custom_id")
 						->select("crs.title")
 						->select("crs.type")
 						->select("crs.begin_date")
@@ -160,6 +158,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 		} else {
 			$rec["action"] = "";
 		}
+		$rec['max_credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['max_credit_points']);
 		$this->ctrl->setParameter($this, "usr_id", null);
 		$this->ctrl->setParameter($this, "crs_id", null);
 
