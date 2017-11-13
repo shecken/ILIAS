@@ -142,7 +142,7 @@ abstract class Player {
 		$form->addCommandButton(self::COMMAND_NEXT, $this->txt("next"));
 		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 
-		$form->setTitle($current_step->getLabel());
+		$form->setTitle($this->getPlayerTitle());
 		$current_step->appendToStepForm($form);
 
 		if ($post) {
@@ -170,9 +170,10 @@ abstract class Player {
 	protected function buildOverviewForm(ProcessState $state) {
 		$steps = $this->getSortedSteps();
 		$form = $this->getForm();
-		$form->addCommandButton(self::COMMAND_CONFIRM, $this->txt("confirm"));
+		$form->addCommandButton(self::COMMAND_CONFIRM, $this->getConfirmButtonLabel());
 		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
-		$form->setTitle($this->txt("overview_header"));
+		$form->setTitle($this->getPlayerTitle());
+		$form->setDescription($this->getOverViewDescription());
 
 		for($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
@@ -242,6 +243,27 @@ abstract class Player {
 	 * @return	void
 	 */
 	abstract protected function redirectToPreviousLocation($messages, $sucess);
+
+	/**
+	 * Get the title of player
+	 *
+	 * @return string
+	 */
+	abstract protected function getPlayerTitle();
+
+	/**
+	 * Get description for oberview form
+	 *
+	 * @return string
+	 */
+	abstract protected function getOverViewDescription();
+
+	/**
+	 * Get the label for confirm button
+	 *
+	 * @return string
+	 */
+	abstract protected function getConfirmButtonLabel();
 
 	/**
 	 * Get the state information about the booking process.

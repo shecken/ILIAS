@@ -269,6 +269,27 @@ class ilTMSBookingGUI  extends Booking\Player {
 		$this->g_ctrl->redirect($this->parent_gui, $this->parent_cmd);
 	}
 
+	/**
+	 * @inheritdocs
+	 */
+	protected function getPlayerTitle() {
+		return $this->g_lng->txt("booking");
+	}
+
+	/**
+	 * @inheritdocs
+	 */
+	protected function getOverViewDescription() {
+		return $this->g_lng->txt("booking_overview_description");
+	}
+
+	/**
+	 * @inheritdocs
+	 */
+	protected function getConfirmButtonLabel() {
+		return $this->g_lng->txt("booking_confirm");
+	}
+
 }
 
 /**
