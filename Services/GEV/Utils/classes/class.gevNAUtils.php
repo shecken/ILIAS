@@ -122,16 +122,13 @@ class gevNAUtils
 		, "BD"
 		, "FD"
 		, "UA"
-		, "HA 84"
-		, "BA 84"
-		, "Org PV 59"
-		, "PV 59"
+		, "84er"
+		, "59er"
 		, "AVL"
-		, "VA 59"
-		, "VA HGB 84"
+		, "VA"
 		, "NFK"
 		, "int. Trainer"
-		, "DBV EVG"
+		, "int. Referent"
 		);
 
 	/**
