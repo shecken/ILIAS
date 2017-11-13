@@ -151,6 +151,13 @@ class ilTMSCancelGUI  extends Booking\Player {
 		return $this->g_lng->txt("cancel_overview_description");
 	}
 
+	/**
+	 * @inheritdocs
+	 */
+	protected function getConfirmButtonLabel() {
+		return $this->g_lng->txt("cancel_confirm");
+	}
+
 }
 
 /**
