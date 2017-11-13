@@ -835,16 +835,16 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 				);
 
 		$player
-			->expects($this->exactly(2))
+			->expects($this->once())
 			->method("txt")
-			->withConsecutive(["confirm"], ["abort"])
-			->will($this->onConsecutiveCalls("lng_confirm", "lng_abort"));
+			->withConsecutive(["abort"])
+			->will($this->onConsecutiveCalls("lng_abort"));
 
 		$form
 			->expects($this->exactly(2))
 			->method("addCommandButton")
 			->withConsecutive
-				( ["confirm", "lng_confirm"]
+				( ["confirm", $confirm_label]
 				, ["abort", "lng_abort"]
 				);
 
