@@ -41,7 +41,9 @@ class BookingPlayerForTest extends Booking\Player {
 	}
 	protected function getPlayerTitle() {
 	}
-	protected function getOverViewDescription(){
+	protected function getOverViewDescription() {
+	}
+	protected function getConfirmButtonLabel() {
 	}
 }
 
@@ -738,7 +740,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_buildOverviewForm() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
-			->setMethods(["getSortedSteps", "getProcessState", "getForm", "txt", "getPlayerTitle", "getOverViewDescription"])
+			->setMethods(["getSortedSteps", "getProcessState", "getForm", "txt", "getPlayerTitle", "getOverViewDescription", "getConfirmButtonLabel"])
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -756,6 +758,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->withStepData(2, $data3);
 		$player_title = "Player";
 		$overview_description = "This is the overview";
+		$confirm_label = "Confirm";
 
 		$step1 = $this->createMock(Booking\Step::class);
 		$step2 = $this->createMock(Booking\Step::class);
@@ -770,6 +773,11 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->expects($this->once())
 			->method("getForm")
 			->willReturn($form);
+
+		$player
+			->expects($this->once())
+			->method("getConfirmButtonLabel")
+			->willReturn($confirm_label);
 
 		$player
 			->expects($this->once())
