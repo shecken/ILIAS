@@ -276,6 +276,13 @@ class ilTMSBookingGUI  extends Booking\Player {
 		return $this->g_lng->txt("booking");
 	}
 
+	/**
+	 * @inheritdocs
+	 */
+	protected function getOverViewDescription() {
+		return $this->g_lng->txt("booking_overview_description");
+	}
+
 }
 
 /**
