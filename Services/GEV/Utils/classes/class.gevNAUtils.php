@@ -129,7 +129,7 @@ class gevNAUtils
 		, "VA HGB 84"
 		, "NFK"
 		, "int. Trainer"
-		, "DBV EVG"
+		, "int. Referent"
 		);
 
 	/**

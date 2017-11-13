@@ -351,14 +351,14 @@ class gevSettings
 	public static $VMS_ROLE_MAPPING = array(
 		610 => array("84er",		"DBV"),
 		613 => array("DBV UVG",		"DBV"),
-		614 => array("DBV EVG",		"DBV"),
-		615 => array("DBV EVG",		"DBV"),
+		614 => array("int. Referent",		"DBV"),
+		615 => array("int. Referent",		"DBV"),
 		616 => array("DBV UVG",		"DBV"),
-		617 => array("DBV EVG",		"DBV"),
-		618 => array("DBV EVG",		"DBV"),
-		620 => array("DBV EVG",		"DBV"),
-		675 => array("DBV EVG",		"DBV"),
-		601 => array("DBV EVG",		"DBV"),
+		617 => array("int. Referent",		"DBV"),
+		618 => array("int. Referent",		"DBV"),
+		620 => array("int. Referent",		"DBV"),
+		675 => array("int. Referent",		"DBV"),
+		601 => array("int. Referent",		"DBV"),
 
 		603 => array("84er",		"Mitarbeiter"),
 		604 => array("84er",		"Mitarbeiter"),
@@ -436,7 +436,7 @@ class gevSettings
 		, "ext. Trainer"
 		, "OD-Betreuer"
 		, "DBV UVG"
-		, "DBV EVG"
+		, "int. Referent"
 		, "Agt-ID"
 		);
 
@@ -470,7 +470,7 @@ class gevSettings
 		, "ext. Trainer"
 		, "OD-Betreuer"
 		, "DBV UVG"
-		, "DBV EVG"
+		, "int. Referent"
 		, "TP Service"
 		, "TP Basis"
 		, "VFS"
@@ -663,7 +663,7 @@ class gevSettings
 		//, "ext. Trainer"			=> "nicht relevant"
 		, "OD-Betreuer"				=> "ID"
 		, "DBV UVG"					=> "AAD"
-		, "DBV EVG"					=> "AAD"
+		, "int. Referent"					=> "AAD"
 		//, "TP Service"			=> "nicht relevant"
 		//, "TP Basis"				=> "nicht relevant"
 		//, "VFS"					=> "nicht relevant"

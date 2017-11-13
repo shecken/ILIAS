@@ -2979,7 +2979,7 @@ if (!$ilDB->tableExists('hist_tep_individ_days')) {
 		$source_employees = gevOrgUnitUtils::getEmployeesIn(array($rec["ref_id"]));
 		foreach (gevOrgUnitUtils::getAllPeopleIn(array($rec["ref_id"])) as $usr_id) {
 			$user = gevUserUtils::getInstance($usr_id);
-			if ($user->hasRoleIn(array("FD", "OD/BD", "UA", "OD/FD/BD ID", "DBV EVG"))) {
+			if ($user->hasRoleIn(array("FD", "OD/BD", "UA", "OD/FD/BD ID", "int. Referent"))) {
 				continue;
 			}
 			$role = in_array($usr_id, $source_employees) ? "Mitarbeiter" : "Vorgesetzter";
@@ -4393,7 +4393,7 @@ $fixed_dec_training_category_ref_id = 49841;
 gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Administrator", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Admin-Voll", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "DBV UVG", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
-gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "DBV EVG", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
+gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "int. Referent", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "RTL", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "flex-dez-Training", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 gevCourseUtils::grantPermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "Admin-dez-ID", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
@@ -4439,7 +4439,7 @@ require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 $fixed_dec_training_category_ref_id = 49841;
 
 gevCourseUtils::revokePermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "DBV UVG", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
-gevCourseUtils::revokePermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "DBV EVG", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
+gevCourseUtils::revokePermissionsForAllCoursesBelow($fixed_dec_training_category_ref_id, "int. Referent", array("change_trainer","load_signature_list","load_member_list","load_csn_list","view_mailing","view_schedule_pdf"));
 
 $flex_dec_training_category_ref_id = 49840;
 

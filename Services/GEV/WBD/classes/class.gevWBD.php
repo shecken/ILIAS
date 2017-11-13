@@ -100,7 +100,7 @@ class gevWBD
 			,"NFK"
 			,"OD-Betreuer"
 			,"DBV UVG"
-			,"DBV EVG"
+			,"int. Referent"
 		),
 
 		//2 - Ausschließlichkeitsvermittler
@@ -156,7 +156,7 @@ class gevWBD
 		,"59er"
 		,"AVL"
 		,"DBV UVG"
-		,"DBV EVG"
+		,"int. Referent"
 		,"TP Service"
 	);
 
@@ -166,7 +166,7 @@ class gevWBD
 		,"59er"
 		,"AVL"
 		,"DBV UVG"
-		,"DBV EVG"
+		,"int. Referent"
 		,"TP Service"
 		,"TP Basis"
 		,"VP"

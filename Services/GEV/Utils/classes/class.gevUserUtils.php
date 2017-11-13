@@ -44,7 +44,7 @@ class gevUserUtils
 		, "FDA"
 		, "Azubi"
 		, "DBV UVG"
-		, "DBV EVG"
+		, "int. Referent"
 	);
 
 	protected function __construct($a_user_id)
@@ -2100,7 +2100,7 @@ class gevUserUtils
 					   ,"int. Trainer"
 					   ,"OD-Betreuer"
 					   ,"DBV UVG"
-					   ,"DBV EVG"
+					   ,"int. Referent"
 					   ,"DBV-Fin-UVG"
 					   ,"RTL"
 					);
