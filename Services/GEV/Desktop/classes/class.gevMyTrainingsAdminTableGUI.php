@@ -84,7 +84,7 @@ class gevMyTrainingsAdminTableGUI extends catAccordionTableGUI {
 		$this->addColumn($this->gLng->txt("gev_location"), "location");
 		$this->addColumn($this->gLng->txt("date"), "start_date", "112px");
 		$this->addColumn($this->gLng->txt("tutor"));
-		$this->addColumn($this->gLng->txt("wb_time"));
+		$this->addColumn($this->gLng->txt("gev_wb_time"));
 		$this->addColumn($this->gLng->txt("mbrcount"));
 		$this->addColumn($this->gLng->txt("status"));
 		$this->addColumn($this->gLng->txt("action"));
