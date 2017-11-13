@@ -40,7 +40,8 @@ class BookingPlayerForTest extends Booking\Player {
 		$this->resetProcess();
 	}
 	protected function getPlayerTitle() {
-		return ";";
+	}
+	protected function getOverViewDescription(){
 	}
 }
 
@@ -737,7 +738,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_buildOverviewForm() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
-			->setMethods(["getSortedSteps", "getProcessState", "getForm", "txt", "getPlayerTitle"])
+			->setMethods(["getSortedSteps", "getProcessState", "getForm", "txt", "getPlayerTitle", "getOverViewDescription"])
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -754,6 +755,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->withStepData(1, $data2)
 			->withStepData(2, $data3);
 		$player_title = "Player";
+		$overview_description = "This is the overview";
 
 		$step1 = $this->createMock(Booking\Step::class);
 		$step2 = $this->createMock(Booking\Step::class);
@@ -773,6 +775,11 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->expects($this->once())
 			->method("getPlayerTitle")
 			->willReturn($player_title);
+
+		$player
+			->expects($this->once())
+			->method("getOverViewDescription")
+			->willReturn($overview_description);
 
 		$step1
 			->expects($this->once())

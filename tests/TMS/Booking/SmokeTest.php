@@ -29,6 +29,9 @@ class DummyPlayer extends Booking\Player {
 	protected function getPlayerTitle() {
 		throw new \LogicException("Mock me!");
 	}
+	protected function getOverViewDescription() {
+		throw new \LogicException("Mock me!");
+	}
 }
 
 class TMS_Booking_SmokeTest extends PHPUnit_Framework_TestCase {
