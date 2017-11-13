@@ -4116,14 +4116,7 @@ class gevCourseUtils
 		$wb_time = self::convertCreditpointsToTime((int)$c_p);
 		$hours = $wb_time[gevCourseUtils::CREDITED_DURATION_HOURS];
 		$minutes = $wb_time[gevCourseUtils::CREDITED_DURATION_MINUTES];
-		$wb_time = '';
-		if($hours > 0) {
-			$wb_time .= $hours.' '.$lng->txt('hours').' ';
-		}
-		if($minutes > 0) {
-			$wb_time .= $minutes.' '.$lng->txt('minutes');
-		}
-		return $wb_time;
+		return str_pad($hours, 2,'0',STR_PAD_LEFT).':'.str_pad($minutes, 2,'0',STR_PAD_LEFT);
 	}
 	public function getCreditedDurationFormatted()
 	{
