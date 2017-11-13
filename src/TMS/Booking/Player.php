@@ -259,6 +259,13 @@ abstract class Player {
 	abstract protected function getOverViewDescription();
 
 	/**
+	 * Get the label for confirm button
+	 *
+	 * @return string
+	 */
+	abstract protected function getConfirmButtonLabel();
+
+	/**
 	 * Get the state information about the booking process.
 	 *
 	 * @return	ProcessState
