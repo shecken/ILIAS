@@ -170,7 +170,7 @@ abstract class Player {
 	protected function buildOverviewForm(ProcessState $state) {
 		$steps = $this->getSortedSteps();
 		$form = $this->getForm();
-		$form->addCommandButton(self::COMMAND_CONFIRM, $this->txt("confirm"));
+		$form->addCommandButton(self::COMMAND_CONFIRM, $this->getConfirmButtonLabel());
 		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 		$form->setTitle($this->getPlayerTitle());
 		$form->setDescription($this->getOverViewDescription());
