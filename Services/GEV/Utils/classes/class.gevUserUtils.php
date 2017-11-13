@@ -31,8 +31,7 @@ class gevUserUtils
 	// mit Führungskraft klären" angezeigt.
 	protected static $roles_with_prearrival_note = array(
 		  "UA"
-		, "HA 84"
-		, "BA 84"
+		, "84er"
 		, "59er"
 		, "MA"
 		, "OD/FD/BD ID"
@@ -2087,8 +2086,7 @@ class gevUserUtils
 					   ,"BD"
 					   ,"FD"
 					   ,"UA"
-					   ,"HA 84"
-					   ,"BA 84"
+					   ,"84er"
 					   ,"59er"
 					   ,"AVL"
 					   ,"FK"

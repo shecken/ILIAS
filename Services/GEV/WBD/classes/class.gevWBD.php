@@ -112,8 +112,7 @@ class gevWBD
 			,"NA"
 			*/
 			"UA"
-			,"HA 84"
-			,"BA 84"
+			,"84er"
 			,"NA"
 			,"AVL"
 		),
@@ -153,8 +152,7 @@ class gevWBD
 
 	public static $wbd_tp_service_roles = array(
 		"UA"
-		,"HA 84"
-		,"BA 84"
+		,"84er"
 		,"59er"
 		,"AVL"
 		,"DBV UVG"
@@ -164,8 +162,7 @@ class gevWBD
 
 	public static $wbd_relevant_roles = array(
 		"UA"
-		,"HA 84"
-		,"BA 84"
+		,"84er"
 		,"59er"
 		,"AVL"
 		,"DBV UVG"

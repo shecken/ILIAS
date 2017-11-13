@@ -3140,7 +3140,7 @@ if (!$ilDB->tableExists('hist_tep_individ_days')) {
 	ilCustomInstaller::maybeInitObjDataCache();
 	ilCustomInstaller::maybeInitUserToRoot();
 
-	$global_roles_of_superiors = array( "HA 84"
+	$global_roles_of_superiors = array( "84er"
 									  );
 
 	// Administration and Org-Units

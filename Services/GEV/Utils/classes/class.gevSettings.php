@@ -349,7 +349,7 @@ class gevSettings
 
 	// Role mapping
 	public static $VMS_ROLE_MAPPING = array(
-		610 => array("HA 84",		"DBV"),
+		610 => array("84er",		"DBV"),
 		613 => array("DBV UVG",		"DBV"),
 		614 => array("DBV EVG",		"DBV"),
 		615 => array("DBV EVG",		"DBV"),
@@ -360,10 +360,10 @@ class gevSettings
 		675 => array("DBV EVG",		"DBV"),
 		601 => array("DBV EVG",		"DBV"),
 
-		603 => array("BA 84",		"Mitarbeiter"),
-		604 => array("BA 84",		"Mitarbeiter"),
-		606 => array("BA 84",		"Mitarbeiter"),
-		607 => array("BA 84",		"Mitarbeiter"),
+		603 => array("84er",		"Mitarbeiter"),
+		604 => array("84er",		"Mitarbeiter"),
+		606 => array("84er",		"Mitarbeiter"),
+		607 => array("84er",		"Mitarbeiter"),
 
 		608 => array("VP",			"Mitarbeiter"),
 		650 => array("VP",			"Mitarbeiter"),
@@ -378,15 +378,15 @@ class gevSettings
 		664 => array("NA",			"Mitarbeiter"),
 		693 => array("NA",			"Mitarbeiter"),
 
-		694 => array("BA 84",		"Mitarbeiter"),
+		694 => array("84er",		"Mitarbeiter"),
 
 		634 => array("AVL",			"Mitarbeiter"),
 
-		628 => array("HA 84",		"Mitarbeiter"),
-		630 => array("HA 84",		"Mitarbeiter"),
-		632 => array("HA 84",		"Mitarbeiter"),
-		633 => array("HA 84",		"Mitarbeiter"),
-		690 => array("HA 84",		"Mitarbeiter"),
+		628 => array("84er",		"Mitarbeiter"),
+		630 => array("84er",		"Mitarbeiter"),
+		632 => array("84er",		"Mitarbeiter"),
+		633 => array("84er",		"Mitarbeiter"),
+		690 => array("84er",		"Mitarbeiter"),
 
 		625 => array("OD/BD",		"Vorgesetzter"),
 		609 => array("OD/BD",		"Vorgesetzter"),
@@ -451,8 +451,7 @@ class gevSettings
 		, "BD"
 		, "FD"
 		, "UA"
-		, "HA 84"
-		, "BA 84"
+		, "84er"
 		, "59er"
 		, "Ausbildungsbeauftragter"
 		, "FK"
@@ -641,8 +640,7 @@ class gevSettings
 		, "BD"						=> "AAD"
 		, "FD"						=> "AAD"
 		, "UA"						=> "HGB §84"
-		, "HA 84"					=> "HGB §84"
-		, "BA 84"					=> "HGB §84"
+		, "84er"					=> "HGB §84"
 		, "59er"					=> "AAD"
 		, "NA"						=> "HGB §84"
 		, "VP"						=> "HGB §84"
