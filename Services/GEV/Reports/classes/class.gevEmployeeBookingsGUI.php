@@ -43,7 +43,7 @@ class gevEmployeeBookingsGUI extends catBasicReportGUI
 						->column("type", "gev_learning_type")
 						->column("date", "date")
 						->column("venue", "gev_location")
-						->column("max_credit_points", "gev_credit_points")
+						->column("max_credit_points", "gev_wb_time")
 						->column("fee", "&euro;", true)
 						->column("booking_status", "gev_booking_status")
 						->column("action", $this->action_img, true, "", true)
