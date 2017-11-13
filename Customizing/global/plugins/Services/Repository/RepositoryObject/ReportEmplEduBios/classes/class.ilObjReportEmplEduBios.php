@@ -39,7 +39,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 				."		AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL ".$year." YEAR)"
 				."		AND ".$this->participationWBDRelevant()
 				."		AND ".$course_may_be_in_wbd
-				."		, usrcrs.credit_points"
+				."		, FLOOR(usrcrs.credit_points / 3)"
 				."		, 0"
 				."		)"
 				."	)";
