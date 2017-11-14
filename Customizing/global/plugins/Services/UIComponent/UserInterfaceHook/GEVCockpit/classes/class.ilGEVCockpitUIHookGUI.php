@@ -20,15 +20,18 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 	const ADMIN_TRAININGS_CHECK_INTERVAL = "300";
 	const ASSESSMENT_CHECK_INTERVAL = "300";
 
+	protected $within_mediathek = null;
+
 	public function __construct()
 	{
-		global $ilUser, $lng, $ilCtrl, $ilDB, $ilAccess, $rbacreview;
+		global $ilUser, $lng, $ilCtrl, $ilDB, $ilAccess, $rbacreview, $tree;
 		$this->gLng = $lng;
 		$this->gUser = $ilUser;
 		$this->gCtrl = $ilCtrl;
 		$this->gIldb = $ilDB;
 		$this->gAccess = $ilAccess;
 		$this->gRbacreview = $rbacreview;
+		$this->gTree = $tree;
 	}
 
 	/**
@@ -78,12 +81,30 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 				|| ($cmd_class == "ilobjreportexambiogui"
 					&& $get["target_user_id"] == $this->gUser->getId())
 				|| $base_class == "iltepgui"
+				|| ($base_class == "ilrepositorygui" && $this->withinMediathek($get['ref_id']))
 			)
 		|| (
 			$base_class == "ilobjplugindispatchgui" &&
 				   (($cmd_class == "ilobjreportstudyprogrammegui" && $cmd == "showcontent")
 				|| ($cmd_class == "ilindividualplangui" && ($cmd == "view" || $cmd == "showcontent")))
 		);
+	}
+
+	protected function withinMediathek($ref_id)
+	{
+		if($this->within_mediathek === null) {
+			$this->within_mediathek = $this->calculateWithinMediathek($ref_id);
+		}
+		return $this->within_mediathek;
+	}
+
+	protected function calculateWithinMediathek($ref_id)
+	{
+		if($ref_id === null) {
+			return false;
+		}
+		$mediathek_ref_id = gevSettings::getInstance()->getCockpitMediathekRefId();
+		return $this->gTree->isGrandChild($mediathek_ref_id,$ref_id) || $ref_id == $mediathek_ref_id;
 	}
 
 	protected function cmdClassNotIn($cmd_class)
@@ -143,6 +164,9 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			||  $_GET["cmdClass"] == "ilindividualplangui") {
 				$ref_id = $_GET["ref_id"];
 				return "va_pass_".$ref_id;
+			}
+			if(strtolower($_GET['baseClass']) == "ilrepositorygui" && $this->withinMediathek($_GET['ref_id'])) {
+				return 'mediathek';
 			}
 		}
 		if ($this->isSearch()) {
@@ -315,7 +339,14 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 					= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
 			}
 		}
+		$mediathek_ref_id = gevSettings::getInstance()->getCockpitMediathekRefId();
+		$may_see_mediathek = $this->gAccess->checkAccess('read','',$mediathek_ref_id);
 
+		if($may_see_mediathek) {
+			$this->gCtrl->setParameterByClass('ilrepositorygui','ref_id',$mediathek_ref_id);
+			$items['mediathek'] = array($this->gLng->txt('gev_mediathek'),$this->gCtrl->getLinkTargetByClass(array('ilrepositorygui','ilrepositorygui'),'render'));
+			$this->gCtrl->setParameterByClass('ilrepositorygui','ref_id',null);
+		}
 
 		return $items;
 	}
