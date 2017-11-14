@@ -23,6 +23,7 @@ abstract class Player {
 	const COMMAND_ABORT = "abort";
 	const COMMAND_NEXT	= "next";
 	const COMMAND_CONFIRM = "confirm";
+	const COMMAND_PREVIOUS = "previous";
 
 	/**
 	 * @var	\ArrayAccess
@@ -139,6 +140,7 @@ abstract class Player {
 		$current_step = $steps[$step_number];
 
 		$form = $this->getForm();
+		$form->addCommandButton(self::COMMAND_PREVIOUS, $this->txt("previous"));
 		$form->addCommandButton(self::COMMAND_NEXT, $this->txt("next"));
 		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 
@@ -170,6 +172,7 @@ abstract class Player {
 	protected function buildOverviewForm(ProcessState $state) {
 		$steps = $this->getSortedSteps();
 		$form = $this->getForm();
+		$form->addCommandButton(self::COMMAND_PREVIOUS, $this->txt("previous"));
 		$form->addCommandButton(self::COMMAND_CONFIRM, $this->getConfirmButtonLabel());
 		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 		$form->setTitle($this->getPlayerTitle());
