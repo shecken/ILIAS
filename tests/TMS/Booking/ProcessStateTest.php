@@ -47,4 +47,12 @@ class TMS_Booking_ProcessStateTest extends PHPUnit_Framework_TestCase {
 			->withNextStep();
 		$this->assertEquals(1, $state->getStepNumber());
 	}
+
+	public function test_withPrevousStep() {
+		$state = (new Booking\ProcessState(0,0,0, []))
+			->withNextStep()
+			->withNextStep()
+			->withPreviousStep();
+		$this->assertEquals(1, $state->getStepNumber());
+	}
 }

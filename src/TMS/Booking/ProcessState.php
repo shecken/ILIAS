@@ -79,6 +79,17 @@ class ProcessState {
 	}
 
 	/**
+	 * Set the step to the previous step
+	 *
+	 * @return ProcessState
+	 */
+	public function withPreviousStep() {
+		$clone = clone $this;
+		$clone->step_number--;
+		return $clone;
+	}
+
+	/**
 	 * Set data for a certain step.
 	 *
 	 * @param	int		$step_number
