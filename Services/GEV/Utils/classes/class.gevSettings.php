@@ -815,7 +815,7 @@ class gevSettings
 	public function setCockpitMediathekRefId($ref_id)
 	{
 		assert('is_int($ref_id)');
-		return $this->settings->set(self::COCKPIT_MEDIATHEK_REF_ID,$ref_id);
+		$this->settings->set(self::COCKPIT_MEDIATHEK_REF_ID,$ref_id);
 	}
 
 	const CRS_NA_QUALI_REF_ID = "crs_na_quali_ref_id";
