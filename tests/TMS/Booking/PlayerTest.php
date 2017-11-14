@@ -238,16 +238,17 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn($player_title);
 
 		$player
-			->expects($this->exactly(2))
+			->expects($this->exactly(3))
 			->method("txt")
-			->withConsecutive(["next"], ["abort"])
-			->will($this->onConsecutiveCalls("lng_next", "lng_abort"));
+			->withConsecutive(["previous"], ["next"], ["abort"])
+			->will($this->onConsecutiveCalls("lng_previous", "lng_next", "lng_abort"));
 
 		$form
-			->expects($this->exactly(2))
+			->expects($this->exactly(3))
 			->method("addCommandButton")
 			->withConsecutive
-				( ["next", "lng_next"]
+				( ["previous", "lng_previous"]
+				, ["next", "lng_next"]
 				, ["abort", "lng_abort"]
 				);
 
@@ -835,16 +836,17 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 				);
 
 		$player
-			->expects($this->once())
+			->expects($this->exactly(2))
 			->method("txt")
-			->withConsecutive(["abort"])
-			->will($this->onConsecutiveCalls("lng_abort"));
+			->withConsecutive(["previous"], ["abort"])
+			->will($this->onConsecutiveCalls("lng_previous", "lng_abort"));
 
 		$form
-			->expects($this->exactly(2))
+			->expects($this->exactly(3))
 			->method("addCommandButton")
 			->withConsecutive
-				( ["confirm", $confirm_label]
+				( ["previous", "lng_previous"]
+				, ["confirm", $confirm_label]
 				, ["abort", "lng_abort"]
 				);
 
