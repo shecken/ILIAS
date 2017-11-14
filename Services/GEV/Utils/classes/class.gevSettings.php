@@ -807,6 +807,17 @@ class gevSettings
 		$this->settings->set(self::DUPLICATE_USER_ORGUNIT_ID, $obj_id);
 	}
 
+	const COCKPIT_MEDIATHEK_REF_ID = 'cockpit_mediathek_ref_id';
+	public function getCockpitMediathekRefId()
+	{
+		return $this->settings->get(self::COCKPIT_MEDIATHEK_REF_ID);
+	}
+	public function setCockpitMediathekRefId($ref_id)
+	{
+		assert('is_int($ref_id)');
+		return $this->settings->set(self::COCKPIT_MEDIATHEK_REF_ID,$ref_id);
+	}
+
 	const CRS_NA_QUALI_REF_ID = "crs_na_quali_ref_id";
 	public function setNAQualiCourseRefId($ref_id)
 	{
