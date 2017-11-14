@@ -1014,4 +1014,85 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 		$no_view = $player->process("confirm", []);
 		$this->assertNull($no_view);
 	}
+
+	public function test_process_previous() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState", "getForm", "getPlayerTitle", "processPreviousStep"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$form_step2 = $this->createMock(\ilPropertyFormGUI::class);
+		$form_step3 = $this->createMock(\ilPropertyFormGUI::class);
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 3;
+		$data1 = "DATA 1";
+		$data2 = ["foo" => "bar"];
+		$data3 = "DATA 3";
+		$state = (new Booking\ProcessState($crs_id, $usr_id, $step_number))
+			->withStepData(0, $data1)
+			->withStepData(1, $data2)
+			->withStepData(2, $data3);
+		$player_title = "Player";
+		$html = "HTML OUTPUT STEP 2";
+
+		$step1 = $this->createMock(Booking\Step::class);
+		$step2 = $this->createMock(Booking\Step::class);
+		$step3 = $this->createMock(Booking\Step::class);
+
+		$step1
+			->expects($this->never())
+			->method($this->anything());
+
+		$step3
+			->expects($this->never())
+			->method($this->anything());
+
+		$player
+			->expects($this->once())
+			->method("processPreviousStep")
+			->willReturn($html);
+
+		$state = $state->withPrevousStep();
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$player
+			->expects($this->atLeastOnce())
+			->method("getSortedSteps")
+			->willReturn([$step1, $step2, $step3]);
+
+		$player
+			->expects($this->once())
+			->method("getForm")
+			->willReturn($form_step2);
+
+		$player
+			->expects($this->once())
+			->method("getPlayerTitle")
+			->willReturn($player_title);
+
+		$step2
+			->expects($this->once())
+			->method("appendToStepForm")
+			->with($form_step2);
+
+		$form_step2
+			->expects($this->once())
+			->method("setValuesByArray")
+			->with($data2);
+
+		$form_step2
+			->expects($this->once())
+			->method("getHTML")
+			->willReturn($html);
+
+		$view = $player->process("previous", $post);
+
+		$this->assertEquals($html, $view);
+	}
 }
