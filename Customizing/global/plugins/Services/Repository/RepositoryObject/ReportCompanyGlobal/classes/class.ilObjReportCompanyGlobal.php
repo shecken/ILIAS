@@ -195,11 +195,13 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				}
 				$sum_data[$column] += $row[$column];
 			}
+			$row['wp_part'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$row['wp_part']);
 		}
 
 		$sum_data['type'] = $this->plugin->txt('sum');
 		$sum_data['part_user'] = '--';
 		$sum_data['book_user'] = '--';
+		$sum_data['wp_part'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$sum_data['wp_part']);
 		$data['sum'] = $sum_data;
 
 		return $data;
