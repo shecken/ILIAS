@@ -112,6 +112,9 @@ abstract class Player {
 		if ($cmd === self::COMMAND_NEXT || $cmd === null) {
 			return $this->processStep($state, $post);
 		}
+		if ($cmd === self::COMMAND_PREVIOUS || $cmd === null) {
+			return $this->processPreviousStep($state);
+		}
 		if ($cmd === self::COMMAND_CONFIRM) {
 			$this->finishProcess($state);
 			return null;
@@ -140,7 +143,9 @@ abstract class Player {
 		$current_step = $steps[$step_number];
 
 		$form = $this->getForm();
-		$form->addCommandButton(self::COMMAND_PREVIOUS, $this->txt("previous"));
+		if($step_number > 0) {
+			$form->addCommandButton(self::COMMAND_PREVIOUS, $this->txt("previous"));
+		}
 		$form->addCommandButton(self::COMMAND_NEXT, $this->txt("next"));
 		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
 
@@ -160,6 +165,45 @@ abstract class Player {
 				}
 			}
 		}
+		return $form->getHtml();
+	}
+
+	/**
+	 * Build the view for the previews step in the booking process.
+	 *
+	 * @param	ProcessState	$state
+	 * @param	array|null	$post
+	 * @return	string
+	 */
+	protected function processPreviousStep(ProcessState $state) {
+		$steps = $this->getSortedSteps();
+		$state = $state->withPreviousStep();
+		$step_number = $state->getStepNumber();
+
+		if($step_number < 0) {
+			throw new \LogicException("It is impossible that the number of step is smaller than 0.");
+		}
+
+		$current_step = $steps[$step_number];
+		$step_data = $state->getStepData($step_number);
+		$form = $this->getForm();
+
+		if($step_number > 0) {
+			$form->addCommandButton(self::COMMAND_PREVIOUS, $this->txt("previous"));
+		}
+		$form->addCommandButton(self::COMMAND_NEXT, $this->txt("next"));
+		$form->addCommandButton(self::COMMAND_ABORT, $this->txt("abort"));
+
+		$form->setTitle($this->getPlayerTitle());
+		$current_step->appendToStepForm($form);
+
+		if(is_object($step_data)) {
+			$data = get_object_vars($step_data);
+			if(is_array($data)) {
+				$form->setValuesByArray($data);
+			}
+		}
+
 		return $form->getHtml();
 	}
 
