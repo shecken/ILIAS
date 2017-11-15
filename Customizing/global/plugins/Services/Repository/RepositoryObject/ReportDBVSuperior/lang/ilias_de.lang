@@ -27,3 +27,5 @@ filter_show_critical_dbvs#:#Zeige mir nur kritische DBVen.
 bd#:#BD
 credit_points#:#Bildungspunkte
 credit_points_forecast#:#Gebuchte Bildungspunkte
+wb_time_finished#:#WB-Zeit
+wb_time_forecast#:#WB-Zeit gebucht

@@ -128,8 +128,8 @@ class ilObjReportDBVSuperior extends ilObjReportBase
 		$table	->column("lastname", $this->plugin->txt("lastname"), true)
 				->column("firstname", $this->plugin->txt("firstname"), true)
 				->column("odbd", $this->plugin->txt("bd"), true)
-				->column("credit_points", $this->plugin->txt("credit_points"), true)
-				->column("max_credit_points", $this->plugin->txt("credit_points_forecast"), true);
+				->column("credit_points", $this->plugin->txt("wb_time_finished"), true)
+				->column("max_credit_points", $this->plugin->txt("wb_time_forecast"), true);
 		return parent::buildTable($table);
 	}
 

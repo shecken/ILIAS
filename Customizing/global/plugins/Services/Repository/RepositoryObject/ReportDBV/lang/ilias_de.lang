@@ -32,3 +32,5 @@ credit_points_forecast#:#Gebuchte Bildungspunkte
 sum_credit_points#:#Gesamtpunktzahl
 sum_credit_points_forecast#:#Gesamte Gebuchte Bildungspunkte
 report_year#:#Jahr der Auswertung
+wb_time_finished#:#WB-Zeit
+wb_time_forecast#:#WB-Zeit gebucht

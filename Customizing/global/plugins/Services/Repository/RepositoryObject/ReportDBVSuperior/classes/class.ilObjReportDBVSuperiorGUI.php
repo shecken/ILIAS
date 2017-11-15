@@ -36,6 +36,8 @@ class ilObjReportDBVSuperiorGUI extends ilObjReportBaseGUI {
 		if(self::$dbv_report_ref) {
 			$rec = self::addDbvReportLink($rec);
 		}
+		$rec['max_credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['max_credit_points']);
+		$rec['credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['credit_points']);
 		return parent::transformResultRow(self::setBD($rec));
 	}
 
@@ -76,6 +78,8 @@ class ilObjReportDBVSuperiorGUI extends ilObjReportBaseGUI {
 
 	public static function transformResultRowXLSX($rec) {
 		$rec['odbd'] = $rec['org_unit_above1'];
+		$rec['max_credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['max_credit_points']);
+		$rec['credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['credit_points']);
 		return parent::transformResultRow($rec);
 	}
 }

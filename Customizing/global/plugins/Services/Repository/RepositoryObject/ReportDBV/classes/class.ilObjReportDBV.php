@@ -134,8 +134,8 @@ class ilObjReportDBV extends ilObjReportBase
 				->column("dbv_hot_topic", $this->plugin->txt("dbv_hot_topic"), true)
 				->column("type", $this->plugin->txt("type"), true)
 				->column("date", $this->plugin->txt("date"), true)
-				->column("credit_points", $this->plugin->txt("credit_points"), true)
-				->column("max_credit_points", $this->plugin->txt("credit_points_forecast"), true);
+				->column("credit_points", $this->plugin->txt("wb_time_finished"), true)
+				->column("max_credit_points", $this->plugin->txt("wb_time_forecast"), true);
 		return parent::buildTable($table);
 	}
 
@@ -166,7 +166,11 @@ class ilObjReportDBV extends ilObjReportBase
 				$summed_data[$sum_key] += is_numeric($row[$data_key]) ? $row[$data_key] : 0;
 			}
 		}
-		return $summed_data;
+		$return = [];
+		foreach ($summed_data as $key => $value) {
+			$return[$key] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$value);
+		}
+		return $return;
 	}
 
 	public function renderSumTable($gui)
