@@ -197,13 +197,7 @@ abstract class Player {
 
 		$form->setTitle($this->getPlayerTitle());
 		$current_step->appendToStepForm($form);
-
-		if(is_object($step_data)) {
-			$data = get_object_vars($step_data);
-			if(is_array($data)) {
-				$form->setValuesByArray($data);
-			}
-		}
+		$current_step->addDataToForm($form, $step_data);
 
 		return $form->getHtml();
 	}
