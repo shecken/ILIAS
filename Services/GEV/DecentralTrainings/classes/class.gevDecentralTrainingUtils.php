@@ -143,7 +143,7 @@ class gevDecentralTrainingUtils
 				." WHERE cs.activation_type = 1"
 				."   AND oref.deleted IS NULL"
 				."   AND is_template.value = 'Ja'"
-				."   AND edu_prog.value = 'dezentrales Training' "
+				."   AND edu_prog.value = 'dezentrales Training (AD)' "
 				.$a_where
 				." ORDER BY od.title ASC";
 	}
