@@ -3174,9 +3174,9 @@ class gevCourseUtils
 					   $bill !== null?$bill->getAmount():0
 				   )." &euro;"
 				   	)
-			, array( $this->gLng->txt("gev_credit_points")
+			, array( $this->gLng->txt("gev_wb_time")
 				   , true
-				   , $this->getCreditPoints()
+				   , $this->getCreditedDurationFormatted()
 				   )
 			);
 
