@@ -178,6 +178,7 @@ abstract class Player {
 	protected function processPreviousStep(ProcessState $state) {
 		$steps = $this->getSortedSteps();
 		$state = $state->withPreviousStep();
+		$this->saveProcessState($state);
 		$step_number = $state->getStepNumber();
 
 		if($step_number < 0) {
