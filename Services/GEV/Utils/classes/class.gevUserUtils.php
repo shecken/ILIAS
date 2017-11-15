@@ -44,6 +44,17 @@ class gevUserUtils
 		, "Azubi"
 		, "DBV UVG"
 		, "int. Referent"
+		, "CENT"
+		, "COS"
+		, "AM"
+		, "ADVO"
+		, "GDAG"
+		, "BAD"
+		, "DIAL"
+		, "MA"
+		, "FK"
+		, "IDD"
+		, "Admin LE"
 	);
 
 	protected function __construct($a_user_id)

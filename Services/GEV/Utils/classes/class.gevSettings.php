@@ -437,6 +437,17 @@ class gevSettings
 		, "DBV UVG"
 		, "int. Referent"
 		, "Agt-ID"
+		, "CENT"
+		, "COS"
+		, "AM"
+		, "ADVO"
+		, "GDAG"
+		, "BAD"
+		, "DIAL"
+		, "MA"
+		, "FK"
+		, "IDD"
+		, "Admin LE"
 		);
 
 	// Names of roles where users need to pay the
@@ -473,6 +484,16 @@ class gevSettings
 		, "TP Basis"
 		, "VFS"
 		, "Agt-ID"
+		, "CENT"
+		, "COS"
+		, "AM"
+		, "ADVO"
+		, "GDAG"
+		, "BAD"
+		, "DIAL"
+		, "MA"
+		, "FK"
+		, "IDD"
 		);
 
 	// Names of roles that count as admins
@@ -664,6 +685,17 @@ class gevSettings
 		//, "TP Service"			=> "nicht relevant"
 		//, "TP Basis"				=> "nicht relevant"
 		//, "VFS"					=> "nicht relevant"
+		, "CENT"					=> "ID"
+		, "COS"						=> "ID"
+		, "AM"						=> "ID"
+		, "ADVO"					=> "ID"
+		, "GDAG"					=> "ID"
+		, "BAD"						=> "ID"
+		, "DIAL"					=> "ID"
+		, "MA"						=> "ID"
+		, "FK"						=> "ID"
+		, "IDD"						=> "ID"
+		, "Admin LE"				=> "ID"
 		);
 
 	public static $TEPTYPE_ORDER = array(
