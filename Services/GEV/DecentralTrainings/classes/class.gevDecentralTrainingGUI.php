@@ -768,11 +768,12 @@ class gevDecentralTrainingGUI
 		$form = $this->buildTrainingOptionsForm(false, $is_flexible, $form_values);
 
 		//gev patch start
+		$check_input = $form->checkInput();
 		$form->setValuesByPost();
 		$element = $form->getItemByPostvar("correct_data");
 		$element->setChecked(false);
 
-		if (!$form->checkInput()) {
+		if (!$check_input) {
 			return $this->showSettings($form);
 		}
 

@@ -469,7 +469,7 @@ $options = array(
 	,"Nebenberufsagenten"
 	,"Vertriebsassistenten"
 	,"DBV UVG"
-	,"DBV EVG"
+	,"int. Referent"
 	,"Inhaber einer Unternehmeragentur"
 	,"Innenvertrieb FD / OD / BD"
 	,"Innenvertrieb HV"
