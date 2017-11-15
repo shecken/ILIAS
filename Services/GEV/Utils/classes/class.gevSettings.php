@@ -349,21 +349,21 @@ class gevSettings
 
 	// Role mapping
 	public static $VMS_ROLE_MAPPING = array(
-		610 => array("HA 84",		"DBV"),
+		610 => array("84er",		"DBV"),
 		613 => array("DBV UVG",		"DBV"),
-		614 => array("DBV EVG",		"DBV"),
-		615 => array("DBV EVG",		"DBV"),
+		614 => array("int. Referent",		"DBV"),
+		615 => array("int. Referent",		"DBV"),
 		616 => array("DBV UVG",		"DBV"),
-		617 => array("DBV EVG",		"DBV"),
-		618 => array("DBV EVG",		"DBV"),
-		620 => array("DBV EVG",		"DBV"),
-		675 => array("DBV EVG",		"DBV"),
-		601 => array("DBV EVG",		"DBV"),
+		617 => array("int. Referent",		"DBV"),
+		618 => array("int. Referent",		"DBV"),
+		620 => array("int. Referent",		"DBV"),
+		675 => array("int. Referent",		"DBV"),
+		601 => array("int. Referent",		"DBV"),
 
-		603 => array("BA 84",		"Mitarbeiter"),
-		604 => array("BA 84",		"Mitarbeiter"),
-		606 => array("BA 84",		"Mitarbeiter"),
-		607 => array("BA 84",		"Mitarbeiter"),
+		603 => array("84er",		"Mitarbeiter"),
+		604 => array("84er",		"Mitarbeiter"),
+		606 => array("84er",		"Mitarbeiter"),
+		607 => array("84er",		"Mitarbeiter"),
 
 		608 => array("VP",			"Mitarbeiter"),
 		650 => array("VP",			"Mitarbeiter"),
@@ -378,22 +378,22 @@ class gevSettings
 		664 => array("NA",			"Mitarbeiter"),
 		693 => array("NA",			"Mitarbeiter"),
 
-		694 => array("BA 84",		"Mitarbeiter"),
+		694 => array("84er",		"Mitarbeiter"),
 
 		634 => array("AVL",			"Mitarbeiter"),
 
-		628 => array("HA 84",		"Mitarbeiter"),
-		630 => array("HA 84",		"Mitarbeiter"),
-		632 => array("HA 84",		"Mitarbeiter"),
-		633 => array("HA 84",		"Mitarbeiter"),
-		690 => array("HA 84",		"Mitarbeiter"),
+		628 => array("84er",		"Mitarbeiter"),
+		630 => array("84er",		"Mitarbeiter"),
+		632 => array("84er",		"Mitarbeiter"),
+		633 => array("84er",		"Mitarbeiter"),
+		690 => array("84er",		"Mitarbeiter"),
 
 		625 => array("OD/BD",		"Vorgesetzter"),
 		609 => array("OD/BD",		"Vorgesetzter"),
 		649 => array("OD/BD",		"Vorgesetzter"),
 		671 => array("FD",			"Vorgesetzter"),
 		674 => array("VP",			"Vorgesetzter"),
-		9100 => array("ID FK",		"Vorgesetzter")
+		9100 => array("FK",		"Vorgesetzter")
 
 	);
 
@@ -418,16 +418,14 @@ class gevSettings
 		, "OD"
 		, "BD"
 		, "FD"
-		, "Org PV 59"
-		, "PV 59"
+		, "59er"
 		, "Ausbildungsbeauftragter"
-		, "ID FK"
-		, "ID MA"
+		, "FK"
+		, "MA"
 		, "OD/FD/BD ID"
 		, "OD/FD ID"
 		, "BD ID"
-		, "VA 59"
-		, "VA HGB 84"
+		, "VA"
 		, "NFK"
 		, "FDA"
 		, "Ausbilder"
@@ -437,7 +435,7 @@ class gevSettings
 		, "ext. Trainer"
 		, "OD-Betreuer"
 		, "DBV UVG"
-		, "DBV EVG"
+		, "int. Referent"
 		, "Agt-ID"
 		);
 
@@ -452,18 +450,15 @@ class gevSettings
 		, "BD"
 		, "FD"
 		, "UA"
-		, "HA 84"
-		, "BA 84"
-		, "Org PV 59"
-		, "PV 59"
+		, "84er"
+		, "59er"
 		, "Ausbildungsbeauftragter"
-		, "ID FK"
-		, "ID MA"
+		, "FK"
+		, "MA"
 		, "OD/FD/BD ID"
 		, "OD/FD ID"
 		, "BD ID"
-		, "VA 59"
-		, "VA HGB 84"
+		, "VA"
 		, "NFK"
 		, "FDA"
 		, "Ausbilder"
@@ -473,7 +468,7 @@ class gevSettings
 		, "ext. Trainer"
 		, "OD-Betreuer"
 		, "DBV UVG"
-		, "DBV EVG"
+		, "int. Referent"
 		, "TP Service"
 		, "TP Basis"
 		, "VFS"
@@ -643,22 +638,19 @@ class gevSettings
 		, "BD"						=> "AAD"
 		, "FD"						=> "AAD"
 		, "UA"						=> "HGB §84"
-		, "HA 84"					=> "HGB §84"
-		, "BA 84"					=> "HGB §84"
-		, "Org PV 59"				=> "AAD"
-		, "PV 59"					=> "AAD"
+		, "84er"					=> "HGB §84"
+		, "59er"					=> "AAD"
 		, "NA"						=> "HGB §84"
 		, "VP"						=> "HGB §84"
 		, "AVL"						=> "HGB §84"
 		//, "Ausbildungsbeauftragter" => "nicht relevant"
-		, "ID FK"					=> "ID"
-		, "ID MA"					=> "ID"
+		, "FK"						=> "ID"
+		, "MA"						=> "ID"
 		, "OD/FD/BD ID"				=> "ID"
 		, "OD/FD ID"				=> "ID"
 		, "BD ID"					=> "ID"
 		, "Agt-Id"					=> "HGB §84"
-		, "VA 59"					=> "AAD"
-		, "VA HGB 84"				=> "HGB §84"
+		, "VA"						=> "HGB §84"
 		, "NFK"						=> "AAD"
 		, "FDA"						=> "AAD"
 		//, "Ausbilder"				=> "nicht relevant"
@@ -668,7 +660,7 @@ class gevSettings
 		//, "ext. Trainer"			=> "nicht relevant"
 		, "OD-Betreuer"				=> "ID"
 		, "DBV UVG"					=> "AAD"
-		, "DBV EVG"					=> "AAD"
+		, "int. Referent"			=> "AAD"
 		//, "TP Service"			=> "nicht relevant"
 		//, "TP Basis"				=> "nicht relevant"
 		//, "VFS"					=> "nicht relevant"

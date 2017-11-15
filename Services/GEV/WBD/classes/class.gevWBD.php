@@ -93,15 +93,13 @@ class gevWBD
 			,"OD"
 			,"BD"
 			,"FD"
-			,"Org PV 59"
-			,"PV 59"
+			,"59er"
 			,"Ausbildungsbeauftragter"
-			,"VA 59"
-			,"VA HGB 84"
+			,"VA"
 			,"NFK"
 			,"OD-Betreuer"
 			,"DBV UVG"
-			,"DBV EVG"
+			,"int. Referent"
 		),
 
 		//2 - Ausschließlichkeitsvermittler
@@ -113,8 +111,7 @@ class gevWBD
 			,"NA"
 			*/
 			"UA"
-			,"HA 84"
-			,"BA 84"
+			,"84er"
 			,"NA"
 			,"AVL"
 		),
@@ -133,8 +130,8 @@ class gevWBD
 			,'Admin-Orga'
 			,'Admin-eingeschraenkt'
 			,'Admin-Ansicht'
-			,'ID FK'
-			,'ID MA'
+			,'FK'
+			,'MA'
 			,'OD/FD/BD ID'
 			,'OD/FD ID'
 			,'BD ID'
@@ -154,25 +151,21 @@ class gevWBD
 
 	public static $wbd_tp_service_roles = array(
 		"UA"
-		,"HA 84"
-		,"BA 84"
-		,"Org PV 59"
-		,"PV 59"
+		,"84er"
+		,"59er"
 		,"AVL"
 		,"DBV UVG"
-		,"DBV EVG"
+		,"int. Referent"
 		,"TP Service"
 	);
 
 	public static $wbd_relevant_roles = array(
 		"UA"
-		,"HA 84"
-		,"BA 84"
-		,"Org PV 59"
-		,"PV 59"
+		,"84er"
+		,"59er"
 		,"AVL"
 		,"DBV UVG"
-		,"DBV EVG"
+		,"int. Referent"
 		,"TP Service"
 		,"TP Basis"
 		,"VP"

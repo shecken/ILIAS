@@ -272,14 +272,20 @@ class gevMainMenuGUI extends ilMainMenuGUI
 
 		$has_managment_menu = ($manage_courses || $search_courses || $manage_users || $manage_org_units
 							     || $manage_mails || $manage_competences || $manage_auto_user_admin_plugin)
-							&& ($this->user_utils && !$this->user_utils->hasRoleIn(array("OD/BD", "UA", "ID FK", "DBV UVG", "HA 84", "OD", "FD", "BD")))
+							&& ($this->user_utils && !$this->user_utils->hasRoleIn(array("OD/BD", "UA", "FK", "DBV UVG", "84er", "OD", "FD", "BD")))
 							;
 
 		require_once("Services/TEP/classes/class.ilTEPPermissions.php");
 
 		$employee_booking = ($this->user_utils && $this->user_utils->canViewEmployeeBookings());
 		require_once("Services/GEV/Utils/classes/class.gevHAUtils.php");
-		$can_create_ha_unit = ($this->user_utils && ($this->user_utils->hasRoleIn(array("HA 84")) && !gevHAUtils::getInstance()->hasHAUnit($this->user_utils->getId())));
+		/**
+		 * Disabled because of new role mapping in GOA 3.0
+		 * BA 84 and HA 84 merged in role 84er
+		 * Old BA 84 could not open ha units
+		 */
+		//$can_create_ha_unit = ($this->user_utils && ($this->user_utils->hasRoleIn(array("HA 84")) && !gevHAUtils::getInstance()->hasHAUnit($this->user_utils->getId())));
+		$can_create_ha_unit = false;
 		$local_user_admin = ($this->user_utils && $this->user_utils->isSuperior()); //Local User Administration Permission
 
 		$has_others_menu = $employee_booking || $can_create_ha_unit;
