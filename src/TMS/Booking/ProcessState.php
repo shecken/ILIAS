@@ -115,7 +115,7 @@ class ProcessState {
 		if (!array_key_exists($step_number, $this->step_data)) {
 			throw new \OutOfBoundsException("No data for $step_number.");
 		}
-		return json_decode($this->step_data[$step_number]);
+		return json_decode($this->step_data[$step_number], true);
 	}
 
 	/**
