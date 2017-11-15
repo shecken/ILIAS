@@ -437,6 +437,17 @@ class gevSettings
 		, "DBV UVG"
 		, "int. Referent"
 		, "Agt-ID"
+		, "Central"
+		, "Cosmos"
+		, "AM"
+		, "Advocard"
+		, "GDAG"
+		, "Badenia"
+		, "Dialog"
+		, "MA"
+		, "FK"
+		, "IDD"
+		, "Admin LE"
 		);
 
 	// Names of roles where users need to pay the
@@ -473,6 +484,16 @@ class gevSettings
 		, "TP Basis"
 		, "VFS"
 		, "Agt-ID"
+		, "Central"
+		, "Cosmos"
+		, "AM"
+		, "Advocard"
+		, "GDAG"
+		, "Badenia"
+		, "Dialog"
+		, "MA"
+		, "FK"
+		, "IDD"
 		);
 
 	// Names of roles that count as admins
@@ -664,6 +685,17 @@ class gevSettings
 		//, "TP Service"			=> "nicht relevant"
 		//, "TP Basis"				=> "nicht relevant"
 		//, "VFS"					=> "nicht relevant"
+		, "Central"					=> "ID"
+		, "Cosmos"					=> "ID"
+		, "AM"						=> "ID"
+		, "Advocard"				=> "ID"
+		, "GDAG"					=> "ID"
+		, "Badenia"					=> "ID"
+		, "Dialog"					=> "ID"
+		, "MA"						=> "ID"
+		, "FK"						=> "ID"
+		, "IDD"						=> "ID"
+		, "Admin LE"				=> "ID"
 		);
 
 	public static $TEPTYPE_ORDER = array(
@@ -797,6 +829,17 @@ class gevSettings
 	public function setDuplicatedUserOrgUnitId($obj_id)
 	{
 		$this->settings->set(self::DUPLICATE_USER_ORGUNIT_ID, $obj_id);
+	}
+
+	const COCKPIT_MEDIATHEK_REF_ID = 'cockpit_mediathek_ref_id';
+	public function getCockpitMediathekRefId()
+	{
+		return $this->settings->get(self::COCKPIT_MEDIATHEK_REF_ID);
+	}
+	public function setCockpitMediathekRefId($ref_id)
+	{
+		assert('is_int($ref_id)');
+		$this->settings->set(self::COCKPIT_MEDIATHEK_REF_ID,$ref_id);
 	}
 
 	const CRS_NA_QUALI_REF_ID = "crs_na_quali_ref_id";

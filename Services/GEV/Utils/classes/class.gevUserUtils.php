@@ -44,6 +44,17 @@ class gevUserUtils
 		, "Azubi"
 		, "DBV UVG"
 		, "int. Referent"
+		, "Central"
+		, "Cosmos"
+		, "AM"
+		, "Advocard"
+		, "GDAG"
+		, "Badenia"
+		, "Dialog"
+		, "MA"
+		, "FK"
+		, "IDD"
+		, "Admin LE"
 	);
 
 	protected function __construct($a_user_id)
