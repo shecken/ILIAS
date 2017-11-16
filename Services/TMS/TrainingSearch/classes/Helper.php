@@ -9,9 +9,6 @@ class Helper {
 	const F_TYPE = "f_type";
 	const F_TOPIC = "f_topic";
 	const F_TARGET_GROUP = "f_target";
-	const F_CITY = "f_city";
-	const F_PROVIDER = "f_provider";
-	const F_NOT_MIN_MEMBER = "f_not_min_member";
 	const F_DURATION = "f_duration";
 	const F_SORT_VALUE = "f_sort_value";
 
@@ -39,13 +36,12 @@ class Helper {
 	 * Get needed values from bkm. Just best for user
 	 *
 	 * @param ilObjBookingModalities[] 	$bms
-	 * @param ilDateTime 	$crs_start_date
 	 *
-	 * @return array<integer, int | ilDateTime | string>
+	 * @return array<integer, int | string>
 	 */
-	public function getBestBkmValues(array $bkms, ilDateTime $crs_start_date) {
-		$plugin = ilPluginAdmin::getPluginObjectById('xbkm');
-		return $plugin->getBestBkmValues($bkms, $crs_start_date);
+	public function getBestBkmValues(array $bkms) {
+		require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/BookingModalities/classes/class.ilBookingModalitiesPlugin.php");
+		return ilBookingModalitiesPlugin::bestValuesForUser($bkms);
 	}
 
 	/**
@@ -143,11 +139,6 @@ class Helper {
 		$item->setEnd(new ilDateTime(date("Y-12-31 23:59:59"), IL_CAL_DATETIME));
 		$form->addItem($item);
 
-		$item = new ilCheckboxInputGUI("", self::F_NOT_MIN_MEMBER);
-		$item->setInfo($this->g_lng->txt('not_min_member'));
-		$item->setValue(1);
-		$form->addItem($item);
-
 		$item = new ilHiddenInputGUI('cmd');
 		$item->setValue('submit');
 		$form->addItem($item);
@@ -162,10 +153,24 @@ class Helper {
 		$submit = $this->g_factory->button()->primary($this->g_lng->txt('search'), "#")->withOnLoadCode(function($id) use ($form_id) {
 			return "$('#{$id}').click(function() { $('#{$form_id}').submit(); return false; });";
 		});
- 
+
+		$reset = $this->g_factory->button()->standard($this->g_lng->txt('reset'), "#")->withOnLoadCode(function($id) use ($form_id) {
+			$dur1 = '$("input[name=\'f_duration[start]\']").val("'.date("01.01.Y").'");';
+			$dur2 = '$("input[name=\'f_duration[end]\']").val("'.date("31.12.Y").'");';
+			return "$('#{$id}').click(function() { 
+				$('#f_title').val('');
+				$('#f_type option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
+				$('#f_topic option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
+				$('#f_target option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
+				$('#f_not_min_member').prop('checked', false );
+				".$dur1."
+				".$dur2."
+				return false; 
+			});";
+		});
 
 		$modal = $this->g_factory->modal()->roundtrip($this->g_lng->txt('filter'), $this->g_factory->legacy($form->getHTML()))
-			->withActionButtons([$submit]);
+			->withActionButtons([$reset, $submit]);
 
 		$button1 = $this->g_factory->button()->standard($this->g_lng->txt('search'), '#')
 			->withOnClick($modal->getShowSignal());
@@ -181,33 +186,36 @@ class Helper {
 	public function getFilterValuesFrom(array $values) {
 		$filter = array();
 
-		if(array_key_exists(self::F_TITLE, $values)
-			&& trim($values[self::F_TITLE]) != ""
-		) {
-			$filter[self::F_TITLE] = trim($values[self::F_TITLE]);
+		if(array_key_exists(self::F_TITLE, $values)) {
+			$title = trim($values[self::F_TITLE]);
+			if($title != "") {
+				$filter[self::F_TITLE] = $title;
+			}
 		}
 
-		if(array_key_exists(self::F_TYPE, $values)
-			&& (int)$values[self::F_TYPE] != -1
-		) {
-			$filter[self::F_TYPE] = (int)$values[self::F_TYPE];
+		if(array_key_exists(self::F_TYPE, $values)) {
+			$type = $values[self::F_TYPE];
+			if($type != -1) {
+				$filter[self::F_TYPE] = $type;
+			}
 		}
 
-		if(array_key_exists(self::F_TOPIC, $values)
-			&& (int)$values[self::F_TOPIC] != -1
-		) {
-			$filter[self::F_TOPIC] = (int)$values[self::F_TOPIC];
+		if(array_key_exists(self::F_TOPIC, $values)) {
+			$topic = $values[self::F_TOPIC];
+			if($topic != -1) {
+				$filter[self::F_TOPIC] = $topic;
+			}
 		}
 
-		if(array_key_exists(self::F_TARGET_GROUP, $values)
-			&& (int)$values[self::F_TARGET_GROUP] != -1
-		) {
-			$filter[self::F_TARGET_GROUP] = (int)$values[self::F_TARGET_GROUP];
+		if(array_key_exists(self::F_TARGET_GROUP, $values)) {
+			$target_group = $values[self::F_TARGET_GROUP];
+			if($target_group != -1) {
+				$filter[self::F_TARGET_GROUP] = $target_group;
+			}
 		}
 
-		$not_min_member = $values[self::F_NOT_MIN_MEMBER];
-		if($not_min_member && $not_min_member == "1") {
-			$filter[self::F_NOT_MIN_MEMBER] = $not_min_member;
+		if(array_key_exists(self::F_DURATION, $values)) {
+			$filter[self::F_DURATION] = $values[self::F_DURATION];
 		}
 
 		if(array_key_exists(self::F_DURATION, $values)) {

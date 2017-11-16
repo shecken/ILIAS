@@ -40,7 +40,10 @@ class UnboundCourseProvider extends Base {
 						CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO
 					  ]
 					)
-				, new CourseInfoImpl
+				];
+
+			if($object->getCourseStart() !== null) {
+				$ret[] = new CourseInfoImpl
 					( $entity
 					, $lng->txt("date")
 					, $this->formatPeriod($object->getCourseStart(), $object->getCourseEnd())
@@ -52,8 +55,8 @@ class UnboundCourseProvider extends Base {
 						CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO,
 						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
 					  ]
-					)
-				];
+					);
+			}
 
 			require_once("Modules/Course/classes/class.ilCourseParticipants.php");
 			require_once("Services/Membership/classes/class.ilWaitingList.php");

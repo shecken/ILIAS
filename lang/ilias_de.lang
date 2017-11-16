@@ -15989,9 +15989,15 @@ tms#:#filter#:#Erweiterte Suche
 tms#:#search#:#Suchen
 tms#:#booking_aborted#:#Ihr Buchungsvorgang wurde abgebrochen.
 common#:#cockpit#:#Cockpit
-tms#:#no_detail_infos#:#<strong><i>Leider liegen keine Detailinfos vor!</i></strong>
+tms#:#no_detail_infos#:#<strong><i>Es liegen keine weiteren Informationen zu diesem Angebot vor.</i></strong>
 tms#:#overview_header#:#Zusammenfassung
 tms#:#no_trainings_available#:#Derzeit stehen für Sie keine Trainings zur Buchung zur Verfügung.
 tms#:#booked_on_waitinglist#:#gebucht auf Warteliste
 tms#:#booked_as_member#:#gebucht
 tms#:#sorting#:#Sortierung
+tms#:#booking#:#Buchung
+tms#:#canceling#:#Stornierung
+tms#:#cancel_overview_description#:#Bitte prüfen Sie die Angaben und schließen Sie die Stornierung ab.
+tms#:#booking_overview_description#:#Bitte prüfen Sie die Angaben und schließen Sie die Buchung ab.
+tms#:#booking_confirm#:#Verbindlich buchen
+tms#:#cancel_confirm#:#Verbindlich stornieren

@@ -1879,8 +1879,8 @@ class ilObjSessionGUI extends ilObjectGUI implements ilDesktopItemHandling
 			$this->object->getFirstAppointment()->setDaysOffset((int)$offset);
 			$this->object->getFirstAppointment()->setStart($start);
 			$this->object->getFirstAppointment()->setEnd($end);
-			$this->object->getFirstAppointment()->setStartingTime($start->getUnixTime()+$start->getUTCOffset());
-			$this->object->getFirstAppointment()->setEndingTime($end->getUnixTime()+$end->getUTCOffset());
+			$this->object->getFirstAppointment()->setStartingTime($start->getUnixTime());
+			$this->object->getFirstAppointment()->setEndingTime($end->getUnixTime());
 			$this->object->getFirstAppointment()->toggleFulltime(false);
 		}
 
