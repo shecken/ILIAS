@@ -119,6 +119,16 @@ class ProcessState {
 	}
 
 	/**
+	 * Checks the given step_number has saved data
+	 *
+	 * @param int 	$step_number
+	 * @return bool
+	 */
+	public function hasStepData($step_number) {
+		return array_key_exists($step_number, $this->step_data);
+	}
+
+	/**
 	 * Get all step data in an array.
 	 *
 	 * @return	array<int,string>
