@@ -119,7 +119,7 @@ class ilParticipationStatusHelper
 			case "Präsenztraining":
 				return ilParticipationStatus::MODE_NON_REVIEWED;
 			case "Selbstlernkurs":
-			case "Praxisbegleitung":
+			case "Praxisbegleitung (AD)":
 				return ilParticipationStatus::MODE_CONTINUOUS;
 			case "Webinar":
 				return ilParticipationStatus::MODE_NON_REVIEWED;

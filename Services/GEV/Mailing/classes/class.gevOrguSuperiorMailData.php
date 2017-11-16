@@ -222,7 +222,7 @@ class gevOrguSuperiorMailData extends ilMailData
 					$tpl->setVariable("CRS_DATE", ", $date");
 				}
 
-				if ((!in_array($entry_data["type"], array("Selbstlernkurs", "Webinar", "Virtuelles Training"))) && $key == "gebucht") {
+				if ((!in_array($entry_data["type"], array("Selbstlernkurs", "Webinar"))) && $key == "gebucht") {
 					$tpl->setCurrentBlock("overnights");
 					$tpl->setVariable("OVERNIGHTS_CAPTION", "Übernachtungen");
 					$tpl->setVariable("USR_OVERNIGHTS_AMOUNT", $entry_data["overnights"]);
