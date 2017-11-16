@@ -1069,7 +1069,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn($player_title);
 
 		$player
-			->expects($this->never())
+			->expects($this->once())
 			->method("saveProcessState");
 
 		$step1
@@ -1077,10 +1077,10 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("appendToStepForm")
 			->with($form_step1);
 
-		$form_step1
+		$step1
 			->expects($this->once())
-			->method("setValuesByArray")
-			->with($data1);
+			->method("addDataToForm")
+			->with($form_step1, $data1);
 
 		$form_step1
 			->expects($this->once())
