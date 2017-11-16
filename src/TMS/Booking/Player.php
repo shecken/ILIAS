@@ -165,6 +165,12 @@ abstract class Player {
 				}
 			}
 		}
+
+		if($state->hasStepData($step_number)) {
+			$step_data = $state->getStepData($step_number);
+			$current_step->addDataToForm($form, $step_data);
+		}
+
 		return $form->getHtml();
 	}
 
