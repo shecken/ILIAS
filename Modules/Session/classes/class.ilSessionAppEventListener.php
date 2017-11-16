@@ -45,8 +45,8 @@ class ilSessionAppEventListener {
 		foreach ($sessions as $session)
 		{
 			$appointment 	= $session->getFirstAppointment();
-			$start_time 	= $appointment->getStart()->get(IL_CAL_FKT_DATE, "H:i:s");
-			$end_time 		= $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i:s");
+			$start_time 	= $appointment->getStart()->get(IL_CAL_FKT_DATE, "H:i:s", "UTC");
+			$end_time 		= $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i:s", "UTC");
 			$offset 		= $appointment->getDaysOffset();
 
 			$start_date 	= self::createDateTime(date("Y-m-d"), $start_time);
