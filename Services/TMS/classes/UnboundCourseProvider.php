@@ -174,7 +174,7 @@ class UnboundCourseProvider extends Base {
 			if($name != "") {
 				$ret[] = new CourseInfoImpl
 					( $entity
-					, $txt("title")
+					, $txt("title_with_colon")
 					, $name
 					, ""
 					, 350
@@ -188,7 +188,7 @@ class UnboundCourseProvider extends Base {
 			if($address != "") {
 				$ret[] = new CourseInfoImpl
 					( $entity
-					, $txt("address")
+					, $txt("address_with_colon")
 					, $address
 					, ""
 					, 360
