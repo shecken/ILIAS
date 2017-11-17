@@ -82,12 +82,11 @@ class UnboundCourseProvider extends Base {
 
 		$date = $this->formatPeriod($crs_start, $object->getCourseEnd());
 		$ret[] = $this->createCourseInfoObject($entity
-			, $this->lng->txt("date")
+			, $this->lng->txt("date").":"
 			, $date
 			, 300
 			, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO,
 				CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
-				CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
 				CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO,
 				CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
 			  ]
@@ -158,7 +157,6 @@ class UnboundCourseProvider extends Base {
 					, 1000
 					, [
 						CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
-						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
 						CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
 					  ]
 				);
@@ -323,11 +321,10 @@ class UnboundCourseProvider extends Base {
 
 			if($name != "") {
 				$ret[] = $this->createCourseInfoObject($entity
-					, $txt("title")
+					, $txt("title").":"
 					, $name
 					, 350
 					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
-						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
 						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
 					  ]
 					);
@@ -342,7 +339,7 @@ class UnboundCourseProvider extends Base {
 
 			if($address != "") {
 				$ret[] =  $this->createCourseInfoObject($entity
-					, $txt("address")
+					, $txt("address").":"
 					, $address
 					, 360
 					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
