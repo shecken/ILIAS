@@ -178,7 +178,6 @@ abstract class Player {
 	 * Build the view for the previews step in the booking process.
 	 *
 	 * @param	ProcessState	$state
-	 * @param	array|null	$post
 	 * @return	string
 	 */
 	protected function processPreviousStep(ProcessState $state) {

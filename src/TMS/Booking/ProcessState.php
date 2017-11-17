@@ -119,7 +119,7 @@ class ProcessState {
 	}
 
 	/**
-	 * Checks the given step_number has saved data
+	 * Checks whether the given step_number has saved data
 	 *
 	 * @param int 	$step_number
 	 * @return bool
