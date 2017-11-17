@@ -45,7 +45,7 @@ class UnboundCourseProvider extends Base {
 			if($object->getCourseStart() !== null) {
 				$ret[] = new CourseInfoImpl
 					( $entity
-					, $lng->txt("date")
+					, $lng->txt("date").":"
 					, $this->formatPeriod($object->getCourseStart(), $object->getCourseEnd())
 					, ""
 					, 300
@@ -174,7 +174,7 @@ class UnboundCourseProvider extends Base {
 			if($name != "") {
 				$ret[] = new CourseInfoImpl
 					( $entity
-					, $txt("title_with_colon")
+					, $txt("title").":"
 					, $name
 					, ""
 					, 350
@@ -188,7 +188,7 @@ class UnboundCourseProvider extends Base {
 			if($address != "") {
 				$ret[] = new CourseInfoImpl
 					( $entity
-					, $txt("address_with_colon")
+					, $txt("address").":"
 					, $address
 					, ""
 					, 360
