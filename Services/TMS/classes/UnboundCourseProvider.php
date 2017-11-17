@@ -196,7 +196,7 @@ class UnboundCourseProvider extends Base {
 			$ret[] = $this->createCourseInfoObject($entity
 					, $this->lng->txt("trainer")
 					, $tutor_names
-					, 1300
+					, 1500
 					, [
 						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO
 					  ]
