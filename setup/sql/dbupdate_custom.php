@@ -6466,3 +6466,9 @@ $q = 'UPDATE hist_usercoursestatus'
 	.'		AND credit_points IS NOT NULL';
 $ilDB->manipulate($q);
 ?>
+
+<#274>
+<?php
+global $ilDB;
+$ilDB->dropTableColumn("dct_building_block", "dbv_topic");
+?>
