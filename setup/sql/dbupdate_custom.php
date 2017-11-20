@@ -6434,3 +6434,41 @@ foreach (ilStudyProgrammeType::getAllTypes() as $type) {
 }
 
 ?>
+
+<#271>
+<?php
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+$credit_points_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_CREDIT_POINTS);
+global $ilDB;
+$q = 'UPDATE adv_md_values_int'
+	.'	SET value = 3*value'
+	.'	WHERE field_id = '.$ilDB->quote($credit_points_field_id,'integer')
+	.'	AND value IS NOT NULL';
+$ilDB->manipulate($q);
+?>
+
+<#272>
+<?php
+$q = 'UPDATE hist_course'
+	.'	SET max_credit_points = 3*max_credit_points'
+	.'	WHERE max_credit_points != '.$ilDB->quote('-empty-','text')
+	.'		AND max_credit_points IS NOT NULL'
+	.'		AND max_credit_points != '.$ilDB->quote(-1,'integer');
+$ilDB->manipulate($q);
+?>
+
+<#273>
+<?php
+$q = 'UPDATE hist_usercoursestatus'
+	.'	SET credit_points = 3*credit_points'
+	.'	WHERE credit_points != '.$ilDB->quote(-1,'integer')
+	.'		AND credit_points != '.$ilDB->quote('-empty-','text')
+	.'		AND credit_points IS NOT NULL';
+$ilDB->manipulate($q);
+?>
+
+<#274>
+<?php
+global $ilDB;
+$ilDB->dropTableColumn("dct_building_block", "dbv_topic");
+?>

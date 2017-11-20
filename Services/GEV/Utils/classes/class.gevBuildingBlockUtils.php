@@ -154,16 +154,6 @@ class gevBuildingBlockUtils
 		$this->topic = $topic;
 	}
 
-	public function getDBVTopic()
-	{
-		return $this->dbv_topic;
-	}
-
-	public function setDBVTopic($dbv_topic)
-	{
-		$this->dbv_topic = $dbv_topic;
-	}
-
 	public function setMoveToCourse($move_to_course)
 	{
 		$this->move_to_course = $move_to_course;
@@ -201,7 +191,7 @@ class gevBuildingBlockUtils
 
 	public function loadData()
 	{
-		$sql = "SELECT obj_id, title, content, target, is_wp_relevant, is_active, gdv_topic, training_categories,topic, dbv_topic, move_to_course, is_blank\n".
+		$sql = "SELECT obj_id, title, content, target, is_wp_relevant, is_active, gdv_topic, training_categories,topic, move_to_course, is_blank\n".
 			   "  FROM ".self::TABLE_NAME.
 			   " WHERE obj_id = ".$this->db->quote($this->getId(), "integer");
 
@@ -218,7 +208,6 @@ class gevBuildingBlockUtils
 			$this->gdv_topic = $row["gdv_topic"];
 			$this->training_categories = $row["training_categories"] ? unserialize($row["training_categories"]) : array();
 			$this->topic = $row["topic"];
-			$this->dbv_topic = $row["dbv_topic"];
 			$this->move_to_course = $row["move_to_course"];
 			$this->is_blank = $row["is_blank"];
 		}
@@ -237,7 +226,6 @@ class gevBuildingBlockUtils
 			  ."     , gdv_topic = ".$this->db->quote($this->getGDVTopic(), "text")."\n"
 			  ."     , training_categories = ".$this->db->quote(serialize($this->getTrainingCategories()), "text")."\n"
 			  ."     , topic = ".$this->db->quote($this->getTopic(), "text")."\n"
-			  ."     , dbv_topic = ".$this->db->quote($this->getDBVTopic(), "text")."\n"
 			  ."     , move_to_course = ".$this->db->quote($this->getMoveToCourse(), "integer")."\n"
 			  ." WHERE obj_id = ".$this->db->quote($this->getId(), "integer");
 
@@ -255,7 +243,7 @@ class gevBuildingBlockUtils
 
 		$sql = "INSERT INTO ".self::TABLE_NAME.""
 			  ." (obj_id, title, content, target, is_wp_relevant, is_active, last_change_user\n"
-			  .", last_change_date, is_deleted, gdv_topic, training_categories, topic, dbv_topic, move_to_course\n"
+			  .", last_change_date, is_deleted, gdv_topic, training_categories, topic, move_to_course\n"
 			  .", pool_id, is_blank)"
 			  ." VALUES (".$this->db->quote($this->getId(), "integer")."\n"
 			  ."        ,".$this->db->quote($this->getTitle(), "text")."\n"
@@ -269,7 +257,6 @@ class gevBuildingBlockUtils
 			  ."        ,".$this->db->quote($this->getGDVTopic(), "text")."\n"
 			  ."        ,".$this->db->quote(serialize($this->getTrainingCategories()), "text")."\n"
 			  ."        ,".$this->db->quote($this->getTopic(), "text")."\n"
-			  ."        ,".$this->db->quote($this->getDBVTopic(), "text")."\n"
 			  ."        ,".$this->db->quote($this->getMoveToCourse(), "integer")."\n"
 			  ."        ,".$this->db->quote($this->getPoolId(), "integer")."\n"
 			  ."        ,".$this->db->quote($this->getIsBlank(), "integer")."\n"
@@ -292,7 +279,7 @@ class gevBuildingBlockUtils
 
 		$add_where = self::createAdditionalWhere($a_search_opts);
 		$sql = "SELECT bb.obj_id, bb.title, bb.content, bb.target\n"
-			  ."     , bb.is_wp_relevant, bb.is_active, bb.gdv_topic, bb.training_categories, bb.topic, bb.dbv_topic\n"
+			  ."     , bb.is_wp_relevant, bb.is_active, bb.gdv_topic, bb.training_categories, bb.topic\n"
 			  ."     , usr.login, bb.last_change_date, bb.move_to_course, bb.is_blank\n"
 			  ."  FROM ".self::TABLE_NAME." bb\n"
 			  ."  JOIN usr_data usr ON usr_id = last_change_user\n"
@@ -326,7 +313,7 @@ class gevBuildingBlockUtils
 		global $ilDB;
 
 		$sql = "SELECT obj_id, title, content, target\n"
-			  ."     , is_wp_relevant, is_active, gdv_topic, training_categories, topic, dbv_topic\n"
+			  ."     , is_wp_relevant, is_active, gdv_topic, training_categories, topic,\n"
 			  ."	 move_to_course, is_blank\n"
 			  ."  FROM ".self::TABLE_NAME."\n"
 			  ."  WHERE is_deleted = ".$ilDB->quote(0, "integer")."\n"
@@ -628,7 +615,6 @@ class gevBuildingBlockUtils
 
 		$cpy_bb_utils->setTrainingCategories($this->getTrainingCategories());
 		$cpy_bb_utils->setTopic($this->getTopic());
-		$cpy_bb_utils->setDBVTopic($this->getDBVTopic());
 		$cpy_bb_utils->setMoveToCourse($this->getMoveToCourse());
 		$cpy_bb_utils->setPoolId($target_pool_id);
 
@@ -649,15 +635,15 @@ class gevBuildingBlockUtils
 
 		$insert = "INSERT INTO ".self::TABLE_NAME."\n"
 				." (obj_id, title, content, target, is_wp_relevant, is_active, is_deleted, last_change_user
-					, last_change_date, gdv_topic, training_categories, topic, dbv_topic, move_to_course, pool_id)"
-				." VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+					, last_change_date, gdv_topic, training_categories, topic, move_to_course, pool_id)"
+				." VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-		$insert_types = array("integer","text","text","text","integer","integer","integer","integer","timestamp","text","text","text","text","integer","integer");
+		$insert_types = array("integer","text","text","text","integer","integer","integer","integer","timestamp","text","text","text","integer","integer");
 
 		$statement = $ilDB->prepare($insert, $insert_types);
 
 		$query = "SELECT title, content, target, is_wp_relevant, is_active, is_deleted, last_change_user
-					, last_change_date, gdv_topic, training_categories, topic, dbv_topic, move_to_course\n"
+					, last_change_date, gdv_topic, training_categories, topic, move_to_course\n"
 					." FROM ".self::TABLE_NAME."\n"
 					." WHERE pool_id = ".$ilDB->quote($from_pool_id, "integer");
 

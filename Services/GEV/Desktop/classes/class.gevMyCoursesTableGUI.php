@@ -57,7 +57,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
 		$this->addColumn($this->gLng->txt("gev_location"), "location");
 		$this->addColumn($this->gLng->txt("date"), "start_date");
-		$this->addColumn($this->gLng->txt("gev_points"), "points");
+		$this->addColumn($this->gLng->txt("gev_wb_time"), "points");
 		$this->addColumn("&euro;", "fee");
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "actions", "20px", false);
 
@@ -160,12 +160,14 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 			$show_absolute_cancel_date = ilDateTime::_before($now, $a_set["absolute_cancel_date"]);
 		}
 
+		$wb_time = gevCourseUtils::convertCreditpointsToFormattedDuration($a_set['points']);
+
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("STATUS", $status);
 		$this->tpl->setVariable("TYPE", $a_set["type"]);
 		$this->tpl->setVariable("LOCATION", ($a_set["location"] != "") ? $a_set["location"] : $a_set["location_free_text"]);
 		$this->tpl->setVariable("DATE", $date);
-		$this->tpl->setVariable("POINTS", $a_set["points"]);
+		$this->tpl->setVariable("POINTS", $wb_time);
 		$this->tpl->setVariable("FEE", gevCourseUtils::formatFee($a_set["fee"]));
 		$this->tpl->setVariable("ACTIONS", $action);
 		$this->tpl->setVariable("TARGET_GROUP", $a_set["target_group"]);

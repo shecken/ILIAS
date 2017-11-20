@@ -47,10 +47,9 @@ class ilBuildingBlockTableGUI extends ilTable2GUI
 
 		$this->addColumn($this->lng->txt("gev_dec_training_training_category"), 'training_categories');
 		$this->addColumn($this->lng->txt("gev_dec_training_gdv_topic"), 'gdv_topic');
-		$this->addColumn($this->lng->txt("gev_dec_training_dbv_topic"), 'dbv_topic');
 		$this->addColumn($this->lng->txt("gev_dec_training_topic"), 'topic');
 
-		$this->addColumn($this->lng->txt("gev_dec_building_block_is_wp_relevant"), "is_wp_relevant");
+		$this->addColumn($this->lng->txt("gev_dec_building_block_is_idd_relevant"), "is_wp_relevant");
 		$this->addColumn($this->lng->txt("gev_dec_building_block_active"), "is_active");
 		$this->addColumn($this->lng->txt("last_change"), "last_change");
 		$this->addColumn($this->lng->txt("action"));
@@ -74,7 +73,6 @@ class ilBuildingBlockTableGUI extends ilTable2GUI
 
 		$this->tpl->setVariable("TRAINING_CAT", implode("<br />", $a_set["training_categories"]));
 		$this->tpl->setVariable("GDV_TOPIC", $a_set["gdv_topic"]);
-		$this->tpl->setVariable("DBV_TOPIC", $a_set["dbv_topic"]);
 		$this->tpl->setVariable("TOPIC", $a_set["topic"]);
 
 		$this->tpl->setVariable("IS_WP_RELEVANT", ($a_set["is_wp_relevant"]) ? "Ja" : "Nein");

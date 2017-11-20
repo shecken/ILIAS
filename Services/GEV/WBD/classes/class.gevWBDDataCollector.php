@@ -545,7 +545,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 		$sql = "SELECT hist_usercoursestatus.row_id, hist_user.user_id\n"
 					.", hist_usercoursestatus.begin_date, hist_usercoursestatus.end_date\n"
-					.", hist_usercoursestatus.credit_points, hist_course.type, hist_course.wbd_topic\n"
+					.", FLOOR(hist_usercoursestatus.credit_points/3) credit_points, hist_course.type, hist_course.wbd_topic\n"
 					.", hist_course.crs_id"
 					.", hist_course.title, hist_user.bwv_id\n"
 					.", hist_user.begin_of_certification\n"

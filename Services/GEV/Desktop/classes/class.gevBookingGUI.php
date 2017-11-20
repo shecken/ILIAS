@@ -333,10 +333,6 @@ class gevBookingGUI
 				   , $desc
 				   , $desc
 				   )
-			, array( $this->lng->txt("gev_course_id")
-				   , true
-				   , $this->crs_utils->getCustomId()
-				   )
 			, array( $this->lng->txt("gev_target_group")
 				   , true
 				   , $this->crs_utils->getTargetGroupDesc()
@@ -398,9 +394,9 @@ class gevBookingGUI
 				   , $this->isWithPayment()
 				   , str_replace(".", ",", "".$this->crs_utils->getFormattedFee()) . " &euro;"
 				   )
-			, array( $this->lng->txt("gev_credit_points")
+			, array( $this->lng->txt("gev_wb_time")
 				   , true
-				   , $this->crs_utils->getCreditPoints()
+				   , $this->crs_utils->getCreditedDurationFormatted()
 				   )
 			//, array( $this->lng->txt("precondition")
 			//	   , true

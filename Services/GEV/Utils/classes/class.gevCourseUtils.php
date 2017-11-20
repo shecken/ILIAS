@@ -3136,11 +3136,7 @@ class gevCourseUtils
 		$officer_contact = $this->getTrainingOfficerContactInfo();
 
 		$vals = array(
-			  array( $this->gLng->txt("gev_course_id")
-				   , true
-				   , $this->getCustomId()
-				   )
-			, array( $this->gLng->txt("gev_course_type")
+			  array( $this->gLng->txt("gev_course_type")
 				   , true
 				   , implode(", ", $this->getType())
 				   )
@@ -3178,9 +3174,9 @@ class gevCourseUtils
 					   $bill !== null?$bill->getAmount():0
 				   )." &euro;"
 				   	)
-			, array( $this->gLng->txt("gev_credit_points")
+			, array( $this->gLng->txt("gev_wb_time")
 				   , true
-				   , $this->getCreditPoints()
+				   , $this->getCreditedDurationFormatted()
 				   )
 			);
 
@@ -4078,5 +4074,53 @@ class gevCourseUtils
 		$crs_ref->update();
 		$crs_ref->createReference();
 		$crs_ref->putInTree($ref_id);
+	}
+
+	const CREDITED_DURATION_HOURS = 'hours';
+	const CREDITED_DURATION_MINUTES = 'minutes';
+
+	/**
+	 * Convert the credit points to a time-duration.
+	 *
+	 * @param	int	$c_p
+	 * @return	int[string]
+	 */
+	public static function convertCreditpointsToTime($c_p)
+	{
+		assert('is_int($c_p) || is_null($c_p)');
+		$minutes_over_full_hours_equivalent = $c_p%4;
+		$full_hours_equivalent = $c_p - $minutes_over_full_hours_equivalent;
+
+		return [self::CREDITED_DURATION_HOURS => $full_hours_equivalent/4
+				,self::CREDITED_DURATION_MINUTES => $minutes_over_full_hours_equivalent*15];
+	}
+
+	/**
+	 * Get the time-creditpoints equivalent of this course.
+	 *
+	 * @return	int[string]
+	 */
+	public function getCreditedDuration()
+	{
+		$c_p = (int)$this->getCreditPoints();
+		return self::convertCreditpointsToTime($c_p);
+	}
+
+	/**
+	 * Same as above, but formated.
+	 */
+	public static function convertCreditpointsToFormattedDuration($c_p)
+	{
+		assert('is_int($c_p) || is_null($c_p)');
+		global $lng;
+		$wb_time = self::convertCreditpointsToTime((int)$c_p);
+		$hours = $wb_time[gevCourseUtils::CREDITED_DURATION_HOURS];
+		$minutes = $wb_time[gevCourseUtils::CREDITED_DURATION_MINUTES];
+		return str_pad($hours, 2,'0',STR_PAD_LEFT).':'.str_pad($minutes, 2,'0',STR_PAD_LEFT);
+	}
+	public function getCreditedDurationFormatted()
+	{
+		$c_p = (int)$this->getCreditPoints();
+		return self::convertCreditpointsToFormattedDuration($c_p);
 	}
 }

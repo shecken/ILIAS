@@ -50,7 +50,7 @@ class ilParticipationStatusTableGUI extends ilTable2GUI
 		$this->addColumn($this->lng->txt("login"), "login");
 		$this->addColumn($this->lng->txt("objs_orgu"), "org");
 		$this->addColumn($this->lng->txt("ptst_admin_status"), "status");
-		$this->addColumn($this->lng->txt("ptst_admin_credit_points"), "cpoints");
+		$this->addColumn($this->lng->txt("gev_wb_time"), "cpoints");
 		$this->addColumn($this->lng->txt("ptst_admin_changed_by"), "changed_on");
 
 		//gev-patch #2286 start

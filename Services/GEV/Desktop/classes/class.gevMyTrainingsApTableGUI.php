@@ -71,7 +71,6 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		$this->addColumn("", "expand", "0px", false, "catTableExpandButton");
 
 		$this->addColumn($this->gLng->txt("title"), "title");
-		$this->addColumn($this->gLng->txt("gev_training_id"), "custom_id");
 		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
 		//$this->addColumn($this->gLng->txt("gev_learning_cat"), "category");
 		$this->addColumn($this->gLng->txt("gev_location"), "location");

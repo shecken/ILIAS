@@ -39,7 +39,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 				."		AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL ".$year." YEAR)"
 				."		AND ".$this->participationWBDRelevant()
 				."		AND ".$course_may_be_in_wbd
-				."		, usrcrs.credit_points"
+				."		, FLOOR(usrcrs.credit_points / 3)"
 				."		, 0"
 				."		)"
 				."	)";
@@ -118,7 +118,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.$this->whereConditions($query);
 
 		$query .= '	GROUP BY usr.user_id'
-					.$this->havingConditions()
+
 					.'	'.$this->queryOrder();
 		return $query;
 	}
@@ -131,45 +131,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		$where = $this->possiblyAddLastnameCondition($where);
 		$where = $this->possiblyAddWbdRelevantCondition($where);
 		return $where;
-	}
-
-	private function havingConditions()
-	{
-		$having_critical = $this->havingCritical();
-		$having_critical_fourth = $this->havingCriticalFourth();
-		$havings = array();
-		if ($having_critical !== '') {
-			$havings[] = $having_critical;
-		}
-		if ($having_critical_fourth !== '') {
-			$havings[] = $having_critical_fourth;
-		}
-		if (count($havings) > 0) {
-			return '	HAVING '.implode(' AND ', $havings);
-		}
-		return '';
-	}
-
-	private function havingCritical()
-	{
-		$selection = $this->filter_selections['critical'];
-		if ($selection) {
-			return 'attention = \'X\'';
-		}
-		return '';
-	}
-
-	private function havingCriticalFourth()
-	{
-		$selection = $this->filter_selections['critical_4th'];
-		if ($selection) {
-			$cert_year_sql =
-				' YEAR( CURDATE( ) ) - YEAR( begin_of_certification ) '
-					.'- ( DATE_FORMAT( CURDATE( ) , \'%m%d\' ) < DATE_FORMAT( begin_of_certification, \'%m%d\' ) )';
-			return 'begin_of_certification >= \''.self::EARLIEST_CERT_START.'\' AND '.
-						$cert_year_sql.' = 4 AND attention = \'X\'';
-		}
-		return '';
 	}
 
 	private function possiblyAddLastnameCondition($where)
@@ -347,14 +308,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		return
 			$f->sequence(
 				$f->option(
-					$txt('show_critical_persons'),
-					''
-				),
-				$f->option(
-					$txt('show_critical_persons_4th_year'),
-					''
-				),
-				$f->option(
 					$txt('wbd_relevant_only'),
 					''
 				),
@@ -375,20 +328,16 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 					$txt('lastname_filter'),
 					''
 				)
-			)->map(function ($critical, $critical_fourth, $wbd_relevant, $no_wbd_imp, $recursive, $orgu_selection, $lastname) use ($self) {
+			)->map(function ($wbd_relevant, $no_wbd_imp, $recursive, $orgu_selection, $lastname) use ($self) {
 								return array(
-									'critical' => $critical
-									,'critical_4th' => $critical_fourth
-									,'wbd_relevant' => $wbd_relevant
+									'wbd_relevant' => $wbd_relevant
 									,'no_wbd_imp' => $no_wbd_imp
 									,'recursive' => $recursive
 									,'orgu_selection' => $orgu_selection
 									,'lastname' => $lastname);
 			}, $tf->dict(
 				array(
-								'critical' => $tf->bool()
-								,'critical_4th' => $tf->bool()
-								,'wbd_relevant' => $tf->bool()
+								'wbd_relevant' => $tf->bool()
 								,'no_wbd_imp' => $tf->bool()
 								,'recursive' => $tf->bool()
 								,'orgu_selection' => $tf->lst($tf->int())
