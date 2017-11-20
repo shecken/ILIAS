@@ -607,10 +607,7 @@ class gevBookingGUI
 
 		$form->setFormAction($this->ctrl->getFormAction($this));
 		$vals = array(
-			  array( $this->lng->txt("gev_course_id")
-				   , $this->crs_utils->getCustomId()
-				   )
-			, array( $this->lng->txt("gev_training_fee")
+			 array( $this->lng->txt("gev_training_fee")
 				   , str_replace(".", ",", "".$this->crs_utils->getFormattedFee()) . " &euro;"
 				   )
 			, array( $this->lng->txt("gev_payment_type")
