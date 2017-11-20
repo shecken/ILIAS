@@ -200,7 +200,7 @@ class gevCourseBuildingBlockUtils {
 
 		$sql = "SELECT\n"
 			  ."    base.id, base.crs_id, base.bb_id, base.start_time, base.end_time, base.credit_points, base.practice_session,\n"
-			  ."    join1.title, join1.target, join1.content, base.crs_request_id, base.bb_id, join1.dbv_topic, join1.is_blank,\n"
+			  ."    join1.title, join1.target, join1.content, base.crs_request_id, base.bb_id, join1.is_blank,\n"
 			  ."    ljoin1.content AS blank_content, ljoin1.target AS blank_target\n"
 			  ." FROM ".self::TABLE_NAME." AS base\n"
 			  ." JOIN ".self::TABLE_NAME_JOIN1." AS join1\n"
