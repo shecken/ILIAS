@@ -79,7 +79,7 @@ class ilMaterialListHelper
 	 */
 	public function getCustomId()
 	{				
-		return gevCourseUtils::getInstance($this->course_id)->getCustomId();
+		return gevCourseUtils::getInstance($this->course_id)->getId();
 	}
 	
 	/**
