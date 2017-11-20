@@ -51,3 +51,4 @@ crs_filter_topics#:#Trainingskategorien
 org_unit_recursive#:#Auch alle Mitarbeiter der darunterliegenden Organisationseinheiten anzeigen
 placeholder#:#Bitte wählen
 cnt_crs#:#Anzahl Trainings
+wb_time#:#WB-Zeit

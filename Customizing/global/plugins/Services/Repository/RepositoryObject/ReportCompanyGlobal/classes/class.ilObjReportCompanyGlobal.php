@@ -223,7 +223,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				->column('book_user', $this->plugin->txt('members'), true)
 				->column('crs_cnt_part', $this->plugin->txt('cnt_crs'), true)
 				->column('part_book', $this->plugin->txt('participations'), true)
-				->column('wp_part', $this->plugin->txt('edu_points'), true)
+				->column('wp_part', $this->plugin->txt('wb_time'), true)
 				->column('part_user', $this->plugin->txt('members'), true);
 		return parent::buildTable($table);
 	}
