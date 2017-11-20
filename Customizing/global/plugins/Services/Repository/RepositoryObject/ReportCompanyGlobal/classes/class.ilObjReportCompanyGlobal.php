@@ -141,7 +141,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 					)
 				),
 				$f->multiselectsearch(
-					$txt("edupoints"),
+					$txt("wb_time"),
 					"",
 					array('(hc.max_credit_points > 0 OR hc.crs_id < 0)'
 								=> $txt('trainings_w_points')
