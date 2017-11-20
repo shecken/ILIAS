@@ -29,8 +29,10 @@ class gevSettings
 
 	// Block "Trainingsverwaltung"
 	// Nummer der Maßnahme
+	// OBSOLET!
 	const CRS_AMD_CUSTOM_ID 		= "crs_amd_custom_id";
 	// Nummernkreis
+	// OBSOLET!
 	const CRS_AMD_CUSTOM_ID_TEMPLATE = "crs_amd_custom_id_template";
 	// Trainingsvorlage (nicht im Konzept)
 	const CRS_AMD_TEMPLATE_TITLE	= "crs_amd_template_title";
@@ -77,6 +79,7 @@ class gevSettings
 	const CRS_AMD_TARGET_GROUP_DESC	= "crs_amd_target_group_desc";
 
 	// Fachschulung
+	// OBSOLET!
 	const CRS_AMD_EXPERT_TRAINING	= "crs_amd_expert_training";
 	// Bildungspunkte
 	const CRS_AMD_CREDIT_POINTS		= "crs_amd_credit_points";
@@ -103,6 +106,7 @@ class gevSettings
 	// harte Stornofrist
 	const CRS_AMD_ABSOLUTE_CANCEL_DEADLINE = "crs_amd_absolute_cancel_deadline";
 	// relevante Themen
+	// OBSOLET!
 	const CRS_AMD_DBV_HOT_TOPIC = "crs_amd_dbv_hot_topic";
 	// maximale Teilnehmer auf der Warteliste
 	const CRS_AMD_MAX_WAITING_LIST_LENGTH = "crs_amd_max_waiting_list_length";
