@@ -1,6 +1,8 @@
 <?php
 
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.ilObjReportBaseGUI.php';
+require_once 'Services/GEV/Utils/classes/class.gevCourseUtils.php';
+
 /**
 * User Interface class for example repository object.
 * ...
@@ -95,6 +97,8 @@ class ilObjReportEmplAttGUI extends ilObjReportBaseGUI
 		// credit_points
 		if ($rec["credit_points"] == -1) {
 			$rec["credit_points"] = $lng->txt("gev_table_no_entry");
+		} else {
+			$rec["credit_points"] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec["credit_points"]);
 		}
 
 		//date
@@ -146,6 +150,8 @@ class ilObjReportEmplAttGUI extends ilObjReportBaseGUI
 		// credit_points
 		if ($rec["credit_points"] == -1) {
 			$rec["credit_points"] = $lng->txt("gev_table_no_entry");
+		} else {
+			$rec["credit_points"] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec["credit_points"]);
 		}
 
 		//date
