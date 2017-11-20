@@ -38,8 +38,8 @@ dec_fixed#:#feste dezentrale Trainings
 dec_flexible#:#flexible dezentrale Trainings
 non_dec#:#nicht-dezentrale Trainings
 wbd_relevant#:#WBD-relevant
-trainings_w_points#:#Trainings mit Bildungspunkten
-trainings_wo_points#:#Trainings ohne Bildungspunkte
+trainings_w_points#:#Trainings mit anrechenbarer Weiterbildungszeit
+trainings_wo_points#:#Trainings ohne anrechenbare Weiterbildungszeit
 yes#:#Ja
 no#:#Nein
 xrcg_content#:#Report
