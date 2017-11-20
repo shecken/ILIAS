@@ -38,7 +38,7 @@ class ilObjReportDBVGUI extends ilObjReportBaseGUI {
 			$date = '-';
 		}
 		$rec['date'] = $date;
-		$rec['max_credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['max_credit_points']);
+		$rec['credit_points_to_sum'] = $rec['credit_points'];
 		$rec['credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['credit_points']);
 		return parent::transformResultRow(self::setBD($rec));
 	}
@@ -54,8 +54,9 @@ class ilObjReportDBVGUI extends ilObjReportBaseGUI {
 			$date = '-';
 		}
 		$rec['date'] = $date;
-		$rec['max_credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['max_credit_points']);
+		$rec['credit_points_to_sum'] = $rec['credit_points'];
 		$rec['credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['credit_points']);
+
 		return parent::transformResultRowXLSX(self::setBD($rec));
 	}
 

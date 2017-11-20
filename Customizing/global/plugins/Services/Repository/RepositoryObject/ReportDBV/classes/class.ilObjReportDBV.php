@@ -66,10 +66,6 @@ class ilObjReportDBV extends ilObjReportBase
 				->select_raw(
 					"IF(hucs.participation_status != 'nicht gesetzt', hucs.credit_points, 0) credit_points"
 				)
-				->select_raw(
-					"IF(hucs.participation_status != 'nicht gesetzt', hucs.credit_points,
-						hc.max_credit_points) max_credit_points"
-				)
 				->from("org_unit_personal oup")
 				->join("hist_userorgu huo_in")
 					->on("oup.orgunit_id = huo_in.orgu_id AND huo_in.`action` = 1 AND rol_title = ".$this->gIldb->quote("Mitarbeiter", "text"))
@@ -122,8 +118,7 @@ class ilObjReportDBV extends ilObjReportBase
 	protected function buildTable($table)
 	{
 		$this->table_sums = catReportTable::create()
-				->column("sum_credit_points", $this->plugin->txt("sum_credit_points"), true, "", false, false)
-				->column("sum_credit_points_forecast", $this->plugin->txt("sum_credit_points_forecast"), true, "", false, false)
+				->column("sum_credit_points", $this->plugin->txt("wb_time_finished"), true, "", false, false)
 				->template("tpl.gev_dbv_report_sum_row.html", $this->plugin->getDirectory());
 
 		$table	->column("lastname", $this->plugin->txt("lastname"), true)
@@ -134,8 +129,7 @@ class ilObjReportDBV extends ilObjReportBase
 				->column("dbv_hot_topic", $this->plugin->txt("dbv_hot_topic"), true)
 				->column("type", $this->plugin->txt("type"), true)
 				->column("date", $this->plugin->txt("date"), true)
-				->column("credit_points", $this->plugin->txt("wb_time_finished"), true)
-				->column("max_credit_points", $this->plugin->txt("wb_time_forecast"), true);
+				->column("credit_points", $this->plugin->txt("wb_time_finished"), true);
 		return parent::buildTable($table);
 	}
 
@@ -159,7 +153,7 @@ class ilObjReportDBV extends ilObjReportBase
 
 	protected function sumData($data)
 	{
-		$to_sum = array("sum_credit_points" => "credit_points","sum_credit_points_forecast" => "max_credit_points");
+		$to_sum = array("sum_credit_points" => "credit_points_to_sum");
 		$summed_data = array_fill_keys(array_keys($to_sum), 0);
 		foreach ($data as $row) {
 			foreach ($to_sum as $sum_key => $data_key) {
