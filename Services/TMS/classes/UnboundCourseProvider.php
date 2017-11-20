@@ -38,7 +38,6 @@ class UnboundCourseProvider extends Base {
 			$ret = $this->getCourseInfoForTrainingProvider($ret, $entity, (int)$object->getId());
 			$ret = $this->getCourseInfoForImportantInformation($ret, $entity, $object);
 			$ret = $this->getCourseInfoForTutors($ret, $entity, $object);
-			$ret = $this->getCourseInfoForSessionAppointments($ret, $entity, $object);
 
 			return $ret;
 		}
@@ -80,21 +79,29 @@ class UnboundCourseProvider extends Base {
 			return $ret;
 		}
 
+		$time = $this->getSessionAppointments($entity, $object);
 		$date = $this->formatPeriod($crs_start, $object->getCourseEnd());
 		$ret[] = $this->createCourseInfoObject($entity
 			, $this->lng->txt("date").":"
 			, $date
 			, 300
 			, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO,
-				CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
-				CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO,
+				CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO
+			  ]
+		);
+
+		$ret[] = $this->createCourseInfoObject($entity
+			, $this->lng->txt("date").":"
+			, $date."<br />".$time
+			, 300
+			, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
 				CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
 			  ]
 		);
 
 		$ret[] = $this->createCourseInfoObject($entity
 			, $this->lng->txt("date")
-			, $date
+			, $date."<br />".$time
 			, 900
 			, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
 		);
@@ -207,13 +214,14 @@ class UnboundCourseProvider extends Base {
 	/**
 	 * Get a course info with session appointments
 	 *
-	 * @param CourseInfo[]
 	 * @param Entity $entity
 	 * @param Object 	$object
 	 *
-	 * @return CourseInfo[]
+	 * @return string
 	 */
-	protected function getCourseInfoForSessionAppointments(array $ret, Entity $entity, $object) {
+	protected function getSessionAppointments(Entity $entity, $object) {
+		$vals = array();
+
 		$sessions = $this->getSessionsOfCourse($object->getRefId());
 		if(count($sessions) > 0) {
 			foreach ($sessions as $session) {
@@ -225,20 +233,10 @@ class UnboundCourseProvider extends Base {
 				$vals[$offset] = $this->lng->txt("day")." ".$offset." ".$start_time." - ".$end_time;
 			}
 
-			asort($vals);
-			$vals = join("<br />", $vals);
-
-			$ret[] = $this->createCourseInfoObject($entity
-					, ""
-					, $vals
-					, 1000
-					, [
-						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO
-					  ]
-				);
 		}
 
-		return $ret;
+		asort($vals);
+		return join("<br />", $vals);
 	}
 
 	/**
@@ -320,57 +318,32 @@ class UnboundCourseProvider extends Base {
 			}
 
 			if($name != "") {
+				$val = array();
+				$val[] = $name;
+
+				if($address != "") {
+					$val[] = $address;
+				}
+
+				if($postcode != "" || $city != "") {
+					$val[] = $postcode." ".$city;
+				}
+
 				$ret[] = $this->createCourseInfoObject($entity
 					, $txt("title").":"
-					, $name
+					, join("<br />", $val)
 					, 350
 					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
 						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
 					  ]
-					);
+				);
 
 				$ret[] = $this->createCourseInfoObject($entity
 					, $txt("title")
-					, $name
+					, join("<br />", $val)
 					, 1200
 					, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
-					);
-			}
-
-			if($address != "") {
-				$ret[] =  $this->createCourseInfoObject($entity
-					, $txt("address").":"
-					, $address
-					, 360
-					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
-						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
-					  ]
-					);
-
-				$ret[] = $this->createCourseInfoObject($entity
-					, ""
-					, $address
-					, 1300
-					, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
-					);
-			}
-
-			if($postcode != "" || $city != "") {
-				$ret[] = $this->createCourseInfoObject($entity
-					, ""
-					, $postcode." ".$city
-					, 370
-					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
-						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
-					  ]
-					);
-
-				$ret[] = $this->createCourseInfoObject($entity
-					, ""
-					, $postcode." ".$city
-					, 1400
-					, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
-					);
+				);
 			}
 		}
 		return $ret;
