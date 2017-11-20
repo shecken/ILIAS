@@ -315,7 +315,7 @@ class gevUserUtils
 				 , gevSettings::CRS_AMD_CONTENTS 			=> "content"
 			);
 
-		$additional_where = " AND (amd6.value != 'Praxisbegleitung' OR amd6.value IS NULL)";
+		$additional_where = " AND (amd6.value != 'Praxisbegleitung (AD)' OR amd6.value IS NULL)";
 
 		require_once("Services/ParticipationStatus/classes/class.ilParticipationStatus.php");
 		$booked = array_diff(

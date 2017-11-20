@@ -131,7 +131,7 @@ class ilObjReportTrDemandRet extends ilObjReportBase
 			.'		AND tpl.hist_historic = 0'
 			.'		AND tpl.is_template = \'Ja\''
 			.'		AND crs.begin_date != \'0000-00-00\''
-			.'		AND '.$this->gIldb->in('crs.type', array('Webinar','Präsenztraining','Virtuelles Training'), false, 'text')
+			.'		AND '.$this->gIldb->in('crs.type', array('Webinar','Präsenztraining'), false, 'text')
 			.'		'.$this->localCondition()
 			.$this->addFilters();
 		return $where;
@@ -241,8 +241,7 @@ class ilObjReportTrDemandRet extends ilObjReportBase
 						$txt('training_type'),
 						'',
 						array('Webinar' => 'Webinar',
-							'Präsenztraining' => 'Präsenztraining',
-							'Virtuelles Training' => 'Virtuelles Training')
+							'Präsenztraining' => 'Präsenztraining')
 					),
 					$f->multiselectsearch(
 						$txt('filter_cancelled'),

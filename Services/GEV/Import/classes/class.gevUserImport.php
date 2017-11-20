@@ -571,7 +571,7 @@ class gevUserImport {
 		}
 		if($client == 'GEV'){
 			$entry['old_usr_id'] = $entry['usr_id'];
-			$entry['is_decentral'] = ($entry['edu_program'] == 'dezentrales Training') ? 1 : 0;
+			$entry['is_decentral'] = ($entry['edu_program'] == 'dezentrales Training (AD)') ? 1 : 0;
 			$entry['last_wbd_report'] = ($entry['last_wbd_report']) ? $entry['last_wbd_report'] : 'NULL';
 
 		}

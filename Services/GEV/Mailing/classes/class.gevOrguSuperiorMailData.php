@@ -222,7 +222,7 @@ class gevOrguSuperiorMailData extends ilMailData
 					$tpl->setVariable("CRS_DATE", ", $date");
 				}
 
-				if ((!in_array($entry_data["type"], array("Selbstlernkurs", "Webinar", "Virtuelles Training"))) && $key == "gebucht") {
+				if ((!in_array($entry_data["type"], array("Selbstlernkurs", "Webinar"))) && $key == "gebucht") {
 					$tpl->setCurrentBlock("overnights");
 					$tpl->setVariable("OVERNIGHTS_CAPTION", "Übernachtungen");
 					$tpl->setVariable("USR_OVERNIGHTS_AMOUNT", $entry_data["overnights"]);
@@ -254,13 +254,15 @@ class gevOrguSuperiorMailData extends ilMailData
 		}
 
 		switch ($a_edu_program) {
-			case "zentrales Training":
+			case "zentrales Training (AD)":
 				return "zentrales $a_type";
-			case "dezentrales Training":
+			case "dezentrales Training (AD)":
 				return "dezentrales $a_type";
-			case "Grundausbildung":
+			case "Grundausbildung (AD)":
+			case "Grundausbildung (ID)":
 				return $a_type." (Grundausbildung)";
-			case "Azubi-Ausbildung":
+			case "Azubi-Ausbildung (AD)":
+			case "Azubi-Ausbildung (ID)":
 				return $a_type." (Azubi-Ausbildung)";
 			default:
 				return $a_type;

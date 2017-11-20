@@ -42,7 +42,7 @@ class ilObjReportASTD extends ilObjReportBase
 
 	protected function prepareQueryComponents($a_query)
 	{
-		$this->categories = array(	'astd_hours_not_self_learn' 	=>	" SUM( IF(".$this->gIldb->in('type', array('Virtuelles Training','Präsenztraining','Webinar'), false, 'text').", "
+		$this->categories = array(	'astd_hours_not_self_learn' 	=>	" SUM( IF(".$this->gIldb->in('type', array('Präsenztraining','Webinar'), false, 'text').", "
 																			."IF(chours IS NOT NULL AND chours != 0, chours, "
 																				."IF(thours IS NOT NULL AND chours != 0, thours, "
 																					."4*GREATEST(credit_points,0)/3)), 0)) "
