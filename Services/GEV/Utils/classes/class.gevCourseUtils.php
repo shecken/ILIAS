@@ -2717,7 +2717,6 @@ class gevCourseUtils
 
 		$arr = array("Titel" => $this->getTitle()
 					, "Untertitel" => $this->getSubtitle()
-					, "Nummer der Maßnahme" => $this->getCustomId()
 					, "Datum" => ($start_date !== null && $end_date !== null)
 								 ? ilDatePresentation::formatPeriod($this->getStartDate(), $this->getEndDate())
 								 : ""
