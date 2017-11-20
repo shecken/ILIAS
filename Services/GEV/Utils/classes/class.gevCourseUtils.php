@@ -3329,19 +3329,6 @@ class gevCourseUtils
 			$additional_where .= " AND od.title LIKE ".$db->quote("%".$a_search_options["title"]."%", "text");
 		}
 
-		if (array_key_exists("custom_id", $a_search_options)) {
-			$custom_id_field_id = $gev_set->getAMDFieldId(gevSettings::CRS_AMD_CUSTOM_ID);
-
-			// this is knowledge from the course amd plugin!
-
-			$additional_join .=
-				" LEFT JOIN adv_md_values_text custom_id".
-				"   ON cs.obj_id = custom_id.obj_id ".
-				"   AND custom_id.field_id = ".$db->quote($custom_id_field_id, "integer")
-				;
-			$additional_where .=
-				" AND custom_id.value LIKE ".$db->quote("%".$a_search_options["custom_id"]."%", "text");
-		}
 
 		if (array_key_exists("type", $a_search_options)) {
 			$additional_where .=
@@ -3438,8 +3425,7 @@ class gevCourseUtils
 		$count = count($crss);
 
 		$crs_amd =
-			array( gevSettings::CRS_AMD_CUSTOM_ID			=> "custom_id"
-				 , gevSettings::CRS_AMD_TYPE 				=> "type"
+			array( gevSettings::CRS_AMD_TYPE 				=> "type"
 				 , gevSettings::CRS_AMD_VENUE 				=> "location"
 				 , gevSettings::CRS_AMD_START_DATE			=> "start_date"
 				 , gevSettings::CRS_AMD_END_DATE 			=> "end_date"
