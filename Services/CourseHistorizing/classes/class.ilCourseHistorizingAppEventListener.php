@@ -126,7 +126,6 @@ class ilCourseHistorizingAppEventListener
 		}
 
 		$data_payload = array(
-			'custom_id'							=> self::$ilCourseHistorizingHelper->getCustomIdOf($parameter),
 			'title'								=> $parameter->getTitle(),
 			'template_title'					=> self::$ilCourseHistorizingHelper->getTemplateTitleOf($parameter),
 			'type'								=> self::$ilCourseHistorizingHelper->getTypeOf($parameter),
@@ -134,7 +133,6 @@ class ilCourseHistorizingAppEventListener
 			'begin_date'						=> $begin_date,
 			'end_date'							=> $end_date,
 			'hours'								=> self::$ilCourseHistorizingHelper->getHoursOf($parameter),
-			'is_expert_course'					=> self::$ilCourseHistorizingHelper->isExpertCourse($parameter),
 			'venue'								=> self::$ilCourseHistorizingHelper->getVenueOf($parameter),
 			'provider'							=> self::$ilCourseHistorizingHelper->getProviderOf($parameter),
 			'tutor'								=> self::$ilCourseHistorizingHelper->getTutorOf($parameter),
@@ -144,7 +142,6 @@ class ilCourseHistorizingAppEventListener
 			'wbd_topic'							=> self::$ilCourseHistorizingHelper->getWBDTopicOf($parameter),
 			'edu_program'						=> self::$ilCourseHistorizingHelper->getEduProgramOf($parameter),
 			'is_online'							=> self::$ilCourseHistorizingHelper->isOnline($parameter),
-			'dbv_hot_topic'						=> self::$ilCourseHistorizingHelper->getDBVHotTopicOf($parameter),
 			'virtual_classroom_type'			=> self::$ilCourseHistorizingHelper->getVirtualClassroomType($parameter),
 			'dct_type'							=> self::$ilCourseHistorizingHelper->getDCTType($parameter),
 			'template_obj_id'					=> self::$ilCourseHistorizingHelper->getTemplateObjId($parameter),

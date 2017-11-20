@@ -102,7 +102,6 @@ class ilCourseHistorizing extends ilHistorizingStorage {
 	 */
 	protected function getContentColumnsDefinition() {
 		$definition =  array(
-			'custom_id'				=> 'text',
 			'title'					=> 'text',
 			'template_title'		=> 'text',
 			'type'					=> 'text',
@@ -110,7 +109,6 @@ class ilCourseHistorizing extends ilHistorizingStorage {
 			'begin_date'			=> 'date',
 			'end_date'				=> 'date',
 			'hours'					=> 'integer',
-			'is_expert_course'		=> 'integer',
 			'venue'					=> 'text',
 			'provider'				=> 'text',
 			'tutor'					=> 'text',
@@ -124,7 +122,6 @@ class ilCourseHistorizing extends ilHistorizingStorage {
 			'dl_storno'				=> 'integer',
 			'dl_booking'			=> 'integer',
 			'dl_waitinglist'		=> 'integer',
-			'dbv_hot_topic'			=> 'text',
 			'virtual_classroom_type'=> 'text',
 			'dct_type'				=> 'text',
 			'template_obj_id'		=> 'integer',

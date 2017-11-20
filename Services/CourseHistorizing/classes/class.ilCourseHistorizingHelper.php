@@ -45,19 +45,6 @@ class ilCourseHistorizingHelper
 	#endregion
 
 	/**
-	 * Returns the custom id of the given course.
-	 * 
-	 * @param integer|ilObjCourse $course
-	 *
-	 * @return string
-	 */
-	public static function getCustomIdOf($course)
-	{
-		return gevCourseUtils::getInstanceByObjOrId($course)
-							 ->getCustomId();
-	}
-
-	/**
 	 * Returns the template title of the given course.
 	 *
 	 * @param integer|ilObjCourse $course
@@ -142,18 +129,6 @@ class ilCourseHistorizingHelper
 							 ->getAmountHours();
 	}
 
-	/**
-	 * Returns the is_expert_course flag of the given course.
-	 *
-	 * @param integer|ilObjCourse $course
-	 *
-	 * @return boolean
-	 */
-	public static function isExpertCourse($course)
-	{
-		return gevCourseUtils::getInstanceByObjOrId($course)
-							 ->getIsExpertTraining() ? 1 : 0;
-	}
 
 	/**
 	 * Returns the venue of the given course.
@@ -318,10 +293,6 @@ class ilCourseHistorizingHelper
 
 	}
 
-	public static function getDBVHotTopicOf($course) {
-		$utils = gevCourseUtils::getInstanceByObjOrId($course);
-		return $utils->getDBVHotTopic();
-	}
 
 	public static function getVirtualClassroomType($course) {
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
