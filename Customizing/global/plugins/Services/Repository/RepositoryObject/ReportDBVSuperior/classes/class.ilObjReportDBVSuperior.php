@@ -47,13 +47,6 @@ class ilObjReportDBVSuperior extends ilObjReportBase
 				->select("dbv.firstname")
 				->select("huo_in.org_unit_above1")
 				->select("huo_in.org_unit_above2")
-				->select_raw(
-					"SUM(IF(hucs.participation_status != 'nicht gesetzt', hucs.credit_points, 0)) as credit_points"
-				)
-				->select_raw(
-					"SUM(IF(hucs.participation_status != 'nicht gesetzt', hucs.credit_points,
-						hc.max_credit_points)) as max_credit_points"
-				)
 				->from("org_unit_personal oup")
 				->join("hist_userorgu huo_in")
 					->on("oup.orgunit_id = huo_in.orgu_id AND huo_in.`action` = 1 AND rol_title = ".$this->gIldb->quote("Mitarbeiter", "text"))
@@ -127,9 +120,7 @@ class ilObjReportDBVSuperior extends ilObjReportBase
 	{
 		$table	->column("lastname", $this->plugin->txt("lastname"), true)
 				->column("firstname", $this->plugin->txt("firstname"), true)
-				->column("odbd", $this->plugin->txt("bd"), true)
-				->column("credit_points", $this->plugin->txt("wb_time_finished"), true)
-				->column("max_credit_points", $this->plugin->txt("wb_time_forecast"), true);
+				->column("odbd", $this->plugin->txt("bd"), true);
 		return parent::buildTable($table);
 	}
 
