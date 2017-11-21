@@ -10,6 +10,13 @@ class Helper {
 	const F_TOPIC = "f_topic";
 	const F_TARGET_GROUP = "f_target";
 	const F_DURATION = "f_duration";
+	const F_SORT_VALUE = "f_sort_value";
+
+	const S_ALL = "s_all";
+	const S_TITLE = "s_title";
+	const S_PERIOD = "s_period";
+	const S_TYPE = "s_type";
+	const S_CITY = "s_city";
 
 	/**
 	 * @var ilObjUser
@@ -211,6 +218,10 @@ class Helper {
 			$filter[self::F_DURATION] = $values[self::F_DURATION];
 		}
 
+		if(array_key_exists(self::F_DURATION, $values)) {
+			$filter[self::F_DURATION] = $values[self::F_DURATION];
+		}
+
 		return $filter;
 	}
 
@@ -231,6 +242,15 @@ class Helper {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Get the option for sorting of table
+	 *
+	 * @return string[]
+	 */
+	public function getSortOptions() {
+		return array(Helper::S_ALL, Helper::S_TITLE, Helper::S_PERIOD, Helper::S_TYPE, Helper::S_CITY);
 	}
 }
 
