@@ -14,6 +14,8 @@ require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php")
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
 class ilTMSBookingGUI  extends Booking\Player {
+	use \ILIAS\TMS\MyUsersHelper;
+
 	/**
 	 * @var ilTemplate
 	 */
@@ -66,14 +68,16 @@ class ilTMSBookingGUI  extends Booking\Player {
 	}
 
 	public function executeCommand() {
-		// TODO: Check if current user may book course for other user here.
-		assert('$this->g_user->getId() === $_GET["usr_id"]');
-
 		assert('is_numeric($_GET["crs_ref_id"])');
 		assert('is_numeric($_GET["usr_id"])');
 
 		$crs_ref_id = (int)$_GET["crs_ref_id"];
 		$usr_id = (int)$_GET["usr_id"];
+
+		if((int)$this->g_user->getId() !== $usr_id && !$this->checkIsSuperiorEmployeeBelowCurrent($usr_id)) {
+			$this->redirectToPreviousLocation(array($this->g_lng->txt("no_permissions_to_book")), false);
+		}
+
 		global $DIC;
 		$process_db = new ilTMSBookingPlayerStateDB();
 
@@ -294,6 +298,18 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 */
 	protected function getConfirmButtonLabel() {
 		return $this->g_lng->txt("booking_confirm");
+	}
+
+	/**
+	 * Checks the user course should be boooked to is employee or superior under current user
+	 *
+	 * @param int 	$usr_id
+	 *
+	 * @return bool
+	 */
+	protected function checkIsSuperiorEmployeeBelowCurrent($usr_id) {
+		$members_below = $this->getUserWhereCurrentCanBookFor($this->g_user->getId());
+		return array_key_exists($usr_id, $members_below);
 	}
 
 }
