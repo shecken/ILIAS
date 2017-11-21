@@ -114,6 +114,9 @@ class gevCrsMailData extends ilMailData {
 			case "WP":
 				$val = $this->crs_utils->getCreditPoints();
 				break;
+			case "WB-ZEIT":
+				$val = $this->crs_utils->getCreditedDurationFormatted();
+				break;
 			case "METHODEN":
 				$methods = $this->crs_utils->getMethods();
 				if ($methods !== null) {
