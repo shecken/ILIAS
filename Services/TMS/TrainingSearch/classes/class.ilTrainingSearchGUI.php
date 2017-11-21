@@ -15,6 +15,7 @@ class ilTrainingSearchGUI {
 	const CMD_SHOW = "show";
 	const CMD_SHOW_MODAL = "showModal";
 	const CMD_FILTER = "filter";
+	const CMD_CHANGE_USER = "changeUser";
 
 	/**
 	 * @var ilTemplate
@@ -75,6 +76,8 @@ class ilTrainingSearchGUI {
 				$cmd = $this->g_ctrl->getCmd(self::CMD_SHOW);
 				switch($cmd) {
 					case self::CMD_SHOW:
+					case self::CMD_CHANGE_USER:
+						$this->changeUser();
 						$this->show();
 						break;
 					case self::CMD_FILTER:
@@ -182,6 +185,18 @@ class ilTrainingSearchGUI {
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "crs_ref_id", null);
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", null);
 		return $link;
+	}
+
+	/**
+	 * Change user courses are searched for to selected user
+	 *
+	 * @return void
+	 */
+	protected function changeUser() {
+		$get = $_GET;
+		if(isset($get[Helper::S_USER]) && $get[Helper::S_USER] !== "") {
+			$this->search_user_id = (int)$get[Helper::S_USER];
+		}
 	}
 }
 
