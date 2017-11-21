@@ -2730,7 +2730,7 @@ class gevCourseUtils
 					);
 
 		if ($a_type === self::MEMBERLIST_HOTEL) {
-			unset($arr["Bildungspunkte"]);
+			unset($arr["WB-Zeit"]);
 		}
 
 		if ($this->isPraesenztraining()) {
