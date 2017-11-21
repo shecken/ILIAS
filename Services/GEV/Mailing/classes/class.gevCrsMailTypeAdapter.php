@@ -34,6 +34,7 @@ class gevCrsMailTypeAdapter extends ilMailTypeAdapter {
 				, array("Trainingstyp"					, "Typ des Training")
 				, array("Trainingsthemen"				, "alle Themen des Trainings aus Mehrfachauswahl")
 				, array("WP"							, "maximale Anzahl von Bildungspunkte, die für das Training erreicht werden können")
+				, array("WB-Zeit"						, "Die dem Kurs Entsprechende Weiterbildungszeit")
 				, array("Methoden"						, "Methoden des Trainings aus Mehrfachauswahl")
 				, array("Medien"						, "beim Training verwendete Medien aus Mehrfachauswahl")
 				, array("Zielgruppen"					, "Zielgruppen des Trainings aus Mehrfachauswahl")
