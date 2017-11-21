@@ -283,7 +283,15 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 * @inheritdocs
 	 */
 	protected function getPlayerTitle() {
-		return $this->g_lng->txt("booking");
+		assert('is_numeric($_GET["usr_id"])');
+		$usr_id = (int)$_GET["usr_id"];
+
+		if($usr_id === (int)$this->g_user->getId()) {
+			return $this->g_lng->txt("booking");
+		}
+
+		require_once("Services/User/classes/class.ilObjUser.php");
+		return sprintf($this->g_lng->txt("booking_for"), ilObjUser::_lookupFullname($usr_id));
 	}
 
 	/**
