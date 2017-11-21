@@ -59,7 +59,7 @@ class ilTrainingSearchTableGUI {
 	 *
 	 * @return string
 	 */
-	public function render() {
+	public function render($view_constrols) {
 		global $DIC;
 		$f = $DIC->ui()->factory();
 		$renderer = $DIC->ui()->renderer();
@@ -67,7 +67,7 @@ class ilTrainingSearchTableGUI {
 		//build table
 		$ptable = $f->table()->presentation(
 			$this->g_lng->txt("header"), //title
-			$this->getSortationObjects($f),
+			$view_constrols,
 			function ($row, BookableCourse $record, $ui_factory, $environment) { //mapping-closure
 				return $row
 					->withTitle($record->getTitleValue())
@@ -84,39 +84,6 @@ class ilTrainingSearchTableGUI {
 
 		//apply data to table and render
 		return $renderer->render($ptable->withData($data));
-	}
-
-	/**
-	 * Get all sorting and filter items for the table
-	 *
-	 * @param 	$f
-	 *
-	 * @return Sortation[]
-	 */
-	protected function getSortationObjects($f) {
-		$ret = array();
-		require_once("Services/Component/classes/class.ilPluginAdmin.php");
-		if(ilPluginAdmin::isPluginActive('xccl')) {
-			$plugin = ilPluginAdmin::getPluginObjectById('xccl');
-			$actions = $plugin->getActions();
-			$link = $this->g_ctrl->getLinkTarget($this->parent, ilTrainingSearchGUI::CMD_QUICKFILTER);
-
-			$options = array(null => "Alle");
-			$ret[] = $f->viewControl()->sortation($options + $actions->getTypeOptions())
-						->withTargetURL($link, Helper::F_TYPE)
-						->withLabel($plugin->txt("conf_options_type"));
-
-			$ret[] = $f->viewControl()->sortation($options + $actions->getTopicOptions())
-						->withTargetURL($link, Helper::F_TOPIC)
-						->withLabel($plugin->txt("conf_options_topic"));
-		}
-
-		$link = $this->g_ctrl->getLinkTarget($this->parent, ilTrainingSearchGUI::CMD_SORT);
-		$ret[] = $f->viewControl()->sortation($this->helper->getSortOptions())
-						->withTargetURL($link, Helper::F_SORT_VALUE)
-						->withLabel($this->g_lng->txt("sorting"));
-
-		return $ret;
 	}
 }
 

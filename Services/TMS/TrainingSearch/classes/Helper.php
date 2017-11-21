@@ -176,10 +176,7 @@ class Helper {
 		$modal = $this->g_factory->modal()->roundtrip($this->g_lng->txt('filter'), $this->g_factory->legacy($form->getHTML()))
 			->withActionButtons([$reset, $submit]);
 
-		$button1 = $this->g_factory->button()->primary($this->g_lng->txt('search'), '#')
-			->withOnClick($modal->getShowSignal());
-
-		return $this->g_renderer->render([$button1, $modal]);
+		return $modal;
 	}
 
 	/**

@@ -51,6 +51,8 @@ class ilTrainingSearchGUI {
 		$this->g_user = $DIC->user();
 		$this->g_lng = $DIC->language();
 		$this->g_toolbar = $DIC->toolbar();
+		$this->g_f = $DIC->ui()->factory();
+		$this->g_renderer = $DIC->ui()->renderer();
 
 		$this->parent = $parent;
 		$this->db = $db;
@@ -151,8 +153,13 @@ class ilTrainingSearchGUI {
 		$table = new ilTrainingSearchTableGUI($this, $this->helper);
 		$table->setData($bookable_trainings);
 
-		$modal = $this->prepareModal();
-		$content =  $modal."<br \><br \><br \>".$table->render();
+		$modal = $this->prepareModal($button1);
+		$button1 = $this->g_f->button()->standard($this->g_lng->txt('search'), '#')
+			->withOnClick($modal->getShowSignal());
+
+		$view_control = array($button1);
+		$view_control = $this->addSortationObjects($view_control);
+		$content = $this->g_renderer->render($modal).$table->render($view_control);
 
 		if(count($bookable_trainings) == 0) {
 			$content .= $this->getNoAvailableTrainings();
@@ -160,6 +167,36 @@ class ilTrainingSearchGUI {
 
 		$this->g_tpl->setContent($content);
 		$this->g_tpl->show();
+	}
+
+	/**
+	 * Add all sorting and filter items for the table
+	 *
+	 * @return Sortation[]
+	 */
+	protected function addSortationObjects($view_control) {
+		require_once("Services/Component/classes/class.ilPluginAdmin.php");
+		if(ilPluginAdmin::isPluginActive('xccl')) {
+			$plugin = ilPluginAdmin::getPluginObjectById('xccl');
+			$actions = $plugin->getActions();
+			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_QUICKFILTER);
+
+			$options = array(null => "Alle");
+			$view_control[] = $this->g_f->viewControl()->sortation($options + $actions->getTypeOptions())
+						->withTargetURL($link, Helper::F_TYPE)
+						->withLabel($plugin->txt("conf_options_type"));
+
+			$view_control[] = $this->g_f->viewControl()->sortation($options + $actions->getTopicOptions())
+						->withTargetURL($link, Helper::F_TOPIC)
+						->withLabel($plugin->txt("conf_options_topic"));
+		}
+
+		$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_SORT);
+		$view_control[] = $this->g_f->viewControl()->sortation($this->helper->getSortOptions())
+						->withTargetURL($link, Helper::F_SORT_VALUE)
+						->withLabel($this->g_lng->txt("sorting"));
+
+		return $view_control;
 	}
 
 	/**
