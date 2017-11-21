@@ -130,7 +130,7 @@ class ilObjReportWBDPoints extends ilObjReportBase
 				  ."     ON usrcrs.crs_id = crs.crs_id\n"
 				  ."         AND crs.hist_historic = 0\n"
 				  ." WHERE usrcrs.hist_historic = 0\n"
-				 // ."     AND usrcrs.wbd_booking_id != '-empty-'\n"
+				  ."     AND usrcrs.wbd_booking_id != '-empty-'\n"
 				  ."     AND usr.hist_historic = 0\n"
 				  ."     AND crs.hist_historic = 0\n"
 				  ."     AND crs.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")."\n"
