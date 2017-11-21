@@ -162,18 +162,7 @@ function calculateCreditPoints() {
 	diff_h =  diff_h + (end_h - start_h);
 	tot_m = diff_m + (diff_h * 60);
 	credit_points = tot_m / 15;
-	/*credit_points = Math.floor( tot_m );
-	calc = tot_m - credit_points;
-	calc = calc.toFixed(1);
 
-	if(calc > 0 && calc < 0.6) {
-		credit_points += 0.3; 
-	}
-
-	if(calc >= 0.6 && calc < 1) {
-		credit_points += 0.6; 
-	}
- 	*/
 	if(isWP == "Ja") {
 		$('#wp').val(credit_points);
 		$('#wb_time').val( padNumber(diff_h) + ':' + padNumber(diff_m) );
