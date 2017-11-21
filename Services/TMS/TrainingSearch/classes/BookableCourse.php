@@ -252,7 +252,7 @@ class BookableCourse {
 			$book = array_shift($book_info);
 			if($book->getValue() == 1) {
 				return [$this->getUIFactory()
-						->button()->standard
+						->button()->primary
 							( $label,
 								$link
 							)
