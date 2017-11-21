@@ -292,6 +292,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			}
 
 			if(array_key_exists(Helper::F_TOPIC, $filter)
+				&& $filter[Helper::F_TOPIC] !== ""
 				&& (count($topic_ids) == 0
 					|| !$this->filter->courseHasTopics($topic_ids, $filter[Helper::F_TOPIC])
 				)
@@ -301,6 +302,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			}
 
 			if(array_key_exists(Helper::F_TYPE, $filter)
+				&& $filter[Helper::F_TYPE] !== ""
 				&& !$this->filter->courseHasType($type_id, $filter[Helper::F_TYPE])
 			) {
 				unset($crs_infos[$key]);
