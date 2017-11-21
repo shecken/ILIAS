@@ -118,7 +118,7 @@ class ilMaterialListHelper
 	 */
 	public function getContact()
 	{				
-		return "Ad-Schulung.de@generali.com";
+		return "generali-onlineakademie@generali.com";
 	}
 	
 	/**
