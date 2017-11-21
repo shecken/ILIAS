@@ -258,8 +258,13 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 * @inheritdocs
 	 */
 	protected function redirectToPreviousLocation($messages, $success) {
+		assert('is_numeric($_GET["usr_id"])');
+		$usr_id = (int)$_GET["usr_id"];
+
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "crs_ref_id", null);
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", null);
+		$this->g_ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
+
 		if (count($messages)) {
 			$message = join("<br/>", $messages);
 			if ($success) {
