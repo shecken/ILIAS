@@ -16,7 +16,7 @@ class gevCourseBuildingBlockUtils {
 	const TABLE_NAME = "dct_crs_building_block";
 	const TABLE_NAME_JOIN1 = "dct_building_block";
 	const TABLE_NAME_LEFT_JOIN1 = "dct_blank_bb_infos";
-	const DURATION_PER_POINT = 45;
+	const DURATION_PER_POINT = 15;
 	const MAX_DURATION_MINUTES = 720;
 
 	protected $course_building_block_id = "";

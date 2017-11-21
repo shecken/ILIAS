@@ -50,7 +50,6 @@ class gevDecentralTrainingCreateSchedulePDF
 		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 		$this->blocks 	= gevCourseBuildingBlockUtils::getAllCourseBuildingBlocks(gevObjectUtils::getRefId($a_crs_id));
 		$this->pdf 		= new ilPDFHelper($this->mode, $this->unit, $this->format);
-		$this->customId = "";
 		
 		$this->spaceLeft = 1.0;
 		$this->spaceRight = 1.0;
@@ -141,7 +140,6 @@ class gevDecentralTrainingCreateSchedulePDF
 	*/
 	private function createCrsInfo() {
 		$meta_data = $this->crs_utils->getListMetaData();
-		$this->customId = $meta_data["Nummer der Maßnahme"];
 		$trainers = explode(", ", $meta_data["Trainer"]);
 		$jump_trainers = count($trainers) - 1;
 
@@ -153,10 +151,9 @@ class gevDecentralTrainingCreateSchedulePDF
 
 		$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + (2 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("Titel"));
 		$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + (3 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("Untertitel"));
-		$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + (4 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("Nummer der Maßnahme"));
 		$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + (5 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("Datum"));
 		$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + (6 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("Veranstaltungsort"));
-		$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + (7 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("Bildungspunkte"));
+		$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + (7 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("WB-Zeit"));
 		$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + (8 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("Trainer"));
 		//$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + ((9 + $jump_trainers) * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("Trainingsbetreuer"));
 		//$this->pdf->WriteText($this->spaceLeft, $this->crsInfoSpaceTop + ((10 + $jump_trainers) * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars("Fachlich verantwortlich"));
@@ -165,10 +162,9 @@ class gevDecentralTrainingCreateSchedulePDF
 		$this->pdf->SetFont($this->crsInfoFontName, $this->crsInfoNoBold, $this->crsInfoFontSize);
 		$this->pdf->WriteText($this->crsInfoSecondColoumnSpaceLeft, $this->crsInfoSpaceTop + (2 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars($meta_data["Titel"]));
 		$this->pdf->WriteText($this->crsInfoSecondColoumnSpaceLeft, $this->crsInfoSpaceTop + (3 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars($meta_data["Untertitel"]));
-		$this->pdf->WriteText($this->crsInfoSecondColoumnSpaceLeft, $this->crsInfoSpaceTop + (4 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars($meta_data["Nummer der Maßnahme"]));
 		$this->pdf->WriteText($this->crsInfoSecondColoumnSpaceLeft, $this->crsInfoSpaceTop + (5 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars($meta_data["Datum"]));
 		$this->pdf->WriteText($this->crsInfoSecondColoumnSpaceLeft, $this->crsInfoSpaceTop + (6 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars($meta_data["Veranstaltungsort"]));
-		$this->pdf->WriteText($this->crsInfoSecondColoumnSpaceLeft, $this->crsInfoSpaceTop + (7 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars($meta_data["Bildungspunkte"]));
+		$this->pdf->WriteText($this->crsInfoSecondColoumnSpaceLeft, $this->crsInfoSpaceTop + (7 * $this->crsInfoSpaceTopAdd), $this->encodeSpecialChars($meta_data["WB-Zeit"]));
 		
 		foreach ($trainers as $key => $value) {
 			$this->pdf->WriteText($this->crsInfoSecondColoumnSpaceLeft, $this->crsInfoSpaceTop + ((8+$key) * $this->crsInfoSpaceTopAdd), $value);
@@ -281,7 +277,6 @@ class gevDecentralTrainingCreateSchedulePDF
 	private function createFooterRow() {
 		$this->pdf->SetFont($this->crsFooterFontName, $this->crsFooterNoBold, $this->crsFooterFontSize);
 		$this->pdf->WriteText($this->spaceLeft, 20, $this->encodeSpecialChars("Seite ".$this->pageCounter));
-		$this->pdf->WriteText($this->spaceLeft + 2, 20, $this->encodeSpecialChars("Nummer der Maßnahme ".$this->customId));
 	}
 
 	private function calcMaxRowHeight($block_title,$content,$targets, $width) {

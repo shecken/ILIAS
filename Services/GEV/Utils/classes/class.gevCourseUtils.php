@@ -2721,7 +2721,7 @@ class gevCourseUtils
 								 ? ilDatePresentation::formatPeriod($this->getStartDate(), $this->getEndDate())
 								 : ""
 					, "Veranstaltungsort" => $venue_title
-					, "Bildungspunkte" => $this->getCreditPoints()
+					, "WB-Zeit" => $this->getCreditedDurationFormatted()
 					, "Trainer" => 	($trainerList !== null)
 					 				? implode(", ", $trainerList)
 					 				: " "
@@ -2730,11 +2730,11 @@ class gevCourseUtils
 					);
 
 		if ($a_type === self::MEMBERLIST_HOTEL) {
-			unset($arr["Bildungspunkte"]);
+			unset($arr["WB-Zeit"]);
 		}
 
 		if ($this->isPraesenztraining()) {
-			$arr["Bei Rückfragen"] = "Ad-Schulung.de@generali.com";
+			$arr["Bei Rückfragen"] = "generali-onlineakademie@generali.com";
 		}
 		return $arr;
 	}
