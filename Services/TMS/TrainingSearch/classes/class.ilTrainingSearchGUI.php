@@ -115,6 +115,19 @@ class ilTrainingSearchGUI {
 	}
 
 	/**
+	 * Sorts all table entries according to selection
+	 *
+	 * @return void
+	 */
+	protected function sort() {
+		$get = $_GET;
+		$filter = $this->helper->getFilterValuesFrom($get);
+		$bookable_trainings = $this->getBookableTrainings($filter);
+		$bookable_trainings = $this->helper->sortBookableTrainings($get, $bookable_trainings);
+		$this->showTrainings($bookable_trainings);
+	}
+
+	/**
 	 * Post processing for quick filter values
 	 *
 	 * @return void
