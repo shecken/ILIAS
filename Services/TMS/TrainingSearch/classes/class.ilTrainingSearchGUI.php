@@ -27,9 +27,13 @@ class ilTrainingSearchGUI {
 	protected $g_ctrl;
 
 	/**
-	 * @var ilObjUser
+	 * User id of user who going to get booked.
+	 * Initial the current ilUser.
+	 * Might be changed to other is current is allowd to book for other
+	 *
+	 * @var int
 	 */
-	protected $g_user;
+	protected $search_user_id;
 
 	/**
 	 * @var ilPersonalDesktopGUI
@@ -46,7 +50,7 @@ class ilTrainingSearchGUI {
 
 		$this->g_tpl = $DIC->ui()->mainTemplate();
 		$this->g_ctrl = $DIC->ctrl();
-		$this->g_user = $DIC->user();
+		$this->search_user_id = $DIC->user()->getId();
 		$this->g_lng = $DIC->language();
 		$this->g_toolbar = $DIC->toolbar();
 
@@ -162,7 +166,7 @@ class ilTrainingSearchGUI {
 	 * @return BookableCourse[]
 	 */
 	protected function getBookableTrainings(array $filter) {
-		return $this->db->getBookableTrainingsFor($this->g_user->getId(), $filter);
+		return $this->db->getBookableTrainingsFor($this->search_user_id, $filter);
 	}
 
 	/**
@@ -173,7 +177,7 @@ class ilTrainingSearchGUI {
 	 */
 	public function getBookingLink(BookableCourse $course) {
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "crs_ref_id", $course->getRefId());
-		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", $this->g_user->getId());
+		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", $this->search_user_id);
 		$link = $this->g_ctrl->getLinkTargetByClass("ilTMSBookingGUI", "start");
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "crs_ref_id", null);
 		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", null);
