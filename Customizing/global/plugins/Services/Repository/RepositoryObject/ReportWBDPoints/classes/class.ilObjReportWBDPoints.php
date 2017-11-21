@@ -47,7 +47,7 @@ class ilObjReportWBDPoints extends ilObjReportBase
 				->column("title", $this->plugin->txt("crs_title"), true)
 				->column("begin_date", $this->plugin->txt("begin_date"), true)
 				->column("end_date", $this->plugin->txt("end_date"), true)
-				->column("credit_points", $this->plugin->txt("credit_points"), true)
+				->column("credit_points", $this->plugin->txt("wb_time"), true)
 				->column("wbd_booking_id", $this->plugin->txt("wbd_booking_id"), true)
 				->column("custom_id", $this->plugin->txt("training_id_2"), true)
 				->column("type", $this->plugin->txt("course_type"), true);
@@ -130,7 +130,7 @@ class ilObjReportWBDPoints extends ilObjReportBase
 				  ."     ON usrcrs.crs_id = crs.crs_id\n"
 				  ."         AND crs.hist_historic = 0\n"
 				  ." WHERE usrcrs.hist_historic = 0\n"
-				  ."     AND usrcrs.wbd_booking_id != '-empty-'\n"
+				 // ."     AND usrcrs.wbd_booking_id != '-empty-'\n"
 				  ."     AND usr.hist_historic = 0\n"
 				  ."     AND crs.hist_historic = 0\n"
 				  ."     AND crs.type != ".$this->gIldb->quote(gevCourseUtils::CRS_TYPE_COACHING, "text")."\n"
