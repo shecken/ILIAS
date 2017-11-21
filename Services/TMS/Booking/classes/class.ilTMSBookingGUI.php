@@ -98,8 +98,6 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 * @return void
 	 */
 	public function redirectOnParallelCourses() {
-		assert('$this->g_user->getId() === $_GET["usr_id"]');
-
 		assert('is_numeric($_GET["crs_ref_id"])');
 		assert('is_numeric($_GET["usr_id"])');
 
