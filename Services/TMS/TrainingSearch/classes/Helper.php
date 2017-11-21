@@ -219,10 +219,6 @@ class Helper {
 			$filter[self::F_DURATION] = $values[self::F_DURATION];
 		}
 
-		if(array_key_exists(self::F_DURATION, $values)) {
-			$filter[self::F_DURATION] = $values[self::F_DURATION];
-		}
-
 		return $filter;
 	}
 
