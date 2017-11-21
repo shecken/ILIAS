@@ -28,7 +28,7 @@ class ilTrainingSearchTableGUI {
 
 		global $DIC;
 		$this->g_lng = $DIC->language();
-
+		$this->g_ctrl = $DIC->ctrl();
 		$this->helper = $helper;
 
 		$this->g_lng->loadLanguageModule('tms');
@@ -59,7 +59,7 @@ class ilTrainingSearchTableGUI {
 	 *
 	 * @return string
 	 */
-	public function render() {
+	public function render($view_constrols) {
 		global $DIC;
 		$f = $DIC->ui()->factory();
 		$renderer = $DIC->ui()->renderer();
@@ -67,7 +67,7 @@ class ilTrainingSearchTableGUI {
 		//build table
 		$ptable = $f->table()->presentation(
 			$this->g_lng->txt("header"), //title
-			array(),
+			$view_constrols,
 			function ($row, BookableCourse $record, $ui_factory, $environment) { //mapping-closure
 				return $row
 					->withTitle($record->getTitleValue())
