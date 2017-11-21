@@ -128,7 +128,13 @@ class ilTrainingSearchGUI {
 		$table->setData($bookable_trainings);
 
 		$modal = $this->prepareModal();
-		$this->g_tpl->setContent($modal."<br \><br \><br \>".$table->render());
+		$content = $modal."<br \><br \><br \>".$table->render();
+
+		if(count($bookable_trainings) == 0) {
+			$content .= $this->getNoAvailableTrainings();
+		}
+
+		$this->g_tpl->setContent($content);
 		$this->g_tpl->show();
 	}
 
@@ -137,11 +143,8 @@ class ilTrainingSearchGUI {
 	 *
 	 * @return void
 	 */
-	protected function showNoAvailableTrainings() {
-		$modal = $this->prepareModal();
-		$msg = $this->g_lng->txt('no_trainings_available');
-		$this->g_tpl->setContent($modal."<br \><br \><br \>".$msg);
-		$this->g_tpl->show();
+	protected function getNoAvailableTrainings() {
+		return $this->g_lng->txt('no_trainings_available');
 	}
 
 	/**
