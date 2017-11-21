@@ -498,6 +498,7 @@ class gevSettings
 		, "MA"
 		, "FK"
 		, "IDD"
+		, "Admin LE"
 		);
 
 	// Names of roles that count as admins
