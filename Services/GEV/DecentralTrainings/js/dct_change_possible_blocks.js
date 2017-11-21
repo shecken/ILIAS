@@ -130,6 +130,17 @@ function changeBuildingBlockInfos() {
 	});
 }
 
+function padNumber(num) {
+	if(num < 10) {
+		if(num == 0) {
+			return '00';
+		} else {
+			return '0' + num;
+		}
+	}
+	return num;
+}
+
 function calculateCreditPoints() {
 	var isWP = $('#isWP').val();
 
@@ -138,20 +149,20 @@ function calculateCreditPoints() {
 	var end_h = parseInt($('#duration\\[end\\]\\[time\\]_h option:selected').val());
 	var end_m = parseInt($('#duration\\[end\\]\\[time\\]_m option:selected').val());
 
-	var tot_h = 0;
-	var tot_m = 0;
+	var diff_h = 0;
+	var diff_m = 0;
 
 	if(end_m < start_m) {
-		tot_h = -1;
-		tot_m = end_m + (60 - start_m);
+		diff_h = -1;
+		diff_m = end_m + (60 - start_m);
 	} else {
-		tot_m = end_m - start_m;
+		diff_m = end_m - start_m;
 	}
 
-	tot_h =  tot_h + (end_h - start_h);
-	tot_m = tot_m + (tot_h * 60);
-	tot_m = tot_m / 45;
-	credit_points = Math.floor( tot_m );
+	diff_h =  diff_h + (end_h - start_h);
+	tot_m = diff_m + (diff_h * 60);
+	credit_points = tot_m / 15;
+	/*credit_points = Math.floor( tot_m );
 	calc = tot_m - credit_points;
 	calc = calc.toFixed(1);
 
@@ -162,12 +173,16 @@ function calculateCreditPoints() {
 	if(calc >= 0.6 && calc < 1) {
 		credit_points += 0.6; 
 	}
-
+ 	*/
 	if(isWP == "Ja") {
 		$('#wp').val(credit_points);
+		$('#wb_time').val( padNumber(diff_h) + ':' + padNumber(diff_m) );
 	} else {
 		$('#wp').val(0);
+		$('#wb_time').val('00:00');
 	}
-	
+
+
 	$('#ue').val(credit_points);
 }
+
