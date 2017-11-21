@@ -12,11 +12,15 @@ class Helper {
 	const F_DURATION = "f_duration";
 	const F_SORT_VALUE = "f_sort_value";
 
-	const S_ALL = "s_all";
-	const S_TITLE = "s_title";
-	const S_PERIOD = "s_period";
-	const S_TYPE = "s_type";
-	const S_CITY = "s_city";
+	const S_TITLE_ASC = "s_title_asc";
+	const S_PERIOD_ASC = "s_period_asc";
+	const S_TYPE_ASC = "s_type_asc";
+	const S_CITY_ASC = "s_city_asc";
+
+	const S_TITLE_DESC = "s_title_desc";
+	const S_PERIOD_DESC = "s_period_desc";
+	const S_TYPE_DESC = "s_type_desc";
+	const S_CITY_DESC = "s_city_desc";
 
 	/**
 	 * @var ilObjUser
@@ -245,12 +249,169 @@ class Helper {
 	}
 
 	/**
+	 * Sorts filtered bookable training according to user input
+	 *
+	 * @param string[] 	$values
+	 * @param BookableCourse[]
+	 *
+	 * @return BookableCourse[]
+	 */
+	public function sortBookableTrainings(array $values, $bookable_trainings) {
+		if(array_key_exists(self::F_SORT_VALUE, $values)
+			&& $values[self::F_SORT_VALUE] != ""
+		) {
+			$function = null;
+			switch($values[self::F_SORT_VALUE]) {
+				case self::S_TITLE_ASC:
+					uasort($bookable_trainings, $this->getTitleSortingClosure("asc"));
+					break;
+				case self::S_TITLE_DESC:
+					uasort($bookable_trainings, $this->getTitleSortingClosure("desc"));
+					break;
+				case self::S_TYPE_ASC:
+					uasort($bookable_trainings, $this->getTypeSortingClosure("asc"));
+					break;
+				case self::S_TYPE_DESC:
+					uasort($bookable_trainings, $this->getTypeSortingClosure("desc"));
+					break;
+				case self::S_PERIOD_ASC:
+					uasort($bookable_trainings, $this->getPeriodSortingClosure("asc"));
+					break;
+				case self::S_PERIOD_DESC:
+					uasort($bookable_trainings, $this->getPeriodSortingClosure("desc"));
+					break;
+				case self::S_CITY_DESC:
+					uasort($bookable_trainings, $this->getCitySortingClosure("asc"));
+					break;
+				case self::S_CITY_DESC:
+					uasort($bookable_trainings, $this->getCitySortingClosure("desc"));
+					break;
+			}
+		}
+
+		return $bookable_trainings;
+	}
+
+	/**
+	 * Get sorting closure for title
+	 *
+	 * @param string 	$direction
+	 *
+	 * @return Closure
+	 */
+	protected function getTitleSortingClosure($direction) {
+		if($direction == "asc") {
+			return function($a, $b) {
+					return strcmp($a->getTitle(), $b->getTitle());
+				};
+		}
+
+		if($direction == "desc") {
+			return function($a, $b) {
+					return strcmp($b->getTitle(), $a->getTitle());
+				};
+		}
+	}
+
+	/**
+	 * Get sorting closure for type
+	 *
+	 * @param string 	$direction
+	 *
+	 * @return Closure
+	 */
+	protected function getTypeSortingClosure($direction) {
+		if($direction == "asc") {
+			return function($a, $b) {
+					if($a->getType() > $b->getType()) {
+						return 1;
+					}
+
+					if($a->getType() < $b->getType()) {
+						return -1;
+					}
+
+					return 0;
+				};
+		}
+
+		if($direction == "desc") {
+			return function($a, $b) {
+					if($a->getType() > $b->getType()) {
+						return -1;
+					}
+
+					if($a->getType() < $b->getType()) {
+						return 1;
+					}
+
+					return 0;
+				};
+		}
+	}
+
+	/**
+	 * Get sorting closure for period
+	 *
+	 * @param string 	$direction
+	 *
+	 * @return Closure
+	 */
+	protected function getPeriodSortingClosure($direction) {
+		if($direction == "asc") {
+			return function($a, $b) {
+					$start_date_a = $a->getBeginDate()->get(IL_CAL_DATE);
+					$start_date_b = $b->getBeginDate()->get(IL_CAL_DATE);
+					return strcmp($start_date_a, $start_date_b);
+				};
+		}
+
+		if($direction == "desc") {
+			return function($a, $b) {
+					$start_date_a = $a->getBeginDate()->get(IL_CAL_DATE);
+					$start_date_b = $b->getBeginDate()->get(IL_CAL_DATE);
+					return strcmp($start_date_b, $start_date_a);
+				};
+		}
+	}
+
+	/**
+	 * Get sorting closure for city
+	 *
+	 * @param string 	$direction
+	 *
+	 * @return Closure
+	 */
+	protected function getCitySortingClosure($direction) {
+		if($direction == "asc") {
+			return function($a, $b) {
+					return strcmp($a->getLocation(), $b->getLocation());
+				};
+		}
+
+		if($direction == "desc") {
+			return function($a, $b) {
+					return strcmp($b->getLocation(), $a->getLocation());
+				};
+		}
+	}
+
+	/**
 	 * Get the option for sorting of table
 	 *
 	 * @return string[]
 	 */
 	public function getSortOptions() {
-		return array(Helper::S_ALL, Helper::S_TITLE, Helper::S_PERIOD, Helper::S_TYPE, Helper::S_CITY);
+		return array(
+			Helper::S_TITLE_ASC => "Titel: aufsteigend",
+			Helper::S_TITLE_DESC => "Titel: absteigend",
+			Helper::S_PERIOD_ASC => "Zeitraum: aufsteigend",
+			Helper::S_PERIOD_DESC => "Zeitraum: absteigend",
+			Helper::S_TYPE_ASC => "Trainingstyp: aufsteigend",
+			Helper::S_TYPE_DESC => "Trainingstyp: absteigend",
+			Helper::S_CITY_ASC=>"Ort: aufsteigend",
+			Helper::S_CITY_DESC=>"Ort: absteigend"
+		);
 	}
 }
 
