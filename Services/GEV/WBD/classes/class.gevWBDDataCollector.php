@@ -1083,7 +1083,7 @@ class gevWBDDataCollector implements WBDDataCollector
 				."".$this->gDB->quote($creator_id, "integer").",\n"
 				."".$this->gDB->quote($usr_id, "integer").",\n"
 				."".$this->gDB->quote($crs_id, "integer").",\n"
-				."".$this->gDB->quote($credit_points, "integer").",\n"
+				."".$this->gDB->quote(3*$credit_points, "integer").",\n"
 				."0,\n"
 				."0,\n"
 				."".$this->gDB->quote($okz, "text").",\n"
