@@ -84,7 +84,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 				." WHERE object_data.type = 'crs'".PHP_EOL
 				."     AND object_reference.deleted IS NULL";
 
-		
+
 		$res = $this->g_db->query($query);
 		$ret = array();
 		while($row = $this->g_db->fetchAssoc($res)) {
@@ -190,7 +190,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	}
 
 	/**
-	 * Get first child by type recursive
+	 * Get all children by type recursive
 	 *
 	 * @param int 	$ref_id
 	 * @param string 	$search_type
