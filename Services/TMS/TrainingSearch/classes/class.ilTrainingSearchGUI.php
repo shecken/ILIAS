@@ -91,11 +91,7 @@ class ilTrainingSearchGUI {
 	 */
 	protected function show() {
 		$bookable_trainings = $this->getBookableTrainings(array());
-		if(count($bookable_trainings) > 0) {
-			$this->showTrainings($bookable_trainings);
-		} else {
-			$this->showNoAvailableTrainings();
-		}
+		$this->showTrainings($bookable_trainings);
 	}
 
 	/**
@@ -107,12 +103,7 @@ class ilTrainingSearchGUI {
 		$post = $_POST;
 		$filter = $this->helper->getFilterValuesFrom($post);
 		$bookable_trainings = $this->getBookableTrainings($filter);
-		if(count($bookable_trainings) > 0) {
-			$this->showTrainings($bookable_trainings);
-		} else {
-			$this->showNoAvailableTrainings();
-		}
-
+		$this->showTrainings($bookable_trainings);
 	}
 
 	/**
@@ -139,7 +130,7 @@ class ilTrainingSearchGUI {
 	}
 
 	/**
-	 * Show empty search-results message
+	 * Get empty search-results message
 	 *
 	 * @return void
 	 */
