@@ -101,18 +101,19 @@ class ilTrainingSearchTableGUI {
 			$actions = $plugin->getActions();
 			$link = $this->g_ctrl->getLinkTarget($this->parent, ilTrainingSearchGUI::CMD_QUICKFILTER);
 
-			$ret[] = $f->viewControl()->sortation($actions->getTypeOptions())
+			$options = array(null => "Alle");
+			$ret[] = $f->viewControl()->sortation($options + $actions->getTypeOptions())
 						->withTargetURL($link, Helper::F_TYPE)
 						->withLabel($plugin->txt("conf_options_type"));
 
-			$ret[] = $f->viewControl()->sortation($actions->getTopicOptions())
+			$ret[] = $f->viewControl()->sortation($options + $actions->getTopicOptions())
 						->withTargetURL($link, Helper::F_TOPIC)
 						->withLabel($plugin->txt("conf_options_topic"));
 		}
 
 		$link = $this->g_ctrl->getLinkTarget($this->parent, ilTrainingSearchGUI::CMD_SORT);
 		$ret[] = $f->viewControl()->sortation($this->helper->getSortOptions())
-						->withTargetURL($link, Helper::F_TOPIC)
+						->withTargetURL($link, Helper::F_SORT_VALUE)
 						->withLabel($this->g_lng->txt("sorting"));
 
 		return $ret;
