@@ -238,16 +238,17 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn($player_title);
 
 		$player
-			->expects($this->exactly(2))
+			->expects($this->exactly(3))
 			->method("txt")
-			->withConsecutive(["next"], ["abort"])
-			->will($this->onConsecutiveCalls("lng_next", "lng_abort"));
+			->withConsecutive(["previous"], ["next"], ["abort"])
+			->will($this->onConsecutiveCalls("lng_previous", "lng_next", "lng_abort"));
 
 		$form
-			->expects($this->exactly(2))
+			->expects($this->exactly(3))
 			->method("addCommandButton")
 			->withConsecutive
-				( ["next", "lng_next"]
+				( ["previous", "lng_previous"]
+				, ["next", "lng_next"]
 				, ["abort", "lng_abort"]
 				);
 
@@ -570,6 +571,10 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->expects($this->never())
 			->method("getData");
 
+		$step2
+			->expects($this->never())
+			->method("addDataToForm");
+
 		$player
 			->expects($this->never())
 			->method("saveProcessState");
@@ -835,16 +840,17 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 				);
 
 		$player
-			->expects($this->once())
+			->expects($this->exactly(2))
 			->method("txt")
-			->withConsecutive(["abort"])
-			->will($this->onConsecutiveCalls("lng_abort"));
+			->withConsecutive(["previous"], ["abort"])
+			->will($this->onConsecutiveCalls("lng_previous", "lng_abort"));
 
 		$form
-			->expects($this->exactly(2))
+			->expects($this->exactly(3))
 			->method("addCommandButton")
 			->withConsecutive
-				( ["confirm", $confirm_label]
+				( ["previous", "lng_previous"]
+				, ["confirm", $confirm_label]
 				, ["abort", "lng_abort"]
 				);
 
@@ -1011,5 +1017,162 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 		$no_view = $player->process("confirm", []);
 		$this->assertNull($no_view);
+	}
+
+	public function test_process_previous() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState", "getForm", "getPlayerTitle"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$form_step1 = $this->createMock(\ilPropertyFormGUI::class);
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 2;
+		$data0 = "DATA 0";
+		$data1 = array("foo" => "bar");
+		$data2 = "DATA 2";
+		$state = (new Booking\ProcessState($crs_id, $usr_id, $step_number))
+			->withStepData(0, $data0)
+			->withStepData(1, $data1)
+			->withStepData(2, $data2);
+		$player_title = "Player";
+		$html = "HTML OUTPUT STEP 2";
+
+		$step0 = $this->createMock(Booking\Step::class);
+		$step1 = $this->createMock(Booking\Step::class);
+		$step2 = $this->createMock(Booking\Step::class);
+
+		$step0
+			->expects($this->never())
+			->method($this->anything());
+
+		$step2
+			->expects($this->never())
+			->method($this->anything());
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$player
+			->expects($this->once())
+			->method("getSortedSteps")
+			->willReturn([$step0, $step1, $step2]);
+
+		$player
+			->expects($this->once())
+			->method("getForm")
+			->willReturn($form_step1);
+
+		$player
+			->expects($this->once())
+			->method("getPlayerTitle")
+			->willReturn($player_title);
+
+		$player
+			->expects($this->once())
+			->method("saveProcessState");
+
+		$step1
+			->expects($this->once())
+			->method("appendToStepForm")
+			->with($form_step1);
+
+		$step1
+			->expects($this->once())
+			->method("addDataToForm")
+			->with($form_step1, $data1);
+
+		$form_step1
+			->expects($this->once())
+			->method("getHTML")
+			->willReturn($html);
+
+		$view = $player->process("previous", $post);
+
+		$this->assertEquals($html, $view);
+	}
+
+	public function test_process_build_only_on_no_post_with_saved_data() {
+		$player = $this->getMockBuilder(BookingPlayerForTest::class)
+			->setMethods(["getSortedSteps", "getProcessState", "saveProcessState", "getForm", "getPlayerTitle"])
+			->disableOriginalConstructor()
+			->getMock();
+
+		$form = $this->createMock(\ilPropertyFormGUI::class);
+
+		$crs_id = 23;
+		$usr_id = 42;
+		$step_number = 1;
+		$data0 = "DATA 0";
+		$data1 = array("foo" => "bar");
+		$data2 = "DATA 2";
+		$state = (new Booking\ProcessState($crs_id, $usr_id, $step_number))
+			->withStepData(0, $data0)
+			->withStepData(1, $data1)
+			->withStepData(2, $data2);
+		$player_title = "Player";
+
+		$step1 = $this->createMock(Booking\Step::class);
+		$step2 = $this->createMock(Booking\Step::class);
+		$step3 = $this->createMock(Booking\Step::class);
+
+		$step1
+			->expects($this->never())
+			->method($this->anything());
+		$step3
+			->expects($this->never())
+			->method($this->anything());
+
+		$player
+			->expects($this->once())
+			->method("getProcessState")
+			->willReturn($state);
+
+		$player
+			->expects($this->once())
+			->method("getSortedSteps")
+			->willReturn([$step1, $step2, $step3]);
+
+		$player
+			->expects($this->once())
+			->method("getForm")
+			->willReturn($form);
+
+		$player
+			->expects($this->once())
+			->method("getPlayerTitle")
+			->willReturn($player_title);
+
+		$step2
+			->expects($this->once())
+			->method("appendToStepForm")
+			->with($form);
+
+		$step2
+			->expects($this->never())
+			->method("getData");
+
+		$step2
+			->expects($this->once())
+			->method("addDataToForm")
+			->with($form, $data1);
+
+		$player
+			->expects($this->never())
+			->method("saveProcessState");
+
+		$html = "HTML OUTPUT";
+		$form
+			->expects($this->once())
+			->method("getHTML")
+			->willReturn($html);
+
+		$view = $player->process();
+
+		$this->assertEquals($html, $view);
 	}
 }

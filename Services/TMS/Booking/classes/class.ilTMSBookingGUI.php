@@ -248,6 +248,9 @@ class ilTMSBookingGUI  extends Booking\Player {
 		else if ($id == "aborted") {
 			$id = "booking_aborted";
 		}
+		else if ($id == "previous") {
+			$id = "btn_previous";
+		}
 		return $this->g_lng->txt($id);
 	}
 
