@@ -66,6 +66,9 @@ class ilObjReportDBV extends ilObjReportBase
 				->select_raw(
 					"IF(hucs.participation_status != 'nicht gesetzt', hucs.credit_points, 0) credit_points"
 				)
+				->select_raw(
+					"IF(hucs.credit_points > 0 AND hucs.credit_points IS NOT NULL, hucs.credit_points, 0) credit_points_potential"
+				)
 				->from("org_unit_personal oup")
 				->join("hist_userorgu huo_in")
 					->on("oup.orgunit_id = huo_in.orgu_id AND huo_in.`action` = 1 AND rol_title = ".$this->gIldb->quote("Mitarbeiter", "text"))
@@ -119,6 +122,7 @@ class ilObjReportDBV extends ilObjReportBase
 	{
 		$this->table_sums = catReportTable::create()
 				->column("sum_credit_points", $this->plugin->txt("wb_time_finished"), true, "", false, false)
+				->column("sum_credit_points_potential", $this->plugin->txt("wb_time_forecast"), true, "", false, false)
 				->template("tpl.gev_dbv_report_sum_row.html", $this->plugin->getDirectory());
 
 		$table	->column("lastname", $this->plugin->txt("lastname"), true)
@@ -153,7 +157,7 @@ class ilObjReportDBV extends ilObjReportBase
 
 	protected function sumData($data)
 	{
-		$to_sum = array("sum_credit_points" => "credit_points_to_sum");
+		$to_sum = array("sum_credit_points" => "credit_points_to_sum", "sum_credit_points_potential" => "credit_points_potential");
 		$summed_data = array_fill_keys(array_keys($to_sum), 0);
 		foreach ($data as $row) {
 			foreach ($to_sum as $sum_key => $data_key) {
