@@ -16,12 +16,10 @@ class Helper {
 
 	const S_TITLE_ASC = "s_title_asc";
 	const S_PERIOD_ASC = "s_period_asc";
-	const S_TYPE_ASC = "s_type_asc";
 	const S_CITY_ASC = "s_city_asc";
 
 	const S_TITLE_DESC = "s_title_desc";
 	const S_PERIOD_DESC = "s_period_desc";
-	const S_TYPE_DESC = "s_type_desc";
 	const S_CITY_DESC = "s_city_desc";
 
 	const S_USER = "s_user";
@@ -265,12 +263,6 @@ class Helper {
 				case self::S_TITLE_DESC:
 					uasort($bookable_trainings, $this->getTitleSortingClosure("desc"));
 					break;
-				case self::S_TYPE_ASC:
-					uasort($bookable_trainings, $this->getTypeSortingClosure("asc"));
-					break;
-				case self::S_TYPE_DESC:
-					uasort($bookable_trainings, $this->getTypeSortingClosure("desc"));
-					break;
 				case self::S_PERIOD_ASC:
 					uasort($bookable_trainings, $this->getPeriodSortingClosure("asc"));
 					break;
@@ -306,43 +298,6 @@ class Helper {
 		if($direction == "desc") {
 			return function($a, $b) {
 					return strcmp($b->getTitle(), $a->getTitle());
-				};
-		}
-	}
-
-	/**
-	 * Get sorting closure for type
-	 *
-	 * @param string 	$direction
-	 *
-	 * @return Closure
-	 */
-	protected function getTypeSortingClosure($direction) {
-		if($direction == "asc") {
-			return function($a, $b) {
-					if($a->getType() > $b->getType()) {
-						return 1;
-					}
-
-					if($a->getType() < $b->getType()) {
-						return -1;
-					}
-
-					return 0;
-				};
-		}
-
-		if($direction == "desc") {
-			return function($a, $b) {
-					if($a->getType() > $b->getType()) {
-						return -1;
-					}
-
-					if($a->getType() < $b->getType()) {
-						return 1;
-					}
-
-					return 0;
 				};
 		}
 	}
