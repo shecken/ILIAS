@@ -2,8 +2,8 @@
 
 namespace CaT\TRTFixtures;
 
-use CaT\Filter as Filters;
-use CaT\TableRelations as TR;
+use ILIAS\TMS\Filter as Filters;
+use ILIAS\TMS\TableRelations as TR;
 
 class SqlQueryInterpreterWrap extends TR\SqlQueryInterpreter {
 

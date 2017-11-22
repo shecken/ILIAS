@@ -1,7 +1,7 @@
 <?php
-namespace CaT\TableRelations;
-use CaT\Filter as Filter;
-use CaT\TableRelations\Tables\DerivedFields as Derived;
+namespace ILIAS\TMS\TableRelations;
+use ILIAS\TMS\Filter as Filter;
+use ILIAS\TMS\TableRelations\Tables\DerivedFields as Derived;
 
 /**
  * Creates a sql-query or data from a query object.

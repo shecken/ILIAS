@@ -1,9 +1,9 @@
 <?php
-namespace CaT\TableRelations\Tables;
-use CaT\TableRelations as TR;
-use CaT\TableRelations\Graphs as Graphs;
-use CaT\Filter\Predicates as Predicates;
-use CaT\Filter as Filter;
+namespace ILIAS\TMS\TableRelations\Tables;
+use ILIAS\TMS\TableRelations as TR;
+use ILIAS\TMS\TableRelations\Graphs as Graphs;
+use ILIAS\TMS\Filter\Predicates as Predicates;
+use ILIAS\TMS\Filter as Filter;
 /**
  * Table management takes place here.
  * Translates tables to graphs and operates them

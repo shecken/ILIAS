@@ -1,6 +1,6 @@
 <?php
-use CaT\TableRelations as TableRelations;
-use CaT\Filter as Filters;
+use ILIAS\TMS\TableRelations as TableRelations;
+use ILIAS\TMS\Filter as Filters;
 class TableFieldTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {

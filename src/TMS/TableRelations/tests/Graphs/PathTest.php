@@ -1,5 +1,5 @@
 <?php
-use CaT\TableRelations\Graphs as Graphs;
+use ILIAS\TMS\TableRelations\Graphs as Graphs;
 use CaT\TRTFixtures\GraphTestFactory as GraphTestFactory;
 class PathTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
@@ -17,7 +17,7 @@ class PathTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($seq,array("a1","a2","a3"));
 	}
 	/**
-	 * @expectedException CaT\TableRelations\Graphs\GraphException
+	 * @expectedException ILIAS\TMS\TableRelations\Graphs\GraphException
 	 */
 	public function test_path_double_node() {
 		$gtf = $this->gtf;

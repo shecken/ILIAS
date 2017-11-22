@@ -1,5 +1,5 @@
 <?php
-namespace CaT\TableRelations\Tables;
+namespace ILIAS\TMS\TableRelations\Tables;
 /**
  * A field combining Predicate-Fields and table functinality.
  * Note: it may still be used in Predicates.

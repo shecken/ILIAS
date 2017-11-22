@@ -1,5 +1,5 @@
 <?php
-use CaT\TableRelations\Graphs as Graphs;
+use ILIAS\TMS\TableRelations\Graphs as Graphs;
 use CaT\TRTFixtures\GraphTestFactory as GraphTestFactory;
 class GraphTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
@@ -127,7 +127,7 @@ class GraphTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException CaT\TableRelations\Graphs\GraphException
+	 * @expectedException ILIAS\TMS\TableRelations\Graphs\GraphException
 	 */
 	public function test_no_double_nodes_in_graph() {
 		$g = $this->circleGraph();

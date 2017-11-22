@@ -1,6 +1,6 @@
 <?php
 
-namespace CaT\TableRelations;
+namespace ILIAS\TMS\TableRelations;
 
 class GraphFactory {
 	public function Graph() {

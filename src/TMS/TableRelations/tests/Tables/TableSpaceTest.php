@@ -1,7 +1,7 @@
 <?php
 
-use CaT\TableRelations as TR;
-use CaT\Filter as Filters;
+use ILIAS\TMS\TableRelations as TR;
+use ILIAS\TMS\Filter as Filters;
 use CaT\TRTFixtures\SqlPredicateInterpreterWrap as SqlPredicateInterpreterWrap;
 class TestTableSpace extends PHPUnit_Framework_TestCase {
 

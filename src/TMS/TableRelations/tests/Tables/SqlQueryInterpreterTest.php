@@ -1,6 +1,6 @@
 <?php
-use CaT\TableRelations as TR;
-use CaT\Filter as Filters;
+use ILIAS\TMS\TableRelations as TR;
+use ILIAS\TMS\Filter as Filters;
 use CaT\TRTFixtures\SqlQueryInterpreterWrap as SqlQueryInterpreterWrap;
 
 class SqlQueryInterpreterTest extends PHPUnit_Framework_TestCase {

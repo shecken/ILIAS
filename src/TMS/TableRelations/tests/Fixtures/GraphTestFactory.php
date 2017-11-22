@@ -1,8 +1,8 @@
 <?php
 namespace CaT\TRTFixtures;
 
-use CaT\TableRelations\Graphs as Graphs;
-use CaT\TableRelations as TR;
+use ILIAS\TMS\TableRelations\Graphs as Graphs;
+use ILIAS\TMS\TableRelations as TR;
 
 class GraphTestFactory extends TR\GraphFactory {
 	public function Node($id, $subgraph = 0) {

@@ -1,5 +1,5 @@
 <?php
-namespace CaT\TableRelations\Graphs;
+namespace ILIAS\TMS\TableRelations\Graphs;
 
 class GraphException extends \Exception {
 }

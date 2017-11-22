@@ -1,8 +1,8 @@
 <?php
 
-namespace CaT\TableRelations\Tables;
+namespace ILIAS\TMS\TableRelations\Tables;
 
-use CaT\Filter as Filters;
+use ILIAS\TMS\Filter as Filters;
 /**
  * @inheritdoc
  */

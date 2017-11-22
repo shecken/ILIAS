@@ -1,6 +1,6 @@
 <?php
-use CaT\TableRelations as TableRelations;
-use CaT\Filter as Filters;
+use ILIAS\TMS\TableRelations as TableRelations;
+use ILIAS\TMS\Filter as Filters;
 class TableTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
@@ -72,14 +72,14 @@ class TableTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException CaT\TableRelations\Tables\TableException
+	 * @expectedException ILIAS\TMS\TableRelations\Tables\TableException
 	 */
 	public function test_wrong_filed() {
 		$t = $this->tableSample();
 		$t->addField($this->tf->Field("field1","table_id1"));
 	}
 	/**
-	 * @expectedException CaT\TableRelations\Tables\TableException
+	 * @expectedException ILIAS\TMS\TableRelations\Tables\TableException
 	 */
 	public function test_wrong_field_in_constrain() {
 		$t = $this->tableSample();

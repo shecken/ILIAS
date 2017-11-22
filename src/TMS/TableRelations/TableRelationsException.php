@@ -1,5 +1,5 @@
 <?php
-namespace CaT\TableRelations;
+namespace ILIAS\TMS\TableRelations;
 
 class TableRelationsException extends \Exception{
 	

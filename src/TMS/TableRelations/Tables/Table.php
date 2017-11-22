@@ -1,7 +1,7 @@
 <?php
-namespace CaT\TableRelations\Tables;
-use CaT\TableRelations\Graphs as Graphs;
-use CaT\Filter\Predicates as Predicates;
+namespace ILIAS\TMS\TableRelations\Tables;
+use ILIAS\TMS\TableRelations\Graphs as Graphs;
+use ILIAS\TMS\Filter\Predicates as Predicates;
 
 /**
  * This is to be seen as a container carrying

@@ -1,6 +1,6 @@
 <?php
 
-namespace CaT\TableRelations\Graphs;
+namespace ILIAS\TMS\TableRelations\Graphs;
 
 /**
  * A path is a sequence of node ids. It must at least have a start-node.

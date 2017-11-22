@@ -1,6 +1,6 @@
 <?php
 
-namespace CaT\TableRelations\Graphs;
+namespace ILIAS\TMS\TableRelations\Graphs;
 /**
  * We are using depth first search , to get infos about graph.
  * These will be represented by a collection of paths, which are 

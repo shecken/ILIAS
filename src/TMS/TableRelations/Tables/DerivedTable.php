@@ -1,8 +1,8 @@
 <?php
 
-namespace CaT\TableRelations\Tables;
-use CaT\TableRelations\Graphs as Graphs;
-use CaT\Filter as Filters;
+namespace ILIAS\TMS\TableRelations\Tables;
+use ILIAS\TMS\TableRelations\Graphs as Graphs;
+use ILIAS\TMS\Filter as Filters;
 
 /**
  * Table derived from space (~subselect).

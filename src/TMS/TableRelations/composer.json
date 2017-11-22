@@ -1,7 +1,0 @@
-{
-	"autoload": {
-		"psr-4" : { "CaT\\TableRelations\\" : ".",
-					"CaT\\TRTFixtures\\" : "tests/Fixtures",
-					"CaT\\Filter\\": "../Filter"  }
-	}
-}

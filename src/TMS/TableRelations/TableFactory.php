@@ -1,7 +1,7 @@
 <?php
-namespace CaT\TableRelations;
+namespace ILIAS\TMS\TableRelations;
 
-use CaT\Filter as Filters;
+use ILIAS\TMS\Filter as Filters;
 /**
  * This is a class to fullfill our our table construction needs,
  * e.g. shortcuts for tables and derived fields used in many reports.

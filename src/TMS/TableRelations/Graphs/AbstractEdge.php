@@ -1,5 +1,5 @@
 <?php
-namespace CaT\TableRelations\Graphs;
+namespace ILIAS\TMS\TableRelations\Graphs;
 
 /**
  * Represents na edge within AbstractGraph.

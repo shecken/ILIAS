@@ -1,7 +1,7 @@
 <?php
-namespace CaT\TableRelations\Tables;
+namespace ILIAS\TMS\TableRelations\Tables;
 
-use CaT\Filter\Predicates as Predicates;
+use ILIAS\TMS\Filter\Predicates as Predicates;
 
 /**
  * Store metadata about tables.

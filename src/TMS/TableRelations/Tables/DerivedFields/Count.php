@@ -1,8 +1,8 @@
 <?php
 
-namespace CaT\TableRelations\Tables\DerivedFields;
-use CaT\TableRelations\Tables as T;
-use CaT\Filter as Filters;
+namespace ILIAS\TMS\TableRelations\Tables\DerivedFields;
+use ILIAS\TMS\TableRelations\Tables as T;
+use ILIAS\TMS\Filter as Filters;
 /**
  * Count the number of entries in a field
  */
