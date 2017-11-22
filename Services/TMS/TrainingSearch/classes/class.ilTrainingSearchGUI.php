@@ -299,8 +299,6 @@ class ilTrainingSearchGUI {
 			Helper::S_TITLE_DESC => $this->g_lng->txt(Helper::S_TITLE_DESC),
 			Helper::S_PERIOD_ASC => $this->g_lng->txt(Helper::S_PERIOD_ASC),
 			Helper::S_PERIOD_DESC => $this->g_lng->txt(Helper::S_PERIOD_DESC),
-			Helper::S_TYPE_ASC => $this->g_lng->txt(Helper::S_TYPE_ASC),
-			Helper::S_TYPE_DESC => $this->g_lng->txt(Helper::S_TYPE_DESC),
 			Helper::S_CITY_ASC => $this->g_lng->txt(Helper::S_CITY_ASC),
 			Helper::S_CITY_DESC => $this->g_lng->txt(Helper::S_CITY_DESC)
 		);
