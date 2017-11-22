@@ -29,6 +29,7 @@ class ilTrainingSearchTableGUI {
 		global $DIC;
 		$this->g_lng = $DIC->language();
 		$this->g_ctrl = $DIC->ctrl();
+
 		$this->helper = $helper;
 
 		$this->g_lng->loadLanguageModule('tms');
