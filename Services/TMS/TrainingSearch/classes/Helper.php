@@ -392,24 +392,6 @@ class Helper {
 				};
 		}
 	}
-
-	/**
-	 * Get the option for sorting of table
-	 *
-	 * @return string[]
-	 */
-	public function getSortOptions() {
-		return array(
-			Helper::S_TITLE_ASC => "Titel: aufsteigend",
-			Helper::S_TITLE_DESC => "Titel: absteigend",
-			Helper::S_PERIOD_ASC => "Zeitraum: aufsteigend",
-			Helper::S_PERIOD_DESC => "Zeitraum: absteigend",
-			Helper::S_TYPE_ASC => "Trainingstyp: aufsteigend",
-			Helper::S_TYPE_DESC => "Trainingstyp: absteigend",
-			Helper::S_CITY_ASC=>"Ort: aufsteigend",
-			Helper::S_CITY_DESC=>"Ort: absteigend"
-		);
-	}
 }
 
 /**
