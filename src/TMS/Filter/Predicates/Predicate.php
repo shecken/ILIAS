@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * A predicate is some abstract function from some record (like a dictionary,
@@ -12,12 +12,12 @@ abstract class Predicate {
 	/**
 	 * ToDo: This should be private and the other factory-members as well.
 	 *
-	 * @var	\CaT\Filter\PredicateFactory
+	 * @var	\ILIAS\TMS\Filter\PredicateFactory
 	 */
 	protected $factory;
 	protected $fields;
 
-	protected function setFactory(\CaT\Filter\PredicateFactory $factory) {
+	protected function setFactory(\ILIAS\TMS\Filter\PredicateFactory $factory) {
 		$this->factory = $factory;
 	}
 
@@ -34,7 +34,7 @@ abstract class Predicate {
 
 	protected function addPossibleFieldsToFields ( array $poss_fields, array $fields) {
 		foreach ($poss_fields as $poss_field) {
-			if($poss_field instanceof \CaT\Filter\Predicates\Field) {
+			if($poss_field instanceof \ILIAS\TMS\Filter\Predicates\Field) {
 				$fields = $this->addFieldToFields($poss_field, $fields);
 			}
 		}

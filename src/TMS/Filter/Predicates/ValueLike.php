@@ -2,18 +2,18 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * An atom in a predicate that acts like a value.
  */
 class ValueLike {
 	/**
-	 * @var	\CaT\Filter\PredicateFactory
+	 * @var	\ILIAS\TMS\Filter\PredicateFactory
 	 */
 	protected $factory;
 
-	protected function setFactory(\CaT\Filter\PredicateFactory $factory) {
+	protected function setFactory(\ILIAS\TMS\Filter\PredicateFactory $factory) {
 		$this->factory = $factory;
 	}
 

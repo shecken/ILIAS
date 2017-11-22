@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2016 Stefan Hecken, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter;
+namespace ILIAS\TMS\Filter;
 
 /**
 * Decides which kind of Filter should be displayed and initialize GUI
@@ -87,25 +87,25 @@ class DisplayFilter
 		$filter_class = get_class($filter);
 
 		switch ($filter_class) {
-			case "CaT\Filter\Filters\DatePeriod":
+			case "ILIAS\TMS\Filter\Filters\DatePeriod":
 				return $this->gui_factory->dateperiod_gui($filter, $navi->path());
 				break;
-			case "CaT\Filter\Filters\Multiselect":
+			case "ILIAS\TMS\Filter\Filters\Multiselect":
 				return $this->gui_factory->multiselect_gui($filter, $navi->path());
 				break;
-			case "CaT\Filter\Filters\MultiselectSearch":
+			case "ILIAS\TMS\Filter\Filters\MultiselectSearch":
 				return $this->gui_factory->multiselectsearch_gui($filter, $navi->path());
 				break;
-			case "CaT\Filter\Filters\Singleselect":
+			case "ILIAS\TMS\Filter\Filters\Singleselect":
 				return $this->gui_factory->singleselect_gui($filter, $navi->path());
 				break;
-			case "CaT\Filter\Filters\Option":
+			case "ILIAS\TMS\Filter\Filters\Option":
 				return $this->gui_factory->option_gui($filter, $navi->path());
 				break;
-			case "CaT\Filter\Filters\Text":
+			case "ILIAS\TMS\Filter\Filters\Text":
 				return $this->gui_factory->text_gui($filter, $navi->path());
 				break;
-			case "CaT\Filter\Filters\Sequence":
+			case "ILIAS\TMS\Filter\Filters\Sequence":
 				try {
 					$navi->enter();
 					return $this->getNextGUI($navi->current(), $navi);
@@ -113,7 +113,7 @@ class DisplayFilter
 					return false;
 				}
 				break;
-			case "CaT\Filter\Filters\OneOf":
+			case "ILIAS\TMS\Filter\Filters\OneOf":
 				return $this->gui_factory->one_of_gui($filter, $navi->path());
 				break;
 			default:
@@ -216,13 +216,13 @@ class DisplayFilter
 	*
 	* @return array
 	*/
-	public function buildFilterValues(\CaT\Filter\Filters\Sequence $sequence, array $post_values)
+	public function buildFilterValues(\ILIAS\TMS\Filter\Filters\Sequence $sequence, array $post_values)
 	{
-		$navi = new \CaT\Filter\Navigator($sequence);
+		$navi = new \ILIAS\TMS\Filter\Navigator($sequence);
 		$ret = array();
 
 		while ($filter = $this->getNextFilter($navi)) {
-			if ($filter instanceof \CaT\Filter\Filters\Sequence) {
+			if ($filter instanceof \ILIAS\TMS\Filter\Filters\Sequence) {
 				$navi->enter();
 				$filter = $navi->current();
 			}
@@ -230,7 +230,7 @@ class DisplayFilter
 			$current_class = get_class($filter);
 			$value = $post_values[$navi->path()];
 			switch ($current_class) {
-				case "CaT\Filter\Filters\DatePeriod":
+				case "ILIAS\TMS\Filter\Filters\DatePeriod":
 					$start = $filter->default_begin();
 					$end = $filter->default_end();
 
@@ -243,7 +243,7 @@ class DisplayFilter
 					array_push($ret, $start);
 					array_push($ret, $end);
 					break;
-				case "CaT\Filter\Filters\OneOf":
+				case "ILIAS\TMS\Filter\Filters\OneOf":
 					$value = $this->unserializeValue($value);
 					$choice = $value["option"];
 					$value = $value[$choice];
@@ -277,7 +277,7 @@ class DisplayFilter
 					array_push($ret, (int)$choice);
 					array_push($ret, $value);
 					break;
-				case "CaT\Filter\Filters\Multiselect":
+				case "ILIAS\TMS\Filter\Filters\Multiselect":
 					$value = $this->unserializeValue($value);
 					// TODO: this seams to be fishy... what about other filters besides
 					// multiselects?
@@ -295,7 +295,7 @@ class DisplayFilter
 					}
 					array_push($ret, $value);
 					break;
-				case "CaT\Filter\Filters\MultiselectSearch":
+				case "ILIAS\TMS\Filter\Filters\MultiselectSearch":
 					// TODO: Dedup with MultiselectSearch
 					$value = $this->unserializeValue($value);
 					// TODO: this seams to be fishy... what about other filters besides
@@ -314,19 +314,19 @@ class DisplayFilter
 					}
 					array_push($ret, $value);
 					break;
-				case "CaT\Filter\Filters\Singleselect":
+				case "ILIAS\TMS\Filter\Filters\Singleselect":
 					if ($filter->input_type() == $this->type_factory->int()) {
 						$value = (int)$value;
 					}
 					array_push($ret, $value);
 					break;
-				case "CaT\Filter\Filters\Text":
+				case "ILIAS\TMS\Filter\Filters\Text":
 					if ($value === null) {
 						$value = "";
 					}
 					array_push($ret, $value);
 					break;
-				case "CaT\Filter\Filters\Option":
+				case "ILIAS\TMS\Filter\Filters\Option":
 					array_push($ret, (bool)$value);
 					break;
 				default:

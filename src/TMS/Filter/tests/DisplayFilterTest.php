@@ -10,9 +10,9 @@ class DisplayFilterTest
 {
 	public function setUp() {
 		error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-		$this->type_factory =  new \CaT\Filter\TypeFactory();
-		$this->factory = new \CaT\Filter\FilterFactory(new \CaT\Filter\PredicateFactory(), $this->type_factory);
-		$this->gui_factory = new \CaT\Filter\FilterGUIFactory();
+		$this->type_factory =  new \ILIAS\TMS\Filter\TypeFactory();
+		$this->factory = new \ILIAS\TMS\Filter\FilterFactory(new \ILIAS\TMS\Filter\PredicateFactory(), $this->type_factory);
+		$this->gui_factory = new \ILIAS\TMS\Filter\FilterGUIFactory();
 	}
 
 	public function test_display_filter() {
@@ -38,7 +38,7 @@ class DisplayFilterTest
 		$post_values = array();
 		$counter = 0;
 
-		$df = new \CaT\Filter\DisplayFilter($this->gui_factory, $this->type_factory);
+		$df = new \ILIAS\TMS\Filter\DisplayFilter($this->gui_factory, $this->type_factory);
 
 		while($gui = $df->getNextFilterGUI($fs, $post_values)) {
 			$this->assertInstanceOf($classes[$counter], $gui);
@@ -81,7 +81,7 @@ class DisplayFilterTest
 		$counter = 0;
 		$post_values = array();
 
-		$df = new \CaT\Filter\DisplayFilter($this->gui_factory, $this->type_factory);
+		$df = new \ILIAS\TMS\Filter\DisplayFilter($this->gui_factory, $this->type_factory);
 
 		while($gui = $df->getNextFilterGUI($fs, $post_values)) {
 			$this->assertInstanceOf($classes[$counter], $gui);
@@ -94,7 +94,7 @@ class DisplayFilterTest
 	}
 
 	public function test_buildFilterValues() {
-		$display_filter = new \CaT\Filter\DisplayFilter($this->gui_factory, $this->type_factory);
+		$display_filter = new \ILIAS\TMS\Filter\DisplayFilter($this->gui_factory, $this->type_factory);
 		$f = $this->factory;
 
 		$filter = $f->sequence($f->multiselect("foo", "bar", array(0 => "val_0", 1 => "val_1")));

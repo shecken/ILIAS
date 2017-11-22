@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * A predicate to compare two values.

@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2016 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Filters;
+namespace ILIAS\TMS\Filter\Filters;
 
 class Singleselect extends SelectBase {
 	/**
@@ -10,7 +10,7 @@ class Singleselect extends SelectBase {
 	 */
 	protected $default_choice;
 
-	public function __construct(\CaT\Filter\FilterFactory $factory, $label, $description, $options,
+	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $label, $description, $options,
 								array $mappings = array(), array $mapping_result_types = array(),
 								$default_choice = "")
 	{

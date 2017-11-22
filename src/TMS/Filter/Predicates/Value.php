@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * An atom in a predicate that is a value.
@@ -14,7 +14,7 @@ abstract class Value extends ValueLike {
 	protected $value;
 
 
-	public function __construct(\CaT\Filter\PredicateFactory $factory, $value) {
+	public function __construct(\ILIAS\TMS\Filter\PredicateFactory $factory, $value) {
 		$err = $this->value_errors($value);
 		if ($err) {
 			throw new \InvalidArgumentException($err);

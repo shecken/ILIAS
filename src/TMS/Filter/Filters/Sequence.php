@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2016 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Filters;
+namespace ILIAS\TMS\Filter\Filters;
 
 class Sequence extends FilterList {
 	/**
@@ -10,7 +10,7 @@ class Sequence extends FilterList {
 	 */
 	protected $subs;
 
-	public function __construct(\CaT\Filter\FilterFactory $factory, $subs,
+	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $subs,
 								array $mappings = array(), array $mapping_result_types = array()) {
 		$this->setFactory($factory);
 		$this->setSubs($subs);

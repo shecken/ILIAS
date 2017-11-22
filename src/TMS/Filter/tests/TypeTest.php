@@ -12,7 +12,7 @@ class TypeTest extends PHPUnit_Framework_TestCase {
 		//include_once("./Services/PHPUnit/classes/class.ilUnitUtil.php");
 		//ilUnitUtil::performInitialisation();
 
-		$this->factory = new \CaT\Filter\TypeFactory();
+		$this->factory = new \ILIAS\TMS\Filter\TypeFactory();
 
 		// to prevent warnings for unset system timezone
 		date_default_timezone_set("Europe/Berlin");

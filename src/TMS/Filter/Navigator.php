@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2016 Stefan Hecken, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter;
+namespace ILIAS\TMS\Filter;
 
 class Navigator {
 

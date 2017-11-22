@@ -2,11 +2,11 @@
 
 /* Copyright (c) 2016 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Filters;
+namespace ILIAS\TMS\Filter\Filters;
 
 abstract class Filter {
 	/**
-	 * @var	\CaT\Filter\FilterFactory
+	 * @var	\ILIAS\TMS\Filter\FilterFactory
 	 */
 	protected $factory;
 
@@ -30,7 +30,7 @@ abstract class Filter {
 	 */
 	private $mapping_result_types = array();
 
-	protected function setFactory(\CaT\Filter\FilterFactory $factory) {
+	protected function setFactory(\ILIAS\TMS\Filter\FilterFactory $factory) {
 		$this->factory = $factory;
 	}
 
@@ -47,7 +47,7 @@ abstract class Filter {
 	protected function setMappings(array $mappings, array $mapping_result_types) {
 		assert('count($mappings) == count($mapping_result_types)');
 		$this->mappings = array_map(function(\Closure $c){return $c;}, $mappings);
-		$this->mapping_result_types = array_map(function(\CaT\Filter\Types\Type $t){return $t;}, $mapping_result_types);
+		$this->mapping_result_types = array_map(function(\ILIAS\TMS\Filter\Types\Type $t){return $t;}, $mapping_result_types);
 	}
 
 	protected function getMappings() {
@@ -75,7 +75,7 @@ abstract class Filter {
 	/**
 	 * Type of the content of the filter.
 	 *
-	 * @return	\CaT\Filter\Types\Type
+	 * @return	\ILIAS\TMS\Filter\Types\Type
 	 */
 	public function content_type() {
 		if (count($this->mapping_result_types) == 0) {
@@ -89,14 +89,14 @@ abstract class Filter {
 	/**
 	 * Type of the original (i.e. unmapped) content of the filter.
 	 *
-	 * @return	\CaT\Filter\Types\Type
+	 * @return	\ILIAS\TMS\Filter\Types\Type
 	 */
 	abstract public function original_content_type();
 
 	/**
 	 * The type of inputs the filter requires.
 	 *
-	 * @return	\CaT\Filter\Types\Type
+	 * @return	\ILIAS\TMS\Filter\Types\Type
 	 */
 	abstract public function input_type();
 
@@ -106,10 +106,10 @@ abstract class Filter {
 	 * TODO: switch params
 	 *
 	 * @param	\Closure					$mapper
-	 * @param	\CaT\Filter\Types\Type		$result_type
+	 * @param	\ILIAS\TMS\Filter\Types\Type		$result_type
 	 * @return	Filter
 	 */
-	public function map(\Closure $mapper, \CaT\Filter\Types\Type $result_type) {
+	public function map(\Closure $mapper, \ILIAS\TMS\Filter\Types\Type $result_type) {
 		assert('$mapper instanceof \\Closure');
 		//TODO : check number of $mapper params.
 		return $this->map_raw($mapper, $result_type);
@@ -119,10 +119,10 @@ abstract class Filter {
 	 * Map a function over the content of the filter, but without any checks.
 	 *
 	 * @param	\Closure					$mapper
-	 * @param	\CaT\Filter\Types\Type		$result_type
+	 * @param	\ILIAS\TMS\Filter\Types\Type		$result_type
 	 * @return	Filter
 	 */
-	public function map_raw(\Closure $mapper, \CaT\Filter\Types\Type $result_type) {
+	public function map_raw(\Closure $mapper, \ILIAS\TMS\Filter\Types\Type $result_type) {
 		$ms = array_merge($this->mappings, array($mapper));
 		$mrts = array_merge($this->mapping_result_types, array($result_type));
 		return $this->clone_with_new_mappings($ms, $mrts);

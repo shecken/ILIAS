@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2016 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Filters;
+namespace ILIAS\TMS\Filter\Filters;
 
 class Multiselect extends SelectBase {
 	/**
@@ -10,7 +10,7 @@ class Multiselect extends SelectBase {
 	 */
 	protected $default_choice;
 
-	public function __construct(\CaT\Filter\FilterFactory $factory, $label, $description, $options,
+	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $label, $description, $options,
 								array $mappings = array(), array $mapping_result_types = array()
 								, array $default_choice = array()) 
 	{
@@ -58,7 +58,7 @@ class Multiselect extends SelectBase {
 						$this->options, $mappings, $mapping_result_types, $this->default_choice);
 	}
 
-	public function use_all_if_nothing(array $values, \CaT\Filter\Types\Type $result_type) {
+	public function use_all_if_nothing(array $values, \ILIAS\TMS\Filter\Types\Type $result_type) {
 		return $this->map(function(array $status) use ($values) {
 			if (count($status) === 0) {
 				return $values;

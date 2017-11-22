@@ -5,12 +5,12 @@
 class NavigatorTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 		error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
-		$this->factory = new \CaT\Filter\FilterFactory(new \CaT\Filter\PredicateFactory(), new \CaT\Filter\TypeFactory());
+		$this->factory = new \ILIAS\TMS\Filter\FilterFactory(new \ILIAS\TMS\Filter\PredicateFactory(), new \ILIAS\TMS\Filter\TypeFactory());
 	}
 
 	public function test_initial_path() {
 		$f = $this->factory->text("l1", "d1");
-		$navi = (new \CaT\Filter\Navigator($f));
+		$navi = (new \ILIAS\TMS\Filter\Navigator($f));
 		$this->assertEquals(null, $navi->path());
 	}
 
@@ -20,7 +20,7 @@ class NavigatorTest extends PHPUnit_Framework_TestCase {
 		$f3 = $this->factory->text("l3", "d3");
 		$fs = $this->factory->sequence($f1, $f2, $f3);
 
-		$navi = (new \CaT\Filter\Navigator($fs))->go_to("0");
+		$navi = (new \ILIAS\TMS\Filter\Navigator($fs))->go_to("0");
 		$this->assertEquals($navi->tree(), $fs);
 		$this->assertEquals($navi->path(), "0");
 		$this->assertEquals($navi->current(), $f1);
@@ -77,7 +77,7 @@ class NavigatorTest extends PHPUnit_Framework_TestCase {
 
 		$fs = $this->factory->sequence($f1, $fs2, $f2, $f3);
 
-		$navi = (new \CaT\Filter\Navigator($fs))->go_to("0");
+		$navi = (new \ILIAS\TMS\Filter\Navigator($fs))->go_to("0");
 		$this->assertEquals($navi->tree(), $fs);
 		$this->assertEquals($navi->path(), "0");
 		$this->assertEquals($navi->current(), $f1);

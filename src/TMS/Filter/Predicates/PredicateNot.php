@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * A predicate that is true when the other predicate is false.
@@ -13,7 +13,7 @@ class PredicateNot extends Predicate {
 	 */
 	protected $sub;
 
-	public function __construct(\CaT\Filter\PredicateFactory $factory, Predicate $sub) {
+	public function __construct(\ILIAS\TMS\Filter\PredicateFactory $factory, Predicate $sub) {
 		$this->setFactory($factory);
 		$this->sub = $sub;
 	}

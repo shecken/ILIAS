@@ -14,7 +14,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 		//include_once("./Services/PHPUnit/classes/class.ilUnitUtil.php");
 		//ilUnitUtil::performInitialisation();
 
-		$this->factory = new \CaT\Filter\FilterFactory(new \CaT\Filter\PredicateFactory(), new \CaT\Filter\TypeFactory());
+		$this->factory = new \ILIAS\TMS\Filter\FilterFactory(new \ILIAS\TMS\Filter\PredicateFactory(), new \ILIAS\TMS\Filter\TypeFactory());
 
 		// to prevent warnings for unset system timezone
 		date_default_timezone_set("Europe/Berlin");
@@ -79,14 +79,14 @@ class FilterTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf("\\CaT\\Filter\\Predicates\\Predicate", $predicate);
 
 		$fields = array_map(
-			function (\CaT\Filter\Predicates\Field $f) {
+			function (\ILIAS\TMS\Filter\Predicates\Field $f) {
 					return $f->name();
 			},
 			$predicate->fields()
 		);
 		$this->assertEquals(array("start_field", "end_field"), $fields);
 
-		$interpreter = new \CaT\Filter\DictionaryPredicateInterpreter;
+		$interpreter = new \ILIAS\TMS\Filter\DictionaryPredicateInterpreter;
 
 		$this->assertTrue($interpreter->interpret(
 			$predicate,
@@ -157,7 +157,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
 		$this->assertNotNull($filter);
 
-		$interpreter = new \CaT\Filter\DictionaryPredicateInterpreter;
+		$interpreter = new \ILIAS\TMS\Filter\DictionaryPredicateInterpreter;
 
 		$pred_true = $filter->content(true);
 
@@ -263,7 +263,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
 		$this->assertNotNull($filter);
 
-		$interpreter = new \CaT\Filter\DictionaryPredicateInterpreter;
+		$interpreter = new \ILIAS\TMS\Filter\DictionaryPredicateInterpreter;
 
 		$pred = $filter->content(array(1,2));
 		$this->assertTrue($interpreter->interpret($pred, array("foo" => 2)));
@@ -345,7 +345,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
 		$this->assertNotNull($filter);
 
-		$interpreter = new \CaT\Filter\DictionaryPredicateInterpreter;
+		$interpreter = new \ILIAS\TMS\Filter\DictionaryPredicateInterpreter;
 
 		$pred_true = $filter->content("bar");
 
@@ -389,7 +389,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
 		$this->assertNotNull($filter);
 
-		$interpreter = new \CaT\Filter\DictionaryPredicateInterpreter;
+		$interpreter = new \ILIAS\TMS\Filter\DictionaryPredicateInterpreter;
 
 		$pred = $filter->content(new \DateTime("1985-05-04"), new \DateTime("2015-05-04"), "foo", "bar");
 
@@ -425,7 +425,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
 		$this->assertNotNull($filter);
 
-		$interpreter = new \CaT\Filter\DictionaryPredicateInterpreter;
+		$interpreter = new \ILIAS\TMS\Filter\DictionaryPredicateInterpreter;
 
 		$pred = $filter->content(new \DateTime("1985-05-04"), new \DateTime("2015-05-04"), "foo", "bar");
 
@@ -483,7 +483,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
 		$this->assertNotNull($filter);
 
-		$interpreter = new \CaT\Filter\DictionaryPredicateInterpreter;
+		$interpreter = new \ILIAS\TMS\Filter\DictionaryPredicateInterpreter;
 
 		$pred_0 = $filter->content(0, array(new \DateTime("1985-05-04"), new \DateTime("2015-05-04")));
 

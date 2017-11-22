@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * An atom in the predicate that references a field.
@@ -13,7 +13,7 @@ class Field extends ValueLike {
 	 */
 	protected $name;
 	
-	public function __construct(\CaT\Filter\PredicateFactory $factory, $name) {
+	public function __construct(\ILIAS\TMS\Filter\PredicateFactory $factory, $name) {
 		if (!is_string($name)) {
 			throw new \InvalidArgumentException($err);
 		}

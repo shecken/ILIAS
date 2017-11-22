@@ -17,8 +17,8 @@ class  SqlInterpreterTest
 		ilUnitUtil::performInitialisation();
 		global $ilDB;
 		$this->db = $ilDB;
-		$this->factory = new \CaT\Filter\PredicateFactory();
-		$this->interpreter = new \CaT\Filter\SqlPredicateInterpreter($ilDB);
+		$this->factory = new \ILIAS\TMS\Filter\PredicateFactory();
+		$this->interpreter = new \ILIAS\TMS\Filter\SqlPredicateInterpreter($ilDB);
 		date_default_timezone_set('Europe/Berlin');
 	}
 

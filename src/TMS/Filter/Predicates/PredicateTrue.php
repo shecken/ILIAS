@@ -2,13 +2,13 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * A predicate that is always true.
  */
 class PredicateTrue extends Predicate {
-	public function __construct(\CaT\Filter\PredicateFactory $factory) {
+	public function __construct(\ILIAS\TMS\Filter\PredicateFactory $factory) {
 		$this->setFactory($factory);
 	}
 

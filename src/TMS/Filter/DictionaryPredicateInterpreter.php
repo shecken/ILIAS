@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter;
+namespace ILIAS\TMS\Filter;
 
 /**
  * Interpreter to check the predicate on a dictionary.
@@ -17,16 +17,16 @@ class DictionaryPredicateInterpreter {
 	 * 
 	 * @return	bool
 	 */
-	public function interpret( \CaT\Filter\Predicates\Predicate $p, array $d) {
-		if ($p instanceof \CaT\Filter\Predicates\PredicateTrue) {
+	public function interpret( \ILIAS\TMS\Filter\Predicates\Predicate $p, array $d) {
+		if ($p instanceof \ILIAS\TMS\Filter\Predicates\PredicateTrue) {
 			return true;
 		}
 
-		if ($p instanceof \CaT\Filter\Predicates\PredicateNot) {
+		if ($p instanceof \ILIAS\TMS\Filter\Predicates\PredicateNot) {
 			return !$this->interpret($p->sub(), $d);
 		}
 
-		if ($p instanceof \CaT\Filter\Predicates\PredicateAny) {
+		if ($p instanceof \ILIAS\TMS\Filter\Predicates\PredicateAny) {
 			$predicates = $p->subs();
 			foreach ($predicates as $predicate) {
 				if( $this->interpret($predicate, $d) ) {
@@ -36,7 +36,7 @@ class DictionaryPredicateInterpreter {
 			return false;
 		}
 
-		if ($p instanceof \CaT\Filter\Predicates\PredicateAll) {
+		if ($p instanceof \ILIAS\TMS\Filter\Predicates\PredicateAll) {
 			$predicates = $p->subs();
 			foreach ($predicates as $predicate) {
 				if( !$this->interpret($predicate, $d) ) {
@@ -46,7 +46,7 @@ class DictionaryPredicateInterpreter {
 			return true;
 		}
 
-		if($p instanceof \CaT\Filter\Predicates\PredicateIn) {
+		if($p instanceof \ILIAS\TMS\Filter\Predicates\PredicateIn) {
 			$value = $p->getValue();
 			$list = $p->getList()->values();
 			foreach($list as $list_el) {
@@ -57,7 +57,7 @@ class DictionaryPredicateInterpreter {
 			return false;
 		}
 
-		if($p instanceof \CaT\Filter\Predicates\PredicateIsNull) {
+		if($p instanceof \ILIAS\TMS\Filter\Predicates\PredicateIsNull) {
 			if($field = current($p->fields())) {
 				$field_name = $field->name();
 				if(array_key_exists($field_name, $d)) {
@@ -70,7 +70,7 @@ class DictionaryPredicateInterpreter {
 		}
 
 
-		if ($p instanceof \CaT\Filter\Predicates\PredicateComparison) {
+		if ($p instanceof \ILIAS\TMS\Filter\Predicates\PredicateComparison) {
 			$left = $p->left();
 			$right = $p->right();
 			if($left instanceof Predicates\Field) {
@@ -81,7 +81,7 @@ class DictionaryPredicateInterpreter {
 				$left_type = $this->varType($left);
 				$left = $left->value();
 			}
-			if($right instanceof \CaT\Filter\Predicates\Field) {
+			if($right instanceof \ILIAS\TMS\Filter\Predicates\Field) {
 				$right_name = $right->name();
 				$right = array_key_exists($right_name, $d) ? $d[$right_name] : null;
 				$right_type = $this->fieldType($right);
@@ -93,7 +93,7 @@ class DictionaryPredicateInterpreter {
 				throw new \InvalidArgumentException("DictionaryPredicateInterpreter::interpret :"
 					." comparing different field types");
 			}
-			if($p instanceof  \CaT\Filter\Predicates\PredicateEq) {
+			if($p instanceof  \ILIAS\TMS\Filter\Predicates\PredicateEq) {
 				if( $right_type === self::IS_DATE ) {
 					return $right == $left;
 				}
@@ -104,7 +104,7 @@ class DictionaryPredicateInterpreter {
 					return $left === $right;
 				}
 			}
-			if($p instanceof  \CaT\Filter\Predicates\PredicateNeq) {
+			if($p instanceof  \ILIAS\TMS\Filter\Predicates\PredicateNeq) {
 				if( $right_type === self::IS_DATE ) {
 					return $right != $left ;
 				}
@@ -115,7 +115,7 @@ class DictionaryPredicateInterpreter {
 					return $left !== $right;
 				}
 			}
-			if($p instanceof  \CaT\Filter\Predicates\PredicateLt) {
+			if($p instanceof  \ILIAS\TMS\Filter\Predicates\PredicateLt) {
 				if( $right_type === self::IS_DATE ) {
 					return $left < $right;
 				}
@@ -144,13 +144,13 @@ class DictionaryPredicateInterpreter {
 	}
 
 	protected function varType($var) {
-		if( $var instanceof \CaT\Filter\Predicates\ValueStr) {
+		if( $var instanceof \ILIAS\TMS\Filter\Predicates\ValueStr) {
 			return self::IS_STR;
 		}
-		if( $var instanceof \CaT\Filter\Predicates\ValueInt) {
+		if( $var instanceof \ILIAS\TMS\Filter\Predicates\ValueInt) {
 			return self::IS_INT;
 		}
-		if( $var instanceof \CaT\Filter\Predicates\ValueDate) {
+		if( $var instanceof \ILIAS\TMS\Filter\Predicates\ValueDate) {
 			return self::IS_DATE;
 		}
 		throw new \InvalidArgumentException("DictionaryPredicateInterpreter::varType : invalid var type");

@@ -12,8 +12,8 @@ class PredicateTest extends PHPUnit_Framework_TestCase {
 		//include_once("./Services/PHPUnit/classes/class.ilUnitUtil.php");
 		//ilUnitUtil::performInitialisation();
 
-		$this->factory = new \CaT\Filter\PredicateFactory();
-		$this->interpreter = new \CaT\Filter\DictionaryPredicateInterpreter();
+		$this->factory = new \ILIAS\TMS\Filter\PredicateFactory();
+		$this->interpreter = new \ILIAS\TMS\Filter\DictionaryPredicateInterpreter();
 		date_default_timezone_set('Europe/Berlin');
 	}
 
@@ -1027,13 +1027,13 @@ class PredicateTest extends PHPUnit_Framework_TestCase {
 	public function test_ValueList() {
 		$ls = $this->factory->list_int(1,2,3,4);
 		$this->assertInstanceOf("\\CaT\\Filter\\Predicates\\ValueList", $ls);
-		$vals = array_map(function (\CaT\Filter\Predicates\ValueInt $v) {
+		$vals = array_map(function (\ILIAS\TMS\Filter\Predicates\ValueInt $v) {
 					return $v->value();
 				}, $ls->values());
 
 		$ls = $this->factory->list_str("one","two","three");
 		$this->assertInstanceOf("\\CaT\\Filter\\Predicates\\ValueList", $ls);
-		$vals = array_map(function (\CaT\Filter\Predicates\ValueStr $v) {
+		$vals = array_map(function (\ILIAS\TMS\Filter\Predicates\ValueStr $v) {
 					return $v->value();
 				}, $ls->values());
 		$this->assertEquals(array("one","two","three"), $vals);

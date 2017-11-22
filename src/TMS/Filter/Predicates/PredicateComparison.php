@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * A predicate to compare two values.
@@ -18,7 +18,7 @@ abstract class PredicateComparison extends Predicate {
 	 */
 	protected $r;
 
-	public function __construct(\CaT\Filter\PredicateFactory $factory, ValueLike $l, ValueLike $r) {
+	public function __construct(\ILIAS\TMS\Filter\PredicateFactory $factory, ValueLike $l, ValueLike $r) {
 		$this->l = $l;
 		$this->r = $r;
 		$this->setFactory($factory);

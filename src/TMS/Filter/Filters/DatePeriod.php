@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2016 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Filters;
+namespace ILIAS\TMS\Filter\Filters;
 
 class DatePeriod extends Filter {
 	/**
@@ -25,7 +25,7 @@ class DatePeriod extends Filter {
 	 */
 	private $period_max;
 
-	public function __construct(\CaT\Filter\FilterFactory $factory, $label, $description,
+	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $label, $description,
 			\DateTime $default_begin = null, \DateTime $default_end = null,
 			\DateTime $period_min = null, \DateTime $period_max = null,
 			array $mappings = array(), array $mapping_result_types = array()) {

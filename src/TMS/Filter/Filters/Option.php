@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2016 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Filters;
+namespace ILIAS\TMS\Filter\Filters;
 
 class Option extends Filter
 {
@@ -14,7 +14,7 @@ class Option extends Filter
 	protected $checked;
 
 	public function __construct(
-		\CaT\Filter\FilterFactory $factory,
+		\ILIAS\TMS\Filter\FilterFactory $factory,
 		$label,
 		$description,
 		array $mappings = array(),

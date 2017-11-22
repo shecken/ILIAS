@@ -1,6 +1,6 @@
 <?php
 
-namespace CaT\Filter\Types;
+namespace ILIAS\TMS\Filter\Types;
 
 
 class DictionaryType extends Type {
@@ -9,7 +9,7 @@ class DictionaryType extends Type {
 	public function __construct(array $types ) {
 
 		foreach ($types as $key => $type) {
-			if(!($type instanceof \CaT\Filter\Types\Type)) {
+			if(!($type instanceof \ILIAS\TMS\Filter\Types\Type)) {
 				throw new \InvalidArgumentException("DictionaryType::Expected type");
 			}
 		}

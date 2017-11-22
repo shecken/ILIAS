@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter;
+namespace ILIAS\TMS\Filter;
 
 /**
  * Factory to build filters.

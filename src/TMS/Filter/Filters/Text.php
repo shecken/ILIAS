@@ -2,10 +2,10 @@
 
 /* Copyright (c) 2016 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Filters;
+namespace ILIAS\TMS\Filter\Filters;
 
 class Text extends Filter {
-	public function __construct(\CaT\Filter\FilterFactory $factory, $label, $description,
+	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $label, $description,
 								array $mappings = array(), array $mapping_result_types = array()) {
 		assert('is_string($label)');
 		assert('is_string($description)');

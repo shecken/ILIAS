@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * A bundle of some predicates.
@@ -13,7 +13,7 @@ abstract class PredicateBundle extends Predicate {
 	 */
 	protected $subs = array();
 
-	public function __construct( \CaT\Filter\PredicateFactory $factory, array $subs) {
+	public function __construct( \ILIAS\TMS\Filter\PredicateFactory $factory, array $subs) {
 		$this->subs = array_map(function(Predicate $p) {
 			return $p;
 		}, $subs);

@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees, Extended GPL, see docs/LICENSE */
 
-namespace CaT\Filter\Predicates;
+namespace ILIAS\TMS\Filter\Predicates;
 
 /**
  * Factory to build predicates for the fluent interface.
@@ -17,11 +17,11 @@ class FluentPredicateFactory {
 	protected $continue;
 
 	/**
-	 * @var	\CaT\Filter\PredicateFactory
+	 * @var	\ILIAS\TMS\Filter\PredicateFactory
 	 */
 	protected $factory;
 
-	public function __construct(\Closure $continue, \CaT\Filter\PredicateFactory $factory) {
+	public function __construct(\Closure $continue, \ILIAS\TMS\Filter\PredicateFactory $factory) {
 		$this->continue = $continue;
 		$this->factory = $factory;
 	}
