@@ -213,7 +213,7 @@ class ilTrainingSearchGUI {
 		}
 
 		$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_SORT);
-		$view_control[] = $this->g_f->viewControl()->sortation($this->helper->getSortOptions())
+		$view_control[] = $this->g_f->viewControl()->sortation($this->getSortOptions())
 						->withTargetURL($link, Helper::F_SORT_VALUE)
 						->withLabel($this->g_lng->txt("sorting"));
 
@@ -281,6 +281,24 @@ class ilTrainingSearchGUI {
 		if(isset($get[Helper::S_USER]) && $get[Helper::S_USER] !== "") {
 			$this->search_user_id = (int)$get[Helper::S_USER];
 		}
+	}
+
+	/**
+	 * Get the option for sorting of table
+	 *
+	 * @return string[]
+	 */
+	public function getSortOptions() {
+		return array(
+			Helper::S_TITLE_ASC => $this->g_lng->txt(Helper::S_TITLE_ASC),
+			Helper::S_TITLE_DESC => $this->g_lng->txt(Helper::S_TITLE_DESC),
+			Helper::S_PERIOD_ASC => $this->g_lng->txt(Helper::S_PERIOD_ASC),
+			Helper::S_PERIOD_DESC => $this->g_lng->txt(Helper::S_PERIOD_DESC),
+			Helper::S_TYPE_ASC => $this->g_lng->txt(Helper::S_TYPE_ASC),
+			Helper::S_TYPE_DESC => $this->g_lng->txt(Helper::S_TYPE_DESC),
+			Helper::S_CITY_ASC => $this->g_lng->txt(Helper::S_CITY_ASC),
+			Helper::S_CITY_DESC => $this->g_lng->txt(Helper::S_CITY_DESC)
+		);
 	}
 }
 
