@@ -186,6 +186,10 @@ class gevDecentralTrainingCreationRequest
 								 ."     TemplateObjId: ".$this->templateObjId()."\n");
 		}
 
+		// Sleep two seconds two avoid wrong order of statements on db when setting
+		// course online again (#3577). Could as well be 1 or 5 seconds, though...
+		sleep(2);
+
 		$trgt_obj_id = $this->getObjectIdFor($trgt_ref_id);
 		$trgt_utils = $this->getCourseUtils((int)$trgt_obj_id);
 		$trgt_crs = $trgt_utils->getCourse();
@@ -198,10 +202,6 @@ class gevDecentralTrainingCreationRequest
 		$this->assignUserToCreatorRole($this->user_id, $trgt_ref_id);
 
 		$rbacsystem->resetRoleCache();
-
-		// Sleep two seconds two avoid wrong order of statements on db when setting
-		// course online again (#3577). Could as well be 1 or 5 seconds, though...
-		sleep(2);
 
 		// New course should have same title as old course.
 		$trgt_crs->setTitle($src_utils->getTitle());
