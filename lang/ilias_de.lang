@@ -16002,3 +16002,5 @@ tms#:#booking_overview_description#:#Bitte prüfen Sie die Angaben und schließe
 tms#:#booking_confirm#:#Verbindlich buchen
 tms#:#cancel_confirm#:#Verbindlich stornieren
 tms#:#trainer#:#Trainer
+tms#:#employees#:#Mitarbeiter
+tms#:#booking_for#:#Buchung für %s

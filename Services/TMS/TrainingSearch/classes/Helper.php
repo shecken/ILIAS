@@ -5,6 +5,8 @@
  */
 
 class Helper {
+	use \ILIAS\TMS\MyUsersHelper;
+
 	const F_TITLE = "f_title";
 	const F_TYPE = "f_type";
 	const F_TOPIC = "f_topic";
@@ -21,6 +23,8 @@ class Helper {
 	const S_PERIOD_DESC = "s_period_desc";
 	const S_TYPE_DESC = "s_type_desc";
 	const S_CITY_DESC = "s_city_desc";
+
+	const S_USER = "s_user";
 
 	/**
 	 * @var ilObjUser
