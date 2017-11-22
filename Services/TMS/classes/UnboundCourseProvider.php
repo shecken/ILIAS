@@ -226,8 +226,8 @@ class UnboundCourseProvider extends Base {
 		if(count($sessions) > 0) {
 			foreach ($sessions as $session) {
 				$appointment 	= $session->getFirstAppointment();
-				$start_time 	= $appointment->getStart()->get(IL_CAL_FKT_DATE, "H:i", "UTC");
-				$end_time 		= $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i", "UTC");
+				$start_time 	= $appointment->getStart()->get(IL_CAL_FKT_DATE, "H:i");
+				$end_time 		= $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i");
 				$offset 		= $appointment->getDaysOffset();
 
 				$vals[$offset] = $this->lng->txt("day")." ".$offset." ".$start_time." - ".$end_time;
