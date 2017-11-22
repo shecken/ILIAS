@@ -186,29 +186,30 @@ class ilTrainingSearchGUI {
 	 * @return Sortation[]
 	 */
 	protected function addSortationObjects($view_control) {
-		require_once("Services/Component/classes/class.ilPluginAdmin.php");
-		$link = $this->g_ctrl->getLinkTarget($this->parent, ilTrainingSearchGUI::CMD_CHANGE_USER);
-
 		$employees = $this->helper->getUserWhereCurrentCanBookFor((int)$this->g_user->getId());
 		if(count($employees) > 0) {
-			$view_control[] = $this->g_f->viewControl()->sortation($employees)
+			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_CHANGE_USER);
+			$view_control[] = $this->g_f->viewControl()->quickfilter($employees)
 				->withTargetURL($link, Helper::S_USER)
-				->withLabel($this->g_lng->txt("employees"))
-				->withLabel(ilObjUser::_lookupFullname($this->search_user_id));
+				->withDefaultValue($this->g_user->getId())
+				->withLabel($this->g_lng->txt("employees"));
 		}
 
+		require_once("Services/Component/classes/class.ilPluginAdmin.php");
 		if(ilPluginAdmin::isPluginActive('xccl')) {
 			$plugin = ilPluginAdmin::getPluginObjectById('xccl');
 			$actions = $plugin->getActions();
 			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_QUICKFILTER);
 
-			$options = array(null => "Alle");
-			$view_control[] = $this->g_f->viewControl()->sortation($options + $actions->getTypeOptions())
+			$options = array("" => $this->g_lng->txt("show_all"));
+			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $actions->getTypeOptions())
 						->withTargetURL($link, Helper::F_TYPE)
+						->withDefaultValue("")
 						->withLabel($plugin->txt("conf_options_type"));
 
-			$view_control[] = $this->g_f->viewControl()->sortation($options + $actions->getTopicOptions())
+			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $actions->getTopicOptions())
 						->withTargetURL($link, Helper::F_TOPIC)
+						->withDefaultValue("")
 						->withLabel($plugin->txt("conf_options_topic"));
 		}
 
