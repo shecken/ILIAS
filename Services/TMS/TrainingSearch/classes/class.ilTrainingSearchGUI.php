@@ -30,9 +30,9 @@ class ilTrainingSearchGUI {
 	protected $g_ctrl;
 
 	/**
-	 * User id of user who going to get booked.
+	 * UserId of the user that is going to be booked. Initially set to current ilUser.
 	 * Initial the current ilUser.
-	 * Might be changed to other is current is allowd to book for other
+	 * This might be changed, if the current user is allowed to book for others.
 	 *
 	 * @var int
 	 */

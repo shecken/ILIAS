@@ -309,7 +309,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 	}
 
 	/**
-	 * Checks the user course should be boooked to is employee or superior under current user
+	 * Checks if a user is hierarchically under the current user.
 	 *
 	 * @param int 	$usr_id
 	 *

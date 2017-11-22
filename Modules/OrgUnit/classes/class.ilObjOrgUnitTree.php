@@ -313,12 +313,12 @@ class ilObjOrgUnitTree {
 
 	// cat-tms-patch start (352)
 	/**
-	 * @param $user_id   int
-	 * @param $recursive bool if this is true subsequent orgunits of this users superior role get searched as well.
+	 * @param int 	$user_id
+	 * @param bool 	$recursive 	if this is true subsequent orgunits of this users superior role get searched as well.
 	 * @return int[] returns an array of user_ids of the users which have an superior role in an orgunit of which this user's id has a superior role.
 	 */
 	public function getSuperiorsUnderUser($user_id, $recursive = true) {
-		//querry for all orgu where user_id is superior.
+		//query for all orgu where user_id is superior.
 		$q = "SELECT orgu.obj_id, refr.ref_id FROM object_data orgu
                 INNER JOIN object_reference refr ON refr.obj_id = orgu.obj_id
 				INNER JOIN object_data roles ON roles.title LIKE CONCAT('il_orgu_superior_',refr.ref_id)
