@@ -108,7 +108,10 @@ class ilTrainingSearchGUI {
 	 * @return void
 	 */
 	protected function show() {
-		$bookable_trainings = $this->getBookableTrainings(array());
+		$get = $_GET;
+		$filter = $this->helper->getFilterValuesFrom($get);
+		$bookable_trainings = $this->getBookableTrainings($filter);
+		$bookable_trainings = $this->helper->sortBookableTrainings(array(Helper::F_SORT_VALUE => Helper::S_TITLE_ASC), $bookable_trainings);
 		$this->showTrainings($bookable_trainings);
 	}
 
