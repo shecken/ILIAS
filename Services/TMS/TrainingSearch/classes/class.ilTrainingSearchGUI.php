@@ -69,6 +69,7 @@ class ilTrainingSearchGUI {
 
 	public function executeCommand() {
 		$next_class = $this->g_ctrl->getNextClass();
+		$this->changeUser();
 
 		switch ($next_class) {
 			case "iltmsbookinggui":
@@ -82,7 +83,6 @@ class ilTrainingSearchGUI {
 				switch($cmd) {
 					case self::CMD_SHOW:
 					case self::CMD_CHANGE_USER:
-						$this->changeUser();
 						$this->show();
 						break;
 					case self::CMD_FILTER:
