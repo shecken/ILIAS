@@ -15994,3 +15994,13 @@ tms#:#overview_header#:#Zusammenfassung
 tms#:#no_trainings_available#:#Derzeit stehen für Sie keine Trainings zur Buchung zur Verfügung.
 tms#:#booked_on_waitinglist#:#gebucht auf Warteliste
 tms#:#booked_as_member#:#gebucht
+tms#:#sorting#:#Sortierung
+tms#:#booking#:#Buchung
+tms#:#canceling#:#Stornierung
+tms#:#cancel_overview_description#:#Bitte prüfen Sie die Angaben und schließen Sie die Stornierung ab.
+tms#:#booking_overview_description#:#Bitte prüfen Sie die Angaben und schließen Sie die Buchung ab.
+tms#:#booking_confirm#:#Verbindlich buchen
+tms#:#cancel_confirm#:#Verbindlich stornieren
+tms#:#trainer#:#Trainer
+tms#:#employees#:#Mitarbeiter
+tms#:#booking_for#:#Buchung für %s
