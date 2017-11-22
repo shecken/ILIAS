@@ -105,15 +105,15 @@ interface Factory {
 	 *   effect: >
 	 *      A click on an option will filter the associated data-list
 	 *      by calling a page with a parameter according to the selected option or triggering a signal.
-	 *      The label displayed in the dropdown will be set to the selected sorting.
+	 *      The label displayed in the dropdown will be set to the selected option.
 	 *
 	 * rules:
 	 *   usage:
 	 *      1: A Quickfilter MUST NOT be used standalone.
-	 *      2: Sortations MUST BE visually close to the list or table their operation will have effect upon.
-	 *      3: There SHOULD NOT be more than one Sortation per view.
+	 *      2: Quickfilters MUST BE visually close to the list or table their operation will have effect upon.
+	 *      3: There SHOULD NOT be more than one Quickfilter per view.
 	 *   accessibility:
-	 *      1: Sortation MUST be operable via keyboard only.
+	 *      1: Quickfilter MUST be operable via keyboard only.
 	 *
 	 * ---
 	 * @param array<string,string>  $options 	a dictionary with value=>title
