@@ -36,11 +36,8 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			$this->xbkm = ilPluginAdmin::getPluginObjectById('xbkm');
 
 			$crss = $this->getAllCourses($user_id);
-			var_dump(count($crss));
 			$crss = $this->filterCoursesUserIsBookedTo($user_id, $crss);
-			var_dump(count($crss));
 			$crss = $this->filterCoursesUserHasNoPermissionsTo($user_id, $crss);
-			var_dump(count($crss));
 			$crss = $this->addBookingModalitiesOfCourses($crss);
 			$crss = $this->addCourseClassification($crss);
 			$crss = $this->createBookableCourseByFilter($crss, $filter);
