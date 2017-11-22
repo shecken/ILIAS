@@ -116,7 +116,7 @@ class UnboundCourseProvider extends Base {
 		require_once("Services/Membership/classes/class.ilWaitingList.php");
 		if(\ilCourseParticipants::_isParticipant($object->getRefId(), $this->user->getId())) {
 			$ret[] = $this->createCourseInfoObject($entity
-					, $this->lng->txt("status")
+					, $this->lng->txt("status").":"
 					, $this->lng->txt("booked_as_member")
 					, 600
 					, [
@@ -127,7 +127,7 @@ class UnboundCourseProvider extends Base {
 
 		if(\ilWaitingList::_isOnList($this->user->getId(), $object->getId())) {
 			$ret[] = $this->createCourseInfoObject($entity
-					, $this->lng->txt("status")
+					, $this->lng->txt("status").":"
 					, $this->lng->txt("booked_on_waitinglist")
 					, 600
 					, [
