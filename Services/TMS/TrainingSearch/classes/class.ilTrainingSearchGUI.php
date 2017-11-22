@@ -16,6 +16,8 @@ class ilTrainingSearchGUI {
 	const CMD_SHOW_MODAL = "showModal";
 	const CMD_FILTER = "filter";
 	const CMD_CHANGE_USER = "changeUser";
+	const CMD_QUICKFILTER = "quickFilter";
+	const CMD_SORT = "sort";
 
 	/**
 	 * @var ilTemplate
@@ -54,6 +56,9 @@ class ilTrainingSearchGUI {
 		$this->search_user_id = $DIC->user()->getId();
 		$this->g_lng = $DIC->language();
 		$this->g_toolbar = $DIC->toolbar();
+		$this->g_f = $DIC->ui()->factory();
+		$this->g_renderer = $DIC->ui()->renderer();
+		$this->g_user = $DIC->user();
 
 		$this->parent = $parent;
 		$this->db = $db;
@@ -83,6 +88,12 @@ class ilTrainingSearchGUI {
 					case self::CMD_FILTER:
 						$this->filter();
 						break;
+					case self::CMD_QUICKFILTER:
+						$this->quickFilter();
+						break;
+					case self::CMD_SORT:
+						$this->sort();
+						break;
 					default:
 						throw new Exception("Unknown command: ".$cmd);
 				}
@@ -106,9 +117,34 @@ class ilTrainingSearchGUI {
 	 *
 	 * @return void
 	 */
-	protected function filter() {
+	public function filter() {
 		$post = $_POST;
 		$filter = $this->helper->getFilterValuesFrom($post);
+		$bookable_trainings = $this->getBookableTrainings($filter);
+		$this->showTrainings($bookable_trainings);
+	}
+
+	/**
+	 * Sorts all table entries according to selection
+	 *
+	 * @return void
+	 */
+	protected function sort() {
+		$get = $_GET;
+		$filter = $this->helper->getFilterValuesFrom($get);
+		$bookable_trainings = $this->getBookableTrainings($filter);
+		$bookable_trainings = $this->helper->sortBookableTrainings($get, $bookable_trainings);
+		$this->showTrainings($bookable_trainings);
+	}
+
+	/**
+	 * Post processing for quick filter values
+	 *
+	 * @return void
+	 */
+	public function quickFilter() {
+		$get = $_GET;
+		$filter = $this->helper->getFilterValuesFrom($get);
 		$bookable_trainings = $this->getBookableTrainings($filter);
 		$this->showTrainings($bookable_trainings);
 	}
@@ -125,8 +161,13 @@ class ilTrainingSearchGUI {
 		$table = new ilTrainingSearchTableGUI($this, $this->helper);
 		$table->setData($bookable_trainings);
 
-		$modal = $this->prepareModal();
-		$content = $modal."<br \><br \><br \>".$table->render();
+		$modal = $this->prepareModal($button1);
+		$button1 = $this->g_f->button()->standard($this->g_lng->txt('search'), '#')
+			->withOnClick($modal->getShowSignal());
+
+		$view_control = array($button1);
+		$view_control = $this->addSortationObjects($view_control);
+		$content = $this->g_renderer->render($modal).$table->render($view_control);
 
 		if(count($bookable_trainings) == 0) {
 			$content .= $this->getNoAvailableTrainings();
@@ -134,6 +175,46 @@ class ilTrainingSearchGUI {
 
 		$this->g_tpl->setContent($content);
 		$this->g_tpl->show();
+	}
+
+	/**
+	 * Add all sorting and filter items for the table
+	 *
+	 * @return Sortation[]
+	 */
+	protected function addSortationObjects($view_control) {
+		require_once("Services/Component/classes/class.ilPluginAdmin.php");
+		$link = $this->g_ctrl->getLinkTarget($this->parent, ilTrainingSearchGUI::CMD_CHANGE_USER);
+
+		$employees = $this->helper->getUserWhereCurrentCanBookFor((int)$this->g_user->getId());
+		if(count($employees) > 0) {
+			$view_control[] = $this->g_f->viewControl()->sortation($employees)
+				->withTargetURL($link, Helper::S_USER)
+				->withLabel($this->g_lng->txt("employees"))
+				->withLabel(ilObjUser::_lookupFullname($this->search_user_id));
+		}
+
+		if(ilPluginAdmin::isPluginActive('xccl')) {
+			$plugin = ilPluginAdmin::getPluginObjectById('xccl');
+			$actions = $plugin->getActions();
+			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_QUICKFILTER);
+
+			$options = array(null => "Alle");
+			$view_control[] = $this->g_f->viewControl()->sortation($options + $actions->getTypeOptions())
+						->withTargetURL($link, Helper::F_TYPE)
+						->withLabel($plugin->txt("conf_options_type"));
+
+			$view_control[] = $this->g_f->viewControl()->sortation($options + $actions->getTopicOptions())
+						->withTargetURL($link, Helper::F_TOPIC)
+						->withLabel($plugin->txt("conf_options_topic"));
+		}
+
+		$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_SORT);
+		$view_control[] = $this->g_f->viewControl()->sortation($this->helper->getSortOptions())
+						->withTargetURL($link, Helper::F_SORT_VALUE)
+						->withLabel($this->g_lng->txt("sorting"));
+
+		return $view_control;
 	}
 
 	/**

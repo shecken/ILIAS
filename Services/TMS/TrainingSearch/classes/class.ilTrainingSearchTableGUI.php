@@ -29,7 +29,7 @@ class ilTrainingSearchTableGUI {
 		global $DIC;
 		$this->g_lng = $DIC->language();
 		$this->g_ctrl = $DIC->ctrl();
-		$this->g_user = $DIC->user();
+
 		$this->helper = $helper;
 
 		$this->g_lng->loadLanguageModule('tms');
@@ -60,7 +60,7 @@ class ilTrainingSearchTableGUI {
 	 *
 	 * @return string
 	 */
-	public function render() {
+	public function render($view_constrols) {
 		global $DIC;
 		$f = $DIC->ui()->factory();
 		$renderer = $DIC->ui()->renderer();
@@ -68,7 +68,7 @@ class ilTrainingSearchTableGUI {
 		//build table
 		$ptable = $f->table()->presentation(
 			$this->g_lng->txt("header"), //title
-			$this->getSortationObjects($f),
+			$view_constrols,
 			function ($row, BookableCourse $record, $ui_factory, $environment) { //mapping-closure
 				return $row
 					->withTitle($record->getTitleValue())
@@ -85,25 +85,6 @@ class ilTrainingSearchTableGUI {
 
 		//apply data to table and render
 		return $renderer->render($ptable->withData($data));
-	}
-
-	/**
-	 * Get all sorting and filter items for the table
-	 *
-	 * @param 	$f
-	 *
-	 * @return Sortation[]
-	 */
-	protected function getSortationObjects($f) {
-		$ret = array();
-		require_once("Services/Component/classes/class.ilPluginAdmin.php");
-
-		$link = $this->g_ctrl->getLinkTarget($this->parent, ilTrainingSearchGUI::CMD_CHANGE_USER);
-		$ret[] = $f->viewControl()->sortation($this->helper->getUserWhereCurrentCanBookFor((int)$this->g_user->getId()))
-						->withTargetURL($link, Helper::S_USER)
-						->withLabel($this->g_lng->txt("employees"));
-
-		return $ret;
 	}
 }
 
