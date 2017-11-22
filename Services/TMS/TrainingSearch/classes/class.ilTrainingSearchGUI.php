@@ -202,12 +202,16 @@ class ilTrainingSearchGUI {
 			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_QUICKFILTER);
 
 			$options = array("" => $this->g_lng->txt("show_all"));
-			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $actions->getTypeOptions())
+			$type_options = $actions->getTypeOptions();
+			uasort($type_options, function($a, $b) { return strcmp($a, $b);});
+			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $type_options)
 						->withTargetURL($link, Helper::F_TYPE)
 						->withDefaultValue("")
 						->withLabel($plugin->txt("conf_options_type"));
 
-			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $actions->getTopicOptions())
+			$topic_options = $actions->getTopicOptions();
+			uasort($topic_options, function($a, $b) { return strcmp($a, $b);});
+			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $topic_options)
 						->withTargetURL($link, Helper::F_TOPIC)
 						->withDefaultValue("")
 						->withLabel($plugin->txt("conf_options_topic"));
