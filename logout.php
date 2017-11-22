@@ -13,6 +13,8 @@
 require_once("Services/Init/classes/class.ilInitialisation.php");
 ilInitialisation::initILIAS();
 
+ilSession::clear("bypass_maintenance_page");
+
 $ilCtrl->initBaseClass("ilStartUpGUI");
 $ilCtrl->setCmd("showLogout");
 $ilCtrl->setTargetScript("ilias.php");
@@ -20,4 +22,3 @@ $ilCtrl->callBaseClass();
 $ilBench->save();
 
 exit;
-?>
