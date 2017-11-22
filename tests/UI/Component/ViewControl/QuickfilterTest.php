@@ -1,5 +1,5 @@
 <?php
-/* Copyright (c) 2017 Nils Haagen <nils.haagen@concepts-and-training.de> Extended GPL, see docs/LICENSE */
+/* Copyright (c) 2017 Stefan Hecken <stefan.hecken@concepts-and-training.de> Extended GPL, see docs/LICENSE */
 
 require_once("libs/composer/vendor/autoload.php");
 require_once(__DIR__."/../../Base.php");
