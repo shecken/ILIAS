@@ -215,7 +215,7 @@ class ilTrainingSearchGUI {
 		$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_SORT);
 		$view_control[] = $this->g_f->viewControl()->sortation($this->getSortOptions())
 						->withTargetURL($link, Helper::F_SORT_VALUE)
-						->withLabel($this->g_lng->txt("sorting"));
+						->withLabel($this->g_lng->txt(Helper::S_TITLE_ASC));
 
 		return $view_control;
 	}
