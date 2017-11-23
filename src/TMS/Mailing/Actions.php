@@ -10,8 +10,8 @@ namespace ILIAS\TMS\Mailing;
 interface Actions {
 	const BOOKED_ON_COURSE = "B01";
 	const BOOKED_ON_WAITINGLIST = "B02";
-	const CANCELD_FROM_COURSE = "C01";
-	const CANCELD_FROM_WAITINGLIST = "C02";
+	const CANCELED_FROM_COURSE = "C01";
+	const CANCELED_FROM_WAITINGLIST = "C02";
 
 	/**
 	 * Sends a mail for a course to the user.
