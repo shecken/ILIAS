@@ -162,7 +162,7 @@
 						<div class="gev-start-row1">
 							<div class="gev-start-row1-1">
 								<h1>DIE GENERALI ONLINE AKADEMIE ... </h1>
-								<p>... wird derzeit einer Wartung unterzogen. Kommen sie bald wieder!</p>
+								<p>... wird derzeit einer Wartung unterzogen. Kommen Sie bald wieder!</p>
 							</div>
 							<div class="gev-start-row1-2">
 								<ul class="gev-start">
