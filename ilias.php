@@ -12,10 +12,10 @@
 *
 */
 
+include('./maintenance.inc.php');
+
 require_once("Services/Init/classes/class.ilInitialisation.php");
 ilInitialisation::initILIAS();
-
-include('./maintenance.inc.php');
 
 //gev-patch 2559 do not show pre loader on download
 ilUtil::setCookie("download_started", null, false, false, false);

@@ -10,6 +10,8 @@
 * @package ilias
 */
 
+include('./maintenance.inc.php');
+
 // jump to setup if ILIAS3 is not installed
 if (!file_exists(getcwd()."/ilias.ini.php")) {
 	header("Location: ./setup/setup.php");
@@ -62,8 +64,6 @@ if (isset($_GET["client_id"])) {
 
 require_once("Services/Init/classes/class.ilInitialisation.php");
 ilInitialisation::initILIAS();
-
-include('./maintenance.inc.php');
 
 $ilCtrl->initBaseClass("ilStartUpGUI");
 $ilCtrl->setTargetScript("ilias.php");

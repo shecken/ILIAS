@@ -10,10 +10,10 @@
 * @package ilias-core
 */
 
+setcookie("bypass_maintenance_page", null, -1);
+
 require_once("Services/Init/classes/class.ilInitialisation.php");
 ilInitialisation::initILIAS();
-
-ilSession::clear("bypass_maintenance_page");
 
 $ilCtrl->initBaseClass("ilStartUpGUI");
 $ilCtrl->setCmd("showLogout");
