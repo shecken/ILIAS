@@ -130,8 +130,8 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 * @return bool
 	 */
 	protected function userHasAccess($user_id, $crs_ref_id, $crs_id) {
-		$visible = $this->g_access->checkAccess("visible", "", $crs_ref_id);
-		$read = $this->g_access->checkAccess("read", "", $crs_ref_id);
+		$visible = $this->g_access->checkAccessOfUser($user_id, "visible", "", $crs_ref_id);
+		$read = $this->g_access->checkAccessOfUser($user_id, "read", "", $crs_ref_id);
 
 		$always_visible = false;
 		$active = ilObjCourseAccess::_isActivated($crs_id, $always_visible);
