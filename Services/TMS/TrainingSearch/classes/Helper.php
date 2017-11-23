@@ -291,13 +291,13 @@ class Helper {
 	protected function getTitleSortingClosure($direction) {
 		if($direction == "asc") {
 			return function($a, $b) {
-					return strcmp($a->getTitle(), $b->getTitle());
+					return strcasecmp($a->getTitle(), $b->getTitle());
 				};
 		}
 
 		if($direction == "desc") {
 			return function($a, $b) {
-					return strcmp($b->getTitle(), $a->getTitle());
+					return strcasecmp($b->getTitle(), $a->getTitle());
 				};
 		}
 	}
