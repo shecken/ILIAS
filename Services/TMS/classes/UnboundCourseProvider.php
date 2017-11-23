@@ -222,7 +222,7 @@ class UnboundCourseProvider extends Base {
 	protected function getSessionAppointments(Entity $entity, $object) {
 		$vals = array();
 
-		$sessions = $this->getSessionsOfCourse($object->getRefId());
+		$sessions = $this->getAllChildrenOfByType($object->getRefId(), "sess");
 		if(count($sessions) > 0) {
 			foreach ($sessions as $session) {
 				$appointment 	= $session->getFirstAppointment();
@@ -240,22 +240,33 @@ class UnboundCourseProvider extends Base {
 	}
 
 	/**
-	 * Find sessions underneath course 
+	 * Get first child by type recursive
 	 *
-	 * @param 	int 			$crs_ref_id
-	 * @return 	ilObjSession[]
+	 * @param int 	$ref_id
+	 * @param string 	$search_type
+	 *
+	 * @return Object 	of search type
 	 */
-	protected function getSessionsOfCourse($crs_ref_id)
-	{
+	protected function getAllChildrenOfByType($ref_id, $search_type) {
 		global $DIC;
+		$g_tree = $DIC->repositoryTree();
+		$g_objDefinition = $DIC["objDefinition"];
 
-		$g_tree 	= $DIC->repositoryTree();
-		$ret 		= array();
-		$sessions 	= $g_tree->getChildsByType($crs_ref_id, "sess");
+		$childs = $g_tree->getChilds($ref_id);
+		$ret = array();
 
-		foreach($sessions as $session)
-		{
-			$ret[] = ilObjectFactory::getInstanceByRefId($session['ref_id']);
+		foreach ($childs as $child) {
+			$type = $child["type"];
+			if($type == $search_type) {
+				$ret[] = \ilObjectFactory::getInstanceByRefId($child["child"]);
+			}
+
+			if($g_objDefinition->isContainer($type)) {
+				$rec_ret = $this->getAllChildrenOfByType($child["child"], $search_type);
+				if(! is_null($rec_ret)) {
+					$ret = array_merge($ret, $rec_ret);
+				}
+			}
 		}
 
 		return $ret;
