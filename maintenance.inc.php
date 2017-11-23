@@ -1,7 +1,7 @@
 <?php
 
 // switch maintenance off here...
-if (true) {
+if (false) {
 	$bypass = @$_GET['bypass_maintenance_page'];
 	$cookie_bypass = @$_COOKIE["bypass_maintenance_page"];
 	if ($bypass != 1 && $cookie_bypass != 1) {
