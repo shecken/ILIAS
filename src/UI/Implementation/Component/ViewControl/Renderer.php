@@ -35,6 +35,10 @@ class Renderer extends AbstractComponentRenderer
 		if ($component instanceof Component\ViewControl\Pagination) {
 			return $this->renderPagination($component, $default_renderer);
 		}
+		if ($component instanceof Component\ViewControl\Quickfilter) {
+			return $this->renderQickfilter($component, $default_renderer);
+
+		}
 	}
 
 	protected function renderMode(Component\ViewControl\Mode $component, RendererInterface $default_renderer)
@@ -150,6 +154,7 @@ class Renderer extends AbstractComponentRenderer
 				$url = $component->getTargetURL();
 				$url .= (strpos($url, '?') === false) ?  '?' : '&';
 				$url .= $component->getParameterName() .'=' .$val;
+				$url = $this->appendCurrentGetParamters($url);
 				$shy = $f->button()->shy($label, $url);
 			}
 			$items[] = $shy;
@@ -251,6 +256,66 @@ class Renderer extends AbstractComponentRenderer
 	}
 
 
+	protected function renderQickfilter(Component\ViewControl\Quickfilter $component, RendererInterface $default_renderer) {
+		$f = new \ILIAS\UI\Implementation\Factory(
+			new \ILIAS\UI\Implementation\Component\SignalGenerator()
+		);
+
+		$tpl = $this->getTemplate("tpl.quickfilter.html", true, true);
+
+		$component = $component->withResetSignals();
+		$triggeredSignals = $component->getTriggeredSignals();
+		if($triggeredSignals) {
+
+			$internal_signal = $component->getSelectSignal();
+			$signal = $triggeredSignals[0]->getSignal();
+			$options = json_encode($signal->getOptions());
+
+			$component = $component->withOnLoadCode(function($id) use ($internal_signal, $signal) {
+				return "$(document).on('{$internal_signal}', function(event, signalData) {
+							il.UI.viewcontrol.quickfilter.onInternalSelect(event, signalData, '{$signal}', '{$id}');
+							return false;
+						})";
+			});
+
+			//maybeRenderId does not return id
+			$id = $this->bindJavaScript($component);
+			$tpl->setVariable('ID', $id);
+		}
+
+		//setup entries
+		$options = $component->getOptions();
+		$init_label = $component->getLabel();
+		$items = array();
+		foreach ($options as $val => $label) {
+			if($triggeredSignals) {
+				$shy = $f->button()->shy($label, $val)->withOnClick($internal_signal);
+			} else {
+				$url = $component->getTargetURL();
+				$url .= (strpos($url, '?') === false) ?  '?' : '&';
+				$url .= $component->getParameterName() .'=' .$val;
+				$url = $this->appendCurrentGetParamters($url);
+				$shy = $f->button()->shy($label, $url);
+			}
+			$items[] = $shy;
+		}
+
+		if(array_key_exists($component->getParameterName(), $_GET)) {
+			$default_value = $component->getDefaultValue();
+
+			if($default_value != $_GET[$component->getParameterName()]) {
+				$init_label = $options[$_GET[$component->getParameterName()]];
+			}
+		}
+
+		$dd = $f->dropdown()->standard($items)
+			->withLabel($init_label);
+
+		$tpl->setVariable('QUICKFILTER_DROPDOWN', $default_renderer->render($dd));
+		return $tpl->get();
+	}
+
+
 	/**
 	 * @param string 	$val
 	 * @param Component\ViewControl\Pagination 	$component
@@ -340,6 +405,23 @@ class Renderer extends AbstractComponentRenderer
 		}
 	}
 
+	/**
+	 * look into current $_GET params and append left-overs that are
+	 * not controlled by this component.
+	 *
+	 * @param string $url
+	 * @return string
+	 */
+	protected function appendCurrentGetParamters($url) {
+		$query = html_entity_decode(parse_url($url, PHP_URL_QUERY));
+		parse_str($query, $params);
+		foreach ($_GET as $key => $value) {
+			if(! array_key_exists($key, $params)) {
+				$url .= '&' .$key .'=' .$value;
+			}
+		}
+		return $url;
+	}
 
 	/**
 	 * @inheritdoc
@@ -368,7 +450,8 @@ class Renderer extends AbstractComponentRenderer
 			Component\ViewControl\Mode::class,
 			Component\ViewControl\Section::class,
 			Component\ViewControl\Sortation::class,
-			Component\ViewControl\Pagination::class
+			Component\ViewControl\Pagination::class,
+			Component\ViewControl\Quickfilter::class
 		);
 
 	}
