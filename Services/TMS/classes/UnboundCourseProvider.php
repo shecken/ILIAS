@@ -240,7 +240,7 @@ class UnboundCourseProvider extends Base {
 	}
 
 	/**
-	 * Get first child by type recursive
+	 * Get all child by type recursive
 	 *
 	 * @param int 	$ref_id
 	 * @param string 	$search_type

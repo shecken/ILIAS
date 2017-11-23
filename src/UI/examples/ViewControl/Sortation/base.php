@@ -13,7 +13,7 @@ function base() {
 	);
 
 	$s = $f->viewControl()->sortation($options)
-		->withTargetURL('./', 'sortation');
+		->withTargetURL($DIC->http()->request()->getRequestTarget(), 'sortation');
 
 	$s2 = $s->withLabel($DIC->language()->txt('sortation_std_label'));
 
