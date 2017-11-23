@@ -9,74 +9,66 @@
 * @version	$Id$
 */
 
-class gevDecentralTrainingCreationRequest {
+class gevDecentralTrainingCreationRequest
+{
 	const CREATOR_ROLE_TITLE = "Pool Trainingsersteller";
 	const CREATOR_ROLE_DESC = "Ersteller des dezentralen Trainings mit Ref-Id %d";
 	const WEB_DATA_FOLDER = 'request_data';
-	
+
 	// @var gevDecentralTrainingCreationRequestDB
 	protected $db;
-	
+
 	// @var int				Id of this request.
 	protected $request_id;
-	
+
 	// @var int				Id of the user that wants to create the training.
 	protected $user_id;
-	
+
 	// @var string			Session id to be used for copy soap calls.
 	protected $session_id;
-	
+
 	// @var int				Object id of the course template to use.
 	protected $template_obj_id;
-	
+
 	// @var gevDecentralTrainingSettings
 	protected $settings;
-	
+
 	// @var int[]			Ids of the trainers that should be added to th course.
 	protected $trainer_ids;
-	
+
 	// @var ilDateTime|null	Datetime the creation was requested.
 	protected $requested_ts;
 	// @var ilDateTime|null	Datetime the creation was requested.
 	protected $finished_ts;
-	
+
 	// @var int|null		Id of the object that was created by the request.
 	protected $created_obj_id;
 
 	// @var string 			Local role of training creator
 	protected $trgt_creator_role_id = null;
-	
-	public function __construct( gevDecentralTrainingCreationRequestDB $db
-							   , $a_user_id
-							   , $a_template_obj_id
-							   , array $a_trainer_ids
-							   , gevDecentralTrainingSettings $a_settings
-							   // For creation from the database.
-							   , $a_request_id = null
-							   , $a_session_id = null
-							   , ilDateTime $a_requested_ts = null
-							   , ilDateTime $a_finished_ts = null
-							   , $a_created_obj_id = null
-							   ) {
+
+	public function __construct( gevDecentralTrainingCreationRequestDB $db, $a_user_id, $a_template_obj_id, array $a_trainer_ids, gevDecentralTrainingSettings $a_settings, $a_request_id = null, $a_session_id = null, ilDateTime $a_requested_ts = null, ilDateTime $a_finished_ts = null, $a_created_obj_id = null
+							   )
+	{
 		$this->db = $db;
-		
+
 		// TODO: Maybe uncomment this, if the stuff works.
 		assert($a_request_id === null || is_int($a_request_id));
 		assert($a_created_obj_id === null || (is_int($a_created_obj_id)));
-		
+
 		assert(is_int($a_user_id));
 		assert(ilObject::_lookupType($a_user_id) == "usr");
-		
+
 		assert(is_int($a_template_obj_id));
 		assert(ilObject::_lookupType($a_template_obj_id) == "crs");
-		
+
 		assert($a_session_id === null || is_string($a_session_id));
-		
+
 		foreach ($a_trainer_ids as $id) {
 			assert(is_int($id));
 			assert(ilObject::_lookupType($id) == "usr");
 		}
-		
+
 		$this->request_id = $a_request_id;
 		$this->user_id = $a_user_id;
 		$this->session_id = $a_session_id;
@@ -87,89 +79,101 @@ class gevDecentralTrainingCreationRequest {
 		$this->finished_ts = $a_finished_ts;
 		$this->created_obj_id = $a_created_obj_id;
 	}
-	
-	public function requestId() {
+
+	public function requestId()
+	{
 		return $this->request_id;
 	}
-	
-	public function userId() {
+
+	public function userId()
+	{
 		return $this->user_id;
 	}
-	
-	public function sessionId() {
+
+	public function sessionId()
+	{
 		return $this->session_id;
 	}
-	
-	public function templateObjId() {
+
+	public function templateObjId()
+	{
 		return $this->template_obj_id;
 	}
-	
-	public function settings() {
+
+	public function settings()
+	{
 		return $this->settings;
 	}
 
-	public function setSettings($settings) {
+	public function setSettings($settings)
+	{
 		$this->settings = $settings;
 	}
-	
-	public function trainerIds() {
+
+	public function trainerIds()
+	{
 		return $this->trainer_ids;
 	}
-	
-	public function requestedTS() {
+
+	public function requestedTS()
+	{
 		return $this->requested_ts;
 	}
-	
-	public function finishedTS() {
+
+	public function finishedTS()
+	{
 		return $this->finished_ts;
 	}
-	
-	public function createdObjId() {
+
+	public function createdObjId()
+	{
 		return $this->created_obj_id;
 	}
-	
-	public function request() {
-		$this->requested_ts = new ilDateTime(time(),IL_CAL_UNIX);
+
+	public function request()
+	{
+		$this->requested_ts = new ilDateTime(time(), IL_CAL_UNIX);
 		$this->session_id = $this->getNewSessionId();
 		if ($this->request_id === null) {
 			$this->request_id = $this->db->createRequest($this);
-		}
-		else {
+		} else {
 			$this->db->updateRequest($this);
 		}
 	}
-	
-	public function save() {
+
+	public function save()
+	{
 		if ($this->request_id === null) {
 			$this->request_id = $this->db->createRequest($this);
-		}
-		else {
+		} else {
 			$this->db->updateRequest($this);
 		}
 	}
-	
-	public function delete() {
+
+	public function delete()
+	{
 		$this->db->deleteRequest($this);
 		$this->request_id = null;
 	}
-	
-	public function run() {
+
+	public function run()
+	{
 		if ($this->finished_ts !== null) {
 			$this->throwException("Request already finished.");
 		}
-		
+
 		if ($this->isSessionExpired()) {
 			$this->throwException("Session '".$this->session_id."' is expired.");
 		}
-		
+
 		$rbacsystem = $this->getRBACSystem();
-		
+
 		$this->checkPermissionToCreateTrainingForTrainers();
 
 		$src_utils = $this->getCourseUtils($this->template_obj_id);
-		
+
 		$trgt_ref_id = $this->cloneTemplate($src_utils->getCourse());
-		
+
 		if (!$trgt_ref_id) {
 			$this->throwException("gevDecentralTrainingUtils::create:\n"
 								 ."User ".$this->userId()."has no permission to create training in the category above the template course"
@@ -179,23 +183,26 @@ class gevDecentralTrainingCreationRequest {
 								 ."     Id:            ".$this->requestId()."\n"
 								 ."     UserId:        ".$this->userId()."\n"
 								 ."     SessionId:     ".$this->sessionId()."\n"
-								 ."     TemplateObjId: ".$this->templateObjId()."\n"
-								 );
+								 ."     TemplateObjId: ".$this->templateObjId()."\n");
 		}
-		
+
+		// Sleep two seconds two avoid wrong order of statements on db when setting
+		// course online again (#3577). Could as well be 1 or 5 seconds, though...
+		sleep(2);
+
 		$trgt_obj_id = $this->getObjectIdFor($trgt_ref_id);
 		$trgt_utils = $this->getCourseUtils((int)$trgt_obj_id);
 		$trgt_crs = $trgt_utils->getCourse();
-		
+
 		// Roles and Members
 		$this->adjustTrainerPermissions($trgt_crs);
 		$this->adjustOwnerAndAdmin($src_utils, $trgt_crs);
 		$this->assignTrainers($trgt_crs);
 		$this->addCreatorUserLogin($trgt_utils, $this->user_id);
 		$this->assignUserToCreatorRole($this->user_id, $trgt_ref_id);
-		
+
 		$rbacsystem->resetRoleCache();
-		
+
 		// New course should have same title as old course.
 		$trgt_crs->setTitle($src_utils->getTitle());
 		// New course should be online.
@@ -204,14 +211,14 @@ class gevDecentralTrainingCreationRequest {
 
 		$this->settings->applyTo((int)$trgt_obj_id);
 
-		if($trgt_utils->isFlexibleDecentrallTraining()) {
+		if ($trgt_utils->isFlexibleDecentrallTraining()) {
 			$this->updateCourseBuildingBlocks($trgt_utils->getRefId());
 			$this->updateCourseWithBuidlingBlockData($trgt_utils->getRefId());
 			$this->updateBlankCourseBuildingBlocks($trgt_utils->getRefId());
 		}
 
 		$trgt_crs = $trgt_utils->getCourse();
-		
+
 		$this->createTEPEntry($trgt_crs);
 
 		// ATTENTION: This will delete the temporary files if successfull,
@@ -221,44 +228,47 @@ class gevDecentralTrainingCreationRequest {
 
 		$this->bookSuperiorsToTrainingCreator($trgt_utils);
 
-		$this->finished_ts = new ilDateTime(time(),IL_CAL_UNIX);
+		$this->finished_ts = new ilDateTime(time(), IL_CAL_UNIX);
 		$this->created_obj_id = $trgt_obj_id;
-		
+
 		$this->db->updateRequest($this);
 		$this->destroySession();
 		$this->resetCopyWizard();
 	}
-	
-	public function abort() {
+
+	public function abort()
+	{
 		if ($this->finished_ts !== null) {
 			$this->throwException("Request already finished.");
 		}
-		
-		$this->finished_ts = new ilDateTime(time(),IL_CAL_UNIX);
+
+		$this->finished_ts = new ilDateTime(time(), IL_CAL_UNIX);
 		$this->db->updateRequest($this);
 	}
-	
-	protected function checkPermissionToCreateTrainingForTrainers() {
+
+	protected function checkPermissionToCreateTrainingForTrainers()
+	{
 		$dec_utils = $this->getDecentralTrainingUtils();
 		foreach ($this->trainer_ids as $trainer_id) {
 			if (!$dec_utils->canCreateFor($this->user_id, $trainer_id)) {
-				$this->throwException( "gevDecentralTrainingUtils::create: No permission"
+				$this->throwException("gevDecentralTrainingUtils::create: No permission"
 									  ." for ".$this->user_id
 									  ." to create training for ".$trainer_id);
 			}
 		}
 	}
-	
-	protected function cloneTemplate(ilObjCourse $a_src) {
+
+	protected function cloneTemplate(ilObjCourse $a_src)
+	{
 		$db = $this->getDB();
 		$tree = $this->getTree();
 		$dec_utils = $this->getDecentralTrainingUtils();
-		
+
 		$info = $dec_utils->getTemplateInfoFor($this->user_id, $this->template_obj_id);
 		$parent = $tree->getParentId($info["ref_id"]);
-		
+
 		$res = $db->query(
-			 "SELECT DISTINCT c.child ref_id, od.type "
+			"SELECT DISTINCT c.child ref_id, od.type "
 			." FROM tree p"
 			." RIGHT JOIN tree c"
 			."	ON LOCATE(CONCAT(p.path,'.'),c.path) = 1"
@@ -266,71 +276,60 @@ class gevDecentralTrainingCreationRequest {
 			." LEFT JOIN object_reference oref ON oref.ref_id = c.child"
 			." LEFT JOIN object_data od ON od.obj_id = oref.obj_id"
 			." WHERE p.child = ".$db->quote($info["ref_id"], "integer")
-			);
-		
+		);
+
 		// These are options that tell the cloning method, that every child of the
 		// template should be cloned as well.
 		$options = array();
-		while($rec = $db->fetchAssoc($res)) {
+		while ($rec = $db->fetchAssoc($res)) {
 			if ($type == "rolf") {
 				continue;
 			}
 			$options[$rec["ref_id"]] = array("type" => 2);
 		}
-		
-		return $a_src->cloneAllObject( $this->session_id
-									 , $this->getClientId()
-									 , "crs"
-									 , $parent
-									 , $info["ref_id"]
-									 , $options
-									 , false
-									 , true
-									 , $this->user_id
-									 , 600
-									 );
+
+		return $a_src->cloneAllObject($this->session_id, $this->getClientId(), "crs", $parent, $info["ref_id"], $options, false, true, $this->user_id, 600);
 	}
-	
-	protected function createCreatorRole($a_trgt_ref_id) {
+
+	protected function createCreatorRole($a_trgt_ref_id)
+	{
 		$rbacreview = $this->getRBACReview();
 		$object_factory = $this->getObjectFactory();
 		$rbacadmin = $this->getRBACAdmin();
 		$db = $this->getDB();
-		
+
 		// Get role template id
-		$res = $db->query( "SELECT obj_id FROM object_data "
+		$res = $db->query("SELECT obj_id FROM object_data "
 						  ."WHERE type = 'rolt'"
-						  ."  AND title = ".$db->quote(self::CREATOR_ROLE_TITLE, "text")
-						  );
-		
+						  ."  AND title = ".$db->quote(self::CREATOR_ROLE_TITLE, "text"));
+
 		if ($rec = $db->fetchAssoc($res)) {
 			// Create the creator role
 			$rolf_data = $rbacreview->getRoleFolderOfObject($a_trgt_ref_id);
 			$rolf = $object_factory->getInstanceByRefId($rolf_data["ref_id"]);
-			$creator_role = $rolf->createRole( self::CREATOR_ROLE_TITLE
-											 , sprintf(self::CREATOR_ROLE_DESC, $a_trgt_ref_id)
-											 );
-			
-			// Adjust permissions according to role template. 
-			$rbacadmin->copyRoleTemplatePermissions
-							( $rec["obj_id"], ROLE_FOLDER_ID
-							, $rolf->getRefId()
-							, $creator_role->getId()
-							);
+			$creator_role = $rolf->createRole(self::CREATOR_ROLE_TITLE, sprintf(self::CREATOR_ROLE_DESC, $a_trgt_ref_id));
+
+			// Adjust permissions according to role template.
+			$rbacadmin->copyRoleTemplatePermissions(
+				$rec["obj_id"],
+				ROLE_FOLDER_ID,
+				$rolf->getRefId(),
+				$creator_role->getId()
+			);
 			// TODO: This seems to be superfluous, but there also might be a reason this is here...
 			$ops = $rbacreview->getOperationsOfRole($creator_role->getId(), "crs", $rolf->getRefId());
 			$rbacadmin->grantPermission($creator_role->getId(), $ops, $a_trgt_ref_id);
-		}
-		else {
-			$this->throwException( "gevDecentralTrainingUtils::create: Roletemplate '"
+		} else {
+			$this->throwException("gevDecentralTrainingUtils::create: Roletemplate '"
 								  .self::CREATOR_ROLE_TITLE
 								  ."' does not exist.");
 		}
-		
+
 		return $creator_role->getId();
 	}
-	
-	protected function assignUserToCreatorRole($user_id, $trgt_ref_id) {
+
+	protected function assignUserToCreatorRole($user_id, $trgt_ref_id)
+	{
 		if ($this->trgt_creator_role_id === null) {
 			$this->trgt_creator_role_id = $this->createCreatorRole($trgt_ref_id);
 		}
@@ -339,11 +338,13 @@ class gevDecentralTrainingCreationRequest {
 		$rbacadmin->assignUser($this->trgt_creator_role_id, $user_id);
 	}
 
-	protected function addCreatorUserLogin($trgt_utils, $user_id) {
+	protected function addCreatorUserLogin($trgt_utils, $user_id)
+	{
 		$trgt_utils->setTrainingCreatorLogin(ilObjUser::_lookupLogin($user_id));
 	}
-	
-	protected function adjustTrainerPermissions(ilObjCourse $a_trgt_crs) {
+
+	protected function adjustTrainerPermissions(ilObjCourse $a_trgt_crs)
+	{
 		$rbacreview = $this->getRBACReview();
 		$rbacadmin = $this->getRBACAdmin();
 
@@ -355,101 +356,119 @@ class gevDecentralTrainingCreationRequest {
 		$rbacadmin->revokePermission($a_trgt_crs->getRefId(), $trainer_role);
 		$rbacadmin->grantPermission($trainer_role, $new_trainer_ops, $a_trgt_crs->getRefId());
 	}
-	
-	protected function adjustOwnerAndAdmin(gevCourseUtils $a_src_utils, ilObjCourse $a_trgt_crs) {
+
+	protected function adjustOwnerAndAdmin(gevCourseUtils $a_src_utils, ilObjCourse $a_trgt_crs)
+	{
 		$orig_admin_id = $a_src_utils->getMainAdmin()->getId();
 		$a_trgt_crs->setOwner($orig_admin_id);
 		$a_trgt_crs->updateOwner();
 		$a_trgt_crs->getMembersObject()->add($orig_admin_id, IL_CRS_ADMIN);
 		$a_trgt_crs->getMembersObject()->delete($this->user_id);
 	}
-	
-	protected function assignTrainers(ilObjCourse $trgt_crs) {
+
+	protected function assignTrainers(ilObjCourse $trgt_crs)
+	{
 		foreach ($this->trainer_ids as $trainer_id) {
-			$trgt_crs->getMembersObject()->add($trainer_id,IL_CRS_TUTOR);
+			$trgt_crs->getMembersObject()->add($trainer_id, IL_CRS_TUTOR);
 		}
 	}
-	
-	protected function createTEPEntry(ilObjCourse $trgt_crs) {
+
+	protected function createTEPEntry(ilObjCourse $trgt_crs)
+	{
 		require_once("Services/TEP/classes/class.ilTEPCourseEntries.php");
 		ilTEPCourseEntries::$instances = array();
 		$tep_entry = ilTEPCourseEntries::getInstance($trgt_crs);
 		$tep_entry->updateEntry();
 	}
-	
+
 	// Some Helpers
-	
-	protected function getCourseUtils($a_obj_id) {
+
+	protected function getCourseUtils($a_obj_id)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 		return gevCourseUtils::getInstance($a_obj_id);
 	}
-	
-	protected function getDecentralTrainingUtils() {
+
+	protected function getDecentralTrainingUtils()
+	{
 		return gevDecentralTrainingUtils::getInstance();
 	}
-	
-	protected function throwException($msg) {
+
+	protected function throwException($msg)
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingException.php");
 		throw new gevDecentralTrainingException($msg);
 	}
-	
-	protected function getObjectIdFor($a_ref_id) {
+
+	protected function getObjectIdFor($a_ref_id)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
 		return gevObjectUtils::getObjId($a_ref_id);
 	}
-	
-	protected function getOperationIdsByNames(array $names) {
+
+	protected function getOperationIdsByNames(array $names)
+	{
 		return  ilRbacReview::_getOperationIdsByName($names);
 	}
 
-	protected function getDecentralTrainingFileStorage($tmpPathString) {
+	protected function getDecentralTrainingFileStorage($tmpPathString)
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingFileStorage.php");
 		return new gevDecentralTrainingFileStorage($tmpPathString);
 	}
-	
+
 	// GETTERS FOR GLOBALS
-	
-	protected function getTree() {
+
+	protected function getTree()
+	{
 		global $tree;
 		return $tree;
 	}
-	
-	protected function getDB() {
+
+	protected function getDB()
+	{
 		global $ilDB;
 		return $ilDB;
 	}
-	
-	protected function getRBACReview() {
+
+	protected function getRBACReview()
+	{
 		global $rbacreview;
 		return $rbacreview;
 	}
-	
-	protected function getRBACAdmin() {
+
+	protected function getRBACAdmin()
+	{
 		global $rbacadmin;
 		return $rbacadmin;
 	}
-	
-	protected function getRBACSystem() {
+
+	protected function getRBACSystem()
+	{
 		global $rbacsystem;
 		return $rbacsystem;
 	}
-	
-	protected function getObjectFactory() {
+
+	protected function getObjectFactory()
+	{
 		global $ilias;
 		return $ilias->obj_factory;
 	}
-	
-	protected function getLng() {
+
+	protected function getLng()
+	{
 		global $lng;
 		return $lng;
 	}
-	
-	protected function getClientId() {
+
+	protected function getClientId()
+	{
 		global $ilias;
 		return $ilias->client_id;
 	}
-	
-	protected function getNewSessionId() {
+
+	protected function getNewSessionId()
+	{
 		require_once("Services/Authentication/classes/class.ilSession.php");
 		$session_id = $_COOKIE["PHPSESSID"];
 		if (!ilSession::_exists($session_id)) {
@@ -458,48 +477,55 @@ class gevDecentralTrainingCreationRequest {
 		$session_id = ilSession::_duplicate($session_id);
 		return $session_id;
 	}
-	
-	protected function destroySession() {
+
+	protected function destroySession()
+	{
 		require_once("Services/Authentication/classes/class.ilSession.php");
 		ilSession::_destroy($this->session_id);
 	}
-	
-	protected function isSessionExpired() {
+
+	protected function isSessionExpired()
+	{
 		require_once("Services/Authentication/classes/class.ilSession.php");
 		return !ilSession::_exists($this->session_id);
 	}
-	
-	protected function resetCopyWizard() {
+
+	protected function resetCopyWizard()
+	{
 		require_once("Services/CopyWizard/classes/class.ilCopyWizardOptions.php");
 		ilCopyWizardOptions::$instances = null;
 	}
 
-	protected function updateCourseBuildingBlocks($a_trgt_crs_ref_id) {
+	protected function updateCourseBuildingBlocks($a_trgt_crs_ref_id)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevCourseBuildingBlockUtils.php");
-		gevCourseBuildingBlockUtils::updateCrsBuildungBlocksCrsIdByCrsRequestId($a_trgt_crs_ref_id,$this->request_id);
+		gevCourseBuildingBlockUtils::updateCrsBuildungBlocksCrsIdByCrsRequestId($a_trgt_crs_ref_id, $this->request_id);
 	}
 
-	protected function updateBlankCourseBuildingBlocks($a_trgt_crs_ref_id) {
+	protected function updateBlankCourseBuildingBlocks($a_trgt_crs_ref_id)
+	{
 		require_once("Services/GEV/DecentralTrainings/classes/BlankBuildingBlocks/ilBlankDB.php");
 		$blank_db = new ilBlankDB();
 		$blank_db->moveToCrsId($this->request_id, $a_trgt_crs_ref_id);
 	}
 
-	protected function updateCourseWithBuidlingBlockData($a_trgt_crs_ref_id) {
+	protected function updateCourseWithBuidlingBlockData($a_trgt_crs_ref_id)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevCourseBuildingBlockUtils.php");
 		gevCourseBuildingBlockUtils::courseUpdates($a_trgt_crs_ref_id);
 	}
 
-	protected function addAttachmentsToMail($trgt_obj_id) {
+	protected function addAttachmentsToMail($trgt_obj_id)
+	{
 		$added_files = $this->settings()->addedFiles();
-		if($added_files === null) {
+		if ($added_files === null) {
 			return;
 		}
 
 		$file_storage = $this->getDecentralTrainingFileStorage($this->settings()->tmpPathString());
 		$trgt_utils = $this->getCourseUtils((int)$trgt_obj_id);
 
-		
+
 		$trgt_utils->addAttachmentsToMailSingleFolder($added_files, $file_storage->getAbsolutePath());
 		$trgt_utils->addPreselectedAttachments(array(gevCourseUtils::RECIPIENT_MEMBER,gevCourseUtils::RECIPIENT_STANDARD), $added_files);
 		$trgt_utils->saveCustomAttachments($added_files);
@@ -509,14 +535,15 @@ class gevDecentralTrainingCreationRequest {
 		$file_storage->deleteDirectory();
 	}
 
-	protected function bookSuperiorsToTrainingCreator($trgt_utils) {
+	protected function bookSuperiorsToTrainingCreator($trgt_utils)
+	{
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		$training_creator = $trgt_utils->getTrainingCreatorLogin();
 
 		$usr_utils = gevUserUtils::getInstance(ilObjUser::_lookupId($training_creator));
 		$trgt_ref_id = $trgt_utils->getRefId();
-		foreach(gevOrgUnitUtils::getSuperiorsIn($usr_utils->getOrgUnitsWhereUserIsTutor()) as $superior_id) {
+		foreach (gevOrgUnitUtils::getSuperiorsIn($usr_utils->getOrgUnitsWhereUserIsTutor()) as $superior_id) {
 			$this->assignUserToCreatorRole($superior_id, $trgt_ref_id);
 		}
 	}
