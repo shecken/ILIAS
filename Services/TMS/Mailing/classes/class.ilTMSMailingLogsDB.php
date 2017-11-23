@@ -30,7 +30,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 	/**
 	 *@inheritdoc
 	 */
-	public function log($crs_ref_id, $usr_id, $mail_id, $subject = '', $msg = '') {
+	public function log($context, $usr_id, $mail_id, $crs_ref_id = null, $subject = '', $msg = '') {
 		$id = $this->getNextId();
 		$date = new \ilDateTime(date('c'), IL_CAL_DATETIME);
 		$usr_login = \ilObjUser::_lookupLogin($usr_id);
@@ -44,15 +44,18 @@ class ilTMSMailingLogsDB implements LoggingDB {
 		$values = array(
 			"id" => array("integer", $entry->getId()),
 			"datetime" => array("text", $entry->getDate()->get(IL_CAL_DATETIME)),
-			"crs_ref_id" => array("integer", $entry->getCourseRefId()),
+			"context" => array("text", $entry->getContext()),
+			"mail_id" => array("text", $entry->getMailId()),
 			"usr_id" => array("integer", $entry->getUserId()),
 			"usr_login" => array("text", $entry->getUserLogin()),
 			"usr_name" => array("text", $entry->getUserName()),
 			"usr_mail" => array("text", $entry->getUserMail()),
-			"mail_id" => array("text", $entry->getMailId()),
 			"subject" => array("text", $entry->getSubject()),
 			"msg" => array("text", $entry->getMessage()),
 		);
+		if(! is_null($entry->getCourseRefId())) {
+			$values["crs_ref_id"] = array("integer", $entry->getCourseRefId());
+		}
 
 		$this->db->insert(static::TABLE_NAME, $values);
 		return $entry;
@@ -64,7 +67,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 	public function	selectForCourse($ref_id, $sort=null, $limit=null) {
 		assert('is_int($ref_id)');
 		$query = "SELECT" .PHP_EOL
-				." id, datetime, crs_ref_id,"
+				." id, datetime, context, crs_ref_id,"
 				." usr_id, usr_login, usr_name, usr_mail, "
 				." mail_id, subject, msg" .PHP_EOL
 				." FROM ".static::TABLE_NAME .PHP_EOL
@@ -87,12 +90,13 @@ class ilTMSMailingLogsDB implements LoggingDB {
 			$entry = new LogEntry(
 				(int)$row["id"],
 				new \ilDateTime($row["datetime"], IL_CAL_DATETIME),
-				(int)$row["crs_ref_id"],
+				(string)$row["context"],
 				(int)$row["usr_id"],
 				(string)$row["usr_login"],
 				(string)$row["usr_name"],
 				(string)$row["usr_mail"],
 				(string)$row["mail_id"],
+				(int)$row["crs_ref_id"];
 				(string)$row["subject"],
 				(string)$row["msg"]
 			);
@@ -138,7 +142,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 				'crs_ref_id' => array(
 					'type' 		=> 'integer',
 					'length' 	=> 4,
-					'notnull' 	=> true
+					'notnull' 	=> false
 				),
 				'mail_id' => array(
 					'type' 		=> 'text',
@@ -172,7 +176,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 				'msg' => array(
 					'type' 		=> 'clob',
 					'notnull' 	=> false
-				),
+				)
 			);
 			$this->db->createTable(static::TABLE_NAME, $fields);
 		}
