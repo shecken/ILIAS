@@ -37,9 +37,9 @@ class ilTMSMailingLogsDB implements LoggingDB {
 		$usr_name = \ilObjUser::_lookupFullname($usr_id);
 		$usr_mail = \ilObjUser::_lookupEmail($usr_id);
 
-		$entry = new LogEntry($id, $date, $crs_ref_id,
+		$entry = new LogEntry($id, $date, $context,
 			$usr_id, $usr_login, $usr_name, $usr_mail,
-			$mail_id, $subject, $msg);
+			$mail_id, $crs_ref_id, $subject, $msg);
 
 		$values = array(
 			"id" => array("integer", $entry->getId()),
@@ -96,7 +96,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 				(string)$row["usr_name"],
 				(string)$row["usr_mail"],
 				(string)$row["mail_id"],
-				(int)$row["crs_ref_id"];
+				(int)$row["crs_ref_id"],
 				(string)$row["subject"],
 				(string)$row["msg"]
 			);
