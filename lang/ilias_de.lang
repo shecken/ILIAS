@@ -15964,9 +15964,6 @@ crs#:#crs_mail_context_invitation_info#:#Einladungsmail für die Mitglieder eine
 crs#:#crs_mail_context_automatic_title#:#Automatische Mail an Kurs-Mitglieder
 crs#:#crs_mail_context_automatic_info#:#Weitere, automatische Mails im Kontext des Kurses (Austritt, Absage, Storno, etc.)
 common#:#training_search#:#Trainingssuche
-tms#:#booking_not_possible#:#Ihre Buchung ist nicht möglich.
-tms#:#cutting_trainings#:#Folgendes, bereits gebuchte Training überschneidet sich mit dem Training:
-tms#:#info_can_storno#:#Hinweis: Über "Meine Trainings" können Sie eine Stornierung des bereits gebuchten Trainings durchführen.
 tms#:#header#:#Trainingssuche
 tms#:#available_slots#:#freie Plätze
 tms#:#target_groups#:#Zielgruppen
@@ -16011,3 +16008,5 @@ tms#:#s_period_desc#:#Zeitraum: absteigend
 tms#:#s_city_asc#:#Ort: aufsteigend
 tms#:#s_city_desc#:#Ort: absteigend
 tms#:#show_all#:#Alle anzeigen
+tms#:#period#:#Zeitplan
+tms#:#time_suffix#:#Uhr

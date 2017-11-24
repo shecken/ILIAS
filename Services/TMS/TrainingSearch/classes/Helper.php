@@ -291,13 +291,13 @@ class Helper {
 	protected function getTitleSortingClosure($direction) {
 		if($direction == "asc") {
 			return function($a, $b) {
-					return strcmp($a->getTitle(), $b->getTitle());
+					return strcasecmp($a->getTitle(), $b->getTitle());
 				};
 		}
 
 		if($direction == "desc") {
 			return function($a, $b) {
-					return strcmp($b->getTitle(), $a->getTitle());
+					return strcasecmp($b->getTitle(), $a->getTitle());
 				};
 		}
 	}
@@ -312,6 +312,14 @@ class Helper {
 	protected function getPeriodSortingClosure($direction) {
 		if($direction == "asc") {
 			return function($a, $b) {
+					if(is_null($a->getBeginDate()) && is_null($b->getBeginDate())) {
+						return 0;
+					} else if(is_null($a->getBeginDate()) && !is_null($b->getBeginDate())) {
+						return 1;
+					} else if(!is_null($a->getBeginDate()) && is_null($b->getBeginDate())) {
+						return -1;
+					}
+
 					$start_date_a = $a->getBeginDate()->get(IL_CAL_DATE);
 					$start_date_b = $b->getBeginDate()->get(IL_CAL_DATE);
 					return strcmp($start_date_a, $start_date_b);
@@ -320,6 +328,14 @@ class Helper {
 
 		if($direction == "desc") {
 			return function($a, $b) {
+					if(is_null($a->getBeginDate()) && is_null($b->getBeginDate())) {
+						return 0;
+					} else if(is_null($a->getBeginDate()) && !is_null($b->getBeginDate())) {
+						return 1;
+					} else if(!is_null($a->getBeginDate()) && is_null($b->getBeginDate())) {
+						return -1;
+					}
+
 					$start_date_a = $a->getBeginDate()->get(IL_CAL_DATE);
 					$start_date_b = $b->getBeginDate()->get(IL_CAL_DATE);
 					return strcmp($start_date_b, $start_date_a);
