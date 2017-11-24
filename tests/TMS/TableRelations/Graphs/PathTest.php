@@ -1,6 +1,6 @@
 <?php
 use ILIAS\TMS\TableRelations\Graphs as Graphs;
-use CaT\TRTFixtures\GraphTestFactory as GraphTestFactory;
+use ILIAS\TMS\TableRelations\TestFixtures\GraphTestFactory as GraphTestFactory;
 class PathTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 		$this->gtf = new GraphTestFactory();
