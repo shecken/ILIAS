@@ -127,7 +127,7 @@ class FilterFactory {
 	 */
 	public function sequence_and() {
 		$subs = func_get_args();
-		$t = $this->type_factory()->cls("\\CaT\\Filter\\Predicates\\Predicate");
+		$t = $this->type_factory()->cls("\\ILIAS\\TMS\\Filter\\Predicates\\Predicate");
 		assert('$this->sequence_and_check_input_content_type($subs,$t)');
 		return call_user_func_array(array($this, "sequence"), $subs)
 			->map_raw(function() {

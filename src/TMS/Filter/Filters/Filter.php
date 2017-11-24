@@ -136,7 +136,7 @@ abstract class Filter {
 	 * @return	Filter
 	 */
 	public function map_to_predicate(\Closure $mapper) {
-		return $this->map($mapper, $this->factory->type_factory()->cls("\\CaT\\Filter\\Predicates\\Predicate"));
+		return $this->map($mapper, $this->factory->type_factory()->cls("\\ILIAS\\TMS\\Filter\\Predicates\\Predicate"));
 	}
 
 	/**
