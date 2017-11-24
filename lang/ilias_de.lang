@@ -16008,3 +16008,5 @@ tms#:#s_period_desc#:#Zeitraum: absteigend
 tms#:#s_city_asc#:#Ort: aufsteigend
 tms#:#s_city_desc#:#Ort: absteigend
 tms#:#show_all#:#Alle anzeigen
+tms#:#period#:#Zeitplan
+tms#:#time_suffix#:#Uhr
