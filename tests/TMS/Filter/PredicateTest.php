@@ -1026,13 +1026,13 @@ class PredicateTest extends PHPUnit_Framework_TestCase {
 
 	public function test_ValueList() {
 		$ls = $this->factory->list_int(1,2,3,4);
-		$this->assertInstanceOf("\\CaT\\Filter\\Predicates\\ValueList", $ls);
+		$this->assertInstanceOf("\\ILIAS\\TMS\\Filter\\Predicates\\ValueList", $ls);
 		$vals = array_map(function (\ILIAS\TMS\Filter\Predicates\ValueInt $v) {
 					return $v->value();
 				}, $ls->values());
 
 		$ls = $this->factory->list_str("one","two","three");
-		$this->assertInstanceOf("\\CaT\\Filter\\Predicates\\ValueList", $ls);
+		$this->assertInstanceOf("\\ILIAS\\TMS\\Filter\\Predicates\\ValueList", $ls);
 		$vals = array_map(function (\ILIAS\TMS\Filter\Predicates\ValueStr $v) {
 					return $v->value();
 				}, $ls->values());
