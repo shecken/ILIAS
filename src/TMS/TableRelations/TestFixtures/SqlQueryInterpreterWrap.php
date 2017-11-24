@@ -1,6 +1,6 @@
 <?php
 
-namespace CaT\TRTFixtures;
+namespace ILIAS\TMS\TableRelations\TestFixtures;
 
 use ILIAS\TMS\Filter as Filters;
 use ILIAS\TMS\TableRelations as TR;
