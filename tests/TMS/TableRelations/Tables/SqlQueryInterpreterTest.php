@@ -1,7 +1,7 @@
 <?php
 use ILIAS\TMS\TableRelations as TR;
 use ILIAS\TMS\Filter as Filters;
-use CaT\TRTFixtures\SqlQueryInterpreterWrap as SqlQueryInterpreterWrap;
+use ILIAS\TMS\TableRelations\TestFixtures\SqlQueryInterpreterWrap as SqlQueryInterpreterWrap;
 
 class SqlQueryInterpreterTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {

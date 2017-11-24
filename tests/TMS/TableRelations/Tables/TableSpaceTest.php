@@ -2,7 +2,7 @@
 
 use ILIAS\TMS\TableRelations as TR;
 use ILIAS\TMS\Filter as Filters;
-use CaT\TRTFixtures\SqlPredicateInterpreterWrap as SqlPredicateInterpreterWrap;
+use ILIAS\TMS\TableRelations\TestFixtures\SqlPredicateInterpreterWrap as SqlPredicateInterpreterWrap;
 class TestTableSpace extends PHPUnit_Framework_TestCase {
 
 	public function table($i,$N = 3) {
