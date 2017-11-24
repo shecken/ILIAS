@@ -80,7 +80,17 @@ class ilTMSBookingActions implements Booking\Actions {
 
 		if($this->maybeBookAsMember((int)$course->getRefId(), $booking_modality)) {
 			$participant->add($user->getId(), IL_CRS_MEMBER);
-			$this->mailing->sendCourseMail(Mailing\Actions::BOOKED_ON_COURSE, $course->getRefId(), $user->getId());
+		//	$this->mailing->sendCourseMail(Mailing\Actions::BOOKED_ON_COURSE, $course->getRefId(), $user->getId());
+
+		global $ilAppEventHandler;
+		 $ilAppEventHandler->raise(
+			 'Plugin/CourseMailing',
+			 'user_booked_self_on_course',
+			 array(
+				 'crs_ref_id' => (int)$course->getRefId(),
+				 'usr_id' => (int)$user->getId()
+			 )
+		 );
 			return Booking\Actions::STATE_BOOKED;
 		}
 
