@@ -223,7 +223,7 @@ class TableSpace {
 			if(!$this->fieldInSpace($field)) {
 				throw new TableException("requested field $name not in space");
 			}
-			$this->relevant_table_ids[$field->tableId()];
+			$this->relevant_table_ids[] = $field->tableId();
 		} elseif($field instanceof AbstractDerivedField) {
 			if(!isset($this->requested_fields[$field->name_simple()])) {
 				throw new TableException("requested field $name not in space");
