@@ -32,7 +32,8 @@ class UnboundCourseProvider extends Base {
 			$ret = array();
 
 			$ret[] = $this->getCourseInfoForTitle($entity, $object);
-			$ret = $this->getCourseInfoForPeriod($ret, $entity, $object);
+			$ret = $this->getCourseInfoForPeriodDate($ret, $entity, $object);
+			$ret = $this->getCourseInfoForPeriodTimes($ret, $entity, $object);
 			$ret = $this->getCourseInfoForBookingStatus($ret, $entity, $object);
 			$ret = $this->getCourseInfoForVenue($ret, $entity, (int)$object->getId());
 			$ret = $this->getCourseInfoForTrainingProvider($ret, $entity, (int)$object->getId());
@@ -65,7 +66,7 @@ class UnboundCourseProvider extends Base {
 	}
 
 	/**
-	 * Get a course info with course period
+	 * Get a course info with period date
 	 *
 	 * @param CourseInfo[]
 	 * @param Entity $entity
@@ -73,13 +74,12 @@ class UnboundCourseProvider extends Base {
 	 *
 	 * @return CourseInfo[]
 	 */
-	protected function getCourseInfoForPeriod(array $ret, Entity $entity, $object) {
+	protected function getCourseInfoForPeriodDate(array $ret, Entity $entity, $object) {
 		$crs_start = $object->getCourseStart();
 		if($crs_start === null) {
 			return $ret;
 		}
 
-		$time = $this->getSessionAppointments($entity, $object);
 		$date = $this->formatPeriod($crs_start, $object->getCourseEnd());
 		$ret[] = $this->createCourseInfoObject($entity
 			, $this->lng->txt("date").":"
@@ -92,7 +92,7 @@ class UnboundCourseProvider extends Base {
 
 		$ret[] = $this->createCourseInfoObject($entity
 			, $this->lng->txt("date").":"
-			, $date."<br />".$time
+			, $date
 			, 300
 			, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
 				CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
@@ -101,10 +101,50 @@ class UnboundCourseProvider extends Base {
 
 		$ret[] = $this->createCourseInfoObject($entity
 			, $this->lng->txt("date")
-			, $date."<br />".$time
+			, $date
 			, 900
 			, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
 		);
+
+		return $ret;
+	}
+
+	/**
+	 * Get a course info with course period
+	 *
+	 * @param CourseInfo[]
+	 * @param Entity $entity
+	 * @param Object 	$object
+	 *
+	 * @return CourseInfo[]
+	 */
+	protected function getCourseInfoForPeriodTimes(array $ret, Entity $entity, $object) {
+		$crs_start = $object->getCourseStart();
+		if($crs_start === null) {
+			return $ret;
+		}
+
+		$times = $this->getSessionAppointments($entity, $object);
+		if(count($times) > 0) {
+			$first_time = current($times);
+			$times_formatted = $this->getAppointmentOutput($times);
+
+			$ret[] = $this->createCourseInfoObject($entity
+				, $this->lng->txt("period").":"
+				, $times_formatted
+				, 310
+				, [CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
+					CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
+				  ]
+			);
+
+			$ret[] = $this->createCourseInfoObject($entity
+				, $this->lng->txt("period")
+				, $times_formatted
+				, 910
+				, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+			);
+		}
 
 		return $ret;
 	}
@@ -225,18 +265,36 @@ class UnboundCourseProvider extends Base {
 		$sessions = $this->getAllChildrenOfByType($object->getRefId(), "sess");
 		if(count($sessions) > 0) {
 			foreach ($sessions as $session) {
-				$appointment 	= $session->getFirstAppointment();
-				$start_time 	= $appointment->getStart()->get(IL_CAL_FKT_DATE, "H:i");
-				$end_time 		= $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i");
-				$offset 		= $appointment->getDaysOffset();
+				$appointment = $session->getFirstAppointment();
+				$date = $this->formatDate($appointment->getStart());
+				$start_time = $appointment->getStart()->get(IL_CAL_FKT_DATE, "H:i");
+				$end_time = $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i");
+				$offset = $appointment->getDaysOffset();
 
-				$vals[$offset] = $this->lng->txt("day")." ".$offset." ".$start_time." - ".$end_time;
+				$vals[$offset] = array("start_time" => $start_time, "end_time" => $end_time);
 			}
-
 		}
 
-		asort($vals);
-		return join("<br />", $vals);
+		ksort($vals);
+		return $vals;
+	}
+
+	/**
+	 * Transofrom session appointments to output string
+	 *
+	 * @param string[]
+	 *
+	 * @return string[]
+	 */
+	protected function getAppointmentOutput($appointments) {
+		return array_map(function($offset, $times) {
+			return $offset
+				.". ".$this->lng->txt("day")
+				.": ".$times["start_time"]
+				." - ".$times["end_time"]
+				." ".$this->lng->txt("time_suffix");
+			}, array_keys($appointments), $appointments
+		);
 	}
 
 	/**
