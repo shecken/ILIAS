@@ -13,7 +13,7 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	 */
 	protected $usr_id;
 
-	public function __contruct($usr_id) {
+	public function __construct($usr_id) {
 		assert('is_int($usr_id)');
 		$this->usr_id = $usr_id;
 	}
