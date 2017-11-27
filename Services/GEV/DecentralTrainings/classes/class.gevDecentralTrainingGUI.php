@@ -938,8 +938,8 @@ class gevDecentralTrainingGUI
 		$form = new catPropertyFormGUI();
 		$form->setTemplate("tpl.gev_dec_training_choose_template_form.html", "Services/GEV/Desktop");
 		$form->setTitle($this->lng->txt("gev_dec_training_choose_template_and_trainers"));
-		$form->addCommandButton("createTraining", $this->lng->txt("continue"));
 		$form->addCommandButton("cancel", $this->lng->txt("cancel"));
+		$form->addCommandButton("createTraining", $this->lng->txt("continue"));
 		$this->ctrl->setParameter($this, "date", $this->date);
 		$form->setFormAction($this->ctrl->getFormAction($this));
 
