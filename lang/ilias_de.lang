@@ -16010,3 +16010,6 @@ tms#:#s_city_desc#:#Ort: absteigend
 tms#:#show_all#:#Alle anzeigen
 tms#:#period#:#Zeitplan
 tms#:#time_suffix#:#Uhr
+tms#:#t_user#:#Ansicht: Mitarbeiter
+tms#:#t_course#:#Ansicht: Kurs
+tms#:#canceling_for#:#Stornierung für %s
