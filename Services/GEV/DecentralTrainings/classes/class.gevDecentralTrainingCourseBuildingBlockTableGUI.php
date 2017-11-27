@@ -89,7 +89,6 @@ class gevDecentralTrainingCourseBuildingBlockTableGUI extends catTableGUI {
 			$this->tpl->setVariable("TARGET", $a_set["target"]);
 		}
 
-		//$this->tpl->setVariable("PRACTICE_SESSION", $a_set["practice_session"]);//$a_set["practice_session"]);
 		$this->tpl->setVariable("CREDIT_POINTS", gevCourseUtils::convertCreditpointsToFormattedDuration((int)$a_set["credit_points"]));
 
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingUtils.php");
