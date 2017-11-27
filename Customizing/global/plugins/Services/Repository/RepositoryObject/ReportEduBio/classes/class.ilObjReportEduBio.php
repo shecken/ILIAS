@@ -109,11 +109,11 @@ class ilObjReportEduBio extends ilObjReportBase
 				->select("crs.tutor")
 				->select_raw('IF('.$this->gIldb->in('usrcrs.okz', array('OKZ1','OKZ2','OZ3'), false, 'text')
 								.'	,IF(usrcrs.wbd_booking_id != '.$this->gIldb->quote('-empty-', 'text').' AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_cancelled != 1'
-								.'		,usrcrs.credit_points'
+								.'		,usrcrs.credit_points/3'
 								.'		,IF((usrcrs.end_date > '.$this->gIldb->quote($one_year_befone_now, 'date')
 												.'OR (usrcrs.end_date = '.$this->gIldb->quote($one_year_befone_now, 'date').' AND usrcrs.begin_date >= '.$this->gIldb->quote($one_year_befone_now, 'date').' ) )'
 												.' AND usrcrs.credit_points > 0 AND usrcrs.credit_points IS NOT NULL AND usrcrs.wbd_cancelled != 1'
-								.'			,usrcrs.credit_points,\'-\')'
+								.'			,usrcrs.credit_points/3,\'-\')'
 								.'	)'
 								.'	,\'-\''
 								.') as credit_points')
@@ -170,10 +170,10 @@ class ilObjReportEduBio extends ilObjReportBase
 		$period = $this->filter->get("period");
 
 		$query = $this->wbdQuery($period["start"], $period["end"]);
-		$wbd_data["sum"] =  $this->gIldb->fetchAssoc($this->gIldb->query($query))["sum"];
+		$wbd_data["sum"] =  (int)$this->gIldb->fetchAssoc($this->gIldb->query($query))["sum"];
 
 		$query = $this->wbdQuery($cp_start, $cp_end);
-		$wbd_data["sum_cert_period"] = $this->gIldb->fetchAssoc($this->gIldb->query($query))["sum"];
+		$wbd_data["sum_cert_period"] = (int)$this->gIldb->fetchAssoc($this->gIldb->query($query))["sum"];
 		return $wbd_data;
 	}
 
@@ -183,17 +183,17 @@ class ilObjReportEduBio extends ilObjReportBase
 		$academy_points = array();
 
 		$query = $this->academyQuery($period["start"], $period["end"], false);
-		$academy_points["to_transfer_sum"] = $this->gIldb->fetchAssoc($this->gIldb->query($query))["sum"];
+		$academy_points["to_transfer_sum"] = (int)$this->gIldb->fetchAssoc($this->gIldb->query($query))["sum"];
 
 		$query = $this->academyQuery($period["start"], $period["end"], true);
-		$academy_points["transfered_sum"] = $this->gIldb->fetchAssoc($this->gIldb->query($query))["sum"];
+		$academy_points["transfered_sum"] = (int)$this->gIldb->fetchAssoc($this->gIldb->query($query))["sum"];
 		return $academy_points;
 	}
 
 	protected function academyQuery(ilDate $start = null, ilDate $end = null, $transferred)
 	{
 		$one_year_befone_now  = (new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d');
-		return 	"SELECT SUM(usrcrs.credit_points) sum "
+		return 	"SELECT SUM(usrcrs.credit_points)/3 sum "
 				."	FROM hist_usercoursestatus usrcrs "
 				."	JOIN hist_course crs"
 				."		ON crs.crs_id = usrcrs.crs_id "
@@ -234,7 +234,7 @@ class ilObjReportEduBio extends ilObjReportBase
 
 	protected function wbdQuery(ilDate $start, ilDate $end)
 	{
-		return   "SELECT SUM(usrcrs.credit_points) sum "
+		return   "SELECT SUM(usrcrs.credit_points)/3 sum "
 				." FROM hist_usercoursestatus usrcrs"
 				.$this->wbdQueryWhere($start, $end)
 				." AND usrcrs.wbd_booking_id IS NOT NULL AND usrcrs.wbd_booking_id != '-empty-'"
