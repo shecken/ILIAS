@@ -102,7 +102,49 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 		return 	$this->title->render()
 				.($this->object->deliverFilter() !== null ? $this->object->deliverFilter()->render() : "")
 				.($this->spacer !== null ? $this->spacer->render() : "")
+				.($this->object->getWBD()->getWBDTPType() !== gevWBD::WBD_NO_SERVICE ?
+					$this->renderOverview().($this->spacer !== null ? $this->spacer->render() : "") : "")
 				.$this->renderTable();
+	}
+
+	protected function renderOverview() {
+		$tpl = new ilTemplate("tpl.gev_edu_bio_overview.html", true, true, $this->object->plugin->getDirectory());
+		$this->insertAcademyPoints($tpl);
+		if($this->object->getWBD()->getWBDTPType() === gevWBD::WBD_TP_SERVICE ) {
+			$this->insertWBDPoints($tpl);
+			if ($this->object->getWBD()->transferPointsFromWBD()) {
+				$tpl->setVariable("WBDPOINTSVISIBIBLE", "visible");
+			} else {
+				$tpl->setVariable("WBDPOINTSVISIBIBLE", "invisible");
+				if($this->object->getWBD()->transferPointsToWBD()) {
+					ilUtil::sendInfo($this->plugin->txt("wbd_transfer_on"));
+				} elseif($this->object->getWBD()->wbdRegistrationIsPending()) {
+					ilUtil::sendInfo($this->plugin->txt("wbd_reg_pending"));
+				}
+			}
+		} else {
+			$tpl->setVariable("WBDPOINTSVISIBIBLE", "invisible");
+		}
+		return $tpl->get();
+	}
+
+	protected function insertAcademyPoints($tpl) {
+		$tpl->setVariable("ACA_TRANSFERED_SUM_TITLE", $this->object->plugin->txt("aca_transferred_points_filter"));
+		$tpl->setVariable("ACA_TO_TRANSFER_SUM_TITLE", $this->object->plugin->txt("aca_to_transdfer_points_filter"));
+		$aux = $this->object->academy_points["transfered_sum"];
+		$tpl->setVariable("ACA_TRANSFERED_SUM", $aux ? $aux : 0);
+		$aux = $this->object->academy_points["to_transfer_sum"];
+		$tpl->setVariable("ACA_TO_TRANSFER_SUM", $aux ? $aux : 0);
+	}
+
+	protected function insertWBDPoints($tpl) {
+		$tpl->setVariable("WBD_SUM_TITLE", $this->object->plugin->txt("points_in_wbd"));
+		$tpl->setVariable("WBD_SUM_CERT_PERIOD_TITLE", $this->object->plugin->txt("points_in_wbd_cert_period"));
+		$tpl->setVariable("WBD_CERT_PERIOD", $this->object->wbd_data["cert_period"]);
+		$aux = $this->object->wbd_data["sum"];
+		$tpl->setVariable("WBD_SUM", $aux ? $aux : 0);
+		$aux = $this->object->wbd_data["sum_cert_period"];
+		$tpl->setVariable("WBD_SUM_CERT_PERIOD", $aux ? $aux : 0);
 	}
 
 	protected function getBill() {
@@ -215,6 +257,9 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 
 		$rec['credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['credit_points']);
 
+		$rec["wbd"] = in_array($rec["okz"], array("OKZ1", "OKZ2", "OKZ3"))
+					? $lng->txt("yes")
+					: $lng->txt("no");
 		return parent::transformResultRowXLSX($rec);
 	}
 
