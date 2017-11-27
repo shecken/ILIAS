@@ -331,7 +331,9 @@ class ilObjOrgUnitTree {
 		}
 		$employees = array();
 		foreach ($orgu_ref_ids as $orgu_ref_id) {
-			$employees = array_merge($employees, $this->getSuperiors($orgu_ref_id, $recursive));
+			foreach ($this->getChildren($orgu_ref_id) as $key => $value) {
+				$employees = array_merge($employees, $this->getSuperiors($value, $recursive));
+			}
 		}
 
 		return $employees;
