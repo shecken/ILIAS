@@ -31,4 +31,9 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	public function placeholderIds() {
 		return array();
 	}
+
+	public function getCourseRefId() {
+		return $this->crs_ref_id;
+	}
+
 }

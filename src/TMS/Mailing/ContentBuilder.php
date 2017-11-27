@@ -12,15 +12,6 @@ namespace ILIAS\TMS\Mailing;
 interface MailContentBuilder {
 
 	/**
-	 * get instance of this with template-identifier and contexts
-	 *
-	 * @param string 	$ident
-	 * @param MailContext[] $contexts
-	 * @return MailContentBuilder
-	 */
-	public function withData($ident, $contexts);
-
-	/**
 	 * Get the template's id of this Mail.
 	 *
 	 * @return int
@@ -28,11 +19,21 @@ interface MailContentBuilder {
 	public function getTemplateId();
 
 	/**
-	 * Get the template's identifier of this Mail.
+	 * Get an instance of Mail with this template assigned.
 	 *
-	 * @return int
+	 * @param int 	$id
+	 * @return Mail
 	 */
-	public function getTemplateIdentifier();
+	public function withTemplateId($id);
+
+	/**
+	 * Get an instance of Mail with these contexts.
+	 * A context will provide values for placeholders.
+	 *
+	 * @param MailContext[]
+	 * @return Mail
+	 */
+	public function withContexts($contexts);
 
 	/**
 	 * Get the subject of Mail with placeholders applied

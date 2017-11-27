@@ -7,6 +7,16 @@ use ILIAS\TMS\Mailing;
  * User-related placeholder-values
  */
 class ilTMSMailContextUser implements Mailing\MailContext {
+/*
+	'MAIL_SALUTATION'
+    'FIRST_NAME'
+    'LAST_NAME'
+    'LOGIN'
+    'ILIAS_URL'
+    'CLIENT_NAME'
+    'COURSE_TITLE'
+    'COURSE_LINK'
+*/
 
 	/**
 	 * @var int
@@ -22,7 +32,17 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	 * @inheritdoc
 	 */
 	public function valueFor($placeholder_id) {
-		return null;
+		switch($placeholder_id) {
+			case 'MAIL_SALUTATION':
+				return 'Hr. ';
+
+			case 'LOGIN':
+				return 'loginlogin';
+
+
+			default:
+				return null;
+		}
 	}
 
 	/**

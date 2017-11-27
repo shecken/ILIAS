@@ -25,6 +25,20 @@ class ilTMSBookingActions implements Booking\Actions {
 		$user = ilObjectFactory::getInstanceByObjId($user_id);
 		assert('$user instanceof \ilObjUser');
 
+		 global $ilAppEventHandler;
+		 $ilAppEventHandler->raise(
+			 //'TMS/BookingActions',
+			 //'Plugin/CourseMailing',
+			 'Modules/Course',
+			 'user_booked_self_on_course',
+			 array(
+				 'crs_ref_id' => (int)$course->getRefId(),
+				 'usr_id' => (int)$user->getId()
+			 )
+		 );
+		 die('EVENT FIRED?');
+
+
 		return $this->maybeMakeCourseMember($course, $user);
 	}
 
@@ -61,6 +75,7 @@ class ilTMSBookingActions implements Booking\Actions {
 	 * @return	string
 	 */
 	protected function maybeMakeCourseMember(\ilObjCourse $course, \ilObjUser $user) {
+
 		require_once("Modules/Course/classes/class.ilCourseParticipant.php");
 		$participant = \ilCourseParticipant::_getInstancebyObjId($course->getId(), $user->getId());
 		if ($participant->isMember()) {
@@ -80,17 +95,7 @@ class ilTMSBookingActions implements Booking\Actions {
 
 		if($this->maybeBookAsMember((int)$course->getRefId(), $booking_modality)) {
 			$participant->add($user->getId(), IL_CRS_MEMBER);
-		//	$this->mailing->sendCourseMail(Mailing\Actions::BOOKED_ON_COURSE, $course->getRefId(), $user->getId());
-
-		global $ilAppEventHandler;
-		 $ilAppEventHandler->raise(
-			 'Plugin/CourseMailing',
-			 'user_booked_self_on_course',
-			 array(
-				 'crs_ref_id' => (int)$course->getRefId(),
-				 'usr_id' => (int)$user->getId()
-			 )
-		 );
+			$this->mailing->sendCourseMail(Mailing\Actions::BOOKED_ON_COURSE, $course->getRefId(), $user->getId());
 			return Booking\Actions::STATE_BOOKED;
 		}
 
