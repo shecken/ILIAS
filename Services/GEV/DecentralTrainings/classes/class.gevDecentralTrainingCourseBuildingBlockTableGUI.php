@@ -53,7 +53,6 @@ class gevDecentralTrainingCourseBuildingBlockTableGUI extends catTableGUI {
 		$this->addColumn($this->lng->txt("gev_dec_crs_building_block_block"), '');
 		$this->addColumn($this->lng->txt("gev_dec_crs_building_block_content"), "");
 		$this->addColumn($this->lng->txt("gev_dec_building_block_target"), "");
-		$this->addColumn($this->lng->txt("gev_dec_building_ue"), "");
 		$this->addColumn($this->lng->txt("gev_wb_time"), "");
 		$this->addColumn($this->lng->txt("action"), "");
 
@@ -90,7 +89,7 @@ class gevDecentralTrainingCourseBuildingBlockTableGUI extends catTableGUI {
 			$this->tpl->setVariable("TARGET", $a_set["target"]);
 		}
 
-		$this->tpl->setVariable("PRACTICE_SESSION", $a_set["practice_session"]);//$a_set["practice_session"]);
+		//$this->tpl->setVariable("PRACTICE_SESSION", $a_set["practice_session"]);//$a_set["practice_session"]);
 		$this->tpl->setVariable("CREDIT_POINTS", gevCourseUtils::convertCreditpointsToFormattedDuration((int)$a_set["credit_points"]));
 
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingUtils.php");
