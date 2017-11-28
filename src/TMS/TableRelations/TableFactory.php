@@ -169,6 +169,9 @@ class TableFactory {
 		return new Tables\DerivedFields\GroupConcat($this->predicate_factory, $name, $field, $separator);
 	}
 
+	public function concat($name, Filters\Predicates\Field $field_1, Filters\Predicates\Field $field_2, $inbetween = null) {
+		return new Tables\DerivedFields\Concat($this->predicate_factory, $name, $field_1,  $field_2, $inbetween);
+	}
 
 	/**
 	 * Derived field equivalent of sql FROM_UNIXTIME

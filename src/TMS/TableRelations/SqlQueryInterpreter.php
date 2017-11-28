@@ -8,7 +8,7 @@ use ILIAS\TMS\TableRelations\Tables\DerivedFields as Derived;
  */
 class SqlQueryInterpreter {
 
-	public function __construct(Filter\SqlPredicateInterpreter $predicate_interpreter, Filter\PredicateFactory $pf, \ilDB $ildb) {
+	public function __construct(Filter\SqlPredicateInterpreter $predicate_interpreter, Filter\PredicateFactory $pf, \ilDBInterface $ildb) {
 		$this->predicate_interpreter = $predicate_interpreter;
 		$this->gIldb = $ildb;
 		$this->pf = $pf;
@@ -72,6 +72,14 @@ class SqlQueryInterpreter {
 			return $this->interpretField($field->left()).' /'.$this->interpretField($field->right());
 		} elseif( $field instanceof Derived\Times ) {
 			return $this->interpretField($field->left()).' *'.$this->interpretField($field->right());
+		} elseif( $field instanceof Derived\Concat ) {
+			$inbetween = $field->inbetween();
+			if($inbetween === null) {
+				$inbetween = ',';
+			} else {
+				$inbetween = ','.$this->gIldb->quote($inbetween,'text').',';
+			}
+			return ' CONCAT('.$this->interpretField($field->fieldOne()).$inbetween.$this->interpretField($field->fieldTwo()).')'; 
 		} else {
 			throw new TableRelationsException("Unknown field type".$field->name());
 		}
