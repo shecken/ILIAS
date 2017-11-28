@@ -9,6 +9,14 @@ require_once 'Services/Mail/classes/class.ilMailTemplateDataProvider.php';
  *
  */
 class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
+	const DEFAULT_WRAPPER = './Services/Mail/templates/default/tpl.html_mail_template.html';
+	const DEFAULT_IMAGES = './Services/Mail/templates/default/img/';
+	const CUSTOM_WRAPPER = './Customizing/global/skin/custom/Services/Mail/tpl.html_mail_template.html';
+	const CUSTOM_IMAGES = './Customizing/global/skin/custom/Services/Mail/img/';
+
+	//get all placeholder ids (w/o [])
+	//read: lookahead for bracket, all chars, end with bracket
+	const PLACEHOLDER = "/(?<=\[)[^]]+(?=\])/";
 
 	/**
 	 * @var
@@ -27,14 +35,13 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 	 */
 	protected $template;
 
-	//get all placeholder ids (w/o [])
-	//read: lookahead for bracket, all chars, end with bracket
-	const PLACEHOLDER = "/(?<=\[)[^]]+(?=\])/";
-
 	public function __construct($mailing_db) {
 		$this->mailing_db = $mailing_db;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function withData($ident, $contexts) {
 		$clone = clone $this;
 		$clone->ident = $ident;
@@ -43,9 +50,8 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 		return $clone;
 	}
 
-
 	/**
-	 *
+	 *@return void
 	 */
 	private function initTemplate() {
 		$template_provider = new \ilMailTemplateDataProvider();
@@ -81,11 +87,44 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 	 * @inheritdoc
 	 */
 	public function getMessage(){
+		$msg = nl2br($this->getResolvedMessage());
+		$wrapper = $this->getWrapper();
+		$body = str_replace('{PLACEHOLDER}', $msg, $wrapper);
+		return $body;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getPlainMessage(){
+		return strip_tags($this->getResolvedMessage());
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getEmbeddedImages(){
+		$files = array();
+		if(file_exists(self::CUSTOM_WRAPPER)){
+			if(is_dir(self::CUSTOM_IMAGES)) {
+				$files = $this->readDir(self::CUSTOM_IMAGES);
+			}
+		} else {
+			$files = $this->readDir(self::DEFAULT_IMAGES);
+		}
+		return $files;
+	}
+
+	/**
+	 * Replaces all placeholders.
+	 *
+	 * @return string
+	 */
+	private function getResolvedMessage(){
 		$body = $this->template->getMessage();
 		$placeholders = array();
 
 		preg_match_all(self::PLACEHOLDER, $body, $placeholders);
-		var_dump($placeholders);
 		foreach ($placeholders[0] as $placeholder) {
 			$search = '[' .$placeholder .']';
 			$value = '';
@@ -96,14 +135,26 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 				}
 			}
 			$body = str_replace($search, $value, $body);
-			var_dump($search);
-			var_dump($value);
 		}
 		return $body;
 	}
 
+	private function getWrapper() {
+		if(!file_exists(self::CUSTOM_WRAPPER)) {
+			$bracket = file_get_contents(self::DEFAULT_WRAPPER);
+		} else {
+			$bracket = file_get_contents(self::CUSTOM_WRAPPER);
+		}
+		return $bracket;
+	}
 
-
-
+	private function readDir($dirpath) {
+		$files = array_diff(scandir($dirpath), array('.', '..'));
+		$ret = array();
+		foreach ($files as $file) {
+			$ret[] = array($dirpath.$file, 'img/'.$file);
+		}
+		return $ret;
+	}
 
 }

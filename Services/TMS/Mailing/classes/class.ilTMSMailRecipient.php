@@ -35,4 +35,19 @@ class ilTMSMailRecipient implements Mailing\Recipient {
 	public function getUserId() {
 		return $this->usr_id;
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getUserName() {
+		if($this->usr_id) {
+			$nam = \ilObjUser::_lookupName($this->usr_id);
+			return trim(sprintf('%s %s %s',
+				$nam['title'],
+				$nam['firstname'],
+				$nam['lastname']
+			));
+		}
+		return null;
+	}
 }

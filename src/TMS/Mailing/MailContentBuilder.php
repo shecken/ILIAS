@@ -42,12 +42,28 @@ interface MailContentBuilder {
 	public function getSubject();
 
 	/**
-	 * Gets the message of Mail with filled placeholders,
+	 * Gets the (HTML-)message of Mail with filled placeholders,
 	 * i.e.: apply all from placeholder values to template's message'.
 	 *
 	 * @return string
 	 */
 	public function getMessage();
+
+	/**
+	 * Gets the message of Mail with filled placeholders,
+	 * i.e.: apply all from placeholder values to template's message'.
+	 * All tags are stripped.
+	 *
+	 * @return string
+	 */
+	public function getPlainMessage();
+
+	/**
+	 * Returns pathes toimages that should be embedded.
+	 *
+	 * @return array[]	array( array('/path/to/img/img.jpg', 'img.jpg'), ...)
+	 */
+	public function getEmbeddedImages();
 
 	//TODO: atachments
 }

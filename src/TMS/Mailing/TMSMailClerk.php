@@ -10,13 +10,30 @@ class TMSMailClerk {
 	 */
 	protected $content_builder;
 
+	/**
+	 * @var LoggingDB
+	 */
+	protected $logger;
+
+	/**
+	 * @var PHPMail
+	 */
+	protected $sender;
+
 
 	public function __construct($content_builder, $logger) {
 		$this->content_builder = $content_builder;
 		$this->logger = $logger;
+		$this->initSender();
 	}
 
-	public function process($mails, $logcontext) {
+	private function initSender() {
+		$this->sender = new \PHPMailer();
+		$this->sender->CharSet = "utf-8";
+		$this->sender->isHTML(true);
+	}
+
+	public function process($mails, $event) {
 
 		foreach ($mails as $mail) {
 			//var_dump($mail);
@@ -29,18 +46,28 @@ class TMSMailClerk {
 				$contexts
 			);
 
-			var_dump($recipient->getMailAddress());
-			var_dump($builder->getSubject());
-			var_dump($builder->getMessage());
+			$subject = $builder->getSubject();
+			$msg_html = $builder->getMessage();
+			$msg_plain = $builder->getPlainMessage();
+			$embedded = $builder->getEmbeddedImages();
+
+			$mail_to_address = $recipient->getMailAddress();
+			$mail_to_name = $recipient->getUserName();
+
+			/*
+			require_once 'Services/Mail/classes/class.ilMail.php';
+			$addr = \ilMail::getIliasMailerAddress();
+			var_dump($addr);
+			*/
+			$mail_from_address = 'info@cat06.de';
+			$mail_from_name = 'your friendly ilias';
 
 
-			$logcontext = $logcontext;
+			print '<hr>';
+			$logcontext = $event;
 			$usr_id = $recipient->getUserId();
 			$mail_id = $builder->getTemplateId();
 			$mail_id = $builder->getTemplateIdentifier();
-			$subject = $builder->getSubject();
-			$msg = $builder->getMessage();
-
 			$crs_ref_id = null;
 			foreach ($contexts as $context) {
 				if(get_class($context) === 'ilTMSMailContextCourse') {
@@ -48,14 +75,49 @@ class TMSMailClerk {
 				}
 			}
 
+$mail_to_address = 'nhaagen@cat06.de';
+
+			$this->sender->setFrom($mail_from_address, $mail_from_name);
+			$this->sender->addAddress($mail_to_address, $mail_to_name);
+			$this->sender->Subject = $subject;
+			$this->sender->Body = $msg_html;
+			$this->sender->AltBody = $msg_plain;
+			foreach ($embedded as $embed) {
+				list($path, $file) = $embed;
+				$this->sender->AddEmbeddedImage($path, $file);
+
+			}
+
+			$err = $this->sender->Send();
+			if($err === false) {
+			//	var_dump($this->sender->ErrorInfo);
+			}
+
+			print '<hr>';
+			print(sprintf('From: %s (%s)', $mail_from_address, $mail_from_name));
+			print '<br>';
+			print(sprintf('To: %s (%s)', $mail_to_address, $mail_to_name));
+			print '<br>';
+			print $subject;
+			print '<br>';
+			print $msg_plain;
+			print '<br>';
+			print '<br>';
+			print $msg_html;
+
+			var_dump($this->sender->ErrorInfo);
+
+
 			$this->logger->log(
 				$logcontext,
 				$usr_id,
 				$mail_id,
 				$crs_ref_id,
 				$subject,
-				$msg
+				$msg_plain
 			);
+
+
 
 		}
 		die('in clerk');

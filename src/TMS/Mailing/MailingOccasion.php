@@ -19,6 +19,22 @@ interface MailingOccasion extends Component {
 	public function providesMailForEvent($event);
 
 	/**
+	 * Get the full list of events this Occasion
+	 * provides mails for.
+	 *
+	 * @return string[]
+	 */
+	public function listEvents();
+
+	/**
+	 * Every Occasion maps to exactly ONE mailtemplate.
+	 * This is its ident.
+	 *
+	 * @return string
+	 */
+	public function templateIdent();
+
+	/**
 	 * get mails for this occasion
 	 *
 	 * @param string 	$event
@@ -26,5 +42,7 @@ interface MailingOccasion extends Component {
 	 * @return Mail[]
 	 */
 	public function getMails($event, $parameter);
+
+
 
 }

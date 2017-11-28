@@ -1,7 +1,7 @@
 <?php
-namespace ILIAS\TMS\Mailing;
-
 /* Copyright (c) 2017 Nils Haagen <nils.haagen@concepts-and-training.de> */
+
+namespace ILIAS\TMS\Mailing;
 
 /**
  * everything a mail needs to know
@@ -9,9 +9,9 @@ namespace ILIAS\TMS\Mailing;
 class TMSMail implements Mail {
 
 	/**
-	 * @var int
+	 * @var Recipient
 	 */
-	protected $usr_id;
+	protected $recipient;
 
 	/**
 	 * @var string
