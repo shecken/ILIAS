@@ -20,10 +20,16 @@ class TMSMailClerk {
 	 */
 	protected $sender;
 
+	/**
+	 * @var Recipient
+	 */
+	protected $from;
 
-	public function __construct($content_builder, $logger) {
+
+	public function __construct($content_builder, $logger, Recipient $from) {
 		$this->content_builder = $content_builder;
 		$this->logger = $logger;
+		$this->from = $from;
 		$this->initSender();
 	}
 
@@ -34,6 +40,9 @@ class TMSMailClerk {
 	}
 
 	public function process($mails, $event) {
+
+		$mail_from_address = $this->from->getMailAddress();
+		$mail_from_name = $this->from->getUserName();
 
 		foreach ($mails as $mail) {
 			//var_dump($mail);
@@ -54,13 +63,6 @@ class TMSMailClerk {
 			$mail_to_address = $recipient->getMailAddress();
 			$mail_to_name = $recipient->getUserName();
 
-			/*
-			require_once 'Services/Mail/classes/class.ilMail.php';
-			$addr = \ilMail::getIliasMailerAddress();
-			var_dump($addr);
-			*/
-			$mail_from_address = 'info@cat06.de';
-			$mail_from_name = 'your friendly ilias';
 
 
 			print '<hr>';

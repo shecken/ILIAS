@@ -14,6 +14,16 @@ class ilTMSMailRecipient implements Mailing\Recipient {
 	 */
 	protected $usr_id;
 
+	/**
+	 * @var string | null
+	 */
+	protected $mail;
+
+	/**
+	 * @var string | null
+	 */
+	protected $name;
+
 	public function __construct($usr_id = null) {
 		assert('is_int($usr_id) || $usr_id===null');
 		$this->usr_id = $usr_id;
@@ -26,7 +36,10 @@ class ilTMSMailRecipient implements Mailing\Recipient {
 		if($this->usr_id) {
 			return \ilObjUser::_lookupEmail($this->usr_id);
 		}
-		//raise
+		if($this->mail) {
+			return $this->mail;
+		}
+		throw new \Exception('There is no mail address fort his recipient');
 	}
 
 	/**
@@ -48,6 +61,33 @@ class ilTMSMailRecipient implements Mailing\Recipient {
 				$nam['lastname']
 			));
 		}
-		return null;
+		return $this->name;
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withName($name) {
+		assert('is_string($name)');
+		if(! is_null($this->usr_id)) {
+			throw new \Exception('You cannot manually set the name for a recipient based on usr_id');
+		}
+		$clone = clone $this;
+		$clone->name = $name;
+		return $clone;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withMail($mail) {
+		assert('is_string($mail)');
+		if(! is_null($this->usr_id)) {
+			throw new \Exception('You cannot manually set the mail for a recipient based on usr_id');
+		}
+		$clone = clone $this;
+		$clone->mail = $mail;
+		return $clone;
+	}
+
 }
