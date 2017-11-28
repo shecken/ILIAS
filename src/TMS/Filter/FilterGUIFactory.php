@@ -17,7 +17,7 @@ class FilterGUIFactory {
 	 * @return	FilterGUI
 	 */
 	public function dateperiod_gui(Filters\DatePeriod $filter, $path) {
-		require_once ("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterDatePeriodGUI.php");
+		require_once ("Services/TMS/Filter/classes/class.catFilterDatePeriodGUI.php");
 		return new \catFilterDatePeriodGUI($filter, $path);
 	}
 
@@ -29,7 +29,7 @@ class FilterGUIFactory {
 	 * @return	FilterGUI
 	 */
 	public function option_gui(Filters\Option $filter, $path) {
-		require_once ("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterOptionGUI.php");
+		require_once ("Services/TMS/Filter/classes/class.catFilterOptionGUI.php");
 		return new \catFilterOptionGUI($filter, $path);
 	}
 
@@ -41,7 +41,7 @@ class FilterGUIFactory {
 	 * @return	FilterGUI
 	 */
 	public function multiselect_gui(Filters\Multiselect $filter, $path) {
-		require_once ("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterMultiselectGUI.php");
+		require_once ("Services/TMS/Filter/classes/class.catFilterMultiselectGUI.php");
 		return new \catFilterMultiselectGUI($filter, $path);
 	}
 
@@ -53,7 +53,7 @@ class FilterGUIFactory {
 	 * @return	FilterGUI
 	 */
 	public function multiselectsearch_gui(Filters\MultiselectSearch $filter, $path) {
-		require_once ("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterMultiselectSearchGUI.php");
+		require_once ("Services/TMS/Filter/classes/class.catFilterMultiselectSearchGUI.php");
 		return new \catFilterMultiselectSearchGUI($filter, $path);
 	}
 
@@ -65,7 +65,7 @@ class FilterGUIFactory {
 	 * @return	FilterGUI
 	 */
 	public function singleselect_gui(Filters\Singleselect $filter, $path) {
-		require_once ("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterSingleselectGUI.php");
+		require_once ("Services/TMS/Filter/classes/class.catFilterSingleselectGUI.php");
 		return new \catFilterSingleselectGUI($filter, $path);
 	}
 
@@ -77,7 +77,7 @@ class FilterGUIFactory {
 	 * @return	FilterGUI
 	 */
 	public function text_gui(Filters\Text $filter, $path) {
-		require_once ("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterTextGUI.php");
+		require_once ("Services/TMS/Filter/classes/class.catFilterTextGUI.php");
 		return new \catFilterTextGUI($filter, $path);
 	}
 
@@ -89,7 +89,7 @@ class FilterGUIFactory {
 	 * @return	FilterGUI
 	 */
 	public function one_of_gui(Filters\OneOf $filter, $path) {
-		require_once ("Customizing/global/plugins/Services/Cron/CronHook/ReportMaster/classes/ReportBase/class.catFilterOneOfGUI.php");
+		require_once ("Services/TMS/Filter/classes/class.catFilterOneOfGUI.php");
 		return new \catFilterOneOfGUI($filter, $path);
 	}
 }
