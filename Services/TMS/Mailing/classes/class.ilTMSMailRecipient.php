@@ -4,6 +4,7 @@ use ILIAS\TMS\Mailing;
 /* Copyright (c) 2017 Nils Haagen <nils.haagen@concepts-and-training.de> */
 
 require_once('./Services/User/classes/class.ilObjUser.php');
+
 /**
  * recipients for mails
  */

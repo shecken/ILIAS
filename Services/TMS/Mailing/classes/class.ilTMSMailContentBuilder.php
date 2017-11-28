@@ -80,7 +80,7 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 	 * @return string
 	 */
 	public function getSubject(){
-		return $this->template->getSubject();
+		return $this->resolvePlaceholders($this->template->getSubject());
 	}
 
 	/**
@@ -121,10 +121,19 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 	 * @return string
 	 */
 	private function getResolvedMessage(){
-		$body = $this->template->getMessage();
+		return $this->resolvePlaceholders($this->template->getMessage());
+	}
+
+	/**
+	 * Resolve all placeholder in txt
+	 *
+	 * @param string $txt
+	 * @return string
+	 */
+	private function resolvePlaceholders($txt) {
 		$placeholders = array();
 
-		preg_match_all(self::PLACEHOLDER, $body, $placeholders);
+		preg_match_all(self::PLACEHOLDER, $txt, $placeholders);
 		foreach ($placeholders[0] as $placeholder) {
 			$search = '[' .$placeholder .']';
 			$value = '';
@@ -134,10 +143,12 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 					$value = $v;
 				}
 			}
-			$body = str_replace($search, $value, $body);
+			$txt = str_replace($search, $value, $txt);
 		}
-		return $body;
+		return $txt;
+
 	}
+
 
 	private function getWrapper() {
 		if(!file_exists(self::CUSTOM_WRAPPER)) {
