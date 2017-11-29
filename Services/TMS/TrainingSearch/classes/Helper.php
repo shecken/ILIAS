@@ -16,12 +16,10 @@ class Helper {
 
 	const S_TITLE_ASC = "s_title_asc";
 	const S_PERIOD_ASC = "s_period_asc";
-	const S_TYPE_ASC = "s_type_asc";
 	const S_CITY_ASC = "s_city_asc";
 
 	const S_TITLE_DESC = "s_title_desc";
 	const S_PERIOD_DESC = "s_period_desc";
-	const S_TYPE_DESC = "s_type_desc";
 	const S_CITY_DESC = "s_city_desc";
 
 	const S_USER = "s_user";
@@ -265,12 +263,6 @@ class Helper {
 				case self::S_TITLE_DESC:
 					uasort($bookable_trainings, $this->getTitleSortingClosure("desc"));
 					break;
-				case self::S_TYPE_ASC:
-					uasort($bookable_trainings, $this->getTypeSortingClosure("asc"));
-					break;
-				case self::S_TYPE_DESC:
-					uasort($bookable_trainings, $this->getTypeSortingClosure("desc"));
-					break;
 				case self::S_PERIOD_ASC:
 					uasort($bookable_trainings, $this->getPeriodSortingClosure("asc"));
 					break;
@@ -299,50 +291,13 @@ class Helper {
 	protected function getTitleSortingClosure($direction) {
 		if($direction == "asc") {
 			return function($a, $b) {
-					return strcmp($a->getTitle(), $b->getTitle());
+					return strcasecmp($a->getTitle(), $b->getTitle());
 				};
 		}
 
 		if($direction == "desc") {
 			return function($a, $b) {
-					return strcmp($b->getTitle(), $a->getTitle());
-				};
-		}
-	}
-
-	/**
-	 * Get sorting closure for type
-	 *
-	 * @param string 	$direction
-	 *
-	 * @return Closure
-	 */
-	protected function getTypeSortingClosure($direction) {
-		if($direction == "asc") {
-			return function($a, $b) {
-					if($a->getType() > $b->getType()) {
-						return 1;
-					}
-
-					if($a->getType() < $b->getType()) {
-						return -1;
-					}
-
-					return 0;
-				};
-		}
-
-		if($direction == "desc") {
-			return function($a, $b) {
-					if($a->getType() > $b->getType()) {
-						return -1;
-					}
-
-					if($a->getType() < $b->getType()) {
-						return 1;
-					}
-
-					return 0;
+					return strcasecmp($b->getTitle(), $a->getTitle());
 				};
 		}
 	}
@@ -357,6 +312,14 @@ class Helper {
 	protected function getPeriodSortingClosure($direction) {
 		if($direction == "asc") {
 			return function($a, $b) {
+					if(is_null($a->getBeginDate()) && is_null($b->getBeginDate())) {
+						return 0;
+					} else if(is_null($a->getBeginDate()) && !is_null($b->getBeginDate())) {
+						return 1;
+					} else if(!is_null($a->getBeginDate()) && is_null($b->getBeginDate())) {
+						return -1;
+					}
+
 					$start_date_a = $a->getBeginDate()->get(IL_CAL_DATE);
 					$start_date_b = $b->getBeginDate()->get(IL_CAL_DATE);
 					return strcmp($start_date_a, $start_date_b);
@@ -365,6 +328,14 @@ class Helper {
 
 		if($direction == "desc") {
 			return function($a, $b) {
+					if(is_null($a->getBeginDate()) && is_null($b->getBeginDate())) {
+						return 0;
+					} else if(is_null($a->getBeginDate()) && !is_null($b->getBeginDate())) {
+						return 1;
+					} else if(!is_null($a->getBeginDate()) && is_null($b->getBeginDate())) {
+						return -1;
+					}
+
 					$start_date_a = $a->getBeginDate()->get(IL_CAL_DATE);
 					$start_date_b = $b->getBeginDate()->get(IL_CAL_DATE);
 					return strcmp($start_date_b, $start_date_a);
@@ -391,24 +362,6 @@ class Helper {
 					return strcmp($b->getLocation(), $a->getLocation());
 				};
 		}
-	}
-
-	/**
-	 * Get the option for sorting of table
-	 *
-	 * @return string[]
-	 */
-	public function getSortOptions() {
-		return array(
-			Helper::S_TITLE_ASC => "Titel: aufsteigend",
-			Helper::S_TITLE_DESC => "Titel: absteigend",
-			Helper::S_PERIOD_ASC => "Zeitraum: aufsteigend",
-			Helper::S_PERIOD_DESC => "Zeitraum: absteigend",
-			Helper::S_TYPE_ASC => "Trainingstyp: aufsteigend",
-			Helper::S_TYPE_DESC => "Trainingstyp: absteigend",
-			Helper::S_CITY_ASC=>"Ort: aufsteigend",
-			Helper::S_CITY_DESC=>"Ort: absteigend"
-		);
 	}
 }
 

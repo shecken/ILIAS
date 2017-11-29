@@ -331,10 +331,34 @@ class ilObjOrgUnitTree {
 		}
 		$employees = array();
 		foreach ($orgu_ref_ids as $orgu_ref_id) {
-			$employees = array_merge($employees, $this->getSuperiors($orgu_ref_id, $recursive));
+			foreach ($this->getChildren($orgu_ref_id) as $key => $value) {
+				$employees = array_merge($employees, $this->getSuperiors($value, $recursive));
+			}
 		}
 
 		return $employees;
+	}
+
+	/**
+	 * Get all org units where user is superior
+	 *
+	 * @param int 	$user_id
+	 *
+	 * @return int[]
+	 */
+	public function getOrgUnitsWhereUserIsSuperior($user_id) {
+		$q = "SELECT orgu.obj_id, refr.ref_id FROM object_data orgu
+				INNER JOIN object_reference refr ON refr.obj_id = orgu.obj_id
+				INNER JOIN object_data roles ON roles.title LIKE CONCAT('il_orgu_superior_',refr.ref_id)
+				INNER JOIN rbac_ua rbac ON rbac.usr_id = " . $this->db->quote($user_id, "integer") . " AND roles.obj_id = rbac.rol_id
+				WHERE orgu.type = 'orgu'";
+		$set = $this->db->query($q);
+		$orgu_ref_ids = array();
+		while ($res = $this->db->fetchAssoc($set)) {
+			$orgu_ref_ids[] = $res['ref_id'];
+		}
+
+		return $orgu_ref_ids;
 	}
 	// cat-tms-patch end
 

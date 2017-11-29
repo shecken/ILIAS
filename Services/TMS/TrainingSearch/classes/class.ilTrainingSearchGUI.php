@@ -69,12 +69,12 @@ class ilTrainingSearchGUI {
 
 	public function executeCommand() {
 		$next_class = $this->g_ctrl->getNextClass();
+		$this->changeUser();
 
 		switch ($next_class) {
 			case "iltmsbookinggui":
 				require_once("Services/TMS/Booking/classes/class.ilTMSBookingGUI.php");
 				$gui = new ilTMSBookingGUI($this, self::CMD_SHOW);
-				$gui->redirectOnParallelCourses();
 				$this->g_ctrl->forwardCommand($gui);
 				break;
 			default:
@@ -82,7 +82,6 @@ class ilTrainingSearchGUI {
 				switch($cmd) {
 					case self::CMD_SHOW:
 					case self::CMD_CHANGE_USER:
-						$this->changeUser();
 						$this->show();
 						break;
 					case self::CMD_FILTER:
@@ -108,7 +107,10 @@ class ilTrainingSearchGUI {
 	 * @return void
 	 */
 	protected function show() {
-		$bookable_trainings = $this->getBookableTrainings(array());
+		$get = $_GET;
+		$filter = $this->helper->getFilterValuesFrom($get);
+		$bookable_trainings = $this->getBookableTrainings($filter);
+		$bookable_trainings = $this->helper->sortBookableTrainings(array(Helper::F_SORT_VALUE => Helper::S_TITLE_ASC), $bookable_trainings);
 		$this->showTrainings($bookable_trainings);
 	}
 
@@ -183,36 +185,41 @@ class ilTrainingSearchGUI {
 	 * @return Sortation[]
 	 */
 	protected function addSortationObjects($view_control) {
-		require_once("Services/Component/classes/class.ilPluginAdmin.php");
-		$link = $this->g_ctrl->getLinkTarget($this->parent, ilTrainingSearchGUI::CMD_CHANGE_USER);
-
 		$employees = $this->helper->getUserWhereCurrentCanBookFor((int)$this->g_user->getId());
-		if(count($employees) > 0) {
-			$view_control[] = $this->g_f->viewControl()->sortation($employees)
+		if(count($employees) > 1) {
+			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_CHANGE_USER);
+			$view_control[] = $this->g_f->viewControl()->quickfilter($employees)
 				->withTargetURL($link, Helper::S_USER)
-				->withLabel($this->g_lng->txt("employees"))
-				->withLabel(ilObjUser::_lookupFullname($this->search_user_id));
+				->withDefaultValue($this->g_user->getId())
+				->withLabel($this->g_lng->txt("employees"));
 		}
 
+		require_once("Services/Component/classes/class.ilPluginAdmin.php");
 		if(ilPluginAdmin::isPluginActive('xccl')) {
 			$plugin = ilPluginAdmin::getPluginObjectById('xccl');
 			$actions = $plugin->getActions();
 			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_QUICKFILTER);
 
-			$options = array(null => "Alle");
-			$view_control[] = $this->g_f->viewControl()->sortation($options + $actions->getTypeOptions())
+			$options = array("" => $this->g_lng->txt("show_all"));
+			$type_options = $actions->getTypeOptions();
+			uasort($type_options, function($a, $b) { return strcmp($a, $b);});
+			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $type_options)
 						->withTargetURL($link, Helper::F_TYPE)
+						->withDefaultValue("")
 						->withLabel($plugin->txt("conf_options_type"));
 
-			$view_control[] = $this->g_f->viewControl()->sortation($options + $actions->getTopicOptions())
+			$topic_options = $actions->getTopicOptions();
+			uasort($topic_options, function($a, $b) { return strcmp($a, $b);});
+			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $topic_options)
 						->withTargetURL($link, Helper::F_TOPIC)
+						->withDefaultValue("")
 						->withLabel($plugin->txt("conf_options_topic"));
 		}
 
 		$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_SORT);
-		$view_control[] = $this->g_f->viewControl()->sortation($this->helper->getSortOptions())
+		$view_control[] = $this->g_f->viewControl()->sortation($this->getSortOptions())
 						->withTargetURL($link, Helper::F_SORT_VALUE)
-						->withLabel($this->g_lng->txt("sorting"));
+						->withLabel($this->g_lng->txt(Helper::S_TITLE_ASC));
 
 		return $view_control;
 	}
@@ -278,6 +285,22 @@ class ilTrainingSearchGUI {
 		if(isset($get[Helper::S_USER]) && $get[Helper::S_USER] !== "") {
 			$this->search_user_id = (int)$get[Helper::S_USER];
 		}
+	}
+
+	/**
+	 * Get the option for sorting of table
+	 *
+	 * @return string[]
+	 */
+	public function getSortOptions() {
+		return array(
+			Helper::S_TITLE_ASC => $this->g_lng->txt(Helper::S_TITLE_ASC),
+			Helper::S_TITLE_DESC => $this->g_lng->txt(Helper::S_TITLE_DESC),
+			Helper::S_PERIOD_ASC => $this->g_lng->txt(Helper::S_PERIOD_ASC),
+			Helper::S_PERIOD_DESC => $this->g_lng->txt(Helper::S_PERIOD_DESC),
+			Helper::S_CITY_ASC => $this->g_lng->txt(Helper::S_CITY_ASC),
+			Helper::S_CITY_DESC => $this->g_lng->txt(Helper::S_CITY_DESC)
+		);
 	}
 }
 
