@@ -19,7 +19,7 @@ class catPropertyFormGUI extends ilPropertyFormGUI {
 	protected $tpl_location = "Services/Form";
 	
 	public function __construct() {
-		parent::ilPropertyFormGUI();
+		parent::__construct();
 	}
 
 	public function setTemplate($a_name, $a_location) {
@@ -65,7 +65,6 @@ class catPropertyFormGUI extends ilPropertyFormGUI {
 
 		$tpl->addJavaScript("./Services/JavaScript/js/Basic.js");
 		$tpl->addJavaScript("Services/Form/js/Form.js");
-
 
 		$this->tpl = new ilTemplate($this->getTemplateFilename(), true, true, $this->getTemplateLocation());
 
