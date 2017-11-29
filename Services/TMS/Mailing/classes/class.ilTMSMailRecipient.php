@@ -39,8 +39,9 @@ class ilTMSMailRecipient implements Mailing\Recipient {
 		}
 		if($this->mail) {
 			return $this->mail;
+		} else {
+			throw new \Exception('There is no mail address for this recipient');
 		}
-		throw new \Exception('There is no mail address fort his recipient');
 	}
 
 	/**
@@ -48,6 +49,16 @@ class ilTMSMailRecipient implements Mailing\Recipient {
 	 */
 	public function getUserId() {
 		return $this->usr_id;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getUserLogin() {
+		if($this->usr_id) {
+			return \ilObjUser::_lookupLogin($this->usr_id);
+		}
+		return null;
 	}
 
 	/**

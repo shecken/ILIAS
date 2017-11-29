@@ -26,6 +26,12 @@ interface Recipient {
 	 *
 	 * @return string | null
 	 */
+	public function getUserLogin();
+
+	/**
+	 *
+	 * @return string | null
+	 */
 	public function getUserName();
 
 	/**

@@ -72,11 +72,13 @@ $mail_to_address = 'nhaagen@cat06.de';
 
 			}
 
-			//$err = $this->sender->Send();
+			$err = '';
+			if(! $this->sender->Send()) {
+				$err = $this->sender->ErrorInfo;
+			};
 
-$err = '';
 			$mail_to_usr_id = $recipient->getUserId();
-			$mail_to_usr_login = '';
+			$mail_to_usr_login = $recipient->getUserLogin();
 
 			$crs_ref_id = null;
 			foreach ($contexts as $context) {
@@ -84,7 +86,6 @@ $err = '';
 					$crs_ref_id = $context->getCourseRefId();
 				}
 			}
-
 
 			$this->logger->log(
 				$event,
@@ -98,9 +99,6 @@ $err = '';
 				$msg_plain,
 				$err
 			);
-
-
-
 		}
 		die('in clerk');
 	}
