@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2017 Nils Haagen <nils.haagen@concepts-and-training.de> */
 use ILIAS\TMS\Mailing;
-require_once 'Services/Mail/classes/class.ilMailTemplateDataProvider.php';
+
 /**
  * This builds content for mails in TMS, as e.g. used for
  * automatic notifications in courses.
@@ -19,21 +19,24 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 	const PLACEHOLDER = "/(?<=\[)[^]]+(?=\])/";
 
 	/**
-	 * @var
+	 * @var MailingDB
 	 */
 	protected $mailing_db;
+
 	/**
-	 * @var
+	 * @var string
 	 */
 	protected $ident;
+
 	/**
-	 * @var
+	 * @var MailContext[]
 	 */
 	protected $contexts;
+
 	/**
-	 * @var
+	 * @var array<string, string>
 	 */
-	protected $template;
+	protected $template_data;
 
 	public function __construct($mailing_db) {
 		$this->mailing_db = $mailing_db;
@@ -46,25 +49,22 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 		$clone = clone $this;
 		$clone->ident = $ident;
 		$clone->contexts = $contexts;
-		$clone->initTemplate();
+		$clone->initTemplateData();
 		return $clone;
 	}
 
 	/**
-	 *@return void
+	 * @return void
 	 */
-	private function initTemplate() {
-		$template_provider = new \ilMailTemplateDataProvider();
-		list($template_id, $template_context) = $this->mailing_db->getTemplateIdAndContextByTitle($this->getTemplateIdentifier());
-		$this->template_id = $template_id;
-		$this->template = $template_provider->getTemplateById($template_id);
+	private function initTemplateData() {
+		$this->template_data = $this->mailing_db->getTemplateDataByTitle($this->ident);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function getTemplateId() {
-		return $this->template_id;
+		return $this->template_data['id'];
 	}
 
 	/**
@@ -80,7 +80,7 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 	 * @return string
 	 */
 	public function getSubject(){
-		return $this->resolvePlaceholders($this->template->getSubject());
+		return $this->resolvePlaceholders($this->template_data['subject']);
 	}
 
 	/**
@@ -121,7 +121,7 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 	 * @return string
 	 */
 	private function getResolvedMessage(){
-		return $this->resolvePlaceholders($this->template->getMessage());
+		return $this->resolvePlaceholders($this->template_data['message']);
 	}
 
 	/**

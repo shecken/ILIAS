@@ -12,5 +12,14 @@ interface MailingDB {
 	 *
 	 * @return int
 	 */
-	public function getTemplateIdAndContextByTitle($title);
+	public function getTemplateIdByTitle($title);
+
+	/**
+	 * Get template data by template title
+	 *
+	 * @param string 	$title
+	 *
+	 *  @return array<string, string> | null
+	 */
+	public function getTemplateDataByTitle($title);
 }
