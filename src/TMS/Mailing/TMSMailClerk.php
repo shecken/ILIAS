@@ -45,15 +45,11 @@ class TMSMailClerk {
 		$mail_from_name = $this->from->getUserName();
 
 		foreach ($mails as $mail) {
-			//var_dump($mail);
-
 			$recipient = $mail->getRecipient();
 			$contexts = $mail->getContexts();
+			$template_ident = $mail->getTemplateIdentifier();
 
-			$builder =  $this->content_builder->withData(
-				$mail->getTemplateIdentifier(),
-				$contexts
-			);
+			$builder =  $this->content_builder->withData($template_ident, $contexts);
 
 			$subject = $builder->getSubject();
 			$msg_html = $builder->getMessage();
@@ -62,20 +58,6 @@ class TMSMailClerk {
 
 			$mail_to_address = $recipient->getMailAddress();
 			$mail_to_name = $recipient->getUserName();
-
-
-
-			print '<hr>';
-			$logcontext = $event;
-			$usr_id = $recipient->getUserId();
-			$mail_id = $builder->getTemplateId();
-			$mail_id = $builder->getTemplateIdentifier();
-			$crs_ref_id = null;
-			foreach ($contexts as $context) {
-				if(get_class($context) === 'ilTMSMailContextCourse') {
-					$crs_ref_id = $context->getCourseRefId();
-				}
-			}
 
 $mail_to_address = 'nhaagen@cat06.de';
 
@@ -90,33 +72,31 @@ $mail_to_address = 'nhaagen@cat06.de';
 
 			}
 
-			$err = $this->sender->Send();
-			if($err === false) {
-			//	var_dump($this->sender->ErrorInfo);
+			//$err = $this->sender->Send();
+
+$err = '';
+			$mail_to_usr_id = $recipient->getUserId();
+			$mail_to_usr_login = '';
+
+			$crs_ref_id = null;
+			foreach ($contexts as $context) {
+				if(get_class($context) === 'ilTMSMailContextCourse') {
+					$crs_ref_id = $context->getCourseRefId();
+				}
 			}
-
-			print '<hr>';
-			print(sprintf('From: %s (%s)', $mail_from_address, $mail_from_name));
-			print '<br>';
-			print(sprintf('To: %s (%s)', $mail_to_address, $mail_to_name));
-			print '<br>';
-			print $subject;
-			print '<br>';
-			print $msg_plain;
-			print '<br>';
-			print '<br>';
-			print $msg_html;
-
-			var_dump($this->sender->ErrorInfo);
 
 
 			$this->logger->log(
-				$logcontext,
-				$usr_id,
-				$mail_id,
+				$event,
+				$template_ident,
+				$mail_to_address,
+				$mail_to_name,
+				$mail_to_usr_id,
+				$mail_to_usr_login,
 				$crs_ref_id,
 				$subject,
-				$msg_plain
+				$msg_plain,
+				$err
 			);
 
 
