@@ -17,13 +17,15 @@ require_once("Services/TMS/Filter/classes/class.catPropertyFormGUI.php");
 class catPropertyFormTplGUI extends catPropertyFormGUI {
 	protected $tpl_filename = "tpl.property_form.html";
 	protected $tpl_location = "Services/Form";
-	
+	protected $items = [];
+	protected $buttons = [];
+
 	public function __construct() {
 		global $lng, $tpl, $ilSetting;
 		$this->gTpl = $tpl;
 		$this->glng = $lng;
 		$this->gSettings = $ilSetting;
-		parent::ilPropertyFormGUI();
+		parent::__construct();
 	}
 
 	public function setTemplate($a_name, $a_location) {
