@@ -186,6 +186,16 @@ class TableSpace {
 		return $this;
 	}
 
+	public function forceRelevant(AbstractTable $table)
+	{
+		$id = $table->id();
+		if(!$this->graph->getNodeById($id)) {
+			throw new TableException("$id not in space");
+		}
+		$this->relevant_table_ids[] = $id;
+		return $this;
+	}
+
 	public function requested() {
 		return $this->requested_fields;
 	}
