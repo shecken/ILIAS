@@ -19,7 +19,7 @@ class TMSMail implements Mail {
 	protected $template_ident;
 
 	/**
-	 * @var MailContexts[]
+	 * @var MailContext[]
 	 */
 	protected $contexts;
 

@@ -26,19 +26,31 @@ class TMSMailClerk {
 	protected $from;
 
 
-	public function __construct($content_builder, $logger, Recipient $from) {
+	public function __construct(MailContentBuilder $content_builder, LoggingDB $logger, Recipient $from) {
 		$this->content_builder = $content_builder;
 		$this->logger = $logger;
 		$this->from = $from;
 		$this->initSender();
 	}
 
+	/**
+	 * Initialize PHPMailer.
+	 *
+	 * @return void
+	 */
 	private function initSender() {
 		$this->sender = new \PHPMailer();
 		$this->sender->CharSet = "utf-8";
 		$this->sender->isHTML(true);
 	}
 
+	/**
+	 * Send mails.
+	 *
+	 * @param TMSMail[] $mails
+	 * @param string $event
+	 * @return void
+	 */
 	public function process($mails, $event) {
 
 		$mail_from_address = $this->from->getMailAddress();

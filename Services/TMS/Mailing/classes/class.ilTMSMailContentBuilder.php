@@ -38,7 +38,7 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 	 */
 	protected $template_data;
 
-	public function __construct($mailing_db) {
+	public function __construct(Mailing\MailingDB $mailing_db) {
 		$this->mailing_db = $mailing_db;
 	}
 
