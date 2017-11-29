@@ -252,4 +252,8 @@ class TableFactory {
 		return new Tables\DerivedFields\Times($this->predicate_factory, $name, $factor1, $factor2);
 	}
 
+	public function dateFormat(	$name, Filters\Predicates\Field $field, $format = '%d.%m.%Y')
+	{
+		return new Tables\DerivedFields\DateFormat($this->predicate_factory, $name, $field, $format);
+	}
 }

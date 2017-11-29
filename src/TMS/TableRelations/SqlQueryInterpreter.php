@@ -80,7 +80,9 @@ class SqlQueryInterpreter {
 				$inbetween = ','.$this->gIldb->quote($inbetween,'text').',';
 			}
 			return ' CONCAT('.$this->interpretField($field->fieldOne()).$inbetween.$this->interpretField($field->fieldTwo()).')'; 
-		} else {
+		} elseif( $field instanceof Derived\DateFormat ) {
+			return ' DATE_FORMAT('.$this->interpretField($field->argument()).','.$this->gIldb->quote($field->format(),'text').')';
+		}else {
 			throw new TableRelationsException("Unknown field type".$field->name());
 		}
 	}
