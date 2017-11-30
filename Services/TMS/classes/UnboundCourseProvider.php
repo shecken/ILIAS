@@ -41,6 +41,7 @@ class UnboundCourseProvider extends Base {
 			$ret = $this->getCourseInfoForImportantInformation($ret, $entity, $object);
 			$ret = $this->getCourseInfoForTutors($ret, $entity, $object);
 			$ret = $this->getCourseInfoForToCourseButton($ret, $entity, $object);
+			$ret = $this->getCourseInfoForCourseMemberButton($ret, $entity, $object);
 
 			return $ret;
 		}
@@ -467,6 +468,32 @@ class UnboundCourseProvider extends Base {
 			,1
 			, [CourseInfo::CONTEXT_TO_COURSE_BUTTON]
 		);
+
+		return $ret;
+	}
+
+	/**
+	 * Get a course infomation object to decide showing a course member button or not
+	 *
+	 * @param CourseInfo[]
+	 * @param Entity $entity
+	 * @param Object 	$object
+	 *
+	 * @return CourseInfo[]
+	 */
+	protected function getCourseInfoForCourseMemberButton(array $ret, Entity $entity, $object) {
+		$course_member_objects = $this->getAllChildrenOfByType($object->getRefId(), "xcmb");
+		$course_member_object = array_shift($course_member_objects);
+		$link = $course_member_object->getLinkToMemberView();
+
+		if($link !== null) {
+			$ret[] = $this->createCourseInfoObject($entity
+				, ""
+				, $link
+				,1
+				, [CourseInfo::CONTEXT_COURSE_MEMBER_BUTTON]
+			);
+		}
 
 		return $ret;
 	}
