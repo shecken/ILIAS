@@ -10,7 +10,7 @@ class catFilterFlatViewGUI
 
 		$this->gCtrl = $ilCtrl;
 		$this->gLng = $lng;
-
+		$this->gLng->loadLanguageModule('tms');
 
 		$this->parent_obj = $parent_obj;
 		$this->sequence = $sequence;
@@ -51,7 +51,7 @@ class catFilterFlatViewGUI
 		$form->setFormAction($this->gCtrl->getFormAction($this->parent_obj));
 		$form->setShowTopButtons(false);
 		$form->getTemplate()->setVariable("BTN_CMD", $this->cmd_save);
-		$form->getTemplate()->setVariable("BTN_VALUE", $this->gLng->txt("gev_filter"));
+		$form->getTemplate()->setVariable("BTN_VALUE", $this->gLng->txt("report_filter"));
 
 		return $form;
 	}
