@@ -91,7 +91,7 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 												, IL_CAL_DATETIME)
 											: "");
 		//$vars["COURSE_TOPICS"] = ilUtil::prepareFormOutput(implode(", ", $crs->getTopics()));
-		$vars["COURSE_CREDIT_POINTS"] = ilUtil::prepareFormOutput($crs->getCreditPoints());
+		$vars["COURSE_CREDIT_POINTS"] = ilUtil::prepareFormOutput($crs->getCreditPoints()/3);
 		$vars["WB_TIME"] = gevCourseUtils::convertCreditpointsToFormattedDuration(ilUtil::prepareFormOutput($crs->getCreditPoints()));
 		// gev-patch end
 		
@@ -146,7 +146,7 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 												, IL_CAL_DATETIME)
 											: "");
 		//$vars["COURSE_TOPICS"] = ilUtil::prepareFormOutput(implode(", ", $crs->getTopics()));
-		$vars["COURSE_CREDIT_POINTS"] = ilUtil::prepareFormOutput($crs->getCreditPoints());
+		$vars["COURSE_CREDIT_POINTS"] = ilUtil::prepareFormOutput($crs->getCreditPoints()/3);
 		$vars["WB_TIME"] = gevCourseUtils::convertCreditpointsToFormattedDuration(ilUtil::prepareFormOutput($crs->getCreditPointsOf($user_id)));
 		// gev-patch end
 		
