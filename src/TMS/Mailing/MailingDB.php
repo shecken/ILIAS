@@ -15,11 +15,12 @@ interface MailingDB {
 	public function getTemplateIdByTitle($title);
 
 	/**
-	 * Get template data by template title
+	 * Get template data by template title.
+	 * TemplateData holds title, context, language, subject and message of a mail-template.
 	 *
 	 * @param string 	$title
 	 *
-	 *  @return array<string, string> | null
+	 * @return array<string, string> | null
 	 */
 	public function getTemplateDataByTitle($title);
 }

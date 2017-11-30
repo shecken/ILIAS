@@ -16,7 +16,7 @@ interface MailingOccasion extends Component {
 	 * @param string 	$event
 	 * @return bool
 	 */
-	public function providesMailForEvent($event);
+	public function doesProvideMailForEvent($event);
 
 	/**
 	 * Get the full list of events this Occasion

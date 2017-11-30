@@ -3,6 +3,13 @@
 
 namespace ILIAS\TMS\Mailing;
 
+/**
+ * The Clerk uses the MailContentBuilder to assembles the actual mail-bodies,
+ * factorizes the mail with the data from Recipient and gives the mails
+ * to the sender.
+ * Finally, a log entry is written.
+ *
+ */
 class TMSMailClerk {
 
 	/**
@@ -71,8 +78,6 @@ class TMSMailClerk {
 			$mail_to_address = $recipient->getMailAddress();
 			$mail_to_name = $recipient->getUserName();
 
-$mail_to_address = 'nhaagen@cat06.de';
-
 			$this->sender->setFrom($mail_from_address, $mail_from_name);
 			$this->sender->addAddress($mail_to_address, $mail_to_name);
 			$this->sender->Subject = $subject;
@@ -112,6 +117,5 @@ $mail_to_address = 'nhaagen@cat06.de';
 				$err
 			);
 		}
-		die('in clerk');
 	}
 }

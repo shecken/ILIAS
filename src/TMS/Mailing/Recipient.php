@@ -5,7 +5,8 @@
 namespace ILIAS\TMS\Mailing;
 
 /**
- *
+ * A Recipient must provide an eMail-address;
+ * it is used in the Clerk to get mail and user name from.
  */
 interface Recipient {
 

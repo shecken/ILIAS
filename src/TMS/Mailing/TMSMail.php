@@ -24,8 +24,8 @@ class TMSMail implements Mail {
 	protected $contexts;
 
 
-	public function __construct($recipient, $template_ident, $contexts) {
-
+	public function __construct(Recipient $recipient, $template_ident, $contexts) {
+		assert('is_string($template_ident)');
 		$this->recipient = $recipient;
 		$this->template_ident = $template_ident;
 		$this->contexts = $contexts;
