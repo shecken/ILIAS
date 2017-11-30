@@ -884,10 +884,6 @@ class ilObjCourseGUI extends ilContainerGUI
 			return false;
 		}
 
-		$this->object->update();
-		$file_obj->create();
-		$this->record_gui->writeEditForm();
-
 		// cat-tms-patch start
 		// provider (plugin)
 		if(ilPluginAdmin::isPluginActive('trainingprovider')) {
@@ -935,6 +931,12 @@ class ilObjCourseGUI extends ilContainerGUI
 			}
 		}
 		// cat-tms-patch end
+
+		$this->object->update();
+		$file_obj->create();
+		$this->record_gui->writeEditForm();
+
+
 
 		// Update ecs content
 		include_once 'Modules/Course/classes/class.ilECSCourseSettings.php';
