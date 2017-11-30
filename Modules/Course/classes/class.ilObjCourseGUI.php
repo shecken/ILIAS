@@ -1098,43 +1098,6 @@ class ilObjCourseGUI extends ilContainerGUI
 		{
 			$this->object->handleAutoFill();
 		}
-		$this->object->update();
-
-
-		include_once './Services/Object/classes/class.ilObjectServiceSettingsGUI.php';
-		ilObjectServiceSettingsGUI::updateServiceSettingsForm(
-			$this->object->getId(),
-			$form,
-			array(
-				ilObjectServiceSettingsGUI::CALENDAR_VISIBILITY,
-				ilObjectServiceSettingsGUI::USE_NEWS,
-				ilObjectServiceSettingsGUI::AUTO_RATING_NEW_OBJECTS,
-				ilObjectServiceSettingsGUI::TAG_CLOUD,
-				ilObjectServiceSettingsGUI::CUSTOM_METADATA,
-				ilObjectServiceSettingsGUI::BADGES
-			)
-		);
-
-		require_once('Services/Tracking/classes/class.ilChangeEvent.php');
-		global $ilUser;
-		ilChangeEvent::_recordWriteEvent($this->object->getId(), $ilUser->getId(), 'update');
-		ilChangeEvent::_catchupWriteEvents($this->object->getId(), $ilUser->getId());
-
-		// lp sync confirmation required
-		if($show_lp_sync_confirmation)
-		{
-			return $this->confirmLPSync();
-		}
-
-		// Update ecs export settings
-		include_once 'Modules/Course/classes/class.ilECSCourseSettings.php';
-		$ecs = new ilECSCourseSettings($this->object);
-		if(!$ecs->handleSettingsUpdate())
-		{
-			$form->setValuesByPost();
-			ilUtil::sendFailure($GLOBALS['DIC']->language()->txt('err_check_input'));
-			return $this->editObject($form);
-		}
 
 		// cat-tms-patch start
 
@@ -1184,6 +1147,43 @@ class ilObjCourseGUI extends ilContainerGUI
 
 		// cat-tms-patch end
 
+		$this->object->update();
+
+
+		include_once './Services/Object/classes/class.ilObjectServiceSettingsGUI.php';
+		ilObjectServiceSettingsGUI::updateServiceSettingsForm(
+			$this->object->getId(),
+			$form,
+			array(
+				ilObjectServiceSettingsGUI::CALENDAR_VISIBILITY,
+				ilObjectServiceSettingsGUI::USE_NEWS,
+				ilObjectServiceSettingsGUI::AUTO_RATING_NEW_OBJECTS,
+				ilObjectServiceSettingsGUI::TAG_CLOUD,
+				ilObjectServiceSettingsGUI::CUSTOM_METADATA,
+				ilObjectServiceSettingsGUI::BADGES
+			)
+		);
+
+		require_once('Services/Tracking/classes/class.ilChangeEvent.php');
+		global $ilUser;
+		ilChangeEvent::_recordWriteEvent($this->object->getId(), $ilUser->getId(), 'update');
+		ilChangeEvent::_catchupWriteEvents($this->object->getId(), $ilUser->getId());
+
+		// lp sync confirmation required
+		if($show_lp_sync_confirmation)
+		{
+			return $this->confirmLPSync();
+		}
+
+		// Update ecs export settings
+		include_once 'Modules/Course/classes/class.ilECSCourseSettings.php';
+		$ecs = new ilECSCourseSettings($this->object);
+		if(!$ecs->handleSettingsUpdate())
+		{
+			$form->setValuesByPost();
+			ilUtil::sendFailure($GLOBALS['DIC']->language()->txt('err_check_input'));
+			return $this->editObject($form);
+		}
 
 		return $this->afterUpdate();
 	}
