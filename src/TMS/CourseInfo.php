@@ -20,6 +20,7 @@ interface CourseInfo extends Component {
 	const CONTEXT_USER_CAN_CANCEL = 8;
 	const CONTEXT_USER_CAN_BOOK = 9;
 	const CONTEXT_TO_COURSE_BUTTON = 10;
+	const CONTEXT_COURSE_MEMBER_BUTTON = 11;
 
 	/**
 	 * Get a label for this step in the process.
