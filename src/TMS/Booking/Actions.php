@@ -20,6 +20,7 @@ interface Actions {
 	const EVENT_SUPERIOR_BOOKED_WAITING = 'superior_booked_user_on_waiting'; //B04
 	const EVENT_ADMIN_BOOKED_COURSE = 'admin_booked_user_on_course'; //B05
 	const EVENT_ADMIN_BOOKED_WAITING = 'admin_booked_user_on_waiting'; //B06
+
 	const EVENT_USER_FILLEDUP_FROM_WAITING = 'user_booked_on_course_by_waiting'; //B07
 
 	const EVENT_USER_CANCELED_COURSE = 'user_canceled_self_from_course'; //C01
