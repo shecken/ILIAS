@@ -60,6 +60,7 @@ class TMSMailClerk {
 	 */
 	public function process($mails, $event) {
 
+		$err = array();
 		$mail_from_address = $this->from->getMailAddress();
 		$mail_from_name = $this->from->getUserName();
 
@@ -89,9 +90,9 @@ class TMSMailClerk {
 
 			}
 
-			$err = '';
+
 			if(! $this->sender->Send()) {
-				$err = $this->sender->ErrorInfo;
+				$err[] = $this->sender->ErrorInfo;
 			};
 
 			$mail_to_usr_id = $recipient->getUserId();
@@ -112,9 +113,9 @@ class TMSMailClerk {
 				$mail_to_usr_id,
 				$mail_to_usr_login,
 				$crs_ref_id,
-				$subject,
-				$msg_plain,
-				$err
+				(string)$subject,
+				(string)$msg_plain,
+				implode(PHPEOL, $err)
 			);
 		}
 	}
