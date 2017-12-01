@@ -15964,6 +15964,7 @@ crs#:#crs_mail_context_invitation_info#:#Einladungsmail für die Mitglieder eine
 crs#:#crs_mail_context_automatic_title#:#Automatische Mail an Kurs-Mitglieder
 crs#:#crs_mail_context_automatic_info#:#Weitere, automatische Mails im Kontext des Kurses (Austritt, Absage, Storno, etc.)
 common#:#training_search#:#Trainingssuche
+tms#:#report_filter#:#Filter
 tms#:#header#:#Trainingssuche
 tms#:#available_slots#:#freie Plätze
 tms#:#target_groups#:#Zielgruppen
@@ -16010,3 +16011,6 @@ tms#:#s_city_desc#:#Ort: absteigend
 tms#:#show_all#:#Alle anzeigen
 tms#:#period#:#Zeitplan
 tms#:#time_suffix#:#Uhr
+tms#:#t_user#:#Ansicht: Mitarbeiter
+tms#:#t_course#:#Ansicht: Kurs
+tms#:#canceling_for#:#Stornierung für %s

@@ -23,6 +23,7 @@ class UnboundCourseProvider extends Base {
 	public function buildComponentsOf($component_type, Entity $entity) {
 		global $DIC;
 		$this->lng = $DIC["lng"];
+		$this->g_access = $DIC->access();
 		$this->lng->loadLanguageModule("tms");
 		$this->lng->loadLanguageModule("crs");
 		$this->user = $DIC->user();
@@ -39,6 +40,8 @@ class UnboundCourseProvider extends Base {
 			$ret = $this->getCourseInfoForTrainingProvider($ret, $entity, (int)$object->getId());
 			$ret = $this->getCourseInfoForImportantInformation($ret, $entity, $object);
 			$ret = $this->getCourseInfoForTutors($ret, $entity, $object);
+			$ret = $this->getCourseInfoForToCourseButton($ret, $entity, $object);
+			$ret = $this->getCourseInfoForCourseMemberButton($ret, $entity, $object);
 
 			return $ret;
 		}
@@ -445,6 +448,57 @@ class UnboundCourseProvider extends Base {
 	}
 
 	/**
+	 * Get a course infomation object to decide showing a to course button or not
+	 *
+	 * @param CourseInfo[]
+	 * @param Entity $entity
+	 * @param Object 	$object
+	 *
+	 * @return CourseInfo[]
+	 */
+	protected function getCourseInfoForToCourseButton(array $ret, Entity $entity, $object) {
+		$show_button = 0;
+		if($this->g_access->checkAccess("read", "", $object->getRefId())) {
+			$show_button = 1;
+		}
+
+		$ret[] = $this->createCourseInfoObject($entity
+			, ""
+			, $show_button
+			,1
+			, [CourseInfo::CONTEXT_TO_COURSE_BUTTON]
+		);
+
+		return $ret;
+	}
+
+	/**
+	 * Get a course infomation object to decide showing a course member button or not
+	 *
+	 * @param CourseInfo[]
+	 * @param Entity $entity
+	 * @param Object 	$object
+	 *
+	 * @return CourseInfo[]
+	 */
+	protected function getCourseInfoForCourseMemberButton(array $ret, Entity $entity, $object) {
+		$course_member_objects = $this->getAllChildrenOfByType($object->getRefId(), "xcmb");
+		$course_member_object = array_shift($course_member_objects);
+		$link = $course_member_object->getLinkToMemberView();
+
+		if($link !== null) {
+			$ret[] = $this->createCourseInfoObject($entity
+				, ""
+				, $link
+				,1
+				, [CourseInfo::CONTEXT_COURSE_MEMBER_BUTTON]
+			);
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * Create a course inforamtion object
 	 *
 	 * @param Entity 	$entity
@@ -465,4 +519,6 @@ class UnboundCourseProvider extends Base {
 					, $contexts
 				);
 	}
+
+
 }

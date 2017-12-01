@@ -93,6 +93,10 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 				continue;
 			}
 
+			if($this->isTemplate($row["ref_id"])) {
+				continue;
+			}
+
 			$crs = ilObjectFactory::getInstanceByRefId($row["ref_id"]);
 			$ret[] = array("crs" => $crs);
 		}
@@ -119,6 +123,18 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Check the course is an template
+	 *
+	 * @param int 	$ref_id
+	 *
+	 * @return bool
+	 */
+	protected function isTemplate($ref_id) {
+		$copy_settings = $this->getFirstChildOfByType($ref_id, "xcps");
+		return $copy_settings !== null;
 	}
 
 	/**
