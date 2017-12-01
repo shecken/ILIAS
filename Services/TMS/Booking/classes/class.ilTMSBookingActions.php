@@ -13,9 +13,6 @@ use ILIAS\TMS\Mailing;
  */
 class ilTMSBookingActions implements Booking\Actions {
 
-	public function __construct(Mailing\Actions $mailing) {
-		$this->mailing = $mailing;
-	}
 	/**
 	 * @inheritdoc
 	 */
@@ -24,9 +21,9 @@ class ilTMSBookingActions implements Booking\Actions {
 		assert('$course instanceof \ilObjCourse');
 		$user = ilObjectFactory::getInstanceByObjId($user_id);
 		assert('$user instanceof \ilObjUser');
-
 		return $this->maybeMakeCourseMember($course, $user);
 	}
+
 
 	/**
 	 * @inheritdoc
@@ -37,14 +34,22 @@ class ilTMSBookingActions implements Booking\Actions {
 		$course = ilObjectFactory::getInstanceByRefId($crs_ref_id);
 		if(ilCourseParticipants::_isParticipant($course->getRefId(), $user_id)) {
 			$course->getMemberObject()->delete($user_id);
-			$this->mailing->sendCourseMail(Mailing\Actions::CANCELED_FROM_COURSE, $course->getRefId(), $user_id);
+			$event = self::EVENT_USER_CANCELED_COURSE;
+			if(! $this->isCurrentUser((int)$user_id)) {
+				$event = self::EVENT_SUPERIOR_CANCELED_COURSE;
+			}
+			$this->fireBookingEvent($event, (int)$course->getRefId(), (int)$user_id);
 			return Booking\Actions::STATE_REMOVED_FROM_COURSE;
 		}
 
 		$crs_id = $course->getId();
 		if(ilWaitingList::_isOnList($user_id, $crs_id)) {
 			ilWaitingList::deleteUserEntry($user_id, $crs_id);
-			$this->mailing->sendCourseMail(Mailing\Actions::CANCELED_FROM_WAITINGLIST, $course->getRefId(), $user_id);
+			$event = self::EVENT_USER_CANCELED_WAITING;
+			if(! $this->isCurrentUser((int)$user_id)) {
+				$event = self::EVENT_SUPERIOR_CANCELED_WAITING;
+			}
+			$this->fireBookingEvent($event, (int)$course->getRefId(), (int)$user_id);
 			return Booking\Actions::STATE_REMOVED_FROM_WAITINGLIST;
 		}
 
@@ -61,6 +66,7 @@ class ilTMSBookingActions implements Booking\Actions {
 	 * @return	string
 	 */
 	protected function maybeMakeCourseMember(\ilObjCourse $course, \ilObjUser $user) {
+
 		require_once("Modules/Course/classes/class.ilCourseParticipant.php");
 		$participant = \ilCourseParticipant::_getInstancebyObjId($course->getId(), $user->getId());
 		if ($participant->isMember()) {
@@ -80,13 +86,21 @@ class ilTMSBookingActions implements Booking\Actions {
 
 		if($this->maybeBookAsMember((int)$course->getRefId(), $booking_modality)) {
 			$participant->add($user->getId(), IL_CRS_MEMBER);
-			$this->mailing->sendCourseMail(Mailing\Actions::BOOKED_ON_COURSE, $course->getRefId(), $user->getId());
+			$event = self::EVENT_USER_BOOKED_COURSE;
+			if(! $this->isCurrentUser((int)$user->getId())) {
+				$event = self::EVENT_SUPERIOR_BOOKED_COURSE;
+			}
+			$this->fireBookingEvent($event, (int)$course->getRefId(), (int)$user->getId());
 			return Booking\Actions::STATE_BOOKED;
 		}
 
 		if($this->maybeAddOnWaitingList($course, $booking_modality)) {
 			$course->waiting_list_obj->addToList((int)$user->getId());
-			$this->mailing->sendCourseMail(Mailing\Actions::BOOKED_ON_WAITINGLIST, $course->getRefId(), $user->getId());
+			$event = self::EVENT_USER_BOOKED_WAITING;
+			if(! $this->isCurrentUser((int)$user->getId())) {
+				$event = self::EVENT_SUPERIOR_BOOKED_WAITING;
+			}
+			$this->fireBookingEvent($event, (int)$course->getRefId(), (int)$user->getId());
 			return Booking\Actions::STATE_WAITING_LIST;
 		}
 
@@ -163,6 +177,43 @@ class ilTMSBookingActions implements Booking\Actions {
 		}
 		return null;
 	}
+
+
+	/**
+	 * raises an event with course refId and user id as params.
+	 * @param string 	$event
+	 * @param int 	$crs_ref
+	 * @param int 	$usr_id
+	 * @return void
+	 */
+	private function fireBookingEvent($event, $crs_ref, $usr_id) {
+		assert('is_string($event)');
+		assert('is_int($crs_ref)');
+		assert('is_int($usr_id)');
+
+		global $ilAppEventHandler;
+		$ilAppEventHandler->raise(
+			'Modules/Course',
+			$event,
+			array(
+				 'crs_ref_id' => $crs_ref,
+				 'usr_id' => $usr_id
+			 )
+		 );
+	}
+
+	/**
+	 * Is the user with id $user_id the currently logged in user?
+	 * If not, it is save to assume (in this context) that the
+	 * current user is a superior of the targeted user.
+	 * @param int $usr_id
+	 * @return bool
+	 */
+	private function isCurrentUser($user_id) {
+		global $DIC;
+		return ((int)$DIC->user()->getId() === $user_id);
+	}
+
 }
 
 /**

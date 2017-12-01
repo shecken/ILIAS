@@ -18431,3 +18431,30 @@ while($res = $db->fetchAssoc($query)) {
 }
 
 ?>
+<#5087>
+<?php
+require_once("Services/TMS/Mailing/classes/class.ilTMSMailingLogsDB.php");
+global $DIC;
+$ilDB = $DIC->database();
+$db = new ilTMSMailingLogsDB($ilDB);
+$db->createTable();
+?>
+<#5088>
+<?php
+require_once("Services/TMS/Mailing/classes/class.ilTMSMailingLogsDB.php");
+global $DIC;
+$ilDB = $DIC->database();
+$db = new ilTMSMailingLogsDB($ilDB);
+$db->createSequence();
+?>
+<#5089>
+<?php
+require_once("Services/TMS/Mailing/classes/class.ilTMSMailingLogsDB.php");
+global $DIC;
+$ilDB = $DIC->database();
+$db = new ilTMSMailingLogsDB($ilDB);
+$db->createPrimaryKey();
+?>
+
+
+

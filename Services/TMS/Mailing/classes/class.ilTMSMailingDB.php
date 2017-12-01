@@ -21,9 +21,9 @@ class ilTMSMailingDB implements Mailing\MailingDB {
 	 *
 	 * @return int
 	 */
-	public function getTemplateIdAndContextByTitle($title) {
+	public function getTemplateIdByTitle($title) {
 		assert('is_string($title)');
-		$query = "SELECT tpl_id, context".PHP_EOL
+		$query = "SELECT tpl_id".PHP_EOL
 				." FROM ".self::TABLE_NAME.PHP_EOL
 				." WHERE title LIKE ".$this->getDB()->quote($title."%", "text");
 
@@ -34,8 +34,37 @@ class ilTMSMailingDB implements Mailing\MailingDB {
 
 		$row = $this->getDB()->fetchAssoc($res);
 
-		return array((int)$row["tpl_id"], $row["context"]);
+		return (int)$row["tpl_id"];
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getTemplateDataByTitle($title) {
+		assert('is_string($title)');
+
+		$query = "SELECT tpl_id, title, context, lang, m_subject, m_message".PHP_EOL
+				." FROM ".self::TABLE_NAME.PHP_EOL
+				." WHERE title LIKE ".$this->getDB()->quote($title."%", "text");
+
+		$res = $this->getDB()->query($query);
+		if($this->getDB()->numRows($res) == 0) {
+			return null;
+		}
+
+		$row = $this->getDB()->fetchAssoc($res);
+
+		return array(
+			'id' => $row["tpl_id"],
+			'title' => $row["title"],
+			'context' => $row["context"],
+			'lang' => $row["lang"],
+			'subject' => $row["m_subject"],
+			'message' => $row["m_message"]
+		);
+
+	}
+
 
 	/**
 	 * Get the db handler

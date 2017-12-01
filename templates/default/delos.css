@@ -7172,6 +7172,11 @@ hr.il-divider-with-label {
 .il-viewcontrol-sortation .dropdown-toggle .caret:before {
   content: "\21f5";
 }
+
+.il-viewcontrol-pagination {
+  display: block !important;
+}
+
 ul.breadcrumb {
   margin: 0;
   font-weight: 600;
