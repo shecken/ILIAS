@@ -106,6 +106,20 @@ class PredicateFactory {
 	}
 
 	/**
+	 * Construct a list from array of str values.
+	 *
+	 * @param	string[]	$strs
+	 * @return	ValueList
+	 */
+	public function list_string_by_array($strs) {
+		$val_objs = array();
+		foreach ($strs as $str) {
+			$val_objs[] = $this->str($str);
+		}
+		return new Predicates\ValueList($val_objs);
+	}
+
+	/**
 	 * Construct a list from array of int values.
 	 *
 	 * @param	Field[]	$fields

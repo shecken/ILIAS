@@ -36,6 +36,17 @@ class DerivedTable implements AbstractTable, Graphs\AbstractNode {
 		}
 		$this->constrain = $constraint;
 	}
+	/**
+	 * Insert constraint directly into the subspace.
+	 * This should hopefully esure better performance, since data will
+	 * be filtered right where it is touched for the first time.
+	 *
+	 * @param	Filters\Predicates\Predicate	$constraint
+	 * @return	void
+	 */
+	public function addConstraintSub(Filters\Predicates\Predicate $constraint) {
+		$this->space->addFilter($constraint);
+	}
 
 	/**
 	 * @inheritdoc
