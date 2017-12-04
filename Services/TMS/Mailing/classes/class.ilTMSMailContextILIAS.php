@@ -16,7 +16,7 @@ class ilTMSMailContextILIAS implements Mailing\MailContext {
 	/**
 	 * @inheritdoc
 	 */
-	public function valueFor($placeholder_id) {
+	public function valueFor($placeholder_id, $contexts = array()) {
 		switch ($placeholder_id) {
 			case 'ILIAS_URL':
 				return ILIAS_HTTP_PATH . '/login.php?client_id=' . CLIENT_ID;
