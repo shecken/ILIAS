@@ -62,9 +62,10 @@ class ilSessionAppEventListener {
 
 			if($crs_start)
 			{
-				$crs_start->increment(ilDateTime::DAY, --$offset);
+				$clac_crs_start = clone $crs_start;
+				$clac_crs_start->increment(ilDateTime::DAY, --$offset);
 
-				$date 		= $crs_start->get(IL_CAL_FKT_DATE, "Y-m-d");
+				$date 		= $clac_crs_start->get(IL_CAL_FKT_DATE, "Y-m-d");
 				$start_date = self::createDateTime($date, $start_time);
 				$end_date 	= self::createDateTime($date, $end_time);
 			}
