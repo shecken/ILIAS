@@ -18,21 +18,20 @@ class ilTMSMailContextEnte implements Mailing\MailContext {
 	public function __construct($entity, $owner) {
 		$this->entity = $entity;
 		$this->owner = $owner;
-		$this->txt = $txt;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function placeholderIds() {
-		return self::$PLACEHOLDERS;
+		return array();
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function valueFor($placeholder_id) {
-		return 'RESOLVED' . $placeholder_id;
+	public function valueFor($placeholder_id, $contexts = array()) {
+		return null;
 	}
 
 

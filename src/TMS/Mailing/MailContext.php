@@ -17,11 +17,14 @@ interface MailContext {
 
 	/**
 	 * Get a value for a placeholder.
+	 * Some resolvements require more than one context - all contexts of
+	 * content-builder are relayed to valueFor.
 	 *
 	 * @param string 	$placeholder_id
+	 * @param MailContext[] 	$contexts
 	 * @return string|null
 	 */
-	public function valueFor($placeholder_id);
+	public function valueFor($placeholder_id, $contexts = array());
 
 	/**
 	 * Returns the list of placeholder_ids this context provides.
