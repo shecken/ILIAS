@@ -101,6 +101,12 @@ class ilAdminSearchGUI {
 		}
 		else {
 			$search_opts = array();
+			$year = date('Y');
+			$search_opts["period"] = array(
+				"start" => time(),
+				"end" => strtotime((date('Y')+1).date('-m-d'))
+				);
+
 		}
 
 		foreach ($search_opts as $key => $value) {
