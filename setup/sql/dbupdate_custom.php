@@ -6472,3 +6472,33 @@ $ilDB->manipulate($q);
 global $ilDB;
 $ilDB->dropTableColumn("dct_building_block", "dbv_topic");
 ?>
+
+<#275>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_date', array('obj_id'), 'doi');
+?>
+
+<#276>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_date', array('field_id'), 'dfi');
+?>
+
+<#277>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_int', array('obj_id'), 'ioi');
+?>
+
+<#278>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_int', array('field_id'), 'ifi');
+?>
+
+<#279>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_text', array('field_id'), 'tfi');
+?>
