@@ -488,7 +488,6 @@ class UnboundCourseProvider extends Base {
 			return $ret;
 		}
 
-		$ret = array();
 		$course_member_object = array_shift($course_member_objects);
 
 		if($course_member_object !== null) {
