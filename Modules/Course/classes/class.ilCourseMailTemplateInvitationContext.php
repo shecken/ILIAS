@@ -16,6 +16,8 @@ include_once './Services/Mail/classes/class.ilMailTemplateContext.php';
  */
 class ilCourseMailTemplateInvitationContext extends ilMailTemplateContext
 {
+
+	use ilHandlerObjectHelper;
 	const ID = 'crs_context_invitation';
 	const REPOSITORY_REF_ID = 1;
 
