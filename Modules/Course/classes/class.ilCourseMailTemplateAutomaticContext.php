@@ -96,6 +96,14 @@ class ilCourseMailTemplateAutomaticContext extends ilMailTemplateContext
 			}
 		}
 
+		foreach ($this->getTMSStandardPlaceholderIds() as $context => $ids) {
+			foreach ($ids as $id) {
+				$placeholders[$context .$id] = array(
+						'placeholder' => $id,
+						'label'	=> $context
+					);
+			}
+		}
 
 		return $placeholders;
 	}
@@ -164,6 +172,16 @@ class ilCourseMailTemplateAutomaticContext extends ilMailTemplateContext
 		return $this->getComponentsOfType(ILIAS\TMS\Mailing\MailContext::class);
 	}
 
+	/**
+	 * Get placeholderids of TMS-Standard contexts
+	 *
+	 * @return array<string, string[]>
+	 */
+	protected function getTMSStandardPlaceholderIds() {
+		require_once('./Services/TMS/Mailing/classes/ilTMSMailing.php');
+		$tms_mailing = new \ilTMSMailing();
+		return $tms_mailing->getPlaceholderIdsOfStandardContexts();
+	}
 
 	/**
 	 * @inheritdoc

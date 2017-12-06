@@ -79,4 +79,21 @@ class ilTMSMailing implements Mailing\Actions {
 		return $clerk;
 	}
 
+
+	public function getPlaceholderIdsOfStandardContexts() {
+		require_once('class.ilTMSMailContextILIAS.php');
+		require_once('class.ilTMSMailContextUser.php');
+		require_once('class.ilTMSMailContextCourse.php');
+
+		$context_ilias = new \ilTMSMailContextILIAS();
+		$context_user = new \ilTMSMailContextUser(0);
+		$context_course = new \ilTMSMailContextCourse(0);
+
+		return array(
+			'ilTMSMailContextIlias' => $context_ilias->placeholderIds()
+			,'ilTMSMailContextUser' => $context_user->placeholderIds()
+			,'ilTMSMailContextCourse' => $context_course->placeholderIds()
+		);
+	}
+
 }
