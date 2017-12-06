@@ -485,7 +485,7 @@ class UnboundCourseProvider extends Base {
 		$course_member_objects = $this->getAllChildrenOfByType($object->getRefId(), "xcmb");
 
 		if(count($course_member_objects) === 0) {
-			return null;
+			return $ret;
 		}
 
 		$ret = array();
