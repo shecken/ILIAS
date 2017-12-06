@@ -85,6 +85,16 @@ class ilCourseMailTemplateInvitationContext extends ilMailTemplateContext
 				);
 		}
 
+		foreach ($this->getGloballyProvidedMailContexts() as $context) {
+			foreach ($context->placeholderIds() as $placeholder_id) {
+				$id = get_class($context) .$placeholder_id;
+				$placeholders[$id] = array(
+					'placeholder' => $placeholder_id,
+					'label'	=> get_class($context)
+				);
+			}
+		}
+
 		return $placeholders;
 	}
 
@@ -140,6 +150,15 @@ class ilCourseMailTemplateInvitationContext extends ilMailTemplateContext
 	 */
 	protected function getComponentPlaceholdersValues() {
 		return $this->getComponentsOfType(\ILIAS\TMS\Mailing\PlaceholderValue::class);
+	}
+
+	/**
+	 * Get all mailing contexts from Ente
+	 *
+	 * @return MailContext[]
+	 */
+	protected function getGloballyProvidedMailContexts() {
+		return $this->getComponentsOfType(ILIAS\TMS\Mailing\MailContext::class);
 	}
 
 	/**
