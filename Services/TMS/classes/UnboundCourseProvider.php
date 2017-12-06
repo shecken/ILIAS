@@ -483,6 +483,12 @@ class UnboundCourseProvider extends Base {
 	 */
 	protected function getCourseInfoForCourseMemberButton(array $ret, Entity $entity, $object) {
 		$course_member_objects = $this->getAllChildrenOfByType($object->getRefId(), "xcmb");
+
+		if(count($course_member_objects) === 0) {
+			return null;
+		}
+
+		$ret = array();
 		$course_member_object = array_shift($course_member_objects);
 
 		if($course_member_object !== null) {

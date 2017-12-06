@@ -30,7 +30,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	/**
 	 * @inheritdoc
 	 */
-	public function valueFor($placeholder_id) {
+	public function valueFor($placeholder_id, $contexts = array()) {
 		if(array_key_exists($placeholder_id, $this::$PLACEHOLDER)){
 			$func = $this::$PLACEHOLDER[$placeholder_id];
 			return $this->$func();
