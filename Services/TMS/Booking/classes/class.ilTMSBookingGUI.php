@@ -313,6 +313,10 @@ class ilTMSBookingGUI  extends Booking\Player {
 			}
 
 			$booked_template_id = $this->getTemplateIdOf((int)$course->getId());
+			if(is_null($template_id) || is_null($booked_template_id)) {
+				return false;
+			}
+
 			if ($booked_template_id != $template_id) {
 				return false;
 			}
