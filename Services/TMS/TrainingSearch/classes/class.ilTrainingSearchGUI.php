@@ -160,7 +160,7 @@ class ilTrainingSearchGUI {
 	 */
 	protected function showTrainings(array $bookable_trainings) {
 		require_once("Services/TMS/TrainingSearch/classes/class.ilTrainingSearchTableGUI.php");
-		$table = new ilTrainingSearchTableGUI($this, $this->helper);
+		$table = new ilTrainingSearchTableGUI($this, $this->helper, $this->search_user_id);
 		$table->setData($bookable_trainings);
 
 		$modal = $this->prepareModal($button1);

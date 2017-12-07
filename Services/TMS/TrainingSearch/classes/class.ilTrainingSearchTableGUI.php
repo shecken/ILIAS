@@ -23,12 +23,13 @@ class ilTrainingSearchTableGUI {
 	 */
 	protected $g_lng;
 
-	public function __construct(ilTrainingSearchGUI $parent, Helper $helper) {
+	public function __construct(ilTrainingSearchGUI $parent, Helper $helper, $search_user_id) {
 		$this->parent = $parent;
 
 		global $DIC;
 		$this->g_lng = $DIC->language();
 		$this->g_ctrl = $DIC->ctrl();
+		$this->search_user_id = $search_user_id;
 
 		$this->helper = $helper;
 
@@ -76,7 +77,7 @@ class ilTrainingSearchTableGUI {
 					->withImportantFields($record->getImportantFields())
 					->withContent($ui_factory->listing()->descriptive($record->getDetailFields()))
 					->withFurtherFields($record->getFurtherFields())
-					->withButtons($record->getBookButton($this->g_lng->txt("book_course"), $this->parent->getBookingLink($record))
+					->withButtons($record->getBookButton($this->g_lng->txt("book_course"), $this->parent->getBookingLink($record), $this->search_user_id)
 					);
 			}
 		);
