@@ -81,9 +81,9 @@ class ilTMSMailing implements Mailing\Actions {
 
 
 	public function getPlaceholderIdsOfStandardContexts() {
-		require_once('class.ilTMSMailContextILIAS.php');
-		require_once('class.ilTMSMailContextUser.php');
-		require_once('class.ilTMSMailContextCourse.php');
+		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextILIAS.php');
+		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextUser.php');
+		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextCourse.php');
 
 		$context_ilias = new \ilTMSMailContextILIAS();
 		$context_user = new \ilTMSMailContextUser(0);
