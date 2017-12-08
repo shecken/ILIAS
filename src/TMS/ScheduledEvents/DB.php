@@ -19,11 +19,12 @@ namespace ILIAS\TMS\ScheduledEvents;
  * The Component (or any other listener) will carry out the action.
  */
 
-interface ScheduleDB {
+interface DB {
 
 	/**
 	 * Create a new scheduled event.
 	 *
+	 * @param int 	$issuer_ref
 	 * @param DateTime 	$due
 	 * @param string 	$component 	e.g. "Modules/Course"
 	 * @param string 	$event 		e.g. "reached_end_of_booking_period"
@@ -31,7 +32,7 @@ interface ScheduleDB {
 	 *
 	 * @return \ILIAS\TMS\ScheduledEvents\Event
 	 */
-	public function create($due, $component, $event, $params = array());
+	public function create($issuer_ref, $due, $component, $event, $params = array());
 
 	/**
 	 * Updates a scheduled event.
@@ -57,6 +58,14 @@ interface ScheduleDB {
 	public function getAllDue();
 
 	/**
+	 * Get all events from this issuer
+	 *
+	 * @param int 	$ref_id
+	 * @return \ILIAS\TMS\ScheduledEvents\Event[]
+	 */
+	public function getAllFromIssuer($ref_id);
+
+	/**
 	 * Declare these events as accouted for (i.e.:they were raised)
 	 * Most likely: delete them from DB.
 	 *
@@ -64,5 +73,13 @@ interface ScheduleDB {
 	 * @return void
 	 */
 	public function setAccountedFor($events);
+
+	/**
+	 * Delete those events.
+	 *
+	 * @param \ILIAS\TMS\ScheduledEvents\Event[] $events
+	 * @return void
+	 */
+	public function delete($events);
 
 }

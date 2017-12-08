@@ -16,6 +16,11 @@ class Event {
 	protected $id;
 
 	/**
+	 * @var int 	ref_id of issuing object
+	 */
+	protected $issuer;
+
+	/**
 	 * @var DateTime
 	 */
 	protected $due;
@@ -37,17 +42,19 @@ class Event {
 
 	/**
 	 * @param int 	$id
+	 * @param int 	$issuer_ref
 	 * @param DateTime 	$due
 	 * @param string 	$component 	e.g. "Modules/Course"
 	 * @param string 	$event 		e.g. "reached_end_of_booking_period"
 	 * @param array<string,string> 	e.g. ['crs_ref_id' => '123', 'discard_waiting' => 'true']
 	 */
-	public function __construct($id, $due, $component, $event, $params) {
+	public function __construct($id, $issuer_ref, $due, $component, $event, $params) {
 		assert('is_int($id)');
 		assert('is_a($due, "DateTime")');
 		assert('is_string($component)');
 		assert('is_string($event)');
 		$this->due = $due;
+		$this->issuer = $issuer_ref;
 		$this->component = $component;
 		$this->event = $event;
 		$this->params = $params;
@@ -58,6 +65,13 @@ class Event {
 	 */
 	public function getId() {
 		return $this->id;
+	}
+
+	/*
+	 * @return int
+	 */
+	public function getIssuerRef() {
+		return $this->issuer;
 	}
 
 	/*
