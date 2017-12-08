@@ -50,11 +50,13 @@ class Event {
 	 */
 	public function __construct($id, $issuer_ref, $due, $component, $event, $params) {
 		assert('is_int($id)');
+		assert('is_int($issuer_ref)');
 		assert('is_a($due, "DateTime")');
 		assert('is_string($component)');
 		assert('is_string($event)');
-		$this->due = $due;
+		$this->id = $id;
 		$this->issuer = $issuer_ref;
+		$this->due = $due;
 		$this->component = $component;
 		$this->event = $event;
 		$this->params = $params;

@@ -61,9 +61,11 @@ interface DB {
 	 * Get all events from this issuer
 	 *
 	 * @param int 	$ref_id
+	 * @param string|null 	$component
+	 * @param string|null 	$event
 	 * @return \ILIAS\TMS\ScheduledEvents\Event[]
 	 */
-	public function getAllFromIssuer($ref_id);
+	public function getAllFromIssuer($ref_id, $component=null, $event=null);
 
 	/**
 	 * Declare these events as accouted for (i.e.:they were raised)
