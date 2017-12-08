@@ -40,7 +40,7 @@ interface ScheduleDB {
 	 *
 	 * @return void
 	 */
-	public function update($event);
+	public function update(Event $event);
 
 	/**
 	 * Get all events.
