@@ -1092,8 +1092,8 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 		global $DIC;
 		$db = $DIC["ilDB"];
 		$db->insert("crs_copy_mappings",
-			[ "obj_id" => ["integer", $this->getId()]
-			, "source_id" => ["integer", $new_course->getId()]
+			[ "obj_id" => ["integer", $new_course->getId()]
+			, "source_id" => ["integer", $this->getId()]
 			]);
 	}
 
