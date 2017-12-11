@@ -3,6 +3,8 @@ use ILIAS\TMS\TableRelations as TR;
 use ILIAS\TMS\Filter as Filters;
 use ILIAS\TMS\TableRelations\TestFixtures\SqlQueryInterpreterWrap as SqlQueryInterpreterWrap;
 
+require_once 'Services/Database/interfaces/interface.ilDBInterface.php';
+require_once 'Services/Database/classes/class.ilDBConstants.php';
 class SqlQueryInterpreterTest extends PHPUnit_Framework_TestCase {
 	public function setUp() {
 
@@ -10,7 +12,13 @@ class SqlQueryInterpreterTest extends PHPUnit_Framework_TestCase {
 		$this->gf = new TR\GraphFactory();
 		$this->pf = new Filters\PredicateFactory();
 		$this->tf = new TR\TableFactory($this->pf, $this->gf);
-		$this->i = new  SqlQueryInterpreterWrap();
+		$db = $this->getMockBuilder('ilDBInterface')
+					->disableOriginalConstructor()
+					->disableOriginalClone()
+					->disableArgumentCloning()
+					->disallowMockingUnknownTypes()
+					->getMock();
+		$this->i = new  SqlQueryInterpreterWrap(new Filters\SqlPredicateInterpreter($db),$this->pf,$db);
 	}
 
 	protected function field($id) {
@@ -46,6 +54,9 @@ class SqlQueryInterpreterTest extends PHPUnit_Framework_TestCase {
 				$this->tf->sum('sum',
 					$this->tf->quot('quot',$this->tf->min('min',$table->field('f1')),
 						$this->tf->max('max',$table->field('f2'))))));
+
+		$this->assertRegExp('#IF\\(\\s*`a`\\.`f1`\\s*=\\s*`a`\\.`f2`\s*,\\s*a\\.f1\\s*,\\s*a\\.f2\\s*\\)#'
+				,$i->_interpretField($this->tf->ifThenElse('foo',$f1->EQ($f2),$f1,$f2)));
 	}
 
 	public function test_table() {
