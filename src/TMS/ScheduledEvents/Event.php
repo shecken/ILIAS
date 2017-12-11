@@ -48,10 +48,9 @@ class Event {
 	 * @param string 	$event 		e.g. "reached_end_of_booking_period"
 	 * @param array<string,string> 	e.g. ['crs_ref_id' => '123', 'discard_waiting' => 'true']
 	 */
-	public function __construct($id, $issuer_ref, $due, $component, $event, $params) {
+	public function __construct($id, $issuer_ref, \DateTime $due, $component, $event, $params) {
 		assert('is_int($id)');
 		assert('is_int($issuer_ref)');
-		assert('is_a($due, "DateTime")');
 		assert('is_string($component)');
 		assert('is_string($event)');
 		$this->id = $id;

@@ -28,11 +28,11 @@ interface DB {
 	 * @param DateTime 	$due
 	 * @param string 	$component 	e.g. "Modules/Course"
 	 * @param string 	$event 		e.g. "reached_end_of_booking_period"
-	 * @param array<string,mixed> 	e.g. ['crs_ref_id' => 123, 'discard_waiting' => true]
+	 * @param array<string,string> 	e.g. ['crs_ref_id' => '123', 'discard_waiting' => 'true']
 	 *
 	 * @return \ILIAS\TMS\ScheduledEvents\Event
 	 */
-	public function create($issuer_ref, $due, $component, $event, $params = array());
+	public function create($issuer_ref, \DateTime $due, $component, $event, $params = array());
 
 	/**
 	 * Updates a scheduled event.
@@ -68,7 +68,7 @@ interface DB {
 	public function getAllFromIssuer($ref_id, $component=null, $event=null);
 
 	/**
-	 * Declare these events as accouted for (i.e.:they were raised)
+	 * Declare these events as accounted for (i.e.:they were raised)
 	 * Most likely: delete them from DB.
 	 *
 	 * @param \ILIAS\TMS\ScheduledEvents\Event[] $events
