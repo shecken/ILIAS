@@ -252,7 +252,7 @@ class TableSpace {
 	 * @param	string	$direction
 	 */
 	public function orderBy(array $field_ids, $direction ) {
-		foreach($order_by as $requested_id) {
+		foreach($field_ids as $requested_id) {
 			if(!isset($this->requested_fields[$requested_id])) {
 				throw new TableException('order field '.$requested_id.' unknown');
 			}
