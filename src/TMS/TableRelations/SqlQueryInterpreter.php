@@ -79,10 +79,12 @@ class SqlQueryInterpreter {
 			} else {
 				$inbetween = ','.$this->gIldb->quote($inbetween,'text').',';
 			}
-			return ' CONCAT('.$this->interpretField($field->fieldOne()).$inbetween.$this->interpretField($field->fieldTwo()).')'; 
+			return ' CONCAT('.$this->interpretField($field->fieldOne()).$inbetween.$this->interpretField($field->fieldTwo()).')';
 		} elseif( $field instanceof Derived\DateFormat ) {
 			return ' DATE_FORMAT('.$this->interpretField($field->argument()).','.$this->gIldb->quote($field->format(),'text').')';
-		}else {
+		} elseif( $field instanceof Derived\IfThenElse ) {
+			return ' IF('.$this->interpretPredicate($field->condition()).','.$this->interpretField($field->met()).','.$this->interpretField($field->notMet()).')';
+		} else {
 			throw new TableRelationsException("Unknown field type".$field->name());
 		}
 	}
