@@ -12,9 +12,7 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 		'MAIL_SALUTATION' => 'salutation',
 		'FIRST_NAME' => 'firstName',
 		'LAST_NAME' => 'lastName',
-		'LOGIN' => 'login',
-		'ILIAS_URL' => 'iliasUrl',
-		'CLIENT_NAME' => 'instanceName'
+		'LOGIN' => 'login'
 	);
 
 	/**
@@ -35,7 +33,7 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	/**
 	 * @inheritdoc
 	 */
-	public function valueFor($placeholder_id) {
+	public function valueFor($placeholder_id, $contexts = array()) {
 		if(array_key_exists($placeholder_id, $this::$PLACEHOLDER)){
 			$func = $this::$PLACEHOLDER[$placeholder_id];
 			return $this->$func();
@@ -48,6 +46,13 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	 */
 	public function placeholderIds() {
 		return array_keys($this::$PLACEHOLDER);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getUsrId() {
+		return $this->usr_id;
 	}
 
 	/**
@@ -94,21 +99,5 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	 */
 	private function login() {
 		return $this->getUser()->getLogin();
-	}
-
-	/**
-	 * @return string
-	 */
-	private function iliasUrl() {
-		return ILIAS_HTTP_PATH . '/login.php?client_id=' . CLIENT_ID;
-		var_dump('ILIAS_HTTP_PATH');
-		var_dump(ILIAS_HTTP_PATH);die();
-	}
-
-	/**
-	 * @return string
-	 */
-	private function instanceName() {
-		return CLIENT_NAME;
 	}
 }

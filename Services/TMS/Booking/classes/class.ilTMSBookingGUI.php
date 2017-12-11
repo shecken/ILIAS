@@ -53,6 +53,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 		$this->g_ctrl = $DIC->ctrl();
 		$this->g_user = $DIC->user();
 		$this->g_lng = $DIC->language();
+		$this->g_db = $DIC->database();
 
 		$this->g_lng->loadLanguageModule('tms');
 
@@ -76,6 +77,10 @@ class ilTMSBookingGUI  extends Booking\Player {
 
 		if((int)$this->g_user->getId() !== $usr_id && !$this->checkIsSuperiorEmployeeBelowCurrent($usr_id)) {
 			$this->redirectToPreviousLocation(array($this->g_lng->txt("no_permissions_to_book")), false);
+		}
+
+		if($this->duplicateCourseBooked($crs_ref_id, $usr_id)) {
+			$this->redirectToPreviousLocation(array($this->g_lng->txt("duplicate_course_booked")), false);
 		}
 
 		global $DIC;
@@ -188,6 +193,165 @@ class ilTMSBookingGUI  extends Booking\Player {
 	protected function checkIsSuperiorEmployeeBelowCurrent($usr_id) {
 		$members_below = $this->getUserWhereCurrentCanBookFor($this->g_user->getId());
 		return array_key_exists($usr_id, $members_below);
+	}
+
+	/**
+	 * Checks user has booked trainings from same template
+	 *
+	 * @param int 	$crs_ref_id
+	 * @param int 	$usr_id
+	 *
+	 * @return bool
+	 */
+	protected function duplicateCourseBooked($crs_ref_id, $usr_id) {
+		$course = \ilObjectFactory::getInstanceByRefId($crs_ref_id);
+		$template_id = $this->getTemplateIdOf($obj_id);
+
+		$booked_courses = $this->getUnfinishedDuplicateBookedCoursesOfUser($course, $usr_id);
+		$waiting = $this->getUnfnishedWaitingListCoursesOfUser($course, $usr_id);
+		$courses = array_merge($booked_courses, $waiting);
+
+		return count($courses) > 0;
+	}
+
+	/**
+	 * Checks the user a parelle course to this he wants to book
+	 *
+	 * @param \ilObjCourse 	$course
+	 * @param int 	$usr_id
+	 * @return \ilObjCourse[]
+	 */
+	protected function getUnfinishedDuplicateBookedCoursesOfUser(\ilObjCourse $course, $usr_id)
+	{
+		assert('is_int($usr_id)');
+		$start_date = $course->getCourseStart();
+		if ($start_date === null) {
+			return array();
+		}
+
+		$booked = $this->getUserBookedCourses($usr_id);
+		return $this->filterDuplicateCourses((int)$course->getId(), $booked, $usr_id);
+	}
+
+	/**
+	 * Checks the user a parelle course to this he wants to book
+	 *
+	 * @param \ilObjCourse 	$course
+	 * @param int 	$usr_id
+	 * @return \ilObjCourse[]
+	 */
+	protected function getUnfnishedWaitingListCoursesOfUser(\ilObjCourse $course, $usr_id)
+	{
+		assert('is_int($usr_id)');
+		$start_date = $course->getCourseStart();
+		if ($start_date === null) {
+			return array();
+		}
+
+		$waitinglist_courses = $this->getUserWaitinglistCourses($usr_id);
+		return $this->filterDuplicateCourses((int)$course->getId(), $waitinglist_courses, $usr_id);
+	}
+
+	/**
+	 * Get courses where user is booked
+	 *
+	 * @param int	$usr_id
+	 *
+	 * @return \ilObjCourse[]
+	 */
+	protected function getUserBookedCourses($usr_id)
+	{
+		$ret = array();
+		require_once("Services/Membership/classes/class.ilParticipants.php");
+		foreach (\ilParticipants::_getMembershipByType($usr_id, "crs", true) as $crs_id) {
+			$ref_id = array_shift(\ilObject::_getAllReferences($crs_id));
+			$ret[] = \ilObjectFactory::getInstanceByRefId($ref_id);
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Get courses where user is on waiting list
+	 *
+	 * @param int	$usr_id
+	 *
+	 * @return \ilObjCourse[]
+	 */
+	protected function getUserWaitinglistCourses($usr_id)
+	{
+		$ret = array();
+		require_once("Services/Membership/classes/class.ilWaitingList.php");
+		foreach (\ilWaitingList::getIdsWhereUserIsOnList($usr_id) as $crs_id) {
+			$ref_id = array_shift(\ilObject::_getAllReferences($crs_id));
+			$ret[] = \ilObjectFactory::getInstanceByRefId($ref_id);
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Filter courses with same template and not finished
+	 *
+	 * @param int 	$crs_id
+	 * @param \ilObjCourse[] 	$courses
+	 * @param int 	$usr_id
+	 *
+	 * @return \ilObjCourse[]
+	 */
+	protected function filterDuplicateCourses($crs_id, array $courses, $usr_id) {
+		$template_id = $this->getTemplateIdOf($crs_id);
+
+		return array_filter($courses, function ($course) use ($template_id, $usr_id) {
+			$end_date = $course->getCourseEnd();
+			if ($end_date === null) {
+				return false;
+			}
+
+			if($this->courseFinished($end_date)) {
+				return false;
+			}
+
+			$booked_template_id = $this->getTemplateIdOf((int)$course->getId());
+			if(is_null($template_id) || is_null($booked_template_id)) {
+				return false;
+			}
+
+			if ($booked_template_id != $template_id) {
+				return false;
+			}
+
+			return true;
+		});
+	}
+
+
+	/**
+	 * Check user has passed course
+	 *
+	 * @param \ilDateTime 	$end_date
+	 *
+	 * @return bool
+	 */
+	protected function courseFinished($end_date) {
+		$today = date("Y-m-d");
+		return $end_date->get(IL_CAL_DATE) < $today;
+	}
+
+	/**
+	 * Get template id of course
+	 *
+	 * @param int 	$crs_id
+	 *
+	 * @return int 	$template_id
+	 */
+	protected function getTemplateIdOf($crs_id)
+	{
+		$query = "SELECT source_id FROM crs_copy_mappings WHERE obj_id = ".$this->g_db->quote($crs_id, "integer");
+		$res = $this->g_db->query($query);
+		$row = $this->g_db->fetchAssoc($res);
+
+		return $row["source_id"];
 	}
 
 }

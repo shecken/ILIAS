@@ -138,7 +138,7 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 			$search = '[' .$placeholder .']';
 			$value = '';
 			foreach ($this->contexts as $context) {
-				$v = $context->valueFor($placeholder);
+				$v = $context->valueFor($placeholder, $this->contexts);
 				if($v) {
 					$value = $v;
 				}
