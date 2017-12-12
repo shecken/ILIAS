@@ -42,6 +42,7 @@ class UnboundCourseProvider extends Base {
 			$ret = $this->getCourseInfoForTutors($ret, $entity, $object);
 			$ret = $this->getCourseInfoForToCourseButton($ret, $entity, $object);
 			$ret = $this->getCourseInfoForCourseMemberButton($ret, $entity, $object);
+			$ret = $this->getCourseInfoForCourseMemberCountings($ret, $entity, $object);
 
 			return $ret;
 		}
@@ -515,6 +516,43 @@ class UnboundCourseProvider extends Base {
 				);
 			}
 		}
+
+		return $ret;
+	}
+
+	/**
+	 * Get a course infomation object to list member countings
+	 *
+	 * @param CourseInfo[]
+	 * @param Entity $entity
+	 * @param Object 	$object
+	 *
+	 * @return CourseInfo[]
+	 */
+	protected function getCourseInfoForCourseMemberCountings(array $ret, Entity $entity, $object) {
+		$object->initWaitingList();
+
+		$min_member = $object->getSubscriptionMinMembers();
+		if($min_member === null) {
+			$min_member = 0;
+		}
+		$max_member = $object->getSubscriptionMaxMembers();
+		if($max_member === null) {
+			$max_member = 0;
+		}
+
+		$values = array();
+		$values[] = $this->lng->txt("booked_user").": ".count($object->getMembersObject()->getMembers());
+		$values[] = $this->lng->txt("waiting_user").": ".$object->waiting_list_obj->getCountUsers();
+		$values[] = $this->lng->txt("min_member").": ".$min_member;
+		$values[] = $this->lng->txt("max_member").": ".$max_member;
+
+		$ret[] = $this->createCourseInfoObject($entity
+					, $this->lng->txt("user_bookings")
+					, $values
+					, 350
+					, [CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO]
+				);
 
 		return $ret;
 	}
