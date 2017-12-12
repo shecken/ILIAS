@@ -7,11 +7,6 @@ use ILIAS\TMS\TableRelations as TR;
 
 class SqlQueryInterpreterWrap extends TR\SqlQueryInterpreter {
 
-	public function __construct()
-	{
-
-	}
-
 	public function _interpretField(Filters\Predicates\Field $field) {
 		return $this->interpretField($field);
 	}
