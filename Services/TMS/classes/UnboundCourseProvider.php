@@ -147,6 +147,18 @@ class UnboundCourseProvider extends Base {
 				, 910
 				, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
 			);
+
+			// Filter session where current user is assigned as lecture
+			$only_for_trainer = array_filter($times, function($time) {
+				return in_array($this->user->getId(), $time["lecture"]);
+			});
+			$times_formatted = $this->getAppointmentOutput($only_for_trainer);
+			$ret[] = $this->createCourseInfoObject($entity
+				, $this->lng->txt("tutor_assignment_period")
+				, $times_formatted
+				, 310
+				, [CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO]
+			);
 		}
 
 		return $ret;
@@ -207,7 +219,8 @@ class UnboundCourseProvider extends Base {
 					, 1000
 					, [
 						CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
-						CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
+						CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO,
+						CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO
 					  ]
 				);
 
@@ -272,9 +285,9 @@ class UnboundCourseProvider extends Base {
 				$date = $this->formatDate($appointment->getStart());
 				$start_time = $appointment->getStart()->get(IL_CAL_FKT_DATE, "H:i");
 				$end_time = $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i");
+				$lecture = $session->getAssignedTutorsIds();
 				$offset = $appointment->getDaysOffset();
-
-				$vals[$offset] = array("start_time" => $start_time, "end_time" => $end_time);
+				$vals[$offset] = array("start_time" => $start_time, "end_time" => $end_time, "lecture" => $lecture);
 			}
 		}
 
