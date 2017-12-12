@@ -35,15 +35,6 @@ interface DB {
 	public function create($issuer_ref, \DateTime $due, $component, $event, $params = array());
 
 	/**
-	 * Updates a scheduled event.
-	 *
-	 * @param \ILIAS\TMS\ScheduledEvents\Event $event
-	 *
-	 * @return void
-	 */
-	public function update(Event $event);
-
-	/**
 	 * Get all events.
 	 *
 	 * @return \ILIAS\TMS\ScheduledEvents\Event[]
@@ -58,7 +49,8 @@ interface DB {
 	public function getAllDue();
 
 	/**
-	 * Get all events from this issuer
+	 * Get all events from this issuer;
+	 * Filter more by giving $component and/or $event.
 	 *
 	 * @param int 	$ref_id
 	 * @param string|null 	$component
