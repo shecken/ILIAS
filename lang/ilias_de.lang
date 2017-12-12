@@ -16017,3 +16017,8 @@ tms#:#canceling_for#:#Stornierung für %s
 tms#:#duplicate_course_booked#:#Ein Training dieser Vorlage ist bereits gebucht und noch nicht beendet. Sie dürfen dieses Angebot daher nicht buchen. Sie können die Buchungen in der Übersicht ihrer gebuchten Trainings im Cockpit einsehen und dort ggf. Stornierungen vornehmen.
 tms#:#tutor_assignment_period#:#Trainereinsatztage
 tms#:#request_book#:#Buchungsanfrage
+tms#:#user_bookings#:#Buchungen
+tms#:#booked_user#:#Gebuchte Teilnehmer
+tms#:#waiting_user#:#Teilnehmer auf Warteliste
+tms#:#min_member#:#minimale Teilnehmerzahl
+tms#:#max_member#:#maximale Teilnehmerzahl
