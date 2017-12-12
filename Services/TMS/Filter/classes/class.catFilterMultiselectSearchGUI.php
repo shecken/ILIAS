@@ -1,5 +1,5 @@
 <?php
-require_once("./Services/Form/classes/class.ilMultiSelectSearchInputGUI.php");
+require_once("./Services/TMS/Filter/classes/class.ilMultiSelectSearchInputGUI.php");
 require_once 'Services/TMS/Filter/classes/class.catFilterGUI.php';
 
 class catFilterMultiselectSearchGUI extends catFilterGUI {
