@@ -256,4 +256,8 @@ class TableFactory {
 	{
 		return new Tables\DerivedFields\DateFormat($this->predicate_factory, $name, $field, $format);
 	}
+
+	public function ifThenElse($name, Filters\Predicates\Predicate $condition, Filters\Predicates\Field $then , Filters\Predicates\Field $else) {
+		return new Tables\DerivedFields\IfThenElse($this->predicate_factory, $name, $condition, $then, $else);
+	}
 }

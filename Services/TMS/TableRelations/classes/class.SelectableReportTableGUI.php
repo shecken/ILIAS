@@ -137,19 +137,17 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	public function prepareTableAndSetRelevantFields($space) {
 		$this->determineSelectedColumns();
 		$this->spanColumns();
-		$this->setExternalSorting($this->external_sorting);
+		$this->setExternalSorting(true);
 		foreach($this->relevantFields() as $id => $field) {
 			$space->request($field,$id);
 		}
-		if($this->external_sorting) {
-			$this->determineOffsetAndOrder(true);
-			$order_column_id = $this->getOrderField();
-			if(isset($this->relevantColumns()[$order_column_id])) {
-				$order_direction = $this->getOrderDirection();
-				$space->orderBy(array_keys($this->fields[$order_column_id]),$order_direction);
-			} else {
-				$space->orderBy(array(key($this->relevantColumns())),'asc');
-			}
+		$this->determineOffsetAndOrder(true);
+		$order_column_id = $this->getOrderField();
+		if(isset($this->relevantColumns()[$order_column_id])) {
+			$order_direction = $this->getOrderDirection();
+			$space->orderBy( array_keys($this->fields[$order_column_id]),$order_direction);
+		} else {
+			$space->orderBy(array(key($this->relevantColumns())),'asc');
 		}
 		return $space;
 	}
