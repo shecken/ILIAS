@@ -120,7 +120,14 @@ class UserFactory
 	 */
 	public function UserUpdater()
 	{
-		return new UserUpdater($this->UserLocator(), $this->UdfWrapper(), $this->error_colletion, $this->log);
+		return new UserUpdater(
+			$this->UserLocator(),
+			$this->UserRoleUpdater(),
+			$this->RoleConfiguration(),
+			$this->UdfWrapper(),
+			$this->f->OrguFactory()->OrguConfig(),
+			$this->error_colletion,
+			$this->log);
 	}
 
 	/**
@@ -128,7 +135,7 @@ class UserFactory
 	 *
 	 * @param	UOI\User\Users	$left
 	 * @param	UOI\User\Users	$right
-	 * @return	 UOI\User\UsersDifference
+	 * @return	UOI\User\UsersDifference
 	 */
 	public function Difference(UOI\User\Users $left, UOI\User\Users $right)
 	{
