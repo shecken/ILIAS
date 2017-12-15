@@ -138,7 +138,8 @@ class UnboundCourseProvider extends Base {
 				, $times_formatted
 				, 310
 				, [CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
-					CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
+					CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO,
+					CourseInfo::CONTEXT_ADMIN_TRAINIGS_DETAIL_INFO
 				  ]
 			);
 
@@ -221,7 +222,8 @@ class UnboundCourseProvider extends Base {
 					, [
 						CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
 						CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO,
-						CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO
+						CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO,
+						CourseInfo::CONTEXT_ADMIN_TRAINIGS_DETAIL_INFO
 					  ]
 				);
 
@@ -254,13 +256,14 @@ class UnboundCourseProvider extends Base {
 				$tutor_names[] = \ilObjUser::_lookupFullname($tutor_id);
 			}
 
-			$tutor_names = join(", ", $tutor_names);
+			// $tutor_names = join(", ", $tutor_names);
 			$ret[] = $this->createCourseInfoObject($entity
 					, $this->lng->txt("trainer")
 					, $tutor_names
 					, 1500
 					, [
-						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO
+						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+						CourseInfo::CONTEXT_ADMIN_TRAINIGS_DETAIL_INFO
 					  ]
 				);
 		}
