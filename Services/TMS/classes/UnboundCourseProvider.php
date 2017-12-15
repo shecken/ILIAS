@@ -139,7 +139,7 @@ class UnboundCourseProvider extends Base {
 				, 310
 				, [CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
 					CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO,
-					CourseInfo::CONTEXT_ADMIN_TRAINIGS_DETAIL_INFO
+					CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
 				  ]
 			);
 
@@ -223,7 +223,7 @@ class UnboundCourseProvider extends Base {
 						CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
 						CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO,
 						CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO,
-						CourseInfo::CONTEXT_ADMIN_TRAINIGS_DETAIL_INFO
+						CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
 					  ]
 				);
 
@@ -263,7 +263,7 @@ class UnboundCourseProvider extends Base {
 					, 1500
 					, [
 						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
-						CourseInfo::CONTEXT_ADMIN_TRAINIGS_DETAIL_INFO
+						CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
 					  ]
 				);
 		}
