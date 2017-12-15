@@ -256,7 +256,6 @@ class UnboundCourseProvider extends Base {
 				$tutor_names[] = \ilObjUser::_lookupFullname($tutor_id);
 			}
 
-			// $tutor_names = join(", ", $tutor_names);
 			$ret[] = $this->createCourseInfoObject($entity
 					, $this->lng->txt("trainer")
 					, $tutor_names
