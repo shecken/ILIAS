@@ -85,9 +85,9 @@ class ilUserOrguImportJob extends ilCronJob
 		$cron_result = new ilCronJobResult();
 
 		ilCronManager::ping($this->getId());
-		//$this->updateUsers();
+		$this->updateUsers();
 		ilCronManager::ping($this->getId());
-		//$this->updateOrgus();
+		$this->updateOrgus();
 		ilCronManager::ping($this->getId());
 		$this->updateUserOrgus();
 		ilCronManager::ping($this->getId());
@@ -120,7 +120,6 @@ class ilUserOrguImportJob extends ilCronJob
 		}
 	}
 
-
 	protected function updateUserOrgus()
 	{
 		$uo_f = $this->f->UserOrguAssignmentsFactory();
@@ -132,10 +131,5 @@ class ilUserOrguImportJob extends ilCronJob
 			$uo_f->UserOrguUpdater()->applyDiff($diff);
 		}
 
-	//	$commulative_roles = $uo_f->UserOrguExcel()->commulativeRoles();
-
-	//	if ($commulative_roles) {
-	//		$uo_f->UserOrguUpdater()->updateCustomUserRoles($commulative_roles);
-	//	}
 	}
 }
