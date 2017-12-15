@@ -113,6 +113,11 @@ class ExcelUsers
 	protected function postprocessRow(array $row)
 	{
 		$row[UdfWrapper::PROP_ORGUS] = implode(',',Base\Orgu\ExcelOrgus::normalizedOrguPath($row));
+		unset($row[self::COLUMN_LE]);
+		unset($row[self::COLUMN_RESSORT]);
+		unset($row[self::COLUMN_DEPARTMENT]);
+		unset($row[self::COLUMN_GROUP]);
+		unset($row[self::COLUMN_TEAM]);
 		switch($row[UdfWrapper::PROP_GENDER]) {
 			case 'männlich':
 				$gender = 'm';
@@ -123,6 +128,7 @@ class ExcelUsers
 			default:
 				$gender = '';
 		}
+		$row[UdfWrapper::PROP_PNR] = (string)$row[UdfWrapper::PROP_PNR];
 		$row[UdfWrapper::PROP_GENDER] = $gender;
 		$row[UdfWrapper::PROP_LOGIN] = trim($row[UdfWrapper::PROP_PNR]);
 		if($row[UdfWrapper::PROP_INACTIVE_BEGIN] === '#') {
