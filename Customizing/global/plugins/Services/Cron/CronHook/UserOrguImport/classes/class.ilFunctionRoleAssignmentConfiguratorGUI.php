@@ -83,6 +83,7 @@ class ilFunctionRoleAssignmentConfiguratorGUI
 						,$this->postprocessInput($form->getInput(self::POST_EMPLOYEE_FUNCTIONS))
 					)
 				);
+				ilUtil::sendSuccess($this->plugin->txt('functions_saved'));
 				$this->showAssignments();
 			} catch(UOI\UserOrguAssignments\Exception $e) {
 				ilUtil::sendFailure($this->plugin->txt('function_role_overlap_error'));
