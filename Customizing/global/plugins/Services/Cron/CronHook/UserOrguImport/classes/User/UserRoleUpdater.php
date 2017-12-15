@@ -71,6 +71,24 @@ class UserRoleUpdater
 		}
 	}
 
+	/**
+	 * Assign roles according to role configuration to a user. No roles
+	 * will be deassigned. To be used with new users.
+	 *
+	 * @param	IliasUser	$previous
+	 * @param	RoleConfiguration	$role_config_previous
+	 * @param	RoleConfiguration	$role_config_new
+	 * @return	void
+	 */
+	public function assignRolesToUserAccodingToConfig(IliasUser $user, RoleConfiguration $config)
+	{
+		$extern_role = $this->externKuFlagOf($user);
+		$assign = $config->roleIdsFor($extern_role);
+		foreach ($assign as $role_id) {
+			$this->ra->assignToUser($role_id, $user);
+		}
+	}
+
 	protected function externKuFlagOf(IliasUser $user)
 	{
 		return $user->properties()[UdfWrapper::PROP_FLAG_KU];
