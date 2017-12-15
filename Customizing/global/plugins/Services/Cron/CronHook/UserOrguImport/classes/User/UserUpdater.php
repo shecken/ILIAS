@@ -15,14 +15,21 @@ class UserUpdater
 
 	public function __construct(
 		UserLocator $ul,
+		UserRoleUpdater $uru,
+		RoleConfiguration $rc,
 		UdfWrapper $udf,
+		Base\Orgu\OrguConfig $oc,
 		Base\ErrorReporting\ErrorCollection $ec,
 		Base\Log\Log $log)
 	{
 		$this->ul = $ul;
+		$this->uru = $uru;
+		$this->rc = $rc;
 		$this->udf = $udf;
 		$this->ec = $ec;
 		$this->log = $log;
+
+		$this->exit_ref_id = $oc->getExitRefId();
 	}
 
 	/**
@@ -62,6 +69,7 @@ class UserUpdater
 		$props = $user->properties();
 		$il_id = $user->iliasId();
 		if (\ilObjUser::userExists([$il_id])) {
+			$this->uru->updateRolesOfChangedUser($this->ul->userByUserId($il_id), $user, $this->rc);
 			$il_usr = $this->updateUserData($props, new \ilObjUser($il_id));
 			$il_usr->writePrefs();
 			$il_usr->update();
@@ -124,6 +132,7 @@ class UserUpdater
 				$il_usr->writePrefs();
 				$il_usr->update();
 				$this->udf->updateUserData($props, (int)$il_usr->getId());
+				$this->uru->assignRolesToUserAccodingToConfig($this->ul->userByUserId($usr_id), $this->rc);
 			} catch (\Exception $e) {
 				$this->ec->addError('user with properties '.Base\Log\DatabaseLog::arrayToString($props).' could not be created:'.$e->getMessage());
 			}
@@ -158,9 +167,11 @@ class UserUpdater
 		$props = $user->properties();
 		if (\ilObjUser::userExists([$il_id])) {
 			if (\ilObjUser::_lookupActive($il_id)) {
-				/**
-				 * Moving to exit-orgu here.
-				 */
+				$exit_orgu = new \ilObjOrgUnit($this->exit_ref_id);
+				$exit_orgu->assignUsersToEmployeeRole([$il_id]);
+				$usr = new \ilObjUser($il_id);
+				$usr->setActive(false);
+				$usr->update();
 			}
 		} else {
 			$this->ec->addError('user with properties '.Base\Log\DatabaseLog::arrayToString($props).' does not exists and may not be delted');
