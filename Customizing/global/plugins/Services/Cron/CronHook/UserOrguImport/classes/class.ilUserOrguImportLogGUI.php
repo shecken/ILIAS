@@ -10,7 +10,6 @@ class ilUserOrguImportLogGUI
 
 	const POST_ORGU_ID = 'orgu_id';
 	const POST_PNR = 'pnr';
-	const POST_AOB = 'aob';
 
 	protected $tpl;
 
@@ -62,7 +61,6 @@ class ilUserOrguImportLogGUI
 
 		$orgu_id = trim((string)$form->getItemByPostVar(self::POST_ORGU_ID)->getValue());
 		$pnr = trim((string)$form->getItemByPostVar(self::POST_PNR)->getValue());
-		$aob = trim((string)$form->getItemByPostVar(self::POST_AOB)->getValue());
 
 		if ($orgu_id === '' && $pnr === '' && $aob === '') {
 			\ilUtil::sendFailure($this->plugin->txt('no_filter_value_warning'));
@@ -74,9 +72,6 @@ class ilUserOrguImportLogGUI
 			}
 			if ($pnr !== '') {
 				$properties['pnr'] = $pnr;
-			}
-			if ($aob !== '') {
-				$properties['aob'] = $aob;
 			}
 
 			$table = new DUOI\LogEntriesTableGUI(
@@ -107,12 +102,6 @@ class ilUserOrguImportLogGUI
 			self::POST_PNR
 		);
 		$form->addItem($pnr);
-
-		$aob = new ilTextInputGUI(
-			$this->plugin->txt('filter_log_aob'),
-			self::POST_AOB
-		);
-		$form->addItem($aob);
 
 		$form->addCommandButton(self::CMD_SHOW_LOG_ENTRIES, $this->plugin->txt('filter_log_show_entries'));
 		return $form;
