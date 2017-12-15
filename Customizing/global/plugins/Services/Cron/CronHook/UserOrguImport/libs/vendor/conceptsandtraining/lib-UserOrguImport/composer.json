@@ -1,0 +1,11 @@
+{
+    "name": "conceptsandtraining/lib-UserOrguImport",
+    "require": {
+        "php": ">=5.4.0"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"CaT\\UserOrguImport\\" : "./src"
+		}
+	}
+}
