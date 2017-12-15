@@ -27,7 +27,7 @@ class ilUserOrguImportLogGUI
 		$this->ctrl = $DIC['ilCtrl'];
 
 		$errors = new DUOI\ErrorReporting\ErrorCollection();
-		$f = $this->plugin->getFactory();
+		$f = $this->plugin->getFactory($errors);
 		$this->actions = new DUOI\User\ilUserActions($f->UserFactory());
 		$this->log = $f->Log();
 	}
