@@ -106,6 +106,7 @@ class ExternRoleTableGUI extends \ilTable2GUI
 			\ilExternRolesConfiguratorGUI::GET_EXTERN_ROLE_ID,
 			null
 		);
+		$l->setId("selection_list_".$extern_role_id);
 		return $l->getHTML();
 	}
 
