@@ -61,7 +61,11 @@ class Table implements AbstractTable, Graphs\AbstractNode {
 				throw new TableException("unknown fields in predicate");
 			}
 		}
-		$this->constraint = $predicate;
+		if($this->constraint) {
+			$this->constraint = $this->constraint->_AND($predicate);
+		} else {
+			$this->constraint = $predicate;
+		}
 		return $this;
 	}
 
