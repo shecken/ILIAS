@@ -263,6 +263,15 @@ class gevSettings
 	//Kostenstelle VFS
 	const USR_UDF_FINANCIAL_ACCOUNT	= "usr_udf_financial_account";
 
+	const USR_UDF_ORGU_SAP = 'usr_udf_orgu_sap';
+	const USR_UDF_FLAG_KU = 'usr_udf_flag_ku';
+	const USR_UDF_PERSONAL_ID = 'usr_udf_personal_id';
+	const USR_UDF_FINANCIAL_ACCOUNT_LONG = 'usr_udf_financial_account_long';
+	const USR_UDF_FUNCTION = 'usr_udf_function';
+	const USR_UDF_ENTRY_DATE_KU = 'usr_udf_entry_date_ku';
+	const USR_UDF_INACTIVE_START = 'usr_udf_inactive_start';
+	const USR_UDF_INACTIVE_END = 'usr_udf_inactive_end';
+	const USR_UDF_SUPERIOR_OF_USR = 'usr_udf_superior_of_usr';
 
 
 

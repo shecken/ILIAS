@@ -1,0 +1,23 @@
+{
+	"name":"plugin-UserOrguImport",
+	"minimum-stability": "dev",
+	"description": "Dependencies of a UserOrguImport plugin",
+	"license": "GPL v3",
+	"authors": [],
+	"require": {
+		"conceptsandtraining/lib-UserOrguImport": "dev-master"
+		,"box/spout": "2.7.2"
+	},
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/conceptsandtraining/lib-UserOrguImport.git"
+		}
+	],
+	"autoload" : {
+		"psr-4" : {
+			"CaT\\IliasUserOrguImport\\" : "../classes",
+			"CaT\\IliasUOITestObjects\\" : "../tests/fixture"
+		}
+	}
+}

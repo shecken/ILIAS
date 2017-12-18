@@ -1,0 +1,80 @@
+extern_role#:#Externe Rolle
+role_ilias#:#Rolle ILIAS
+extern_role_description#:#Beschreibung
+actions#:#Aktionen
+please_choose#:#bitte wählen
+edit#:#bearbeiten
+delete_ext_role#:#löschen
+back#:#Zurück
+abort#:#Abbrechen
+create#:#Neue externe Rolle anlegen
+extern_role_title#:#Titel
+extern_role_desc#:#Beschreibung
+ilias_roles#:#ILIAS Rollenzuweisung
+save#:#Speichern
+extern_roles_configuration#:#Rollenzuweisung
+role_exists_failure#:#Der gewünschte Name der  ist bereits vergeben.
+no_roles_failure#:#Der externen Rolle muss mindestens eine ILIAS Rolle zugewiesen sein.
+edit_extern#:#Externe Rolle bearbeiten
+create_extern#:#Neue externe Rolle anlegen
+delete_ext_roles_conf_head#:#Wollen Sie die folgenden Rollen wirklich löschen: %s ?
+delete_ext_role_conf_head#:#Wollen Sie die Rolle '%s' wirklich löschen?
+ext_roles_deleted#:#Die Rollen wurden gelöscht.
+ext_role_deleted#:#Die Rolle wurde gelöscht.
+new_role_created#:#Die Rolle wurde angelegt.
+role_updated#:#Die Rolle wurde aktualisiert.
+delete#:#Löschen
+cancel#:#Abbrechen
+no_role_chosen#:#Keine Rolle ausgewählt.
+deployed_files_overview#:#Übersicht bereitgestellter Dateien
+view_log#:#Log Durchsuchen
+filter_log_entries#:#Logeinträge Suchen
+filter_log_orgu_id#:#Org.Einheit - Id
+filter_log_pnr#:#PNR
+filter_log_aob#:#AOB
+filter_log_show_entries#:#Suchen
+no_filter_value_warning#:#Bitte geben sie mindestens einen der Parameter an.
+log_table_orgu_id#:#Org.Einheit - Id
+log_table_pnr#:#PNR
+log_table_aob#:#AOB
+log_table_timestamp#:#Zeitpunkt
+log_table_entry#:#Eintrag
+log_table_title#:#Einträge
+udf_config#:#UDF-Einstellungen
+orgu_config#:#Einstellungen für Organisationseinheiten
+fs_config#:#Konfiguration des Dateisystems
+udf_configuration#:#Einstellungen für UDF-Felder
+xuoi_usr_flag_ku#:#Kennzeichen KU
+xuoi_usr_orgus#:#Organisationseoinheit SAP
+xoui_usr_pnr#:#Personalnummer
+xoui_usr_cost_centre#:#Kostenstelle
+xoui_usr_const_centre_long#:#Bezeichnung Kostenstelle
+xuoi_usr_function#:#Funktion
+xuoi_usr_entry_date_ku#:#Eintrittsdatum
+xuoi_usr_entry_date_ko#:#Eintrittsdatum KO 
+xuoi_usr_inactive_begin#:#Inaktiv von
+xuoi_usr_inactive_end#:#Inaktiv bis
+xuoi_usr_superior_of_usr#:#Vorgesetzter
+xuoi_usr_exit_date#:#Austrittsdatum
+udf_saved#:#Udf-Einstellungen gespeichert
+function_role_config#:#Rolleneinstellungen für Funktion
+superior_functions#:#Funktion für Vorgesetze
+employee_functions#:#Funktion für Mitarbeiter
+save_udf_config#:#Speichern
+orgu_configuration#:#Einstellungen für Organisationseinheiten
+amd_fields#:#Einstellungen für AMD-Feld-Ids
+devk_orgu_amd_prop_zip#:#Feld-Id für PLZ
+devk_orgu_amd_prop_city#:#Feld-Id für Ort
+devk_orgu_amd_prop_street#:#Feld-Id für Straße und Hausnummer
+devk_orgu_amd_prop_country#:#Feld-Id für Land
+devk_orgu_amd_prop_phone#:#Feld-Id für Telefon
+amd_record_orgu_type#:#Einstellungen für Record-Id und Typ der Organisationseinheit
+amd_record#:#Record-Id
+orgu_type#:#Typ der Organisationseinheit
+orgu_root_refs#:#Wurzelknoten für den Einheitenimport
+orgu_root#:#Wurzelknoten für Organisationseinheiten
+save_config#:#Speichern
+fs_configuration#:#Konfiguration des Dateisystems
+deployment_path#:#Pfad zur Bereitstellung der Importdateien
+saved#:#Einstellungen gespeichert.
+functions_saved#:#Rolleneinstellungen gespeichert
