@@ -47,7 +47,7 @@ class RoleConfiguration
 	public function add($ext_role, $desc, array $role_ids)
 	{
 		assert('is_string($ext_role)');
-		if (in_array($ext_role, array_keys($this->extern_roles_ids))) {
+		if (in_array('#'.$ext_role, array_keys($this->extern_roles_ids))) {
 			throw new \InvalidArgumentException($ext_role.' allready exists');
 		}
 		if (!$this->globalRolesExist($role_ids)) {
@@ -93,7 +93,7 @@ class RoleConfiguration
 	{
 		assert('is_int($ext_role_id)');
 		assert('is_string($ext_role)');
-		if (isset($this->extern_roles_ids[$ext_role]) && $this->extern_roles_ids[$ext_role] !== $ext_role_id) {
+		if (isset($this->extern_roles_ids['#'.$ext_role]) && $this->extern_roles_ids['#'.$ext_role] !== $ext_role_id) {
 			throw new \InvalidArgumentException($ext_role.' allready exists');
 		}
 		if (!$this->globalRolesExist($role_ids)) {
@@ -150,7 +150,9 @@ class RoleConfiguration
 	 */
 	public function externRoles()
 	{
-		return array_keys($this->extern_roles_ids);
+		return array_map(function ($arg) {
+				return substr($arg,1);
+			},array_keys($this->extern_roles_ids));
 	}
 
 	/**
@@ -161,7 +163,7 @@ class RoleConfiguration
 	public function externRoleExists($ext_role)
 	{
 		assert('is_string($ext_role)');
-		return isset($this->extern_roles_ids[$ext_role]);
+		return isset($this->extern_roles_ids['#'.$ext_role]);
 	}
 
 	/**
@@ -183,7 +185,7 @@ class RoleConfiguration
 	public function externRoleIdForExternRole($ext_role)
 	{
 		assert('is_string($ext_role)');
-		return $this->extern_roles_ids[$ext_role];
+		return $this->extern_roles_ids['#'.$ext_role];
 	}
 
 	/**
@@ -266,7 +268,7 @@ class RoleConfiguration
 		$res = $this->db->query($query);
 		while ($rec = $this->db->fetchAssoc($res)) {
 			$this->extern_roles[(int)$rec['id']] = [self::DESC => $rec['description'], self::EXT_ROLE => $rec['ext_role']];
-			$this->extern_roles_ids[$rec['ext_role']] = (int)$rec['id'];
+			$this->extern_roles_ids['#'.$rec['ext_role']] = (int)$rec['id'];
 		}
 	}
 }
