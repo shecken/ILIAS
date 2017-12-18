@@ -57,4 +57,11 @@ class TMSMail implements Mail {
 	public function getContexts() {
 		return $this->contexts;
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getAttachments() {
+		return $this->attachments;
+	}
 }
