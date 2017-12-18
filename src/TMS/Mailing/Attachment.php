@@ -11,9 +11,9 @@ namespace ILIAS\TMS\Mailing;
 interface Attachment
 {
 	/**
-	 * Returns the filename of the attachment.
+	 * Returns the file path to an attachment.
 	 *
 	 * @return 	string
 	 */
-	public function getAttachmentFilename();
+	public function getAttachmentPath();
 }
