@@ -17,6 +17,7 @@ class ilTimeInputGUI extends ilSubEnabledFormPropertyGUI
 	protected $time = "00:00:00";
 	protected $minute_step_size = 5;
 	protected $showseconds = false;
+	protected $max_hours = 23;
 
 	/**
 	* Constructor
@@ -75,6 +76,27 @@ class ilTimeInputGUI extends ilSubEnabledFormPropertyGUI
 	}
 
 	/**
+	 * Set the maximum of displayed hours
+	 *
+	 * @param int 	$max_hours
+	 *
+	 * @return void
+	 */
+	public function setMaxHours($max_hours) {
+		assert('is_int($max_hours)');
+		$this->max_hours = $max_hours;
+	}
+
+	/**
+	 * Get the max hours
+	 *
+	 * @return int
+	 */
+	public function getMaxHours() {
+		return $this->max_hours;
+	}
+
+	/**
 	* Set value by array
 	*
 	* @param	array	$a_values	value array
@@ -96,12 +118,21 @@ class ilTimeInputGUI extends ilSubEnabledFormPropertyGUI
 	public function setValue($value)
 	{
 		if($this->getShowSeconds()) {
-			if(!preg_match("/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$/", $value)) {
-				throw new Exception("Value must be in basic time format HH:mm:ss");
+			$times = explode(":", $value);
+
+			if(($time[0] < 0 || $times[0] > $this->getMaxHours())
+				|| ($time[1] < 0 || $times[1] > 59)
+				|| ($time[2] < 0 || $times[2] > 59)
+			) {
+				throw new Exception("Value out of bounds. Max Value is ".$this->getMaxHours().":59:59");
 			}
 		} else {
-			if(!preg_match("/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/", $value)) {
-				throw new Exception("Value must be in basic time format HH:mm");
+			$times = explode(":", $value);
+
+			if(($time[0] < 0 || $times[0] > $this->getMaxHours())
+				|| ($time[1] < 0 || $times[1] > 59)
+			) {
+				throw new Exception("Value out of bounds. Max Value is ".$this->getMaxHours().":59");
 			}
 		}
 
@@ -195,7 +226,7 @@ class ilTimeInputGUI extends ilSubEnabledFormPropertyGUI
 
 		$tpl->setVariable("TXT_HOURS", $lng->txt("form_hours"));
 		$val = array();
-		for ($i=0; $i<=23; $i++) {
+		for ($i=0; $i<=$this->getMaxHours(); $i++) {
 			$val[$i] = $i;
 		}
 		$tpl->setVariable(
