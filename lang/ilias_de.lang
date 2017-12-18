@@ -16022,3 +16022,6 @@ tms#:#booked_user#:#Gebuchte Teilnehmer
 tms#:#waiting_user#:#Teilnehmer auf Warteliste
 tms#:#min_member#:#minimale Teilnehmerzahl
 tms#:#max_member#:#maximale Teilnehmerzahl
+tms#:#form_hours#:#Stunden
+tms#:#form_minutes#:#Minuten
+tms#:#form_seconds#:#Sekunden
