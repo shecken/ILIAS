@@ -97,7 +97,7 @@ class PredicateFactory {
 	 * @param	string[]|int[]	$ints
 	 * @return	ValueList
 	 */
-	public function list_int_by_array($ints) {
+	public function list_int_by_array(array $ints) {
 		$val_objs = array();
 		foreach ($ints as $int) {
 			$val_objs[] = $this->int($int);
@@ -111,7 +111,7 @@ class PredicateFactory {
 	 * @param	string[]	$strs
 	 * @return	ValueList
 	 */
-	public function list_string_by_array($strs) {
+	public function list_string_by_array(array $strs) {
 		$val_objs = array();
 		foreach ($strs as $str) {
 			$val_objs[] = $this->str($str);
