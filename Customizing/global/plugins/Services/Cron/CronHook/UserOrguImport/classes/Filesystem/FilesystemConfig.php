@@ -38,7 +38,7 @@ class FilesystemConfig
 	 * @param	string	$path
 	 * @return	self
 	 */
-	public function withDeploymentPath($path)
+	public function setDeploymentPath($path)
 	{
 		assert('is_string($path)');
 		if (!is_readable($path) || !is_dir($path)) {

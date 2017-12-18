@@ -67,7 +67,7 @@ class ilFilesystemConfiguratorGUI
 		if ($form->checkInput()) {
 			$path = $form->getItemByPostVar(self::POST_DEPLOYMENT_PATH)->getValue();
 			if (is_readable($path) && is_dir($path)) {
-				$config->withDeploymentPath($path);
+				$config->setDeploymentPath($path);
 				ilUtil::sendSuccess($this->plugin->txt('saved'));
 				$this->show();
 				return;
