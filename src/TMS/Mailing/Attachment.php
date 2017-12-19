@@ -16,4 +16,12 @@ interface Attachment
 	 * @return 	string
 	 */
 	public function getAttachmentPath();
+
+	/**
+	 * Sets the path of an attachment.
+	 *
+	 * @param 	string 	$value
+	 * @return 	self
+	 */
+	public function withAttachmentPath($path);
 }
