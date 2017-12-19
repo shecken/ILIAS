@@ -553,7 +553,9 @@ class UnboundCourseProvider extends Base {
 					, $this->lng->txt("user_bookings")
 					, $values
 					, 350
-					, [CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO]
+					, [CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO,
+						CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
+					]
 				);
 
 		return $ret;
