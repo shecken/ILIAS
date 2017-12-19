@@ -10,12 +10,9 @@ use ILIAS\TMS\Mailing;
 class ilTMSMailAttachment implements Mailing\Attachment
 {
 	/**
-	 * Constructor of the class ilTMSMailContextAttachment
+	 * @var string
 	 */
-	public function __construct()
-	{
-		
-	}
+	protected $attachment_path;
 
 	/**
 	 * @inheritdoc
@@ -23,5 +20,16 @@ class ilTMSMailAttachment implements Mailing\Attachment
 	public function getAttachmentPath()
 	{
 		return $this->attachment_path;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function withAttachmentPath($path)
+	{
+		assert('is_string($path)');
+		$clone = clone $this;
+		$clone->attachment_path = $path;
+		return $clone;
 	}
 }
