@@ -84,6 +84,8 @@ class SqlQueryInterpreter {
 			return ' DATE_FORMAT('.$this->interpretField($field->argument()).','.$this->gIldb->quote($field->format(),'text').')';
 		} elseif( $field instanceof Derived\IfThenElse ) {
 			return ' IF('.$this->interpretPredicate($field->condition()).','.$this->interpretField($field->met()).','.$this->interpretField($field->notMet()).')';
+		} elseif($field instanceof Derived\ConstInt) {
+			return $this->gIldb->quote($field->value(), 'integer');
 		} else {
 			throw new TableRelationsException("Unknown field type".$field->name());
 		}
