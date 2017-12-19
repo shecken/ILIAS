@@ -43,11 +43,4 @@ interface MailingOccasion extends Component {
 	 */
 	public function getMails($event, $parameter);
 
-	/**
-	 * Get attachments for mail.
-	 *
-	 * @return 	Attachments
-	 */
-	public function getAttachments();
-
 }
