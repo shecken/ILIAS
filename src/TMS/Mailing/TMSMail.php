@@ -24,12 +24,17 @@ class TMSMail implements Mail {
 	protected $contexts;
 
 	/**
-	 * @var Attachment
+	 * @var Attachment[]
 	 */
 	protected $attachments;
 
 
-	public function __construct(Recipient $recipient, $template_ident, $contexts, $attachments) {
+	public function __construct(
+		Recipient $recipient,
+		$template_ident,
+		array $contexts,
+		Attachments $attachments
+	) {
 		assert('is_string($template_ident)');
 		$this->recipient = $recipient;
 		$this->template_ident = $template_ident;
