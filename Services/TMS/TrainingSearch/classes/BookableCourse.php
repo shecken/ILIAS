@@ -210,6 +210,13 @@ class BookableCourse {
 		return $this->show_book_button;
 	}
 
+	protected function getShowRequestButton() {
+		if ($this->show_request_button === null) {
+			$this->show_request_button = $this->getCourseInfo(CourseInfo::CONTEXT_USER_CAN_ASK_FOR_BOOKING);
+		}
+		return $this->show_request_button;
+	}
+
 	public function getTitleValue() {
 		// Take most important info as title
 		$short_info = $this->getShortInfo();
@@ -262,7 +269,47 @@ class BookableCourse {
 			}
 		}
 
-		return [];
+		return null;
+	}
+
+	public function getRequestButton($label) {
+		$book_info = $this->getShowRequestButton();
+
+		if(count($book_info) >= 2) {
+			$mail = null;
+			$button = null;
+			foreach($book_info as $book) {
+				if($this->checkForMail($book->getValue())) {
+					$mail = $book->getValue();
+				}
+
+				if((int)$book->getValue() === 1) {
+					$button = true;
+				}
+			}
+
+			if($button && !is_null($mail)) {
+				return [$this->getUIFactory()
+						->button()->primary
+							( $label,
+								"mailto:".$mail
+							)
+						];
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Checks the value if it is an mail adress or not
+	 *
+	 * @param string 	$value
+	 *
+	 * @return bool
+	 */
+	protected function checkForMail($value) {
+		return preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $value);
 	}
 
 	/**

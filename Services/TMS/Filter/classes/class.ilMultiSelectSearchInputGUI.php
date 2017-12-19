@@ -83,6 +83,8 @@ class ilMultiSelectSearchInputGUI extends ilMultiSelectInputGUI
 	}
 
 	public function render(){
+		global $lng;
+
 		$tpl = $this->getInputTemplate();
 		$values = $this->getValue();
 		$options = $this->getOptions();
@@ -96,7 +98,7 @@ class ilMultiSelectSearchInputGUI extends ilMultiSelectInputGUI
 		$tpl->setVariable("ID_SELECT", $id);
 		$tpl->setVariable("WIDTH", $this->getWidth());
 		$tpl->setVariable("HEIGHT", $this->getHeight());
-		$tpl->setVariable("PLACEHOLDER", '');
+		$tpl->setVariable("PLACEHOLDER", $lng->txt("please_choose"));
 		$tpl->setVariable("MINIMUM_INPUT_LENGTH", $this->getMinimumInputLength());
 		$tpl->setVariable("CSS_CLASS", $this->getCssClass());
 

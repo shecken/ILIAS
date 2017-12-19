@@ -42,6 +42,7 @@ class UnboundCourseProvider extends Base {
 			$ret = $this->getCourseInfoForTutors($ret, $entity, $object);
 			$ret = $this->getCourseInfoForToCourseButton($ret, $entity, $object);
 			$ret = $this->getCourseInfoForCourseMemberButton($ret, $entity, $object);
+			$ret = $this->getCourseInfoForCourseMemberCountings($ret, $entity, $object);
 
 			return $ret;
 		}
@@ -137,7 +138,8 @@ class UnboundCourseProvider extends Base {
 				, $times_formatted
 				, 310
 				, [CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
-					CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
+					CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO,
+					CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
 				  ]
 			);
 
@@ -146,6 +148,18 @@ class UnboundCourseProvider extends Base {
 				, $times_formatted
 				, 910
 				, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+			);
+
+			// Filter session where current user is assigned as lecture
+			$only_for_trainer = array_filter($times, function($time) {
+				return in_array($this->user->getId(), $time["lecture"]);
+			});
+			$times_formatted = $this->getAppointmentOutput($only_for_trainer);
+			$ret[] = $this->createCourseInfoObject($entity
+				, $this->lng->txt("tutor_assignment_period")
+				, $times_formatted
+				, 310
+				, [CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO]
 			);
 		}
 
@@ -207,7 +221,9 @@ class UnboundCourseProvider extends Base {
 					, 1000
 					, [
 						CourseInfo::CONTEXT_SEARCH_DETAIL_INFO,
-						CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO
+						CourseInfo::CONTEXT_USER_BOOKING_DETAIL_INFO,
+						CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO,
+						CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
 					  ]
 				);
 
@@ -240,13 +256,13 @@ class UnboundCourseProvider extends Base {
 				$tutor_names[] = \ilObjUser::_lookupFullname($tutor_id);
 			}
 
-			$tutor_names = join(", ", $tutor_names);
 			$ret[] = $this->createCourseInfoObject($entity
 					, $this->lng->txt("trainer")
 					, $tutor_names
 					, 1500
 					, [
-						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO
+						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+						CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
 					  ]
 				);
 		}
@@ -272,9 +288,9 @@ class UnboundCourseProvider extends Base {
 				$date = $this->formatDate($appointment->getStart());
 				$start_time = $appointment->getStart()->get(IL_CAL_FKT_DATE, "H:i");
 				$end_time = $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i");
+				$lecture = $session->getAssignedTutorsIds();
 				$offset = $appointment->getDaysOffset();
-
-				$vals[$offset] = array("start_time" => $start_time, "end_time" => $end_time);
+				$vals[$offset] = array("start_time" => $start_time, "end_time" => $end_time, "lecture" => $lecture);
 			}
 		}
 
@@ -502,6 +518,43 @@ class UnboundCourseProvider extends Base {
 				);
 			}
 		}
+
+		return $ret;
+	}
+
+	/**
+	 * Get a course infomation object to list member countings
+	 *
+	 * @param CourseInfo[]
+	 * @param Entity $entity
+	 * @param Object 	$object
+	 *
+	 * @return CourseInfo[]
+	 */
+	protected function getCourseInfoForCourseMemberCountings(array $ret, Entity $entity, $object) {
+		$object->initWaitingList();
+
+		$min_member = $object->getSubscriptionMinMembers();
+		if($min_member === null) {
+			$min_member = 0;
+		}
+		$max_member = $object->getSubscriptionMaxMembers();
+		if($max_member === null) {
+			$max_member = 0;
+		}
+
+		$values = array();
+		$values[] = $this->lng->txt("booked_user").": ".count($object->getMembersObject()->getMembers());
+		$values[] = $this->lng->txt("waiting_user").": ".$object->waiting_list_obj->getCountUsers();
+		$values[] = $this->lng->txt("min_member").": ".$min_member;
+		$values[] = $this->lng->txt("max_member").": ".$max_member;
+
+		$ret[] = $this->createCourseInfoObject($entity
+					, $this->lng->txt("user_bookings")
+					, $values
+					, 350
+					, [CourseInfo::CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO]
+				);
 
 		return $ret;
 	}

@@ -1,6 +1,5 @@
 <#1>
 <?php
-
 if( !$ilDB->tableExists('crs_copy_mappings') )
 {
 	$ilDB->createTable('crs_copy_mappings', array(
@@ -27,4 +26,32 @@ if( !$ilDB->tableExists('crs_copy_mappings') )
 $ilDB->renameTableColumn('crs_copy_mappings', "obj_id", "obj_id2");
 $ilDB->renameTableColumn('crs_copy_mappings', "source_id", "obj_id");
 $ilDB->renameTableColumn('crs_copy_mappings', "obj_id2", "source_id");
+?>
+
+<#3>
+<?php
+require_once("Services/TMS/ScheduledEvents/classes/Schedule.php");
+$db = new Schedule($ilDB);
+$db->createTable();
+?>
+
+<#4>
+<?php
+require_once("Services/TMS/ScheduledEvents/classes/Schedule.php");
+$db = new Schedule($ilDB);
+$db->createPrimaryKey();
+?>
+
+<#5>
+<?php
+require_once("Services/TMS/ScheduledEvents/classes/Schedule.php");
+$db = new Schedule($ilDB);
+$db->createSequence();
+?>
+
+<#6>
+<?php
+require_once("Services/TMS/ScheduledEvents/classes/Schedule.php");
+$db = new Schedule($ilDB);
+$db->createParamsTable();
 ?>
