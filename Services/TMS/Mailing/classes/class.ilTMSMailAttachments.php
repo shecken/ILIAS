@@ -27,7 +27,7 @@ class ilTMSMailAttachments implements Mailing\Attachments
 	 */
 	public function addAttachment(Mailing\Attachment $attachment)
 	{
-		if($this->hasAttachment($attachment)) {
+		if(!$this->hasAttachment($attachment)) {
 			$this->attachments[] = $attachment;
 		}
 	}
