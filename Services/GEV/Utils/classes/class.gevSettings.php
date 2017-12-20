@@ -268,7 +268,7 @@ class gevSettings
 	const USR_UDF_PERSONAL_ID = 'usr_udf_personal_id';
 	const USR_UDF_FINANCIAL_ACCOUNT_LONG = 'usr_udf_financial_account_long';
 	const USR_UDF_FUNCTION = 'usr_udf_function';
-	const USR_UDF_ENTRY_DATE_KU = 'usr_udf_entry_date_ku';
+	const USR_UDF_ENTRY_DATE_KO = 'usr_udf_entry_date_ko';
 	const USR_UDF_INACTIVE_START = 'usr_udf_inactive_start';
 	const USR_UDF_INACTIVE_END = 'usr_udf_inactive_end';
 	const USR_UDF_SUPERIOR_OF_USR = 'usr_udf_superior_of_usr';
@@ -333,10 +333,11 @@ class gevSettings
 		,'Stellung VFS'
 
 		,'Paisy-Personalnummer VFS'
-		,'Kostenstelle VFS'
-
+		,'Kostenstelle'
+		,'Bezeichnung Kostenstelle'
 		,'AD-Titel'
-		,'Eintrittsdatum'
+		,'Eintrittsdatum KU'
+		,'Eintrittsdatum KO'
 		,'Austrittsdatum'
 		,'IHK Registernummer'
 
@@ -353,6 +354,14 @@ class gevSettings
 		,'Nächste durchzuführende WBD Aktion'
 		,'Vorheriger TP-Service'
 		,'WBD Punkte nachmelden ab'
+		,'Kennzeichen KU'
+		,'Organisationseinheit SAP'
+		,'Personalnummer'
+
+		,'Funktion'
+		,'inaktiv von'
+		,'inaktiv bis'
+		,'Vorgesetzter'
 	);
 
 	public static $LOCAL_USER_MANDATORY_UDF_FIELDS = array(
