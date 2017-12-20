@@ -16,22 +16,14 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 	const DATE = "Datum";
 	const VENUE = "Veranstalter";
 	const TIME = "Zeit";
-
-	/**
-	 * @inheritdoc
-	 */
-	public function getICalFilePath(array $info)
-	{
-		$ical = $this->buildIcal($info);
-		return $this->createICalFile($ical);
-	}
+	const FILE_EXTENSION = ".iCal";
 
 	/**
 	 * @inheritdoc
 	 */
 	public function getICalString(array $info)
 	{
-		return $this->buildIcal($info);
+		return $this->buildICal($info);
 	}
 
 	/**
@@ -45,7 +37,7 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 		$crs_name = "";
 		$description = "";
 		$duration = "";
-		$time = "";
+		$times = "";
 		$venue = "";
 
 		foreach($info as $i) {
@@ -60,7 +52,7 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 					$date = $i->getValue();
 					break;
 				case self::TIME:
-					$time = $i->getValue();
+					$times = $i->getValue();
 					break;
 				case self::VENUE:
 					$venue = $i->getValue();
@@ -99,18 +91,24 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 		$tz->addComponent($tz_rule_daytime);
 		$tz->addComponent($tz_rule_standart);
 		$calendar->setTimezone($tz);
-		$event = new \Eluceo\iCal\Component\Event();
-		$event
-			->setDtStart(new \DateTime($date['start']))
-			->setDtEnd(new \DateTime($date['end']))
-			->setNoTime(false)
-			->setLocation($venue, $venue)
-			->setUseTimezone(true)
-			->setSummary($title)
-			->setDescription($description);
-		$calendar
-			->setTimezone($tz)
-			->addComponent($event);
+
+		foreach ($times as $time) {
+			$start = $time['date']." ".$time['start_time'].":00";
+			$end = $time['date']." ".$time['end_time'].":00";
+
+			$event = new \Eluceo\iCal\Component\Event();
+			$event
+				->setDtStart(new \DateTime($start))
+				->setDtEnd(new \DateTime($end))
+				->setNoTime(false)
+				->setLocation($venue, $venue)
+				->setUseTimezone(true)
+				->setSummary($title)
+				->setDescription($description);
+			$calendar
+				->setTimezone($tz)
+				->addComponent($event);
+		}
 
 		return $calendar->render();
 	}
@@ -119,14 +117,15 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 	 * Creates a iCal file and return its path.
 	 *
 	 * @param 	string 	$ical
+	 * @param 	string 	$file_name
 	 * @return 	string
 	 */
-	protected function createICalFile($ical)
+	public function saveICal($ical, $file_name)
 	{
 		assert('is_string($ical)');
 
 		$dir = sys_get_temp_dir();
-		$tmp = tempnam($dir, "iCal_");
+		$tmp = $dir."/".$file_name.self::FILE_EXTENSION;
 		file_put_contents($tmp, $ical);
 		return $tmp;
 	}
