@@ -133,6 +133,17 @@ class UnboundCourseProvider extends Base {
 			, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
 		);
 
+		$ret[] = $this->createCourseInfoObject($entity
+			, $this->lng->txt("date")
+			, array(
+				"start" => $crs_start->get(IL_CAL_DATE, "YY-mm-dd"),
+				"end" => $object->getCourseEnd()->get(IL_CAL_DATE, "YY-mm-dd")
+			  )
+			, 300
+			, [CourseInfo::CONTEXT_ICAL
+			  ]
+		);
+
 		return $ret;
 	}
 
@@ -171,6 +182,13 @@ class UnboundCourseProvider extends Base {
 				, $times_formatted
 				, 910
 				, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+			);
+
+			$ret[] = $this->createCourseInfoObject($entity
+				, $this->lng->txt("time")
+				, $times_formatted
+				, 910
+				, [CourseInfo::CONTEXT_ICAL]
 			);
 
 			// Filter session where current user is assigned as lecture
@@ -446,6 +464,15 @@ class UnboundCourseProvider extends Base {
 					, 350
 					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
 						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
+					  ]
+				);
+
+				$ret[] = $this->createCourseInfoObject($entity
+					, $this->lng->txt("venue")
+					, join(", ", $val)
+					, 350
+					, [
+						CourseInfo::CONTEXT_ICAL
 					  ]
 				);
 
