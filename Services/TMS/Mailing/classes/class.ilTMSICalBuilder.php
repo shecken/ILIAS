@@ -16,7 +16,7 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 	const DATE = "Datum";
 	const VENUE = "Veranstalter";
 	const TIME = "Zeit";
-	const FILE_EXTENSION = ".iCal";
+	const FILE_EXTENSION = ".ics";
 
 	/**
 	 * @inheritdoc
@@ -105,26 +105,25 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 			$calendar
 				->setTimezone($tz)
 				->addComponent($event);
+		} else {
+			foreach ($times as $time) {
+				$start = $time['date']." ".$time['start_time'].":00";
+				$end = $time['date']." ".$time['end_time'].":00";
+
+				$event = new \Eluceo\iCal\Component\Event();
+				$event
+					->setDtStart(new \DateTime($start))
+					->setDtEnd(new \DateTime($end))
+					->setNoTime(false)
+					->setLocation($venue, $venue)
+					->setUseTimezone(true)
+					->setSummary($title)
+					->setDescription($description);
+				$calendar
+					->setTimezone($tz)
+					->addComponent($event);
+			}
 		}
-
-		foreach ($times as $time) {
-			$start = $time['date']." ".$time['start_time'].":00";
-			$end = $time['date']." ".$time['end_time'].":00";
-
-			$event = new \Eluceo\iCal\Component\Event();
-			$event
-				->setDtStart(new \DateTime($start))
-				->setDtEnd(new \DateTime($end))
-				->setNoTime(false)
-				->setLocation($venue, $venue)
-				->setUseTimezone(true)
-				->setSummary($title)
-				->setDescription($description);
-			$calendar
-				->setTimezone($tz)
-				->addComponent($event);
-		}
-
 		return $calendar->render();
 	}
 
