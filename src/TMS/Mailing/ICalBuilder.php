@@ -10,14 +10,6 @@ namespace ILIAS\TMS\Mailing;
 interface ICalBuilder
 {
 	/**
-	 * Get an iCal file path for crs_id.
-	 *
-	 * @param 	array 	$info
-	 * @return 	string 	path to iCal file
-	 */
-	public function getICalFilePath(array $info);
-
-	/**
 	 * Get an iCal string for crs_id.
 	 *
 	 * @param 	array 	$info
