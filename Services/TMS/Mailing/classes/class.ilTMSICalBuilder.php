@@ -17,12 +17,20 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 	const VENUE = "Veranstalter";
 	const TIME = "Zeit";
 
+	public function __construct()
+	{
+		global $DIC;
+
+		$this->g_filessystem = $DIC->filesystem();
+	}
+
 	/**
 	 * @inheritdoc
 	 */
 	public function getICalFilePath(array $info)
 	{
-		$this->buildIcal($info);
+		$ical = $this->buildIcal($info);
+		$this->createICalFile($ical);
 	}
 
 	/**
@@ -69,18 +77,7 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 			}
 		}
 
-		// $start_date_obj = $date['start'];
-		// $end_date_obj = $date['end'];
-		// if ($start_date_obj === null || $end_date_obj === null) {
-		// 	throw new Exception("gevUserUtils::buildICAL:"
-		// 						." start- or end-date of course are not set."
-		// 						." You have to provide both in order to create an ical event.");
-		// }
-		// $start_date =
-		// 	$start_date_obj->get(IL_CAL_DATE)." ".$this->getFormattedStartTime().":00";
-		// $end_date =
-		// 	$end_date_obj->get(IL_CAL_DATE)." ".$this->getFormattedEndTime().":00";
-		$calendar = new \Eluceo\iCal\Component\Calendar('generali-onlineakademie.de');
+		$calendar = new \Eluceo\iCal\Component\Calendar($title);
 		$tz_rule_daytime = new \Eluceo\iCal\Component\TimezoneRule(\Eluceo\iCal\Component\TimezoneRule::TYPE_DAYLIGHT);
 		$tz_rule_daytime
 			->setTzName('CEST')
@@ -116,18 +113,23 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 			->setNoTime(false)
 			->setLocation($venue, $venue)
 			->setUseTimezone(true)
-			->setSummary($this->getTitle())
-			->setDescription($this->getSubtitle())
-			->setOrganizer(new \Eluceo\iCal\Property\Event\Organizer($organizer));
+			->setSummary($title)
+			->setDescription($description);
 		$calendar
 			->setTimezone($tz)
 			->addComponent($event);
-		$wstream = fopen($a_filename, "w");
-		fwrite($wstream, $calendar->render());
-		fclose($wstream);
-		if ($a_send) {
-			exit();
-		}
-		return array($a_filename, "calender.ics");
+
+		return $calendar->render();
+	}
+
+	/**
+	 * Creates a iCal file and return its path.
+	 *
+	 * @param 	string 	$ical
+	 * @return 	string
+	 */
+	protected function createICalFile($ical)
+	{
+		assert('is_int($ical)');
 	}
 }
