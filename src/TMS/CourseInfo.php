@@ -24,6 +24,7 @@ interface CourseInfo extends Component {
 	const CONTEXT_ASSIGNED_TRAINING_DETAIL_INFO = 12;
 	const CONTEXT_USER_CAN_ASK_FOR_BOOKING = 13;
 	const CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO = 14;
+	const CONTEXT_ICAL = 15;
 
 	/**
 	 * Get a label for this step in the process.
