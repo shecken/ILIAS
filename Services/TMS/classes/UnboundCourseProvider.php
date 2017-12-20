@@ -186,7 +186,7 @@ class UnboundCourseProvider extends Base {
 
 			$ret[] = $this->createCourseInfoObject($entity
 				, $this->lng->txt("time")
-				, $times_formatted
+				, $times
 				, 910
 				, [CourseInfo::CONTEXT_ICAL]
 			);
@@ -331,7 +331,7 @@ class UnboundCourseProvider extends Base {
 				$end_time = $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i");
 				$lecture = $session->getAssignedTutorsIds();
 				$offset = $appointment->getDaysOffset();
-				$vals[$offset] = array("start_time" => $start_time, "end_time" => $end_time, "lecture" => $lecture);
+				$vals[$offset] = array("start_time" => $start_time, "end_time" => $end_time, "lecture" => $lecture, "date" => $date);
 			}
 		}
 
