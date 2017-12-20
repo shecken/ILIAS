@@ -16025,3 +16025,5 @@ tms#:#max_member#:#maximale Teilnehmerzahl
 tms#:#form_hours#:#Stunden
 tms#:#form_minutes#:#Minuten
 tms#:#form_seconds#:#Sekunden
+tms#:#hide_breadcrumb#:#Navigation einschränken
+tms#:#hide_breadcrumb_info#:#Mit dieser Einstellung wird die Navigation nur bis zum Kurs angezeigt.

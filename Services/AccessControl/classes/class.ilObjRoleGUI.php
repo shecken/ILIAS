@@ -489,6 +489,43 @@ class ilObjRoleGUI extends ilObjectGUI
 		return true;
 	}
 	
+	// cat-tms-patch start
+	/**
+	 * Add tms specific configuration controls
+	 *
+	 * @return void
+	 */
+	protected function initTMSRoleProperties() {
+		$this->lng->loadLanguageModule("tms");
+		$reg = new ilCheckboxInputGUI($this->lng->txt('hide_breadcrumb'), 'hide_breadcrumb');
+		$reg->setValue(1);
+		$reg->setInfo($this->lng->txt('hide_breadcrumb_info'));
+		$this->form->addItem($reg);
+
+		// Preparation for TMS-398
+		// $reg = new ilCheckboxInputGUI($this->lng->txt('hide_menu_tree'), 'hide_menu_tree');
+		// $reg->setValue(1);
+		// $this->form->addItem($reg);
+	}
+
+	/**
+	 * Load tms specific values
+	 *
+	 * @param int 	$role_id
+	 *
+	 * @return void
+	 */
+	protected function readTMSRoleProperties($role_id) {
+		$ret = array();
+		$ret["hide_breadcrumb"] = true;
+
+		// Preparation for TMS-398
+		// $ret["hide_menu_tree"] = true;
+
+		return $ret;
+	}
+	// cat-tms-patch end
+
 	/**
 	 * Store form input in role object
 	 * @return 
@@ -538,7 +575,13 @@ class ilObjRoleGUI extends ilObjectGUI
 			$data['wsp_disk_quota'] = ilUtil::Bytes2MB($role->getPersonalWorkspaceDiskQuota());		
 		}
 		$data['pro'] = $rbacreview->isProtected($this->obj_ref_id, $role->getId());
-		
+
+		// cat-tms-patch start
+		$tms_data = $this->readTMSRoleProperties((int)$role->getId());
+		$data = array_merge($data, $tms_data);
+		var_dump($data);
+		// cat-tms-patch end
+
 		$this->form->setValuesByArray($data);
 	}
 	
@@ -591,6 +634,9 @@ class ilObjRoleGUI extends ilObjectGUI
 		
 		$this->initFormRoleProperties(self::MODE_GLOBAL_UPDATE);
 		$this->readRoleProperties($this->object);
+		// cat-tms-patch start
+		$this->initTMSRoleProperties();
+		// cat-tms-patch end
 		$this->tpl->setContent($this->form->getHTML());
 	}
 	
