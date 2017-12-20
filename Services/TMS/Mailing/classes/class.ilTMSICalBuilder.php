@@ -17,20 +17,13 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 	const VENUE = "Veranstalter";
 	const TIME = "Zeit";
 
-	public function __construct()
-	{
-		global $DIC;
-
-		$this->g_filessystem = $DIC->filesystem();
-	}
-
 	/**
 	 * @inheritdoc
 	 */
 	public function getICalFilePath(array $info)
 	{
 		$ical = $this->buildIcal($info);
-		$this->createICalFile($ical);
+		return $this->createICalFile($ical);
 	}
 
 	/**
@@ -130,6 +123,11 @@ class ilTMSICalBuilder implements Mailing\ICalBuilder
 	 */
 	protected function createICalFile($ical)
 	{
-		assert('is_int($ical)');
+		assert('is_string($ical)');
+
+		$dir = sys_get_temp_dir();
+		$tmp = tempnam($dir, "iCal_");
+		file_put_contents($tmp, $ical);
+		return $tmp;
 	}
 }
