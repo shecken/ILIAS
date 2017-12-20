@@ -151,15 +151,15 @@ $permissions = [
 		,"changeable_lua"		=> false
 		,"certificate"			=> false];
 
-$fields = [	gevSettings::USR_UDF_FLAG_KU => ['Kennzeichen KU',$permissions,null]
-			,gevSettings::USR_UDF_ORGU_SAP => ['Organisationseinheit SAP',$permissions,null]
-			,gevSettings::USR_UDF_PERSONAL_ID => ['Personalnummer',$permissions,null]
-			,gevSettings::USR_UDF_FINANCIAL_ACCOUNT_LONG => ['Bezeichnung Kostenstelle',$permissions,null]
-			,gevSettings::USR_UDF_FUNCTION => ['Funktion',$permissions,null]
-			,gevSettings::USR_UDF_ENTRY_DATE_KU => ['Eintrittsdatum KO',$permissions,null]
-			,gevSettings::USR_UDF_INACTIVE_START => ['Inaktiv von',$permissions,null]
-			,gevSettings::USR_UDF_INACTIVE_END => ['Inaktiv bis',$permissions,null]
-			,gevSettings::USR_UDF_SUPERIOR_OF_USR => ['Vorgesetzter',$permissions,null]
+$fields = [	 'Kennzeichen KU' => [ gevSettings::USR_UDF_FLAG_KU,UDF_TYPE_TEXT,$permissions,null]
+			,'Organisationseinheit SAP'=> [ gevSettings::USR_UDF_ORGU_SAP,UDF_TYPE_TEXT,$permissions,null]
+			,'Personalnummer' => [ gevSettings::USR_UDF_PERSONAL_ID,UDF_TYPE_TEXT,$permissions,null]
+			,'Bezeichnung Kostenstelle' => [gevSettings::USR_UDF_FINANCIAL_ACCOUNT_LONG,UDF_TYPE_TEXT,$permissions,null]
+			,'Funktion' => [ gevSettings::USR_UDF_FUNCTION ,UDF_TYPE_TEXT,$permissions,null]
+			,'Eintrittsdatum KO' => [ gevSettings::USR_UDF_ENTRY_DATE_KO,UDF_TYPE_TEXT,$permissions,null]
+			,'inaktiv von' => [gevSettings::USR_UDF_INACTIVE_START ,UDF_TYPE_TEXT,$permissions,null]
+			,'inaktiv bis' => [gevSettings::USR_UDF_INACTIVE_END,UDF_TYPE_TEXT,$permissions,null]
+			,'Vorgesetzter' => [gevSettings::USR_UDF_SUPERIOR_OF_USR ,UDF_TYPE_TEXT,$permissions,null]
 			];
 gevUDFUtils::createUDFFields($fields);
 ?>
