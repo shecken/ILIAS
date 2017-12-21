@@ -33,7 +33,11 @@ class TMSMailClerk {
 	protected $from;
 
 
-	public function __construct(MailContentBuilder $content_builder, LoggingDB $logger, Recipient $from) {
+	public function __construct(
+		MailContentBuilder $content_builder,
+		LoggingDB $logger,
+		Recipient $from
+	) {
 		$this->content_builder = $content_builder;
 		$this->logger = $logger;
 		$this->from = $from;
@@ -67,6 +71,7 @@ class TMSMailClerk {
 		foreach ($mails as $mail) {
 			$recipient = $mail->getRecipient();
 			$contexts = $mail->getContexts();
+			$attachments = $mail->getAttachments();
 			$template_ident = $mail->getTemplateIdentifier();
 
 			$builder =  $this->content_builder->withData($template_ident, $contexts);
@@ -87,9 +92,10 @@ class TMSMailClerk {
 			foreach ($embedded as $embed) {
 				list($path, $file) = $embed;
 				$this->sender->AddEmbeddedImage($path, $file);
-
 			}
-
+			foreach($attachments->getAttachments() as $attachment) {
+				$this->sender->addAttachment($attachment->getAttachmentPath());
+			}
 
 			if(! $this->sender->Send()) {
 				$err[] = $this->sender->ErrorInfo;

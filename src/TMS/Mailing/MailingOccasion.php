@@ -43,6 +43,4 @@ interface MailingOccasion extends Component {
 	 */
 	public function getMails($event, $parameter);
 
-
-
 }
