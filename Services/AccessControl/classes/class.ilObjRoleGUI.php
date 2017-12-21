@@ -485,46 +485,14 @@ class ilObjRoleGUI extends ilObjectGUI
 			$wquo->setInfo($this->lng->txt('enter_in_mb_desc').'<br />'.$this->lng->txt('disk_quota_on_role_desc'));
 			$this->form->addItem($wquo);
 		}
-			
+
+		// cat-tms-patch start
+		if($this->isGlobal() && ($a_mode == self::MODE_GLOBAL_CREATE || $a_mode == self::MODE_GLOBAL_UPDATE)) {
+			$this->initTMSRoleSettings();
+		}
+		// cat-tms-patch end
 		return true;
 	}
-	
-	// cat-tms-patch start
-	/**
-	 * Add tms specific configuration controls
-	 *
-	 * @return void
-	 */
-	protected function initTMSRoleProperties() {
-		$this->lng->loadLanguageModule("tms");
-		$reg = new ilCheckboxInputGUI($this->lng->txt('hide_breadcrumb'), 'hide_breadcrumb');
-		$reg->setValue(1);
-		$reg->setInfo($this->lng->txt('hide_breadcrumb_info'));
-		$this->form->addItem($reg);
-
-		// Preparation for TMS-398
-		// $reg = new ilCheckboxInputGUI($this->lng->txt('hide_menu_tree'), 'hide_menu_tree');
-		// $reg->setValue(1);
-		// $this->form->addItem($reg);
-	}
-
-	/**
-	 * Load tms specific values
-	 *
-	 * @param int 	$role_id
-	 *
-	 * @return void
-	 */
-	protected function readTMSRoleProperties($role_id) {
-		$ret = array();
-		$ret["hide_breadcrumb"] = true;
-
-		// Preparation for TMS-398
-		// $ret["hide_menu_tree"] = true;
-
-		return $ret;
-	}
-	// cat-tms-patch end
 
 	/**
 	 * Store form input in role object
@@ -547,6 +515,7 @@ class ilObjRoleGUI extends ilObjectGUI
 		$role->toggleAssignUsersStatus($this->form->getInput('la'));
 		$role->setDiskQuota(ilUtil::MB2Bytes($this->form->getInput('disk_quota')));
 		$role->setPersonalWorkspaceDiskQuota(ilUtil::MB2Bytes($this->form->getInput('wsp_disk_quota')));
+
 		return true;
 	}
 	
@@ -577,16 +546,12 @@ class ilObjRoleGUI extends ilObjectGUI
 		$data['pro'] = $rbacreview->isProtected($this->obj_ref_id, $role->getId());
 
 		// cat-tms-patch start
-		$tms_data = $this->readTMSRoleProperties((int)$role->getId());
+		$tms_data = $this->readTMSRoleSettings($role);
 		$data = array_merge($data, $tms_data);
-		var_dump($data);
 		// cat-tms-patch end
 
 		$this->form->setValuesByArray($data);
 	}
-	
-
-
 
 	/**
 	 * Only called from administration -> role folder ?
@@ -596,7 +561,6 @@ class ilObjRoleGUI extends ilObjectGUI
 	public function createObject()
 	{
 		global $rbacsystem;
-		
 		if(!$rbacsystem->checkAccess('create_role',$this->obj_ref_id))
 		{
 			$ilErr->raiseError($this->lng->txt('permission_denied'),$ilErr->MESSAGE);
@@ -613,7 +577,6 @@ class ilObjRoleGUI extends ilObjectGUI
 	public function editObject()
 	{
 		global $rbacsystem, $rbacreview, $ilSetting,$ilErr,$ilToolbar;
-
 		if(!$this->checkAccess('write','edit_permission'))
 		{
 			$ilErr->raiseError($this->lng->txt("msg_no_perm_write"),$ilErr->MESSAGE);
@@ -631,12 +594,9 @@ class ilObjRoleGUI extends ilObjectGUI
 				);
 			}
 		}
-		
+
 		$this->initFormRoleProperties(self::MODE_GLOBAL_UPDATE);
 		$this->readRoleProperties($this->object);
-		// cat-tms-patch start
-		$this->initTMSRoleProperties();
-		// cat-tms-patch end
 		$this->tpl->setContent($this->form->getHTML());
 	}
 	
@@ -655,6 +615,11 @@ class ilObjRoleGUI extends ilObjectGUI
 			include_once './Services/AccessControl/classes/class.ilObjRole.php';
 			$this->loadRoleProperties($this->role = new ilObjRole());
 			$this->role->create();
+			// cat-tms-patch start
+			$this->role->createTMSSettings();
+			$this->loadTMSRoleSettings($this->role);
+			$this->role->updateTMSSettings();
+			// cat-tms-patch end
 			$rbacadmin->assignRoleToFolder($this->role->getId(), $this->obj_ref_id,'y');
 			$rbacadmin->setProtected(
 				$this->obj_ref_id,
@@ -695,7 +660,12 @@ class ilObjRoleGUI extends ilObjectGUI
 		{
 			include_once './Services/AccessControl/classes/class.ilObjRole.php';
 			$this->loadRoleProperties($this->object);
+			// cat-tms-patch start
+			$this->loadTMSRoleSettings($this->object);
+			$this->object->updateTMSSettings();
+			// cat-tms-patch end
 			$this->object->update();
+
 			$rbacadmin->setProtected(
 				$this->obj_ref_id,
 				$this->object->getId(),
@@ -971,6 +941,9 @@ class ilObjRoleGUI extends ilObjectGUI
 		}
 		
 		$this->object->setParent((int) $this->obj_ref_id);
+		// cat-tms-patch start
+		$this->object->deleteTMSSettings();
+		// cat-tms-patch end
 		$this->object->delete();
 		ilUtil::sendSuccess($this->lng->txt('msg_deleted_role'),true);
 		
@@ -1843,8 +1816,80 @@ class ilObjRoleGUI extends ilObjectGUI
 		ilUtil::sendSuccess($this->lng->txt('clipboard_user_added'),true);
 		$ilCtrl->redirect($this, 'userassignment');
 	}
-	
-	
-	
+
+	// cat-tms-patch start
+	/**
+	 * Add tms specific configuration controls
+	 *
+	 * @return void
+	 */
+	protected function initTMSRoleSettings() {
+		$this->lng->loadLanguageModule("tms");
+		$reg = new ilCheckboxInputGUI($this->lng->txt('hide_breadcrumb'), 'hide_breadcrumb');
+		$reg->setInfo($this->lng->txt('hide_breadcrumb_info'));
+		$reg->setValue(1);
+		$this->form->addItem($reg);
+
+		$reg = new ilCheckboxInputGUI($this->lng->txt('hide_menu_tree'), 'hide_menu_tree');
+		$reg->setInfo($this->lng->txt('hide_menu_tree_info'));
+		$reg->setValue(1);
+		$this->form->addItem($reg);
+	}
+
+	/**
+	 * Load tms specific values
+	 *
+	 * @param ilObjRole 	$role
+	 *
+	 * @return void
+	 */
+	protected function readTMSRoleSettings(ilObjRole $role) {
+		$ret = array();
+
+		$tms_settings = $role->getTMSSettings();
+		$ret["hide_breadcrumb"] = $tms_settings->getHideBreadcrumb();
+		$ret["hide_menu_tree"] = $tms_settings->getHideMenuTree();
+
+		return $ret;
+	}
+
+	/**
+	 * Updates role with tms settings
+	 *
+	 * @param ilObjRole 	$role
+	 *
+	 * @return void
+	 */
+	protected function loadTMSRoleSettings(ilObjRole $role) {
+		$hide_breadcrumb = (bool)$this->form->getInput('hide_breadcrumb');
+		$hide_menu_tree = (bool)$this->form->getInput('hide_menu_tree');
+
+		$role->setTMSSettings($hide_breadcrumb, $hide_menu_tree);
+	}
+
+	/**
+	 * Checks the current edited role is a global
+	 *
+	 * @return bool
+	 */
+	protected function isGlobal() {
+		if($this->object->getRefId() == $this->id) {
+			return true;
+		}
+
+		if($this->role !== null) {
+			return true;
+		}
+
+		if($this->object !== null) {
+			global $DIC;
+			$g_rbacreview = $DIC->rbac()->review();
+			$global_roles = $g_rbacreview->getGlobalRoles();
+			return in_array($this->object->getId(), $global_roles);
+		}
+
+		return false;
+	}
+	// cat-tms-patch end
 } // END class.ilObjRoleGUI
 ?>
