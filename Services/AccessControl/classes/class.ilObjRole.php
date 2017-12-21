@@ -36,6 +36,21 @@ class ilObjRole extends ilObject
 	var $disk_quota;
 	var $wsp_disk_quota;
 
+	// cat-tms-patch start
+	/**
+	 * Special settings for tms
+	 *
+	 * @var ilTMSRoleSettings
+	 */
+	protected $tms_settings;
+
+	/**
+	 * DB settings for tms
+	 *
+	 * @var ilTMSRoleSettings
+	 */
+	protected $tms_settings_db;
+
 	/**
 	* Constructor
 	* @access	public
@@ -48,6 +63,12 @@ class ilObjRole extends ilObject
 		$this->disk_quota = 0;
 		$this->wsp_disk_quota = 0;
 		parent::__construct($a_id,$a_call_by_reference);
+
+		// cat tms-patch start
+		global $DIC;
+		require_once("Services/TMS/Roles/classes/class.ilTMSRolesDB.php");
+		$this->tms_settings_db = new ilTMSRolesDB($DIC->database());
+		// cat tms-patch end
 	}
 	
 	/**
@@ -174,6 +195,10 @@ class ilObjRole extends ilObject
 		{
 			 $this->ilias->raiseError("<b>Error: There is no dataset with id ".$this->id."!</b><br />class: ".get_class($this)."<br />Script: ".__FILE__."<br />Line: ".__LINE__, $this->ilias->FATAL);
 		}
+
+		// cat-tms-patch start
+		$this->readTMSSettings();
+		// cat-tms-patch end
 
 		parent::read();
 	}
@@ -495,6 +520,11 @@ class ilObjRole extends ilObject
 			// linked local role: INHERITANCE WAS STOPPED, SO DELETE ONLY THIS LOCAL ROLE
 			$rbacadmin->deleteLocalRole($this->getId(),$this->getParent());
 		}
+
+		// cat-tms-patch start
+		$this->deleteTMSSettings();
+		// cat-tms-patch end
+
 		return true;
 	}
 	
@@ -1050,6 +1080,39 @@ class ilObjRole extends ilObject
 			}
 			return true;
 	}
-	
+
+	// cat-tms-patch start
+	/**
+	 * Get the current tms settings
+	 *
+	 * @return ilTMSRoleSettings
+	 */
+	public function getTMSSettings() {
+		return $this->tms_settings;
+	}
+
+	public function createTMSSettings() {
+		$this->tms_settings = $this->tms_settings_db->create((int)$this->getId());
+	}
+
+	public function updateTMSSettings() {
+		$this->tms_settings_db->update($this->tms_settings);
+	}
+
+	public function deleteTMSSettings() {
+		$this->tms_settings_db->deleteFor((int)$this->getId());
+	}
+
+	public function readTMSSettings() {
+		$this->tms_settings = $this->tms_settings_db->selectFor((int)$this->getId());
+	}
+
+	public function setTMSSettings($hide_breadcrumb, $hide_menu_tree) {
+		assert('is_bool($hide_breadcrumb)');
+		assert('is_bool($hide_menu_tree)');
+		$this->tms_settings = $this->tms_settings->withHideBreadcrumb($hide_breadcrumb)
+			->withHideMenuTree($hide_menu_tree);
+	}
+	// cat-tms-patch end
 } // END class.ilObjRole
 ?>
