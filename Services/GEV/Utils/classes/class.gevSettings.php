@@ -694,7 +694,7 @@ class gevSettings
 		, "OD/FD ID"				=> "ID"
 		, "BD ID"					=> "ID"
 		, "Agt-Id"					=> "HGB §84"
-		, "VA"						=> "HGB §84"
+		, "VA"						=> "AAD"
 		, "NFK"						=> "AAD"
 		, "FDA"						=> "AAD"
 		//, "Ausbilder"				=> "nicht relevant"
