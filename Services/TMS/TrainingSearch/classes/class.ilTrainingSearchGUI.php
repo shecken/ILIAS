@@ -19,7 +19,7 @@ class ilTrainingSearchGUI {
 	const CMD_QUICKFILTER = "quickFilter";
 	const CMD_SORT = "sort";
 
-	const PAGE_SIZE = 30;
+	const PAGE_SIZE = 10;
 	const PAGINATION_PARAM = "pagination";
 
 	/**
