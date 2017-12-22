@@ -241,7 +241,8 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 * @return Object 	of search type
 	 */
 	protected function hasChildOfType($ref_id, $search_type) {
-		$children = $this->g_tree->getSubTreeTypes($ref_id, [$search_type]);
+		$node = $this->getNodeData($ref_id);
+		$children = $this->g_tree->getSubTree($node, false, $search_type);
 		return count($children) > 0;
 	}
 
