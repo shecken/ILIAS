@@ -59,9 +59,12 @@ class ilTrainingSearchTableGUI {
 	/**
 	 * Renders the presentation table
 	 *
-	 * @return string
+	 * @param 	ILIAS\UI\Component\Component[] 	$view_constrols
+	 * @param	int			$offset
+	 * @param	int|null	$limit
+	 * @return 	string
 	 */
-	public function render($view_constrols) {
+	public function render($view_constrols, $offset = 0, $limit = null) {
 		global $DIC;
 		$f = $DIC->ui()->factory();
 		$renderer = $DIC->ui()->renderer();
@@ -92,7 +95,7 @@ class ilTrainingSearchTableGUI {
 			}
 		);
 
-		$data = $this->getData();
+		$data = array_slice($this->getData(), $offset, $limit);
 
 		//apply data to table and render
 		return $renderer->render($ptable->withData($data));
