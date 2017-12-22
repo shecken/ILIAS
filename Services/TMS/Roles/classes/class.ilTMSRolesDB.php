@@ -78,6 +78,44 @@ class ilTMSRolesDB {
 	}
 
 	/**
+	 * User can view full path of breadcumb by user role_ids
+	 *
+	 * @param int[] 	$role_ids
+	 *
+	 * @return bool
+	 */
+	public function viewFullBreadcrump(array $role_ids) {
+		$query = "SELECT COUNT(role_id) AS cnt".PHP_EOL
+				." FROM ".self::TABLE_NAME.PHP_EOL
+				." WHERE hide_breadcrumb = 0".PHP_EOL
+				."     AND ".$this->getDB()->in("role_id", $role_ids, false, "integer");
+
+		$res = $this->getDB()->query($query);
+		$row = $this->getDB()->fetchAssoc($res);
+
+		return (int)$row["cnt"] > 0;
+	}
+
+	/**
+	 * User can view full navigation tree
+	 *
+	 * @param int[] 	$role_ids
+	 *
+	 * @return bool
+	 */
+	public function viewNavigationTree(array $role_ids) {
+		$query = "SELECT COUNT($role_id) as cnt".PHP_EOL
+				." FROM ".self::TABLE_NAME.PHP_EOL
+				." WHERE hide_menu_tree = 0".PHP_EOL
+				."     AND ".$this->getDB()->in("role_id", $role_ids, false, "integer");
+
+		$res = $this->getDB()->query($query);
+		$row = $this->getDB()->fetchAssoc($res);
+
+		return $row["cnt"] > 0;
+	}
+
+	/**
 	 * Delete settings for
 	 *
 	 * @param int 	$role_id
