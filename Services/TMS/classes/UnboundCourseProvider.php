@@ -130,7 +130,9 @@ class UnboundCourseProvider extends Base {
 			, $this->lng->txt("date")
 			, $date
 			, 900
-			, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+			, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+				CourseInfo::CONTEXT_ACCOMODATION_DEFAULT_INFO
+			]
 		);
 
 		$ret[] = $this->createCourseInfoObject($entity
@@ -181,7 +183,9 @@ class UnboundCourseProvider extends Base {
 				, $this->lng->txt("period")
 				, $times_formatted
 				, 910
-				, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+				, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+					CourseInfo::CONTEXT_ACCOMODATION_DEFAULT_INFO
+				  ]
 			);
 
 			$ret[] = $this->createCourseInfoObject($entity
