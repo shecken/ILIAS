@@ -178,7 +178,7 @@ class ilTrainingSearchGUI {
 			->withTotalEntries(count($bookable_trainings))
 			->withPageSize(self::PAGE_SIZE)
 			->withCurrentPage($current_page)
-			->withTargetURL($cmd, self::PAGINATION_PARAM);
+			->withTargetURL($link, self::PAGINATION_PARAM);
 		$offset = $pagination->getOffset();
 		$limit = self::PAGE_SIZE;
 		$view_control[] = $pagination;
