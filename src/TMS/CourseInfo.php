@@ -25,6 +25,7 @@ interface CourseInfo extends Component {
 	const CONTEXT_USER_CAN_ASK_FOR_BOOKING = 13;
 	const CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO = 14;
 	const CONTEXT_ICAL = 15;
+	const CONTEXT_ACCOMODATION_DEFAULT_INFO = 16;
 
 	/**
 	 * Get a label for this step in the process.
