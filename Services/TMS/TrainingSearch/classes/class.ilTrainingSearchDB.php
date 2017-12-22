@@ -78,10 +78,11 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 * @return array<ilObjCourse>
 	 */
 	protected function getAllCoursesForUser($user_id) {
-		$query = "SELECT DISTINCT object_data.obj_id, object_reference.ref_id FROM object_data".PHP_EOL
-				." LEFT JOIN object_reference ON object_data.obj_id = object_reference.obj_id".PHP_EOL
-				." WHERE object_data.type = 'crs'".PHP_EOL
-				."     AND object_reference.deleted IS NULL";
+		$query = "SELECT DISTINCT crs_settings.obj_id, object_reference.ref_id".PHP_EOL
+				." FROM crs_settings".PHP_EOL
+				." JOIN object_reference ON crs_settings.obj_id = object_reference.obj_id".PHP_EOL
+				." WHERE object_reference.deleted IS NULL".PHP_EOL
+				."     AND crs_settings.activation_type = 1";
 
 		$res = $this->g_db->query($query);
 		$ret = array();
