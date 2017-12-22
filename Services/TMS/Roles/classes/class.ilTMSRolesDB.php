@@ -104,7 +104,7 @@ class ilTMSRolesDB {
 	 * @return bool
 	 */
 	public function viewNavigationTree(array $role_ids) {
-		$query = "SELECT COUNT($role_id) as cnt".PHP_EOL
+		$query = "SELECT COUNT(role_id) AS cnt".PHP_EOL
 				." FROM ".self::TABLE_NAME.PHP_EOL
 				." WHERE hide_menu_tree = 0".PHP_EOL
 				."     AND ".$this->getDB()->in("role_id", $role_ids, false, "integer");
@@ -112,7 +112,7 @@ class ilTMSRolesDB {
 		$res = $this->getDB()->query($query);
 		$row = $this->getDB()->fetchAssoc($res);
 
-		return $row["cnt"] > 0;
+		return (int)$row["cnt"] > 0;
 	}
 
 	/**
