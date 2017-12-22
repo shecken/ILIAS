@@ -87,15 +87,15 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 		$res = $this->g_db->query($query);
 		$ret = array();
 		while($row = $this->g_db->fetchAssoc($res)) {
+			if($this->isTemplate($row["ref_id"])) {
+				continue;
+			}
+
 			if($this->userIsOnCourse($user_id, $row["ref_id"], $row["obj_id"])) {
 				continue;
 			}
 
 			if(!$this->userHasAccess($user_id, $row["ref_id"], $row["obj_id"])) {
-				continue;
-			}
-
-			if($this->isTemplate($row["ref_id"])) {
 				continue;
 			}
 
