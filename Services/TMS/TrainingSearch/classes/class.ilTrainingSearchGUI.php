@@ -173,6 +173,7 @@ class ilTrainingSearchGUI {
 		$current_page = (int)$_GET[self::PAGINATION_PARAM];
 
 		$view_control = array($button1);
+		$view_control = $this->addSortationObjects($view_control);
 		if ($cmd === self::CMD_SHOW) {
 			$link = $this->g_ctrl->getLinkTarget($this, $cmd, "", false, false);
 			$pagination = $this->g_f->viewControl()->pagination()
@@ -188,7 +189,6 @@ class ilTrainingSearchGUI {
 			$offset = 0;
 			$limit = null;
 		}
-		$view_control = $this->addSortationObjects($view_control);
 		$content = $this->g_renderer->render($modal).$table->render($view_control, $offset, $limit);
 
 		if(count($bookable_trainings) == 0) {
