@@ -62,13 +62,14 @@ class ilObjRole extends ilObject
 		$this->type = "role";
 		$this->disk_quota = 0;
 		$this->wsp_disk_quota = 0;
-		parent::__construct($a_id,$a_call_by_reference);
 
 		// cat tms-patch start
 		global $DIC;
 		require_once("Services/TMS/Roles/classes/class.ilTMSRolesDB.php");
 		$this->tms_settings_db = new ilTMSRolesDB($DIC->database());
 		// cat tms-patch end
+
+		parent::__construct($a_id,$a_call_by_reference);
 	}
 	
 	/**
