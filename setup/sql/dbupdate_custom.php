@@ -87,3 +87,16 @@ if($ilDB->tableExists('tms_role_settings') )
 	$ilDB->addPrimaryKey('tms_role_settings', array('role_id'));
 }
 ?>
+
+<#9>
+<?php
+global $DIC;
+require_once("Services/TMS/Roles/classes/class.ilTMSRolesDB.php");
+$tms_settings_db = new ilTMSRolesDB($ilDB);
+$query = "SELECT rol_id FROM rbac_fa WHERE parent = 8 AND assign='y'";
+$res = $ilDB->query($query);
+while($row = $ilDB->fetchAssoc($res)) {
+	$tms_settings = $tms_settings_db->selectFor((int)$row["rol_id"]);
+	$tms_settings_db->update($tms_settings);
+}
+?>
