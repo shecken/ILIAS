@@ -135,7 +135,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 * @return bool
 	 */
 	protected function isTemplate($ref_id) {
-		$copy_settings = $this->getFirstChildOfByType($ref_id, "xcps");
+		$copy_settings = $this->hasChildOfType($ref_id, "xcps");
 		return $copy_settings !== null;
 	}
 
@@ -231,6 +231,19 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Check if ref_id has a child of the given type.
+	 *
+	 * @param int 	$ref_id
+	 * @param string 	$search_type
+	 *
+	 * @return Object 	of search type
+	 */
+	protected function hasChildOfType($ref_id, $search_type) {
+		$children = $this->g_tree->getSubTreeTypes($ref_id, [$search_type]);
+		return count($children) > 0;
 	}
 
 	/**
