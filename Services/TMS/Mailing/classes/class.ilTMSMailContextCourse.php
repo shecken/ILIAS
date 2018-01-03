@@ -16,7 +16,9 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		'TRAINER_FIRST_NAME' => 'trainerFirstname',
 		'TRAINER_LAST_NAME' => 'trainerLastname',
 		'OFFICE_FIRST_NAME' => 'adminFirstname',
-		'OFFICE_LAST_NAME' => 'adminLastname'
+		'OFFICE_LAST_NAME' => 'adminLastname',
+		'VENUE' => 'crsVenue',
+		'TRAINING_PROVIDER' => 'crsProvider'
 	);
 
 	/**
@@ -108,7 +110,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	}
 
 	/**
-	 * @return string
+	 * @return string | null
 	 */
 	public function trainerFirstname() {
 		$trainer = $this->getTrainer();
@@ -119,7 +121,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	}
 
 	/**
-	 * @return string
+	 * @return string | null
 	 */
 	public function trainerLastname() {
 		$trainer = $this->getTrainer();
@@ -130,7 +132,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	}
 
 	/**
-	 * @return string
+	 * @return string | null
 	 */
 	public function adminFirstname() {
 		$admin = $this->getAdmin();
@@ -141,7 +143,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	}
 
 	/**
-	 * @return string
+	 * @return string | null
 	 */
 	public function adminLastname() {
 		$admin = $this->getAdmin();
@@ -150,6 +152,50 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		}
 		return $admin;
 	}
+
+	/**
+	 * @return string | null
+	 */
+	public function crsVenue() {
+		if(!ilPluginAdmin::isPluginActive('venues')) {
+			return null;
+		}
+		$vplug = ilPluginAdmin::getPluginObjectById('venues');
+		$vactions = $vplug->getActions();
+
+		$vassignment = $vactions->getAssignment($this->getCourseObjectId());
+		if($vassignment->isCustomAssignment()) {
+			$venue_text = $vassignment->getVenueText();
+		} else {
+			$vid = $vassignment->getVenueId();
+			$v = $vactions->getVenue($vid);
+			$gen = $v->getGeneral();
+			$add = $v->getAddress();
+
+			$venue_text = implode('<br />', array(
+				$gen->getName(),
+				$add->getAddress1(),
+				$add->getAddress2(),
+				$add->getPostcode() .' ' .$add->getCity()
+			));
+		}
+		return $venue_text;
+
+	}
+
+	/**
+	 * @return string | null
+	 */
+	public function crsProvider() {
+		if(!ilPluginAdmin::isPluginActive('trainingprovider')) {
+			return null;
+		}
+		$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
+		$pactions = $pplug->getActions();
+	}
+
+
+
 
 	/**
 	 * Get session appointments from within the course
@@ -221,6 +267,18 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		}
 		return $this->crs_obj;
 	}
+
+	/**
+	 * Get the course-object's obj_id
+	 *
+	 * @return int
+	 */
+	protected function getCourseObjectId() {
+		global $ilObjDataCache;
+		return $ilObjDataCache->lookupObjId($this->getCourseRefId());
+	}
+
+
 
 	/**
 	 * Get first member with trainer-role
