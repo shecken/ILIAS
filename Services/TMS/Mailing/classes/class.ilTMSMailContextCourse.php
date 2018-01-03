@@ -27,7 +27,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	protected $crs_ref_id;
 
 	/**
-	 * @var ilObjCourse
+	 * @var ilObjCourse | null
 	 */
 	protected $crs_obj;
 
@@ -93,20 +93,30 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	}
 
 	/**
-	 * @return string
+	 * @return string | null
 	 */
 	public function crsStartdate() {
 		$crs = $this->getCourseObject();
-		return $crs->getCourseStart()->get(IL_CAL_FKT_DATE, "d.m.Y");
+		$start = $crs->getCourseStart();
+		if($start) {
+			return $start->get(IL_CAL_FKT_DATE, "d.m.Y");
+		} else {
+			return null;
+		}
 
 	}
 
 	/**
-	 * @return string
+	 * @return string | null
 	 */
 	public function crsEnddate() {
 		$crs = $this->getCourseObject();
-		return $crs->getCourseEnd()->get(IL_CAL_FKT_DATE, "d.m.Y");
+		$end = $crs->getCourseEnd();
+		if($end) {
+			return $end->get(IL_CAL_FKT_DATE, "d.m.Y");
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -296,7 +306,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	 * @return ilObjUser | null
 	 */
 	protected function getTrainer() {
-		$participants = $this->getCourseobject()->getMembersObject();
+		$participants = $this->getCourseObject()->getMembersObject();
 		$trainers = $participants->getTutors();
 		if(count($trainers) > 0) {
 			$trainer_id = (int)$trainers[0];
@@ -311,7 +321,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	 * @return ilObjUser | null
 	 */
 	protected function getAdmin() {
-		$participants = $this->getCourseobject()->getMembersObject();
+		$participants = $this->getCourseObject()->getMembersObject();
 		$admins = $participants->getAdmins();
 		if(count($admins) > 0) {
 			$admin_id = (int)$admins[0];
