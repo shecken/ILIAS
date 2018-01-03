@@ -290,8 +290,6 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		return $ilObjDataCache->lookupObjId($this->getCourseRefId());
 	}
 
-
-
 	/**
 	 * Get first member with trainer-role
 	 *
