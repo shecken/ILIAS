@@ -12,13 +12,20 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		'COURSE_LINK' => 'crsLink',
 		'SCHEDULE' => 'crsSchedule',
 		'STARTDATE' => 'crsStartdate',
-		'ENDDATE' => 'crsEnddate'
+		'ENDDATE' => 'crsEnddate',
+		'TRAINER_FIRST_NAME' => 'trainerFirstname',
+		'TRAINER_LAST_NAME' => 'trainerLastname'
 	);
 
 	/**
 	 * @var int
 	 */
 	protected $crs_ref_id;
+
+	/**
+	 * @var ilObjCourse
+	 */
+	protected $crs_obj;
 
 	public function __construct($crs_ref_id) {
 		assert('is_int($crs_ref_id)');
@@ -85,7 +92,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	 * @return string
 	 */
 	public function crsStartdate() {
-		$crs = \ilObjectFactory::getInstanceByRefId($this->getCourseRefId());
+		$crs = $this->getCourseObject();
 		return $crs->getCourseStart()->get(IL_CAL_FKT_DATE, "d.m.Y");
 
 	}
@@ -94,8 +101,31 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	 * @return string
 	 */
 	public function crsEnddate() {
-		$crs = \ilObjectFactory::getInstanceByRefId($this->getCourseRefId());
+		$crs = $this->getCourseObject();
 		return $crs->getCourseEnd()->get(IL_CAL_FKT_DATE, "d.m.Y");
+	}
+
+	/**
+	 * @return string
+	 */
+	public function trainerFirstname() {
+		$trainer = $this->getTrainer();
+		if($trainer !== null) {
+			return $trainer->getFirstname();
+		}
+		return $trainer;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function trainerLastname() {
+		$trainer = $this->getTrainer();
+		if($trainer !== null) {
+			return $trainer->getLastname();
+		}
+		return $trainer;
+
 	}
 
 	/**
@@ -124,8 +154,6 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		ksort($vals, SORT_NUMERIC);
 		return $vals;
 	}
-
-
 
 	/**
 	 * Get all children by type recursive
@@ -156,9 +184,34 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 				}
 			}
 		}
-
 		return $ret;
 	}
 
+	/**
+	 * Get the course-object
+	 *
+	 * @return ilObjCourse
+	 */
+	protected function getCourseObject() {
+		if(! $this->crs_obj) {
+			$this->crs_obj = \ilObjectFactory::getInstanceByRefId($this->getCourseRefId());
+		}
+		return $this->crs_obj;
+	}
+
+	/**
+	 * Get first member with trainer-role
+	 *
+	 * @return ilObjUser | null
+	 */
+	protected function getTrainer() {
+		$participants = $this->getCourseobject()->getMembersObject();
+		$trainers = $participants->getTutors();
+		if(count($trainers) > 0) {
+			$trainer_id = (int)$trainers[0];
+			return new \ilObjUser($trainer_id);
+		}
+		return null;
+	}
 
 }
