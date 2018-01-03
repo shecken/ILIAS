@@ -10,7 +10,9 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	private static $PLACEHOLDER = array(
 		'COURSE_TITLE' => 'crsTitle',
 		'COURSE_LINK' => 'crsLink',
-		'SCHEDULE' => 'crsSchedule'
+		'SCHEDULE' => 'crsSchedule',
+		'STARTDATE' => 'crsStartdate',
+		'ENDDATE' => 'crsEnddate'
 	);
 
 	/**
@@ -79,7 +81,22 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		return implode('<br>', $schedule);
 	}
 
+	/**
+	 * @return string
+	 */
+	public function crsStartdate() {
+		$crs = \ilObjectFactory::getInstanceByRefId($this->getCourseRefId());
+		return $crs->getCourseStart()->get(IL_CAL_FKT_DATE, "d.m.Y");
 
+	}
+
+	/**
+	 * @return string
+	 */
+	public function crsEnddate() {
+		$crs = \ilObjectFactory::getInstanceByRefId($this->getCourseRefId());
+		return $crs->getCourseEnd()->get(IL_CAL_FKT_DATE, "d.m.Y");
+	}
 
 	/**
 	 * Get session appointments from within the course
