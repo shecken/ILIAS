@@ -162,8 +162,8 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		}
 		$vplug = ilPluginAdmin::getPluginObjectById('venues');
 		$vactions = $vplug->getActions();
-
 		$vassignment = $vactions->getAssignment($this->getCourseObjectId());
+
 		if($vassignment->isCustomAssignment()) {
 			$venue_text = $vassignment->getVenueText();
 		} else {
@@ -192,10 +192,22 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		}
 		$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
 		$pactions = $pplug->getActions();
+		$passignment = $pactions->getAssignment($this->getCourseObjectId());
+
+		if($passignment->isCustomAssignment()) {
+			$provider_text = $passignment->getProviderText();
+		} else {
+			$pid = $passignment->getProviderId();
+			$pvals = $pactions->getProviderValues($pid);
+			$provider_text = implode('<br />', array(
+				$pvals[$pactions::F_NAME],
+				$pvals[$pactions::F_ADDRESS1],
+				$pvals[$pactions::F_ADDRESS2],
+				$pvals[$pactions::F_POSTCODE] .' '.$pvals[$pactions::F_CITY]
+			));
+		}
+		return $provider_text;
 	}
-
-
-
 
 	/**
 	 * Get session appointments from within the course
