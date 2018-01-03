@@ -14,7 +14,9 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		'STARTDATE' => 'crsStartdate',
 		'ENDDATE' => 'crsEnddate',
 		'TRAINER_FIRST_NAME' => 'trainerFirstname',
-		'TRAINER_LAST_NAME' => 'trainerLastname'
+		'TRAINER_LAST_NAME' => 'trainerLastname',
+		'OFFICE_FIRST_NAME' => 'adminFirstname',
+		'OFFICE_LAST_NAME' => 'adminLastname'
 	);
 
 	/**
@@ -125,7 +127,28 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 			return $trainer->getLastname();
 		}
 		return $trainer;
+	}
 
+	/**
+	 * @return string
+	 */
+	public function adminFirstname() {
+		$admin = $this->getAdmin();
+		if($admin !== null) {
+			return $admin->getFirstname();
+		}
+		return $admin;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function adminLastname() {
+		$admin = $this->getAdmin();
+		if($admin !== null) {
+			return $admin->getLastname();
+		}
+		return $admin;
 	}
 
 	/**
@@ -210,6 +233,21 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		if(count($trainers) > 0) {
 			$trainer_id = (int)$trainers[0];
 			return new \ilObjUser($trainer_id);
+		}
+		return null;
+	}
+
+	/**
+	 * Get first member with admin-role
+	 *
+	 * @return ilObjUser | null
+	 */
+	protected function getAdmin() {
+		$participants = $this->getCourseobject()->getMembersObject();
+		$admins = $participants->getAdmins();
+		if(count($admins) > 0) {
+			$admin_id = (int)$admins[0];
+			return new \ilObjUser($admin_id);
 		}
 		return null;
 	}
