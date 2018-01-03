@@ -93,8 +93,10 @@ class TMSMailClerk {
 				list($path, $file) = $embed;
 				$this->sender->AddEmbeddedImage($path, $file);
 			}
-			foreach($attachments->getAttachments() as $attachment) {
-				$this->sender->addAttachment($attachment->getAttachmentPath());
+			if($attachments !== null) {
+				foreach($attachments->getAttachments() as $attachment) {
+					$this->sender->addAttachment($attachment->getAttachmentPath());
+				}
 			}
 
 			if(! $this->sender->Send()) {

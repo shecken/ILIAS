@@ -24,7 +24,7 @@ class TMSMail implements Mail {
 	protected $contexts;
 
 	/**
-	 * @var Attachment[]
+	 * @var Attachments | null
 	 */
 	protected $attachments;
 
@@ -33,7 +33,7 @@ class TMSMail implements Mail {
 		Recipient $recipient,
 		$template_ident,
 		array $contexts,
-		Attachments $attachments
+		Attachments $attachments = null
 	) {
 		assert('is_string($template_ident)');
 		$this->recipient = $recipient;

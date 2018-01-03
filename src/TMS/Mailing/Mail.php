@@ -33,7 +33,7 @@ interface Mail {
 	/**
 	 * Get all attachments, that should be sent with the mail.
 	 *
-	 * @return Attachment[]
+	 * @return Attachments | null
 	 */
 	public function getAttachments();
 
