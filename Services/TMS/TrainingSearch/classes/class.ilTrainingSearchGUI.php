@@ -236,10 +236,11 @@ class ilTrainingSearchGUI {
 						->withLabel($plugin->txt("conf_options_topic"));
 		}
 
+		// Default sort order to period descending.
 		$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_SORT);
 		$view_control[] = $this->g_f->viewControl()->sortation($this->getSortOptions())
 						->withTargetURL($link, Helper::F_SORT_VALUE)
-						->withLabel($this->g_lng->txt(Helper::S_TITLE_ASC));
+						->withLabel($this->g_lng->txt(Helper::S_PERIOD_DESC));
 
 		return $view_control;
 	}
