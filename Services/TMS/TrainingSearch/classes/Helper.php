@@ -252,7 +252,7 @@ class Helper {
 	 * @return BookableCourse[]
 	 */
 	public function sortBookableTrainings(array $values, $bookable_trainings) {
-		// Sort by time in a descending order if user did
+		// Sort by time in a descending order if user did not specify an order.
 		if(!array_key_exists(self::F_SORT_VALUE, $values)
 			|| $values[self::F_SORT_VALUE] == ""
 		) {
