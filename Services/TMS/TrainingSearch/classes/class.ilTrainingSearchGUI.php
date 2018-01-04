@@ -206,13 +206,14 @@ class ilTrainingSearchGUI {
 	 */
 	protected function addSortationObjects($view_control) {
 		$employees = $this->helper->getUserWhereCurrentCanBookFor((int)$this->g_user->getId());
-		if(count($employees) > 1) {
+		// temporarily disabled booking of training by superiors (TMS-575)
+		/*if(count($employees) > 1) {
 			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_CHANGE_USER);
 			$view_control[] = $this->g_f->viewControl()->quickfilter($employees)
 				->withTargetURL($link, Helper::S_USER)
 				->withDefaultValue($this->g_user->getId())
 				->withLabel($this->g_lng->txt("employees"));
-		}
+		}*/
 
 		require_once("Services/Component/classes/class.ilPluginAdmin.php");
 		if(ilPluginAdmin::isPluginActive('xccl')) {
