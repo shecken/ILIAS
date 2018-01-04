@@ -113,7 +113,7 @@ class ilTrainingSearchGUI {
 		$get = $_GET;
 		$filter = $this->helper->getFilterValuesFrom($get);
 		$bookable_trainings = $this->getBookableTrainings($filter);
-		$bookable_trainings = $this->helper->sortBookableTrainings(array(Helper::F_SORT_VALUE => Helper::S_TITLE_ASC), $bookable_trainings);
+		$bookable_trainings = $this->helper->sortBookableTrainings(array(Helper::F_SORT_VALUE => Helper::S_PERIOD_DESC), $bookable_trainings);
 		$this->showTrainings($bookable_trainings, self::CMD_SHOW);
 	}
 
