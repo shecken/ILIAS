@@ -22,6 +22,13 @@
 */
 
 include_once "./Services/Certificate/classes/class.ilCertificateAdapter.php";
+/**
+ * cat-tms-patch start
+ */
+include_once "./Services/TMS/Certificate/classes/class.ilTMSCertificatePlaceholders.php";
+/**
+ * cat-tms-patch end
+ */
 
 /**
 * Test certificate adapter
@@ -34,6 +41,16 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 {
 	protected $object;
 	protected static $has_certificate = array();
+	/**
+	 * cat-tms-patch start
+	 */
+	/**
+	 * @var \ilTMSCertificatePlaceholders
+	 */
+	protected $tms_adapter;
+	/**
+	 * cat-tms-patch end
+	 */
 
 	/**
 	* ilTestCertificateAdapter contructor
@@ -69,14 +86,20 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		$vars = $this->getBaseVariablesForPreview(false);
 		$vars["COURSE_TITLE"] = ilUtil::prepareFormOutput($this->object->getTitle());
 
+		/**
+		 * cat-tms-patch start
+		 */
+		$tms_vars = $this->getTmsAdatpter()->placeholderPreview();
+		$vars = array_merge($vars, $tms_vars);
+		/**
+		 * cat-tms-patch end
+		 */
+
 		$insert_tags = array();
 		foreach($vars as $id => $caption)
 		{
 			$insert_tags["[".$id."]"] = $caption;
 		}
-
-		var_dump($insert_tags);
-		die();
 		return $insert_tags;
 	}
 
@@ -103,13 +126,20 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		$vars = $this->getBaseVariablesForPresentation($user_data, null, $completion_date);
 		$vars["COURSE_TITLE"] = ilUtil::prepareFormOutput($this->object->getTitle());
 
+		/**
+		 * cat-tms-patch start
+		 */
+		$tms_vars = $this->getTmsAdatpter()->placeholderPresentation($user_id);
+		$vars = array_merge($vars, $tms_vars);
+		/**
+		 * cat-tms-patch end
+		 */
+
 		$insert_tags = array();
 		foreach($vars as $id => $caption)
 		{
 			$insert_tags["[".$id."]"] = $caption;
 		}
-		var_dump($insert_tags);
-		die();
 		return $insert_tags;
 	}
 
@@ -125,6 +155,15 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 
 		$vars = $this->getBaseVariablesDescription(false);
 		$vars["COURSE_TITLE"] = $lng->txt("crs_title");
+
+		/**
+		 * cat-tms-patch start
+		 */
+		$tms_descs = $this->getTmsAdatpter()->placeholderDescriptions();
+		$vars = array_merge($vars, $tms_descs);
+		/**
+		 * cat-tms-patch end
+		 */
 
 		$template = new ilTemplate("tpl.il_as_tst_certificate_edit.html", TRUE, TRUE, "Modules/Test");
 		$template->setCurrentBlock("items");
@@ -226,6 +265,25 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		}
 		return false;
 	}
+
+	/**
+	 * cat-tms-patch start
+	 */
+
+	/**
+	 * get/cache the TMS adapter
+	 * @return \ilTMSCertificatePlaceholders
+	 */
+	protected function getTmsAdatpter() {
+		if(! $this->tms_adatpter) {
+			$this->tms_adatpter = new \ilTMSCertificatePlaceholders($this->object);
+		}
+		return $this->tms_adatpter;
+	}
+
+	/**
+	 * cat-tms-patch end
+	 */
 
 }
 
