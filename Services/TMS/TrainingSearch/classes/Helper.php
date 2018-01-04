@@ -22,6 +22,8 @@ class Helper {
 	const S_PERIOD_DESC = "s_period_desc";
 	const S_CITY_DESC = "s_city_desc";
 
+	const S_DEFAULT = "s_period_asc";
+
 	const S_USER = "s_user";
 
 	/**
@@ -256,7 +258,7 @@ class Helper {
 		if(!array_key_exists(self::F_SORT_VALUE, $values)
 			|| $values[self::F_SORT_VALUE] == ""
 		) {
-			$values[self::F_SORT_VALUE] = self::S_PERIOD_DESC;
+			$values[self::F_SORT_VALUE] = self::S_DEFAULT;
 		}
 
 		switch($values[self::F_SORT_VALUE]) {

@@ -113,7 +113,7 @@ class ilTrainingSearchGUI {
 		$get = $_GET;
 		$filter = $this->helper->getFilterValuesFrom($get);
 		$bookable_trainings = $this->getBookableTrainings($filter);
-		$bookable_trainings = $this->helper->sortBookableTrainings(array(Helper::F_SORT_VALUE => Helper::S_PERIOD_DESC), $bookable_trainings);
+		$bookable_trainings = $this->helper->sortBookableTrainings(array(Helper::F_SORT_VALUE => Helper::S_DEFAULT), $bookable_trainings);
 		$this->showTrainings($bookable_trainings, self::CMD_SHOW);
 	}
 
@@ -240,7 +240,7 @@ class ilTrainingSearchGUI {
 		$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_SORT);
 		$view_control[] = $this->g_f->viewControl()->sortation($this->getSortOptions())
 						->withTargetURL($link, Helper::F_SORT_VALUE)
-						->withLabel($this->g_lng->txt(Helper::S_PERIOD_DESC));
+						->withLabel($this->g_lng->txt(Helper::S_DEFAULT));
 
 		return $view_control;
 	}
