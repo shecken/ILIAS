@@ -174,6 +174,10 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		$vactions = $vplug->getActions();
 		$vassignment = $vactions->getAssignment($this->getCourseObjectId());
 
+		if(! $vassignment) { //no venue configured at course.
+			return null;
+		}
+
 		if($vassignment->isCustomAssignment()) {
 			$venue_text = $vassignment->getVenueText();
 		} else {
@@ -190,7 +194,6 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 			));
 		}
 		return $venue_text;
-
 	}
 
 	/**
@@ -203,6 +206,10 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
 		$pactions = $pplug->getActions();
 		$passignment = $pactions->getAssignment($this->getCourseObjectId());
+
+		if(! $passignment) { //no provider configured at course.
+			return null;
+		}
 
 		if($passignment->isCustomAssignment()) {
 			$provider_text = $passignment->getProviderText();
