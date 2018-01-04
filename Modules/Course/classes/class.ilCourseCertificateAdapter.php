@@ -34,7 +34,7 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 {
 	protected $object;
 	protected static $has_certificate = array();
-	
+
 	/**
 	* ilTestCertificateAdapter contructor
 	*
@@ -55,7 +55,7 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	{
 		return CLIENT_WEB_DIR . "/course/certificates/" . $this->object->getId() . "/";
 	}
-	
+
 	/**
 	* Returns an array containing all variables and values which can be exchanged in the certificate.
 	* The values will be taken for the certificate preview.
@@ -65,15 +65,18 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	public function getCertificateVariablesForPreview()
 	{
 		global $lng;
-		
+
 		$vars = $this->getBaseVariablesForPreview(false);
 		$vars["COURSE_TITLE"] = ilUtil::prepareFormOutput($this->object->getTitle());
-		
+
 		$insert_tags = array();
 		foreach($vars as $id => $caption)
 		{
 			$insert_tags["[".$id."]"] = $caption;
-		}		
+		}
+
+		var_dump($insert_tags);
+		die();
 		return $insert_tags;
 	}
 
@@ -88,26 +91,28 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	public function getCertificateVariablesForPresentation($params = array())
 	{
 		global $lng;
-	
+
 		$user_id = $params["user_id"];
-		
+
 		include_once './Services/User/classes/class.ilObjUser.php';
 		$user_data = ilObjUser::_lookupFields($user_id);
-		
+
 		include_once './Modules/Course/classes/class.ilCourseParticipants.php';
-		$completion_date = ilCourseParticipants::getDateTimeOfPassed($this->object->getId(), $user_id);		
-		
-		$vars = $this->getBaseVariablesForPresentation($user_data, null, $completion_date);		
+		$completion_date = ilCourseParticipants::getDateTimeOfPassed($this->object->getId(), $user_id);
+
+		$vars = $this->getBaseVariablesForPresentation($user_data, null, $completion_date);
 		$vars["COURSE_TITLE"] = ilUtil::prepareFormOutput($this->object->getTitle());
-		
+
 		$insert_tags = array();
 		foreach($vars as $id => $caption)
 		{
 			$insert_tags["[".$id."]"] = $caption;
-		}		
+		}
+		var_dump($insert_tags);
+		die();
 		return $insert_tags;
 	}
-	
+
 	/**
 	* Returns a description of the available certificate parameters. The description will be shown at
 	* the bottom of the certificate editor text area.
@@ -117,11 +122,11 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	public function getCertificateVariablesDescription()
 	{
 		global $lng;
-		
+
 		$vars = $this->getBaseVariablesDescription(false);
 		$vars["COURSE_TITLE"] = $lng->txt("crs_title");
-				
-		$template = new ilTemplate("tpl.il_as_tst_certificate_edit.html", TRUE, TRUE, "Modules/Test");	
+
+		$template = new ilTemplate("tpl.il_as_tst_certificate_edit.html", TRUE, TRUE, "Modules/Test");
 		$template->setCurrentBlock("items");
 		foreach($vars as $id => $caption)
 		{
@@ -156,19 +161,19 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	{
 		return $this->object->getId();
 	}
-	
+
 	/**
 	 * Get certificate/passed status for all given objects and users
-	 * 
-	 * Used in ilObjCourseAccess for ilObjCourseListGUI 
-	 * 
+	 *
+	 * Used in ilObjCourseAccess for ilObjCourseListGUI
+	 *
 	 * @param array $a_usr_ids
-	 * @param array $a_obj_ids 
+	 * @param array $a_obj_ids
 	 */
 	static function _preloadListData($a_usr_ids, $a_obj_ids)
 	{
 		global $ilDB;
-		
+
 		if (!is_array($a_usr_ids))
 		{
 			$a_usr_ids = array($a_usr_ids);
@@ -184,16 +189,16 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 				self::$has_certificate[$usr_id][$obj_id] = false;
 			}
 		}
-		
+
 		include_once "Services/Certificate/classes/class.ilCertificate.php";
 		if (ilCertificate::isActive())
 		{
 			$obj_active = ilCertificate::areObjectsActive($a_obj_ids);
-		
+
 			include_once 'Modules/Course/classes/class.ilCourseParticipants.php';
-			$data = ilCourseParticipants::getPassedUsersForObjects($a_obj_ids, $a_usr_ids);			
+			$data = ilCourseParticipants::getPassedUsersForObjects($a_obj_ids, $a_usr_ids);
 			foreach($data as $rec)
-			{					
+			{
 				if($obj_active[$rec["obj_id"]])
 				{
 					self::$has_certificate[$rec["usr_id"]][$rec["obj_id"]] = true;
@@ -201,15 +206,15 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 			}
 		}
 	}
-	
+
 	/**
 	 * Check if user has certificate for course
-	 * 
-	 * Used in ilObjCourseListGUI 
-	 * 
+	 *
+	 * Used in ilObjCourseListGUI
+	 *
 	 * @param int $a_usr_id
 	 * @param int $a_obj_id
-	 * @return bool 
+	 * @return bool
 	 */
 	static function _hasUserCertificate($a_usr_id, $a_obj_id)
 	{
