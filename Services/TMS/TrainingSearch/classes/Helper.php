@@ -252,30 +252,32 @@ class Helper {
 	 * @return BookableCourse[]
 	 */
 	public function sortBookableTrainings(array $values, $bookable_trainings) {
-		if(array_key_exists(self::F_SORT_VALUE, $values)
-			&& $values[self::F_SORT_VALUE] != ""
+		// Sort by time in a descending order if user did
+		if(!array_key_exists(self::F_SORT_VALUE, $values)
+			|| $values[self::F_SORT_VALUE] == ""
 		) {
-			$function = null;
-			switch($values[self::F_SORT_VALUE]) {
-				case self::S_TITLE_ASC:
-					uasort($bookable_trainings, $this->getTitleSortingClosure("asc"));
-					break;
-				case self::S_TITLE_DESC:
-					uasort($bookable_trainings, $this->getTitleSortingClosure("desc"));
-					break;
-				case self::S_PERIOD_ASC:
-					uasort($bookable_trainings, $this->getPeriodSortingClosure("asc"));
-					break;
-				case self::S_PERIOD_DESC:
-					uasort($bookable_trainings, $this->getPeriodSortingClosure("desc"));
-					break;
-				case self::S_CITY_DESC:
-					uasort($bookable_trainings, $this->getCitySortingClosure("asc"));
-					break;
-				case self::S_CITY_DESC:
-					uasort($bookable_trainings, $this->getCitySortingClosure("desc"));
-					break;
-			}
+			$values[self::F_SORT_VALUE] == self::S_TITLE_DESC;
+		}
+
+		switch($values[self::F_SORT_VALUE]) {
+			case self::S_TITLE_ASC:
+				uasort($bookable_trainings, $this->getTitleSortingClosure("asc"));
+				break;
+			case self::S_TITLE_DESC:
+				uasort($bookable_trainings, $this->getTitleSortingClosure("desc"));
+				break;
+			case self::S_PERIOD_ASC:
+				uasort($bookable_trainings, $this->getPeriodSortingClosure("asc"));
+				break;
+			case self::S_PERIOD_DESC:
+				uasort($bookable_trainings, $this->getPeriodSortingClosure("desc"));
+				break;
+			case self::S_CITY_DESC:
+				uasort($bookable_trainings, $this->getCitySortingClosure("asc"));
+				break;
+			case self::S_CITY_DESC:
+				uasort($bookable_trainings, $this->getCitySortingClosure("desc"));
+				break;
 		}
 
 		return $bookable_trainings;
