@@ -256,7 +256,7 @@ class Helper {
 		if(!array_key_exists(self::F_SORT_VALUE, $values)
 			|| $values[self::F_SORT_VALUE] == ""
 		) {
-			$values[self::F_SORT_VALUE] == self::S_TITLE_DESC;
+			$values[self::F_SORT_VALUE] == self::S_PERIOD_DESC;
 		}
 
 		switch($values[self::F_SORT_VALUE]) {
