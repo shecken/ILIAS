@@ -10,7 +10,6 @@ class Helper {
 	const F_TITLE = "f_title";
 	const F_TYPE = "f_type";
 	const F_TOPIC = "f_topic";
-	const F_TARGET_GROUP = "f_target";
 	const F_DURATION = "f_duration";
 	const F_SORT_VALUE = "f_sort_value";
 
@@ -135,11 +134,6 @@ class Helper {
 			$options = array(-1 => "Alle") + $actions->getTopicOptions();
 			$item->setOptions($options);
 			$form->addItem($item);
-
-			$item = new ilSelectInputGUI($this->g_lng->txt('target_group'), self::F_TARGET_GROUP);
-			$options = array(-1 => "Alle") + $actions->getTargetGroupOptions();
-			$item->setOptions($options);
-			$form->addItem($item);
 		}
 
 		$item = new ilDateDurationInputGUI($this->g_lng->txt('duration'), self::F_DURATION);
@@ -169,7 +163,6 @@ class Helper {
 				$('#f_title').val('');
 				$('#f_type option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
 				$('#f_topic option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
-				$('#f_target option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
 				$('#f_not_min_member').prop('checked', false );
 				".$dur1."
 				".$dur2."
@@ -209,13 +202,6 @@ class Helper {
 			$topic = $values[self::F_TOPIC];
 			if($topic != -1) {
 				$filter[self::F_TOPIC] = $topic;
-			}
-		}
-
-		if(array_key_exists(self::F_TARGET_GROUP, $values)) {
-			$target_group = $values[self::F_TARGET_GROUP];
-			if($target_group != -1) {
-				$filter[self::F_TARGET_GROUP] = $target_group;
 			}
 		}
 

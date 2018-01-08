@@ -282,15 +282,6 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 				}
 			}
 
-			if(array_key_exists(Helper::F_TARGET_GROUP, $filter)
-				&& (count($target_group_ids) == 0
-					|| !$this->filter->courseHasTargetGroups($target_group_ids, $filter[Helper::F_TARGET_GROUP])
-				)
-			) {
-				unset($crs_infos[$key]);
-				continue;
-			}
-
 			if(array_key_exists(Helper::F_TOPIC, $filter)
 				&& $filter[Helper::F_TOPIC] !== ""
 				&& (count($topic_ids) == 0
