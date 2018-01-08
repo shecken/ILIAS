@@ -9,7 +9,6 @@ use CaT\UserOrguImport\Orgu\OrgUnit as Orgu;
 use CaT\IliasUserOrguImport\ErrorReporting\ErrorCollection as ErrorCollection;
 use CaT\IliasUserOrguImport\Filesystem\ImportFiles as ImportFiles;
 use CaT\IliasUserOrguImport\Data\DataExtractor as DataExtractor;
-use CaT\UserOrguImport\Utils as Utils;
 
 /**
  * Extract orgu information from a data source.
