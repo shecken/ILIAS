@@ -442,11 +442,23 @@ class ilMainMenuGUI
 			require_once("Services/Component/classes/class.ilPluginAdmin.php");
 			if(ilPluginAdmin::isPluginActive('cockpit')) {
 				$plugin = ilPluginAdmin::getPluginObjectById('cockpit');
-				$basic_link = $plugin->getActions()->readBasicLink();
+				$basic_links = $plugin->getActions()->read();
+				$link = null;
 
-				if($basic_link !== null && $basic_link != "") {
+				foreach($basic_links as $basic_link) {
+					$ref_id = $basic_link->getRefId();
+					if($ilAccess->checkAccess('visible','', $ref_id)
+						&& $ilAccess->checkAccess('read','', $ref_id)
+					) {
+						include_once('./Services/Link/classes/class.ilLink.php');
+						$link = ilLink::_getStaticLink($ref_id);
+						break;
+					}
+				}
+
+				if($link !== null) {
 					$this->renderEntry($a_tpl, "training_search",
-					$lng->txt("cockpit"), $basic_link);
+					$lng->txt("cockpit"), $link);
 				}
 			}
 		}
