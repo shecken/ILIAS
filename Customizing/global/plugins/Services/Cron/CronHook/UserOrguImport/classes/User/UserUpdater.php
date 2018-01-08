@@ -89,12 +89,12 @@ class UserUpdater
 		$il_usr->setGender($data[UdfWrapper::PROP_GENDER]);
 		$il_usr->setEmail($data[UdfWrapper::PROP_EMAIL]);
 
-		$entry_date = trim((string)$data[UdfWrapper::PROP_INACTIVE_END]);
-		$exit_date = trim((string)$data[UdfWrapper::PROP_INACTIVE_BEGIN]);
+		$inactive_end = trim((string)$data[UdfWrapper::PROP_INACTIVE_END]);
+		$inactive_begin = trim((string)$data[UdfWrapper::PROP_INACTIVE_BEGIN]);
 		$current_date = date('Y-m-d');
-		$after_entry = $entry_date === '' || $current_date >= $entry_date;
-		$before_exit = $exit_date === '' || $current_date <= $exit_date;
-		$active = $after_entry && $before_exit;
+		$before_inactive = $inactive_begin === '' || $current_date < $inactive_begin;
+		$after_inactive = $inactive_end === '' || $current_date > $inactive_end;
+		$active = $before_inactive || $after_inactive;
 		$il_usr->setTimeLimitUnlimited(true);
 		$il_usr->setActive($active);
 		return $il_usr;
@@ -176,5 +176,11 @@ class UserUpdater
 		} else {
 			$this->ec->addError('user with properties '.Base\Log\DatabaseLog::arrayToString($props).' does not exists and may not be delted');
 		}
+	}
+
+	public static function userShouldExitAccordingToDate(User\User $user)
+	{
+		$exit_date = $user->properties()[UdfWrapper::PROP_EXIT_DATE];
+		if(trim((string)))
 	}
 }
