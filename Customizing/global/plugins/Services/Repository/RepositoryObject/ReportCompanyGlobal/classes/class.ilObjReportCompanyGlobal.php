@@ -187,6 +187,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 
 		$sum_data = array();
 
+		$cp_unit = ' '.$this->plugin->txt('cp_unit');
 		foreach ($data as &$row) {
 			$row = call_user_func($callback, $row);
 			foreach (self::$columns_to_sum as $column) {
@@ -195,13 +196,13 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				}
 				$sum_data[$column] += $row[$column];
 			}
-			$row['wp_part'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$row['wp_part']);
+			$row['wp_part'] = gevCourseUtils::convertCreditpointsToTime((int)$row['wp_part'])[gevCourseUtils::CREDITED_DURATION_HOURS].$cp_unit;
 		}
 
 		$sum_data['type'] = $this->plugin->txt('sum');
 		$sum_data['part_user'] = '--';
 		$sum_data['book_user'] = '--';
-		$sum_data['wp_part'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$sum_data['wp_part']);
+		$sum_data['wp_part'] = gevCourseUtils::convertCreditpointsToTime((int)$sum_data['wp_part'])[gevCourseUtils::CREDITED_DURATION_HOURS].$cp_unit;
 		$data['sum'] = $sum_data;
 
 		return $data;
