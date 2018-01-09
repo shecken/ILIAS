@@ -91,6 +91,8 @@ class ilUserOrguImportJob extends ilCronJob
 		ilCronManager::ping($this->getId());
 		$this->updateUserOrgus();
 		ilCronManager::ping($this->getId());
+		$this->exitUsers();
+		ilCronManager::ping($this->getId());
 
 		$this->error_notification->notifyAboutErrors($this->ec);
 		$cron_result->setStatus(ilCronJobResult::STATUS_OK);
@@ -130,6 +132,10 @@ class ilUserOrguImportJob extends ilCronJob
 			$diff = $uo_f->Difference($ilias_user_orgu, $excel_user_orgu);
 			$uo_f->UserOrguUpdater()->applyDiff($diff);
 		}
+	}
 
+	protected function exitUsers()
+	{
+		$this->f->ExitUserManagement()->exitUsers();
 	}
 }
