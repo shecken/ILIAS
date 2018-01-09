@@ -43,6 +43,7 @@ class UserOrguExcel
 	const USER_ID = 'user_id';
 	const COMMULATIVE_ROLE = 'commulative_role';
 	const COLUMN_FUNCTION = 'function';
+	const EXIT_DATE = 'exit_date';
 
 	protected static $conversions_assignments = [
 				'P.Nr.' => self::USER_ID,
@@ -52,20 +53,19 @@ class UserOrguExcel
 				'Gruppe' => Orgu\ExcelOrgus::COLUMN_GROUP,
 				'Team' => Orgu\ExcelOrgus::COLUMN_TEAM,
 				'Anstellungsverhältn.' => self::COLUMN_FUNCTION
+				'Austrittsdatum' => self::EXIT_DATE;
 				];
-
-	protected static $conversions_commulative = [
-				'P.Nr' => self::USER_ID,
-				'BuKr.' => self::COMMULATIVE_ROLE
-				];
-
 
 	public function assignments()
 	{
+		$date = date('Y-m-d');
 		$ass_s = new UserOrgu\Assignments($this->ident);
 		foreach ($this->xlsx->extractContent($this->import_files->getCurrentUserOrguFilePath(), self::$conversions_assignments) as $row) {
 			$row = $this->postprocessRow($row);
 			if ($this->checkRow($row)) {
+				if($row[self::EXIT_DATE] === '' || $row[self::EXIT_DATE] > $date) { // skip assignments of exited users
+					continue;
+				}
 				$ass_s->add(new UserOrgu\Assignment($row, $this->ident));
 			} else {
 				$this->ec->addError('row '.Base\Log\DatabaseLog::arrayToString($row).' invalid');
@@ -90,7 +90,7 @@ class UserOrguExcel
 				$return[UserOrguAMDWrapper::PROP_ROLE] = UserOrguIdentifier::ROLE_EMPLOYEE;
 		}
 		$return[Orgu\OrguAMDWrapper::PROP_ID] = Orgu\ExcelOrgus::idByOrguPath(Orgu\ExcelOrgus::normalizedOrguPath($row));
-
+		$return[self::EXIT_DATE] = $this->tryFormatDate($row[self::EXIT_DATE]);
 		return $return;
 	}
 
@@ -117,34 +117,22 @@ class UserOrguExcel
 			$this->ec->addError('undefined level for assignment '.Base\Log\DatabaseLog::arrayToString($row));
 			return false;
 		}
+		if($row[self::EXIT_DATE] === false) {
+			$this->ec->addError('undefined exit date for assignment '.Base\Log\DatabaseLog::arrayToString($row));
+			return false;
+		}
 		return true;
 	}
 
-	/**
-	 * Get an array of assignment data for extern roles.
-	 * Delivered data will be checked and lacks faulty
-	 * entries from file.
-	 *
-	 * @return	mixed[][]
-	 */
-	public function commulativeRoles()
+	protected function tryFormatDate($date_string)
 	{
-		$user_data = [];
-
-		$pnr_to_user_id = $this->uol->geUserIdsByPNR();
-
-		$file_path = $this->import_files->getCurrentUserOrguFilePath();
-
-		if ($file_path) {
-			foreach ($this->xlsx->extractContent($file_path, self::$conversions_commulative) as $row) {
-				$row = $this->postprocessRow($row);
-			}
+		if($date_string === '' || $date_string === '#') {
+			return '';
 		}
-
-		$usrs = new IUser\Users($this->u_ident);
-		foreach ($user_data as $il_user_id => $properties) {
-			$usrs->add(new User\IliasUser($properties, $this->u_ident, $pnr_to_user_id[$row[self::USER_ID]]));
+		$ts = strtotime($date_string)
+		if($ts !== false ) {
+			return date_create($ts)->format('Y-m-d');
 		}
-		return $usrs;
+		return false;
 	}
 }
