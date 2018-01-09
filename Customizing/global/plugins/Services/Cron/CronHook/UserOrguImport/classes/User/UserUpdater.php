@@ -177,10 +177,4 @@ class UserUpdater
 			$this->ec->addError('user with properties '.Base\Log\DatabaseLog::arrayToString($props).' does not exists and may not be delted');
 		}
 	}
-
-	public static function userShouldExitAccordingToDate(User\User $user)
-	{
-		$exit_date = $user->properties()[UdfWrapper::PROP_EXIT_DATE];
-		if(trim((string)))
-	}
 }
