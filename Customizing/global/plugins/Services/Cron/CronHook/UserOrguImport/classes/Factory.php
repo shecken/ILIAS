@@ -167,4 +167,17 @@ class Factory
 	{
 		return new IliasGlobalRoleManagement($this->rbacadmin, $this->rbacreview);
 	}
+
+	public function ExitUserManagement()
+	{
+		return new ExitUserManagement(
+			$this->IliasGlobalRoleManagement(),
+			$this->OrguFactory()->OrguConfig(),
+			$this->UserFactory()->UserLocator(),
+			$this->UserFactory()->UdfWrapper(),
+			$this->org_unit_tree,
+			$this->Log(),
+			$this->error_collection
+		);
+	}
 }
