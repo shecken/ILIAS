@@ -369,7 +369,7 @@ class ilLocatorGUI
 		require_once("Services/TMS/Roles/classes/class.ilTMSRolesDB.php");
 		$tms_role_settings_db = new ilTMSRolesDB($DIC->database());
 
-		return $tms_role_settings_db->viewFullBreadcrump($role_ids);
+		return $tms_role_settings_db->viewFullBreadcrumb($role_ids);
 	}
 	// cat-tms-patch end
 

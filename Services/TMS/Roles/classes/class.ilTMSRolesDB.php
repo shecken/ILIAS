@@ -84,7 +84,7 @@ class ilTMSRolesDB {
 	 *
 	 * @return bool
 	 */
-	public function viewFullBreadcrump(array $role_ids) {
+	public function viewFullBreadcrumb(array $role_ids) {
 		$query = "SELECT COUNT(role_id) AS cnt".PHP_EOL
 				." FROM ".self::TABLE_NAME.PHP_EOL
 				." WHERE hide_breadcrumb = 0".PHP_EOL
