@@ -50,7 +50,7 @@ class ilObjRole extends ilObject
 	 * @var ilTMSRoleSettings
 	 */
 	protected $tms_settings_db;
-    // cat-tms-patch end
+	// cat-tms-patch end
 
 	/**
 	* Constructor
