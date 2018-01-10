@@ -1844,13 +1844,7 @@ class ilObjRoleGUI extends ilObjectGUI
 	 * @return bool[]
 	 */
 	protected function readTMSRoleSettings(ilObjRole $role) {
-		$ret = array();
-
-		$tms_settings = $role->getTMSSettings();
-		$ret["hide_breadcrumb"] = $tms_settings->getHideBreadcrumb();
-		$ret["hide_menu_tree"] = $tms_settings->getHideMenuTree();
-
-		return $ret;
+		return $role->getTMSSettingsFormValues();
 	}
 
 	/**

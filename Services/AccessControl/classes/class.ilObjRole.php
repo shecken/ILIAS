@@ -1115,6 +1115,16 @@ class ilObjRole extends ilObject
 		$this->tms_settings = $this->tms_settings->withHideBreadcrumb($hide_breadcrumb)
 			->withHideMenuTree($hide_menu_tree);
 	}
+
+	public function getTMSSettingsFormValues() {
+		$ret = array();
+
+		$tms_settings = $this->getTMSSettings();
+		$ret["hide_breadcrumb"] = $tms_settings->getHideBreadcrumb();
+		$ret["hide_menu_tree"] = $tms_settings->getHideMenuTree();
+
+		return $ret;
+	}
 	// cat-tms-patch end
 } // END class.ilObjRole
 ?>
