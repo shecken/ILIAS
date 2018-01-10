@@ -1841,7 +1841,7 @@ class ilObjRoleGUI extends ilObjectGUI
 	 *
 	 * @param ilObjRole 	$role
 	 *
-	 * @return void
+	 * @return bool[]
 	 */
 	protected function readTMSRoleSettings(ilObjRole $role) {
 		$ret = array();
