@@ -1125,6 +1125,37 @@ class ilObjRole extends ilObject
 
 		return $ret;
 	}
+
+	/**
+	 * Creates and updates tms role settings
+	 *
+	 * @return void
+	 */
+	public function afterCreateGlobalRole($hide_breadcrumb, $hide_menu_tree) {
+		$this->createTMSSettings();
+		$this->setTMSSettings($hide_breadcrumb, $hide_menu_tree);
+		$this->updateTMSSettings();
+	}
+
+	/**
+	 * Updates tms role settings
+	 *
+	 * @return void
+	 */
+	public function afterUpdateGlobalRole($hide_breadcrumb, $hide_menu_tree) {
+		$this->setTMSSettings($hide_breadcrumb, $hide_menu_tree);
+		$this->updateTMSSettings();
+	}
+
+	/**
+	 * Deletes tms role settings
+	 *
+	 * @return void
+	 */
+	public function beforeDeleteGlobalRole() {
+		$this->deleteTMSSettings();
+	}
+
 	// cat-tms-patch end
 } // END class.ilObjRole
 ?>
