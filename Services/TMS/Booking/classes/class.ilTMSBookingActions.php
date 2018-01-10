@@ -53,7 +53,7 @@ class ilTMSBookingActions implements Booking\Actions {
 			return Booking\Actions::STATE_REMOVED_FROM_WAITINGLIST;
 		}
 
-		throw new \LogicException("User can not be canceld. Not booked on course or waitinglist.");
+		//throw new \LogicException("User can not be canceld. Not booked on course or waitinglist.");
 	}
 
 	/**

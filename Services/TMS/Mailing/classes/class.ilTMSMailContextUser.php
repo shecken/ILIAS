@@ -75,8 +75,8 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 		if($gender === 'm') {
 			$salutation = 'salutation_m';
 		}
-		if($gender === 'w') {
-			$salutation = 'salutation_w';
+		if($gender === 'f') {
+			$salutation = 'salutation_f';
 		}
 		return $DIC->language()->txt($salutation);
 

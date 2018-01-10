@@ -53,7 +53,7 @@ interface Actions {
 	 *
 	 * @throws \LogicException 	if user can't be canceled from course or waitinglist
 	 *
-	 * @return mixed	one of the STATEs
+	 * @return mixed|null	one of the STATEs or nothing
 	 */
 	public function cancelUser($crs_ref_id, $user_id);
 }

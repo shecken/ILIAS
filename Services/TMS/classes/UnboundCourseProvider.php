@@ -44,6 +44,7 @@ class UnboundCourseProvider extends Base {
 			$ret = $this->getCourseInfoForToCourseButton($ret, $entity, $object);
 			$ret = $this->getCourseInfoForCourseMemberButton($ret, $entity, $object);
 			$ret = $this->getCourseInfoForCourseMemberCountings($ret, $entity, $object);
+			$ret = $this->getCourseInfoForCourseAdminMails($ret, $entity, $object);
 
 			return $ret;
 		}
@@ -130,7 +131,9 @@ class UnboundCourseProvider extends Base {
 			, $this->lng->txt("date")
 			, $date
 			, 900
-			, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+			, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+				CourseInfo::CONTEXT_ACCOMODATION_DEFAULT_INFO
+			]
 		);
 
 		$ret[] = $this->createCourseInfoObject($entity
@@ -181,7 +184,9 @@ class UnboundCourseProvider extends Base {
 				, $this->lng->txt("period")
 				, $times_formatted
 				, 910
-				, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+				, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+					CourseInfo::CONTEXT_ACCOMODATION_DEFAULT_INFO
+				  ]
 			);
 
 			$ret[] = $this->createCourseInfoObject($entity
@@ -304,6 +309,37 @@ class UnboundCourseProvider extends Base {
 					, [
 						CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
 						CourseInfo::CONTEXT_ADMIN_OVERVIEW_DETAIL_INFO
+					  ]
+				);
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Get a course info with mail addresses of course admins
+	 *
+	 * @param CourseInfo[]
+	 * @param Entity $entity
+	 * @param Object 	$object
+	 *
+	 * @return CourseInfo[]
+	 */
+	protected function getCourseInfoForCourseAdminMails(array $ret, Entity $entity, $object) {
+		$admin_ids = $object->getMembersObject()->getAdmins();
+
+		if(count($admin_ids) > 0) {
+			foreach ($admin_ids as $admin_id) {
+				$admin = new \ilObjUser($admin_id);
+				$admin_mails[] = $admin->getEmail();
+			}
+
+			$ret[] = $this->createCourseInfoObject($entity
+					, ""
+					, $admin_mails
+					, 200
+					, [
+						CourseInfo::CONTEXT_USER_CAN_ASK_FOR_BOOKING
 					  ]
 				);
 		}

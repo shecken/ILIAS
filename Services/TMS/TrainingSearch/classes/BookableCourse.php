@@ -274,13 +274,12 @@ class BookableCourse {
 
 	public function getRequestButton($label) {
 		$book_info = $this->getShowRequestButton();
-
 		if(count($book_info) >= 2) {
-			$mail = null;
+			$mails = null;
 			$button = null;
 			foreach($book_info as $book) {
-				if($this->checkForMail($book->getValue())) {
-					$mail = $book->getValue();
+				if(is_array($book->getValue())) {
+					$mails = $book->getValue();
 				}
 
 				if((int)$book->getValue() === 1) {
@@ -288,28 +287,17 @@ class BookableCourse {
 				}
 			}
 
-			if($button && !is_null($mail)) {
+			if($button && !is_null($mails)) {
 				return [$this->getUIFactory()
 						->button()->primary
 							( $label,
-								"mailto:".$mail
+								"mailto:".join(";", $mails)
 							)
 						];
 			}
 		}
 
 		return null;
-	}
-
-	/**
-	 * Checks the value if it is an mail adress or not
-	 *
-	 * @param string 	$value
-	 *
-	 * @return bool
-	 */
-	protected function checkForMail($value) {
-		return preg_match("/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/", $value);
 	}
 
 	/**
