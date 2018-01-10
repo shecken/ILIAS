@@ -91,9 +91,11 @@ if($ilDB->tableExists('tms_role_settings') )
 <#9>
 <?php
 global $DIC;
+$role_root_folder = 8;
+
 require_once("Services/TMS/Roles/classes/class.ilTMSRolesDB.php");
 $tms_settings_db = new ilTMSRolesDB($ilDB);
-$query = "SELECT rol_id FROM rbac_fa WHERE parent = 8 AND assign='y'";
+$query = "SELECT rol_id FROM rbac_fa WHERE parent = $role_root_folder AND assign='y'";
 $res = $ilDB->query($query);
 while($row = $ilDB->fetchAssoc($res)) {
 	$tms_settings = $tms_settings_db->selectFor((int)$row["rol_id"]);
