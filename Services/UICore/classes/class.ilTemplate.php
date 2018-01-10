@@ -1972,6 +1972,12 @@ class ilTemplate extends HTML_Template_ITX
 	 */
 	function fillLeftNav()
 	{
+		// cat-tms-patch start
+		if(!$this->seeNavigation()) {
+			return;
+		}
+		// cat-tms-patch end
+
 		if (trim($this->left_nav_content) != "")
 		{
 			$this->setCurrentBlock("left_nav");
@@ -2087,6 +2093,12 @@ class ilTemplate extends HTML_Template_ITX
 	{
 		global $lng, $ilSetting;
 		
+		// cat-tms-patch start
+		if(!$this->seeNavigation()) {
+			return;
+		}
+		// cat-tms-patch end
+
 		if ($this->upper_icon == "" && $this->tree_flat_link == ""
 			&& $this->mount_webfolder == "")
 		{
@@ -2614,6 +2626,25 @@ if ($a == "HEADER") mk();
 	{
 		$this->enable_fileupload = $a_ref_id;
 	}
+
+		// cat-tms-patch start
+	/**
+	 * Checks user is allowed to the full path of locator
+	 *
+	 * @return bool
+	 */
+	protected function seeNavigation() {
+		global $DIC;
+		$g_user = $DIC->user();
+		$g_rbacreview = $DIC->rbac()->review();
+		$role_ids = $g_rbacreview->assignedGlobalRoles($g_user->getId());
+
+		require_once("Services/TMS/Roles/classes/class.ilTMSRolesDB.php");
+		$tms_role_settings_db = new ilTMSRolesDB($DIC->database());
+
+		return $tms_role_settings_db->viewNavigationTree($role_ids);
+	}
+	// cat-tms-patch end
 }
 
 ?>
