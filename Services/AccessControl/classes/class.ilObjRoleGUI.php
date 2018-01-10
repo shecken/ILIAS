@@ -616,9 +616,7 @@ class ilObjRoleGUI extends ilObjectGUI
 			$this->loadRoleProperties($this->role = new ilObjRole());
 			$this->role->create();
 			// cat-tms-patch start
-			$this->role->createTMSSettings();
-			$this->loadTMSRoleSettings($this->role);
-			$this->role->updateTMSSettings();
+			$this->afterCreateGlobalRole();
 			// cat-tms-patch end
 			$rbacadmin->assignRoleToFolder($this->role->getId(), $this->obj_ref_id,'y');
 			$rbacadmin->setProtected(
@@ -661,8 +659,7 @@ class ilObjRoleGUI extends ilObjectGUI
 			include_once './Services/AccessControl/classes/class.ilObjRole.php';
 			$this->loadRoleProperties($this->object);
 			// cat-tms-patch start
-			$this->loadTMSRoleSettings($this->object);
-			$this->object->updateTMSSettings();
+			$this->afterUpdateGlobalRole();
 			// cat-tms-patch end
 			$this->object->update();
 
@@ -942,7 +939,7 @@ class ilObjRoleGUI extends ilObjectGUI
 		
 		$this->object->setParent((int) $this->obj_ref_id);
 		// cat-tms-patch start
-		$this->object->deleteTMSSettings();
+		$this->afterDeleteGlobalRole();
 		// cat-tms-patch end
 		$this->object->delete();
 		ilUtil::sendSuccess($this->lng->txt('msg_deleted_role'),true);
@@ -1883,6 +1880,36 @@ class ilObjRoleGUI extends ilObjectGUI
 		}
 
 		return false;
+	}
+
+	/**
+	 * Creates and updates tms role settings
+	 *
+	 * @return void
+	 */
+	protected function afterCreateGlobalRole() {
+			$this->role->createTMSSettings();
+			$this->loadTMSRoleSettings($this->role);
+			$this->role->updateTMSSettings();
+	}
+
+	/**
+	 * Updates tms role settings
+	 *
+	 * @return void
+	 */
+	protected function afterUpdateGlobalRole() {
+		$this->loadTMSRoleSettings($this->object);
+		$this->object->updateTMSSettings();
+	}
+
+	/**
+	 * Deletes tms role settings
+	 *
+	 * @return void
+	 */
+	protected function afterDeleteGlobalRole() {
+		$this->object->deleteTMSSettings();
 	}
 	// cat-tms-patch end
 } // END class.ilObjRoleGUI
