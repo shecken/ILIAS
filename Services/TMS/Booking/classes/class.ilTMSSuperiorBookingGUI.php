@@ -9,11 +9,11 @@ require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php");
 
 /**
- * Displays the TMS booking
+ * Displays the TMS superior booking
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
-class ilTMSBookingGUI  extends Booking\Player {
+class ilTMSSuperiorBookingGUI extends Booking\Player {
 	use \ILIAS\TMS\MyUsersHelper;
 
 	/**
@@ -181,6 +181,16 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 */
 	protected function getConfirmButtonLabel() {
 		return $this->g_lng->txt("booking_confirm");
+	}
+
+	/**
+	 * @inheritdocs
+	 */
+	protected function getApplicableSteps() {
+		$steps = $this->getComponentsOfType(SuperiorBookingStep::class);
+		return array_values(array_filter($steps, function($step) {
+			return $step->isApplicableFor($this->getUserId());
+		}));
 	}
 
 	/**

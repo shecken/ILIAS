@@ -350,12 +350,7 @@ abstract class Player {
 	 *
 	 * @return	Step[]
 	 */
-	protected function getApplicableSteps() {
-		$steps = $this->getComponentsOfType(Step::class);
-		return array_values(array_filter($steps, function($step) {
-			return $step->isApplicableFor($this->getUserId());
-		}));
-	}
+	abstract protected function getApplicableSteps();
 
 	/**
 	 * Get the steps for the booking of the couse sorted by period.
