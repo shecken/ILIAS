@@ -50,6 +50,8 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		$this->g_lng = $DIC->language();
 		$this->g_lng->loadLanguageModule("tms");
 		$this->g_db = $DIC->database();
+		$this->g_tree = $DIC->repositoryTree();
+		$this->g_objDefinition = $DIC["objDefinition"];
 		// cat-tms-patch end
 	}
 
@@ -281,28 +283,30 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	 */
 	protected function getTMSVariablesForPresentation($user_id) {
 		assert('is_int($user_id)');
-		$crs_id = $this->object->getId();
-		$query = "SELECT IF(hcrs.begin_date IS NULL, hucrs.booking_date, hcrs.begin_date) AS crs_start,".PHP_EOL
-				."     IF(hcrs.end_date IS NULL, hucrs.ps_acquired_date, hcrs.end_date) AS crs_end,".PHP_EOL
-				."     hcrs.crs_type, hcrs.idd_learning_time AS crs_idd,".PHP_EOL
-				."     hucrs.idd_learning_time AS user_idd".PHP_EOL
-				." FROM hst_crs hcrs".PHP_EOL
-				." JOIN hst_usrcrs hucrs".PHP_EOL
-				."     ON hcrs.crs_id = hucrs.crs_id".PHP_EOL
-				."         AND hucrs.participation_status = 'successful'".PHP_EOL
-				." WHERE hcrs.crs_id = ".$this->g_db->quote($crs_id, "integer").PHP_EOL
-				."     AND hucrs.usr_id = ".$this->g_db->quote($user_id, "integer").PHP_EOL
-				." ORDER BY hcrs.row_id DESC";
-
-		$res = $this->g_db->query($query);
-		$row = $this->g_db->fetchAssoc($res);
-
 		$ret = array();
-		$ret["COURSE_STARTDATE"] = ilDatePresentation::formatDate(new ilDate($row["crs_start"], IL_CAL_DATE));
-		$ret["COURSE_ENDDATE"] = ilDatePresentation::formatDate(new ilDate($row["crs_end"], IL_CAL_DATE));
-		$ret["COURSE_TYPE"] = $row["crs_type"];
-		$ret["IDD_TIME"] = $this->transformIDDLearningTimeToString($row["crs_idd"])." ".$this->g_lng->txt("form_hours");
-		$ret["IDD_USER_TIME"] = $this->transformIDDLearningTimeToString($row["user_idd"])." ".$this->g_lng->txt("form_hours");
+		$crs_ref_id = $this->object->getRefId();
+
+		$crs_start = $this->object->getCourseStart();
+		if($crs_start === null) {
+			$ret["COURSE_STARTDATE"] = null;
+			$ret["COURSE_ENDDATE"] = null;
+		} else {
+			$crs_end = $this->object->getCourseEnd();
+			$ret["COURSE_STARTDATE"] = ilDatePresentation::formatDate($crs_start);
+			$ret["COURSE_ENDDATE"] = ilDatePresentation::formatDate($crs_end);
+		}
+
+		$course_classification = $this->getFirstChildOfByType($crs_ref_id, "xccl");
+		$cc_actions = $course_classification->getActions();
+		$ret["COURSE_TYPE"] = array_shift($cc_actions->getTypeName($course_classification->getCourseClassification()->getType()));
+
+		$edu_tracking = $this->getFirstChildOfByType($crs_ref_id, "xetr");
+		$et_action = $edu_tracking->getActionsFor("IDD");
+		$ret["IDD_TIME"] = $this->transformIDDLearningTimeToString($et_action->select()->getMinutes())." ".$this->g_lng->txt("form_hours");
+
+		$course_member = $this->getFirstChildOfByType($crs_ref_id, "xcmb");
+		$ret["IDD_USER_TIME"] = $this->transformIDDLearningTimeToString($course_member->getMinutesFor($user_id))." ".$this->g_lng->txt("form_hours");
+
 		return $ret;
 	}
 
@@ -318,6 +322,34 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		$hours = floor($minutes / 60);
 		$minutes = $minutes - $hours * 60;
 		return str_pad($hours, "2", "0", STR_PAD_LEFT).":".str_pad($minutes, "2", "0", STR_PAD_LEFT);
+	}
+
+	/**
+	 * Get first child by type recursive
+	 *
+	 * @param int 	$ref_id
+	 * @param string 	$search_type
+	 *
+	 * @return Object 	of search type
+	 */
+	protected function getFirstChildOfByType($ref_id, $search_type) {
+		$childs = $this->g_tree->getChilds($ref_id);
+
+		foreach ($childs as $child) {
+			$type = $child["type"];
+			if($type == $search_type) {
+				return \ilObjectFactory::getInstanceByRefId($child["child"]);
+			}
+
+			if($this->g_objDefinition->isContainer($type)) {
+				$ret = $this->getFirstChildOfByType($child["child"], $search_type);
+				if(! is_null($ret)) {
+					return $ret;
+				}
+			}
+		}
+
+		return null;
 	}
 	// cat-tms-patch end
 
