@@ -44,6 +44,13 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	{
 		$this->object =& $object;
 		parent::__construct();
+
+		// cat-tms-patch start
+		global $DIC;
+		$this->g_lng = $DIC->language();
+		$this->g_lng->loadLanguageModule("tms");
+		$this->g_db = $DIC->database();
+		// cat-tms-patch end
 	}
 
 	/**
@@ -68,7 +75,11 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		
 		$vars = $this->getBaseVariablesForPreview(false);
 		$vars["COURSE_TITLE"] = ilUtil::prepareFormOutput($this->object->getTitle());
-		
+
+		// cat-tms-patch start
+		$vars = array_merge($vars, $this->getTMSVariablesForPreview());
+		// cat-tms-patch end
+
 		$insert_tags = array();
 		foreach($vars as $id => $caption)
 		{
@@ -99,7 +110,11 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		
 		$vars = $this->getBaseVariablesForPresentation($user_data, null, $completion_date);		
 		$vars["COURSE_TITLE"] = ilUtil::prepareFormOutput($this->object->getTitle());
-		
+
+		// cat-tms-patch start
+		$vars = array_merge($vars, $this->getTMSVariablesForPresentation((int)$user_id));
+		// cat-tms-patch end
+
 		$insert_tags = array();
 		foreach($vars as $id => $caption)
 		{
@@ -120,7 +135,11 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		
 		$vars = $this->getBaseVariablesDescription(false);
 		$vars["COURSE_TITLE"] = $lng->txt("crs_title");
-				
+
+		// cat-tms-patch start
+		$vars = array_merge($vars, $this->getTMSVariablesDescription());
+		// cat-tms-patch end
+
 		$template = new ilTemplate("tpl.il_as_tst_certificate_edit.html", TRUE, TRUE, "Modules/Test");	
 		$template->setCurrentBlock("items");
 		foreach($vars as $id => $caption)
@@ -221,6 +240,86 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		}
 		return false;
 	}
+
+	// cat-tms-patch start
+	/**
+	 * Get all tms placeholder for description
+	 *
+	 * @return string[]
+	 */
+	protected function getTMSVariablesDescription() {
+		$ret = array();
+		$ret["COURSE_TYPE"] = $this->g_lng->txt("pl_course_type");
+		$ret["COURSE_STARTDATE"] = $this->g_lng->txt("pl_course_start_date");
+		$ret["COURSE_ENDDATE"] = $this->g_lng->txt("pl_course_start_date");
+		$ret["IDD_TIME"] = $this->g_lng->txt("pl_idd_learning_time");
+		$ret["IDD_USER_TIME"] = $this->g_lng->txt("pl_idd_learning_time_user");
+		return $ret;
+	}
+
+	/**
+	 * Get preview values for tms placeholder
+	 *
+	 * @return string[]
+	 */
+	protected function getTMSVariablesForPreview() {
+		$ret = array();
+		$ret["COURSE_STARTDATE"] = ilDatePresentation::formatDate(new ilDate(time() - (24 * 60 * 60 * 10), IL_CAL_UNIX));
+		$ret["COURSE_ENDDATE"] = ilDatePresentation::formatDate(new ilDate(time() - (24 * 60 * 60 * 5), IL_CAL_UNIX));
+		$ret["COURSE_TYPE"] = $this->g_lng->txt("pl_course_type_preview");
+		$ret["IDD_TIME"] = $this->g_lng->txt("pl_idd_learning_time_preview");
+		$ret["IDD_USER_TIME"] = $this->g_lng->txt("pl_idd_learning_time_user_preview");
+		return $ret;
+	}
+
+	/**
+	 * Get real values for print
+	 *
+	 * @param int 	$user_id
+	 *
+	 * @return string[]
+	 */
+	protected function getTMSVariablesForPresentation($user_id) {
+		assert('is_int($user_id)');
+		$crs_id = $this->object->getId();
+		$query = "SELECT IF(hcrs.begin_date IS NULL, hucrs.booking_date, hcrs.begin_date) AS crs_start,".PHP_EOL
+				."     IF(hcrs.end_date IS NULL, hucrs.ps_acquired_date, hcrs.end_date) AS crs_end,".PHP_EOL
+				."     hcrs.crs_type, hcrs.idd_learning_time AS crs_idd,".PHP_EOL
+				."     hucrs.idd_learning_time AS user_idd".PHP_EOL
+				." FROM hst_crs hcrs".PHP_EOL
+				." JOIN hst_usrcrs hucrs".PHP_EOL
+				."     ON hcrs.crs_id = hucrs.crs_id".PHP_EOL
+				."         AND hucrs.participation_status = 'successful'".PHP_EOL
+				." WHERE hcrs.crs_id = ".$this->g_db->quote($crs_id, "integer").PHP_EOL
+				."     AND hucrs.usr_id = ".$this->g_db->quote($user_id, "integer").PHP_EOL
+				." ORDER BY hcrs.row_id DESC";
+
+		$res = $this->g_db->query($query);
+		$row = $this->g_db->fetchAssoc($res);
+
+		$ret = array();
+		$ret["COURSE_STARTDATE"] = ilDatePresentation::formatDate(new ilDate($row["crs_start"], IL_CAL_DATE));
+		$ret["COURSE_ENDDATE"] = ilDatePresentation::formatDate(new ilDate($row["crs_end"], IL_CAL_DATE));
+		$ret["COURSE_TYPE"] = $row["crs_type"];
+		$ret["IDD_TIME"] = $this->transformIDDLearningTimeToString($row["crs_idd"])." ".$this->g_lng->txt("form_hours");
+		$ret["IDD_USER_TIME"] = $this->transformIDDLearningTimeToString($row["user_idd"])." ".$this->g_lng->txt("form_hours");
+		return $ret;
+	}
+
+	/**
+	 * Transforms the idd minutes into printable string
+	 *
+	 * @param int 	$minutes
+	 *
+	 * @return string
+	 */
+	protected function transformIDDLearningTimeToString($minutes)
+	{
+		$hours = floor($minutes / 60);
+		$minutes = $minutes - $hours * 60;
+		return str_pad($hours, "2", "0", STR_PAD_LEFT).":".str_pad($minutes, "2", "0", STR_PAD_LEFT);
+	}
+	// cat-tms-patch end
 
 }
 
