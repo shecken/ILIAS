@@ -22,6 +22,13 @@
 */
 
 include_once "./Services/Certificate/classes/class.ilCertificateAdapter.php";
+/**
+ * cat-tms-patch start
+ */
+include_once "./Services/TMS/Certificate/classes/class.ilTMSCertificatePlaceholders.php";
+/**
+ * cat-tms-patch end
+ */
 
 /**
 * Test certificate adapter
@@ -34,7 +41,17 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 {
 	protected $object;
 	protected static $has_certificate = array();
-	
+	/**
+	 * cat-tms-patch start
+	 */
+	/**
+	 * @var \ilTMSCertificatePlaceholders
+	 */
+	protected $tms_adapter;
+	/**
+	 * cat-tms-patch end
+	 */
+
 	/**
 	* ilTestCertificateAdapter contructor
 	*
@@ -64,7 +81,7 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	{
 		return CLIENT_WEB_DIR . "/course/certificates/" . $this->object->getId() . "/";
 	}
-	
+
 	/**
 	* Returns an array containing all variables and values which can be exchanged in the certificate.
 	* The values will be taken for the certificate preview.
@@ -74,19 +91,24 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	public function getCertificateVariablesForPreview()
 	{
 		global $lng;
-		
+
 		$vars = $this->getBaseVariablesForPreview(false);
 		$vars["COURSE_TITLE"] = ilUtil::prepareFormOutput($this->object->getTitle());
 
-		// cat-tms-patch start
-		$vars = array_merge($vars, $this->getTMSVariablesForPreview());
-		// cat-tms-patch end
+		/**
+		 * cat-tms-patch start
+		 */
+		$tms_vars = $this->getTmsAdatpter()->placeholderPreview();
+		$vars = array_merge($vars, $tms_vars);
+		/**
+		 * cat-tms-patch end
+		 */
 
 		$insert_tags = array();
 		foreach($vars as $id => $caption)
 		{
 			$insert_tags["[".$id."]"] = $caption;
-		}		
+		}
 		return $insert_tags;
 	}
 
@@ -101,30 +123,35 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	public function getCertificateVariablesForPresentation($params = array())
 	{
 		global $lng;
-	
+
 		$user_id = $params["user_id"];
-		
+
 		include_once './Services/User/classes/class.ilObjUser.php';
 		$user_data = ilObjUser::_lookupFields($user_id);
-		
+
 		include_once './Modules/Course/classes/class.ilCourseParticipants.php';
-		$completion_date = ilCourseParticipants::getDateTimeOfPassed($this->object->getId(), $user_id);		
-		
-		$vars = $this->getBaseVariablesForPresentation($user_data, null, $completion_date);		
+		$completion_date = ilCourseParticipants::getDateTimeOfPassed($this->object->getId(), $user_id);
+
+		$vars = $this->getBaseVariablesForPresentation($user_data, null, $completion_date);
 		$vars["COURSE_TITLE"] = ilUtil::prepareFormOutput($this->object->getTitle());
 
-		// cat-tms-patch start
-		$vars = array_merge($vars, $this->getTMSVariablesForPresentation((int)$user_id));
-		// cat-tms-patch end
+		/**
+		 * cat-tms-patch start
+		 */
+		$tms_vars = $this->getTmsAdatpter()->placeholderPresentation($user_id);
+		$vars = array_merge($vars, $tms_vars);
+		/**
+		 * cat-tms-patch end
+		 */
 
 		$insert_tags = array();
 		foreach($vars as $id => $caption)
 		{
 			$insert_tags["[".$id."]"] = $caption;
-		}		
+		}
 		return $insert_tags;
 	}
-	
+
 	/**
 	* Returns a description of the available certificate parameters. The description will be shown at
 	* the bottom of the certificate editor text area.
@@ -134,15 +161,21 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	public function getCertificateVariablesDescription()
 	{
 		global $lng;
-		
+
 		$vars = $this->getBaseVariablesDescription(false);
 		$vars["COURSE_TITLE"] = $lng->txt("crs_title");
 
-		// cat-tms-patch start
-		$vars = array_merge($vars, $this->getTMSVariablesDescription());
-		// cat-tms-patch end
+		/**
+		 * cat-tms-patch start
+		 */
+		$tms_descs = $this->getTmsAdatpter()->placeholderDescriptions();
+		$vars = array_merge($vars, $tms_descs);
+		/**
+		 * cat-tms-patch end
+		 */
 
-		$template = new ilTemplate("tpl.il_as_tst_certificate_edit.html", TRUE, TRUE, "Modules/Test");	
+		$template = new ilTemplate("tpl.il_as_tst_certificate_edit.html", TRUE, TRUE, "Modules/Test");
+
 		$template->setCurrentBlock("items");
 		foreach($vars as $id => $caption)
 		{
@@ -177,19 +210,19 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 	{
 		return $this->object->getId();
 	}
-	
+
 	/**
 	 * Get certificate/passed status for all given objects and users
-	 * 
-	 * Used in ilObjCourseAccess for ilObjCourseListGUI 
-	 * 
+	 *
+	 * Used in ilObjCourseAccess for ilObjCourseListGUI
+	 *
 	 * @param array $a_usr_ids
-	 * @param array $a_obj_ids 
+	 * @param array $a_obj_ids
 	 */
 	static function _preloadListData($a_usr_ids, $a_obj_ids)
 	{
 		global $ilDB;
-		
+
 		if (!is_array($a_usr_ids))
 		{
 			$a_usr_ids = array($a_usr_ids);
@@ -205,16 +238,16 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 				self::$has_certificate[$usr_id][$obj_id] = false;
 			}
 		}
-		
+
 		include_once "Services/Certificate/classes/class.ilCertificate.php";
 		if (ilCertificate::isActive())
 		{
 			$obj_active = ilCertificate::areObjectsActive($a_obj_ids);
-		
+
 			include_once 'Modules/Course/classes/class.ilCourseParticipants.php';
-			$data = ilCourseParticipants::getPassedUsersForObjects($a_obj_ids, $a_usr_ids);			
+			$data = ilCourseParticipants::getPassedUsersForObjects($a_obj_ids, $a_usr_ids);
 			foreach($data as $rec)
-			{					
+			{
 				if($obj_active[$rec["obj_id"]])
 				{
 					self::$has_certificate[$rec["usr_id"]][$rec["obj_id"]] = true;
@@ -222,15 +255,15 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 			}
 		}
 	}
-	
+
 	/**
 	 * Check if user has certificate for course
-	 * 
-	 * Used in ilObjCourseListGUI 
-	 * 
+	 *
+	 * Used in ilObjCourseListGUI
+	 *
 	 * @param int $a_usr_id
 	 * @param int $a_obj_id
-	 * @return bool 
+	 * @return bool
 	 */
 	static function _hasUserCertificate($a_usr_id, $a_obj_id)
 	{
@@ -243,115 +276,24 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		return false;
 	}
 
-	// cat-tms-patch start
 	/**
-	 * Get all tms placeholder for description
-	 *
-	 * @return string[]
+	 * cat-tms-patch start
 	 */
-	protected function getTMSVariablesDescription() {
-		$ret = array();
-		$ret["COURSE_TYPE"] = $this->g_lng->txt("pl_course_type");
-		$ret["COURSE_STARTDATE"] = $this->g_lng->txt("pl_course_start_date");
-		$ret["COURSE_ENDDATE"] = $this->g_lng->txt("pl_course_start_date");
-		$ret["IDD_TIME"] = $this->g_lng->txt("pl_idd_learning_time");
-		$ret["IDD_USER_TIME"] = $this->g_lng->txt("pl_idd_learning_time_user");
-		return $ret;
-	}
 
 	/**
-	 * Get preview values for tms placeholder
-	 *
-	 * @return string[]
+	 * get/cache the TMS adapter
+	 * @return \ilTMSCertificatePlaceholders
 	 */
-	protected function getTMSVariablesForPreview() {
-		$ret = array();
-		$ret["COURSE_STARTDATE"] = ilDatePresentation::formatDate(new ilDate(time() - (24 * 60 * 60 * 10), IL_CAL_UNIX));
-		$ret["COURSE_ENDDATE"] = ilDatePresentation::formatDate(new ilDate(time() - (24 * 60 * 60 * 5), IL_CAL_UNIX));
-		$ret["COURSE_TYPE"] = $this->g_lng->txt("pl_course_type_preview");
-		$ret["IDD_TIME"] = $this->g_lng->txt("pl_idd_learning_time_preview");
-		$ret["IDD_USER_TIME"] = $this->g_lng->txt("pl_idd_learning_time_user_preview");
-		return $ret;
-	}
-
-	/**
-	 * Get real values for print
-	 *
-	 * @param int 	$user_id
-	 *
-	 * @return string[]
-	 */
-	protected function getTMSVariablesForPresentation($user_id) {
-		assert('is_int($user_id)');
-		$ret = array();
-		$crs_ref_id = $this->object->getRefId();
-
-		$crs_start = $this->object->getCourseStart();
-		if($crs_start === null) {
-			$ret["COURSE_STARTDATE"] = null;
-			$ret["COURSE_ENDDATE"] = null;
-		} else {
-			$crs_end = $this->object->getCourseEnd();
-			$ret["COURSE_STARTDATE"] = ilDatePresentation::formatDate($crs_start);
-			$ret["COURSE_ENDDATE"] = ilDatePresentation::formatDate($crs_end);
+	protected function getTmsAdatpter() {
+		if(! $this->tms_adatpter) {
+			$this->tms_adatpter = new \ilTMSCertificatePlaceholders($this->object);
 		}
-
-		$course_classification = $this->getFirstChildOfByType($crs_ref_id, "xccl");
-		$cc_actions = $course_classification->getActions();
-		$ret["COURSE_TYPE"] = array_shift($cc_actions->getTypeName($course_classification->getCourseClassification()->getType()));
-
-		$edu_tracking = $this->getFirstChildOfByType($crs_ref_id, "xetr");
-		$et_action = $edu_tracking->getActionsFor("IDD");
-		$ret["IDD_TIME"] = $this->transformIDDLearningTimeToString($et_action->select()->getMinutes())." ".$this->g_lng->txt("form_hours");
-
-		$course_member = $this->getFirstChildOfByType($crs_ref_id, "xcmb");
-		$ret["IDD_USER_TIME"] = $this->transformIDDLearningTimeToString($course_member->getMinutesFor($user_id))." ".$this->g_lng->txt("form_hours");
-
-		return $ret;
+		return $this->tms_adatpter;
 	}
 
 	/**
-	 * Transforms the idd minutes into printable string
-	 *
-	 * @param int 	$minutes
-	 *
-	 * @return string
+	 * cat-tms-patch end
 	 */
-	protected function transformIDDLearningTimeToString($minutes)
-	{
-		$hours = floor($minutes / 60);
-		$minutes = $minutes - $hours * 60;
-		return str_pad($hours, "2", "0", STR_PAD_LEFT).":".str_pad($minutes, "2", "0", STR_PAD_LEFT);
-	}
-
-	/**
-	 * Get first child by type recursive
-	 *
-	 * @param int 	$ref_id
-	 * @param string 	$search_type
-	 *
-	 * @return Object 	of search type
-	 */
-	protected function getFirstChildOfByType($ref_id, $search_type) {
-		$childs = $this->g_tree->getChilds($ref_id);
-
-		foreach ($childs as $child) {
-			$type = $child["type"];
-			if($type == $search_type) {
-				return \ilObjectFactory::getInstanceByRefId($child["child"]);
-			}
-
-			if($this->g_objDefinition->isContainer($type)) {
-				$ret = $this->getFirstChildOfByType($child["child"], $search_type);
-				if(! is_null($ret)) {
-					return $ret;
-				}
-			}
-		}
-
-		return null;
-	}
-	// cat-tms-patch end
 
 }
 
