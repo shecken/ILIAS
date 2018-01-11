@@ -16025,14 +16025,6 @@ tms#:#max_member#:#maximale Teilnehmerzahl
 tms#:#form_hours#:#Stunden
 tms#:#form_minutes#:#Minuten
 tms#:#form_seconds#:#Sekunden
-tms#:#pl_course_start_date#:#Startdatum des Kurses
-tms#:#pl_course_end_date#:#Enddatum des Kurses
-tms#:#pl_idd_learning_time#:#Erreichbare IDD-Stunden
-tms#:#pl_idd_learning_time_user#:#Vom Benutzer erreichte IDD-Stunden
-tms#:#pl_course_type#:#Trainingstyp des Kurses
-tms#:#pl_course_type_preview#:#Präsenztraining
-tms#:#pl_idd_learning_time_preview#:#03:10 Stunden
-tms#:#pl_idd_learning_time_user_preview#:#02:55 Stunden
 tms#:#hide_breadcrumb#:#Navigation einschränken
 tms#:#hide_breadcrumb_info#:#Mit dieser Einstellung wird die Navigation nur bis zum Kurs angezeigt.
 tms#:#hide_menu_tree#:#Navigationsbaum ausblenden
