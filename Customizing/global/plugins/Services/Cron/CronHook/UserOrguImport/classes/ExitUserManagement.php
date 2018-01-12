@@ -13,6 +13,8 @@ class ExitUserManagement
 
 	const ORGU_EXIT_IMPORT_ID_PREFIX = 'sap_import_exit_orgu_';
 
+	protected $db;
+	protected $cfg;
 	protected $role_management;
 	protected $orgu_config;
 	protected $u_loc;
@@ -22,15 +24,18 @@ class ExitUserManagement
 	protected $error_collection;
 
 	public function __construct(
+		$db,
+		ExitConfig $cfg,
 		IliasGlobalRoleManagement $role_management,
-		Orgu\OrguCongig $orgu_config,
+		Orgu\OrguConfig $orgu_config,
 		User\UserLocator $u_loc,
 		User\UdfWrapper $udf,
 		\ilObjOrgUnitTree $orgu_tree,
 		Log\Log $log,
 		ErrorReporting\ErrorCollection $error_collection
 	) {
-
+		$this->db = $db;
+		$this->cfg = $cfg;
 		$this->role_management = $role_management;
 		$this->orgu_config = $orgu_config;
 		$this->u_loc = $u_loc;
@@ -53,7 +58,7 @@ class ExitUserManagement
 			$this->getUsersDueToExit()
 		);
 
-		foreach ($diff->toCreate() as $usr) {
+		foreach ($exit_diff->toCreate() as $usr) {
 			try {
 				$this->exitUser($usr);
 			} catch (\Exception $e) {
@@ -62,7 +67,7 @@ class ExitUserManagement
 			}
 		}
 
-		foreach ($diff->toDelete() as $usr) {
+		foreach ($exit_diff->toDelete() as $usr) {
 			try {
 				$this->removeFromExit($usr);
 			} catch (\Exception $e) {
@@ -91,16 +96,19 @@ class ExitUserManagement
 	protected function exitUser(User\IliasUser $usr)
 	{
 		$usr_id = $usr->iliasId();
-		$orgu = $this->getExitOrguByLETitle($this->getLEOfUsr($usr));
-		$orgu->assignUsersToEmployeeRole([$usr_id]);
 
 		foreach ($this->role_management->assignedRoles($usr) as $role_id) {
 			$this->role_management->deassignFromUser($role_id, $usr);
 		}
+		if ($role_id = $this->cfg->exitRoleId()) {
+			$this->role_management->assignToUser($role_id, $usr);
+		}
+		$orgu = $this->getExitOrguByLETitle($this->getLEOfUsr($usr));
+		$orgu->assignUsersToEmployeeRole([$usr_id]);
 		$props = $usr->properties();
 		$this->log->createEntry(
-			'exit user:'.Base\Log\DatabaseLog::arrayToString($props),
-			['pnr' => $props[UdfWrapper::PROP_PNR]]
+			'exit user:'.Log\DatabaseLog::arrayToString($props),
+			['pnr' => $props[User\UdfWrapper::PROP_PNR]]
 		);
 	}
 
@@ -129,15 +137,20 @@ class ExitUserManagement
 		if (strlen($le_title) === 0) {
 			throw new \Exception('undefinite LE');
 		}
-		$import_id = self::ORGU_EXIT_IMPORT_ID_PREFIX.$le_title;
+		$import_id = $this->getImportIdByLETitle($le_title);
 		$obj_id = (int)\ilObjOrgUnit::_lookupObjIdByImportId($import_id);
 		if ($obj_id === 0) {
-			return $this->createOrguWithImportId($import_id);
+			return $this->createOrguForLETitle($le_title);
 		} else {
 			$orgu = new \ilObjOrgUnit(array_shift(\ilObjOrgUnit::_getAllReferences($obj_id)));
 			$orgu->read();
 			return $orgu;
 		}
+	}
+
+	protected function getImportIdByLETitle($le_title)
+	{
+		return md5(self::ORGU_EXIT_IMPORT_ID_PREFIX.$le_title);
 	}
 
 	/**
@@ -146,8 +159,7 @@ class ExitUserManagement
 	 * @param	string	$import_id
 	 * @return	\ilObjOrgUnit
 	 */
-
-	protected function createOrguWithImportId($import_id)
+	protected function createOrguForLETitle($le_title)
 	{
 		assert('is_string($import_id)');
 		$orgu = new \ilObjOrgUnit();
@@ -155,7 +167,8 @@ class ExitUserManagement
 		$orgu->createReference();
 		$orgu->putInTree($this->orgu_config->getExitRefId());
 		$orgu->initDefaultRoles();
-		$orgu->setImportId($import_id);
+		$orgu->setImportId($this->getImportIdByLETitle($le_title));
+		$orgu->setTitle($le_title);
 		$orgu->update();
 		return $orgu;
 	}
@@ -176,10 +189,13 @@ class ExitUserManagement
 			$orgu = new \ilObjOrgUnit($ref_id);
 			$orgu->deassignUserFromEmployeeRole($usr_id);
 		}
+		if ($role_id = $this->cfg->exitRoleId()) {
+			$this->role_management->deassignFromUser($role_id, $usr);
+		}
 		$props = $usr->properties();
 		$this->log->createEntry(
-			'removing user from exit:'.Base\Log\DatabaseLog::arrayToString($props),
-			['pnr' => $props[UdfWrapper::PROP_PNR]]
+			'removing user from exit:'.Log\DatabaseLog::arrayToString($props),
+			['pnr' => $props[User\UdfWrapper::PROP_PNR]]
 		);
 	}
 	/**
