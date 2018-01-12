@@ -100,7 +100,7 @@ class ExcelUsers
 		$function_set = trim((string)$row[UdfWrapper::PROP_FUNCTION]) !== '';
 		$gender = trim((string)$row[UdfWrapper::PROP_GENDER]);
 		$gender_set = $gender === 'm' || $gender === 'f';
-		$dates_set = 
+		$dates_set =
 			$row[UdfWrapper::PROP_INACTIVE_BEGIN] !== false &&
 			$row[UdfWrapper::PROP_INACTIVE_END] !== false &&
 			$row[UdfWrapper::PROP_ENTRY_DATE_KU] !== false &&
@@ -119,13 +119,13 @@ class ExcelUsers
 
 	protected function postprocessRow(array $row)
 	{
-		$row[UdfWrapper::PROP_ORGUS] = implode(', ',Base\Orgu\ExcelOrgus::normalizedOrguPath($row));
+		$row[UdfWrapper::PROP_ORGUS] = implode(', ', Base\Orgu\ExcelOrgus::normalizedOrguPath($row));
 		unset($row[self::COLUMN_LE]);
 		unset($row[self::COLUMN_RESSORT]);
 		unset($row[self::COLUMN_DEPARTMENT]);
 		unset($row[self::COLUMN_GROUP]);
 		unset($row[self::COLUMN_TEAM]);
-		switch($row[UdfWrapper::PROP_GENDER]) {
+		switch ($row[UdfWrapper::PROP_GENDER]) {
 			case 'männlich':
 				$gender = 'm';
 				break;
@@ -148,13 +148,14 @@ class ExcelUsers
 
 	protected function tryFormatDate($date_string)
 	{
-		if($date_string === '' || $date_string === '#') {
+		if ($date_string === '' || $date_string === '#') {
 			return '';
 		}
-		$ts = strtotime($date_string)
-		if($ts !== false ) {
-			return date_create($ts)->format('Y-m-d');
+		try {
+			$date_time = new \DateTime($date_string);
+			return $date_time->format('Y-m-d');
+		} catch (\Exception $e) {
+			return false;
 		}
-		return false;
 	}
 }
