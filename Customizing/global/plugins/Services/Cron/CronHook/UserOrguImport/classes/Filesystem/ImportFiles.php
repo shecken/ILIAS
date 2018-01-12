@@ -12,8 +12,8 @@ use CaT\IliasUserOrguImport\ErrorReporting\ErrorCollection as ErrorCollection;
 class ImportFiles
 {
 
-	const IMPORT_FILE_REGEX_CHECK = '#Check\\_[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}\\.csv#';
-	const IMPORT_FILE_REGEX_DATA = '#SAP\\_[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}\\.xlsx#';
+	const IMPORT_FILE_REGEX_CHECK = '#^Check\\_[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}\\.csv$#';
+	const IMPORT_FILE_REGEX_DATA = '#^SAP\\_[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}\\.xlsx$#';
 
 	protected $user;
 	protected $orgu;
@@ -37,7 +37,7 @@ class ImportFiles
 	{
 		$storage_path = $fs->getAbsolutePath();
 		$files = preg_grep(self::IMPORT_FILE_REGEX_CHECK, $fs->readDir($deployment_path));
-		$files = array_merge($files,preg_grep(self::IMPORT_FILE_REGEX_DATA, $fs->readDir($deployment_path)));
+		$files = array_merge($files, preg_grep(self::IMPORT_FILE_REGEX_DATA, $fs->readDir($deployment_path)));
 
 		foreach ($files as $file) {
 			$fs->move($deployment_path.DIRECTORY_SEPARATOR.$file, $storage_path.DIRECTORY_SEPARATOR.$file);
