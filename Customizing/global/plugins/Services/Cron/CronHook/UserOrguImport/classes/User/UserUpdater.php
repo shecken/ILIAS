@@ -20,8 +20,9 @@ class UserUpdater
 		UdfWrapper $udf,
 		Base\Orgu\OrguConfig $oc,
 		Base\ErrorReporting\ErrorCollection $ec,
-		Base\Log\Log $log)
-	{
+		Base\Log\Log $log
+	) {
+
 		$this->ul = $ul;
 		$this->uru = $uru;
 		$this->rc = $rc;
@@ -40,9 +41,18 @@ class UserUpdater
 	 */
 	public function applyDiff(User\UsersDifference $diff)
 	{
-		$this->add($diff->toCreate());
-		$this->update($diff->toChange());
-		$this->remove($diff->toDelete());
+		if ($this->checkConfig()) {
+			$this->add($diff->toCreate());
+			$this->update($diff->toChange());
+			$this->remove($diff->toDelete());
+		} else {
+			$this->ec->addError('User import not configured.');
+		}
+	}
+
+	protected function checkConfig()
+	{
+		return in_array(UdfWrapper::PROP_PNR, $this->udf->availiableUdfKeywords());
 	}
 
 	/**
@@ -69,7 +79,9 @@ class UserUpdater
 		$props = $user->properties();
 		$il_id = $user->iliasId();
 		if (\ilObjUser::userExists([$il_id])) {
-			$this->uru->updateRolesOfChangedUser($this->ul->userByUserId($il_id), $user, $this->rc);
+			if ($props[UdfWrapper::PROP_EXIT_DATE] > date('Y-m-d') || $props[UdfWrapper::PROP_EXIT_DATE] === '') {
+				$this->uru->updateRolesOfChangedUser($this->ul->userByUserId($il_id), $user, $this->rc);
+			}
 			$il_usr = $this->updateUserData($props, new \ilObjUser($il_id));
 			$il_usr->writePrefs();
 			$il_usr->update();
@@ -89,12 +101,16 @@ class UserUpdater
 		$il_usr->setGender($data[UdfWrapper::PROP_GENDER]);
 		$il_usr->setEmail($data[UdfWrapper::PROP_EMAIL]);
 
-		$entry_date = trim((string)$data[UdfWrapper::PROP_INACTIVE_END]);
-		$exit_date = trim((string)$data[UdfWrapper::PROP_INACTIVE_BEGIN]);
+		$inactive_end = trim((string)$data[UdfWrapper::PROP_INACTIVE_END]);
+		$inactive_begin = trim((string)$data[UdfWrapper::PROP_INACTIVE_BEGIN]);
+		$exit_date =  trim((string)$data[UdfWrapper::PROP_EXIT_DATE]);
+
 		$current_date = date('Y-m-d');
-		$after_entry = $entry_date === '' || $current_date >= $entry_date;
-		$before_exit = $exit_date === '' || $current_date <= $exit_date;
-		$active = $after_entry && $before_exit;
+
+		$before_inactive = $inactive_begin === '' || $current_date < $inactive_begin;
+		$after_inactive = $inactive_end === '' || $current_date > $inactive_end;
+		$before_exit = $current_date < $exit_date || $exit_date === '';
+		$active = ($before_inactive || $after_inactive) && $before_exit;
 		$il_usr->setTimeLimitUnlimited(true);
 		$il_usr->setActive($active);
 		return $il_usr;
@@ -122,7 +138,7 @@ class UserUpdater
 	public function addUser(User\User $user)
 	{
 		$props = $user->properties();
-		if (!\ilObjUser::_lookupId($data[UdfWrapper::PROP_LOGIN])) {
+		if (!\ilObjUser::_lookupId($props[UdfWrapper::PROP_LOGIN])) {
 			$il_usr = new \ilObjUser();
 			$il_usr->setIsSelfRegistered(true);
 			try {
@@ -132,7 +148,9 @@ class UserUpdater
 				$il_usr->writePrefs();
 				$il_usr->update();
 				$this->udf->updateUserData($props, (int)$il_usr->getId());
-				$this->uru->assignRolesToUserAccodingToConfig($this->ul->userByUserId($usr_id), $this->rc);
+				if ($props[UdfWrapper::PROP_EXIT_DATE] > date('Y-m-d') || $props[UdfWrapper::PROP_EXIT_DATE] === '') {
+					$this->uru->assignRolesToUserAccodingToConfig($this->ul->userByUserId($usr_id), $this->rc);
+				}
 			} catch (\Exception $e) {
 				$this->ec->addError('user with properties '.Base\Log\DatabaseLog::arrayToString($props).' could not be created:'.$e->getMessage());
 			}
@@ -165,16 +183,20 @@ class UserUpdater
 	{
 		$il_id = $user->iliasId();
 		$props = $user->properties();
-		if (\ilObjUser::userExists([$il_id])) {
-			if (\ilObjUser::_lookupActive($il_id)) {
-				$exit_orgu = new \ilObjOrgUnit($this->exit_ref_id);
-				$exit_orgu->assignUsersToEmployeeRole([$il_id]);
-				$usr = new \ilObjUser($il_id);
-				$usr->setActive(false);
-				$usr->update();
+		$curr_date = date('Y-m-d');
+		$exit_date = $props[UdfWrapper::PROP_EXIT_DATE];
+
+		if ($curr_date < $exit_date || $exit_date === '') {
+			$props[UdfWrapper::PROP_EXIT_DATE] = $curr_date;
+			if (\ilObjUser::userExists([$il_id])) {
+				$il_usr = $this->updateUserData($props, new \ilObjUser($il_id));
+				$il_usr->writePrefs();
+				$il_usr->update();
+				$this->udf->updateUserData($props, $il_id);
+				$this->log->createEntry('moving undelivered user to exit with properties '.Base\Log\DatabaseLog::arrayToString($props), ['pnr' => $props[UdfWrapper::PROP_PNR]]);
+			} else {
+				$this->ec->addError('user with properties '.Base\Log\DatabaseLog::arrayToString($props).' does not exists and may not be deleted');
 			}
-		} else {
-			$this->ec->addError('user with properties '.Base\Log\DatabaseLog::arrayToString($props).' does not exists and may not be delted');
 		}
 	}
 }

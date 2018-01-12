@@ -30,12 +30,12 @@ class OrguLocator
 	public function orguById($id)
 	{
 		assert('is_string($id)');
-		if($id === OrguConfig::ROOT_ID) {
+		if ($id === OrguConfig::ROOT_ID) {
 			$ref_id = $this->root_ref;
 			return new IliasOrgu([OrguAMDWrapper::PROP_ID => OrguConfig::ROOT_ID], $this->identifier, [OrguAMDWrapper::PROP_ID => OrguConfig::ROOT_ID], (int)$ref_id);
 		} else {
 			$obj_id = \ilObject::_lookupObjIdByImportId($id);
-			if(!$obj_id) {
+			if (!$obj_id) {
 				return null;
 			}
 			if (\ilObject::_lookupType($obj_id) !== 'orgu') {
@@ -77,10 +77,11 @@ class OrguLocator
 	protected function getSubtreeOrgus($root_ref_id)
 	{
 		$orgus = new Orgu\AdjacentOrgUnits($this->identifier);
+		$exit_subtree = $this->tree->getSubTree($this->tree->getNodeTreeData($this->oc->getExitRefId()), false, 'orgu');
 		foreach ($this->tree->getSubTree($this->tree->getNodeTreeData($root_ref_id), false, 'orgu') as $ref_id) {
-			if ($ref_id != $root_ref_id) {
+			if ($ref_id != $root_ref_id && !in_array($ref_id, $exit_subtree)) {
 				$props = $this->getPropertiesByRefId((int)$ref_id);
-				if(trim((string)$props[OrguAMDWrapper::PROP_ID]) !== '') {
+				if (trim((string)$props[OrguAMDWrapper::PROP_ID]) !== '') {
 					$orgus->add(new IliasOrgu(
 						$props,
 						$this->identifier,
@@ -97,7 +98,7 @@ class OrguLocator
 	protected function getParentIdPropertiesByRefId($ref_id)
 	{
 		$parent = (int)$this->tree->getParentNodeData($ref_id)['ref_id'];
-		if($parent === $this->root_ref) {
+		if ($parent === $this->root_ref) {
 			return [OrguAMDWrapper::PROP_ID => OrguConfig::ROOT_ID];
 		}
 		return $this->getPropertiesByRefId($parent);

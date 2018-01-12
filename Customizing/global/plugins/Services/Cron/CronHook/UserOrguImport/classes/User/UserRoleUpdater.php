@@ -35,11 +35,14 @@ class UserRoleUpdater
 		}
 		$previous_extern = $this->externKuFlagOf($previous);
 		$desired_extern = $this->externKuFlagOf($desired);
-		if($previous_extern !== $desired_extern) {
-			foreach ($rc->roleIdsFor($previous_extern) as $role_id) {
+		$assigned = $this->ra->assignedRoles($previous);
+		foreach ($rc->roleIdsFor($previous_extern) as $role_id) {
+			if (in_array($role_id, $assigned)) {
 				$this->ra->deassignFromUser($role_id, $previous);
 			}
-			foreach ($rc->roleIdsFor($desired_extern) as $role_id) {
+		}
+		foreach ($rc->roleIdsFor($desired_extern) as $role_id) {
+			if (!in_array($role_id, $assigned)) {
 				$this->ra->assignToUser($role_id, $previous);
 			}
 		}

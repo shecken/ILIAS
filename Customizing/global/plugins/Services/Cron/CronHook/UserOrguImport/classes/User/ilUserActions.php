@@ -33,8 +33,12 @@ class ilUserActions
 			$user_ids = $u_locator->relevantUserIdsWithExternRole($title);
 			$users = $u_locator->usersByUserIds($user_ids);
 			$updater = $this->f->UserRoleUpdater();
+			$curr_date = date('Y-m-d');
 			foreach ($users as $user) {
-				$updater->updateRolesOfUserChangedConfig($user, $rc_previous, $rc_new);
+				$exit_date = $user->properties()[UdfWrapper::PROP_EXIT_DATE];
+				if ($exit_date === '' || $curr_date < $exit_date) {
+					$updater->updateRolesOfUserChangedConfig($user, $rc_previous, $rc_new);
+				}
 			}
 		}
 
@@ -64,8 +68,12 @@ class ilUserActions
 			$user_ids = array_unique(array_merge($u_locator->relevantUserIdsWithExternRole($previous_ext_role), $u_locator->relevantUserIdsWithExternRole($new_ext_role)));
 			$users = $u_locator->usersByUserIds($user_ids);
 			$updater = $this->f->UserRoleUpdater();
+			$curr_date = date('Y-m-d');
 			foreach ($users as $user) {
-				$updater->updateRolesOfUserChangedConfig($user, $rc_previous, $rc_new);
+				$exit_date = $user->properties()[UdfWrapper::PROP_EXIT_DATE];
+				if ($exit_date === '' || $curr_date < $exit_date) {
+					$updater->updateRolesOfUserChangedConfig($user, $rc_previous, $rc_new);
+				}
 			}
 		}
 		return $rc_new;
@@ -84,8 +92,12 @@ class ilUserActions
 			$user_ids = $u_locator->relevantUserIdsWithExternRole($rc_previous->externRoleForExternRoleId($ext_role_id));
 			$users = $u_locator->usersByUserIds($user_ids);
 			$updater = $this->f->UserRoleUpdater();
+			$curr_date = date('Y-m-d');
 			foreach ($users as $user) {
-				$updater->updateRolesOfUserChangedConfig($user, $rc_previous, $rc_new);
+				$exit_date = $user->properties()[UdfWrapper::PROP_EXIT_DATE];
+				if ($exit_date === '' || $curr_date < $exit_date) {
+					$updater->updateRolesOfUserChangedConfig($user, $rc_previous, $rc_new);
+				}
 			}
 		}
 		return $rc_new;

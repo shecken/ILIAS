@@ -100,6 +100,12 @@ class ExcelUsers
 		$function_set = trim((string)$row[UdfWrapper::PROP_FUNCTION]) !== '';
 		$gender = trim((string)$row[UdfWrapper::PROP_GENDER]);
 		$gender_set = $gender === 'm' || $gender === 'f';
+		$dates_set =
+			$row[UdfWrapper::PROP_INACTIVE_BEGIN] !== false &&
+			$row[UdfWrapper::PROP_INACTIVE_END] !== false &&
+			$row[UdfWrapper::PROP_ENTRY_DATE_KU] !== false &&
+			$row[UdfWrapper::PROP_ENTRY_DATE_KO] !== false &&
+			$row[UdfWrapper::PROP_EXIT_DATE] !== false;
 		return	$kz_ku_set
 			&&	$pnr_set
 			&&	$orgus_set
@@ -107,18 +113,19 @@ class ExcelUsers
 			&&	$firstname_set
 			&&	$lastname_set
 			&&	$function_set
-			&&	$gender_set;
+			&&	$gender_set
+			&&	$dates_set;
 	}
 
 	protected function postprocessRow(array $row)
 	{
-		$row[UdfWrapper::PROP_ORGUS] = implode(',',Base\Orgu\ExcelOrgus::normalizedOrguPath($row));
+		$row[UdfWrapper::PROP_ORGUS] = implode(', ', Base\Orgu\ExcelOrgus::normalizedOrguPath($row));
 		unset($row[self::COLUMN_LE]);
 		unset($row[self::COLUMN_RESSORT]);
 		unset($row[self::COLUMN_DEPARTMENT]);
 		unset($row[self::COLUMN_GROUP]);
 		unset($row[self::COLUMN_TEAM]);
-		switch($row[UdfWrapper::PROP_GENDER]) {
+		switch ($row[UdfWrapper::PROP_GENDER]) {
 			case 'männlich':
 				$gender = 'm';
 				break;
@@ -131,12 +138,24 @@ class ExcelUsers
 		$row[UdfWrapper::PROP_PNR] = (string)$row[UdfWrapper::PROP_PNR];
 		$row[UdfWrapper::PROP_GENDER] = $gender;
 		$row[UdfWrapper::PROP_LOGIN] = trim($row[UdfWrapper::PROP_PNR]);
-		if($row[UdfWrapper::PROP_INACTIVE_BEGIN] === '#') {
-			$row[UdfWrapper::PROP_INACTIVE_BEGIN] = '';
-		}
-		if($row[UdfWrapper::PROP_INACTIVE_END] === '#') {
-			$row[UdfWrapper::PROP_INACTIVE_END] = '';
-		}
+		$row[UdfWrapper::PROP_INACTIVE_BEGIN] = $this->tryFormatDate($row[UdfWrapper::PROP_INACTIVE_BEGIN]);
+		$row[UdfWrapper::PROP_INACTIVE_END] = $this->tryFormatDate($row[UdfWrapper::PROP_INACTIVE_END]);
+		$row[UdfWrapper::PROP_ENTRY_DATE_KU] = $this->tryFormatDate($row[UdfWrapper::PROP_ENTRY_DATE_KU]);
+		$row[UdfWrapper::PROP_ENTRY_DATE_KO] = $this->tryFormatDate($row[UdfWrapper::PROP_ENTRY_DATE_KO]);
+		$row[UdfWrapper::PROP_EXIT_DATE] = $this->tryFormatDate($row[UdfWrapper::PROP_EXIT_DATE]);
 		return $row;
+	}
+
+	protected function tryFormatDate($date_string)
+	{
+		if ($date_string === '' || $date_string === '#') {
+			return '';
+		}
+		try {
+			$date_time = new \DateTime($date_string);
+			return $date_time->format('Y-m-d');
+		} catch (\Exception $e) {
+			return false;
+		}
 	}
 }

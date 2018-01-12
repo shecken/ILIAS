@@ -136,8 +136,8 @@ class OrguUpdater
 				$sup_role_id = (int)$il_orgu->getSuperiorRole();
 				$emp_role_id = (int)$il_orgu->getEmployeeRole();
 
-				$this->irm->setNewOperationsForRoleIdAtRefId($sup_role_id,$orgu_ref_id,self::$desired_operations_superiors);
-				$this->irm->setNewOperationsForRoleIdAtRefId($emp_role_id,$orgu_ref_id,self::$desired_operations_employees);
+				$this->irm->setNewOperationsForRoleIdAtRefId($sup_role_id, $orgu_ref_id, self::$desired_operations_superiors);
+				$this->irm->setNewOperationsForRoleIdAtRefId($emp_role_id, $orgu_ref_id, self::$desired_operations_employees);
 
 				$this->log->createEntry('inserting new orgu under '.$parent_id, ['orgu_id' => $orgu->properties()[OrguAMDWrapper::PROP_ID]]);
 			} else {
@@ -186,16 +186,25 @@ class OrguUpdater
 	 */
 	public function remove(Orgu\AdjacentOrgUnits $orgus)
 	{
-		$to_delete = [];
+		$to_delete_rec = [];
 		foreach ($orgus as $orgu) {
 			assert('$orgu instanceof CaT\IliasUserOrguImport\Orgu\IliasOrgu');
 			$ref_id = $orgu->refId();
 			foreach ($this->tree->getSubTree($this->tree->getNodeTreeData($ref_id), false, 'orgu') as $c_ref_id) {
-				if (!in_array((int)$c_ref_id, $to_delete)) {
-					$to_delete[] = (int)$c_ref_id;
+				if (!in_array((int)$c_ref_id, $to_delete_rec)) {
+					$to_delete_rec[] = (int)$c_ref_id;
 				}
 			}
 		}
-		$this->rep_utils->removeObjectsFromSystem($to_delete, true);
+		if (count($to_delete_rec) > 0) {
+			$to_delete = [];
+			foreach ($to_delete_rec as $ref_id) {
+				$parent_id = (int)$this->tree->getParentId($ref_id);
+				if (!in_array($parent_id, $to_delete_rec)) {
+					$to_delete[] = $ref_id;
+				}
+			}
+			$this->rep_utils->deleteObjects($this->cfg->getRootRefId(), $to_delete);
+		}
 	}
 }

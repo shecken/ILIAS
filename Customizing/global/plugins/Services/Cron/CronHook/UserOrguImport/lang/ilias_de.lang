@@ -78,3 +78,7 @@ fs_configuration#:#Konfiguration des Dateisystems
 deployment_path#:#Pfad zur Bereitstellung der Importdateien
 saved#:#Einstellungen gespeichert.
 functions_saved#:#Rolleneinstellungen gespeichert
+exit_user_config#:#Einstellungen für ausgtretende Benutzer
+superior_global_role#:#Globale Rolle für Vorgesetzte
+employee_global_role#:#Globale Rolle für Mitarbeiter
+exit_global_role#:#Globale Rolle für austretende Benutzer

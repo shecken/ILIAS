@@ -17,6 +17,7 @@ class UserOrguFactory
 	 * @param	\ilDB	$db
 	 * @param	\ilTree	$tree
 	 * @param	\ilOrgUnitTree	$orgu_tree
+	 * @param	\ilSetting $settings
 	 * @param 	User\UdfWrapper	$udf
 	 * @param 	User\UserIdentifier	$u_ident
 	 * @param 	Orgu\OrguConfig	$o_cfg
@@ -33,6 +34,7 @@ class UserOrguFactory
 		$db,
 		$tree,
 		$orgu_tree,
+		\ilSetting $settings,
 		User\UdfWrapper $udf,
 		User\UserIdentifier $u_ident,
 		Orgu\OrguConfig $o_cfg,
@@ -48,6 +50,7 @@ class UserOrguFactory
 		$this->db = $db;
 		$this->tree = $tree;
 		$this->orgu_tree = $orgu_tree;
+		$this->settings = $settings;
 		$this->udf = $udf;
 		$this->u_ident = $u_ident;
 		$this->o_cfg = $o_cfg;
@@ -87,8 +90,8 @@ class UserOrguFactory
 	{
 		return new UserOrguUpdater(
 			$this->UserOrguLocator(),
-			$this->uru,
-			$this->rc,
+			$this->UserOrguFunctionConfigDB(),
+			$this->f->IliasGlobalRoleManagement(),
 			$this->udf,
 			$this->error_collection,
 			$this->log
@@ -130,7 +133,7 @@ class UserOrguFactory
 	 */
 	public function UserOrguFunctionConfigDB()
 	{
-		return new UserOrguFunctionConfigDB($this->db);
+		return new UserOrguFunctionConfigDB($this->db, $this->settings);
 	}
 
 	/**

@@ -11,7 +11,7 @@ class IliasGlobalRoleManagement
 	protected $rbac_admin;
 	protected $rbac_review;
 
-	public function __construct(\ilRbacAdmin $rbac_admin,\ilRbacReview $rbac_review)
+	public function __construct(\ilRbacAdmin $rbac_admin, \ilRbacReview $rbac_review)
 	{
 		$this->rbac_admin = $rbac_admin;
 		$this->rbac_review = $rbac_review;
@@ -41,6 +41,33 @@ class IliasGlobalRoleManagement
 		$this->rbac_admin->deassignUser($role_id, $usr->iliasId());
 	}
 
+
+	/**
+	 * Assign a role to user.
+	 *
+	 * @param	int	$role_id
+	 * @param	User\IliasUser	$usr
+	 */
+	public function assignByUsrId($role_id, $usr_id)
+	{
+		assert('is_int($role_id)');
+		assert('is_int($usr_id)');
+		$this->rbac_admin->assignUser($role_id, $usr_id);
+	}
+
+	/**
+	 * Diassign a role to user.
+	 *
+	 * @param	int	$role_id
+	 * @param	User\IliasUser	$usr
+	 */
+	public function deassignByUsrId($role_id, $usr_id)
+	{
+		assert('is_int($role_id)');
+		assert('is_int($usr_id)');
+		$this->rbac_admin->deassignUser($role_id, $usr_id);
+	}
+
 	/**
 	 * Get a list of all global roles assigned to user.
 	 *
@@ -68,7 +95,7 @@ class IliasGlobalRoleManagement
 	 * @param	int	$ref_id
 	 * @param	sting[]	$operations
 	 */
-	public function setNewOperationsForRoleIdAtRefId($role_id,$ref_id,array $operations)
+	public function setNewOperationsForRoleIdAtRefId($role_id, $ref_id, array $operations)
 	{
 		assert('is_int($role_id)');
 		assert('is_int($ref_id)');
