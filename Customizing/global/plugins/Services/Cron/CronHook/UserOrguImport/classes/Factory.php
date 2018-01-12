@@ -94,6 +94,7 @@ class Factory
 			$this->db,
 			$this->tree,
 			$this->org_unit_tree,
+			$this->settings,
 			$this->UserFactory()->UdfWrapper(),
 			$this->UserFactory()->UserIdentifier(),
 			$this->OrguFactory()->OrguConfig(),
@@ -171,6 +172,8 @@ class Factory
 	public function ExitUserManagement()
 	{
 		return new ExitUserManagement(
+			$this->db,
+			$this->ExitConfig(),
 			$this->IliasGlobalRoleManagement(),
 			$this->OrguFactory()->OrguConfig(),
 			$this->UserFactory()->UserLocator(),
@@ -179,5 +182,10 @@ class Factory
 			$this->Log(),
 			$this->error_collection
 		);
+	}
+
+	public function ExitConfig()
+	{
+		return new ExitConfig($this->settings);
 	}
 }
