@@ -121,13 +121,17 @@ class UserOrguLocator
 
 	protected function getImportByRefIdUnder($ref_id)
 	{
+		$relevant_orgus = array_diff(
+			$this->tree->getSubTree($this->tree->getNodeTreeData($ref_id), false, 'orgu'),
+			$this->tree->getSubTree($this->tree->getNodeTreeData($this->o_cfg->getExitRefId()), false, 'orgu')
+		);
 		$query =
 			'SELECT ref_id, import_id'
 			.'	FROM object_data'
 			.'	JOIN object_reference USING(obj_id)'
 			.'	WHERE '.$this->db->in(
 				'ref_id',
-				$this->tree->getSubTree($this->tree->getNodeTreeData($ref_id), false, 'orgu'),
+				$relevant_orgus,
 				false,
 				'integer'
 			).'	AND import_id IS NOT NULL AND import_id != \'\'';
