@@ -211,6 +211,8 @@ class ilExternRoleGUI
 		foreach ($this->rc->globalRoleIds() as $role_id) {
 			$global_roles[$role_id] = \ilObject::_lookupTitle($role_id);
 		}
+		asort($global_roles);
+
 		$roles->setOptions($global_roles);
 		$form->addItem($roles);
 
