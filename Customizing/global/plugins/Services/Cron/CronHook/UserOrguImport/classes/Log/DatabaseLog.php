@@ -16,7 +16,6 @@ class DatabaseLog implements Log
 	protected static $properties =
 	[
 		'orgu_id',
-		'aob',
 		'pnr'
 	];
 
@@ -101,6 +100,6 @@ class DatabaseLog implements Log
 		foreach ($data as $key => $value) {
 			$aux[] = $key.':'.$value;
 		}
-		return implode(',', $aux);
+		return implode(';', $aux);
 	}
 }
