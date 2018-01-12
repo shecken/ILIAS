@@ -7,7 +7,9 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/UserOrguImport/c
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/UserOrguImport/classes/class.ilUserConfiguratorGUI.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/UserOrguImport/classes/class.ilOrguConfiguratorGUI.php';
 require_once 'Customizing/global/plugins/Services/Cron/CronHook/UserOrguImport/classes/class.ilFilesystemConfiguratorGUI.php';
-require_once 'Customizing/global/plugins/Services/Cron/CronHook/UserOrguImport/classes/class.ilFunctionRoleAssignmentConfiguratorGUI.php';
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/UserOrguImport/classes/class.ilFunctionRoleAssignmentConfiguratorGUI.php';#
+require_once 'Customizing/global/plugins/Services/Cron/CronHook/UserOrguImport/classes/class.ilExitUserConfiguratorGUI.php';
+
 /**
  * @ilCtrl_Calls ilUserOrguImportConfigGUI: ilExternRolesConfiguratorGUI
  * @ilCtrl_Calls ilUserOrguImportConfigGUI: ilDeployedUserOrguDataGUI
@@ -16,6 +18,7 @@ require_once 'Customizing/global/plugins/Services/Cron/CronHook/UserOrguImport/c
  * @ilCtrl_Calls ilUserOrguImportConfigGUI: ilOrguConfiguratorGUI
  * @ilCtrl_Calls ilUserOrguImportConfigGUI: ilFilesystemConfiguratorGUI
  * @ilCtrl_Calls ilUserOrguImportConfigGUI: ilFunctionRoleAssignmentConfiguratorGUI
+ * @ilCtrl_Calls ilUserOrguImportConfigGUI: ilExitUserConfiguratorGUI
  * @ilCtrl_isCalledBy ilUserOrguImportConfigGUI: ilObjComponentSettingsGUI
  */
 
@@ -54,6 +57,9 @@ class ilUserOrguImportConfigGUI extends ilPluginConfigGUI
 				break;
 			case 'ilfunctionroleassignmentconfiguratorgui':
 				$this->functionRoleAssignmentConfig();
+				break;
+			case 'ilexituserconfiguratorgui':
+				$this->exitUserConfig();
 				break;
 			default:
 				$this->externRolesConfiguration();
@@ -111,6 +117,13 @@ class ilUserOrguImportConfigGUI extends ilPluginConfigGUI
 		$this->ctrl->forwardCommand($gui);
 	}
 
+	protected function exitUserConfig()
+	{
+		$this->tabs_gui->setTabActive('exit_user_configuration');
+		$gui = new ilExitUserConfiguratorGUI($this->getPluginObject(), $this);
+		$this->ctrl->forwardCommand($gui);
+	}
+
 	public function getTabs()
 	{
 		$this->tabs_gui->addTab(
@@ -148,6 +161,11 @@ class ilUserOrguImportConfigGUI extends ilPluginConfigGUI
 			$this->txt('view_log'),
 			$this->getLinkTarget('view_log')
 		);
+		$this->tabs_gui->addTab(
+			'exit_user_config',
+			$this->txt('exit_user_config'),
+			$this->getLinkTarget('exit_user_config')
+		);
 	}
 
 	protected function getLinkTarget($target)
@@ -167,6 +185,8 @@ class ilUserOrguImportConfigGUI extends ilPluginConfigGUI
 				return $this->ctrl->getLinkTargetByClass('ilFilesystemConfiguratorGUI', ilFilesystemConfiguratorGUI::CMD_SHOW);
 			case 'function_role_config':
 				return $this->ctrl->getLinkTargetByClass('ilFunctionRoleAssignmentConfiguratorGUI', ilFunctionRoleAssignmentConfiguratorGUI::CMD_SHOW);
+			case 'exit_user_config':
+				return $this->ctrl->getLinkTargetByClass('ilExitUserConfiguratorGUI', ilExitUserConfiguratorGUI::CMD_SHOW);
 		}
 	}
 
