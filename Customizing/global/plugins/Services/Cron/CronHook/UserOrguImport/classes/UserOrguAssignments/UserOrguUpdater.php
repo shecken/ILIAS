@@ -14,14 +14,17 @@ class UserOrguUpdater
 
 	public function __construct(
 		UserOrguLocator $uol,
-		Base\User\UserRoleUpdater $ur_u,
-		Base\User\RoleConfiguration $rc,
+		UserOrguFunctionConfigDB $uofcd,
+		Base\IliasGlobalRoleManagement $ugrm,
 		Base\User\UdfWrapper $udf,
 		Base\ErrorReporting\ErrorCollection $ec,
 		Base\Log\Log $log
 	) {
 
+
 		$this->uol = $uol;
+		$this->uofc = $uofcd->load();
+		$this->ugrm = $ugrm;
 		$this->ec = $ec;
 		$this->ur_u = $ur_u;
 		$this->udf = $udf;
@@ -62,15 +65,21 @@ class UserOrguUpdater
 			if (!isset($assignments[$org_ref_id][$ilias_role])) {
 				$assignments[$org_ref_id][$ilias_role] = [];
 			}
-			$assignments[$org_ref_id][$ilias_role][] = $usr_id;
+			$assignments[$org_ref_id][$ilias_role][] = $ass;
 		}
+		$superior_global = $this->uofc->superiorGlobalRoleId();
+		$employee_global = $this->uofc->employeeGlobalRoleId();
+
 		foreach ($assignments as $ref_id => $roles) {
 			$orgu = new \ilObjOrgUnit($ref_id);
-			foreach ($roles as $role => $usr_ids) {
+			foreach ($roles as $role => $usr_ass_s) {
 				switch ($role) {
 					case UserOrguAssignment::ILIAS_SUPERIOR:
-						foreach ($usr_ids as $usr_id) {
+						foreach ($usr_ass_s as $usr_ass) {
+							$properties = $usr_ass->properties();
+							$usr_id = $usr_ass->iliasUserId();
 							$orgu->deassignUserFromSuperiorRole($usr_id);
+							$this->ugrm->deassignByUsrId($superior_global, $usr_id);
 							$this->log->createEntry(
 								'deassigning user from superior',
 								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR]
@@ -79,8 +88,11 @@ class UserOrguUpdater
 						}
 						break;
 					case UserOrguAssignment::ILIAS_EMPLOYEE:
-						foreach ($usr_ids as $usr_id) {
+						foreach ($usr_ass_s as $usr_ass) {
+							$properties = $usr_ass->properties();
+							$usr_id = $usr_ass->iliasUserId();
 							$orgu->deassignUserFromEmployeeRole($usr_id);
+							$this->ugrm->deassignByUsrId($employee_global, $usr_id);
 							$this->log->createEntry(
 								'deassigning user from employee',
 								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR]
@@ -151,15 +163,25 @@ class UserOrguUpdater
 				,'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID]]
 			);
 		}
+		$superior_global = $this->uofc->superiorGlobalRoleId();
+		$employee_global = $this->uofc->employeeGlobalRoleId();
 		foreach ($assignments as $ref_id => $roles) {
 			$orgu = new \ilObjOrgUnit($ref_id);
 			foreach ($roles as $role => $usr_ids) {
 				switch ($role) {
 					case UserOrguAssignment::ILIAS_SUPERIOR:
 						$orgu->assignUsersToSuperiorRole($usr_ids);
+						foreach ($usr_ids as $usr_id) {
+							$a_usr_id = (int)$usr_id;
+							$this->ugrm->assignByUsrId($superior_global, $a_usr_id);
+						}
 						break;
 					case UserOrguAssignment::ILIAS_EMPLOYEE:
 						$orgu->assignUsersToEmployeeRole($usr_ids);
+						foreach ($usr_ids as $usr_id) {
+							$a_usr_id = (int)$usr_id;
+							$this->ugrm->assignByUsrId($employee_global, $a_usr_id);
+						}
 						break;
 					default:
 						throw new \InvalidArgumentException('Unknown role '.$role);
