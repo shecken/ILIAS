@@ -1,23 +1,23 @@
 [
     {
         "name": "conceptsandtraining/ente",
-        "version": "3.0.1",
-        "version_normalized": "3.0.1.0",
+        "version": "3.0.2",
+        "version_normalized": "3.0.2.0",
         "source": {
             "type": "git",
             "url": "https://github.com/conceptsandtraining/lib-ente.git",
-            "reference": "93e2880f80e62341f82a894d35cab805c3d44262"
+            "reference": "4732a789dc96dd67b60bda37ceef498181618596"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/93e2880f80e62341f82a894d35cab805c3d44262",
-            "reference": "93e2880f80e62341f82a894d35cab805c3d44262",
+            "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/4732a789dc96dd67b60bda37ceef498181618596",
+            "reference": "4732a789dc96dd67b60bda37ceef498181618596",
             "shasum": ""
         },
         "require-dev": {
             "phpunit/phpunit": "^5.6"
         },
-        "time": "2018-01-15T15:15:18+00:00",
+        "time": "2018-01-15T15:31:27+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
