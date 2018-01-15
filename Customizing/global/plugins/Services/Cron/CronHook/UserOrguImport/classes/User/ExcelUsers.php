@@ -143,6 +143,9 @@ class ExcelUsers
 		$row[UdfWrapper::PROP_ENTRY_DATE_KU] = $this->tryFormatDate($row[UdfWrapper::PROP_ENTRY_DATE_KU]);
 		$row[UdfWrapper::PROP_ENTRY_DATE_KO] = $this->tryFormatDate($row[UdfWrapper::PROP_ENTRY_DATE_KO]);
 		$row[UdfWrapper::PROP_EXIT_DATE] = $this->tryFormatDate($row[UdfWrapper::PROP_EXIT_DATE]);
+		$row[UdfWrapper::PROP_BIRTHDAY] = $this->tryFormatDate($row[UdfWrapper::PROP_BIRTHDAY]);
+		$row[UdfWrapper::PROP_COST_CENTRE] = (string)$row[UdfWrapper::PROP_COST_CENTRE];
+		$row[UdfWrapper::PROP_SUPERIOR_OF_USR] = (string)$row[UdfWrapper::PROP_SUPERIOR_OF_USR];
 		return $row;
 	}
 
