@@ -45,6 +45,8 @@ class BookingPlayerForTest extends Booking\Player {
 	}
 	protected function getConfirmButtonLabel() {
 	}
+	protected function getComponentClass() {
+	}
 }
 
 class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
