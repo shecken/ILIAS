@@ -1093,7 +1093,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("getHTML")
 			->willReturn($html);
 
-		$view = $player->process("previous", $post);
+		$view = $player->process("previous", []);
 
 		$this->assertEquals($html, $view);
 	}
