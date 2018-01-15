@@ -18,8 +18,8 @@
 		"symfony/yaml": "^3.1",
 		"guzzlehttp/psr7": "^1.4",
 		"moment/moment": "^2.14.1",
-		"cat/ente" : "v2.1.2",
-		"eluceo/ical": "0.11.4"
+		"eluceo/ical": "0.11.4",
+		"conceptsandtraining/ente": "^v3.0"
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "^1.6",
@@ -29,10 +29,6 @@
 	"autoload": {
 		"psr-4" : { "ILIAS\\" : "../../src" }
 	},
-    "repositories" : [{
-        "type" : "vcs",
-        "url": "git@github.com:/conceptsandtraining/lib-ente.git"
-    }],
 	"extra": {
 		"cweagans/composer-patches" : {
 			"source" : "https://github.com/cweagans/composer-patches",
