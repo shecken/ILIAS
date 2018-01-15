@@ -46,7 +46,7 @@ abstract class ilTMSBookingGUI extends Booking\Player {
 	 */
 	protected $parent_cmd;
 
-	public function __construct($parent_gui, $parent_cmd, $execute_show = true) {
+	final public function __construct($parent_gui, $parent_cmd, $execute_show = true) {
 		global $DIC;
 
 		$this->g_tpl = $DIC->ui()->mainTemplate();
