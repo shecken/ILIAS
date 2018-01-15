@@ -1,11 +1,11 @@
 <?php
 
-use \CaT\Ente\ILIAS\UnboundProvider as Base;
+use \CaT\Ente\ILIAS\SeparatedUnboundProvider;
 use \CaT\Ente\ILIAS\Entity;
 use \ILIAS\TMS\CourseInfo;
 use \ILIAS\TMS\CourseInfoImpl;
 
-class UnboundCourseProvider extends Base {
+class UnboundCourseProvider extends SeparatedUnboundProvider {
 	/**
 	 * @inheritdocs
 	 */
