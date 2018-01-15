@@ -106,7 +106,7 @@ abstract class ilTMSBookingGUI extends Booking\Player {
 	 *
 	 * @return void
 	 */
-	abstract function setParameter($crs_ref_id, $usr_id);
+	abstract protected function setParameter($crs_ref_id, $usr_id);
 
 	// STUFF FROM Booking\Player
 
