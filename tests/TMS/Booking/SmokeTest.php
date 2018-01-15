@@ -36,6 +36,9 @@ class DummyPlayer extends Booking\Player {
 	protected function getConfirmButtonLabel() {
 		throw new \LogicException("Mock me!");
 	}
+	protected function getComponentClass() {
+		throw new \LogicException("Mock me!");
+	}
 }
 
 class TMS_Booking_SmokeTest extends PHPUnit_Framework_TestCase {
