@@ -92,7 +92,7 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_getApplicableSteps() {
 		$player = $this->getMockBuilder(BookingPlayerForTest::class)
-			->setMethods(["getComponentsOfType", "getUserId"])
+			->setMethods(["getComponentsOfType", "getUserId", "getComponentClass"])
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -124,8 +124,13 @@ class TMS_Booking_PlayerTest extends PHPUnit_Framework_TestCase {
 
 		$player
 			->expects($this->once())
+			->method("getComponentClass")
+			->willReturn(Booking\Step::class);
+
+		$player
+			->expects($this->once())
 			->method("getComponentsOfType")
-			->with(Booking\Step::class)
+			->with($this->equalTo(Booking\Step::class))
 			->willReturn([$component1, $component2, $component3]);
 
 		$steps = $player->_getApplicableSteps();
