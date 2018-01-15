@@ -102,3 +102,10 @@ while($row = $ilDB->fetchAssoc($res)) {
 	$tms_settings_db->update($tms_settings);
 }
 ?>
+
+<#10>
+<?php
+	// cat-tms-patch start
+	$ilCtrlStructureReader->getStructure();
+	// cat-tms-patch end
+?>
