@@ -9,11 +9,11 @@ require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php");
 
 /**
- * Displays the TMS booking
+ * Displays the TMS superior booking
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
-class ilTMSBookingGUI  extends Booking\Player {
+abstract class ilTMSBookingGUI extends Booking\Player {
 	use \ILIAS\TMS\MyUsersHelper;
 
 	/**
@@ -46,7 +46,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 */
 	protected $parent_cmd;
 
-	public function __construct($parent_gui, $parent_cmd, $execute_show = true) {
+	final public function __construct($parent_gui, $parent_cmd, $execute_show = true) {
 		global $DIC;
 
 		$this->g_tpl = $DIC->ui()->mainTemplate();
@@ -87,9 +87,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 		$process_db = new ilTMSBookingPlayerStateDB();
 
 		$this->init($DIC, $crs_ref_id, $usr_id, $process_db);
-
-		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "crs_ref_id", $crs_ref_id);
-		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", $usr_id);
+		$this->setParameter($crs_ref_id, $usr_id);
 
 		$cmd = $this->g_ctrl->getCmd("start");
 		$content = $this->process($cmd, $_POST);
@@ -99,6 +97,16 @@ class ilTMSBookingGUI  extends Booking\Player {
 			$this->g_tpl->show();
 		}
 	}
+
+	/**
+	 * Set parameter for player
+	 *
+	 * @param int 	$crs_ref_id
+	 * @param int 	$usr_id
+	 *
+	 * @return void
+	 */
+	abstract protected function setParameter($crs_ref_id, $usr_id);
 
 	// STUFF FROM Booking\Player
 
@@ -138,8 +146,7 @@ class ilTMSBookingGUI  extends Booking\Player {
 		assert('is_numeric($_GET["usr_id"])');
 		$usr_id = (int)$_GET["usr_id"];
 
-		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "crs_ref_id", null);
-		$this->g_ctrl->setParameterByClass("ilTMSBookingGUI", "usr_id", null);
+		$this->setParameter(null, null);
 		$this->g_ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
 
 		if (count($messages)) {
@@ -181,6 +188,13 @@ class ilTMSBookingGUI  extends Booking\Player {
 	 */
 	protected function getConfirmButtonLabel() {
 		return $this->g_lng->txt("booking_confirm");
+	}
+
+	/**
+	 * @inheritdocs
+	 */
+	protected function getComponentClass() {
+		return Booking\SuperiorBookingStep::class;
 	}
 
 	/**
