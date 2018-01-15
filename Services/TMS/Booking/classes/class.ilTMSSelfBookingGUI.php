@@ -186,11 +186,8 @@ class ilTMSSelfBookingGUI extends Booking\Player {
 	/**
 	 * @inheritdocs
 	 */
-	protected function getApplicableSteps() {
-		$steps = $this->getComponentsOfType(Booking\SelfBookingStep::class);
-		return array_values(array_filter($steps, function($step) {
-			return $step->isApplicableFor($this->getUserId());
-		}));
+	protected function getComponentClass() {
+		return Booking\SelfBookingStep::class;
 	}
 
 	/**

@@ -346,11 +346,23 @@ abstract class Player {
 	}
 
 	/**
+	 * Get the class of component player is searching steps
+	 *
+	 * @return string
+	 */
+	abstract protected function getComponentClass();
+
+	/**
 	 * Get the steps that are applicable for a given user.
 	 *
 	 * @return	Step[]
 	 */
-	abstract protected function getApplicableSteps();
+	protected function getApplicableSteps() {
+		$steps = $this->getComponentsOfType($this->getComponentClass());
+		return array_values(array_filter($steps, function($step) {
+			return $step->isApplicableFor($this->getUserId());
+		}));
+	}
 
 	/**
 	 * Get the steps for the booking of the couse sorted by period.
