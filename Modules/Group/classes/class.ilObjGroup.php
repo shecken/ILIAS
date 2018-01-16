@@ -1883,6 +1883,22 @@ class ilObjGroup extends ilContainer implements ilMembershipRegistrationCodes
 		$this->message .= $a_message;
 	}
 	
+	// gev-patch start tms-635
+	/**
+	 * Get members objects
+	 *
+	 * @return ilGroupParticipants
+	 */
+	public function getMembersObject()
+	{
+		if(!$this->members_obj instanceof ilGroupParticipants)
+		{
+			$this->initParticipants();
+		}
+		return $this->members_obj;
+	}
+	// gev-patch end tms-635
+
 	/**
 	 * Prepare calendar appointments
 	 *
