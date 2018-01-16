@@ -19,7 +19,7 @@ class ilTMSSelfCancelGUI extends \ilTMSCancelGUI {
 	 * @inheritdocs
 	 */
 	protected function getComponentClass() {
-		return Booking\SuperiorBookingStep::class;
+		return Booking\Step::class;
 	}
 
 	/**
