@@ -10,15 +10,20 @@ use CaT\Ente\Component;
  * This is an information about a course action, noteworthy for a user in some context.
  */
 interface CourseAction extends Component {
+	const CONTEXT_SEARCH = 1;
+	const CONTEXT_USER_BOOKING = 2;
+	const CONTEXT_EMPLOYEE_BOOKING = 3;
+	const CONTEXT_EDU_BIO = 4;
+	const CONTEXT_EMPOYEE_EDU_BIO = 5;
+	const CONTEXT_MY_TRAININGS = 6;
+	const CONTEXT_MY_ADMIN_TRAININGS = 7;
 
 	/**
-	 * Checks the action is allowed for user
+	 * Get the owner of this action
 	 *
-	 * @param int 	$usr_id 	Id of user the action is requested for
-	 *
-	 * @return bool
+	 * @return \ilObject
 	 */
-	public function isAllowedFor($usr_id);
+	public function getOwner();
 
 	/**
 	 * Get the priority of the step.
@@ -30,13 +35,6 @@ interface CourseAction extends Component {
 	public function getPriority();
 
 	/**
-	 * Get the ui control to render the action
-	 *
-	 * @return UIControl
-	 */
-	public function getControlItem();
-
-	/**
 	 * Check if the info is relevant in the given context.
 	 *
 	 * @param mixed 	$context from the list of contexts in this class
@@ -44,4 +42,22 @@ interface CourseAction extends Component {
 	 * @return bool
 	 */
 	public function hasContext($context);
+
+	/**
+	 * Checks the action is allowed for user
+	 *
+	 * @param int 	$usr_id 	Id of user the action is requested for
+	 *
+	 * @return bool
+	 */
+	public function isAllowedFor($usr_id);
+
+	/**
+	 * Get the link for the ui control
+	 *
+	 * @return string
+	 */
+	public function getLink();
+
+
 }
