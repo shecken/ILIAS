@@ -35,7 +35,7 @@ class ilTMSAppEventListener
 		$provider_db = self::getProviderDB();
 		$unbound_providers = $provider_db->unboundProvidersOf($crs);
 		foreach ($unbound_providers as $unbound_provider) {
-			$provider_db->delete($unbound_provider);
+			$provider_db->delete($unbound_provider, $crs);
 		}
 	}
 
