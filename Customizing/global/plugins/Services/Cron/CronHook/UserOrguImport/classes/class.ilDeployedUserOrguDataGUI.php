@@ -38,6 +38,7 @@ class ilDeployedUserOrguDataGUI
 	protected function showFiles()
 	{
 		$files = $this->filesystem->readDir($this->filesystem->getAbsolutePath());
+		sort($files);
 		$links = '';
 		foreach ($files as $file) {
 			$this->ctrl->setParameter($this, self::GET_FILE, base64_encode($file));
