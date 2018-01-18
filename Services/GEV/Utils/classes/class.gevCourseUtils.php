@@ -3721,6 +3721,29 @@ class gevCourseUtils
 		return false;
 	}
 
+	/**
+	 * Get a link foreach feedback object in a course.
+	 *
+	 * @return array
+	 */
+	public function getLinkForEachFeedbackObject()
+	{
+		include_once('./Services/Link/classes/class.ilLink.php');
+
+		$ret = array();
+		$feedbacks = $this->objsInCourseOfType("xfbk");
+
+		if(count($feedbacks) == 0){
+			return $ret;
+		}
+
+		foreach ($feedbacks as $feedback) {
+			$ret[] = ilLink::_getStaticLink($feedback['ref_id'], "xfbk", true, "");
+		}
+
+		return $ret;
+	}
+
 	public function getCustomAttachments()
 	{
 		$ret = array();
