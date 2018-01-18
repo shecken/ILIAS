@@ -4,13 +4,14 @@ use \CaT\Ente\ILIAS\SeparatedUnboundProvider;
 use \CaT\Ente\ILIAS\Entity;
 use \ILIAS\TMS\CourseInfo;
 use \ILIAS\TMS\CourseInfoImpl;
+use \ILIAS\TMS\CourseAction;
 
 class UnboundCourseProvider extends SeparatedUnboundProvider {
 	/**
 	 * @inheritdocs
 	 */
 	public function componentTypes() {
-		return [CourseInfo::class];
+		return [CourseInfo::class, CourseAction::class];
 	}
 
 	/**
@@ -28,6 +29,10 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 		$this->lng->loadLanguageModule("crs");
 		$this->user = $DIC->user();
 		$object = $entity->object();
+
+		if ($component_type === CourseAction::class) {
+			return $this->getCourseActions($entity, $this->owner());
+		}
 
 		if ($component_type === CourseInfo::class) {
 			$ret = array();
@@ -48,6 +53,17 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 			return $ret;
 		}
 		throw new \InvalidArgumentException("Unexpected component type '$component_type'");
+	}
+
+	/**
+	 * Get all possible actions depentent on Booking modalities
+	 *
+	 * @return CourseAction[]
+	 */
+	protected function getCourseActions(Entity $entity, $owner)
+	{
+		require_once("Services/TMS/CourseActions/ToCourse.php");
+		return [new ToCourse($entity, $owner, 10, [CourseAction::CONTEXT_USER_BOOKING])];
 	}
 
 	/**
