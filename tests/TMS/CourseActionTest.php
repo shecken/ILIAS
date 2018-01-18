@@ -7,10 +7,13 @@ require_once(__DIR__."/../../Services/Object/classes/class.ilObject.php");
 use ILIAS\TMS;
 
 class _CourseActionImpl extends TMS\CourseActionImpl {
-	public function getLink() {
+	public function getLink(\ilCtrl $ctrl, $usr_id) {
 		throw new Exception("mock me");
 	}
 	public function isAllowedFor($usr_id) {
+		throw new Exception("mock me");
+	}
+	public function getLabel() {
 		throw new Exception("mock me");
 	}
 }
