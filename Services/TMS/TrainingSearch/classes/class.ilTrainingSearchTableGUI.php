@@ -30,6 +30,7 @@ class ilTrainingSearchTableGUI {
 		$this->g_lng = $DIC->language();
 		$this->g_ctrl = $DIC->ctrl();
 		$this->search_user_id = $search_user_id;
+		$this->primary = true;
 
 		$this->helper = $helper;
 
@@ -105,7 +106,15 @@ class ilTrainingSearchTableGUI {
 	 * @return Button
 	 */
 	protected function createButton($label, $link, $ui_factory) {
-		return $ui_factory->button()->primary
+		if($this->primary) {
+			$this->primary = false;
+			return $ui_factory->button()->primary
+							( $label,
+								$link
+							);
+		}
+
+		return $ui_factory->button()->standard
 							( $label,
 								$link
 							);
