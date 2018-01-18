@@ -89,6 +89,7 @@ class gevCrsMailTypeAdapter extends ilMailTypeAdapter {
 				, array("Nachtagabreise"				, "Ja, wenn der Benutzer eine Nachtagabreise angegeben hat, sonst Nein.")
 				, array("Liste"							, "Liste der Teilnehmer am Training")
 				, array("Organisatorisches"				, "Feld Organisatorisches aus den Trainingsdetails")
+				, array("Feedback_URL"					, "Links zu den Feedbacks aus dem Kurs.")
 				);
 		}
 	
