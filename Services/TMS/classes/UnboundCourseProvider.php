@@ -69,7 +69,8 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				[
 					CourseAction::CONTEXT_USER_BOOKING,
 					CourseAction::CONTEXT_EMPLOYEE_BOOKING,
-					CourseAction::CONTEXT_MY_ADMIN_TRAININGS
+					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
+					CourseAction::CONTEXT_MY_TRAININGS
 				]
 			)
 		];
