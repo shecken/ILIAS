@@ -1883,7 +1883,7 @@ class ilObjGroup extends ilContainer implements ilMembershipRegistrationCodes
 		$this->message .= $a_message;
 	}
 	
-	// gev-patch start tms-635
+	// gev-patch start gev_635
 	/**
 	 * Get members objects
 	 *
@@ -1897,7 +1897,7 @@ class ilObjGroup extends ilContainer implements ilMembershipRegistrationCodes
 		}
 		return $this->members_obj;
 	}
-	// gev-patch end tms-635
+	// gev-patch end gev_635
 
 	/**
 	 * Prepare calendar appointments
