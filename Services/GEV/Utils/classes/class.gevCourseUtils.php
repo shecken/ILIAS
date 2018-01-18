@@ -3738,7 +3738,7 @@ class gevCourseUtils
 		}
 
 		foreach ($feedbacks as $feedback) {
-			$ret[] = ilLink::_getStaticLink($feedback['ref_id'], "xfbk", true, "");
+			$ret[] = $feedback['title'] .": ".ilLink::_getStaticLink($feedback['ref_id'], "xfbk", true, "");
 		}
 
 		return $ret;
