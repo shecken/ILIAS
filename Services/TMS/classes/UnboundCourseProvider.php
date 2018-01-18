@@ -46,7 +46,6 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 			$ret = $this->getCourseInfoForTrainingProvider($ret, $entity, (int)$object->getId());
 			$ret = $this->getCourseInfoForImportantInformation($ret, $entity, $object);
 			$ret = $this->getCourseInfoForTutors($ret, $entity, $object);
-			$ret = $this->getCourseInfoForToCourseButton($ret, $entity, $object);
 			$ret = $this->getCourseInfoForCourseMemberButton($ret, $entity, $object);
 			$ret = $this->getCourseInfoForCourseMemberCountings($ret, $entity, $object);
 
@@ -530,31 +529,6 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 					);
 			}
 		}
-		return $ret;
-	}
-
-	/**
-	 * Get a course infomation object to decide showing a to course button or not
-	 *
-	 * @param CourseInfo[]
-	 * @param Entity $entity
-	 * @param Object 	$object
-	 *
-	 * @return CourseInfo[]
-	 */
-	protected function getCourseInfoForToCourseButton(array $ret, Entity $entity, $object) {
-		$show_button = 0;
-		if($this->g_access->checkAccess("read", "", $object->getRefId())) {
-			$show_button = 1;
-		}
-
-		$ret[] = $this->createCourseInfoObject($entity
-			, ""
-			, $show_button
-			,1
-			, [CourseInfo::CONTEXT_TO_COURSE_BUTTON]
-		);
-
 		return $ret;
 	}
 
