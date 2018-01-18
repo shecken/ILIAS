@@ -75,14 +75,10 @@ class ilTrainingSearchTableGUI {
 			$view_constrols,
 			function ($row, BookableCourse $record, $ui_factory, $environment) { //mapping-closure
 				$buttons = array();
-				$book_button = $record->getBookButton($this->g_lng->txt("book_course"), $this->parent->getBookingLink($record), $this->search_user_id);
-				$request_button = $record->getRequestButton($this->g_lng->txt("request_book"));
+				$search_actions = $record->getSearchActionLinks($this->g_ctrl, $this->search_user_id);
 
-				if(!is_null($book_button)) {
-					$buttons[] = $book_button;
-				}
-				if(!is_null($request_button)) {
-					$buttons[] = $request_button;
+				foreach ($search_actions as $label => $search_action) {
+					$buttons[] = $this->createButton($label, $search_action, $ui_factory);
 				}
 
 				return $row
@@ -99,6 +95,20 @@ class ilTrainingSearchTableGUI {
 
 		//apply data to table and render
 		return $renderer->render($ptable->withData($data));
+	}
+
+	/**
+	 * Create an ui button
+	 *
+	 * @param string 	$link
+	 *
+	 * @return Button
+	 */
+	protected function createButton($label, $link, $ui_factory) {
+		return $ui_factory->button()->primary
+							( $label,
+								$link
+							);
 	}
 }
 
