@@ -43,6 +43,9 @@ abstract class CourseActionImpl implements CourseAction {
 		assert('is_int($priority)');
 		$this->priority = $priority;
 		$this->contexts = $contexts;
+
+		global $DIC;
+		$this->g_user_id = $DIC->user()->getId();
 	}
 
 	/**
@@ -81,5 +84,10 @@ abstract class CourseActionImpl implements CourseAction {
 	/**
 	 * @inheritdoc
 	 */
-	abstract public function getLink();
+	abstract public function getLink(\ilCtrl $ctrl, $usr_id);
+
+	/**
+	 * @inheritdoc
+	 */
+	abstract public function getLabel();
 }
