@@ -29,6 +29,7 @@ class ilTrainingSearchTableGUI {
 		global $DIC;
 		$this->g_lng = $DIC->language();
 		$this->g_ctrl = $DIC->ctrl();
+		$this->g_user = $DIC->user();
 		$this->search_user_id = $search_user_id;
 		$this->primary = true;
 
@@ -76,7 +77,7 @@ class ilTrainingSearchTableGUI {
 			$view_constrols,
 			function ($row, BookableCourse $record, $ui_factory, $environment) { //mapping-closure
 				$buttons = array();
-				$search_actions = $record->getSearchActionLinks($this->g_ctrl, $this->search_user_id);
+				$search_actions = $record->getSearchActionLinks($this->g_ctrl, $this->search_user_id, $this->search_user_id != $this->g_user->getId());
 
 				foreach ($search_actions as $label => $search_action) {
 					$buttons[] = $this->createButton($label, $search_action, $ui_factory);

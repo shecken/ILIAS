@@ -213,6 +213,13 @@ class BookableCourse {
 		return $this->search_actions;
 	}
 
+	protected function getSuperiorSearchActions() {
+		if ($this->superior_search_actions === null) {
+			$this->superior_search_actions = $this->getCourseAction(CourseAction::CONTEXT_SUPERIOR_SEARCH);
+		}
+		return $this->superior_search_actions;
+	}
+
 	public function getTitleValue() {
 		// Take most important info as title
 		$short_info = $this->getShortInfo();
@@ -250,8 +257,13 @@ class BookableCourse {
 		return ["" => $this->getNoDetailInfoMessage()];
 	}
 
-	public function getSearchActionLinks(\ilCtrl $ctrl, $usr_id) {
-		$search_actions = $this->getSearchActions();
+	public function getSearchActionLinks(\ilCtrl $ctrl, $usr_id, $superior) {
+		if($superior) {
+			$search_actions = $this->getSuperiorSearchActions();
+		} else {
+			$search_actions = $this->getSearchActions();
+		}
+
 		$ret = array();
 		foreach($search_actions as $search_action) {
 			if($search_action->isAllowedFor($usr_id)) {

@@ -17,6 +17,7 @@ interface CourseAction extends Component {
 	const CONTEXT_EMPOYEE_EDU_BIO = 5;
 	const CONTEXT_MY_TRAININGS = 6;
 	const CONTEXT_MY_ADMIN_TRAININGS = 7;
+	const CONTEXT_SUPERIOR_SEARCH = 8;
 
 	/**
 	 * Get the owner of this action
