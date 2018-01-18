@@ -55,9 +55,17 @@ interface CourseAction extends Component {
 	/**
 	 * Get the link for the ui control
 	 *
+	 * @param \ilCtrl 	$ctrl
+	 * @param int 	$usr_id
+	 *
 	 * @return string
 	 */
-	public function getLink();
+	public function getLink(\ilCtrl $ctrl, $usr_id);
 
-
+	/**
+	 * Get the label for the ui control
+	 *
+	 * @return string
+	 */
+	public function getLabel();
 }
