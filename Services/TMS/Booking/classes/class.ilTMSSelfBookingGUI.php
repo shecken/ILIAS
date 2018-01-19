@@ -29,6 +29,13 @@ class ilTMSSelfBookingGUI extends \ilTMSBookingGUI {
 		$this->g_ctrl->setParameterByClass("ilTMSSelfBookingGUI", "crs_ref_id", $crs_ref_id);
 		$this->g_ctrl->setParameterByClass("ilTMSSelfBookingGUI", "usr_id", $usr_id);
 	}
+
+	/**
+	 * @inheritdocs
+	 */
+	protected function getPlayerTitle() {
+		return $this->g_lng->txt("booking");
+	}
 }
 
 /**
