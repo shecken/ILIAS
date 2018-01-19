@@ -211,7 +211,6 @@ class ilTrainingSearchGUI {
 	 */
 	protected function addSortationObjects($view_control) {
 		$employees = $this->helper->getUserWhereCurrentCanBookFor((int)$this->g_user->getId());
-		// temporarily disabled booking of training by superiors (TMS-575)
 		if(count($employees) > 1) {
 			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_CHANGE_USER);
 			$view_control[] = $this->g_f->viewControl()->quickfilter($employees)
