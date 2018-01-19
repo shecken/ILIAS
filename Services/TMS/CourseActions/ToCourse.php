@@ -40,7 +40,7 @@ class ToCourse extends TMS\CourseActionImpl
 	}
 
 	/**
-	 * Get status of booking for this course
+	 * Has user read access to the course
 	 *
 	 * @param int 	$crs_ref_id
 	 *
