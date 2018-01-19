@@ -25,6 +25,13 @@ class ilTMSSelfBookWaitingGUI extends \ilTMSBookingGUI {
 	/**
 	 * @inheritdocs
 	 */
+	protected function getConfirmButtonLabel() {
+		return $this->g_lng->txt("book_waiting_confirm");
+	}
+
+	/**
+	 * @inheritdocs
+	 */
 	protected function setParameter($crs_ref_id, $usr_id) {
 		$this->g_ctrl->setParameterByClass("ilTMSSelfBookWaitingGUI", "crs_ref_id", $crs_ref_id);
 		$this->g_ctrl->setParameterByClass("ilTMSSelfBookWaitingGUI", "usr_id", $usr_id);
