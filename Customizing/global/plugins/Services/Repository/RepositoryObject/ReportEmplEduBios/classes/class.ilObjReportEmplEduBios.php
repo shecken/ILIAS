@@ -39,10 +39,10 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 				."		AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL ".$year." YEAR)"
 				."		AND ".$this->participationWBDRelevant()
 				."		AND ".$course_may_be_in_wbd
-				."		, FLOOR(usrcrs.credit_points / 3)"
+				."		, FLOOR(usrcrs.credit_points)"
 				."		, 0"
 				."		)"
-				."	)";
+				."	) / 3";
 	}
 
 	protected function getRoleIdsForRoleTitles(array $titles)
@@ -77,7 +77,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 
 	public function buildQueryStatement()
 	{
-		$points_total = 'SUM( IF(usrcrs.credit_points > 0, usrcrs.credit_points, 0) )';
+		$points_total = 'SUM( IF(usrcrs.credit_points > 0, usrcrs.credit_points, 0) )/3';
 
 		$query =
 			'SELECT'
@@ -236,7 +236,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 				."        , usrcrs.credit_points"
 				."        , 0"
 				."        )"
-				."   )";
+				."   )/3";
 	}
 
 
