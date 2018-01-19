@@ -35,14 +35,14 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		$course_may_be_in_wbd = '('.$this->courseIsWbdBooked()
 									.' OR '.$this->courseNotOlderThanOneYear().')';
 
-		return   "SUM( IF (	usrcrs.begin_date >= usr.begin_of_certification + INTERVAL ".($year-1)." YEAR "
+		return   "FLOOR(SUM( IF (	usrcrs.begin_date >= usr.begin_of_certification + INTERVAL ".($year-1)." YEAR "
 				."		AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL ".$year." YEAR)"
 				."		AND ".$this->participationWBDRelevant()
 				."		AND ".$course_may_be_in_wbd
-				."		, FLOOR(usrcrs.credit_points / 3)"
+				."		, usrcrs.credit_points"
 				."		, 0"
 				."		)"
-				."	)";
+				."	)/ 3)";
 	}
 
 	protected function getRoleIdsForRoleTitles(array $titles)
@@ -77,7 +77,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 
 	public function buildQueryStatement()
 	{
-		$points_total = 'SUM( IF(usrcrs.credit_points > 0, usrcrs.credit_points, 0) )';
+		$points_total = 'FLOOR(SUM( IF(usrcrs.credit_points > 0, usrcrs.credit_points, 0) )/3)';
 
 		$query =
 			'SELECT'
@@ -230,13 +230,13 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		$course_may_be_in_wbd = '('.$this->courseIsWbdBooked()
 									.' OR '.$this->courseNotOlderThanOneYear().')';
 
-		return 'SUM( IF ('.$course_takes_place_in_cert_period
+		return 'FLOOR(SUM( IF ('.$course_takes_place_in_cert_period
 				.'		AND '.$this->participationWBDRelevant()
 				.'		AND '.$course_may_be_in_wbd
 				."        , usrcrs.credit_points"
 				."        , 0"
 				."        )"
-				."   )";
+				."   )/3)";
 	}
 
 
