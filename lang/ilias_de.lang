@@ -16030,3 +16030,6 @@ tms#:#hide_breadcrumb_info#:#Mit dieser Einstellung wird die Navigation nur bis 
 tms#:#hide_menu_tree#:#Navigationsbaum ausblenden
 tms#:#hide_menu_tree_info#:#Mit dieser Einstellung wird der Navigationsbaum für den Benutzer ausgeblendet.
 tms#:#to_course#:#Zum Training
+tms#:#booking_waiting#:#Buchung auf Warteliste
+tms#:#book_waiting_for#:#Buchung auf Warteliste für %s
+tms#:#book_waiting_confirm#:#Verbindlich auf Warteliste buchen

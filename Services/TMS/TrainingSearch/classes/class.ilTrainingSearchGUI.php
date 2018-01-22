@@ -9,7 +9,7 @@ require_once("Services/TMS/TrainingSearch/classes/Helper.php");
  * Displays the TMS training search
  *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
- * @ilCtrl_Calls	ilTrainingSearchGUI: ilTMSSelfBookingGUI, ilTMSSuperiorBookingGUI
+ * @ilCtrl_Calls	ilTrainingSearchGUI: ilTMSSelfBookingGUI, ilTMSSuperiorBookingGUI, ilTMSSelfBookWaitingGUI, ilTMSSuperiorBookWaitingGUI
  */
 class ilTrainingSearchGUI {
 	const CMD_SHOW = "show";
@@ -80,9 +80,19 @@ class ilTrainingSearchGUI {
 				$gui = new ilTMSSelfBookingGUI($this, self::CMD_SHOW);
 				$this->g_ctrl->forwardCommand($gui);
 				break;
+			case "iltmsselfbookwaitinggui":
+				require_once("Services/TMS/Booking/classes/class.ilTMSSelfBookWaitingGUI.php");
+				$gui = new ilTMSSelfBookWaitingGUI($this, self::CMD_SHOW);
+				$this->g_ctrl->forwardCommand($gui);
+				break;
 			case "iltmssuperiorbookinggui":
 				require_once("Services/TMS/Booking/classes/class.ilTMSSuperiorBookingGUI.php");
 				$gui = new ilTMSSuperiorBookingGUI($this, self::CMD_SHOW);
+				$this->g_ctrl->forwardCommand($gui);
+				break;
+			case "iltmssuperiorbookwaitinggui":
+				require_once("Services/TMS/Booking/classes/class.ilTMSSuperiorBookWaitingGUI.php");
+				$gui = new ilTMSSuperiorBookWaitingGUI($this, self::CMD_SHOW);
 				$this->g_ctrl->forwardCommand($gui);
 				break;
 			default:

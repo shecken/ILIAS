@@ -14,7 +14,7 @@ require_once("Services/TMS/Booking/classes/ilTMSBookingGUI.php");
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
-class ilTMSSuperiorBookingGUI extends \ilTMSBookingGUI {
+class ilTMSSuperiorBookWaitingGUI extends \ilTMSBookingGUI {
 	/**
 	 * @inheritdocs
 	 */
@@ -25,9 +25,16 @@ class ilTMSSuperiorBookingGUI extends \ilTMSBookingGUI {
 	/**
 	 * @inheritdocs
 	 */
+	protected function getConfirmButtonLabel() {
+		return $this->g_lng->txt("book_waiting_confirm");
+	}
+
+	/**
+	 * @inheritdocs
+	 */
 	protected function setParameter($crs_ref_id, $usr_id) {
-		$this->g_ctrl->setParameterByClass("ilTMSSuperiorBookingGUI", "crs_ref_id", $crs_ref_id);
-		$this->g_ctrl->setParameterByClass("ilTMSSuperiorBookingGUI", "usr_id", $usr_id);
+		$this->g_ctrl->setParameterByClass("ilTMSSuperiorBookWaitingGUI", "crs_ref_id", $crs_ref_id);
+		$this->g_ctrl->setParameterByClass("ilTMSSuperiorBookWaitingGUI", "usr_id", $usr_id);
 	}
 
 	/**
@@ -38,7 +45,7 @@ class ilTMSSuperiorBookingGUI extends \ilTMSBookingGUI {
 		$usr_id = (int)$_GET["usr_id"];
 
 		require_once("Services/User/classes/class.ilObjUser.php");
-		return sprintf($this->g_lng->txt("booking_for"), ilObjUser::_lookupFullname($usr_id));
+		return sprintf($this->g_lng->txt("book_waiting_for"), ilObjUser::_lookupFullname($usr_id));
 	}
 }
 
