@@ -85,6 +85,9 @@ class TMSMailClerk {
 			$mail_to_name = $recipient->getUserName();
 
 			$this->sender->setFrom($mail_from_address, $mail_from_name);
+			$this->sender->ClearAllRecipients(); //only send to one recipient!
+			$this->sender->ClearCCs();
+			$this->sender->ClearBCCs();
 			$this->sender->addAddress($mail_to_address, $mail_to_name);
 			$this->sender->Subject = $subject;
 			$this->sender->Body = $msg_html;
