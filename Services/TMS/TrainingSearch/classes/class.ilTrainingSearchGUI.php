@@ -211,14 +211,13 @@ class ilTrainingSearchGUI {
 	 */
 	protected function addSortationObjects($view_control) {
 		$employees = $this->helper->getUserWhereCurrentCanBookFor((int)$this->g_user->getId());
-		// temporarily disabled booking of training by superiors (TMS-575)
-		/*if(count($employees) > 1) {
+		if(count($employees) > 1) {
 			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_CHANGE_USER);
 			$view_control[] = $this->g_f->viewControl()->quickfilter($employees)
 				->withTargetURL($link, Helper::S_USER)
 				->withDefaultValue($this->g_user->getId())
 				->withLabel($this->g_lng->txt("employees"));
-		}*/
+		}
 
 		require_once("Services/Component/classes/class.ilPluginAdmin.php");
 		if(ilPluginAdmin::isPluginActive('xccl')) {
@@ -285,28 +284,6 @@ class ilTrainingSearchGUI {
 	 */
 	protected function getBookableTrainings(array $filter) {
 		return $this->db->getBookableTrainingsFor($this->search_user_id, $filter);
-	}
-
-	/**
-	 * Get a link to book the given training.
-	 *
-	 * @param	BookableCourse	$course
-	 * @return	string
-	 */
-	public function getBookingLink(BookableCourse $course) {
-		if($this->search_user_id == $this->g_user->getId()) {
-			$class = "ilTMSSelfBookingGUI";
-		} else {
-			$class = "ilTMSSuperiorBookingGUI";
-		}
-
-		$this->g_ctrl->setParameterByClass($class, "crs_ref_id", $course->getRefId());
-		$this->g_ctrl->setParameterByClass($class, "usr_id", $this->search_user_id);
-		$link = $this->g_ctrl->getLinkTargetByClass($class, "start");
-		$this->g_ctrl->setParameterByClass($class, "crs_ref_id", null);
-		$this->g_ctrl->setParameterByClass($class, "usr_id", null);
-
-		return $link;
 	}
 
 	/**

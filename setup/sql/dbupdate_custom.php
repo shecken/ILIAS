@@ -120,3 +120,23 @@ while($row = $ilDB->fetchAssoc($res)) {
 	$provider_db = new CaT\Ente\ILIAS\ilProviderDB($DIC->database(), $tree, $cache);
 	$provider_db->createTables();
 ?>
+
+<#12>
+<?php
+require_once("Services/Tree/classes/class.ilTree.php");
+$tree = new ilTree(0);
+require_once("Services/Object/classes/class.ilObjectDataCache.php");
+$cache = new ilObjectDataCache();
+require_once("Services/Object/classes/class.ilObject.php");
+
+$provider_db = new CaT\Ente\ILIAS\ilProviderDB($ilDB, $tree, $cache);
+$query = "SELECT od.obj_id FROM object_data od JOIN object_reference oref ON oref.obj_id = od.obj_id WHERE od.type = 'crs' AND oref.deleted IS NULL";
+$result = $ilDB->query($query);
+while ($row = $ilDB->fetchAssoc($result)) {
+	$obj = new ilObject();
+	$obj->setId($row["obj_id"]);
+	foreach ($provider_db->unboundProvidersOf($obj) as $provider) {
+		$provider_db->update($provider);
+	}
+}
+?>
