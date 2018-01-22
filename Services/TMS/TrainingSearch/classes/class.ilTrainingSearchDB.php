@@ -26,7 +26,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 	 * @inheritdoc
 	 */
 	public function getBookableTrainingsFor($user_id, array $filter) {
-		$crs_infos = array();
+		$crss = array();
 
 		if(ilPluginAdmin::isPluginActive('xccl')) {
 			$crss = $this->getAllCoursesForUser($user_id);
