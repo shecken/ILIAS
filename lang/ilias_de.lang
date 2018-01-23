@@ -16034,3 +16034,4 @@ tms#:#booking_waiting#:#Buchung auf Warteliste
 tms#:#book_waiting_for#:#Buchung auf Warteliste für %s
 tms#:#book_waiting_confirm#:#Verbindlich auf Warteliste buchen
 tms#:#only_bookable#:#Nur buchbare Trainings
+tms#:#idd_relevant#:#Nur IDD relevante
