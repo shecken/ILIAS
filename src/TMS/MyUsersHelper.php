@@ -20,7 +20,7 @@ trait MyUsersHelper {
 
 		foreach($members as $user_id) {
 			$name_infos = \ilObjUser::_lookupName($user_id);
-			$ret[$user_id] = $name_infos["lastname"]." ".$name_infos["firstname"];
+			$ret[$user_id] = $name_infos["lastname"].", ".$name_infos["firstname"];
 		}
 
 		uasort($ret, function($a, $b) {
@@ -53,7 +53,7 @@ trait MyUsersHelper {
 
 		foreach($members as $user_id) {
 			$name_infos = \ilObjUser::_lookupName($user_id);
-			$ret[$user_id] = $name_infos["lastname"]." ".$name_infos["firstname"];
+			$ret[$user_id] = $name_infos["lastname"].", ".$name_infos["firstname"];
 		}
 
 		uasort($ret, function($a, $b) {
