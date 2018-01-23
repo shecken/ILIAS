@@ -220,6 +220,13 @@ class BookableCourse {
 		return $this->superior_search_actions;
 	}
 
+	protected function getIsBookable() {
+		if ($this->is_bookable === null) {
+			$this->is_bookable = $this->getCourseAction(CourseAction::CONTEXT_IS_BOOKABLE);
+		}
+		return $this->is_bookable;
+	}
+
 	public function getTitleValue() {
 		// Take most important info as title
 		$short_info = $this->getShortInfo();
@@ -255,6 +262,16 @@ class BookableCourse {
 		}
 
 		return ["" => $this->getNoDetailInfoMessage()];
+	}
+
+	/**
+	 * Returns the course is bookable or not
+	 *
+	 * @return bool
+	 */
+	public function isBookable() {
+		$is_bookable = $this->getIsBookable();
+		return count($is_bookable) > 0;
 	}
 
 	public function getSearchActionLinks(\ilCtrl $ctrl, $usr_id, $superior) {
