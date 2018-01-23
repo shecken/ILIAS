@@ -222,7 +222,7 @@ class BookableCourse {
 
 	protected function getIsBookable() {
 		if ($this->is_bookable === null) {
-			$this->is_bookable = $this->getCourseAction(CourseAction::CONTEXT_IS_BOOKABLE);
+			$this->is_bookable = $this->getCourseInfo(CourseInfo::CONTEXT_IS_BOOKABLE);
 		}
 		return $this->is_bookable;
 	}
