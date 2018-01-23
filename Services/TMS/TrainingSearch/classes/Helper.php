@@ -12,6 +12,7 @@ class Helper {
 	const F_TOPIC = "f_topic";
 	const F_DURATION = "f_duration";
 	const F_SORT_VALUE = "f_sort_value";
+	const F_ONLY_BOOKABLE = "f_only_bookable";
 
 	const S_TITLE_ASC = "s_title_asc";
 	const S_PERIOD_ASC = "s_period_asc";
@@ -141,6 +142,9 @@ class Helper {
 		$item->setEnd(new ilDateTime(date("Y-12-31 23:59:59"), IL_CAL_DATETIME));
 		$form->addItem($item);
 
+		$item = new ilCheckboxInputGUI($this->g_lng->txt('only_bookable'), self::F_ONLY_BOOKABLE);
+		$form->addItem($item);
+
 		$item = new ilHiddenInputGUI('cmd');
 		$item->setValue('submit');
 		$form->addItem($item);
@@ -208,6 +212,8 @@ class Helper {
 		if(array_key_exists(self::F_DURATION, $values)) {
 			$filter[self::F_DURATION] = $values[self::F_DURATION];
 		}
+
+		$filter[self::F_ONLY_BOOKABLE] = (bool)$values[self::F_ONLY_BOOKABLE];
 
 		return $filter;
 	}
