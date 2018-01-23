@@ -22,6 +22,7 @@ interface CourseInfo extends Component {
 	const CONTEXT_ICAL = 15;
 	const CONTEXT_ACCOMODATION_DEFAULT_INFO = 16;
 	const CONTEXT_IS_BOOKABLE = 17;
+	const CONTEXT_IDD_RELEVANT = 18;
 
 	/**
 	 * Get a label for this step in the process.
