@@ -452,6 +452,7 @@ class ilMainMenuGUI
 					) {
 						include_once('./Services/Link/classes/class.ilLink.php');
 						$link = ilLink::_getStaticLink($ref_id);
+						$link .= "&cockpit";
 						break;
 					}
 				}
