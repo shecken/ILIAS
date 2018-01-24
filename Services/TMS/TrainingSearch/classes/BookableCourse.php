@@ -227,6 +227,13 @@ class BookableCourse {
 		return $this->is_bookable;
 	}
 
+	protected function getIDDRelevant() {
+		if ($this->idd_relevant === null) {
+			$this->idd_relevant = $this->getCourseInfo(CourseInfo::CONTEXT_IDD_RELEVANT);
+		}
+		return $this->idd_relevant;
+	}
+
 	public function getTitleValue() {
 		// Take most important info as title
 		$short_info = $this->getShortInfo();
@@ -272,6 +279,16 @@ class BookableCourse {
 	public function isBookable() {
 		$is_bookable = $this->getIsBookable();
 		return count($is_bookable) > 0;
+	}
+
+	/**
+	 * Returns the course is idd relevant or not
+	 *
+	 * @return bool
+	 */
+	public function isIDDRelevant() {
+		$idd_relevant = $this->getIDDRelevant();
+		return count($idd_relevant) > 0;
 	}
 
 	public function getSearchActionLinks(\ilCtrl $ctrl, $usr_id, $superior) {

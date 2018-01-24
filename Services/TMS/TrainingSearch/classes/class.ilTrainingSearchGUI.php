@@ -301,6 +301,12 @@ class ilTrainingSearchGUI {
 			});
 		}
 
+		if($filter[Helper::F_IDD_RELEVANT]) {
+			$bookable_trainings = array_filter($bookable_trainings, function($bt) {
+				return $bt->isIDDRelevant();
+			});
+		}
+
 		return $bookable_trainings;
 	}
 

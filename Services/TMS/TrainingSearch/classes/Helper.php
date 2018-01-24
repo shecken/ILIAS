@@ -13,6 +13,7 @@ class Helper {
 	const F_DURATION = "f_duration";
 	const F_SORT_VALUE = "f_sort_value";
 	const F_ONLY_BOOKABLE = "f_only_bookable";
+	const F_IDD_RELEVANT = "f_idd_relevant";
 
 	const S_TITLE_ASC = "s_title_asc";
 	const S_PERIOD_ASC = "s_period_asc";
@@ -145,6 +146,9 @@ class Helper {
 		$item = new ilCheckboxInputGUI($this->g_lng->txt('only_bookable'), self::F_ONLY_BOOKABLE);
 		$form->addItem($item);
 
+		$item = new ilCheckboxInputGUI($this->g_lng->txt('idd_relevant'), self::F_IDD_RELEVANT);
+		$form->addItem($item);
+
 		$item = new ilHiddenInputGUI('cmd');
 		$item->setValue('submit');
 		$form->addItem($item);
@@ -214,6 +218,7 @@ class Helper {
 		}
 
 		$filter[self::F_ONLY_BOOKABLE] = (bool)$values[self::F_ONLY_BOOKABLE];
+		$filter[self::F_IDD_RELEVANT] = (bool)$values[self::F_IDD_RELEVANT];
 
 		return $filter;
 	}
