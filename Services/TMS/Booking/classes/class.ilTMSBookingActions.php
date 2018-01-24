@@ -91,6 +91,18 @@ class ilTMSBookingActions implements Booking\Actions {
 				$event = self::EVENT_SUPERIOR_BOOKED_COURSE;
 			}
 			$this->fireBookingEvent($event, (int)$course->getRefId(), (int)$user->getId());
+
+			//TMS-680: if deadlines are passed, send invitation to user directly:
+			if(ilPluginAdmin::isPluginActive('xcml')) { //plug installed?
+				$crsmailing = $this->getFirstCourseMailingInCourse((int)$course->getRefId());
+
+				if($crsmailing && $crsmailing->hasInvitationDatePassed()) {//decide on deadlines
+					//get plug and fire event
+					$plug = ilPluginAdmin::getPluginObjectById('xcml');
+					$invite_event = $plug::EVENT_INVITATION;
+					$this->fireBookingEvent($invite_event, (int)$course->getRefId(), (int)$user->getId());
+				}
+			}
 			return Booking\Actions::STATE_BOOKED;
 		}
 
@@ -170,6 +182,36 @@ class ilTMSBookingActions implements Booking\Actions {
 			}
 			if($objDefinition->isContainer($type)) {
 				$mods =  $this->getFirstBookingModalities($child["child"]);
+				if(!is_null($mods)) {
+					return $mods;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get the first course-mailing below crs
+	 *
+	 * @param int 	$ref_id
+	 *
+	 * @return ilObjCourseMailing | null
+	 */
+	protected function getFirstCourseMailingInCourse($ref_id) {
+		global $DIC;
+		$tree = $DIC->repositoryTree();
+		$objDefinition = $DIC["objDefinition"];
+
+		$childs = $tree->getChilds($ref_id);
+
+		foreach ($childs as $child) {
+			$type = $child["type"];
+			$child_ref = $child["child"];
+			if($type == "xcml") {
+				return \ilObjectFactory::getInstanceByRefId($child_ref);
+			}
+			if($objDefinition->isContainer($type)) {
+				$mods =  $this->getFirstCourseMailingInCourse($child["child"]);
 				if(!is_null($mods)) {
 					return $mods;
 				}
