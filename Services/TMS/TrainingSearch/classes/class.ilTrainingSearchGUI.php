@@ -293,7 +293,15 @@ class ilTrainingSearchGUI {
 	 * @return BookableCourse[]
 	 */
 	protected function getBookableTrainings(array $filter) {
-		return $this->db->getBookableTrainingsFor($this->search_user_id, $filter);
+		$bookable_trainings = $this->db->getBookableTrainingsFor($this->search_user_id, $filter);
+
+		if($filter[Helper::F_ONLY_BOOKABLE]) {
+			$bookable_trainings = array_filter($bookable_trainings, function($bt) {
+				return $bt->isBookable();
+			});
+		}
+
+		return $bookable_trainings;
 	}
 
 	/**
