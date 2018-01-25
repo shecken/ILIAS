@@ -32,6 +32,15 @@ trait CourseInfoHelper {
 		};
 		$info = array_filter($info, $filter_by_context);
 
+		$prios = array();
+		$filter_doubles = function(CourseInfo $ci) use (&$prios) {
+			if(!in_array($ci->getPriority(), $prios)) {
+				$prios[] = $ci->getPriority();
+				return $ci;
+			}
+		};
+		$info = array_filter($info, $filter_doubles);
+
 		$sort_by_prio = function(CourseInfo $a, CourseInfo $b) {
 			$a_prio = $a->getPriority();
 			$b_prio = $b->getPriority();
