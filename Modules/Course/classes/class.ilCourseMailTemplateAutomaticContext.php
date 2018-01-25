@@ -92,7 +92,6 @@ class ilCourseMailTemplateAutomaticContext extends ilMailTemplateContext
 				$placeholders[$id] = array(
 					'placeholder' => $placeholder_id,
 					'label'	=> $context->placeholderDescriptionForId($placeholder_id)
-						.' (' .get_class($context) .')'
 				);
 			}
 		}
@@ -103,7 +102,6 @@ class ilCourseMailTemplateAutomaticContext extends ilMailTemplateContext
 				$placeholders[$id] = array(
 					'placeholder' => $placeholder_id,
 					'label'	=> $context->placeholderDescriptionForId($placeholder_id)
-						.' (' .get_class($context) .')'
 				);
 			}
 		}
