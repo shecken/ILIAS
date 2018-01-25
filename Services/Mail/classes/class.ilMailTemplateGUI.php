@@ -41,7 +41,7 @@ class ilMailTemplateGUI
 	protected $toolbar;
 
 	/**
-	 * 
+	 *
 	 */
 	public function __construct()
 	{
@@ -363,7 +363,7 @@ class ilMailTemplateGUI
 		$placeholders->render(true);
 		exit();
 	}
-	
+
 	/**
 	 * @param ilMailTemplate $template
 	 * @return ilPropertyFormGUI
@@ -404,7 +404,7 @@ class ilMailTemplateGUI
 			$option = new ilRadioOption($ctx->getTitle(), $ctx->getId());
 			$option->setInfo($ctx->getDescription());
 			$context->addOption($option);
-			
+
 			if(!$first)
 			{
 				$first = $id;
@@ -441,7 +441,7 @@ class ilMailTemplateGUI
 
 		require_once 'Services/Mail/classes/Form/class.ilManualPlaceholderInputGUI.php';
 		$placeholders = new ilManualPlaceholderInputGUI($this->ctrl->getLinkTarget($this, 'getAjaxPlaceholdersById', '', true, false));
-		
+
 		if( $template === null )
 		{
 			$context_id = $generic_context->getId();

@@ -79,8 +79,12 @@ class ilTMSMailing implements Mailing\Actions {
 		return $clerk;
 	}
 
-
-	public function getPlaceholderIdsOfStandardContexts() {
+	/**
+	 * get general mail-contexts
+	 *
+	 * @return array <string, Mailing\MailContext>
+	 */
+	public function getStandardContexts() {
 		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextILIAS.php');
 		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextUser.php');
 		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextCourse.php');
@@ -90,10 +94,9 @@ class ilTMSMailing implements Mailing\Actions {
 		$context_course = new \ilTMSMailContextCourse(0);
 
 		return array(
-			'ilTMSMailContextIlias' => $context_ilias->placeholderIds()
-			,'ilTMSMailContextUser' => $context_user->placeholderIds()
-			,'ilTMSMailContextCourse' => $context_course->placeholderIds()
+			'ilTMSMailContextIlias' => $context_ilias
+			,'ilTMSMailContextUser' => $context_user
+			,'ilTMSMailContextCourse' => $context_course
 		);
 	}
-
 }
