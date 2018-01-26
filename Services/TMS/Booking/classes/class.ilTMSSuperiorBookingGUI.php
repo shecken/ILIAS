@@ -19,7 +19,7 @@ class ilTMSSuperiorBookingGUI extends \ilTMSBookingGUI {
 	 * @inheritdocs
 	 */
 	protected function getComponentClass() {
-		return Booking\Step::class;
+		return Booking\SuperiorBookingStep::class;
 	}
 
 	/**
