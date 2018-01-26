@@ -91,18 +91,6 @@ class ilTMSBookingActions implements Booking\Actions {
 				$event = self::EVENT_SUPERIOR_BOOKED_COURSE;
 			}
 			$this->fireBookingEvent($event, (int)$course->getRefId(), (int)$user->getId());
-
-			//TMS-680: if deadlines are passed, send invitation to user directly:
-			if(ilPluginAdmin::isPluginActive('xcml')) { //plug installed?
-				$crsmailing = $this->getFirstCourseMailingInCourse((int)$course->getRefId());
-
-				if($crsmailing && $crsmailing->hasInvitationDatePassed()) {//decide on deadlines
-					//get plug and fire event
-					$plug = ilPluginAdmin::getPluginObjectById('xcml');
-					$invite_event = $plug::EVENT_INVITATION;
-					$this->fireBookingEvent($invite_event, (int)$course->getRefId(), (int)$user->getId());
-				}
-			}
 			return Booking\Actions::STATE_BOOKED;
 		}
 
