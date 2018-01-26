@@ -487,6 +487,13 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
 					  ]
 				);
+
+				$ret[] = $this->createCourseInfoObject($entity
+						, $txt("title")
+						, nl2br($name)
+						, 1200
+						, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
+					);
 			} else {
 				if($city != "") {
 					$ret[] = $this->createCourseInfoObject($entity
