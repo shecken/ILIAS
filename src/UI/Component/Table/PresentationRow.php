@@ -97,4 +97,19 @@ interface PresentationRow extends \ILIAS\UI\Component\Component, Triggerable {
 	 */
 	public function getButtons();
 
+	/**
+	 * @return Signal
+	 */
+	public function getShowSignal();
+
+	/**
+	 * @return Signal
+	 */
+	public function getCloseSignal();
+
+	/**
+	 * @return Signal
+	 */
+	public function getToggleSignal();
+
 }

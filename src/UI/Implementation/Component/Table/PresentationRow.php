@@ -23,6 +23,11 @@ class PresentationRow implements T\PresentationRow {
 	protected $close_signal;
 
 	/**
+	 * @var Signal
+	 */
+	protected $toggle_signal;
+
+	/**
 	 * @var	string
 	 */
 	private $title;
@@ -82,6 +87,7 @@ class PresentationRow implements T\PresentationRow {
 	protected function initSignals() {
 		$this->show_signal = $this->signal_generator->create();
 		$this->close_signal = $this->signal_generator->create();
+		$this->toggle_signal = $this->signal_generator->create();
 	}
 
 	/**
@@ -96,6 +102,14 @@ class PresentationRow implements T\PresentationRow {
 	 */
 	public function getCloseSignal() {
 		return $this->close_signal;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getToggleSignal() {
+		return $this->toggle_signal;
 	}
 
 
