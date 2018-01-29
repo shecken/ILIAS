@@ -184,7 +184,9 @@ class ilFormatMail extends ilMail
 		$formatted = array();
 
 #		debug($a_message);
-		$linebreak = $this->mail_options->getLinebreak();
+		// cat-tms-patch start
+		$linebreak = (int)$this->mail_options->getLinebreak();
+		// cat-tms-patch end
 		// SPLIT INTO LINES returns always an array
 		$lines = explode(chr(10),$a_message);
 		for($i=0;$i<count($lines);$i++)
