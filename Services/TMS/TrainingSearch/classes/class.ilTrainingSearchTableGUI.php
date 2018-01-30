@@ -77,6 +77,7 @@ class ilTrainingSearchTableGUI {
 			$view_constrols,
 			function ($row, BookableCourse $record, $ui_factory, $environment) { //mapping-closure
 				$buttons = array();
+				$this->primary = true;
 				$search_actions = $record->getSearchActionLinks($this->g_ctrl, $this->search_user_id, $this->search_user_id != $this->g_user->getId());
 
 				foreach ($search_actions as $label => $search_action) {
