@@ -172,6 +172,8 @@ class Helper {
 				$('#f_type option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
 				$('#f_topic option').removeAttr('selected').filter('[value=-1]').attr('selected', true);
 				$('#f_not_min_member').prop('checked', false );
+				$('#f_only_bookable').prop('checked', false );
+				$('#f_idd_relevant').prop('checked', false );
 				".$dur1."
 				".$dur2."
 				return false; 
