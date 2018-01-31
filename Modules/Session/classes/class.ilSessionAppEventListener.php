@@ -3,6 +3,8 @@
 require_once('./Modules/Session/classes/class.ilObjSession.php');
 require_once("Services/Membership/classes/class.ilParticipants.php");
 
+use ILIAS\TMS\Timezone;
+
 /**
  * Class ilSessionAppEventListener
  *
@@ -66,6 +68,33 @@ class ilSessionAppEventListener {
 				$clac_crs_start->increment(ilDateTime::DAY, --$offset);
 
 				$date 		= $clac_crs_start->get(IL_CAL_FKT_DATE, "Y-m-d");
+
+				//Check the new date must be manipulated in case of time zone changes
+				$checker = self::getTimezoneChecker();
+				$old_start_date = DateTime::createFromFormat("Y-m-d", $appointment->getStart()->get(IL_CAL_FKT_DATE, "Y-m-d", "UTC"));
+				$new_start_date = DateTime::createFromFormat("Y-m-d", $date);
+
+				if($checker->isSummerTime($old_start_date) && !$checker->isSummerTime($new_start_date)) {
+					$start = explode(":", $start_time);
+					$start[0] = str_pad((int)$start[0] + 1, 2, "0", STR_PAD_LEFT);
+					$start_time = join(":", $start);
+
+					$end = explode(":", $end_time);
+					$end[0] = str_pad((int)$end[0] + 1, 2, "0", STR_PAD_LEFT);
+					$end_time = join(":", $end);
+				}
+
+				if(!$checker->isSummerTime($old_start_date) && $checker->isSummerTime($new_start_date)) {
+					$start = explode(":", $start_time);
+					$start[0] = str_pad((int)$start[0] - 1, 2, "0", STR_PAD_LEFT);
+					$start_time = join(":", $start);
+
+					$end = explode(":", $end_time);
+					$end[0] = str_pad((int)$end[0] - 1, 2, "0", STR_PAD_LEFT);
+					$end_time = join(":", $end);
+				}
+				// End check
+
 				$start_date = self::createDateTime($date, $start_time);
 				$end_date 	= self::createDateTime($date, $end_time);
 			}
@@ -74,6 +103,15 @@ class ilSessionAppEventListener {
 			$appointment->setEnd($end_date);
 			$appointment->update();
 		}
+	}
+
+	/**
+	 * Get instance of timezone checker
+	 *
+	 * @return TimezoneCheckerImpl
+	 */
+	protected static function getTimezoneChecker() {
+		return new Timezone\TimezoneCheckerImpl(new Timezone\TimezoneDBImpl());
 	}
 
 	/**
