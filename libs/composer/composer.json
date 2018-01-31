@@ -19,7 +19,7 @@
 		"guzzlehttp/psr7": "^1.4",
 		"moment/moment": "^2.14.1",
 		"eluceo/ical": "0.11.4",
-		"conceptsandtraining/ente": "^v3.0"
+		"conceptsandtraining/ente": "^v3.1"
 	},
 	"require-dev": {
 		"mikey179/vfsStream": "^1.6",
