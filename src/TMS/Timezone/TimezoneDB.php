@@ -13,7 +13,7 @@ interface TimezoneDB {
 	 *
 	 * @param string 	$year
 	 *
-	 * @return DateTime[]
+	 * @return \DateTime[]
 	 */
 	public function readFor($year);
 }
