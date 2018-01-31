@@ -11,18 +11,9 @@ interface TimezoneChecker {
 	/**
 	 * Checks the given date is in summer timezone
 	 *
-	 * @param string 	$date
+	 * @param DateTime 	$date
 	 *
 	 * @return bool
 	 */
-	public function isSummerTimeZone($date);
-
-	/**
-	 * Checks the given date is in winter timezone
-	 *
-	 * @param string 	$date
-	 *
-	 * @return bool
-	 */
-	public function isWinterTimeZone($date);
+	public function isSummerTime(DateTime $date);
 }
