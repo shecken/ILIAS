@@ -15,5 +15,5 @@ interface TimezoneChecker {
 	 *
 	 * @return bool
 	 */
-	public function isSummerTime(DateTime $date);
+	public function isSummerTime(\DateTime $date);
 }
