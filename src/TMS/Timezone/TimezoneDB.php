@@ -13,18 +13,7 @@ interface TimezoneDB {
 	 *
 	 * @param string 	$year
 	 *
-	 * @return sting[]
+	 * @return DateTime[]
 	 */
 	public function readFor($year);
-
-	/**
-	 * Creates new entry in source db
-	 *
-	 * @param string 	$year
-	 * @param string 	$start_summer
-	 * @param string 	$start_winter
-	 *
-	 * @return void
-	 */
-	public function createEntry($year, $start_summer, $start_winter);
 }
