@@ -1,60 +1,39 @@
 <?php
 
 use ILIAS\TMS\Timezone;
+use PHPUnit\Framework\TestCase;
 
-class TimezoneCheckerTest {
+class TimezoneCheckerTest extends TestCase {
 	public function test_SummerTime() {
-		$db = $this->getMockBuilder(Timezone\TimezoneDB::class)
-			->setMethods(["readFor"])
-			->disableOriginalConstructor()
-			->getMock();
-
-		$start_summer = new DateTime(strtotime("25.03.2018"));
-		$start_winter = new DateTime(strtotime("28.10.2018"));
-
-		$db
-			->expects($this->exactly(6))
-			->method("readFor")
-			->will(array("start_summer" => $start_summer, "start_winter" => $start_winter));
+		$db = new Timezone\TimezoneDBImpl();
 
 		$checker = new Timezone\TimezoneCheckerImpl($db);
-		$checktime = new DateTime(strtotime("25.03.2018"));
+		$checktime =  DateTime::createFromFormat("Y-m-d" , "2018-03-25");
 		$this->assertTrue($checker->isSummerTime($checktime));
 		$this->assertFalse(!$checker->isSummerTime($checktime));
 
-		$checktime = new DateTime(strtotime("27.10.2018"));
+		$checktime =  DateTime::createFromFormat("Y-m-d" , "2018-10-27");
 		$this->assertTrue($checker->isSummerTime($checktime));
 		$this->assertFalse(!$checker->isSummerTime($checktime));
 
-		$checktime = new DateTime(strtotime("19.06.2018"));
+		$checktime =  DateTime::createFromFormat("Y-m-d" , "2018-06-19");
 		$this->assertTrue($checker->isSummerTime($checktime));
 		$this->assertFalse(!$checker->isSummerTime($checktime));
 	}
 
 	public function test_WinterTime() {
-		$db = $this->getMockBuilder(Timezone\TimezoneDB::class)
-			->setMethods(["readFor"])
-			->disableOriginalConstructor()
-			->getMock();
-
-		$start_summer = new DateTime(strtotime("25.03.2018"));
-		$start_winter = new DateTime(strtotime("28.10.2018"));
-
-		$db
-			->expects($this->exactly(6))
-			->method("readFor")
-			->will(array("start_summer" => $start_summer, "start_winter" => $start_winter));
+		$db = new Timezone\TimezoneDBImpl();
 
 		$checker = new Timezone\TimezoneCheckerImpl($db);
-		$checktime = new DateTime(strtotime("28.10.2018"));
+		$checktime =  DateTime::createFromFormat("Y-m-d" , "2018-10-28");
 		$this->assertTrue(!$checker->isSummerTime($checktime));
 		$this->assertFalse($checker->isSummerTime($checktime));
 
-		$checktime = new DateTime(strtotime("31.12.2018"));
+		$checktime =  DateTime::createFromFormat("Y-m-d" , "2018-12-31");
 		$this->assertTrue(!$checker->isSummerTime($checktime));
 		$this->assertFalse($checker->isSummerTime($checktime));
 
-		$checktime = new DateTime(strtotime("03.10.2018"));
+		$checktime =  DateTime::createFromFormat("Y-m-d" , "2018-11-03");
 		$this->assertTrue(!$checker->isSummerTime($checktime));
 		$this->assertFalse($checker->isSummerTime($checktime));
 	}
