@@ -4,20 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "489cc4f7eedcd0f14f7c45b18047422c",
+    "hash": "344b31da17482c17a158db403ed48337",
+    "content-hash": "26d3f38d001d6749456e13c9bf2fa456",
     "packages": [
         {
             "name": "conceptsandtraining/ente",
-            "version": "3.0.2",
+            "version": "3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/conceptsandtraining/lib-ente.git",
-                "reference": "4732a789dc96dd67b60bda37ceef498181618596"
+                "reference": "229c8b628c32ab09616163cd690dc14521bf5ae9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/4732a789dc96dd67b60bda37ceef498181618596",
-                "reference": "4732a789dc96dd67b60bda37ceef498181618596",
+                "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/229c8b628c32ab09616163cd690dc14521bf5ae9",
+                "reference": "229c8b628c32ab09616163cd690dc14521bf5ae9",
                 "shasum": ""
             },
             "require-dev": {
@@ -40,7 +41,7 @@
                 }
             ],
             "description": "An entity component framework for ILIAS.",
-            "time": "2018-01-15T15:31:27+00:00"
+            "time": "2018-01-31 10:55:05"
         },
         {
             "name": "cweagans/composer-patches",
@@ -84,7 +85,7 @@
                 }
             ],
             "description": "Provides a way to patch Composer packages.",
-            "time": "2016-03-28T18:54:21+00:00"
+            "time": "2016-03-28 18:54:21"
         },
         {
             "name": "eluceo/ical",
@@ -140,7 +141,7 @@
                 "ics",
                 "php calendar"
             ],
-            "time": "2017-10-26T11:20:58+00:00"
+            "time": "2017-10-26 11:20:58"
         },
         {
             "name": "ezyang/htmlpurifier",
@@ -184,7 +185,7 @@
             "keywords": [
                 "html"
             ],
-            "time": "2016-07-16T12:58:58+00:00"
+            "time": "2016-07-16 12:58:58"
         },
         {
             "name": "filp/whoops",
@@ -244,7 +245,7 @@
                 "whoops",
                 "zf2"
             ],
-            "time": "2016-05-06T18:25:35+00:00"
+            "time": "2016-05-06 18:25:35"
         },
         {
             "name": "geshi/geshi",
@@ -256,7 +257,7 @@
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/GeSHi/geshi-1.0/zipball/ac5c9c1f26eba2e6d0a9e374dc3d8316b586cdcc",
+                "url": "https://api.github.com/repos/GeSHi/geshi-1.0/zipball/ec918ac67f6d3e9008e1d41c4d22610a96f78755",
                 "reference": "ac5c9c1f26eba2e6d0a9e374dc3d8316b586cdcc",
                 "shasum": ""
             },
@@ -281,7 +282,7 @@
             ],
             "description": "Generic Syntax Highlighter",
             "homepage": "http://qbnz.com/highlighter/",
-            "time": "2016-02-01T23:14:34+00:00"
+            "time": "2016-02-01 23:14:34"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -346,7 +347,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-03-20T17:10:46+00:00"
+            "time": "2017-03-20 17:10:46"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -423,7 +424,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "2015-11-12T13:51:40+00:00"
+            "time": "2015-11-12 13:51:40"
         },
         {
             "name": "moment/moment",
@@ -477,7 +478,7 @@
                 "time",
                 "validate"
             ],
-            "time": "2016-07-04T06:39:29+00:00"
+            "time": "2016-07-04 06:39:29"
         },
         {
             "name": "monolog/monolog",
@@ -555,7 +556,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-07-29T03:23:52+00:00"
+            "time": "2016-07-29 03:23:52"
         },
         {
             "name": "phansys/getid3",
@@ -601,7 +602,7 @@
                 "tags"
             ],
             "abandoned": "james-heinrich/getid3",
-            "time": "2012-12-04T17:31:30+00:00"
+            "time": "2012-12-04 17:31:30"
         },
         {
             "name": "phpmailer/phpmailer",
@@ -666,7 +667,7 @@
                 }
             ],
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-            "time": "2017-01-09T09:33:47+00:00"
+            "time": "2017-01-09 09:33:47"
         },
         {
             "name": "phpoffice/phpexcel",
@@ -723,7 +724,7 @@
                 "xls",
                 "xlsx"
             ],
-            "time": "2015-05-01T07:00:55+00:00"
+            "time": "2015-05-01 07:00:55"
         },
         {
             "name": "pimple/pimple",
@@ -769,7 +770,7 @@
                 "container",
                 "dependency injection"
             ],
-            "time": "2015-09-11T15:10:35+00:00"
+            "time": "2015-09-11 15:10:35"
         },
         {
             "name": "psr/http-message",
@@ -819,7 +820,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06T14:39:51+00:00"
+            "time": "2016-08-06 14:39:51"
         },
         {
             "name": "psr/log",
@@ -857,7 +858,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2012-12-21T11:40:51+00:00"
+            "time": "2012-12-21 11:40:51"
         },
         {
             "name": "robloach/component-installer",
@@ -905,7 +906,7 @@
                 }
             ],
             "description": "Allows installation of Components via Composer.",
-            "time": "2015-08-10T12:35:38+00:00"
+            "time": "2015-08-10 12:35:38"
         },
         {
             "name": "symfony/process",
@@ -954,7 +955,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-28T11:13:48+00:00"
+            "time": "2016-07-28 11:13:48"
         },
         {
             "name": "symfony/yaml",
@@ -1003,7 +1004,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-07-17T14:02:08+00:00"
+            "time": "2016-07-17 14:02:08"
         },
         {
             "name": "technosophos/LibRIS",
@@ -1046,7 +1047,7 @@
                 "RIS",
                 "Reference"
             ],
-            "time": "2012-03-14T16:36:15+00:00"
+            "time": "2012-03-14 16:36:15"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -1114,7 +1115,7 @@
                 "pdf417",
                 "qrcode"
             ],
-            "time": "2015-09-12T10:08:34+00:00"
+            "time": "2015-09-12 10:08:34"
         }
     ],
     "packages-dev": [
@@ -1170,7 +1171,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2015-06-14 21:17:01"
         },
         {
             "name": "mikey179/vfsStream",
@@ -1216,7 +1217,7 @@
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
             "homepage": "http://vfs.bovigo.org/",
-            "time": "2016-07-18T14:02:57+00:00"
+            "time": "2016-07-18 14:02:57"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1270,7 +1271,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27T11:43:31+00:00"
+            "time": "2015-12-27 11:43:31"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -1315,7 +1316,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-09-30T07:12:33+00:00"
+            "time": "2016-09-30 07:12:33"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -1362,7 +1363,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2016-06-10T07:14:17+00:00"
+            "time": "2016-06-10 07:14:17"
         },
         {
             "name": "phpspec/prophecy",
@@ -1424,7 +1425,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2016-06-07T08:13:47+00:00"
+            "time": "2016-06-07 08:13:47"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1486,7 +1487,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-06T15:47:00+00:00"
+            "time": "2015-10-06 15:47:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1533,7 +1534,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2015-06-21T13:08:43+00:00"
+            "time": "2015-06-21 13:08:43"
         },
         {
             "name": "phpunit/php-text-template",
@@ -1574,7 +1575,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21T13:50:34+00:00"
+            "time": "2015-06-21 13:50:34"
         },
         {
             "name": "phpunit/php-timer",
@@ -1618,7 +1619,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2016-05-12T18:03:57+00:00"
+            "time": "2016-05-12 18:03:57"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -1667,7 +1668,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2015-09-15T10:49:45+00:00"
+            "time": "2015-09-15 10:49:45"
         },
         {
             "name": "phpunit/phpunit",
@@ -1739,7 +1740,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-07-21T06:48:14+00:00"
+            "time": "2016-07-21 06:48:14"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1795,7 +1796,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-10-02T06:51:40+00:00"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "sebastian/comparator",
@@ -1859,7 +1860,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2015-07-26T15:48:44+00:00"
+            "time": "2015-07-26 15:48:44"
         },
         {
             "name": "sebastian/diff",
@@ -1911,7 +1912,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08T07:14:41+00:00"
+            "time": "2015-12-08 07:14:41"
         },
         {
             "name": "sebastian/environment",
@@ -1961,7 +1962,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18T05:49:44+00:00"
+            "time": "2016-08-18 05:49:44"
         },
         {
             "name": "sebastian/exporter",
@@ -2028,7 +2029,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17T09:04:28+00:00"
+            "time": "2016-06-17 09:04:28"
         },
         {
             "name": "sebastian/global-state",
@@ -2079,7 +2080,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12T03:26:01+00:00"
+            "time": "2015-10-12 03:26:01"
         },
         {
             "name": "sebastian/recursion-context",
@@ -2132,7 +2133,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2015-11-11T19:50:13+00:00"
+            "time": "2015-11-11 19:50:13"
         },
         {
             "name": "sebastian/version",
@@ -2167,7 +2168,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2015-06-21T13:59:46+00:00"
+            "time": "2015-06-21 13:59:46"
         },
         {
             "name": "webmozart/assert",
@@ -2217,7 +2218,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-08-09T15:02:57+00:00"
+            "time": "2016-08-09 15:02:57"
         }
     ],
     "aliases": [],
