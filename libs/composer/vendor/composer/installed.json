@@ -1,43 +1,5 @@
 [
     {
-        "name": "conceptsandtraining/ente",
-        "version": "3.0.2",
-        "version_normalized": "3.0.2.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/conceptsandtraining/lib-ente.git",
-            "reference": "4732a789dc96dd67b60bda37ceef498181618596"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/4732a789dc96dd67b60bda37ceef498181618596",
-            "reference": "4732a789dc96dd67b60bda37ceef498181618596",
-            "shasum": ""
-        },
-        "require-dev": {
-            "phpunit/phpunit": "^5.6"
-        },
-        "time": "2018-01-15T15:31:27+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-4": {
-                "CaT\\Ente\\": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "GPLv3"
-        ],
-        "authors": [
-            {
-                "name": "Richard Klees",
-                "email": "richard.klees@concepts-and-training.de"
-            }
-        ],
-        "description": "An entity component framework for ILIAS."
-    },
-    {
         "name": "cweagans/composer-patches",
         "version": "1.5.0",
         "version_normalized": "1.5.0.0",
@@ -60,7 +22,7 @@
             "composer/composer": "~1.0",
             "phpunit/phpunit": "~4.6"
         },
-        "time": "2016-03-28T18:54:21+00:00",
+        "time": "2016-03-28 18:54:21",
         "type": "composer-plugin",
         "extra": {
             "class": "cweagans\\Composer\\Patches"
@@ -108,7 +70,7 @@
             "phpunit/phpunit": "~4.0",
             "squizlabs/php_codesniffer": "~2.0"
         },
-        "time": "2015-06-14T21:17:01+00:00",
+        "time": "2015-06-14 21:17:01",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -163,7 +125,7 @@
         "suggest": {
             "ext-mbstring": "Massive performance enhancement of line folding"
         },
-        "time": "2017-10-26T11:20:58+00:00",
+        "time": "2017-10-26 11:20:58",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -215,7 +177,7 @@
         "require": {
             "php": ">=5.2"
         },
-        "time": "2016-07-16T12:58:58+00:00",
+        "time": "2016-07-16 12:58:58",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -270,7 +232,7 @@
             "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
             "whoops/soap": "Formats errors as SOAP responses"
         },
-        "time": "2016-05-06T18:25:35+00:00",
+        "time": "2016-05-06 18:25:35",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -316,11 +278,11 @@
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/GeSHi/geshi-1.0/zipball/ac5c9c1f26eba2e6d0a9e374dc3d8316b586cdcc",
+            "url": "https://api.github.com/repos/GeSHi/geshi-1.0/zipball/ec918ac67f6d3e9008e1d41c4d22610a96f78755",
             "reference": "ac5c9c1f26eba2e6d0a9e374dc3d8316b586cdcc",
             "shasum": ""
         },
-        "time": "2016-02-01T23:14:34+00:00",
+        "time": "2016-02-01 23:14:34",
         "type": "library",
         "installation-source": "source",
         "autoload": {
@@ -369,7 +331,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.0"
         },
-        "time": "2017-03-20T17:10:46+00:00",
+        "time": "2017-03-20 17:10:46",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -455,7 +417,7 @@
             "ptachoire/cssembed": "Assetic provides the integration with phpcssembed to embed data uris",
             "twig/twig": "Assetic provides the integration with the Twig templating engine"
         },
-        "time": "2015-11-12T13:51:40+00:00",
+        "time": "2015-11-12 13:51:40",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -511,7 +473,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.5"
         },
-        "time": "2016-07-18T14:02:57+00:00",
+        "time": "2016-07-18 14:02:57",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -556,7 +518,7 @@
         "require": {
             "robloach/component-installer": "*"
         },
-        "time": "2016-07-04T06:39:29+00:00",
+        "time": "2016-07-04 06:39:29",
         "type": "component",
         "extra": {
             "component": {
@@ -642,7 +604,7 @@
             "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
             "sentry/sentry": "Allow sending log messages to a Sentry server"
         },
-        "time": "2016-07-29T03:23:52+00:00",
+        "time": "2016-07-29 03:23:52",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -694,7 +656,7 @@
             "ext-exif": "EXIF extension is required for graphic modules.",
             "ext-rar": "RAR extension is required for RAR archive module."
         },
-        "time": "2012-12-04T17:31:30+00:00",
+        "time": "2012-12-04 17:31:30",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -743,7 +705,7 @@
         "require-dev": {
             "phpunit/phpunit": "^4.6"
         },
-        "time": "2015-12-27T11:43:31+00:00",
+        "time": "2015-12-27 11:43:31",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -803,7 +765,7 @@
             "mockery/mockery": "^0.9.4",
             "phpunit/phpunit": "^4.4"
         },
-        "time": "2016-09-30T07:12:33+00:00",
+        "time": "2016-09-30 07:12:33",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -848,7 +810,7 @@
             "mockery/mockery": "^0.9.4",
             "phpunit/phpunit": "^5.2||^4.8.24"
         },
-        "time": "2016-06-10T07:14:17+00:00",
+        "time": "2016-06-10 07:14:17",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -899,7 +861,7 @@
         "suggest": {
             "league/oauth2-google": "Needed for Google XOAUTH2 authentication"
         },
-        "time": "2017-01-09T09:33:47+00:00",
+        "time": "2017-01-09 09:33:47",
         "type": "library",
         "extra": {
             "patches_applied": {
@@ -961,7 +923,7 @@
             "ext-xmlwriter": "*",
             "php": ">=5.2.0"
         },
-        "time": "2015-05-01T07:00:55+00:00",
+        "time": "2015-05-01 07:00:55",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1025,7 +987,7 @@
         "require-dev": {
             "phpspec/phpspec": "^2.0"
         },
-        "time": "2016-06-07T08:13:47+00:00",
+        "time": "2016-06-07 08:13:47",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1096,7 +1058,7 @@
             "ext-xdebug": ">=2.2.1",
             "ext-xmlwriter": "*"
         },
-        "time": "2015-10-06T15:47:00+00:00",
+        "time": "2015-10-06 15:47:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1146,7 +1108,7 @@
         "require": {
             "php": ">=5.3.3"
         },
-        "time": "2015-06-21T13:08:43+00:00",
+        "time": "2015-06-21 13:08:43",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1195,7 +1157,7 @@
         "require": {
             "php": ">=5.3.3"
         },
-        "time": "2015-06-21T13:50:34+00:00",
+        "time": "2015-06-21 13:50:34",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1241,7 +1203,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4|~5"
         },
-        "time": "2016-05-12T18:03:57+00:00",
+        "time": "2016-05-12 18:03:57",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1288,7 +1250,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.2"
         },
-        "time": "2015-09-15T10:49:45+00:00",
+        "time": "2015-09-15 10:49:45",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1356,7 +1318,7 @@
         "suggest": {
             "phpunit/php-invoker": "~1.1"
         },
-        "time": "2016-07-21T06:48:14+00:00",
+        "time": "2016-07-21 06:48:14",
         "bin": [
             "phpunit"
         ],
@@ -1418,7 +1380,7 @@
         "suggest": {
             "ext-soap": "*"
         },
-        "time": "2015-10-02T06:51:40+00:00",
+        "time": "2015-10-02 06:51:40",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1467,7 +1429,7 @@
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2015-09-11T15:10:35+00:00",
+        "time": "2015-09-11 15:10:35",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1515,7 +1477,7 @@
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2016-08-06T14:39:51+00:00",
+        "time": "2016-08-06 14:39:51",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1564,7 +1526,7 @@
             "reference": "fe0936ee26643249e916849d48e3a51d5f5e278b",
             "shasum": ""
         },
-        "time": "2012-12-21T11:40:51+00:00",
+        "time": "2012-12-21 11:40:51",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -1613,7 +1575,7 @@
             "composer/composer": "1.*@alpha",
             "phpunit/phpunit": "4.*"
         },
-        "time": "2015-08-10T12:35:38+00:00",
+        "time": "2015-08-10 12:35:38",
         "type": "composer-plugin",
         "extra": {
             "branch-alias": {
@@ -1662,7 +1624,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.4"
         },
-        "time": "2015-07-26T15:48:44+00:00",
+        "time": "2015-07-26 15:48:44",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1726,7 +1688,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.8"
         },
-        "time": "2015-12-08T07:14:41+00:00",
+        "time": "2015-12-08 07:14:41",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1780,7 +1742,7 @@
         "require-dev": {
             "phpunit/phpunit": "^4.8 || ^5.0"
         },
-        "time": "2016-08-18T05:49:44+00:00",
+        "time": "2016-08-18 05:49:44",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1834,7 +1796,7 @@
             "ext-mbstring": "*",
             "phpunit/phpunit": "~4.4"
         },
-        "time": "2016-06-17T09:04:28+00:00",
+        "time": "2016-06-17 09:04:28",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1904,7 +1866,7 @@
         "suggest": {
             "ext-uopz": "*"
         },
-        "time": "2015-10-12T03:26:01+00:00",
+        "time": "2015-10-12 03:26:01",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1954,7 +1916,7 @@
         "require-dev": {
             "phpunit/phpunit": "~4.4"
         },
-        "time": "2015-11-11T19:50:13+00:00",
+        "time": "2015-11-11 19:50:13",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2003,7 +1965,7 @@
             "reference": "58b3a85e7999757d6ad81c787a1fbf5ff6c628c6",
             "shasum": ""
         },
-        "time": "2015-06-21T13:59:46+00:00",
+        "time": "2015-06-21 13:59:46",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -2043,7 +2005,7 @@
         "require": {
             "php": ">=5.5.9"
         },
-        "time": "2016-07-28T11:13:48+00:00",
+        "time": "2016-07-28 11:13:48",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2094,7 +2056,7 @@
         "require": {
             "php": ">=5.5.9"
         },
-        "time": "2016-07-17T14:02:08+00:00",
+        "time": "2016-07-17 14:02:08",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2145,7 +2107,7 @@
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2012-03-14T16:36:15+00:00",
+        "time": "2012-03-14 16:36:15",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -2190,7 +2152,7 @@
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2015-09-12T10:08:34+00:00",
+        "time": "2015-09-12 10:08:34",
         "type": "library",
         "extra": {
             "patches_applied": {
@@ -2264,7 +2226,7 @@
             "phpunit/phpunit": "^4.6",
             "sebastian/version": "^1.0.1"
         },
-        "time": "2016-08-09T15:02:57+00:00",
+        "time": "2016-08-09 15:02:57",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -2293,5 +2255,43 @@
             "check",
             "validate"
         ]
+    },
+    {
+        "name": "conceptsandtraining/ente",
+        "version": "3.1.0",
+        "version_normalized": "3.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/conceptsandtraining/lib-ente.git",
+            "reference": "229c8b628c32ab09616163cd690dc14521bf5ae9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/229c8b628c32ab09616163cd690dc14521bf5ae9",
+            "reference": "229c8b628c32ab09616163cd690dc14521bf5ae9",
+            "shasum": ""
+        },
+        "require-dev": {
+            "phpunit/phpunit": "^5.6"
+        },
+        "time": "2018-01-31 10:55:05",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "CaT\\Ente\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPLv3"
+        ],
+        "authors": [
+            {
+                "name": "Richard Klees",
+                "email": "richard.klees@concepts-and-training.de"
+            }
+        ],
+        "description": "An entity component framework for ILIAS."
     }
 ]
