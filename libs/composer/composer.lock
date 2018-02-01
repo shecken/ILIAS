@@ -9,16 +9,16 @@
     "packages": [
         {
             "name": "conceptsandtraining/ente",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/conceptsandtraining/lib-ente.git",
-                "reference": "229c8b628c32ab09616163cd690dc14521bf5ae9"
+                "reference": "d4f66fb69d426605f88985bf5dbf0134971771ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/229c8b628c32ab09616163cd690dc14521bf5ae9",
-                "reference": "229c8b628c32ab09616163cd690dc14521bf5ae9",
+                "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/d4f66fb69d426605f88985bf5dbf0134971771ed",
+                "reference": "d4f66fb69d426605f88985bf5dbf0134971771ed",
                 "shasum": ""
             },
             "require-dev": {
@@ -32,7 +32,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPLv3"
+                "GPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -41,7 +41,7 @@
                 }
             ],
             "description": "An entity component framework for ILIAS.",
-            "time": "2018-01-31 10:55:05"
+            "time": "2018-02-01 10:00:52"
         },
         {
             "name": "cweagans/composer-patches",
