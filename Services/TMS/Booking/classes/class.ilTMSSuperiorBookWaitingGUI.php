@@ -47,6 +47,13 @@ class ilTMSSuperiorBookWaitingGUI extends \ilTMSBookingGUI {
 		require_once("Services/User/classes/class.ilObjUser.php");
 		return sprintf($this->g_lng->txt("book_waiting_for"), ilObjUser::_lookupFullname($usr_id));
 	}
+
+	/**
+	 * @inheritdocs
+	 */
+	protected function getDuplicatedCourseMessage($usr_id) {
+		return array(sprintf($this->g_lng->txt("superior_duplicate_course_booked"), ilObjUser::_lookupFullname($usr_id)));
+	}
 }
 
 /**
