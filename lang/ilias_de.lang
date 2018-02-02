@@ -16015,7 +16015,7 @@ tms#:#t_user#:#Ansicht: Mitarbeiter
 tms#:#t_course#:#Ansicht: Kurs
 tms#:#canceling_for#:#Stornierung für %s
 tms#:#duplicate_course_booked#:#Ein Training dieser Vorlage ist bereits gebucht und noch nicht beendet. Sie dürfen dieses Angebot daher nicht buchen. Sie können die Buchungen in der Übersicht ihrer gebuchten Trainings im Cockpit einsehen und dort ggf. Stornierungen vornehmen.
-tms#:#superior_duplicate_course_booked#:#Ein Training dieser Vorlage ist für %s bereits gebucht. Eine buchung dieses Angebots ist daher für Ihn nicht möglich. Sie können seine Buchungen in der Übersicht der buchungen Ihrer Mitarbeiter im Cockpit einsehen und ggf. Stornierugen vornehmen.
+tms#:#superior_duplicate_course_booked#:#Ein Training dieser Vorlage ist für %s bereits gebucht. Eine buchung dieses Angebots ist daher möglich. Sie können seine Buchungen in der Übersicht im Cockpit einsehen und ggf. Stornierugen vornehmen.
 tms#:#tutor_assignment_period#:#Trainereinsatztage
 tms#:#request_book#:#Buchungsanfrage
 tms#:#user_bookings#:#Buchungen
