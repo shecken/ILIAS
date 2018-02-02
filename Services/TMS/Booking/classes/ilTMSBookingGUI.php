@@ -80,7 +80,7 @@ abstract class ilTMSBookingGUI extends Booking\Player {
 		}
 
 		if($this->duplicateCourseBooked($crs_ref_id, $usr_id)) {
-			$this->redirectToPreviousLocation(array($this->g_lng->txt("duplicate_course_booked")), false);
+			$this->redirectToPreviousLocation($this->getDuplicatedCourseMessage($usr_id), false);
 		}
 
 		global $DIC;
@@ -368,6 +368,16 @@ abstract class ilTMSBookingGUI extends Booking\Player {
 		return $row["source_id"];
 	}
 
+	/**
+	 * Get the failure message for duplicate courses
+	 *
+	 * @param int 	$usr_id
+	 *
+	 * @return string[]
+	 */
+	protected function getDuplicatedCourseMessage($usr_id) {
+		return array($this->g_lng->txt("duplicate_course_booked"));
+	}
 }
 
 /**
