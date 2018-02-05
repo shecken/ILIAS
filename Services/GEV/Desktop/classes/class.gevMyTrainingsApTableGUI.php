@@ -121,6 +121,17 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 
 		$course_link = ilTEPView::getTitleLinkForCourse($this->gAccess, $this->gCtrl, $a_set["crs_ref_id"]);
 
+		$this->gCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $a_set["crs_ref_id"]);
+		$memberlist_link = $this->gCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "trainer");
+		$signature_list_link = $this->gCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_signature_list");
+		$this->gCtrl->clearParametersByClass("gevMemberListDeliveryGUI");
+
+		$this->gCtrl->setParameter($this->parent_obj, "crsrefid", $a_set['crs_ref_id']);
+		$this->gCtrl->setParameter($this->parent_obj, "crs_id", $a_set['obj_id']);
+		$setstatus_link = $this->gCtrl->getLinkTarget($this->parent_obj, "listStatus");
+		$bookings_link = $this->gCtrl->getLinkTarget($this->parent_obj, "viewBookings");
+		$this->gCtrl->clearParameters($this->parent_obj);
+
 		$this->tpl->setVariable("TITLE_LINK", $course_link);
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("CUSTOM_ID", $a_set["custom_id"]);
