@@ -98,6 +98,13 @@ abstract class ilObjectPluginGUI extends ilObject2GUI
 				$this->ctrl->forwardCommand($cp);
 				break;
 
+			// gev-Patch start 3596
+			case 'ilcommonactiondispatchergui':
+				include_once("Services/Object/classes/class.ilCommonActionDispatcherGUI.php");
+				$gui = ilCommonActionDispatcherGUI::getInstanceFromAjaxCall();
+				$this->ctrl->forwardCommand($gui);
+				break;
+			// gev-Patch end 3596
 			default:
 				if ($this->getCreationMode() || $cmd == "save")
 				{
