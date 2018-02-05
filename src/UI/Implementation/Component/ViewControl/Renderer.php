@@ -160,12 +160,17 @@ class Renderer extends AbstractComponentRenderer
 			$items[] = $shy;
 		}
 
-		if($default_value != $_GET[$component->getParameterName()]) {
-			$init_label = $options[$_GET[$component->getParameterName()]];
+		if (isset($_GET[$component->getParameterName()])) {
+			$sortation = $_GET[$component->getParameterName()];
+		}
+		else {
+			$sortation = null;
 		}
 
-		$dd = $f->dropdown()->standard($items)
-			->withLabel($init_label);
+		$dd = $f->dropdown()->standard($items);
+		if($init_label != $sortation) {
+			$dd = $dd->withLabel($sortation);
+		}
 
 		$tpl->setVariable('SORTATION_DROPDOWN', $default_renderer->render($dd));
 		return $tpl->get();
