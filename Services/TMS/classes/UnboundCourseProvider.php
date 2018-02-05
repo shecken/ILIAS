@@ -61,6 +61,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 	protected function getCourseActions(Entity $entity, $owner)
 	{
 		require_once("Services/TMS/CourseActions/ToCourse.php");
+		require_once("Services/TMS/CourseActions/ToCourseMemberTab.php");
 		return [
 			new ToCourse(
 				$entity,
@@ -69,6 +70,15 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				[
 					CourseAction::CONTEXT_USER_BOOKING,
 					CourseAction::CONTEXT_EMPLOYEE_BOOKING,
+					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
+					CourseAction::CONTEXT_MY_TRAININGS
+				]
+			),
+			new ToCourseMemberTab(
+				$entity,
+				$owner,
+				70,
+				[
 					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
 					CourseAction::CONTEXT_MY_TRAININGS
 				]
