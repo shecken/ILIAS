@@ -24,7 +24,14 @@ class CourseActionTest extends PHPUnit_Framework_TestCase {
 		$contexts = [TMS\CourseAction::CONTEXT_SEARCH];
 		$entity = $this->createMock(CaT\Ente\Entity::class);
 		$owner = $this->createMock(ilObject::class);
-		$action = new _CourseActionImpl($entity, $owner, $priority, $contexts);
+		$user = $this->createMock(\ilUser::class);
+
+		$user
+			->expects($this->once())
+			->method("getId");
+
+		$action = new _CourseActionImpl($entity, $owner, $user, $priority, $contexts);
+
 		$this->assertEquals($entity, $action->entity());
 		$this->assertEquals($owner, $action->getOwner());
 		$this->assertEquals($priority, $action->getPriority());

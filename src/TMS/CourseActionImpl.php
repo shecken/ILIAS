@@ -32,20 +32,24 @@ abstract class CourseActionImpl implements CourseAction {
 	protected $contexts;
 
 	/**
+	 * @var int
+	 */
+	protected $current_user_id;
+
+	/**
 	 * @param Ente\Entity 	$entity
 	 * @param \ilObject 	$owner
 	 * @param int 	$priority
 	 * @param int[] 	$contexts
 	 */
-	public function __construct(Ente\Entity $entity, \ilObject $owner, $priority, array $contexts) {
+	public function __construct(Ente\Entity $entity, \ilObject $owner, \ilUser $current_user, $priority, array $contexts) {
 		$this->entity = $entity;
 		$this->owner = $owner;
 		assert('is_int($priority)');
 		$this->priority = $priority;
 		$this->contexts = $contexts;
 
-		global $DIC;
-		$this->g_user_id = $DIC->user()->getId();
+		$this->current_user_id = $current_user->getId();
 	}
 
 	/**
