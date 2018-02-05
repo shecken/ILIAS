@@ -354,7 +354,7 @@ class TableSpace {
 	}
 
 	protected function getConditionsOnPaths($paths) {
-		$join_condition = array();
+		$join_conditions = array();
 		foreach($paths as $path) {
 			$prev_table_id = null;
 			foreach ($path as $table_id => $table) {
