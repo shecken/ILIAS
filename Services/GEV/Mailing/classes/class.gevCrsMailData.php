@@ -371,6 +371,9 @@ class gevCrsMailData extends ilMailData {
 				}
 				$val = implode("<br />", $names);
 				break;
+			case "FEEDBACK_URL":
+				$val = implode("<br />", $this->crs_utils->getLinkForEachFeedbackObject());
+				break;
 			default:
 				return $a_placeholder_code;
 		}
