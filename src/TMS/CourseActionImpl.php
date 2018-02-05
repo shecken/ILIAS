@@ -42,7 +42,7 @@ abstract class CourseActionImpl implements CourseAction {
 	 * @param int 	$priority
 	 * @param int[] 	$contexts
 	 */
-	public function __construct(Ente\Entity $entity, \ilObject $owner, \ilUser $current_user, $priority, array $contexts) {
+	public function __construct(Ente\Entity $entity, \ilObject $owner, \ilObjUser $current_user, $priority, array $contexts) {
 		$this->entity = $entity;
 		$this->owner = $owner;
 		assert('is_int($priority)');

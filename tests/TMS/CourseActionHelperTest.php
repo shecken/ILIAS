@@ -4,6 +4,9 @@
 
 use ILIAS\TMS;
 
+require_once(__DIR__."/../../Services/UICore/classes/class.ilCtrl.php");
+require_once(__DIR__."/../../Services/User/classes/class.ilObjUser.php");
+
 class CourseActionHelperTest {
 	use TMS\CourseActionHelper;
 
