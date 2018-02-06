@@ -101,6 +101,9 @@ class Query implements AbstractQuery {
 		return $this->order_by;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function orderByMode() {
 		return $this->order_mode;
 	}
@@ -183,7 +186,7 @@ class Query implements AbstractQuery {
 	/**
 	 * @inheritdoc
 	 */
-	public function withOrderBy(array $order_by,$order_mode = self::ORDER_ASC) {
+	public function withOrderBy(array $order_by,$order_mode = TableSpace::ORDER_ASC) {
 		$return = clone $this;
 		$return->order_by = $order_by;
 		$return->order_mode = $order_mode;
