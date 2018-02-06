@@ -113,7 +113,7 @@ class PanelTest extends ILIAS_UI_TestBase {
 
 		$expected_html =
 				"<div class=\"panel panel-primary\">".
-				"   <div class=\"panel-heading ilHeader\">".
+				"   <div class=\"panel-heading ilHeader\" clearfix>".
 				"       <h3 class=\"ilHeader\">Title</h3>".
 				"   </div>".
 				"   <div class=\"panel-body\"></div>".
@@ -133,15 +133,21 @@ class PanelTest extends ILIAS_UI_TestBase {
 
 		$expected_html =
 				"<div class=\"panel panel-primary\">".
-				"   <div class=\"panel-heading ilBlockHeader\">".
+				"   <div class=\"panel-heading ilBlockHeader\" clearfix>".
 				"       <h4>Title</h4>".
 				"   </div>".
-				"   <div class=\"panel-body\"><div class=\"row\">".
-				"       <div class=\"col-sm-8\"></div>".
-				"       <div class=\"col-sm-4\">".
-				"           <div class=\"il-card thumbnail\"><div class=\"caption\"><h5 class=\"card-title\">Card Title</h5></div></div>".
-				"       </div>".
-				"   </div></div>".
+				"   <div class=\"panel-body\">".
+				"       <div class=\"row\">".
+				"           <div class=\"col-sm-8\"></div>".
+				"           <div class=\"col-sm-4\">".
+				"               <div class=\"il-card thumbnail\">".
+				"                    <div class=\"caption\">".
+				"                        <h5 class=\"card-title\">Card Title</h5>".
+				"                    </div>".
+				"               </div>".
+				"           </div>".
+				"        </div>".
+				"    </div>".
 				"</div>";
 
 		$this->assertHTMLEquals($expected_html, $html);
@@ -165,15 +171,22 @@ class PanelTest extends ILIAS_UI_TestBase {
 				"   <div class=\"panel-body\">".
 				"
              <div class=\"panel panel-primary\">".
-				"           <div class=\"panel-heading ilBlockHeader\">".
+				"           <div class=\"panel-heading ilBlockHeader clearfix\">".
 				"               <h4>Title</h4>".
 				"           </div>".
-				"           <div class=\"panel-body\"><div class=\"row\">".
-				"               <div class=\"col-sm-8\"></div>".
-				"               <div class=\"col-sm-4\">".
-				"                   <div class=\"il-card thumbnail\"><div class=\"caption\"><h5 class=\"card-title\">Card Title</h5></div></div>".
+				"           <div class=\"panel-body\">".
+				"               <div class=\"row\">".
+				"                   <div class=\"col-sm-8\"></div>".
+				"                   <div class=\"col-sm-4\">".
+				"                       <div class=\"il-card thumbnail\">".
+				"                           <div class=\"card-no-highlight\"></div>".
+			    "                           <div class=\"caption\">".
+				"                               <h5 class=\"card-title\">Card Title</h5>".
+				"                           </div>".
+				"                       </div>".
+				"                   </div>".
 				"               </div>".
-				"           </div></div>".
+				"            </div>".
 				"       </div>".
 				"   </div>".
 				"</div>";
