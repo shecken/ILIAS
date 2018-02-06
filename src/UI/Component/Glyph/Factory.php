@@ -345,6 +345,7 @@ interface Factory {
 	 *       The briefcase Glyph uses glyphicon-briefcase.
 	 *   effect: >
 	 *       The click on the briefcase opens a popup to the background tasks.
+	 * context: ""
 	 *
 	 * rules:
 	 *   accessibility:
