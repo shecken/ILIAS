@@ -16054,3 +16054,4 @@ tms#:#placeholder_desc_crs_admin_lastname#:#Nachname des Admins am Kurs
 tms#:#placeholder_desc_crs_venue#:#Veranstaltungsort des Kurses
 tms#:#placeholder_desc_crs_provider#:#Trainingsanbieter
 tms#:#to_course_member_tab#:#Buchungen vornehmen
+tms#:#cancel_course#:#Training absagen
