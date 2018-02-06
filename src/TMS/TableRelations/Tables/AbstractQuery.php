@@ -50,6 +50,20 @@ interface AbstractQuery extends \Iterator {
 	public function filter();
 
 	/**
+	 * Get the order-by fields of query.
+	 *
+	 * @return	AbstractField[]
+	 */
+	public function orderByFields();
+
+	/**
+	 * Get the order-by direction of query.
+	 *
+	 * @return	string
+	 */
+	public function orderByMode();
+
+	/**
 	 * Set the fields to be returned in query.
 	 *
 	 * @param	Predicates\Field[] $requested_fields
@@ -104,4 +118,13 @@ interface AbstractQuery extends \Iterator {
 	 * @return	AbstractQuery
 	 */
 	public function withGroupByField($group_by);
+
+	/**
+	 * Set order fields and direction.
+	 *
+	 * @param	AbstractField[]	$order_by
+	 * @param	string	$order_mode
+	 * @return	AbstractQuery
+	 */
+	public function withOrderBy(array $order_by,$order_mode = TableSpace::ORDER_ASC);
 }
