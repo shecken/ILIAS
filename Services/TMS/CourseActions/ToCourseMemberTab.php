@@ -5,7 +5,7 @@
 use ILIAS\TMS;
 
 /**
- * This is an information about a course action, noteworthy for a user in some context.
+ * This action links to the member tab of the course
  */
 class ToCourseMemberTab extends TMS\CourseActionImpl
 {
