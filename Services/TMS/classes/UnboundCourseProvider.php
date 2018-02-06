@@ -62,6 +62,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 	{
 		require_once("Services/TMS/CourseActions/ToCourse.php");
 		require_once("Services/TMS/CourseActions/ToCourseMemberTab.php");
+		require_once("Services/TMS/CourseActions/CancelCourse.php");
 		return [
 			new ToCourse(
 				$entity,
@@ -78,6 +79,15 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				$entity,
 				$owner,
 				70,
+				[
+					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
+					CourseAction::CONTEXT_MY_TRAININGS
+				]
+			),
+			new CancelCourse(
+				$entity,
+				$owner,
+				80,
 				[
 					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
 					CourseAction::CONTEXT_MY_TRAININGS
