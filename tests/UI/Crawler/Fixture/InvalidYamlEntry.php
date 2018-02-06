@@ -15,7 +15,7 @@ interface InvalidEntry {
 	 * description:
 	 *   purpose:
 	 *      Broken Description
-	 *      Exactly here is the YAML wrong (missing multi line statement above)
+	 *   	Exactly here is the YAML wrong (tab at line start)
 	 *   composition: >
 	 *       Description of Composition
 	 *       with line break
