@@ -65,7 +65,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->booked_img = '<img src="'.ilUtil::getImagePath("gev_booked_icon.png").'" />';
 		$this->waiting_img = '<img src="'.ilUtil::getImagePath("gev_waiting_icon.png").'" />';
 		$this->virtualclass_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-classroom.png").'" />';
-		$this->feedback_img = '<img src="'.ilUtil::getImagePath("icon_xfbk.png").'" />';
+		$this->feedback_img = '<img src="'.ilUtil::getImagePath("icon_xfbk_s.png").'" />';
 
 		$legend = new catLegendGUI();
 		$legend->addItem($this->cancel_img, "gev_cancel_training")
