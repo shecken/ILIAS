@@ -87,6 +87,7 @@ class CardTest extends ILIAS_UI_TestBase {
 
 		$expected_html =
 				"<div class=\"il-card thumbnail\">".
+				"   <div class=\"card-no-highlight\"></div>".
 				"   <div class=\"caption\">".
 				"       <h5 class=\"card-title\">Card Title</h5>".
 				"   </div>".
@@ -112,6 +113,7 @@ class CardTest extends ILIAS_UI_TestBase {
 		$expected_html =
 				"<div class=\"il-card thumbnail\">".
 				"   <img src=\"src\" class=\"img-standard\" alt=\"alt\" />".
+				"   <div class=\"card-no-highlight\"></div>".
 				"   <div class=\"caption\">".
 				"       <h5 class=\"card-title\">Card Title</h5>".
 				"   </div>".
