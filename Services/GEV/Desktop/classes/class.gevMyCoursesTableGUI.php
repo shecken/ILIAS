@@ -143,9 +143,9 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		if ($show_webex_link) {
 			$action .= '&nbsp;<a href="'.$crs_utils->getVirtualClassLink().'" target="_blank">'.$this->virtualclass_img.'</a>';
 		}
-
-		if(!$crs_utils->feedbackDone($this->user_id)) {
-			$action .= '&nbsp;<a href="'.$crs_utils->getFeedbackLink().'" target="_blank">'.$this->feedback_img.'</a>';
+		$undone_feedback_ref_ids = $crs_utils->getUndoneFeedbackRefIds($this->user_id);
+		foreach($undone_feedback_ref_ids as $ref_id) {
+			$action .= '&nbsp;<a href="'.$crs_utils->getFeedbackLinkById($ref_id).'" target="_blank">'.$this->feedback_img.'</a>';
 		}
 
 		$action = ltrim($action, "&nbsp;");
