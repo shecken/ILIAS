@@ -146,6 +146,69 @@ class gevCourseUtils
 		return $bl;
 	}
 
+	/**
+	 * Returns links to an feedback gui by given ids.
+	 *
+	 * @param 	int[]
+	 * @return 	string[]
+	 */
+	public function getFeedbackLinkById($ref_id)
+	{
+		global $ilCtrl,$ilUser;
+
+		$ilCtrl->setParameterByClass("ilFeedbackGUI", "ref_id", $ref_id);
+		$link = $ilCtrl->getLinkTargetByClass(array(
+			"ilObjPluginDispatchGUI",
+			"ilObjScaledFeedbackGUI",
+			"ilFeedbackGUI"
+			),
+			"showContent"
+		);
+
+		return $link;
+	}
+
+	/**
+	 * Get all nodes for the type xfbk (ScaledFeedback)
+	 *
+	 * @return 	void
+	 */
+	protected function getFeedbackNodes()
+	{
+		global $tree;
+		$crs_ref_id = $this->getRefId();
+		return $tree->getChildsByTypeFilter($crs_ref_id, array("xfbk"));
+	}
+
+	/**
+	 * Get ref_ids from undone feedbacks.
+	 *
+	 * @param 	int 	$user_id
+	 * @return 	int[]
+	 */
+	public function getUndoneFeedbackRefIds($user_id)
+	{
+		$ids = array();
+		$nodes = $this->getFeedbackNodes();
+
+		if(empty($nodes)) {
+			return $ids;
+		}
+
+		foreach($nodes as $node) {
+			$feedback_obj = ilObjectFactory::getInstanceByRefId($node["ref_id"]);
+			$obj_actions = $feedback_obj->getObjectActions();
+			if(
+				!$obj_actions->checkRepeat($feedback_obj->getId(), $user_id) &&
+				$feedback_obj->getSettings()->getOnline()
+			) {
+				$ids[] = $node['ref_id'];
+			}
+		}
+
+		return $ids;
+	}
+
 	public static function gotoBooking($a_crs_id)
 	{
 		global $ilCtrl;

@@ -65,12 +65,14 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->booked_img = '<img src="'.ilUtil::getImagePath("gev_booked_icon.png").'" />';
 		$this->waiting_img = '<img src="'.ilUtil::getImagePath("gev_waiting_icon.png").'" />';
 		$this->virtualclass_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-classroom.png").'" />';
+		$this->feedback_img = '<img src="'.ilUtil::getImagePath("icon_xfbk_s.png").'" />';
 
 		$legend = new catLegendGUI();
 		$legend->addItem($this->cancel_img, "gev_cancel_training")
 			   ->addItem($this->booked_img, "gev_booked")
 			   ->addItem($this->waiting_img, "gev_waiting")
-			   ->addItem($this->virtualclass_img, "gev_virtual_class");
+			   ->addItem($this->virtualclass_img, "gev_virtual_class")
+			   ->addItem($this->feedback_img, "gev_feedback");
 		$this->setLegend($legend);
 
 		$this->setData($data);
@@ -140,6 +142,10 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 
 		if ($show_webex_link) {
 			$action .= '&nbsp;<a href="'.$crs_utils->getVirtualClassLink().'" target="_blank">'.$this->virtualclass_img.'</a>';
+		}
+		$undone_feedback_ref_ids = $crs_utils->getUndoneFeedbackRefIds($this->user_id);
+		foreach($undone_feedback_ref_ids as $ref_id) {
+			$action .= '&nbsp;<a href="'.$crs_utils->getFeedbackLinkById($ref_id).'" target="_blank">'.$this->feedback_img.'</a>';
 		}
 
 		$action = ltrim($action, "&nbsp;");
