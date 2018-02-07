@@ -147,26 +147,28 @@ class gevCourseUtils
 	}
 
 	/**
-	 * Returns a link to an feedback gui.
+	 * Returns links to an feedback gui by given ids.
 	 *
-	 * @return string
+	 * @param 	int[]
+	 * @return 	string[]
 	 */
-	public function getFeedbackLink()
+	public function getFeedbackLinkById($ref_id)
 	{
 		global $ilCtrl,$ilUser;
-		$result = $this->getFeedbackNode();
 
-		if(!is_array($result) || empty($result)) {
-			return "";
-		}
-		$feedback_ref_id = $result[0]['ref_id'];
-		$ilCtrl->setParameterByClass("ilFeedbackGUI", "ref_id", $feedback_ref_id);
-		$link = $ilCtrl->getLinkTargetByClass(array("ilObjPluginDispatchGUI", "ilObjScaledFeedbackGUI", "ilFeedbackGUI"), "showContent");
-		$ilCtrl->clearParametersByClass("ilFeedbackGUI");
+		$ilCtrl->setParameterByClass("ilFeedbackGUI", "ref_id", $ref_id);
+		$link = $ilCtrl->getLinkTargetByClass(array(
+			"ilObjPluginDispatchGUI",
+			"ilObjScaledFeedbackGUI",
+			"ilFeedbackGUI"
+			),
+			"showContent"
+		);
+
 		return $link;
 	}
 
-	public function getFeedbackNode()
+	public function getFeedbackNodes()
 	{
 		global $tree;
 		$crs_ref_id = $this->getRefId();
@@ -174,20 +176,32 @@ class gevCourseUtils
 	}
 
 	/**
-	 * Checks wheter a feedback is already done.
+	 * Get ref_ids from undone feedbacks.
 	 *
 	 * @param 	int 	$user_id
-	 * @return 	bool
+	 * @return 	int[]
 	 */
-	public function feedbackDone($user_id)
+	public function getUndoneFeedbackRefIds($user_id)
 	{
-		$node = $this->getFeedbackNode();
-		if(empty($node)) {
-			return true;
+		$ids = array();
+		$nodes = $this->getFeedbackNodes();
+
+		if(empty($nodes)) {
+			return $ids;
 		}
-		$feedback_obj = ilObjectFactory::getInstanceByRefId($node[0]["ref_id"]);
-		$obj_actions = $feedback_obj->getObjectActions();
-		return $obj_actions->checkRepeat($feedback_obj->getId(), $user_id);
+
+		foreach($nodes as $node) {
+			$feedback_obj = ilObjectFactory::getInstanceByRefId($node["ref_id"]);
+			$obj_actions = $feedback_obj->getObjectActions();
+			if(
+				!$obj_actions->checkRepeat($feedback_obj->getId(), $user_id) &&
+				$feedback_obj->getSettings()->getOnline()
+			) {
+				$ids[] = $node['ref_id'];
+			}
+		}
+
+		return $ids;
 	}
 
 	public static function gotoBooking($a_crs_id)
