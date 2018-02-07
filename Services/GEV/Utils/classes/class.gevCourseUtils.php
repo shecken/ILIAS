@@ -168,7 +168,12 @@ class gevCourseUtils
 		return $link;
 	}
 
-	public function getFeedbackNodes()
+	/**
+	 * Get all nodes for the type xfbk (ScaledFeedback)
+	 *
+	 * @return 	void
+	 */
+	protected function getFeedbackNodes()
 	{
 		global $tree;
 		$crs_ref_id = $this->getRefId();
