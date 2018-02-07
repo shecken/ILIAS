@@ -144,6 +144,10 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 			$action .= '&nbsp;<a href="'.$crs_utils->getVirtualClassLink().'" target="_blank">'.$this->virtualclass_img.'</a>';
 		}
 
+		if(!$crs_utils->feedbackDone($this->user_id)) {
+			$action .= '&nbsp;<a href="'.$crs_utils->getFeedbackLink().'" target="_blank">'.$this->feedback_img.'</a>';
+		}
+
 		$action = ltrim($action, "&nbsp;");
 
 		$show_cancel_date = true;
