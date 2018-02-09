@@ -42,7 +42,7 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 			->disableOriginalClone()
 			->disableArgumentCloning()
 			->disallowMockingUnknownTypes()
-			->setMockClassName("Step".$this->step_count)
+			->setMockClassName("WorkflowStep".$this->step_count)
 			->getMock();		
 	}
 
@@ -558,7 +558,7 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 		$step1
 			->expects($this->once())
 			->method("appendToOverviewForm")
-			->with($data1, $form);
+			->with($form, $data1);
 		$label1 = "LABEL 1";
 		$step1
 			->expects($this->once())
@@ -568,7 +568,7 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 		$step2
 			->expects($this->once())
 			->method("appendToOverviewForm")
-			->with($data2, $form);
+			->with($form, $data2);
 		$label2 = "LABEL 2";
 		$step2
 			->expects($this->once())
@@ -578,7 +578,7 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 		$step3
 			->expects($this->once())
 			->method("appendToOverviewForm")
-			->with($data3, $form);
+			->with($form, $data3);
 		$label3 = "LABEL 3";
 		$step3
 			->expects($this->once())

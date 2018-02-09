@@ -176,7 +176,7 @@ abstract class Player {
 			$header->setTitle($step->getLabel());
 			$form->addItem($header);
 			$data = $state->getStepData($i);
-			$step->appendToOverviewForm($data, $form);
+			$step->appendToOverviewForm($form, $data);
 		}
 
 		return $form;

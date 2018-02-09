@@ -4,8 +4,6 @@
 
 namespace ILIAS\TMS\Workflow;
 
-use CaT\Ente\Component;
-
 /**
  * This is one step in the booking process of the user.
  */
@@ -63,11 +61,11 @@ interface Step {
 	 *
 	 * The data must be the same as the component return via getData.
 	 *
-	 * @param	mixed		$data
 	 * @param	\ilPropertyFormGUI	$form
+	 * @param	mixed		$data
 	 * @return	void
 	 */
-	public function appendToOverviewForm($data, \ilPropertyFormGUI $form);
+	public function appendToOverviewForm(\ilPropertyFormGUI $form, $data);
 
 	/**
 	 * Process the data to perform the actions in the system that are required
