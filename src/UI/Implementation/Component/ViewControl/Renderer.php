@@ -161,16 +161,11 @@ class Renderer extends AbstractComponentRenderer
 		}
 
 		if (isset($_GET[$component->getParameterName()])) {
-			$sortation = $_GET[$component->getParameterName()];
-		}
-		else {
-			$sortation = null;
+			$init_label = $options[$_GET[$component->getParameterName()]];
 		}
 
-		$dd = $f->dropdown()->standard($items);
-		if($init_label != $sortation) {
-			$dd = $dd->withLabel($sortation);
-		}
+		$dd = $f->dropdown()->standard($items)
+				->withLabel($init_label);
 
 		$tpl->setVariable('SORTATION_DROPDOWN', $default_renderer->render($dd));
 		return $tpl->get();
