@@ -138,7 +138,7 @@ class Wizard implements W\Wizard {
 	 * @inheritdoc
 	 */
 	public function getId() {
-		return "booking_wizard"
+		return $this->component_class
 			."_".$this->acting_user_id
 			."_".$this->crs_ref_id
 			."_".$this->target_user_id;

@@ -45,8 +45,9 @@ class TMS_Booking_WizardTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_getId() {
-		$wizard_id = "booking_wizard_1_2_3";
-		$wizard = new _BookingWizard([], "", 1, 2, 3);
+		$component_class = "SOME_CLASS";
+		$wizard_id = "{$component_class}_1_2_3";
+		$wizard = new _BookingWizard([], $component_class, 1, 2, 3);
 		$this->assertSame($wizard_id, $wizard->getId());
 	}
 
