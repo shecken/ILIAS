@@ -31,7 +31,7 @@ class Query implements AbstractQuery {
 		$this->requested = null;
 		$this->group_by = array();
 		$this->filter = null;
-		$this->root_table;
+		$this->root_table = null;
 		$this->order_by = [];
 		$this->order_mode = TableSpace::ORDER_ASC;
 	}
