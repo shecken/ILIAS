@@ -4,8 +4,10 @@
  */
 
 use ILIAS\TMS\Booking;
+use ILIAS\TMS\Wizard;
 
 require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
+require_once("Services/TMS/Booking/classes/ilTMSBookingGUIBinding.php");
 require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php");
 
 /**
@@ -13,7 +15,7 @@ require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php")
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
-abstract class ilTMSBookingGUI extends Booking\Player {
+abstract class ilTMSBookingGUI {
 	use \ILIAS\TMS\MyUsersHelper;
 
 	/**
@@ -75,22 +77,43 @@ abstract class ilTMSBookingGUI extends Booking\Player {
 		$crs_ref_id = (int)$_GET["crs_ref_id"];
 		$usr_id = (int)$_GET["usr_id"];
 
+		$gui_bindings = new \ilTMSBookingGUIBinding
+			( $this->g_lng
+			, $this->g_ctrl
+			, $this->parent_gui
+			, $this->parent_cmd
+			, $this->getPlayerTitle()
+			, $this->getConfirmButtonLabel()
+			, $this->getOverViewDescription()
+			);
+
 		if((int)$this->g_user->getId() !== $usr_id && !$this->checkIsSuperiorEmployeeBelowCurrent($usr_id)) {
-			$this->redirectToPreviousLocation(array($this->g_lng->txt("no_permissions_to_book")), false);
+			$gui_bindings->redirectToPreviousLocation(array($this->g_lng->txt("no_permissions_to_book")), false);
 		}
 
 		if($this->duplicateCourseBooked($crs_ref_id, $usr_id)) {
-			$this->redirectToPreviousLocation($this->getDuplicatedCourseMessage($usr_id), false);
+			$gui_bindings->redirectToPreviousLocation($this->getDuplicatedCourseMessage($usr_id), false);
 		}
 
 		global $DIC;
-		$process_db = new ilTMSBookingPlayerStateDB();
+		$state_db = new ilTMSBookingPlayerStateDB();
+		$wizard = new Booking\Wizard
+			( $DIC
+			, $this->getComponentClass()
+			, $this->g_user->getId()
+			, $crs_ref_id
+			, $usr_id
+			);
+		$player = new Wizard\Player
+			( $gui_bindings
+			, $wizard
+			, $state_db
+			);
 
-		$this->init($DIC, $crs_ref_id, $usr_id, $process_db);
 		$this->setParameter($crs_ref_id, $usr_id);
 
 		$cmd = $this->g_ctrl->getCmd("start");
-		$content = $this->process($cmd, $_POST);
+		$content = $player->run($cmd, $_POST);
 		assert('is_string($content)');
 		$this->g_tpl->setContent($content);
 		if($this->execute_show) {
@@ -108,61 +131,10 @@ abstract class ilTMSBookingGUI extends Booking\Player {
 	 */
 	abstract protected function setParameter($crs_ref_id, $usr_id);
 
-	// STUFF FROM Booking\Player
-
 	/**
-	 * @inheritdocs
-	 */
-	protected function getForm() {
-		$form = new ilPropertyFormGUI();
-		$form->setFormAction($this->g_ctrl->getFormAction($this));
-		$form->setShowTopButtons(true);
-		return $form;
-	}
-
-	/**
-	 * @inheritdocs
-	 */
-	protected function txt($id) {
-		if ($id === "abort") {
-			$id = "cancel";
-		}
-		else if ($id === "next") {
-			$id = "btn_next";
-		}
-		else if ($id == "aborted") {
-			$id = "booking_aborted";
-		}
-		else if ($id == "previous") {
-			$id = "btn_previous";
-		}
-		return $this->g_lng->txt($id);
-	}
-
-	/**
-	 * @inheritdocs
-	 */
-	protected function redirectToPreviousLocation($messages, $success) {
-		assert('is_numeric($_GET["usr_id"])');
-		$usr_id = (int)$_GET["usr_id"];
-
-		$this->setParameter(null, null);
-		$this->g_ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
-
-		if (count($messages)) {
-			$message = join("<br/>", $messages);
-			if ($success) {
-				ilUtil::sendSuccess($message, true);
-			}
-			else {
-				ilUtil::sendInfo($message, true);
-			}
-		}
-		$this->g_ctrl->redirect($this->parent_gui, $this->parent_cmd);
-	}
-
-	/**
-	 * @inheritdocs
+	 * Get the title of the player.
+	 *
+	 * @return string
 	 */
 	protected function getPlayerTitle() {
 		assert('is_numeric($_GET["usr_id"])');
@@ -177,25 +149,29 @@ abstract class ilTMSBookingGUI extends Booking\Player {
 	}
 
 	/**
-	 * @inheritdocs
+	 * Get a description for the overview step.
+	 *
+	 * @return string
 	 */
 	protected function getOverViewDescription() {
 		return $this->g_lng->txt("booking_overview_description");
 	}
 
 	/**
-	 * @inheritdocs
+	 * Get the label for the confirm button.
+	 *
+	 * @return string
 	 */
 	protected function getConfirmButtonLabel() {
 		return $this->g_lng->txt("booking_confirm");
 	}
 
 	/**
-	 * @inheritdocs
+	 * Get the component class this GUI processes as steps. 
+	 *
+	 * @return	string
 	 */
-	protected function getComponentClass() {
-		return Booking\SuperiorBookingStep::class;
-	}
+	abstract protected function getComponentClass();
 
 	/**
 	 * Checks if a user is hierarchically under the current user.
@@ -222,7 +198,7 @@ abstract class ilTMSBookingGUI extends Booking\Player {
 		$template_id = $this->getTemplateIdOf($obj_id);
 
 		$booked_courses = $this->getUnfinishedDuplicateBookedCoursesOfUser($course, $usr_id);
-		$waiting = $this->getUnfnishedWaitingListCoursesOfUser($course, $usr_id);
+		$waiting = $this->getUnfinishedWaitingListCoursesOfUser($course, $usr_id);
 		$courses = array_merge($booked_courses, $waiting);
 
 		return count($courses) > 0;
@@ -254,7 +230,7 @@ abstract class ilTMSBookingGUI extends Booking\Player {
 	 * @param int 	$usr_id
 	 * @return \ilObjCourse[]
 	 */
-	protected function getUnfnishedWaitingListCoursesOfUser(\ilObjCourse $course, $usr_id)
+	protected function getUnfinishedWaitingListCoursesOfUser(\ilObjCourse $course, $usr_id)
 	{
 		assert('is_int($usr_id)');
 		$start_date = $course->getCourseStart();
