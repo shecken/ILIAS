@@ -77,7 +77,7 @@ abstract class ilTMSBookingGUI {
 		$crs_ref_id = (int)$_GET["crs_ref_id"];
 		$usr_id = (int)$_GET["usr_id"];
 
-		$gui_bindings = new \ilTMSBookingGUIBinding
+		$gui_bindings = new Booking\GUIBindings
 			( $this->g_lng
 			, $this->g_ctrl
 			, $this->parent_gui
@@ -88,15 +88,17 @@ abstract class ilTMSBookingGUI {
 			);
 
 		if((int)$this->g_user->getId() !== $usr_id && !$this->checkIsSuperiorEmployeeBelowCurrent($usr_id)) {
-			$gui_bindings->redirectToPreviousLocation(array($this->g_lng->txt("no_permissions_to_book")), false);
+			$this->setParameter(null, null);
+			return $gui_bindings->redirectToPreviousLocation(array($this->g_lng->txt("no_permissions_to_book")), false);
 		}
 
 		if($this->duplicateCourseBooked($crs_ref_id, $usr_id)) {
-			$gui_bindings->redirectToPreviousLocation($this->getDuplicatedCourseMessage($usr_id), false);
+			$this->setParameter(null, null);
+			return $gui_bindings->redirectToPreviousLocation($this->getDuplicatedCourseMessage($usr_id), false);
 		}
 
 		global $DIC;
-		$state_db = new ilTMSBookingPlayerStateDB();
+		$state_db = new Wizard\SessionStateDB();
 		$wizard = new Booking\Wizard
 			( $DIC
 			, $this->getComponentClass()
@@ -111,6 +113,7 @@ abstract class ilTMSBookingGUI {
 			);
 
 		$this->setParameter($crs_ref_id, $usr_id);
+		$this->ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
 
 		$cmd = $this->g_ctrl->getCmd("start");
 		$content = $player->run($cmd, $_POST);

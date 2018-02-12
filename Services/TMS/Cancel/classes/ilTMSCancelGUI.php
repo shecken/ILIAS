@@ -79,14 +79,36 @@ abstract class ilTMSCancelGUI  extends Booking\Player {
 
 		$crs_ref_id = (int)$_GET["crs_ref_id"];
 		$usr_id = (int)$_GET["usr_id"];
-		global $DIC;
-		$process_db = new ilTMSCancelPlayerStateDB();
 
-		$this->init($DIC, $crs_ref_id, $usr_id, $process_db);
+		$gui_bindings = new Booking\GUIBindings
+			( $this->g_lng
+			, $this->g_ctrl
+			, $this->parent_gui
+			, $this->parent_cmd
+			, $this->getPlayerTitle()
+			, $this->getConfirmButtonLabel()
+			, $this->getOverViewDescription()
+			);
+
+		global $DIC;
+		$state_db = new Wizard\SessionStateDB();
+		$wizard = new Booking\Wizard
+			( $DIC
+			, $this->getComponentClass()
+			, $this->g_user->getId()
+			, $crs_ref_id
+			, $usr_id
+			);
+		$player = new Wizard\Player
+			( $gui_bindings
+			, $wizard
+			, $state_db
+			);
+
 		$this->setParameter($crs_ref_id, $usr_id);
 
 		$cmd = $this->g_ctrl->getCmd("start");
-		$content = $this->process($cmd, $_POST);
+		$content = $player->run($cmd, $_POST);
 		assert('is_string($content)');
 		$this->g_tpl->setContent($content);
 		if($this->execute_show) {
@@ -94,57 +116,10 @@ abstract class ilTMSCancelGUI  extends Booking\Player {
 		}
 	}
 
-	// STUFF FROM Booking\Player
-
 	/**
-	 * @inheritdocs
-	 */
-	protected function getForm() {
-		$form = new ilPropertyFormGUI();
-		$form->setFormAction($this->g_ctrl->getFormAction($this));
-		$form->setShowTopButtons(true);
-		return $form;
-	}
-
-	/**
-	 * @inheritdocs
-	 */
-	protected function txt($id) {
-		if ($id === "abort") {
-			$id = "cancel";
-		}
-		else if ($id === "next") {
-			$id = "btn_next";
-		}
-		else if ($id == "aborted") {
-			$id = "booking_aborted";
-		}
-		else if ($id == "previous") {
-			$id = "btn_previous";
-		}
-		return $this->g_lng->txt($id);
-	}
-
-	/**
-	 * @inheritdocs
-	 */
-	protected function redirectToPreviousLocation($messages, $success) {
-		$this->setParameter(null, null);
-
-		if (count($messages)) {
-			$message = join("<br/>", $messages);
-			if ($success) {
-				ilUtil::sendSuccess($message, true);
-			}
-			else {
-				ilUtil::sendInfo($message, true);
-			}
-		}
-		$this->g_ctrl->redirect($this->parent_gui, $this->parent_cmd);
-	}
-
-	/**
-	 * @inheritdocs
+	 * Get the title of the player.
+	 *
+	 * @return string
 	 */
 	protected function getPlayerTitle() {
 		assert('is_numeric($_GET["usr_id"])');
@@ -159,14 +134,18 @@ abstract class ilTMSCancelGUI  extends Booking\Player {
 	}
 
 	/**
-	 * @inheritdocs
+	 * Get a description for the overview step.
+	 *
+	 * @return string
 	 */
 	protected function getOverViewDescription() {
 		return $this->g_lng->txt("cancel_overview_description");
 	}
 
 	/**
-	 * @inheritdocs
+	 * Get the label for the confirm button.
+	 *
+	 * @return string
 	 */
 	protected function getConfirmButtonLabel() {
 		return $this->g_lng->txt("cancel_confirm");

@@ -107,12 +107,6 @@ class ilTMSBookingGUIBinding extends Wizard\GUIBindings {
 	 * @inheritdocs
 	 */
 	protected function redirectToPreviousLocation($messages, $success) {
-		assert('is_numeric($_GET["usr_id"])');
-		$usr_id = (int)$_GET["usr_id"];
-
-		$this->setParameter(null, null);
-		$this->ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
-
 		if (count($messages)) {
 			$message = join("<br/>", $messages);
 			if ($success) {
