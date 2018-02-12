@@ -16,7 +16,7 @@ use ILIAS\TMS\Wizard as W;
  * TODO: This rather should take the abstract methods via an interface and be final
  * instead of forcing to derive from this class. This will make the ugly init go away.
  */
-abstract class Wizard implements W\Wizard {
+class Wizard implements W\Wizard {
 	use ilHandlerObjectHelper;
 
 	/**
