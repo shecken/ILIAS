@@ -2,47 +2,47 @@
 
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de> */
 
-use ILIAS\TMS\Workflow;
+use ILIAS\TMS\Wizard;
 
 require_once(__DIR__."/../../../Services/Form/classes/class.ilPropertyFormGUI.php");
 
-class _WorkflowPlayer extends Workflow\Player {
+class _WizardPlayer extends Wizard\Player {
 	public function _getState() {
 		return $this->getState();
 	}
-	public function _buildOverviewForm(Workflow\State $state) {
+	public function _buildOverviewForm(Wizard\State $state) {
 		return $this->buildOverviewForm($state);
 	}
 }
 
-class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
+class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 	static protected $count_setups = 0;
 
 	public function setUp() {
-		$this->gui_bindings = $this->createMock(Workflow\GUIBindings::class);
-		$this->workflow = $this->createMock(Workflow\Workflow::class);
-		$this->state_db = $this->createMock(Workflow\StateDB::class);
-		$this->player = new _WorkflowPlayer($this->gui_bindings, $this->workflow, $this->state_db);
+		$this->gui_bindings = $this->createMock(Wizard\GUIBindings::class);
+		$this->wizard = $this->createMock(Wizard\Wizard::class);
+		$this->state_db = $this->createMock(Wizard\StateDB::class);
+		$this->player = new _WizardPlayer($this->gui_bindings, $this->wizard, $this->state_db);
 		$this->step_count = 0;
 		$this->form_count = 0;
 
-		$this->workflow_id = "wfid_".self::$count_setups;
+		$this->wizard_id = "wfid_".self::$count_setups;
 		self::$count_setups++;
 
-		$this->workflow
+		$this->wizard
 			->expects($this->atLeastOnce())
 			->method("getId")
-			->willReturn($this->workflow_id);
+			->willReturn($this->wizard_id);
 	}
 
 	public function createStepMock() {
 		$this->step_count++;
-		return $this->getMockBuilder(Workflow\Step::class)
+		return $this->getMockBuilder(Wizard\Step::class)
 			->disableOriginalConstructor()
 			->disableOriginalClone()
 			->disableArgumentCloning()
 			->disallowMockingUnknownTypes()
-			->setMockClassName("WorkflowStep".$this->step_count)
+			->setMockClassName("WizardStep".$this->step_count)
 			->getMock();		
 	}
 
@@ -59,14 +59,14 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_getState_existing() {
-		$state = $this->getMockBuilder(Workflow\State::class)
+		$state = $this->getMockBuilder(Wizard\State::class)
 			->disableOriginalConstructor()
 			->getMock();
 
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$state2 = $this->player->_getState();
@@ -77,27 +77,27 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn(null);
 
 		$state = $this->player->_getState();
-		$expected = new Workflow\State($this->workflow_id, 0);
+		$expected = new Wizard\State($this->wizard_id, 0);
 		$this->assertEquals($expected, $state);
 	}
 
 	public function test_process_form_building() {
 		$step_number = 1;
-		$state = new Workflow\State($this->workflow_id, $step_number);
+		$state = new Wizard\State($this->wizard_id, $step_number);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->once())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);
@@ -133,17 +133,17 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_process_data_not_ok() {
 		$step_number = 1;
-		$state = new Workflow\State($this->workflow_id, $step_number);
+		$state = new Wizard\State($this->wizard_id, $step_number);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->once())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);
@@ -200,17 +200,17 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_process_form_not_ok() {
 		$step_number = 1;
-		$state = new Workflow\State($this->workflow_id, $step_number);
+		$state = new Wizard\State($this->wizard_id, $step_number);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->once())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);
@@ -264,17 +264,17 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_process_data_ok() {
 		$step_number = 1;
-		$state = new Workflow\State($this->workflow_id, $step_number);
+		$state = new Wizard\State($this->wizard_id, $step_number);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->atLeastOnce())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);
@@ -344,17 +344,17 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_process_build_only_on_no_post() {
 		$step_number = 1;
-		$state = new Workflow\State($this->workflow_id, $step_number);
+		$state = new Wizard\State($this->wizard_id, $step_number);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->once())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);
@@ -401,17 +401,17 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 	}
 	public function test_process_first() {
 		$step_number = 0;
-		$state = new Workflow\State($this->workflow_id, $step_number);
+		$state = new Wizard\State($this->wizard_id, $step_number);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->once())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);
@@ -450,23 +450,23 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_process_last() {
-		$this->player = $this->getMockBuilder(_WorkflowPlayer::class)
+		$this->player = $this->getMockBuilder(_WizardPlayer::class)
 			->setMethods(["buildOverviewForm"])
-			->setConstructorArgs([$this->gui_bindings, $this->workflow, $this->state_db])
+			->setConstructorArgs([$this->gui_bindings, $this->wizard, $this->state_db])
 			->getMock();
 
 		$step_number = 2;
-		$state = new Workflow\State($this->workflow_id, $step_number);
+		$state = new Wizard\State($this->wizard_id, $step_number);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->atLeastOnce())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);
@@ -530,13 +530,13 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 	public function test_buildOverviewForm() {
 		// to satisfy assertion that method is invoked, which
 		// is not required in this testcase
-		$this->workflow->getId();
+		$this->wizard->getId();
 
 		$step_number = 3;
 		$data1 = "DATA 1";
 		$data2 = "DATA 2";
 		$data3 = "DATA 3";
-		$state = (new Workflow\State($this->workflow_id, $step_number))
+		$state = (new Wizard\State($this->wizard_id, $step_number))
 			->withStepData(0, $data1)
 			->withStepData(1, $data2)
 			->withStepData(2, $data3);
@@ -544,7 +544,7 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->once())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);
@@ -620,17 +620,17 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_process_start() {
-		$this->player = $this->getMockBuilder(_WorkflowPlayer::class)
+		$this->player = $this->getMockBuilder(_WizardPlayer::class)
 			->setMethods(["runStep"])
-			->setConstructorArgs([$this->gui_bindings, $this->workflow, $this->state_db])
-			->getMock($this->gui_bindings, $this->workflow, $this->state_db);
+			->setConstructorArgs([$this->gui_bindings, $this->wizard, $this->state_db])
+			->getMock($this->gui_bindings, $this->wizard, $this->state_db);
 
-		$state = new Workflow\State($this->workflow_id, 0);
+		$state = new Wizard\State($this->wizard_id, 0);
 
 		$this->state_db
 			->expects($this->atLeastOnce())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn(null);
 
 		$this->state_db
@@ -652,11 +652,11 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 
 	public function test_process_abort() {
 		$step_number = 2;
-		$state = new Workflow\State($this->workflow_id, $step_number);
+		$state = new Wizard\State($this->wizard_id, $step_number);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$this->state_db
@@ -684,20 +684,20 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 		$data1 = "DATA 1";
 		$data2 = "DATA 2";
 		$data3 = "DATA 3";
-		$state = (new Workflow\State($this->workflow_id, $step_number))
+		$state = (new Wizard\State($this->wizard_id, $step_number))
 			->withStepData(0, $data1)
 			->withStepData(1, $data2)
 			->withStepData(2, $data3);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->once())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);
@@ -739,20 +739,20 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 		$data0 = "DATA 0";
 		$data1 = array("foo" => "bar");
 		$data2 = "DATA 2";
-		$state = (new Workflow\State($this->workflow_id, $step_number))
+		$state = (new Wizard\State($this->wizard_id, $step_number))
 			->withStepData(0, $data0)
 			->withStepData(1, $data1)
 			->withStepData(2, $data2);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step0 = $this->createStepMock();
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->once())
 			->method("getSteps")
 			->willReturn([$step0, $step1, $step2]);
@@ -803,20 +803,20 @@ class TMS_Workflow_PlayerTest extends PHPUnit_Framework_TestCase {
 		$data0 = "DATA 0";
 		$data1 = array("foo" => "bar");
 		$data2 = "DATA 2";
-		$state = (new Workflow\State($this->workflow_id, $step_number))
+		$state = (new Wizard\State($this->wizard_id, $step_number))
 			->withStepData(0, $data0)
 			->withStepData(1, $data1)
 			->withStepData(2, $data2);
 		$this->state_db
 			->expects($this->once())
 			->method("load")
-			->with($this->workflow_id)
+			->with($this->wizard_id)
 			->willReturn($state);
 
 		$step1 = $this->createStepMock();
 		$step2 = $this->createStepMock();
 		$step3 = $this->createStepMock();
-		$this->workflow
+		$this->wizard
 			->expects($this->once())
 			->method("getSteps")
 			->willReturn([$step1, $step2, $step3]);

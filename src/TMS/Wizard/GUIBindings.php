@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2018 Richard Klees <richard.klees@concepts-and-training.de> */
 
-namespace ILIAS\TMS\Workflow;
+namespace ILIAS\TMS\Wizard;
 
 /**
  * Defines the bindings the player needs to the ILIAS-GUIs.

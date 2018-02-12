@@ -2,16 +2,16 @@
 
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de> */
 
-namespace ILIAS\TMS\Workflow;
+namespace ILIAS\TMS\Wizard;
 
 /**
- * Has state information about one workflow.
+ * Has state information about one wizard.
  */
 class State {
 	/**
 	 * @var string	
 	 */
-	protected $workflow_id;
+	protected $wizard_id;
 
 	/**
 	 * @var	int
@@ -23,21 +23,21 @@ class State {
 	 */
 	protected $step_data;
 
-	public function __construct($workflow_id, $step_number, array $step_data = []) {
-		assert('is_string($workflow_id)');
+	public function __construct($wizard_id, $step_number, array $step_data = []) {
+		assert('is_string($wizard_id)');
 		assert('is_int($step_number)');
-		$this->workflow_id = $workflow_id;
+		$this->wizard_id = $wizard_id;
 		$this->step_number = $step_number;
 		$this->step_data = $step_data;
 	}
 
 	/**
-	 * Get the id of the workflow this belongs to.
+	 * Get the id of the wizard this belongs to.
 	 *
 	 * @return	string
 	 */
-	public function getWorkflowId() {
-		return $this->workflow_id;
+	public function getWizardId() {
+		return $this->wizard_id;
 	}
 
 	/**

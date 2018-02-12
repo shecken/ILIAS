@@ -1,19 +1,19 @@
 <?php
 
-namespace ILIAS\TMS\Workflow;
+namespace ILIAS\TMS\Wizard;
 
 /**
- * Definition of a workflow.
+ * Definition of a wizard.
  */
-interface Workflow {
+interface Wizard {
 	/**
-	 * Get a unique id for that workflow.
+	 * Get a unique id for that wizard.
 	 *
-	 * Must be unique over all similar workflows, perform by different people,
+	 * Must be unique over all similar wizards, perform by different people,
 	 * under different circumstances, ...
 	 *
 	 * It must be garanteed, that the steps do not change over different
-	 * instantiations of the same workflow.
+	 * instantiations of the same wizard.
 	 *
 	 * @return	string
 	 */

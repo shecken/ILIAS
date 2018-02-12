@@ -2,7 +2,7 @@
 
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de> */
 
-namespace ILIAS\TMS\Workflow;
+namespace ILIAS\TMS\Wizard;
 
 /**
  * This is one step in the booking process of the user.

@@ -2,15 +2,15 @@
 
 /* Copyright (c) 2018 Richard Klees <richard.klees@concepts-and-training.de> */
 
-namespace ILIAS\TMS\Workflow;
+namespace ILIAS\TMS\Wizard;
 
 require_once(__DIR__."/../../../Services/Form/classes/class.ilFormSectionHeaderGUI.php");
 
 use CaT\Ente\ILIAS\ilHandlerObjectHelper;
 
 /**
- * Displays the steps for the workflow a row, gathers user input and afterwards
- * completes the workflow by processing the steps.
+ * Displays the steps for the wizard a row, gathers user input and afterwards
+ * completes the wizard by processing the steps.
  *
  * TODO: This rather should take the abstract methods via an interface and be final
  * instead of forcing to derive from this class. This will make the ugly init go away.
@@ -24,9 +24,9 @@ abstract class Player {
 	const COMMAND_PREVIOUS = "previous";
 
 	/**
-	 * @var Workflow	
+	 * @var Wizard	
 	 */
-	protected $workflow;
+	protected $wizard;
 
 	/**
 	 * @var GUIBindings
@@ -38,8 +38,8 @@ abstract class Player {
 	 */
 	protected $state_db;
 
-	public function __construct(GUIBindings $gui_bindings, Workflow $workflow, StateDB $state_db) {
-		$this->workflow = $workflow;
+	public function __construct(GUIBindings $gui_bindings, Wizard $wizard, StateDB $state_db) {
+		$this->wizard = $wizard;
 		$this->gui_bindings = $gui_bindings;
 		$this->state_db = $state_db;
 	}
@@ -47,7 +47,7 @@ abstract class Player {
 	/**
 	 * Process the user input and build the appropriate view.
 	 *
-	 * The workflow ended when null is returned.
+	 * The wizard ended when null is returned.
 	 *
 	 * @param	string|null	$cmd
 	 * @param	array|null	$post
@@ -80,14 +80,14 @@ abstract class Player {
 	}
 
 	/**
-	 * Build the view for the current step in the workflow.
+	 * Build the view for the current step in the wizard.
 	 *
 	 * @param	State	$state
 	 * @param	array|null	$post
 	 * @return	string
 	 */
 	protected function runStep(State $state, array $post = null) {
-		$steps = $this->workflow->getSteps();
+		$steps = $this->wizard->getSteps();
 		$step_number = $state->getStepNumber();
 
 		if($step_number < 0) {
@@ -140,7 +140,7 @@ abstract class Player {
 	}
 
 	/**
-	 * Build the view for the previous step in the workflow.
+	 * Build the view for the previous step in the wizard.
 	 *
 	 * @param	State	$state
 	 * @return	string
@@ -160,7 +160,7 @@ abstract class Player {
 	 * @return	\ilPropertyFormGUI
 	 */
 	protected function buildOverviewForm(State $state) {
-		$steps = $this->workflow->getSteps();
+		$steps = $this->wizard->getSteps();
 		$form = $this->gui_bindings->getForm();
 
 		$form->addCommandButton(self::COMMAND_PREVIOUS, $this->gui_bindings->txt("previous"));
@@ -183,17 +183,17 @@ abstract class Player {
 	}
 
 	/**
-	 * Finish the workflow by actually processing the steps.
+	 * Finish the wizard by actually processing the steps.
 	 *
 	 * @param	State	$state
 	 * @return	void
 	 */
 	protected function finish(State $state) {
-		$steps = $this->workflow->getSteps();
+		$steps = $this->wizard->getSteps();
 		assert('$state->getStepNumber() == count($steps)');
 
 		if ($state->getStepNumber() !== count($steps)) {
-			throw new \LogicException("User did not work through the workflow.");
+			throw new \LogicException("User did not work through the wizard.");
 		}
 
 		$messages = [];
@@ -215,10 +215,10 @@ abstract class Player {
 	 * @return	State
 	 */
 	protected function getState() {
-		$state = $this->state_db->load($this->workflow->getId());
+		$state = $this->state_db->load($this->wizard->getId());
 		if ($state !== null) {
 			return $state;
 		}
-		return new State($this->workflow->getId(), self::START_WITH_STEP);
+		return new State($this->wizard->getId(), self::START_WITH_STEP);
 	}
 } 

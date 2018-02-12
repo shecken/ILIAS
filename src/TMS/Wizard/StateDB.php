@@ -2,17 +2,17 @@
 
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de> */
 
-namespace ILIAS\TMS\Workflow;
+namespace ILIAS\TMS\Wizard;
 
 /**
- * Stores state information about workflows.
+ * Stores state information about wizards.
  */
 interface StateDB {
 	/**
-	 * @param	string	$workflow_id
+	 * @param	string	$wizard_id
 	 * @return	State|null
 	 */
-	public function load($workflow_id);
+	public function load($wizard_id);
 
 	/**
 	 * @param	State
