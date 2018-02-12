@@ -11,11 +11,8 @@ use CaT\Ente\ILIAS\ilHandlerObjectHelper;
 /**
  * Displays the steps for the wizard a row, gathers user input and afterwards
  * completes the wizard by processing the steps.
- *
- * TODO: This rather should take the abstract methods via an interface and be final
- * instead of forcing to derive from this class. This will make the ugly init go away.
  */
-abstract class Player {
+class Player {
 	const START_WITH_STEP = 0;
 	const COMMAND_START = "start";
 	const COMMAND_ABORT = "abort";
