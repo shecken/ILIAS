@@ -25,6 +25,11 @@ abstract class Wizard implements W\Wizard {
 	protected $dic;
 
 	/**
+	 * @var	string
+	 */
+	protected $component_class;
+
+	/**
 	 * @var int
 	 */
 	protected $acting_user_id;
@@ -47,16 +52,19 @@ abstract class Wizard implements W\Wizard {
 	/**
 	 * @param	string $wizard_id
 	 * @param	\ArrayAccess|array $dic
+	 * @param	string	$component_class	the user that performs the wizard 
 	 * @param	int	$acting_user_id			the user that performs the wizard 
 	 * @param	int	$crs_ref_id 			course that should get booked
 	 * @param	int	$target_user_id			the user the booking is made for
 	 */
-	public function __construct($dic, $acting_user_id, $crs_ref_id, $target_user_id) {
+	public function __construct($dic, $component_class, $acting_user_id, $crs_ref_id, $target_user_id) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
+		assert('is_string($component_class)');
 		assert('is_int($acting_user_id)');
 		assert('is_int($crs_ref_id)');
 		assert('is_int($target_user_id)');
 		$this->dic = $dic;
+		$this->component_class = $component_class;
 		$this->acting_user_id = $acting_user_id;
 		$this->crs_ref_id = $crs_ref_id;
 		$this->target_user_id = $target_user_id;
@@ -88,7 +96,9 @@ abstract class Wizard implements W\Wizard {
 	 *
 	 * @return string
 	 */
-	abstract protected function getComponentClass();
+	protected function getComponentClass() {
+		return $this->component_class;
+	}
 
 	/**
 	 * Get the steps that are applicable for a given user.

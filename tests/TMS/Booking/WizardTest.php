@@ -23,7 +23,8 @@ class _BookingWizard extends Booking\Wizard{
 	public function _getDIC() {
 		return $this->getDIC();
 	}
-	protected function getComponentClass() {
+	public function _getComponentClass() {
+		return $this->getComponentClass();	
 	}
 }
 
@@ -45,26 +46,32 @@ class TMS_Booking_WizardTest extends PHPUnit_Framework_TestCase {
 
 	public function test_getId() {
 		$wizard_id = "booking_wizard_1_2_3";
-		$wizard = new _BookingWizard([], 1, 2, 3);
+		$wizard = new _BookingWizard([], "", 1, 2, 3);
 		$this->assertSame($wizard_id, $wizard->getId());
 	}
 
 	public function test_getDIC() {
 		$dic = ["my" => "container"];
-		$wizard = new _BookingWizard($dic, 0, 0, 0);
+		$wizard = new _BookingWizard($dic, "", 0, 0, 0);
 		$this->assertSame($dic, $wizard->_getDIC());
 	}
 
 	public function test_getUserId() {
 		$user_id = 42;
-		$wizard = new _BookingWizard([], 0, 0, $user_id);
+		$wizard = new _BookingWizard([], "", 0, 0, $user_id);
 		$this->assertEquals($user_id, $wizard->_getUserId());
 	}
 
 	public function test_getEntityRefId() {
 		$crs_id = 23;
-		$wizard = new _BookingWizard([], 0, $crs_id, 0);
+		$wizard = new _BookingWizard([], "", 0, $crs_id, 0);
 		$this->assertEquals($crs_id, $wizard->_getEntityRefId());
+	}
+
+	public function test_getComponentClass() {
+		$component_class = "THIS_IS_COMPONENT_CLASS";
+		$wizard = new _BookingWizard([], $component_class, 0, 0, 0);
+		$this->assertEquals($component_class, $wizard->_getComponentClass());
 	}
 
 	public function test_getSortedSteps() {
@@ -156,7 +163,7 @@ class TMS_Booking_WizardTest extends PHPUnit_Framework_TestCase {
 
 		$wizard = $this->getMockBuilder(_BookingWizard::class)
 			->setMethods(["getSortedSteps"])
-			->setConstructorArgs([[], $active_user_id, $crs_ref_id, $target_user_id])
+			->setConstructorArgs([[], "", $active_user_id, $crs_ref_id, $target_user_id])
 			->getMock();
 
 		$component1 = $this->createStepMock();
