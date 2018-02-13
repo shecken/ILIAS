@@ -65,6 +65,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 			new ToCourse(
 				$entity,
 				$owner,
+				$this->user,
 				10,
 				[
 					CourseAction::CONTEXT_USER_BOOKING,
