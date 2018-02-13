@@ -79,6 +79,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 			new ToCourseMemberTab(
 				$entity,
 				$owner,
+				$this->user,
 				70,
 				[
 					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
@@ -88,6 +89,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 			new CancelCourse(
 				$entity,
 				$owner,
+				$this->user,
 				80,
 				[
 					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
