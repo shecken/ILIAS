@@ -4,12 +4,11 @@
 
 namespace ILIAS\TMS\Booking;
 
-use ILIAS\TMS\Wizard as W;
 
 /**
  * This adapts the steps from the bookings to the steps from Wizard.
  */
-class StepAdapter implements W\Step {
+class StepAdapter implements \ILIAS\TMS\Wizard\Step {
 	/**
 	 * @var	Step
 	 */

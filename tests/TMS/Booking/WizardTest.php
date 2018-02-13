@@ -3,7 +3,6 @@
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de> */
 
 use ILIAS\TMS\Booking;
-use ILIAS\TMS\Wizard as W;
 
 require_once(__DIR__."/../../../Services/Form/classes/class.ilPropertyFormGUI.php");
 
@@ -181,9 +180,9 @@ class TMS_Booking_WizardTest extends PHPUnit_Framework_TestCase {
 		$this->assertCount(3, $steps);
 		list($step1, $step2, $step3) = $steps;
 
-		$this->assertInstanceOf(W\Step::class, $step1);
-		$this->assertInstanceOf(W\Step::class, $step2);
-		$this->assertInstanceOf(W\Step::class, $step3);
+		$this->assertInstanceOf(\ILIAS\TMS\Wizard\Step::class, $step1);
+		$this->assertInstanceOf(\ILIAS\TMS\Wizard\Step::class, $step2);
+		$this->assertInstanceOf(\ILIAS\TMS\Wizard\Step::class, $step3);
 
 		$component1
 			->expects($this->once())

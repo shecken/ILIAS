@@ -7,7 +7,6 @@ namespace ILIAS\TMS\Booking;
 require_once(__DIR__."/../../../Services/Form/classes/class.ilFormSectionHeaderGUI.php");
 
 use CaT\Ente\ILIAS\ilHandlerObjectHelper;
-use ILIAS\TMS\Wizard as W;
 
 /**
  * Displays the steps for the booking of one spefic course in a row, gathers user
@@ -16,7 +15,7 @@ use ILIAS\TMS\Wizard as W;
  * TODO: This rather should take the abstract methods via an interface and be final
  * instead of forcing to derive from this class. This will make the ugly init go away.
  */
-class Wizard implements W\Wizard {
+class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	use ilHandlerObjectHelper;
 
 	/**
