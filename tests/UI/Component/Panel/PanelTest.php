@@ -101,25 +101,17 @@ class PanelTest extends ILIAS_UI_TestBase {
 		$r = $this->getDefaultRenderer();
 		$p = $f->standard("Title",array());
 
-		$html = new DOMDocument();
-		$html->formatOutput = true;
-		$html->preserveWhiteSpace = false;
+		$html = $this->normalizeHTML($r->render($p));
 
-		$expected = new DOMDocument();
-		$expected->formatOutput = true;
-		$expected->preserveWhiteSpace = false;
-
-		$html = $r->render($p);
-
-		$expected_html =
+		$expected_html = $this->normalizeHTML(
 				"<div class=\"panel panel-primary\">".
-				"   <div class=\"panel-heading ilHeader\">".
-				"       <h3 class=\"ilHeader\">Title</h3>".
-				"   </div>".
-				"   <div class=\"panel-body\"></div>".
-				"</div>";
+				"	<div class=\"panel-heading ilHeader clearfix\">".
+				"		<h3 class=\"ilHeader\">Title</h3> ".
+				"	</div>".
+				"	<div class=\"panel-body\"></div>".
+				"</div>");
 
-		$this->assertHTMLEquals($expected_html, $html);
+		$this->assertEquals($expected_html, $html);
 	}
 
 	public function test_render_sub() {
@@ -129,22 +121,29 @@ class PanelTest extends ILIAS_UI_TestBase {
 		$p = $fp->sub("Title",array());
 		$card = $f->card("Card Title");
 		$p = $p->withCard($card);
-		$html = $r->render($p);
+		$html = $this->normalizeHTML($r->render($p));
 
-		$expected_html =
-				"<div class=\"panel panel-primary\">".
-				"   <div class=\"panel-heading ilBlockHeader\">".
-				"       <h4>Title</h4>".
-				"   </div>".
-				"   <div class=\"panel-body\"><div class=\"row\">".
-				"       <div class=\"col-sm-8\"></div>".
-				"       <div class=\"col-sm-4\">".
-				"           <div class=\"il-card thumbnail\"><div class=\"caption\"><h5 class=\"card-title\">Card Title</h5></div></div>".
-				"       </div>".
-				"   </div></div>".
-				"</div>";
+		$expected_html = $this->normalizeHTML(
+				"<div class=\"panel panel-primary\">	".
+				"	<div class=\"panel-heading ilBlockHeader clearfix\">".
+				"		<h4>Title</h4> ".
+				"	</div>	".
+				"	<div class=\"panel-body\">		".
+				"		<div class=\"row\">".
+				"			<div class=\"col-sm-8\"></div>".
+				"			<div class=\"col-sm-4\">".
+				"<div class=\"il-card thumbnail\">".
+				"			<div class=\"card-no-highlight\"></div>".
+				"	<div class=\"caption\">".
+				"		<h5 class=\"card-title\">Card Title</h5>".
+				"	</div>".
+				"	</div>".
+				"</div>".
+				"		</div>".
+				"					</div>".
+				"</div>");
 
-		$this->assertHTMLEquals($expected_html, $html);
+		$this->assertEquals($expected_html, $html);
 	}
 	public function test_render_report() {
 		$f = $this->getFactory();
@@ -165,15 +164,22 @@ class PanelTest extends ILIAS_UI_TestBase {
 				"   <div class=\"panel-body\">".
 				"
              <div class=\"panel panel-primary\">".
-				"           <div class=\"panel-heading ilBlockHeader\">".
+				"           <div class=\"panel-heading ilBlockHeader clearfix\">".
 				"               <h4>Title</h4>".
 				"           </div>".
-				"           <div class=\"panel-body\"><div class=\"row\">".
-				"               <div class=\"col-sm-8\"></div>".
-				"               <div class=\"col-sm-4\">".
-				"                   <div class=\"il-card thumbnail\"><div class=\"caption\"><h5 class=\"card-title\">Card Title</h5></div></div>".
+				"           <div class=\"panel-body\">".
+				"               <div class=\"row\">".
+				"                   <div class=\"col-sm-8\"></div>".
+				"                   <div class=\"col-sm-4\">".
+				"                       <div class=\"il-card thumbnail\">".
+				"                           <div class=\"card-no-highlight\"></div>".
+			    "                           <div class=\"caption\">".
+				"                               <h5 class=\"card-title\">Card Title</h5>".
+				"                           </div>".
+				"                       </div>".
+				"                   </div>".
 				"               </div>".
-				"           </div></div>".
+				"            </div>".
 				"       </div>".
 				"   </div>".
 				"</div>";

@@ -17,7 +17,7 @@ class Table implements AbstractTable, Graphs\AbstractNode {
 	protected $fields = array();
 	protected $field_names = array();
 	protected $subgraph;
-	protected $constrain = null;
+	protected $constraint = null;
 
 	public function __construct($title, $id) {
 		$this->title = $title;

@@ -3,6 +3,7 @@
 /* Copyright (c) 2018 Stefan Hecken <stefan.hecken@concepts-and-training.de> */
 
 require_once(__DIR__."/../../Services/Object/classes/class.ilObject.php");
+require_once(__DIR__."/../../Services/User/classes/class.ilObjUser.php");
 
 use ILIAS\TMS;
 
@@ -24,7 +25,14 @@ class CourseActionTest extends PHPUnit_Framework_TestCase {
 		$contexts = [TMS\CourseAction::CONTEXT_SEARCH];
 		$entity = $this->createMock(CaT\Ente\Entity::class);
 		$owner = $this->createMock(ilObject::class);
-		$action = new _CourseActionImpl($entity, $owner, $priority, $contexts);
+		$user = $this->createMock(\ilObjUser::class);
+
+		$user
+			->expects($this->once())
+			->method("getId");
+
+		$action = new _CourseActionImpl($entity, $owner, $user, $priority, $contexts);
+
 		$this->assertEquals($entity, $action->entity());
 		$this->assertEquals($owner, $action->getOwner());
 		$this->assertEquals($priority, $action->getPriority());

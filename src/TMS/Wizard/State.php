@@ -2,23 +2,16 @@
 
 /* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de> */
 
-namespace ILIAS\TMS\Booking;
-
-use CaT\Ente\ILIAS\ilHandlerObjectHelper;
+namespace ILIAS\TMS\Wizard;
 
 /**
- * Has state information about one booking process.
+ * Has state information about one wizard.
  */
-class ProcessState {
+class State {
 	/**
-	 * @var	int
+	 * @var string	
 	 */
-	protected $crs_id;
-
-	/**
-	 * @var	int
-	 */
-	protected $usr_id;
+	protected $wizard_id;
 
 	/**
 	 * @var	int
@@ -30,32 +23,21 @@ class ProcessState {
 	 */
 	protected $step_data;
 
-	public function __construct($crs_id, $usr_id, $step_number, array $step_data = []) {
-		assert('is_int($crs_id)');
-		assert('is_int($usr_id)');
+	public function __construct($wizard_id, $step_number, array $step_data = []) {
+		assert('is_string($wizard_id)');
 		assert('is_int($step_number)');
-		$this->crs_id = $crs_id;
-		$this->usr_id = $usr_id;
+		$this->wizard_id = $wizard_id;
 		$this->step_number = $step_number;
 		$this->step_data = $step_data;
 	}
 
 	/**
-	 * Get the id of the course the booking is made for.
+	 * Get the id of the wizard this belongs to.
 	 *
-	 * @return	int
+	 * @return	string
 	 */
-	public function getCourseId() {
-		return $this->crs_id;
-	}
-
-	/**
-	 * Get the id of the user the booking is made for.
-	 *
-	 * @return	int
-	 */
-	public function getUserId() {
-		return $this->usr_id;
+	public function getWizardId() {
+		return $this->wizard_id;
 	}
 
 	/**
@@ -70,7 +52,7 @@ class ProcessState {
 	/**
 	 * Set the step to the next step.
 	 *
-	 * @return ProcessState
+	 * @return State
 	 */
 	public function withNextStep() {
 		$clone = clone $this;
@@ -81,7 +63,7 @@ class ProcessState {
 	/**
 	 * Set the step to the previous step
 	 *
-	 * @return ProcessState
+	 * @return State
 	 */
 	public function withPreviousStep() {
 		$clone = clone $this;
@@ -94,7 +76,7 @@ class ProcessState {
 	 *
 	 * @param	int		$step_number
  	 * @param	mixed	$data	needs to be json-serializable
-	 * @return	ProcessState
+	 * @return	State
 	 */
 	public function withStepData($step_number, $data) {
 		$clone = clone $this;

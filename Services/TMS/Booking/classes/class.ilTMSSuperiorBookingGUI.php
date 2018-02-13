@@ -6,7 +6,6 @@
 use ILIAS\TMS\Booking;
 
 require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
-require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php");
 require_once("Services/TMS/Booking/classes/ilTMSBookingGUI.php");
 
 /**

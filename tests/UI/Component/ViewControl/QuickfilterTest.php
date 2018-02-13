@@ -72,10 +72,10 @@ class QuickfilterTest extends ILIAS_UI_TestBase {
 	protected function getQuickfilterExpectedHTML()
 	{
 		$expected = <<<EOT
-<div class="il-viewcontrol-quickfilter" id=""><div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" > <span class="caret"></span></button><ul class="dropdown-menu">
-	<li><a class="btn btn-link" href="?quickfilter=internal_rating" data-action="?quickfilter=internal_rating"  >Best</a></li>
-	<li><a class="btn btn-link" href="?quickfilter=date_desc" data-action="?quickfilter=date_desc"  >Most Recent</a></li>
-	<li><a class="btn btn-link" href="?quickfilter=date_asc" data-action="?quickfilter=date_asc"  >Oldest</a></li></ul></div>
+<div class="il-viewcontrol-quickfilter" id=""><div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button><ul class="dropdown-menu">
+<li><a class="btn btn-link" href="?quickfilter=internal_rating" data-action="?quickfilter=internal_rating">Best</a></li>
+<li><a class="btn btn-link" href="?quickfilter=date_desc" data-action="?quickfilter=date_desc">Most Recent</a></li>
+<li><a class="btn btn-link" href="?quickfilter=date_asc" data-action="?quickfilter=date_asc">Oldest</a></li></ul></div>
 </div>
 EOT;
 		return $this->normalizeHTML($expected);

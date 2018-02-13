@@ -8,14 +8,33 @@ use ILIAS\TMS\TableRelations\Graphs as Graphs;
  * @inheritdoc
  */
 class Query implements AbstractQuery {
-
-
 	protected $path;
-	protected $having = null;
+	protected $having;
 	protected $requested;
-	protected $group_by = array();
-	protected $filter = null;
+	protected $group_by;
+	protected $filter;
 	protected $root_table;
+
+	/**
+	 * @var AbstractField[]
+	 */
+	protected $order_by = [];
+
+	/**
+	 * @var string
+	 */
+	protected $order_mode;
+
+	public function __construct() {
+		$this->path = null;
+		$this->having = null;
+		$this->requested = null;
+		$this->group_by = array();
+		$this->filter = null;
+		$this->root_table = null;
+		$this->order_by = [];
+		$this->order_mode = TableSpace::ORDER_ASC;
+	}
 
 	/**
 	 * Iterator-functions

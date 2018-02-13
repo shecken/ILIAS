@@ -71,10 +71,10 @@ class SortationTest extends ILIAS_UI_TestBase {
 	protected function getSortationExpectedHTML()
 	{
 		$expected = <<<EOT
-<div class="il-viewcontrol-sortation" id=""><div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false" > <span class="caret"></span></button><ul class="dropdown-menu">
-	<li><a class="btn btn-link" href="?sortation=internal_rating" data-action="?sortation=internal_rating"  >Best</a></li>
-	<li><a class="btn btn-link" href="?sortation=date_desc" data-action="?sortation=date_desc"  >Most Recent</a></li>
-	<li><a class="btn btn-link" href="?sortation=date_asc" data-action="?sortation=date_asc"  >Oldest</a></li></ul></div>
+<div class="il-viewcontrol-sortation" id=""><div class="dropdown"><button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <span class="caret"></span></button><ul class="dropdown-menu">
+<li><a class="btn btn-link" href="?sortation=internal_rating" data-action="?sortation=internal_rating">Best</a></li>
+<li><a class="btn btn-link" href="?sortation=date_desc" data-action="?sortation=date_desc">Most Recent</a></li>
+<li><a class="btn btn-link" href="?sortation=date_asc" data-action="?sortation=date_asc">Oldest</a></li></ul></div>
 </div>
 EOT;
 		return $this->normalizeHTML($expected);

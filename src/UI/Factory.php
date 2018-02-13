@@ -637,6 +637,8 @@ interface Factory {
 	 *   composition: >
 	 *      View Controls are composed mainly of buttons, they are often found in toolbars.
 	 *   effect: Interacting with a view control changes to display in some content area.
+	 *
+	 * rules: []
 	 * ---
 	 * @return \ILIAS\UI\Component\ViewControl\Factory
 	 */
@@ -691,6 +693,8 @@ interface Factory {
 	 * description:
 	 *   purpose: >
 	 *     Tables present a set of uniformly structured data.
+	 *
+	 * rules: []
 	 *
 	 * ---
 	 * @return \ILIAS\UI\Component\Table\Factory
