@@ -52,7 +52,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 
 	final public function __construct(\ilLanguage $lng, \ilCtrl $ctrl, $parent_gui, $parent_cmd, $player_title, $confirm_button_label, $overview_description) {
 		assert('is_object($parent_gui)');
-		assert('is_object($parent_cmd)');
+		assert('is_string($parent_cmd)');
 		assert('is_string($confirm_button_label)');
 		assert('is_string($player_title)');
 		assert('is_string($overview_description)');
