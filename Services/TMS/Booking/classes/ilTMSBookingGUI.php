@@ -8,7 +8,6 @@ use ILIAS\TMS\Wizard;
 
 require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 require_once("Services/TMS/Booking/classes/ilTMSBookingGUIBinding.php");
-require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php");
 
 /**
  * Displays the TMS superior booking
