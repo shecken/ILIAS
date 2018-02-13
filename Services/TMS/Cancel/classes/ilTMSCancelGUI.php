@@ -6,7 +6,6 @@
 use ILIAS\TMS\Booking;
 
 require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
-require_once("Services/TMS/Cancel/classes/class.ilTMSCancelPlayerStateDB.php");
 
 /**
  * Displays the TMS booking 
