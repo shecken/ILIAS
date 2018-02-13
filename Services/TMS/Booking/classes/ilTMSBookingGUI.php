@@ -111,7 +111,7 @@ abstract class ilTMSBookingGUI {
 			);
 
 		$this->setParameter($crs_ref_id, $usr_id);
-		$this->ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
+		$this->g_ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
 
 		$cmd = $this->g_ctrl->getCmd("start");
 		$content = $player->run($cmd, $_POST);
