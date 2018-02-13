@@ -5,9 +5,9 @@
 use ILIAS\TMS;
 
 /**
- * This actions links to the course itself
+ * This actions allows user to cancel a course
  */
-class ToCourse extends TMS\CourseActionImpl
+class CancelCourse extends TMS\CourseActionImpl
 {
 	/**
 	 * @inheritdoc
@@ -15,7 +15,7 @@ class ToCourse extends TMS\CourseActionImpl
 	public function isAllowedFor($usr_id)
 	{
 		$course = $this->entity->object();
-		return $this->hasAccess($course->getRefId());
+		return $this->hasAccess($course->getRefId()) && $this->maybeCancelled($course);
 	}
 
 	/**
@@ -23,10 +23,7 @@ class ToCourse extends TMS\CourseActionImpl
 	 */
 	public function getLink(\ilCtrl $ctrl, $usr_id)
 	{
-		$course = $this->entity->object();
-
-		require_once("Services/Link/classes/class.ilLink.php");
-		return ilLink::_getStaticLink($course->getRefId(), "crs");
+		return "";
 	}
 
 	/**
@@ -36,7 +33,7 @@ class ToCourse extends TMS\CourseActionImpl
 	{
 		global $DIC;
 		$lng = $DIC->language();
-		return $lng->txt("to_course");
+		return $lng->txt("cancel_course");
 	}
 
 	/**
@@ -51,10 +48,24 @@ class ToCourse extends TMS\CourseActionImpl
 		global $DIC;
 		$access = $DIC->access();
 		$course = $this->entity->object();
-		if($access->checkAccess("read", "", $crs_ref_id)) {
+		if($access->checkAccess("visible", "", $crs_ref_id)
+			&& $access->checkAccess("read", "", $crs_ref_id)
+			&& $access->checkAccess("write", "", $crs_ref_id)
+		) {
 			return true;
 		}
 
+		return false;
+	}
+
+	/**
+	 * Checks the course can be cancelled
+	 *
+	 * @param \ilObjCourse 	$course
+	 *
+	 * @return true
+	 */
+	protected function maybeCancelled(\ilObjCourse $course) {
 		return false;
 	}
 }

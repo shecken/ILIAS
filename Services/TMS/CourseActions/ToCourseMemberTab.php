@@ -5,9 +5,9 @@
 use ILIAS\TMS;
 
 /**
- * This actions links to the course itself
+ * This action links to the member tab of the course
  */
-class ToCourse extends TMS\CourseActionImpl
+class ToCourseMemberTab extends TMS\CourseActionImpl
 {
 	/**
 	 * @inheritdoc
@@ -15,6 +15,7 @@ class ToCourse extends TMS\CourseActionImpl
 	public function isAllowedFor($usr_id)
 	{
 		$course = $this->entity->object();
+		var_dump($this->hasAccess($course->getRefId()));
 		return $this->hasAccess($course->getRefId());
 	}
 
@@ -26,7 +27,7 @@ class ToCourse extends TMS\CourseActionImpl
 		$course = $this->entity->object();
 
 		require_once("Services/Link/classes/class.ilLink.php");
-		return ilLink::_getStaticLink($course->getRefId(), "crs");
+		return ilLink::_getStaticLink($course->getRefId(), "crs", true, "_mem");
 	}
 
 	/**
@@ -36,7 +37,7 @@ class ToCourse extends TMS\CourseActionImpl
 	{
 		global $DIC;
 		$lng = $DIC->language();
-		return $lng->txt("to_course");
+		return $lng->txt("to_course_member_tab");
 	}
 
 	/**
@@ -51,7 +52,7 @@ class ToCourse extends TMS\CourseActionImpl
 		global $DIC;
 		$access = $DIC->access();
 		$course = $this->entity->object();
-		if($access->checkAccess("read", "", $crs_ref_id)) {
+		if($access->checkAccess("manage_members", "", $crs_ref_id)) {
 			return true;
 		}
 
