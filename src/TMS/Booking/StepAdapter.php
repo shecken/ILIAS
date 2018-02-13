@@ -27,6 +27,11 @@ class StepAdapter implements W\Step {
 	 */
 	protected $user_id;
 
+	/**
+	 * @param	Step	$wrapped	the Booking\Step to be adapted to Wizard\Step
+	 * @param	int		$crs_ref_id	The ref-id of the course the booking will be made for.
+	 * @param	int		$user_id	The id of the user the booking is made for.
+	 */
 	public function __construct(Step $wrapped, $crs_ref_id, $user_id) {
 		assert('is_int($crs_ref_id)');
 		assert('is_int($user_id)');
