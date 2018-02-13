@@ -3,17 +3,18 @@
  * cat-tms-patch start
  */
 
+namespace ILIAS\TMS\Booking;
+
 use ILIAS\TMS\Wizard;
 
 require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
-require_once("Services/TMS/Booking/classes/class.ilTMSBookingPlayerStateDB.php");
 
 /**
  * GUI Bindings for TMS-Booking process.
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
-class ilTMSBookingGUIBinding extends Wizard\GUIBindings {
+class GUIBindings extends Wizard\GUIBindings {
 	/**
 	 * @var	ilLanguage
 	 */
