@@ -26,18 +26,18 @@ class Player {
 	protected $wizard;
 
 	/**
-	 * @var GUIBindings
+	 * @var ILIASBindings
 	 */
-	protected $gui_bindings;
+	protected $ilias_bindings;
 
 	/**
 	 * @var	StateDB
 	 */
 	protected $state_db;
 
-	public function __construct(GUIBindings $gui_bindings, Wizard $wizard, StateDB $state_db) {
+	public function __construct(ILIASBindings $ilias_bindings, Wizard $wizard, StateDB $state_db) {
 		$this->wizard = $wizard;
-		$this->gui_bindings = $gui_bindings;
+		$this->ilias_bindings = $ilias_bindings;
 		$this->state_db = $state_db;
 	}
 
@@ -64,8 +64,8 @@ class Player {
 				return $this->run(self::COMMAND_NEXT, $post);
 			case self::COMMAND_ABORT:
 				$this->state_db->delete($state);
-				$aborted = $this->gui_bindings->txt("aborted");
-				return $this->gui_bindings->redirectToPreviousLocation([$aborted], false);
+				$aborted = $this->ilias_bindings->txt("aborted");
+				return $this->ilias_bindings->redirectToPreviousLocation([$aborted], false);
 			case self::COMMAND_NEXT:
 				return $this->runStep($state, $post);
 			case self::COMMAND_PREVIOUS:
@@ -194,14 +194,14 @@ class Player {
 	 * @return	\ilPropertyFormGUI
 	 */
 	protected function buildStepForm($step_number, Step $current_step) {
-		$form = $this->gui_bindings->getForm();
+		$form = $this->ilias_bindings->getForm();
 		if($step_number > 0) {
-			$form->addCommandButton(self::COMMAND_PREVIOUS, $this->gui_bindings->txt("previous"));
+			$form->addCommandButton(self::COMMAND_PREVIOUS, $this->ilias_bindings->txt("previous"));
 		}
-		$form->addCommandButton(self::COMMAND_NEXT, $this->gui_bindings->txt("next"));
-		$form->addCommandButton(self::COMMAND_ABORT, $this->gui_bindings->txt("abort"));
+		$form->addCommandButton(self::COMMAND_NEXT, $this->ilias_bindings->txt("next"));
+		$form->addCommandButton(self::COMMAND_ABORT, $this->ilias_bindings->txt("abort"));
 
-		$form->setTitle($this->gui_bindings->txt("title"));
+		$form->setTitle($this->ilias_bindings->txt("title"));
 		$current_step->appendToStepForm($form);
 		return $form;
 	}
@@ -214,14 +214,14 @@ class Player {
 	 */
 	protected function buildOverviewForm(State $state) {
 		$steps = $this->wizard->getSteps();
-		$form = $this->gui_bindings->getForm();
+		$form = $this->ilias_bindings->getForm();
 
-		$form->addCommandButton(self::COMMAND_PREVIOUS, $this->gui_bindings->txt("previous"));
-		$form->addCommandButton(self::COMMAND_CONFIRM, $this->gui_bindings->txt("confirm"));
-		$form->addCommandButton(self::COMMAND_ABORT, $this->gui_bindings->txt("abort"));
+		$form->addCommandButton(self::COMMAND_PREVIOUS, $this->ilias_bindings->txt("previous"));
+		$form->addCommandButton(self::COMMAND_CONFIRM, $this->ilias_bindings->txt("confirm"));
+		$form->addCommandButton(self::COMMAND_ABORT, $this->ilias_bindings->txt("abort"));
 
-		$form->setTitle($this->gui_bindings->txt("title"));
-		$form->setDescription($this->gui_bindings->txt("overview_description"));
+		$form->setTitle($this->ilias_bindings->txt("title"));
+		$form->setDescription($this->ilias_bindings->txt("overview_description"));
 
 		for($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
@@ -259,7 +259,7 @@ class Player {
 			}
 		}
 		$this->state_db->delete($state);
-		$this->gui_bindings->redirectToPreviousLocation($messages, true);
+		$this->ilias_bindings->redirectToPreviousLocation($messages, true);
 	}
 
 	/**

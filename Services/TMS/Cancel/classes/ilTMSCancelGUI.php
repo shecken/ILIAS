@@ -80,7 +80,7 @@ abstract class ilTMSCancelGUI  extends Booking\Player {
 		$crs_ref_id = (int)$_GET["crs_ref_id"];
 		$usr_id = (int)$_GET["usr_id"];
 
-		$gui_bindings = new Booking\GUIBindings
+		$ilias_bindings = new Booking\ILIASBindings
 			( $this->g_lng
 			, $this->g_ctrl
 			, $this->parent_gui
@@ -100,7 +100,7 @@ abstract class ilTMSCancelGUI  extends Booking\Player {
 			, $usr_id
 			);
 		$player = new Wizard\Player
-			( $gui_bindings
+			( $ilias_bindings
 			, $wizard
 			, $state_db
 			);

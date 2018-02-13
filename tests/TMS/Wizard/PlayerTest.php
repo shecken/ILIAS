@@ -19,10 +19,10 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 	static protected $count_setups = 0;
 
 	public function setUp() {
-		$this->gui_bindings = $this->createMock(Wizard\GUIBindings::class);
+		$this->ilias_bindings = $this->createMock(Wizard\ILIASBindings::class);
 		$this->wizard = $this->createMock(Wizard\Wizard::class);
 		$this->state_db = $this->createMock(Wizard\StateDB::class);
-		$this->player = new _WizardPlayer($this->gui_bindings, $this->wizard, $this->state_db);
+		$this->player = new _WizardPlayer($this->ilias_bindings, $this->wizard, $this->state_db);
 		$this->step_count = 0;
 		$this->form_count = 0;
 
@@ -103,12 +103,12 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn([$step1, $step2, $step3]);
 
 		$form = $this->createFormMock();
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("getForm")
 			->willReturn($form);
 
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->exactly(4))
 			->method("txt")
 			->withConsecutive(["previous"], ["next"], ["abort"], ["title"])
@@ -149,7 +149,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn([$step1, $step2, $step3]);
 
 		$form = $this->createFormMock();
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("getForm")
 			->willReturn($form);
@@ -216,7 +216,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn([$step1, $step2, $step3]);
 
 		$form = $this->createFormMock();
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("getForm")
 			->willReturn($form);
@@ -281,7 +281,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 
 		$form_step2 = $this->createFormMock();
 		$form_step3 = $this->createFormMock();
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->exactly(2))
 			->method("getForm")
 			->will($this->onConsecutiveCalls($form_step2, $form_step3));
@@ -360,7 +360,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn([$step1, $step2, $step3]);
 
 		$form = $this->createFormMock();
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("getForm")
 			->willReturn($form);
@@ -417,7 +417,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn([$step1, $step2, $step3]);
 
 		$form = $this->createFormMock();
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("getForm")
 			->willReturn($form);
@@ -452,7 +452,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 	public function test_process_last() {
 		$this->player = $this->getMockBuilder(_WizardPlayer::class)
 			->setMethods(["buildOverviewForm"])
-			->setConstructorArgs([$this->gui_bindings, $this->wizard, $this->state_db])
+			->setConstructorArgs([$this->ilias_bindings, $this->wizard, $this->state_db])
 			->getMock();
 
 		$step_number = 2;
@@ -473,7 +473,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 
 		$form_step3 = $this->createFormMock();
 		$overview_form= $this->createFormMock();
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("getForm")
 			->will($this->onConsecutiveCalls($form_step3, $overview_form));
@@ -550,7 +550,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn([$step1, $step2, $step3]);
 
 		$form= $this->createFormMock();
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->exactly(1))
 			->method("getForm")
 			->willReturn($form);
@@ -600,7 +600,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 					})]
 				);
 
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->exactly(5))
 			->method("txt")
 			->withConsecutive(["previous"], ["confirm"], ["abort"], ["title"], ["overview_description"])
@@ -622,8 +622,8 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 	public function test_process_start() {
 		$this->player = $this->getMockBuilder(_WizardPlayer::class)
 			->setMethods(["runStep"])
-			->setConstructorArgs([$this->gui_bindings, $this->wizard, $this->state_db])
-			->getMock($this->gui_bindings, $this->wizard, $this->state_db);
+			->setConstructorArgs([$this->ilias_bindings, $this->wizard, $this->state_db])
+			->getMock($this->ilias_bindings, $this->wizard, $this->state_db);
 
 		$state = new Wizard\State($this->wizard_id, 0);
 
@@ -664,13 +664,13 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("delete")
 			->willReturn($state);
 
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("txt")
 			->with("aborted")
 			->willReturn("lng_aborted");
 
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("redirectToPreviousLocation")
 			->with(["lng_aborted"], false);
@@ -725,7 +725,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("delete")
 			->willReturn($state);
 
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("redirectToPreviousLocation", true)
 			->with([$conf1, $conf3]);
@@ -767,7 +767,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->expects($this->never())
 			->method($this->anything());
 
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("getForm")
 			->willReturn($form_step1);
@@ -829,7 +829,7 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method($this->anything());
 
 		$form = $this->createFormMock();
-		$this->gui_bindings
+		$this->ilias_bindings
 			->expects($this->once())
 			->method("getForm")
 			->willReturn($form);

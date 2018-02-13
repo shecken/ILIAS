@@ -10,11 +10,11 @@ use ILIAS\TMS\Wizard;
 require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 
 /**
- * GUI Bindings for TMS-Booking process.
+ * ILIAS Bindings for TMS-Booking process.
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
-class GUIBindings extends Wizard\GUIBindings {
+class ILIASBindings extends Wizard\ILIASBindings {
 	/**
 	 * @var	ilLanguage
 	 */

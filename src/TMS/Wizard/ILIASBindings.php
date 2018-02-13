@@ -5,9 +5,9 @@
 namespace ILIAS\TMS\Wizard;
 
 /**
- * Defines the bindings the player needs to the ILIAS-GUIs.
+ * Defines the bindings to ILIAS the player requires.
  */
-interface GUIBindings {
+interface ILIASBindings {
 	/**
 	 * Get a form instance.
 	 *
