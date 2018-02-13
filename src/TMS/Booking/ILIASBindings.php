@@ -14,7 +14,7 @@ require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
-class ILIASBindings extends Wizard\ILIASBindings {
+class ILIASBindings implements Wizard\ILIASBindings {
 	/**
 	 * @var	ilLanguage
 	 */
