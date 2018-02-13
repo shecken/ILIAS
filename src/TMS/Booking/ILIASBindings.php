@@ -69,7 +69,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	/**
 	 * @inheritdocs
 	 */
-	protected function getForm() {
+	public function getForm() {
 		$form = new ilPropertyFormGUI();
 		$form->setFormAction($this->g_ctrl->getFormAction($this));
 		$form->setShowTopButtons(true);
@@ -79,7 +79,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	/**
 	 * @inheritdocs
 	 */
-	protected function txt($id) {
+	public function txt($id) {
 		if ($id === "abort") {
 			$id = "cancel";
 		}
@@ -107,7 +107,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	/**
 	 * @inheritdocs
 	 */
-	protected function redirectToPreviousLocation($messages, $success) {
+	public function redirectToPreviousLocation($messages, $success) {
 		if (count($messages)) {
 			$message = join("<br/>", $messages);
 			if ($success) {
