@@ -85,37 +85,64 @@ class Player {
 	 */
 	protected function runStep(State $state, array $post = null) {
 		$steps = $this->wizard->getSteps();
-		$step_number = $state->getStepNumber();
 
+		if ($content = $this->maybeRunOverview($state, count($steps))) {
+			assert('is_null($post)');
+			return $content;
+		}
+
+		$step_number = $state->getStepNumber();
 		if($step_number < 0) {
 			throw new \LogicException("It is impossible that the number of step is smaller than 0.");
 		}
 
-		if ($step_number == count($steps)) {
-			assert('is_null($post)');
+		$current_step = $steps[$step_number];
+		$form = $this->buildStepForm($step_number, $current_step);
+
+		if ($content = $this->maybeProcessUserInput($state, $step_number, $current_step, $form, $post)) {
+			return $content;
+		}
+
+		$this->maybeAddStepDataToForm($state, $step_number, $current_step, $form);
+
+		return $form->getHtml();
+	}
+
+	/**
+	 * Run the overview if the last step was already processed.
+	 *
+	 * @param	State	$state
+	 * @param	int		$num_steps
+	 * @return	null|string	returns null if overview was not run
+	 */
+	protected function maybeRunOverview(State $state, $num_steps) {
+		assert('is_int($num_steps)');
+		$step_number = $state->getStepNumber();
+		if ($step_number == $num_steps) {
 			return $this
 				->buildOverviewForm($state)
 				->getHtml();
 		}
+		return null;
+	}
 
-		$current_step = $steps[$step_number];
-
-		$form = $this->gui_bindings->getForm();
-		if($step_number > 0) {
-			$form->addCommandButton(self::COMMAND_PREVIOUS, $this->gui_bindings->txt("previous"));
-		}
-		$form->addCommandButton(self::COMMAND_NEXT, $this->gui_bindings->txt("next"));
-		$form->addCommandButton(self::COMMAND_ABORT, $this->gui_bindings->txt("abort"));
-
-		$form->setTitle($this->gui_bindings->txt("title"));
-		$current_step->appendToStepForm($form);
-
-		// TODO: factor me out
-		// This attempts to process the input of the user.
+	/**
+	 * Process user input, if there is any.
+	 * 
+	 * @param	State	$state
+	 * @param	int		$step_number
+	 * @param	Step	$step
+	 * @param	\ilPropertyFormGUI	$form
+	 * @param	array|null	$post
+	 * @return	null|string	returns null if input was processed 
+	 */
+	public function maybeProcessUserInput(State $state, $step_number, Step $step, \ilPropertyFormGUI $form, $post) {
+		assert('is_int($step_number)');
+		assert('is_array($post) || is_null($post)');
 		if ($post) {
 			$form->setValuesByArray($post);
 			if ($form->checkInput()) {
-				$data = $current_step->getData($form);
+				$data = $step->getData($form);
 				if ($data !== null) {
 					$state = $state
 						->withStepData($step_number, $data)
@@ -125,15 +152,24 @@ class Player {
 				}
 			}
 		}
+		return null;
+	}
 
-		// TODO: factor me out
-		// This shows previously inputed data.
+	/**
+	 * Displays previously inputted data, if there is any.
+	 *
+	 * @param	State	$state
+	 * @param	int		$step_number
+	 * @param	Step	$step
+	 * @param	\ilPropertyFormGUI $form
+	 * @return	void
+	 */
+	public function maybeAddStepDataToForm(State $state, $step_number, Step $step, \ilPropertyFormGUI $form) {
+		assert('is_int($step_number)');
 		if($state->hasStepData($step_number)) {
 			$step_data = $state->getStepData($step_number);
-			$current_step->addDataToForm($form, $step_data);
+			$step->addDataToForm($form, $step_data);
 		}
-
-		return $form->getHtml();
 	}
 
 	/**
@@ -148,6 +184,26 @@ class Player {
 		$step_number = $state->getStepNumber();
 
 		return $this->runStep($state);
+	}
+
+	/**
+	 * Build the form for a single step.
+	 *
+	 * @param int	$step_number
+	 * @param Step  $current_step
+	 * @return	\ilPropertyFormGUI
+	 */
+	protected function buildStepForm($step_number, Step $current_step) {
+		$form = $this->gui_bindings->getForm();
+		if($step_number > 0) {
+			$form->addCommandButton(self::COMMAND_PREVIOUS, $this->gui_bindings->txt("previous"));
+		}
+		$form->addCommandButton(self::COMMAND_NEXT, $this->gui_bindings->txt("next"));
+		$form->addCommandButton(self::COMMAND_ABORT, $this->gui_bindings->txt("abort"));
+
+		$form->setTitle($this->gui_bindings->txt("title"));
+		$current_step->appendToStepForm($form);
+		return $form;
 	}
 
 	/**
