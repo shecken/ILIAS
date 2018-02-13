@@ -100,7 +100,7 @@ abstract class ilTMSBookingGUI {
 		$wizard = new Booking\Wizard
 			( $DIC
 			, $this->getComponentClass()
-			, $this->g_user->getId()
+			, (int)$this->g_user->getId()
 			, $crs_ref_id
 			, $usr_id
 			);
