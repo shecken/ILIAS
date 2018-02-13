@@ -71,7 +71,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	 */
 	public function getForm() {
 		$form = new \ilPropertyFormGUI();
-		$form->setFormAction($this->g_ctrl->getFormAction($this));
+		$form->setFormAction($this->ctrl->getFormAction($this));
 		$form->setShowTopButtons(true);
 		return $form;
 	}
@@ -101,7 +101,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 		else if ($id == "overview_description") {
 			return $this->overview_description;
 		}
-		return $this->g_lng->txt($id);
+		return $this->lng->txt($id);
 	}
 
 	/**
