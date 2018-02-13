@@ -118,10 +118,10 @@ class ILIASBindings implements Wizard\ILIASBindings {
 		if (count($messages)) {
 			$message = join("<br/>", $messages);
 			if ($success) {
-				ilUtil::sendSuccess($message, true);
+				\ilUtil::sendSuccess($message, true);
 			}
 			else {
-				ilUtil::sendInfo($message, true);
+				\ilUtil::sendInfo($message, true);
 			}
 		}
 		$this->ctrl->redirect($this->parent_gui, $this->parent_cmd);
