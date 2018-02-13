@@ -3,7 +3,7 @@
 
 namespace ILIAS\TMS;
 
-use CaT\Ente\Component;
+use CaT\Ente;
 
 /**
  * This is an information about a agenda item.
