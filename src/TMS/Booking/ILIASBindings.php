@@ -26,7 +26,12 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	protected $ctrl;
 
 	/**
-	 * @var	mixed
+	 * @var object
+	 */
+	protected $gui;
+
+	/**
+	 * @var object
 	 */
 	protected $parent_gui;
 
@@ -50,7 +55,8 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	 */
 	protected $overview_description;
 
-	final public function __construct(\ilLanguage $lng, \ilCtrl $ctrl, $parent_gui, $parent_cmd, $player_title, $confirm_button_label, $overview_description) {
+	final public function __construct(\ilLanguage $lng, \ilCtrl $ctrl, $gui, $parent_gui, $parent_cmd, $player_title, $confirm_button_label, $overview_description) {
+		assert('is_object($gui)');
 		assert('is_object($parent_gui)');
 		assert('is_string($parent_cmd)');
 		assert('is_string($confirm_button_label)');
@@ -59,6 +65,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 		$this->lng = $lng;
 		$this->ctrl = $ctrl;
 		$this->lng->loadLanguageModule('tms');
+		$this->gui = $gui;
 		$this->parent_gui = $parent_gui;
 		$this->parent_cmd = $parent_cmd;
 		$this->player_title = $player_title;
@@ -71,7 +78,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	 */
 	public function getForm() {
 		$form = new \ilPropertyFormGUI();
-		$form->setFormAction($this->ctrl->getFormAction($this));
+		$form->setFormAction($this->ctrl->getFormAction($this->gui));
 		$form->setShowTopButtons(true);
 		return $form;
 	}

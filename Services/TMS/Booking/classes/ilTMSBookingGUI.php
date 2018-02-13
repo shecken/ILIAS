@@ -78,6 +78,7 @@ abstract class ilTMSBookingGUI {
 		$ilias_bindings = new Booking\ILIASBindings
 			( $this->g_lng
 			, $this->g_ctrl
+			, $this
 			, $this->parent_gui
 			, $this->parent_cmd
 			, $this->getPlayerTitle()
