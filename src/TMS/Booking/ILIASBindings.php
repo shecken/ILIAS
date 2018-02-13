@@ -70,7 +70,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	 * @inheritdocs
 	 */
 	public function getForm() {
-		$form = new ilPropertyFormGUI();
+		$form = new \ilPropertyFormGUI();
 		$form->setFormAction($this->g_ctrl->getFormAction($this));
 		$form->setShowTopButtons(true);
 		return $form;
