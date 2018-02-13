@@ -39,6 +39,7 @@ abstract class CourseActionImpl implements CourseAction {
 	/**
 	 * @param Ente\Entity 	$entity
 	 * @param \ilObject 	$owner
+	 * @param \ilObjUser 	$current_user will most probably be the global user.
 	 * @param int 	$priority
 	 * @param int[] 	$contexts
 	 */
