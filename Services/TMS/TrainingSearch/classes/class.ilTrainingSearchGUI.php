@@ -189,7 +189,7 @@ class ilTrainingSearchGUI {
 
 		$view_control = array($button1);
 		$view_control = $this->addSortationObjects($view_control);
-		if ($cmd === self::CMD_SHOW) {
+		if ($cmd === self::CMD_SHOW && $this->g_user->getId() == $this->search_user_id) {
 			$link = $this->g_ctrl->getLinkTarget($this, $cmd, "", false, false);
 			$pagination = $this->g_f->viewControl()->pagination()
 				->withTotalEntries(count($bookable_trainings))
