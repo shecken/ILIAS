@@ -19,6 +19,9 @@ class ilTrainingSearchGUI {
 	const CMD_QUICKFILTER = "quickFilter";
 	const CMD_SORT = "sort";
 
+	const PAGE_SIZE = 10;
+	const PAGINATION_PARAM = "pagination";
+
 	/**
 	 * @var ilTemplate
 	 */
@@ -181,9 +184,26 @@ class ilTrainingSearchGUI {
 		$modal = $this->prepareModal();
 		$button1 = $this->g_f->button()->standard($this->g_lng->txt('search'), '#')
 			->withOnClick($modal->getShowSignal());
+
+		$current_page = (int)$_GET[self::PAGINATION_PARAM];
+
 		$view_control = array($button1);
 		$view_control = $this->addSortationObjects($view_control);
-
+		if ($cmd === self::CMD_SHOW && $this->g_user->getId() == $this->search_user_id) {
+			$link = $this->g_ctrl->getLinkTarget($this, $cmd, "", false, false);
+			$pagination = $this->g_f->viewControl()->pagination()
+				->withTotalEntries(count($bookable_trainings))
+				->withPageSize(self::PAGE_SIZE)
+				->withCurrentPage($current_page)
+				->withTargetURL($link, self::PAGINATION_PARAM);
+			$offset = $pagination->getOffset();
+			$limit = self::PAGE_SIZE;
+			$view_control[] = $pagination;
+		}
+		else {
+			$offset = 0;
+			$limit = null;
+		}
 		$content = $this->g_renderer->render($modal).$table->render($view_control, $offset, $limit);
 
 		if(count($bookable_trainings) == 0) {
