@@ -94,7 +94,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 			$id = "btn_next";
 		}
 		else if ($id == "aborted") {
-			$id = "booking_aborted";
+			$id = "process_aborted";
 		}
 		else if ($id == "previous") {
 			$id = "btn_previous";

@@ -15985,7 +15985,7 @@ tms#:#duration#:#Zeitraum
 tms#:#not_min_member#:#Nur Trainings anzeigen, deren Mindestteilnehmerzahl noch nicht erreicht wurde.
 tms#:#filter#:#Erweiterte Suche
 tms#:#search#:#Suchen
-tms#:#booking_aborted#:#Ihr Buchungsvorgang wurde abgebrochen.
+tms#:#process_aborted#:#Der Vorgang wurde abgebrochen.
 common#:#cockpit#:#Cockpit
 tms#:#no_detail_infos#:#<strong><i>Es liegen keine weiteren Informationen zu diesem Angebot vor.</i></strong>
 tms#:#overview_header#:#Zusammenfassung
