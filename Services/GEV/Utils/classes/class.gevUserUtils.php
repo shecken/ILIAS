@@ -1336,7 +1336,9 @@ class gevUserUtils
 	*/
 	public function getCoursesWithFeedbackDoneAndStatusIn(array $stati)
 	{
-		$query = 	"SELECT crs_id FROM crs_pstatus_usr WHERE "
+		$query = 	"SELECT crs_id FROM crs_pstatus_usr "
+					." JOIN object_data ON obj_id = crs_id "
+					." WHERE "
 					."	".$this->db->in('status', $stati, false, 'integer')
 					."	AND user_id = ".$this->db->quote($this->user_id, "integer");
 		$res = $this->db->query($query);
