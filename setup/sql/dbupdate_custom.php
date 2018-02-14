@@ -6508,5 +6508,5 @@ $ilDB->addIndex('adv_md_values_text', array('field_id'), 'tfi');
 global $ilDB;
 $where = array("topic" => array("text", "AdcoCard"));
 $field = array("topic" => array("text", "AdvoCard"));
-$ilDB->update('dct_building_block', 'topic', $where);
+$ilDB->update('dct_building_block', $field, $where);
 ?>
