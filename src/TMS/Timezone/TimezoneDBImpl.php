@@ -12,6 +12,10 @@ class TimezoneDBImpl implements TimezoneDB{
 	 * @var array<string, DateTime[]>
 	 */
 	static protected $default_times = array(
+		"2017" => array(
+			"start_summer" => "2017-03-26",
+			"start_winter" => "2017-10-29"
+		),
 		"2018" => array(
 			"start_summer" => "2018-03-25",
 			"start_winter" => "2018-10-28"
