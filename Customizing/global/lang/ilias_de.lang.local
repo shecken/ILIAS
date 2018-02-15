@@ -644,7 +644,7 @@ gev#:#new_bill_saved#:#Neue Rechung angelegt.
 gev#:#bill_data_complete#:#Rechungsdaten komplett
 gev#:#gev_period#:#Zeitraum:
 gev#:#gev_personal_data#:#Personendaten
-gev#:#gev_points#:#Punkte
+gev#:#gev_points#:#WB-Punkte
 gev#:#gev_wb_time#:#WB-Zeit
 gev#:#gev_dec_training_wb_time_sum#:#WB-Zeit gesamt
 gev#:#gev_dec_building_block_is_idd_relevant#:#IDD anrechenbar
@@ -1850,3 +1850,5 @@ mass#:#mass_save_amend#:#Änderung speichern
 orgu#:#edit_ext_id#:#ADE-Nummer
 orgu#:#ext_id#:#ADE-Nummer
 gev#:#bol_link_label_cockpit#:#BOL
+gev#:#xacc_copy#:#Kostenerfassung kopieren
+gev#:#xfbk_copy#:#Sternefeedback kopieren
