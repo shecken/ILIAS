@@ -1850,3 +1850,5 @@ mass#:#mass_save_amend#:#Änderung speichern
 orgu#:#edit_ext_id#:#ADE-Nummer
 orgu#:#ext_id#:#ADE-Nummer
 gev#:#bol_link_label_cockpit#:#BOL
+gev#:#xacc_copy#:#Kostenerfassung kopieren
+gev#:#xfbk_copy#:#Sternefeedback kopieren
