@@ -34,7 +34,7 @@ class gevBuildingBlockUtils
 						   ,"Gewerbe" => "Gewerbe"
 						   ,"Technische Versicherung" => "Technische Versicherung"
 						   ,"Transportversicherung" => "Transportversicherung"
-						   ,"AdcoCard" => "AdvcoCard"
+						   ,"AdcoCard" => "AdvoCard"
 						   ,"Highlights Privatkunden" => "Highlights Privatkunden"
 						   ,"myGenerali" => "myGenerali"
 						   ,"Heilwesen" => "Heilwesen"

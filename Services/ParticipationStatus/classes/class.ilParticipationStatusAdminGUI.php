@@ -568,19 +568,7 @@ class ilParticipationStatusAdminGUI
 			$this->returnToList();
 			// gev-patch end
 		}
-				
-		$helper = ilParticipationStatusHelper::getInstance($this->getCourse());
-		if($helper->getCourseNeedsAttendanceList() &&
-			!$this->getParticipationStatus()->getAttendanceList())
-		{
-			ilUtil::sendFailure($lng->txt("ptst_admin_finalize_need_attendance_list"), true);
-			// gev-patch start
-			//$ilCtrl->redirect($this, "listStatus");
-			$this->returnToList();
-			// gev-patch end
-		}
-		
-		
+
 		// confirmation 
 		// gev-patch start
 		/*
