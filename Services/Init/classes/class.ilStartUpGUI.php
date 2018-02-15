@@ -370,6 +370,10 @@ class ilStartUpGUI
 		$this->ctrl->setTargetScript("gev_registration.php");
 		$tpl->setVariable('AGENT_REGISTRATION_LINK',$this->ctrl->getLinkTargetByClass(array('gevregistrationgui'),'startAgentRegistration'));
 		$tpl->setVariable('NA_REGISTRATION_LINK',$this->ctrl->getLinkTargetByClass(array('gevregistrationgui'),'startNARegistration'));
+
+		// GEV-Patch start gev_3607
+		$this->ctrl->setTargetScript("pwassist.php");
+		// GEV-Patch end gev_3607
 		$tpl->setVariable('PASSWORD_RECOVERY_LINK',$this->ctrl->getLinkTargetByClass("ilpasswordassistancegui", ""));
 
 		$this->ctrl->setTargetScript("ilias.php");
