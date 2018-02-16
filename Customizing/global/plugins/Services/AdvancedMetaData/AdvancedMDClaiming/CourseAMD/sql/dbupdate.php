@@ -859,3 +859,27 @@ $options = array("Präsenztraining"
 
 $amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_TYPE, $options);
 ?>
+
+<#32>
+<?php
+require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+
+$amdutils = gevAMDUtils::getInstance();
+
+$amdutils->addAMDField("Bewertung", "ASTD-Kategorie", gevSettings::CRS_AMD_ASTD_CATEGORY, "", true, null, ilAdvancedMDFieldDefinition::TYPE_SELECT);
+
+$options = array(
+	"Leadership",
+	"Managerial",
+	"Regulatory",
+	"Technical - Business",
+	"Technical - Non Business",
+	"Change Management",
+	"Sales/Product",
+	"Other"
+);
+
+$amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_ASTD_CATEGORY, $options);
+?>
