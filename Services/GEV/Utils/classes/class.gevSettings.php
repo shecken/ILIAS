@@ -144,6 +144,9 @@ class gevSettings
 	//Lernzeit
 	const CRS_AMD_LEARNING_TIME = "crs_amd_learning_time";
 
+	// Typen für ASTD-Kategorien
+	const CRS_AMD_ASTD_CATEGORY = "crs_amd_astd_category";
+
 	// Crs User PState
 	const CRS_USR_STATE_SUCCESS			= "erfolgreich";
 	const CRS_USR_STATE_SUCCESS_VAL		= "2";
