@@ -807,6 +807,11 @@ class gevCourseUtils
 		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_DBV_HOT_TOPIC, $a_topic);
 	}
 
+	public function getASTDCatogery()
+	{
+		$this->amd->getField($this->crs_id, gevSettings::CRS_AMD_ASTD_CATEGORY);
+	}
+
 	public function getFee()
 	{
 		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_FEE);
