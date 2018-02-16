@@ -11,7 +11,6 @@
 
 
 require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
-require_once("Modules/Course/classes/class.ilObjCourse.php");
 
 class ilCourseHistorizingHelper 
 {
@@ -52,7 +51,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getTemplateTitleOf(ilObjCourse $course)
+	public static function getTemplateTitleOf($course)
 	{
 		return gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getTemplateTitle();
@@ -65,7 +64,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getTypeOf(ilObjCourse $course)
+	public static function getTypeOf($course)
 	{
 		return gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getType();
@@ -78,7 +77,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return array
 	 */
-	public static function getTopicOf(ilObjCourse $course)
+	public static function getTopicOf($course)
 	{
 		$topic =  gevCourseUtils::getInstanceByObjOrId($course)
 								->getTopics();
@@ -97,7 +96,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return ilDate
 	 */
-	public static function getBeginOf(ilObjCourse $course)
+	public static function getBeginOf($course)
 	{
 		return gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getStartDate();
@@ -110,7 +109,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return ilDate
 	 */
-	public static function getEndOf(ilObjCourse $course)
+	public static function getEndOf($course)
 	{
 		return gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getEndDate();
@@ -123,7 +122,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return integer
 	 */
-	public static function getHoursOf(ilObjCourse $course)
+	public static function getHoursOf($course)
 	{
 		// count hours in schedule 
 		return gevCourseUtils::getInstanceByObjOrId($course)
@@ -138,7 +137,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getVenueOf(ilObjCourse $course)
+	public static function getVenueOf($course)
 	{
 		$venue = gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getVenueTitle();
@@ -156,7 +155,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getAccomodationOf(ilObjCourse $course)
+	public static function getAccomodationOf($course)
 	{
 		return gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getAccomodationTitle();
@@ -170,7 +169,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getVenueFreeTextOf(ilObjCourse $course)
+	public static function getVenueFreeTextOf($course)
 	{
 		$ret = gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getVenueFreeText();
@@ -185,7 +184,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getProviderOf(ilObjCourse $course)
+	public static function getProviderOf($course)
 	{
 		return gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getProviderTitle();
@@ -198,7 +197,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getMaxCreditPointsOf(ilObjCourse $course)
+	public static function getMaxCreditPointsOf($course)
 	{
 		return gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getCreditPoints();
@@ -211,7 +210,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getFeeOf(ilObjCourse $course)
+	public static function getFeeOf($course)
 	{
 		return gevCourseUtils::getInstanceByObjOrId($course)
 							 ->getFee();
@@ -224,7 +223,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getTutorOf(ilObjCourse $course)
+	public static function getTutorOf($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 
@@ -243,7 +242,7 @@ class ilCourseHistorizingHelper
 	 *
 	 * @return string
 	 */
-	public static function getIsTemplate(ilObjCourse $course)
+	public static function getIsTemplate($course)
 	{
 		if (gevCourseUtils::getInstanceByObjOrId($course)
 						  ->isTemplate()) {
@@ -262,24 +261,24 @@ class ilCourseHistorizingHelper
 	 * @return string
 	 */
 
-	public static function getWBDTopicOf(ilObjCourse $course)
+	public static function getWBDTopicOf($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getWBDTopic();
 	}
 
-	public static function getEduProgramOf(ilObjCourse $course)
+	public static function getEduProgramOf($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getEduProgramm();
 	}
 
-	public static function isOnline(ilObjCourse $course)
+	public static function isOnline($course)
 	{
 		return $course->isActivated() ? 1 : 0;
 	}
 
-	public static function getDeadlineDataOf(ilObjCourse $course)
+	public static function getDeadlineDataOf($course)
 	{
 
 		require_once("Services/GEV/Mailing/classes/class.gevCrsAdditionalMailSettings.php");
@@ -300,13 +299,13 @@ class ilCourseHistorizingHelper
 	}
 
 
-	public static function getVirtualClassroomType(ilObjCourse $course)
+	public static function getVirtualClassroomType($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getVirtualClassType();
 	}
 
-	public static function getDCTType(ilObjCourse $course)
+	public static function getDCTType($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		if($utils->isDecentralTraining()) {
@@ -315,7 +314,7 @@ class ilCourseHistorizingHelper
 		return;
 	}
 
-	public static function getTemplateObjId(ilObjCourse $course)
+	public static function getTemplateObjId($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		$template_ref_id = $utils->getTemplateRefId();
@@ -326,37 +325,37 @@ class ilCourseHistorizingHelper
 		return;
 	}
 
-	public static function getIsCancelled(ilObjCourse $course)
+	public static function getIsCancelled($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getIsCancelled() ? 'Ja' : 'Nein';
 	}
 
-	public static function getSizeWaitingList(ilObjCourse $course)
+	public static function getSizeWaitingList($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getWaitingListLength();
 	}
 
-	public static function getMaxParticipants(ilObjCourse $course)
+	public static function getMaxParticipants($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getMaxParticipants();
 	}
 
-	public static function getWaitinglistActive(ilObjCourse $course)
+	public static function getWaitinglistActive($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getWaitingListActive() ? 'Ja' : 'Nein';
 	}
 	
-	public static function getMinParticipants(ilObjCourse $course)
+	public static function getMinParticipants($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getMinParticipants();
 	}
 
-	public static function getASTDCategory(ilObjCourse $course)
+	public static function getASTDCategory($course)
 	{
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getASTDCategory();
