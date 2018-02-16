@@ -341,4 +341,9 @@ class ilCourseHistorizingHelper
 		$utils = gevCourseUtils::getInstanceByObjOrId($course);
 		return $utils->getMinParticipants();
 	}
+
+	public static function getASTDCatogery($course) {
+		$utils = gevCourseUtils::getInstanceByObjOrId($course);
+		return $utils->getASTDCatogery();
+	}
 }
