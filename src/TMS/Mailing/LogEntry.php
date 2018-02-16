@@ -74,9 +74,9 @@ class LogEntry {
 	 * @param string  	$event
 	 * @param int|null  	$crs_ref_id
 	 * @param string  	$template_ident
-	 * @param int  	$usr_id
-	 * @param string  	$usr_login
-	 * @param string  	$usr_name
+	 * @param int |null 	$usr_id
+	 * @param string | null  	$usr_login
+	 * @param string | null  	$usr_name
 	 * @param string  	$usr_mail
 	 * @param string  	$subject
 	 * @param string  	$msg
@@ -91,9 +91,9 @@ class LogEntry {
 		assert('is_string($event)');
 		assert('is_int($crs_ref_id) || $crs_ref_id===null');
 		assert('is_string($template_ident)');
-		assert('is_int($usr_id)');
-		assert('is_string($usr_login)');
-		assert('is_string($usr_name)');
+		assert('is_int($usr_id) || $usr_id===null');
+		assert('is_string($usr_login) || $usr_login===null');
+		assert('is_string($usr_name) || $usr_name===null');
 		assert('is_string($usr_mail)');
 		assert('is_string($subject)');
 		assert('is_string($msg)');

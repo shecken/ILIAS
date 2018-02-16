@@ -11,7 +11,7 @@ require_once('./Services/User/classes/class.ilObjUser.php');
 class ilTMSMailRecipient implements Mailing\Recipient {
 
 	/**
-	 * @var int
+	 * @var int | null
 	 */
 	protected $usr_id;
 
