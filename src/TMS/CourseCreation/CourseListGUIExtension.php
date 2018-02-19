@@ -34,7 +34,7 @@ trait CourseListGUIExtension {
 	}
 
 	protected function getCreateCourseCommand() {
-		return "create_course";
+		return "create_course_from_template";
 	}
 
 	protected function getCreateCourseCommandLink() {
