@@ -40,7 +40,9 @@ trait CourseListGUIExtension {
 	}
 
 	protected function getCreateCourseCommandLngVar() {
-		return "abort";
+		assert('!is_null($this->lng)');
+		$this->lng->loadLanguageModule("tms");
+		return "create_course_from_template";
 	}
 
 	protected function getCreateCourseAccessGranted() {

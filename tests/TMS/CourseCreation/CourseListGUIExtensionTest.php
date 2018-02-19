@@ -2,6 +2,9 @@
 
 use ILIAS\TMS\CourseCreation\CourseListGUIExtension;
 
+require_once(__DIR__."/../../../Services/Language/classes/class.ilLanguage.php");
+require_once(__DIR__."/../../../Services/UICore/classes/class.ilTemplate.php");
+
 class  _TMS_CourseCreation_CourseListGUIExtension_Parent {
 	public $commands = [];
 	public function getCommands() {
@@ -33,9 +36,32 @@ class _TMS_CourseCreation_CourseListGUIExtension extends _TMS_CourseCreation_Cou
 	}
 }
 
+class _TMS_CourseCreation_CourseListGUIExtension_Bare {
+	use CourseListGUIExtension;
+
+	public function _getCreateCourseCommand() {
+		return $this->getCreateCourseCommand();
+	}
+
+	public function _getCreateCourseCommandLink() {
+		return $this->getCreateCourseCommandLink();
+	}
+
+	public function _getCreateCourseCommandLngVar() {
+		return $this->getCreateCourseCommandLngVar();
+	}
+
+	public function _getCreateCourseAccessGranted() {
+		return $this->getCreateCourseAccessGranted();
+	}
+}
+
 class TMS_CourseCreation_CourseListGUIExtensionTest extends PHPUnit_Framework_TestCase {
+	const CREATE_COURSE_ACTION_LNG_VAR = "create_course_from_template";
+
 	public function setUp() {
 		$this->gui_fake = new _TMS_CourseCreation_CourseListGUIExtension();
+		$this->bare = new _TMS_CourseCreation_CourseListGUIExtension_Bare();
 	}
 
 	public function test_enhances_getCommands() {
@@ -59,5 +85,18 @@ class TMS_CourseCreation_CourseListGUIExtensionTest extends PHPUnit_Framework_Te
 			, "default" => null
 			]];
 		$this->assertEquals($expected, $commands);
+	}
+
+	public function test_getCreateCourseCommandLngVar() {
+		$this->bare->lng = $this->createMock(\ilLanguage::class);
+
+		$this->bare->lng
+			->expects($this->once())
+			->method("loadLanguageModule")
+			->with("tms");
+
+		$id = $this->bare->_getCreateCourseCommandLngVar();
+
+		$this->assertEquals(self::CREATE_COURSE_ACTION_LNG_VAR, $id);
 	}
 }
