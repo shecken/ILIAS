@@ -27,11 +27,6 @@ class _TMS_CourseCreation_CourseListGUIExtension extends _TMS_CourseCreation_Cou
 		return $this->create_course_lng_var;
 	}
 
-	public $create_course_txt = "CREATE_COURSE_TXT";
-	protected function getCreateCourseCommandTxt() {
-		return $this->create_course_txt;
-	}
-
 	public $create_course_access_granted = true;
 	protected function getCreateCourseAccessGranted() {
 		return $this->create_course_access_granted;
@@ -53,12 +48,11 @@ class TMS_CourseCreation_CourseListGUIExtensionTest extends PHPUnit_Framework_Te
 	public function test_inserts_create_command_in_getCommands() {
 		$commands = $this->gui_fake->getCommands();
 		$expected = 
-			[["permission" => "copy"
-			, "cmd" => $this->gui_fake->create_course_cmd
+			[["cmd" => $this->gui_fake->create_course_cmd
 			, "link" => $this->gui_fake->create_course_cmd_link
 			, "frame" => ""
 			, "lang_var" => $this->gui_fake->create_course_lng_var
-			, "txt" => $this->gui_fake->create_course_txt
+			, "txt" => null
 			, "granted" => $this->gui_fake->create_course_access_granted
 			, "access_info" => null
 			, "img" => null

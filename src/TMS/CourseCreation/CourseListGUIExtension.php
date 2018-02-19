@@ -18,12 +18,11 @@ trait CourseListGUIExtension {
 	public function getCommands() {
 		$commands = parent::getCommands();
 		$commands[] = 
-			[ "permission" => "copy"
-			, "cmd" => $this->getCreateCourseCommand()
+			[ "cmd" => $this->getCreateCourseCommand()
 			, "link" => $this->getCreateCourseCommandLink()
 			, "frame" => ""
 			, "lang_var" => $this->getCreateCourseCommandLngVar()
-			, "txt" => $this->getCreateCourseCommandTxt()
+			, "txt" => null
 			, "granted" => $this->getCreateCourseAccessGranted()
 			, "access_info" => null
 			, "img" => null
@@ -33,17 +32,18 @@ trait CourseListGUIExtension {
 	}
 
 	protected function getCreateCourseCommand() {
+		return "create_course";
 	}
 
 	protected function getCreateCourseCommandLink() {
+		return "http://www.google.de";
 	}
 
 	protected function getCreateCourseCommandLngVar() {
-	}
-
-	protected function getCreateCourseCommandTxt() {
+		return "abort";
 	}
 
 	protected function getCreateCourseAccessGranted() {
+		return true;
 	}
 }
