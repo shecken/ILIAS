@@ -14,6 +14,9 @@ include_once "Services/Object/classes/class.ilObjectListGUI.php";
  */
 class ilObjCourseListGUI extends ilObjectListGUI
 {
+	// cat-tms-patch start
+	use \ILIAS\TMS\CourseCreation\CourseListGUIExtension;
+	// cat-tms-patch end 
 
 	/**
 	* initialisation
