@@ -1228,7 +1228,6 @@ class gevDecentralTrainingGUI
 			$orgu_selection->setValue($a_form_values["orgu_id"]);
 		}
 		$orgu_selection->setRecursive(false);
-		$orgu_selection->setRequired(true);
 		$orgu_selection->setDisabled($a_form_values["no_changes_allowed"]);
 		$form->addItem($orgu_selection);
 
