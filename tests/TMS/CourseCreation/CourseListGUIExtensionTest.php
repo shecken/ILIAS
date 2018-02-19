@@ -87,6 +87,12 @@ class TMS_CourseCreation_CourseListGUIExtensionTest extends PHPUnit_Framework_Te
 		$this->assertEquals($expected, $commands);
 	}
 
+	public function test_does_not_insert_command_if_no_access() {
+		$this->gui_fake->create_course_access_granted = false;
+		$commands = $this->gui_fake->getCommands();
+		$this->assertCount(0, $commands);
+	}
+
 	public function test_getCreateCourseCommandLngVar() {
 		$this->bare->lng = $this->createMock(\ilLanguage::class);
 

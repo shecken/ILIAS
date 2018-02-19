@@ -17,17 +17,19 @@ trait CourseListGUIExtension {
 	 */
 	public function getCommands() {
 		$commands = parent::getCommands();
-		$commands[] = 
-			[ "cmd" => $this->getCreateCourseCommand()
-			, "link" => $this->getCreateCourseCommandLink()
-			, "frame" => ""
-			, "lang_var" => $this->getCreateCourseCommandLngVar()
-			, "txt" => null
-			, "granted" => $this->getCreateCourseAccessGranted()
-			, "access_info" => null
-			, "img" => null
-			, "default" => null
-			];
+		if ($this->getCreateCourseAccessGranted()) {
+			$commands[] =
+				[ "cmd" => $this->getCreateCourseCommand()
+				, "link" => $this->getCreateCourseCommandLink()
+				, "frame" => ""
+				, "lang_var" => $this->getCreateCourseCommandLngVar()
+				, "txt" => null
+				, "granted" => $this->getCreateCourseAccessGranted()
+				, "access_info" => null
+				, "img" => null
+				, "default" => null
+				];
+		}
 		return $commands;
 	}
 
