@@ -83,9 +83,9 @@ class UserOrguUpdater
 							$this->ugrm->deassignByUsrId($superior_global, $usr_id);
 							$this->log->createEntry(
 								'deassigning user from superior',
-								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR]
-								,'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID]
-								,'orgu_title' => $orgu_title]
+								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR],
+								'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID],
+								'orgu_title' => $orgu_title]
 							);
 						}
 						break;
@@ -97,9 +97,9 @@ class UserOrguUpdater
 							$this->ugrm->deassignByUsrId($employee_global, $usr_id);
 							$this->log->createEntry(
 								'deassigning user from employee',
-								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR]
-								,'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID]
-								,'orgu_title' => $orgu_title]
+								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR],
+								'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID],
+								'orgu_title' => $orgu_title]
 							);
 						}
 						break;
@@ -177,9 +177,9 @@ class UserOrguUpdater
 							$this->ugrm->assignByUsrId($superior_global, $a_usr_id);
 							$this->log->createEntry(
 								'assigning user to superior',
-								['pnr' => $pnrs_by_usr_id[$usr_id]
-								,'orgu_id' => $import_id
-								,'orgu_title' => $orgu_title]
+								['pnr' => $pnrs_by_usr_id[$usr_id],
+								'orgu_id' => $import_id,
+								'orgu_title' => $orgu_title]
 							);
 						}
 						break;
@@ -190,9 +190,9 @@ class UserOrguUpdater
 							$this->ugrm->assignByUsrId($employee_global, $a_usr_id);
 							$this->log->createEntry(
 								'assigning user to employee',
-								['pnr' => $pnrs_by_usr_id[$usr_id]
-								,'orgu_id' => $import_id
-								,'orgu_title' => $orgu_title]
+								['pnr' => $pnrs_by_usr_id[$usr_id],
+								'orgu_id' => $import_id,
+								'orgu_title' => $orgu_title]
 							);
 						}
 						break;

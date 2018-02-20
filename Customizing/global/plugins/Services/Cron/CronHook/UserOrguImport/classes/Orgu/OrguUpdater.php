@@ -100,8 +100,7 @@ class OrguUpdater
 
 		$this->log->createEntry(
 			implode(',', $log_msg),
-			['orgu_id' => $properties[OrguAMDWrapper::PROP_ID]
-			,
+			['orgu_id' => $properties[OrguAMDWrapper::PROP_ID],
 			'orgu_title' => $properties[OrguAMDWrapper::PROP_TITLE]]
 		);
 	}
@@ -146,8 +145,7 @@ class OrguUpdater
 				$properties = $orgu->properties();
 				$this->log->createEntry(
 					'inserting new orgu under '.$parent_id,
-					['orgu_id' => $properties[OrguAMDWrapper::PROP_ID]
-					,
+					['orgu_id' => $properties[OrguAMDWrapper::PROP_ID],
 					'orgu_title' => $properties[OrguAMDWrapper::PROP_TITLE]]
 				);
 			} else {
@@ -208,8 +206,7 @@ class OrguUpdater
 			$properties = $orgu->properties();
 			$this->log->createEntry(
 				'removing orgu: ',
-				['orgu_id' => $properties[OrguAMDWrapper::PROP_ID]
-				,
+				['orgu_id' => $properties[OrguAMDWrapper::PROP_ID],
 				'orgu_title' => $properties[OrguAMDWrapper::PROP_TITLE]]
 			);
 		}
