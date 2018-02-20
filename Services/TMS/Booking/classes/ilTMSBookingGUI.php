@@ -313,10 +313,34 @@ abstract class ilTMSBookingGUI {
 				return false;
 			}
 
+			if ($booked_template_id == $template_id
+				&& !$this->isTemplateCourse($template_id)
+			) {
+				return false;
+			}
+
 			return true;
 		});
 	}
 
+	/**
+	 * Check the template course id is course with copy settings below
+	 *
+	 * @param int 	$crs_id
+	 *
+	 * @return bool
+	 */
+	protected function isTemplateCourse($crs_id) {
+		if(!\ilPluginAdmin::isPluginActive("xcps")) {
+			return false;
+		}
+
+		$query = "SELECT COUNT('obj_id') AS cnt FROM xcps_tpl_crs WHERE crs_id = ".$this->g_db->quote($crs_id, "integer");
+		$res = $this->g_db->query($query);
+		$row = $this->g_db->fetchAssoc($res);
+
+		return (int)$row["cnt"] > 0;
+	}
 
 	/**
 	 * Check user has passed course
