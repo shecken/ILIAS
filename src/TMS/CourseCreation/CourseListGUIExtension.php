@@ -38,7 +38,7 @@ trait CourseListGUIExtension {
 	}
 
 	protected function getCreateCourseCommandLink() {
-		return "http://www.google.de";
+		return $this->ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilCourseCreationGUI"], $this->getCreateCourseCommand());
 	}
 
 	protected function getCreateCourseCommandLngVar() {
