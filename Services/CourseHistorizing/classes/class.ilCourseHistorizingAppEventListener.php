@@ -150,7 +150,8 @@ class ilCourseHistorizingAppEventListener
 			'waitinglist_active'					=> self::$ilCourseHistorizingHelper->getWaitinglistActive($parameter),
 			'max_participants'					=> self::$ilCourseHistorizingHelper->getMaxParticipants($parameter),
 			'min_participants'					=> self::$ilCourseHistorizingHelper->getMinParticipants($parameter),
-			'accomodation'						=> self::$ilCourseHistorizingHelper->getAccomodationOf($parameter)
+			'accomodation'						=> self::$ilCourseHistorizingHelper->getAccomodationOf($parameter),
+			'astd_category'						=> self::$ilCourseHistorizingHelper->getASTDCategory($parameter)
 		);
 
 

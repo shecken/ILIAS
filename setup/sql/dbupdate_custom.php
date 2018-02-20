@@ -6510,3 +6510,15 @@ $where = array("topic" => array("text", "AdcoCard"));
 $field = array("topic" => array("text", "AdvoCard"));
 $ilDB->update('dct_building_block', $field, $where);
 ?>
+
+<#281>
+<?php
+global $ilDB;
+if (!$ilDB->tableColumnExists('hist_course', 'astd_category')) {
+	$ilDB->addTableColumn('hist_course', 'astd_category', array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => false
+		));
+}
+?>

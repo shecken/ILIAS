@@ -130,7 +130,8 @@ class ilCourseHistorizing extends ilHistorizingStorage {
 			'waitinglist_active'	=> 'text',
 			'max_participants'		=> 'integer',
 			'min_participants'		=> 'integer',
-			'accomodation'			=> 'text'
+			'accomodation'			=> 'text',
+			'astd_category'			=> 'text'
 		);
 
 		return $definition;
