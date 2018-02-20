@@ -48,6 +48,6 @@ trait CourseListGUIExtension {
 	}
 
 	protected function getCreateCourseAccessGranted() {
-		return true;
+		return ilObjectCourseAccess::_checkAccess($this->getCreateCourseCommand(), "copy", $this->ref_id, $this->obj_id);
 	}
 }

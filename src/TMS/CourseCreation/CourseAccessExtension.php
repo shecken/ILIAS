@@ -9,5 +9,13 @@ namespace ILIAS\TMS\CourseCreation;
  */
 trait CourseAccessExtension {
 	function _checkAccessExtension($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id) {
+		// TODO: implement me properly
+		// Check if CourseCreation-plugin exists
+		// Check if course is a template
+		// Check if user may copy course
+		// Check if user can see course creation plugin
+		if ($a_cmd === "create_course_from_template") {
+			return true;
+		}
 	}
 }
