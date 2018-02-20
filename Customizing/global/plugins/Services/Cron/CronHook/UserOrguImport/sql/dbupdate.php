@@ -71,7 +71,6 @@ if (!$db->tableExists('xuoi_uoi_log')) {
 				'entry' => ['type' => 'text', 'length' => 768, 'notnull' => true],
 				'timestamp' => ['type' => 'integer', 'length' => 4, 'notnull' => true],
 				'orgu_id' => ['type' => 'text', 'length' => 64],
-				'aob' => ['type' => 'text', 'length' => 64],
 				'pnr' => ['type' => 'text', 'length' => 64]
 			];
 		$db->createTable('xuoi_uoi_log', $columns);
@@ -162,4 +161,13 @@ $fields = [	 'Kennzeichen KU' => [ gevSettings::USR_UDF_FLAG_KU,UDF_TYPE_TEXT,$p
 			,'Vorgesetzter' => [gevSettings::USR_UDF_SUPERIOR_OF_USR ,UDF_TYPE_TEXT,$permissions,null]
 			];
 gevUDFUtils::createUDFFields($fields);
+?>
+
+<#14>
+<?php
+global $DIC;
+$db = $DIC['ilDB'];
+if (!$db->tableColumnExists('xuoi_uoi_log', 'orgu_title')) {
+	$db->addTableColumn('xuoi_uoi_log', 'orgu_title', ['type' => 'text', 'length' => 128, 'notnull' => false]);
+}
 ?>
