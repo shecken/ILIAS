@@ -114,7 +114,7 @@ class OrguLocator
 	{
 		assert('is_int($ref_id)');
 		$orgu = new \ilObjOrgUnit($ref_id);
-		$prop = [OrguAMDWrapper::PROP_ID => $orgu->getImportId()
+		$prop = [OrguAMDWrapper::PROP_ID => (string)$orgu->getImportId()
 				,OrguAMDWrapper::PROP_TITLE => $orgu->getTitle()];
 		return $prop;
 	}
