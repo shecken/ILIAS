@@ -156,9 +156,6 @@ class gevCrsMailData extends ilMailData {
 					$val = strip_tags($val);
 				}
 				break;
-			case "ID":
-				$val = $this->crs_utils->getId();
-				break;
 			case "STARTDATUM":
 				$val = $this->crs_utils->getFormattedStartDate();
 				break;
