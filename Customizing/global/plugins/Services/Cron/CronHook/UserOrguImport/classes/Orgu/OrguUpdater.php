@@ -98,7 +98,12 @@ class OrguUpdater
 		$il_orgu = $this->updateOrguData(new \ilObjOrgUnit($orgu->refId()), $properties);
 		$il_orgu->update();
 
-		$this->log->createEntry(implode(',', $log_msg), ['orgu_id' => $properties[OrguAMDWrapper::PROP_ID]]);
+		$this->log->createEntry(
+			implode(',', $log_msg),
+			['orgu_id' => $properties[OrguAMDWrapper::PROP_ID]
+			,
+			'orgu_title' => $properties[OrguAMDWrapper::PROP_TITLE]]
+		);
 	}
 
 	protected function updateOrguData(\ilObjOrgUnit $il_orgu, array $data)
@@ -138,8 +143,13 @@ class OrguUpdater
 
 				$this->irm->setNewOperationsForRoleIdAtRefId($sup_role_id, $orgu_ref_id, self::$desired_operations_superiors);
 				$this->irm->setNewOperationsForRoleIdAtRefId($emp_role_id, $orgu_ref_id, self::$desired_operations_employees);
-
-				$this->log->createEntry('inserting new orgu under '.$parent_id, ['orgu_id' => $orgu->properties()[OrguAMDWrapper::PROP_ID]]);
+				$properties = $orgu->properties();
+				$this->log->createEntry(
+					'inserting new orgu under '.$parent_id,
+					['orgu_id' => $properties[OrguAMDWrapper::PROP_ID]
+					,
+					'orgu_title' => $properties[OrguAMDWrapper::PROP_TITLE]]
+				);
 			} else {
 				$cnt++;
 				if ($cnt < $max_count) {
@@ -156,7 +166,7 @@ class OrguUpdater
 		assert('is_string($parent_id)');
 		$props = $orgu->properties();
 		$this->ec->addError('impossible to insert orgu with properties '.Base\Log\DatabaseLog::arrayToString($props)
-							.' under '.$parent_id, ['orgu_id' => $props[OrguAMDWrapper::PROP_ID]]);
+							.' under '.$parent_id);
 	}
 
 	protected function insertUnder(Orgu\AdjacentOrgUnit $orgu, IliasOrgu $parent)
@@ -195,6 +205,13 @@ class OrguUpdater
 					$to_delete_rec[] = (int)$c_ref_id;
 				}
 			}
+			$properties = $orgu->properties();
+			$this->log->createEntry(
+				'removing orgu: ',
+				['orgu_id' => $properties[OrguAMDWrapper::PROP_ID]
+				,
+				'orgu_title' => $properties[OrguAMDWrapper::PROP_TITLE]]
+			);
 		}
 		if (count($to_delete_rec) > 0) {
 			$to_delete = [];
