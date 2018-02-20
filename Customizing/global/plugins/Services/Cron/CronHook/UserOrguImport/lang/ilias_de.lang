@@ -45,7 +45,7 @@ orgu_config#:#Einstellungen für Organisationseinheiten
 fs_config#:#Konfiguration des Dateisystems
 udf_configuration#:#Einstellungen für UDF-Felder
 xuoi_usr_flag_ku#:#Kennzeichen KU
-xuoi_usr_orgus#:#Organisationseoinheit SAP
+xuoi_usr_orgus#:#Organisationseinheit SAP
 xoui_usr_pnr#:#Personalnummer
 xoui_usr_cost_centre#:#Kostenstelle
 xoui_usr_const_centre_long#:#Bezeichnung Kostenstelle
@@ -78,7 +78,9 @@ fs_configuration#:#Konfiguration des Dateisystems
 deployment_path#:#Pfad zur Bereitstellung der Importdateien
 saved#:#Einstellungen gespeichert.
 functions_saved#:#Rolleneinstellungen gespeichert
-exit_user_config#:#Einstellungen für ausgtretende Benutzer
+exit_user_config#:#Einstellungen für ausgetretene Benutzer
 superior_global_role#:#Globale Rolle für Vorgesetzte
 employee_global_role#:#Globale Rolle für Mitarbeiter
-exit_global_role#:#Globale Rolle für austretende Benutzer
+exit_global_role#:#Globale Rolle für ausgetretene Benutzer
+import_root#:#Referenz-Id des Import-Wurzelknotens
+import_exit#:#Referenz-Id der Organisationseinheit für ausgetretene Benutzer
