@@ -6522,3 +6522,35 @@ if (!$ilDB->tableColumnExists('hist_course', 'astd_category')) {
 		));
 }
 ?>
+
+<#282>
+<?php
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::maybeInitClientIni();
+ilCustomInstaller::maybeInitPluginAdmin();
+ilCustomInstaller::maybeInitObjDefinition();
+ilCustomInstaller::maybeInitAppEventHandler();
+ilCustomInstaller::maybeInitTree();
+ilCustomInstaller::maybeInitRBAC();
+ilCustomInstaller::maybeInitObjDataCache();
+ilCustomInstaller::maybeInitUserToRoot();
+ilCustomInstaller::maybeInitSettings();
+
+global $ilDB;
+require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+require_once("Services/GEV/WBD/classes/class.gevWBD.php");
+
+$query = "SELECT usr_id FROM usr_data WHERE usr_id NOT IN (6, 13)";
+$result = $ilDB->query($query);
+
+while($row = $ilDB->fetchAssoc($result)) {
+	$util = gevUserUtils::getInstance((int)$row['usr_id']);
+	$wbd = gevWBD::getInstance((int)$row['usr_id']);
+
+	if($util->hasRoleIn(array("VP"))) {
+		$wbd->setWBDTPType(gevWBD::WBD_EDU_PROVIDER);
+		continue;
+	}
+	$wbd->setWBDTPType(gevWBD::WBD_NO_SERVICE);
+}
+?>
