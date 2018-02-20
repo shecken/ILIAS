@@ -16,7 +16,8 @@ class DatabaseLog implements Log
 	protected static $properties =
 	[
 		'orgu_id',
-		'pnr'
+		'pnr',
+		'orgu_title'
 	];
 
 

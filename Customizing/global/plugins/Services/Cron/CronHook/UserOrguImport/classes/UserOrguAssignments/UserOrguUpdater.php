@@ -72,6 +72,7 @@ class UserOrguUpdater
 
 		foreach ($assignments as $ref_id => $roles) {
 			$orgu = new \ilObjOrgUnit($ref_id);
+			$orgu_title = $orgu->getTitle();
 			foreach ($roles as $role => $usr_ass_s) {
 				switch ($role) {
 					case UserOrguAssignment::ILIAS_SUPERIOR:
@@ -82,8 +83,9 @@ class UserOrguUpdater
 							$this->ugrm->deassignByUsrId($superior_global, $usr_id);
 							$this->log->createEntry(
 								'deassigning user from superior',
-								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR]
-								,'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID]]
+								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR],
+								'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID],
+								'orgu_title' => $orgu_title]
 							);
 						}
 						break;
@@ -95,8 +97,9 @@ class UserOrguUpdater
 							$this->ugrm->deassignByUsrId($employee_global, $usr_id);
 							$this->log->createEntry(
 								'deassigning user from employee',
-								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR]
-								,'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID]]
+								['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR],
+								'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID],
+								'orgu_title' => $orgu_title]
 							);
 						}
 						break;
@@ -117,6 +120,8 @@ class UserOrguUpdater
 	{
 		$orgus = $this->uol->getOrguRefIdByImportIds();
 		$usr_ids_by_pnr = $this->uol->geUserIdsByPNR();
+		$pnrs_by_usr_id = array_flip($usr_ids_by_pnr);
+		$import_ids_by_orgu_ref = array_flip($orgus);
 
 		$assignments = [];
 		foreach ($ass_s as $ass) {
@@ -140,11 +145,9 @@ class UserOrguUpdater
 			}
 			if ($properties[UserOrguAMDWrapper::PROP_ROLE] === UserOrguIdentifier::ROLE_SUPERIOR) {
 				$ilias_role = UserOrguAssignment::ILIAS_SUPERIOR;
-				$log_role = 'superior';
 			}
 			if ($properties[UserOrguAMDWrapper::PROP_ROLE] === UserOrguIdentifier::ROLE_EMPLOYEE) {
 				$ilias_role = UserOrguAssignment::ILIAS_EMPLOYEE;
-				$log_role = 'employee';
 			}
 			if ($ilias_role === null) {
 				$this->ec->addError('User assignment: indefinite role '.$properties[UserOrguAMDWrapper::PROP_ROLE]);
@@ -157,16 +160,14 @@ class UserOrguUpdater
 				$assignments[$org_ref_id][$ilias_role] = [];
 			}
 			$assignments[$org_ref_id][$ilias_role][] = $usr_id;
-			$this->log->createEntry(
-				'assigning user to '.$log_role,
-				['pnr' => $properties[Base\User\UdfWrapper::PROP_PNR]
-				,'orgu_id' => $properties[Base\Orgu\OrguAMDWrapper::PROP_ID]]
-			);
 		}
+
 		$superior_global = $this->uofc->superiorGlobalRoleId();
 		$employee_global = $this->uofc->employeeGlobalRoleId();
 		foreach ($assignments as $ref_id => $roles) {
 			$orgu = new \ilObjOrgUnit($ref_id);
+			$orgu_title = $orgu->getTitle();
+			$import_id = $import_ids_by_orgu_ref[$ref_id];
 			foreach ($roles as $role => $usr_ids) {
 				switch ($role) {
 					case UserOrguAssignment::ILIAS_SUPERIOR:
@@ -174,6 +175,12 @@ class UserOrguUpdater
 						foreach ($usr_ids as $usr_id) {
 							$a_usr_id = (int)$usr_id;
 							$this->ugrm->assignByUsrId($superior_global, $a_usr_id);
+							$this->log->createEntry(
+								'assigning user to superior',
+								['pnr' => $pnrs_by_usr_id[$usr_id],
+								'orgu_id' => $import_id,
+								'orgu_title' => $orgu_title]
+							);
 						}
 						break;
 					case UserOrguAssignment::ILIAS_EMPLOYEE:
@@ -181,6 +188,12 @@ class UserOrguUpdater
 						foreach ($usr_ids as $usr_id) {
 							$a_usr_id = (int)$usr_id;
 							$this->ugrm->assignByUsrId($employee_global, $a_usr_id);
+							$this->log->createEntry(
+								'assigning user to employee',
+								['pnr' => $pnrs_by_usr_id[$usr_id],
+								'orgu_id' => $import_id,
+								'orgu_title' => $orgu_title]
+							);
 						}
 						break;
 					default:

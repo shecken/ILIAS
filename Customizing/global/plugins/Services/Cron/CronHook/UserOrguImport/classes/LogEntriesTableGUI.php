@@ -38,7 +38,7 @@ class LogEntriesTableGUI extends \ilTable2GUI
 		$this->addColumn('', '');
 		$this->addColumn($a_plugin->txt('log_table_orgu_id'), 'orgu_id');
 		$this->addColumn($a_plugin->txt('log_table_pnr'), 'pnr');
-		$this->addColumn($a_plugin->txt('log_table_aob'), 'aob');
+		$this->addColumn($a_plugin->txt('log_table_orgu_title'), 'orgu_title');
 		$this->addColumn($a_plugin->txt('log_table_timestamp'), Log\DatabaseLog::ROW_TIMESTAMP);
 		$this->addColumn($a_plugin->txt('log_table_entry'), Log\DatabaseLog::ROW_ENTRY);
 	}
@@ -47,7 +47,7 @@ class LogEntriesTableGUI extends \ilTable2GUI
 	{
 		$this->tpl->setVariable('ORGU_ID', $set['orgu_id']);
 		$this->tpl->setVariable('PNR', $set['pnr']);
-		$this->tpl->setVariable('AOB', $set['aob']);
+		$this->tpl->setVariable('ORGU_TITLE', $set['orgu_title']);
 		$this->tpl->setVariable('TIMESTAMP', date('Y-m-d H:i:s', $set[Log\DatabaseLog::ROW_TIMESTAMP]));
 		$this->tpl->setVariable('ENTRY', $set[Log\DatabaseLog::ROW_ENTRY]);
 	}

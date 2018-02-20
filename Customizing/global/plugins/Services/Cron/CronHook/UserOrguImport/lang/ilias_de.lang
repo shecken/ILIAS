@@ -31,12 +31,12 @@ view_log#:#Log Durchsuchen
 filter_log_entries#:#Logeinträge Suchen
 filter_log_orgu_id#:#Org.Einheit - Id
 filter_log_pnr#:#PNR
-filter_log_aob#:#AOB
+filter_log_orgu_title#:#Titel der Organisationseinheit
 filter_log_show_entries#:#Suchen
 no_filter_value_warning#:#Bitte geben sie mindestens einen der Parameter an.
 log_table_orgu_id#:#Org.Einheit - Id
 log_table_pnr#:#PNR
-log_table_aob#:#AOB
+log_table_orgu_title#:#Titel der Organisationseinheit
 log_table_timestamp#:#Zeitpunkt
 log_table_entry#:#Eintrag
 log_table_title#:#Einträge
