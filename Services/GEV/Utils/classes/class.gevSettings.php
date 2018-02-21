@@ -360,7 +360,6 @@ class gevSettings
 		,'Kennzeichen KU'
 		,'Organisationseinheit SAP'
 		,'Personalnummer'
-
 		,'Funktion'
 		,'inaktiv von'
 		,'inaktiv bis'
