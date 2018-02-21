@@ -83,17 +83,19 @@ class ilUserOrguImportJob extends ilCronJob
 	public function run()
 	{
 		$cron_result = new ilCronJobResult();
-
-		ilCronManager::ping($this->getId());
-		$this->updateUsers();
-		ilCronManager::ping($this->getId());
-		$this->updateOrgus();
-		ilCronManager::ping($this->getId());
-		$this->updateUserOrgus();
-		ilCronManager::ping($this->getId());
-		$this->exitUsers();
-		ilCronManager::ping($this->getId());
-
+		try {
+			ilCronManager::ping($this->getId());
+			$this->updateUsers();
+			ilCronManager::ping($this->getId());
+			$this->updateOrgus();
+			ilCronManager::ping($this->getId());
+			$this->updateUserOrgus();
+			ilCronManager::ping($this->getId());
+			$this->exitUsers();
+			ilCronManager::ping($this->getId());
+		} catch (\Exception $e) {
+			$this->ec->addError('A fatal error occured, aborting import:'.$e->getMessage());
+		}
 		$this->error_notification->notifyAboutErrors($this->ec);
 		$cron_result->setStatus(ilCronJobResult::STATUS_OK);
 
@@ -108,6 +110,8 @@ class ilUserOrguImportJob extends ilCronJob
 			$ilias_users = $u_f->UserLocator()->relevantUsers();
 			$diff = $u_f->Difference($ilias_users, $excel_users);
 			$this->f->UserFactory()->UserUpdater()->applyDiff($diff);
+		} else {
+			$this->ec->addError('No User data provided. User import skipped.');
 		}
 	}
 
@@ -119,6 +123,8 @@ class ilUserOrguImportJob extends ilCronJob
 			$ilias_orgus = $o_f->OrguLocator()->getRelevantOrgus();
 			$diff = $o_f->Difference($ilias_orgus, $excel_orgus);
 			$this->f->OrguFactory()->OrguUpdater()->applyDiff($diff);
+		} else {
+			$this->ec->addError('No Orgu data provided. Orgu import skipped.');
 		}
 	}
 
@@ -131,6 +137,8 @@ class ilUserOrguImportJob extends ilCronJob
 			$ilias_user_orgu = $uo_f->UserOrguLocator()->getAssignments();
 			$diff = $uo_f->Difference($ilias_user_orgu, $excel_user_orgu);
 			$uo_f->UserOrguUpdater()->applyDiff($diff);
+		} else {
+			$this->ec->addError('No Assignment data provided. Assignment import skipped.');
 		}
 	}
 
