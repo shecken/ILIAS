@@ -6,9 +6,9 @@ class UserOrguConfigTest extends PHPUnit_Framework_TestCase
 {
 	public function test_init()
 	{
-		$cfg =  new UserOrgu\UserOrguConfig();
-		$this->assertEquals([],$cfg->superiorFunctions());
-		$this->assertEquals([],$cfg->employeeFunctions());
+		$cfg =  new UserOrgu\UserOrguFunctionConfig();
+		$this->assertEquals([], $cfg->superiorFunctions());
+		$this->assertEquals([], $cfg->employeeFunctions());
 		return $cfg;
 	}
 
@@ -20,8 +20,8 @@ class UserOrguConfigTest extends PHPUnit_Framework_TestCase
 		$cfg = $this->test_init();
 		$cfg->addSuperiorFunction('fun1');
 		$cfg->addSuperiorFunction('fun2');
-		$this->assertEquals(['fun1','fun2'],$cfg->superiorFunctions());
-		$this->assertEquals(UserOrgu\UserOrguConfig::SUPERIOR_ROLE, $cfg->roleForFunction('fun2'));
+		$this->assertEquals(['fun1','fun2'], $cfg->superiorFunctions());
+		$this->assertEquals(UserOrgu\UserOrguFunctionConfig::SUPERIOR_ROLE, $cfg->roleForFunction('fun2'));
 		$this->assertNull($cfg->roleForFunction('foo'));
 	}
 
@@ -33,8 +33,8 @@ class UserOrguConfigTest extends PHPUnit_Framework_TestCase
 		$cfg = $this->test_init();
 		$cfg->addEmployeeFunction('fun1');
 		$cfg->addEmployeeFunction('fun2');
-		$this->assertEquals(['fun1','fun2'],$cfg->employeeFunctions());
-		$this->assertEquals(UserOrgu\UserOrguConfig::EMPLOYEE_ROLE, $cfg->roleForFunction('fun1'));
+		$this->assertEquals(['fun1','fun2'], $cfg->employeeFunctions());
+		$this->assertEquals(UserOrgu\UserOrguFunctionConfig::EMPLOYEE_ROLE, $cfg->roleForFunction('fun1'));
 		$this->assertNull($cfg->roleForFunction('foo'));
 	}
 
@@ -52,7 +52,6 @@ class UserOrguConfigTest extends PHPUnit_Framework_TestCase
 			$cfg->addSuperiorFunction('fun2');
 			$this->assertFalse('has not thrown');
 		} catch (UserOrgu\Exception $e) {
-
 		}
 	}
 
@@ -70,7 +69,6 @@ class UserOrguConfigTest extends PHPUnit_Framework_TestCase
 			$cfg->addEmployeeFunction('fun2');
 			$this->assertFalse('has not thrown');
 		} catch (UserOrgu\Exception $e) {
-			
 		}
 	}
 
@@ -81,15 +79,14 @@ class UserOrguConfigTest extends PHPUnit_Framework_TestCase
 	{
 		$superiors = ['sa','sb','sc'];
 		$employees = ['ea','eb','ec'];
-		$cfg = UserOrgu\UserOrguConfig::getInstanceByArrays($superiors,$employees);
-		$this->assertEquals($superiors,$cfg->superiorFunctions());
-		$this->assertEquals($employees,$cfg->employeeFunctions());
+		$cfg = UserOrgu\UserOrguFunctionConfig::getInstanceByArrays($superiors, $employees);
+		$this->assertEquals($superiors, $cfg->superiorFunctions());
+		$this->assertEquals($employees, $cfg->employeeFunctions());
 		foreach ($superiors as $value) {
-			$this->assertEquals(UserOrgu\UserOrguConfig::SUPERIOR_ROLE, $cfg->roleForFunction($value));
+			$this->assertEquals(UserOrgu\UserOrguFunctionConfig::SUPERIOR_ROLE, $cfg->roleForFunction($value));
 		}
 		foreach ($employees as $value) {
-			$this->assertEquals(UserOrgu\UserOrguConfig::EMPLOYEE_ROLE, $cfg->roleForFunction($value));
+			$this->assertEquals(UserOrgu\UserOrguFunctionConfig::EMPLOYEE_ROLE, $cfg->roleForFunction($value));
 		}
-
 	}
 }
