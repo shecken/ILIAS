@@ -1,19 +1,20 @@
 <?php
 
-/* Copyright (c) 2017 Richard Klees <richard.klees@concepts-and-training.de> */
+/* Copyright (c) 2018 Richard Klees <richard.klees@concepts-and-training.de> */
 
-namespace ILIAS\TMS\Booking;
+namespace ILIAS\TMS\CourseCreation;
 
 require_once(__DIR__."/../../../Services/Form/classes/class.ilFormSectionHeaderGUI.php");
 
 use CaT\Ente\ILIAS\ilHandlerObjectHelper;
 
 /**
- * Displays the steps for the booking of one spefic course in a row, gathers user
- * input and afterwards completes the booking.
+ * Displays the steps for the creation of a course.
  */
 class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	use ilHandlerObjectHelper;
+
+	const ID_BASE = "CourseCreation";
 
 	/**
 	 * @var	\ArrayAccess
@@ -21,24 +22,14 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	protected $dic;
 
 	/**
-	 * @var	string
-	 */
-	protected $component_class;
-
-	/**
 	 * @var int
 	 */
-	protected $acting_user_id;
+	protected $user_id;
 
 	/**
 	 * @var	int
 	 */
 	protected $crs_ref_id;
-
-	/**
-	 * @var	int
-	 */
-	protected $target_user_id;
 
 	/**
 	 * @var	ProcessStateDB
@@ -52,18 +43,17 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @param	int	$acting_user_id			the user that performs the wizard 
 	 * @param	int	$crs_ref_id 			course that should get booked
 	 * @param	int	$target_user_id			the user the booking is made for
+	 * @param	int	$timestamp				timestamp the process was started
 	 */
-	public function __construct($dic, $component_class, $acting_user_id, $crs_ref_id, $target_user_id) {
+	public function __construct($dic, $user_id, $crs_ref_id, $timestamp) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
-		assert('is_string($component_class)');
-		assert('is_int($acting_user_id)');
+		assert('is_int($user_id)');
 		assert('is_int($crs_ref_id)');
-		assert('is_int($target_user_id)');
+		assert('is_int($timestamp)');
 		$this->dic = $dic;
-		$this->component_class = $component_class;
-		$this->acting_user_id = $acting_user_id;
+		$this->user_id = $user_id;
 		$this->crs_ref_id = $crs_ref_id;
-		$this->target_user_id = $target_user_id;
+		$this->timestamp = $timestamp;
 	}
 
 	/**
@@ -81,20 +71,23 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	}
 
 	/**
-	 * @inheritdoc
+	 * Get the user that wants to create the course.
+	 *
+	 * @return	int
 	 */
 	protected function getUserId() {
-		return $this->target_user_id;
+		return $this->user_id;
 	}
 
 	/**
-	 * Get the class of component player is searching steps
+	 * Get the timestamp the user started the process.
 	 *
-	 * @return string
+	 * @return	int
 	 */
-	protected function getComponentClass() {
-		return $this->component_class;
+	protected function getTimestamp() {
+		return $this->timestamp;
 	}
+
 
 	/**
 	 * Get the steps that are applicable for a given user.
@@ -102,9 +95,10 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @return	Step[]
 	 */
 	protected function getApplicableSteps() {
-		$steps = $this->getComponentsOfType($this->getComponentClass());
+		$steps = $this->getComponentsOfType(Step::class);
 		return array_values(array_filter($steps, function($step) {
-			return $step->isApplicableFor($this->getUserId());
+			$step->setUserId($this->getUserId());
+			return $step->isApplicable();
 		}));
 	}
 
@@ -134,18 +128,16 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @inheritdoc
 	 */
 	public function getId() {
-		return $this->component_class
-			."_".$this->acting_user_id
+		return self::ID_BASE
+			."_".$this->user_id
 			."_".$this->crs_ref_id
-			."_".$this->target_user_id;
+			."_".$this->timestamp;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function getSteps() {
-		return array_map(function($s) {
-			return new StepAdapter($s, $this->crs_ref_id, $this->target_user_id);
-		}, $this->getSortedSteps());
+		return $this->getSortedSteps();
 	}
 } 

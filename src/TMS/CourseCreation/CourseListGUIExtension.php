@@ -38,6 +38,7 @@ trait CourseListGUIExtension {
 	}
 
 	protected function getCreateCourseCommandLink() {
+		$this->ctrl->setParameterByClass("ilCourseCreationGUI", "ref_id", $this->ref_id);
 		return $this->ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilCourseCreationGUI"], $this->getCreateCourseCommand());
 	}
 
@@ -48,6 +49,6 @@ trait CourseListGUIExtension {
 	}
 
 	protected function getCreateCourseAccessGranted() {
-		return ilObjectCourseAccess::_checkAccess($this->getCreateCourseCommand(), "copy", $this->ref_id, $this->obj_id);
+		return \ilObjCourseAccess::_checkAccess($this->getCreateCourseCommand(), "copy", $this->ref_id, $this->obj_id);
 	}
 }
