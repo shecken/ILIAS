@@ -38,6 +38,12 @@ class Request {
 	 */
 	protected $finished_ts;
 
+	/**
+ 	 * @var int		$id
+ 	 * @var int		$user_id
+ 	 * @var string	$session_id
+ 	 * @var int		$crs_obj_id
+	 */
 	public function __construct($id, $user_id, $session_id, $crs_obj_id, \DateTime $requested_ts, \DateTime $finished_ts = null) {
 		assert('is_int($id)');
 		assert('is_int($user_id)');
