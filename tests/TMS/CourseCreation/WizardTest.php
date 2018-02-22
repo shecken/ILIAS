@@ -16,6 +16,9 @@ class _CourseCreationWizard extends CourseCreation\Wizard{
 	public function _getUserId() {
 		return $this->getUserId();
 	}
+	public function _getSessionId() {
+		return $this->getSessionId();
+	}
 	public function _getTimestamp() {
 		return $this->getTimestamp();
 	}
@@ -46,31 +49,44 @@ class TMS_CourseCreation_WizardTest extends PHPUnit_Framework_TestCase {
 	public function test_getId() {
 		$ts = 9087;
 		$wizard_id = "CourseCreation_1_2_$ts";
-		$wizard = new _CourseCreationWizard([], 1, 2, $ts);
+		$request_builder = $this->createMock(CourseCreation\RequestBuilder::class);
+		$wizard = new _CourseCreationWizard([], $request_builder, 1, "", 2, $ts);
 		$this->assertSame($wizard_id, $wizard->getId());
 	}
 
 	public function test_getDIC() {
 		$dic = ["my" => "container"];
-		$wizard = new _CourseCreationWizard($dic, 0, 0, 0);
+		$request_builder = $this->createMock(CourseCreation\RequestBuilder::class);
+		$wizard = new _CourseCreationWizard($dic, $request_builder, 0, "", 0, 0);
 		$this->assertSame($dic, $wizard->_getDIC());
 	}
 
 	public function test_getUserId() {
 		$user_id = 42;
-		$wizard = new _CourseCreationWizard([], $user_id, 0, 0);
+		$request_builder = $this->createMock(CourseCreation\RequestBuilder::class);
+		$wizard = new _CourseCreationWizard([], $request_builder, $user_id, "", 0, 0);
 		$this->assertEquals($user_id, $wizard->_getUserId());
+	}
+
+
+	public function test_getSessionId() {
+		$session_id = "Koeln 2018";
+		$request_builder = $this->createMock(CourseCreation\RequestBuilder::class);
+		$wizard = new _CourseCreationWizard([], $request_builder, 0, $session_id, 0, 0);
+		$this->assertEquals($session_id, $wizard->_getSessionId());
 	}
 
 	public function test_getEntityRefId() {
 		$crs_id = 23;
-		$wizard = new _CourseCreationWizard([], 0, $crs_id, 0);
+		$request_builder = $this->createMock(CourseCreation\RequestBuilder::class);
+		$wizard = new _CourseCreationWizard([], $request_builder, 0, "", $crs_id, 0);
 		$this->assertEquals($crs_id, $wizard->_getEntityRefId());
 	}
 
 	public function test_getTimestamp() {
 		$timestamp = 1337;
-		$wizard = new _CourseCreationWizard([], 0, 0, $timestamp);
+		$request_builder = $this->createMock(CourseCreation\RequestBuilder::class);
+		$wizard = new _CourseCreationWizard([], $request_builder, 0, "", 0, $timestamp);
 		$this->assertEquals($timestamp, $wizard->_getTimestamp());
 	}
 
@@ -161,12 +177,14 @@ class TMS_CourseCreation_WizardTest extends PHPUnit_Framework_TestCase {
 
 
 	public function test_getSteps() {
-		$user_id = 1;
+		$user_id = 42;
+		$session_id = "Duesseldorf 2019";
 		$crs_ref_id = 2;
 
-		$wizard = $this->getMockBuilder(_CourseCreationWizard::class)
+		$request_builder = $this->createMock(CourseCreation\RequestBuilder::class);
+		$wizard = $this->getMockBuilder(CourseCreation\Wizard::class)
 			->setMethods(["getSortedSteps"])
-			->setConstructorArgs([[], $user_id, $crs_ref_id, 0])
+			->setConstructorArgs([[], $request_builder, $user_id, $session_id, $crs_ref_id, 0])
 			->getMock();
 
 		$component1 = $this->createStepMock();
@@ -177,6 +195,30 @@ class TMS_CourseCreation_WizardTest extends PHPUnit_Framework_TestCase {
 			->expects($this->once())
 			->method("getSortedSteps")
 			->willReturn([$component1, $component2, $component3]);
+
+		$request_builder
+			->expects($this->once())
+			->method("setUserIdAndSessionId")
+			->with($user_id, $session_id)
+			->willReturn($request_builder);
+		$request_builder
+			->expects($this->once())
+			->method("setCourseRefId")
+			->with($crs_ref_id)
+			->willReturn($request_builder);
+
+		$component1
+			->expects($this->once())
+			->method("setRequestBuilder")
+			->with($request_builder);
+		$component2
+			->expects($this->once())
+			->method("setRequestBuilder")
+			->with($request_builder);
+		$component3
+			->expects($this->once())
+			->method("setRequestBuilder")
+			->with($request_builder);
 
 		$steps = $wizard->getSteps();
 

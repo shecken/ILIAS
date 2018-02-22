@@ -35,5 +35,12 @@ interface Step extends Component, WStep {
 	 * @return	void
 	 */
 	public function setUserId($user_id);
+
+	/**
+	 * Set the request builder to be used when processing the step.
+	 *
+	 * @return void
+	 */
+	public function setRequestBuilder(RequestBuilder $request_builder);
 }
 
