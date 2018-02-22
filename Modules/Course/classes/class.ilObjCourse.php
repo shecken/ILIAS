@@ -1080,8 +1080,6 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 	 */
 	protected function afterCloneForTMS(\ilObjCourse $new_course) {
 		require_once("Services/Component/classes/class.ilPluginAdmin.php");
-		global $DIC;
-		$log = $DIC->logger()->root();
 		$src_id = (int)$this->getId();
 		$target_id = (int)$new_course->getId();
 		$this->insertCopyMappingInfoToDB($new_course);
