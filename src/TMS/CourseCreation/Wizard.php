@@ -166,4 +166,11 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 			return $s;
 		}, $this->getSortedSteps());
 	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function finish() {
+	}
 } 
