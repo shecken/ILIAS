@@ -37,7 +37,11 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	protected $process_db;
 
 	/**
-	 * @param	string $wizard_id
+	 * @var RequestBuilder
+	 */
+	protected $request_builder;
+
+	/**
 	 * @param	\ArrayAccess|array $dic
 	 * @param	string	$component_class	the user that performs the wizard 
 	 * @param	int	$acting_user_id			the user that performs the wizard 
@@ -45,11 +49,12 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @param	int	$target_user_id			the user the booking is made for
 	 * @param	int	$timestamp				timestamp the process was started
 	 */
-	public function __construct($dic, $user_id, $crs_ref_id, $timestamp) {
+	public function __construct($dic, RequestBuilder $request_builder, $user_id, $crs_ref_id, $timestamp) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_int($user_id)');
 		assert('is_int($crs_ref_id)');
 		assert('is_int($timestamp)');
+		$this->request_builder = $request_builder;
 		$this->dic = $dic;
 		$this->user_id = $user_id;
 		$this->crs_ref_id = $crs_ref_id;
@@ -138,6 +143,9 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @inheritdoc
 	 */
 	public function getSteps() {
-		return $this->getSortedSteps();
+		return array_map(function($s) {
+			$s->setRequestBuilder($this->request_builder);
+			return $s;
+		}, $this->getSortedSteps());
 	}
 } 
