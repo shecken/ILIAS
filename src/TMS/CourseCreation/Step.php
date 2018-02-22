@@ -34,6 +34,6 @@ interface Step extends Component, WStep {
 	 * @param	int	$usr_id
 	 * @return	void
 	 */
-	public function setUserId();
+	public function setUserId($user_id);
 }
 
