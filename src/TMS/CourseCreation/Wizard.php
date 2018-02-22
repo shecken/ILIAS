@@ -110,7 +110,7 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	protected function getSortedSteps() {
 		$steps = $this->getApplicableSteps();
 		if (count($steps) === 0) {
-			throw new \LogicException("No booking steps defined.");
+			throw new \LogicException("No course creation steps defined.");
 		}
 		usort($steps, function (Step $a, Step $b) {
 			if ($a->getPriority() < $b->getPriority()) {

@@ -1,5 +1,7 @@
 <?php
 
+/* Copyright (c) 2018 Richard Klees <richard.klees@concepts-and-training.de> */
+
 use ILIAS\TMS\CourseCreation\CourseListGUIExtension;
 
 require_once(__DIR__."/../../../Services/Language/classes/class.ilLanguage.php");

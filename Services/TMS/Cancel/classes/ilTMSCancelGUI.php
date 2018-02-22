@@ -4,6 +4,7 @@
  */
 
 use ILIAS\TMS\Booking;
+use ILIAS\TMS\Wizard;
 
 require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 
@@ -12,7 +13,7 @@ require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
-abstract class ilTMSCancelGUI  extends Booking\Player {
+abstract class ilTMSCancelGUI  extends Wizard\Player {
 	use ILIAS\TMS\MyUsersHelper;
 
 	/**
