@@ -45,19 +45,23 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @param	\ArrayAccess|array $dic
 	 * @param	\RequestBuilder	$request_builder
 	 * @param	string	$component_class	the user that performs the wizard 
-	 * @param	int	$acting_user_id			the user that performs the wizard 
+	 * @param	int	$user_id				the user that performs the wizard
+	 * @param	string	$session_id			session of said user
 	 * @param	int	$crs_ref_id 			course that should get booked
 	 * @param	int	$target_user_id			the user the booking is made for
 	 * @param	int	$timestamp				timestamp the process was started
+	 *
 	 */
-	public function __construct($dic, RequestBuilder $request_builder, $user_id, $crs_ref_id, $timestamp) {
+	public function __construct($dic, RequestBuilder $request_builder, $user_id, $session_id, $crs_ref_id, $timestamp) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_int($user_id)');
+		assert('is_string($session_id)');
 		assert('is_int($crs_ref_id)');
 		assert('is_int($timestamp)');
 		$this->request_builder = $request_builder;
 		$this->dic = $dic;
 		$this->user_id = $user_id;
+		$this->session_id = $session_id;
 		$this->crs_ref_id = $crs_ref_id;
 		$this->timestamp = $timestamp;
 	}
@@ -86,6 +90,15 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	}
 
 	/**
+	 * Get the session id of the user that wants to create the course.
+	 *
+	 * @return string
+	 */
+	protected function getSessionId() {
+		return $this->session_id;
+	}
+
+	/**
 	 * Get the timestamp the user started the process.
 	 *
 	 * @return	int
@@ -93,7 +106,6 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	protected function getTimestamp() {
 		return $this->timestamp;
 	}
-
 
 	/**
 	 * Get the steps that are applicable for a given user.
@@ -144,6 +156,11 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @inheritdoc
 	 */
 	public function getSteps() {
+		$this->request_builder->setUserIdAndSessionId(
+			$this->getUserId(),
+			$this->getSessionId()
+		);
+		$this->request_builder->setCourseRefId($this->getEntityRefId());
 		return array_map(function($s) {
 			$s->setRequestBuilder($this->request_builder);
 			return $s;
