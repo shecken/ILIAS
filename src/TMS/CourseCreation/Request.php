@@ -26,7 +26,7 @@ class Request {
 	/**
 	 * @var	int
 	 */
-	protected $crs_obj_id;
+	protected $crs_ref_id;
 
 	/**
 	 * @var \DateTime 
@@ -42,17 +42,17 @@ class Request {
  	 * @var int		$id
  	 * @var int		$user_id
  	 * @var string	$session_id
- 	 * @var int		$crs_obj_id
+ 	 * @var int		$crs_ref_id
 	 */
-	public function __construct($id, $user_id, $session_id, $crs_obj_id, \DateTime $requested_ts, \DateTime $finished_ts = null) {
+	public function __construct($id, $user_id, $session_id, $crs_ref_id, \DateTime $requested_ts, \DateTime $finished_ts = null) {
 		assert('is_int($id)');
 		assert('is_int($user_id)');
 		assert('is_string($session_id)');
-		assert('is_int($crs_obj_id)');
+		assert('is_int($crs_ref_id)');
 		$this->id = $id;
 		$this->user_id = $user_id;
 		$this->session_id = $session_id;
-		$this->crs_obj_id = $crs_obj_id;
+		$this->crs_ref_id = $crs_ref_id;
 		$this->requested_ts = $requested_ts;
 		$this->finished_ts = $finished_ts;
 	}
@@ -81,8 +81,8 @@ class Request {
 	/**
 	 * @return int
 	 */
-	public function getCourseObjId() {
-		return $this->crs_obj_id;
+	public function getCourseRefId() {
+		return $this->crs_ref_id;
 	}
 
 	/**
