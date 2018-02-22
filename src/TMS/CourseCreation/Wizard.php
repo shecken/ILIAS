@@ -43,6 +43,7 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 
 	/**
 	 * @param	\ArrayAccess|array $dic
+	 * @param	\RequestBuilder	$request_builder
 	 * @param	string	$component_class	the user that performs the wizard 
 	 * @param	int	$acting_user_id			the user that performs the wizard 
 	 * @param	int	$crs_ref_id 			course that should get booked
