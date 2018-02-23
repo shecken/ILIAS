@@ -7,7 +7,7 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	protected $persistent = [];
 	protected $order = [];
 	protected $selectable = [];
-	protected $external_sorting_columns = [];
+	protected $internal_sorting_columns = [];
 
 	public function __construct($a_parent_gui, $a_cmd) {
 		global $ilCtrl;
