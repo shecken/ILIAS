@@ -937,9 +937,9 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 		global $ilDB,$ilUser;
 
 		// cat-tms-patch start
+		$title = $this->getTitle();
 		if($txt = $this->getCopySettingsTxtClosure()) {
 			$prefix = $txt("template_prefix").": ";
-			$title = $this->getTitle();
 			if(strpos($title, $prefix) !== false) {
 				$this->setTitle(str_replace($prefix, "", $title));
 			}
