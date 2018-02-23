@@ -7,6 +7,8 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	protected $persistent = [];
 	protected $order = [];
 	protected $selectable = [];
+	protected $external_sorting_columns = [];
+
 	public function __construct($a_parent_gui, $a_cmd) {
 		global $ilCtrl;
 
@@ -17,7 +19,7 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$this->setFormAction($ilCtrl->getFormAction($a_parent_gui,$a_cmd));
 		$this->columns_determined = false;
 		$this->setId("report_table");
-		$this->external_sorting = $external_sorting;
+		$this->setExternalSorting(true);
 	}
 
 	/**
@@ -29,8 +31,18 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	 * @param	bool	$selectable 
 	 * @param 	bool	$sort 
 	 * @param 	bool	$no_excel
+	 * @param	bool	$postprocessed_sorting	This setting should be used for all columns which are
+	 *											subjected to postprocessing not conserving order.
 	 */
-	public function defineFieldColumn($title, $column_id, array $fields = array(), $selectable = false, $sort = true , $no_excel =  false) {
+	public function defineFieldColumn(
+		$title,
+		$column_id,
+		array $fields = array(),
+		$selectable = false,
+		$sort = true,
+		$no_excel =  false,
+		$postprocessed_sorting = false) {
+
 		$this->fields[$column_id] = $fields;
 		$this->order[] = $column_id;
 		if($selectable) {
@@ -45,6 +57,9 @@ class SelectableReportTableGUI extends ilTable2GUI {
 				$this->persistent[$column_id]['sort'] = $column_id;
 			}
 			$this->persistent[$column_id]['no_excel'] = $no_excel;
+		}
+		if($postprocessed_sorting) {
+			$this->internal_sorting_columns[] = $column_id;
 		}
 		return $this;
 	}
@@ -145,7 +160,11 @@ class SelectableReportTableGUI extends ilTable2GUI {
 		$order_column_id = $this->getOrderField();
 		if(isset($this->relevantColumns()[$order_column_id])) {
 			$order_direction = $this->getOrderDirection();
-			$space->orderBy( array_keys($this->fields[$order_column_id]),$order_direction);
+			if(in_array($order_column_id, $this->internal_sorting_columns)) {
+				$this->setExternalSorting(false);
+			} else {
+				$space->orderBy( array_keys($this->fields[$order_column_id]),$order_direction);
+			}
 		} else {
 			$space->orderBy(array(key($this->relevantColumns())),'asc');
 		}
