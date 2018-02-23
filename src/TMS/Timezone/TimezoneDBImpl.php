@@ -69,7 +69,7 @@ class TimezoneDBImpl implements TimezoneDB{
 		assert('is_string($year)');
 		$times = $this->getTimes();
 		if(!array_key_exists($year, $times)) {
-			throw new \Exceptopn("Unknown Year");
+			throw new \Exception("Unknown Year");
 		}
 
 		return $times[$year];
