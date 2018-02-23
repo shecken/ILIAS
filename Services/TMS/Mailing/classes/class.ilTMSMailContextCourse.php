@@ -17,6 +17,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		'TRAINER_LAST_NAME' => 'placeholder_desc_crs_trainer_lastname',
 		'OFFICE_FIRST_NAME' => 'placeholder_desc_crs_admin_firstname',
 		'OFFICE_LAST_NAME' => 'placeholder_desc_crs_admin_lastname',
+		'OFFICE_MAIL' => 'placeholder_desc_crs_admin_mail',
 		'VENUE' => 'placeholder_desc_crs_venue',
 		'TRAINING_PROVIDER' => 'placeholder_desc_crs_provider'
 	);
@@ -68,6 +69,8 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 				return $this->adminFirstname();
 			case 'OFFICE_LAST_NAME':
 				return $this->adminLastname();
+			case 'OFFICE_MAIL':
+				return $this->adminEmail();
 			case 'VENUE':
 				return $this->crsVenue();
 			case 'TRAINING_PROVIDER':
@@ -204,6 +207,17 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 	/**
 	 * @return string | null
 	 */
+	public function adminEmail() {
+		$admin = $this->getAdmin();
+		if($admin !== null) {
+			return $admin->getEmail();
+		}
+		return $admin;
+	}
+
+	/**
+	 * @return string | null
+	 */
 	public function crsVenue() {
 		if(!ilPluginAdmin::isPluginActive('venues')) {
 			return null;
@@ -223,12 +237,15 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 			$v = $vactions->getVenue($vid);
 			$gen = $v->getGeneral();
 			$add = $v->getAddress();
+			$con = $v->getContact();
 
 			$venue_text = array(
 				$gen->getName(),
 				$add->getAddress1(),
 				$add->getAddress2(),
-				$add->getPostcode() .' ' .$add->getCity()
+				$add->getPostcode() .' ' .$add->getCity(),
+				$con->getPhone(),
+				$gen->getHomepage()
 			);
 			$venue_text = array_filter($venue_text, function($val) {return trim($val) !== '';});
 		}
