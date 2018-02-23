@@ -1090,6 +1090,10 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 
 			$src = $vactions->getAssignment($src_id);
 
+			if($src === false) {
+				return;
+			}
+
 			if($src->isCustomAssignment()) {
 				$vactions->createCustomVenueAssignment($target_id, $src->getVenueText());
 			} else {
@@ -1102,6 +1106,10 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 			$pactions = $pplug->getActions();
 
 			$src = $pactions->getAssignment($src_id);
+
+			if($src === false) {
+				return;
+			}
 
 			if($src->isCustomAssignment()) {
 				$pactions->createCustomProviderAssignment($target_id, $src->getProviderText());
