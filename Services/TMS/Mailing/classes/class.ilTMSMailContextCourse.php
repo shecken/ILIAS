@@ -223,12 +223,15 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 			$v = $vactions->getVenue($vid);
 			$gen = $v->getGeneral();
 			$add = $v->getAddress();
+			$con = $v->getContact();
 
 			$venue_text = array(
 				$gen->getName(),
 				$add->getAddress1(),
 				$add->getAddress2(),
-				$add->getPostcode() .' ' .$add->getCity()
+				$add->getPostcode() .' ' .$add->getCity(),
+				$con->getPhone(),
+				$gen->getHomepage()
 			);
 			$venue_text = array_filter($venue_text, function($val) {return trim($val) !== '';});
 		}
