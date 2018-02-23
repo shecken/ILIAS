@@ -66,6 +66,8 @@ class ilPersonalDesktopGUI
 		}
 		$this->cmdClass = $_GET['cmdClass'];
 
+		$this->ctrl->saveParameter($this, array("view"));
+
 		//$tree->useCache(false);
 
 		$this->action_menu = new ilAdvancedSelectionListGUI();
@@ -627,6 +629,7 @@ class ilPersonalDesktopGUI
 		{
 			require_once 'Services/PersonalDesktop/classes/class.ilPDSelectedItemsBlockGUI.php';
 			$_GET['view'] = ilPDSelectedItemsBlockGUI::VIEW_MY_MEMBERSHIPS;
+			$this->ctrl->setParameter($this, "view", ilPDSelectedItemsBlockGUI::VIEW_MY_MEMBERSHIPS);
 		}
 
 		$this->show();
@@ -646,6 +649,7 @@ class ilPersonalDesktopGUI
 		{
 			require_once 'Services/PersonalDesktop/classes/class.ilPDSelectedItemsBlockGUI.php';
 			$_GET['view'] = ilPDSelectedItemsBlockGUI::VIEW_SELECTED_ITEMS;
+			$this->ctrl->setParameter($this, "view", ilPDSelectedItemsBlockGUI::VIEW_SELECTED_ITEMS);
 		}
 
 		$this->show();

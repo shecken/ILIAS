@@ -174,7 +174,7 @@ class ilInitialisation
 		}
 		$host = $_SERVER['HTTP_HOST'];
 
-		$rq_uri = $_SERVER['REQUEST_URI'];
+		$rq_uri = strip_tags($_SERVER['REQUEST_URI']);
 
 		// security fix: this failed, if the URI contained "?" and following "/"
 		// -> we remove everything after "?"
@@ -1352,6 +1352,11 @@ class ilInitialisation
 	 */
 	protected static function blockedAuthentication($a_current_script)
 	{
+		if(ilContext::getType() == ilContext::CONTEXT_WAC)
+		{
+			ilLoggerFactory::getLogger('init')->debug('Blocked authentication for WAC request.');
+			return true;
+		}
 		if(ilContext::getType() == ilContext::CONTEXT_APACHE_SSO)
 		{
 			ilLoggerFactory::getLogger('init')->debug('Blocked authentication for sso request.');

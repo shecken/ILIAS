@@ -202,6 +202,9 @@ class ilUtil
 		{
 			$vers = str_replace(" ", "-", $ilias->getSetting("ilias_version"));
 			$vers = "?vers=".str_replace(".", "-", $vers);
+			// use version from template xml to force reload on changes
+            $skin = ilStyleDefinition::getSkins()[ilStyleDefinition::getCurrentSkin()];
+            $vers .= ($skin->getVersion() != '' ? str_replace(".", "-", '-' . $skin->getVersion()) : '');
 		}
 		return $filename . $vers;
 	}
@@ -5259,6 +5262,18 @@ class ilUtil
 	public static function Bytes2MB($a_value)
 	{
 		return  $a_value / (pow(self::_getSizeMagnitude(), 2));
+	}
+
+	/**
+	 * Dump var
+	 *
+	 * @param null $mixed
+	 */
+	static function dumpVar($mixed = null)
+	{
+		echo '<pre>';
+		var_dump($mixed);
+		echo '</pre>';
 	}
 
 
