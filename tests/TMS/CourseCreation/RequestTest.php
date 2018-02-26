@@ -13,8 +13,9 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 		$this->session_id = "SESSION_ID";
 		$this->crs_ref_id = 1337;
 		$this->request_ts = new \DateTime("1985-04-05 13:37");
+		$this->target_ref_id = 4242;
 		$this->finished_ts = new \DateTime("now");
-		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], [], $this->request_ts, $this->finished_ts);
+		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], [], $this->request_ts, $this->target_ref_id, $this->finished_ts);
 	}
 
 	public function test_getId() {
@@ -37,19 +38,30 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->request_ts, $this->request->getRequestedTS());
 	}
 
+	public function test_getTargetRefId() {
+		$this->assertEquals($this->target_ref_id, $this->request->getTargetRefId());
+	}
+
+	public function test_targetRefId_is_nullable() {
+		$request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], [], $this->request_ts, null, null);
+		$this->assertEquals(null, $request->getTargetRefId());
+	}
+
 	public function test_getFinishedTS() {
 		$this->assertEquals($this->finished_ts, $this->request->getFinishedTS());
 	}
 
-	public function test_withDFinishedTS() {
+	public function test_withTargetRefIdAndFinishedTS() {
+		$ref = 2323;
 		$new_ts = new \DateTime("2000-12-31 23:59");
-		$clone = $this->request->withFinishedTS($new_ts);
+		$clone = $this->request->withTargetRefIdAndFinishedTS($ref, $new_ts);
 
 		$this->assertEquals($this->finished_ts, $this->request->getFinishedTS());
+		$this->assertEquals($ref, $clone->getTargetRefId());
 		$this->assertEquals($new_ts, $clone->getFinishedTS());
 	}
 
-	public function test_finishedTS_id_nullable() {
+	public function test_finishedTS_is_nullable() {
 		$request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], [], $this->request_ts, null);
 		$this->assertEquals(null, $request->getFinishedTS());
 	}
@@ -60,7 +72,7 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 			, 456 => 3
 			];
 
-		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $options, [], $this->request_ts, $this->finished_ts);
+		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $options, [], $this->request_ts, $this->target_ref_id, $this->finished_ts);
 
 		$this->assertEquals(2, $this->request->getCopyOptionFor(123));
 		$this->assertEquals(3, $this->request->getCopyOptionFor(456));
@@ -75,7 +87,7 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 			, 456 => $obj2
 			];
 
-		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], $configuration, $this->request_ts, $this->finished_ts);
+		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], $configuration, $this->request_ts, $this->target_ref_id, $this->finished_ts);
 
 		$this->assertSame($obj1, $this->request->getConfigurationFor(123));
 		$this->assertSame($obj2, $this->request->getConfigurationFor(456));

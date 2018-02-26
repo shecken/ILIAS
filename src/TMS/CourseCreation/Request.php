@@ -44,6 +44,11 @@ class Request {
 	protected $requested_ts;
 
 	/**
+	 * @var	int|null
+	 */
+	protected $target_ref_id;
+
+	/**
  	 * @var \DateTime|null
 	 */
 	protected $finished_ts;
@@ -54,11 +59,22 @@ class Request {
  	 * @var string	$session_id
  	 * @var int		$crs_ref_id
 	 */
-	public function __construct($id, $user_id, $session_id, $crs_ref_id, array $copy_options, array $configuration, \DateTime $requested_ts, \DateTime $finished_ts = null) {
+	public function __construct(
+			$id,
+			$user_id,
+			$session_id,
+			$crs_ref_id,
+			array $copy_options,
+			array $configuration,
+			\DateTime $requested_ts,
+			$target_ref_id = null,
+			\DateTime $finished_ts = null
+		) {
 		assert('is_int($id)');
 		assert('is_int($user_id)');
 		assert('is_string($session_id)');
 		assert('is_int($crs_ref_id)');
+		assert('is_int($target_ref_id) || is_null($target_ref_id)');
 		$this->id = $id;
 		$this->user_id = $user_id;
 		$this->session_id = $session_id;
@@ -74,6 +90,7 @@ class Request {
 			assert('is_string(json_encode($v))');
 		}
 		$this->requested_ts = $requested_ts;
+		$this->target_ref_id = $target_ref_id;
 		$this->finished_ts = $finished_ts;
 	}
 
@@ -113,6 +130,13 @@ class Request {
 	}
 
 	/**
+	 * @return int|null
+	 */
+	public function getTargetRefId() {
+		return $this->target_ref_id;
+	}
+
+	/**
 	 * @return \DateTime
 	 */
 	public function getFinishedTS() {
@@ -120,10 +144,14 @@ class Request {
 	}
 
 	/**
+	 * @param	int			$target_ref_id
+	 * @param	\DateTime	$finished_ts
 	 * @return self
 	 */
-	public function withFinishedTS(\DateTime $finished_ts) {
+	public function withTargetRefIdAndFinishedTS($target_ref_id, \DateTime $finished_ts) {
+		assert('is_int($target_ref_id)');
 		$clone = clone $this;
+		$clone->target_ref_id = $target_ref_id;
 		$clone->finished_ts = $finished_ts;
 		return $clone;
 	}
