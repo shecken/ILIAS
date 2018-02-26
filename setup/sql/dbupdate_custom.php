@@ -157,3 +157,26 @@ if($ilDB->tableColumnExists('usr_data', 'email')) {
 	$ilDB->modifyTableColumn('usr_data', 'email', $field);
 }
 ?>
+
+<#15>
+<?php
+if( !$ilDB->tableExists('copy_mappings') )
+{
+	$ilDB->createTable('copy_mappings', array(
+		'obj_id' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		),
+		'source_id' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		)
+	));
+
+	$ilDB->addPrimaryKey('copy_mappings', array('obj_id', 'source_id'));
+}
+?>
