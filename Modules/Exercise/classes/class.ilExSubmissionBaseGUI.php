@@ -30,10 +30,12 @@ abstract class ilExSubmissionBaseGUI
 		$this->tpl = $tpl;		
 	}
 	
+	// cat-tms patch start
 	public static function getOverviewContent(ilInfoScreenGUI $a_info, ilExSubmission $a_submission)
 	{
 
 	}
+	// cat-tms patch end
 	
 	protected function handleTabs()
 	{				

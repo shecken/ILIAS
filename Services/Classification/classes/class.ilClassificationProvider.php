@@ -67,6 +67,7 @@ abstract class ilClassificationProvider
 		return $res;
 	}
 	
+	// cat-tms patch start
 	/**
 	 * Is provider currently active?
 	 * 
@@ -77,8 +78,9 @@ abstract class ilClassificationProvider
 	 */
 	public static function isActive($a_parent_ref_id, $a_parent_obj_id, $a_parent_obj_type)
 	{
-		
+
 	}
+	// cat-tms patch end
 	
 	/**
 	 * Render HTML chunks
