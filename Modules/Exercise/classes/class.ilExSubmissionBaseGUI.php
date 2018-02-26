@@ -30,7 +30,10 @@ abstract class ilExSubmissionBaseGUI
 		$this->tpl = $tpl;		
 	}
 	
-	abstract public static function getOverviewContent(ilInfoScreenGUI $a_info, ilExSubmission $a_submission);
+	public static function getOverviewContent(ilInfoScreenGUI $a_info, ilExSubmission $a_submission)
+	{
+
+	}
 	
 	protected function handleTabs()
 	{				

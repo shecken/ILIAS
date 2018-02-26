@@ -75,7 +75,10 @@ abstract class ilClassificationProvider
 	 * @param string $a_parent_obj_type
 	 * @return bool
 	 */
-	abstract public static function isActive($a_parent_ref_id, $a_parent_obj_id, $a_parent_obj_type);	
+	public static function isActive($a_parent_ref_id, $a_parent_obj_id, $a_parent_obj_type)
+	{
+		
+	}
 	
 	/**
 	 * Render HTML chunks
