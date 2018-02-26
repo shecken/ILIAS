@@ -34,6 +34,11 @@ class Request {
 	protected $copy_options;
 
 	/**
+	 * @var array<int,mixed>
+	 */
+	protected $configuration;
+
+	/**
 	 * @var \DateTime 
 	 */
 	protected $requested_ts;
@@ -49,7 +54,7 @@ class Request {
  	 * @var string	$session_id
  	 * @var int		$crs_ref_id
 	 */
-	public function __construct($id, $user_id, $session_id, $crs_ref_id, array $copy_options, \DateTime $requested_ts, \DateTime $finished_ts = null) {
+	public function __construct($id, $user_id, $session_id, $crs_ref_id, array $copy_options, array $configuration, \DateTime $requested_ts, \DateTime $finished_ts = null) {
 		assert('is_int($id)');
 		assert('is_int($user_id)');
 		assert('is_string($session_id)');
@@ -62,6 +67,11 @@ class Request {
 		foreach ($this->copy_options as $k => $v) {
 			assert('is_int($k)');
 			assert('$v === 1 || $v === 2 || $v === 3');
+		}
+		$this->configuration = $configuration;
+		foreach ($this->configuration as $k => $v) {
+			assert('is_int($k)');
+			assert('is_string(json_encode($v))');
 		}
 		$this->requested_ts = $requested_ts;
 		$this->finished_ts = $finished_ts;
@@ -129,12 +139,27 @@ class Request {
 	 * Defaults to skip.
 	 *
 	 * @param	int		$ref_id
-	 * @return 	mixed	$option;
+	 * @return 	mixed
 	 */
 	public function getCopyOptionFor($ref_id) {
 		if (!isset($this->copy_options[$ref_id])) {
 			return self::SKIP;
 		}
 		return $this->copy_options[$ref_id];
+	}
+
+	/**
+	 * Get the configuration data for the object with the given ref_id.
+	 *
+	 * Defaults to null.
+	 *
+	 * @param	int	$ref_id
+	 * @return	mixed|null
+	 */
+	public function getConfigurationFor($ref_id) {
+		if (!isset($this->configuration[$ref_id])) {
+			return null;
+		}
+		return $this->configuration[$ref_id];
 	}
 }
