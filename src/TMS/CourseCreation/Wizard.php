@@ -51,6 +51,7 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @param	int	$target_user_id			the user the booking is made for
 	 * @param	int	$timestamp				timestamp the process was started
 	 *
+	 * TODO: turn timestamp to \DateTime, document it as member
 	 */
 	public function __construct($dic, RequestBuilder $request_builder, $user_id, $session_id, $crs_ref_id, $timestamp) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
@@ -165,5 +166,17 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 			$s->setRequestBuilder($this->request_builder);
 			return $s;
 		}, $this->getSortedSteps());
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function finish() {
+		// TODO: replace this by just getting the request and
+		// do the actual processing in the cron.
+		$request = $this->request_builder->getRequest(new \DateTime("@{$this->timestamp}"));
+		$process = new Process();
+		$process->run($request);
 	}
 } 

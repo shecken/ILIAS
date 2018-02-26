@@ -31,5 +31,5 @@ interface RequestBuilder {
 	 * @var	\DateTime	$requested_ts
 	 * @return	Request
 	 */
-	public function getRequest();
+	public function getRequest(\DateTime $requested_ts);
 }
