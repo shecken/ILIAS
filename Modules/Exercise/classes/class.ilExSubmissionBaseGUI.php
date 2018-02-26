@@ -31,10 +31,9 @@ abstract class ilExSubmissionBaseGUI
 	}
 	
 	// cat-tms patch start
-	public static function getOverviewContent(ilInfoScreenGUI $a_info, ilExSubmission $a_submission)
-	{
-
-	}
+	/**
+	 * deleted abstract static function getOverviewContent(ilInfoScreenGUI $a_info, ilExSubmission $a_submission)
+	 */
 	// cat-tms patch end
 	
 	protected function handleTabs()

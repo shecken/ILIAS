@@ -42,9 +42,9 @@ abstract class ilComponent
 	abstract function isCore();
 
 	// cat-tms patch start
-	static function getComponentType() {
-
-	}
+	/**
+	 * deleted abstract static function getComponentType()
+	 */
 	// cat-tms patch end
 	
 	/**
