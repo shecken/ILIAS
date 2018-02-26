@@ -1092,7 +1092,7 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 		require_once("Services/Component/classes/class.ilPluginAdmin.php");
 		$src_id = (int)$this->getId();
 		$target_id = (int)$new_course->getId();
-		//$this->insertCourseCopyMappingInfoToDB($new_course);
+		$this->insertCourseCopyMappingInfoToDB($new_course);
 
 		if(ilPluginAdmin::isPluginActive('venues')) {
 			$vplug = ilPluginAdmin::getPluginObjectById('venues');
