@@ -32,4 +32,13 @@ interface RequestBuilder {
 	 * @return	Request
 	 */
 	public function getRequest(\DateTime $requested_ts);
+
+	/**
+	 * Set a copy option for the given ref_id.
+	 *
+	 * @param	int		$ref_id
+	 * @param	mixed 	$copy_option from Request
+	 * @return	self
+	 */
+	public function setCopyOptionFor($ref_id, $copy_option);
 }

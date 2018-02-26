@@ -9,6 +9,15 @@ namespace ILIAS\TMS\CourseCreation;
  */
 class Process {
 	/**
+	 * @var	\ilTree
+	 */
+	protected $tree;
+
+	public function __construct(\ilTree $tree) {
+		$this->tree = $tree;
+	}
+
+	/**
 	 * Run the course creation process for a given course.
 	 *
 	 * @return	void
@@ -27,25 +36,6 @@ class Process {
 		// soon.
 		$parent = $tree->getParentId($request->getCourseRefId());
 
-		$res = $db->query(
-			"SELECT DISTINCT c.child ref_id, od.type "
-			." FROM tree p"
-			." RIGHT JOIN tree c"
-			."	ON LOCATE(CONCAT(p.path,'.'),c.path) = 1"
-			."	AND c.tree = p.tree"
-			." LEFT JOIN object_reference oref ON oref.ref_id = c.child"
-			." LEFT JOIN object_data od ON od.obj_id = oref.obj_id"
-			." WHERE p.child = ".$db->quote($request->getCourseRefId(), "integer")
-		);
-
-		// These are options that tell the cloning method, that every child of the
-		// template should be cloned as well.
-		// TODO: replace these by options from copy settings
-		$options = array();
-		while ($rec = $db->fetchAssoc($res)) {
-			$options[$rec["ref_id"]] = array("type" => 2);
-		}
-
 		// TODO: Turn this into something testable
 		$source = \ilObjectFactory::getInstanceByRefId($request->getCourseRefId());
 
@@ -55,12 +45,27 @@ class Process {
 			"crs",
 			$parent,
 			$request->getCourseRefId(),
-			 $options,
+			$this->getCopyWizardOptions($request),
 			false,
 			1
 			// TODO: maybe reintroduce user parameter again? what was it good for?
 			// TODO: maybe reintroduce timeout param to this method again
 		);
+	}
+
+	/**
+	 * Get copy options for the ilCopyWizard from the request.
+	 *
+	 * @param Request	$request
+	 * @return	array
+	 */
+	protected function getCopyWizardOptions(Request $request) {
+		$sub_nodes = $this->tree->getSubTreeIds($request->getCourseRefId());
+		$options = [];
+		foreach ($sub_nodes as $sub) {
+			$options[$sub] = $request->getCopyOptionFor($sub);
+		}
+		return $options;
 	}
 }
 
