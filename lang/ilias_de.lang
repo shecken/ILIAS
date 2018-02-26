@@ -16058,4 +16058,6 @@ tms#:#to_course_member_tab#:#Buchungen vornehmen
 tms#:#cancel_course#:#Training absagen
 tms#:#placeholder_desc_reminder#:#Für Einladungsmails - wird nur bei Erinnerungen gesetzt.
 tms#:#tms_mailsubject_reminder#:#Erinnerung:
+tms#:#placeholder_desc_oac_reminder#:#Für Übernachtungsliste - wird nur bei Erinnerungen gesetzt.
+tms#:#placeholder_mailsubject_oac_reminder#:#Bestätigung:
 tms#:#create_course_from_template#:#Kurs aus Vorlage erzeugen
