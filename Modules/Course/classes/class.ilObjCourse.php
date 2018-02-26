@@ -1193,6 +1193,17 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 			]);
 	}
 
+	// for course creation
+	/**
+	 * Will be called after course creation with configuration options.
+	 *
+	 * @param	mixed	$config
+	 * @return	void
+	 */
+	public function afterCourseCreation($config) {
+		// TODO: fill me...
+	}
+
 	// cat-tms-patch end
 
 
