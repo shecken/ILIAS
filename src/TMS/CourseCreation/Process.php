@@ -23,11 +23,6 @@ class Process {
 	 * @return	void
 	 */
 	public function run(Request $request) {
-		// TODO: replace these by proper dependency injection
-		global $DIC;
-		$db = $DIC->database();
-		$tree = $DIC->repositoryTree();
-
 		// TODO: get this from somewhere
 		$client_id = "tms52";
 
