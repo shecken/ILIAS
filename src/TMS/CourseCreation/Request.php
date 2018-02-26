@@ -182,7 +182,7 @@ class Request {
 	 * Defaults to null.
 	 *
 	 * @param	int	$ref_id
-	 * @return	mixed|null
+	 * @return	mixed[]|null
 	 */
 	public function getConfigurationFor($ref_id) {
 		if (!isset($this->configuration[$ref_id])) {

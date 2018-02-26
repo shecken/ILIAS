@@ -83,14 +83,14 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 		$obj1 = new \stdClass();
 		$obj2 = new \stdClass();
 		$configuration =
-			[ 123 => $obj1
-			, 456 => $obj2
+			[ 123 => [$obj1]
+			, 456 => [$obj2]
 			];
 
 		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], $configuration, $this->request_ts, $this->target_ref_id, $this->finished_ts);
 
-		$this->assertSame($obj1, $this->request->getConfigurationFor(123));
-		$this->assertSame($obj2, $this->request->getConfigurationFor(456));
+		$this->assertSame([$obj1], $this->request->getConfigurationFor(123));
+		$this->assertSame([$obj2], $this->request->getConfigurationFor(456));
 		$this->assertNull($this->request->getConfigurationFor(789));
 	}
 }
