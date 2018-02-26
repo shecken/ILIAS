@@ -52,13 +52,17 @@ abstract class ilButtonBase implements ilToolbarItem
 		$this->setId(null);
 	}
 	
+	// cat-tms start
 	/**
 	 * Factory
 	 * 
 	 * @return self
 	 */
-	abstract public static function getInstance();
-	
+	public static function getInstance()
+	{
+		
+	}
+	// cat-tms end
 	
 	//
 	// properties
