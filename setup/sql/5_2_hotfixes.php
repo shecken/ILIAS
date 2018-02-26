@@ -422,3 +422,8 @@ if($rp_ops_id && $ep_ops_id && $w_ops_id)
 	}
 }
 ?>
+<#25>
+<?php
+require_once('./Services/Migration/DBUpdate_3560/classes/class.ilDBUpdateNewObjectType.php');
+ilDBUpdateNewObjectType::addRBACTemplate('orgu', 'il_orgu_employee', "OrgUnit Employee Role Template", null);
+?>
