@@ -14,7 +14,7 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 		$this->crs_ref_id = 1337;
 		$this->request_ts = new \DateTime("1985-04-05 13:37");
 		$this->finished_ts = new \DateTime("now");
-		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $this->request_ts, $this->finished_ts);
+		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], $this->request_ts, $this->finished_ts);
 	}
 
 	public function test_getId() {
@@ -50,7 +50,20 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_finishedTS_id_nullable() {
-		$request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $this->request_ts, null);
+		$request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], $this->request_ts, null);
 		$this->assertEquals(null, $request->getFinishedTS());
+	}
+
+	public function test_getCopyOptionFor() {
+		$options =
+			[ 123 => 2
+			, 456 => 3
+			];
+
+		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $options, $this->request_ts, $this->finished_ts);
+
+		$this->assertEquals(2, $this->request->getCopyOptionFor(123));
+		$this->assertEquals(3, $this->request->getCopyOptionFor(456));
+		$this->assertEquals(1, $this->request->getCopyOptionFor(789));
 	}
 }

@@ -29,6 +29,11 @@ class Request {
 	protected $crs_ref_id;
 
 	/**
+	 * @var array<int,int>
+	 */
+	protected $copy_options;
+
+	/**
 	 * @var \DateTime 
 	 */
 	protected $requested_ts;
@@ -44,7 +49,7 @@ class Request {
  	 * @var string	$session_id
  	 * @var int		$crs_ref_id
 	 */
-	public function __construct($id, $user_id, $session_id, $crs_ref_id, \DateTime $requested_ts, \DateTime $finished_ts = null) {
+	public function __construct($id, $user_id, $session_id, $crs_ref_id, array $copy_options, \DateTime $requested_ts, \DateTime $finished_ts = null) {
 		assert('is_int($id)');
 		assert('is_int($user_id)');
 		assert('is_string($session_id)');
@@ -53,6 +58,11 @@ class Request {
 		$this->user_id = $user_id;
 		$this->session_id = $session_id;
 		$this->crs_ref_id = $crs_ref_id;
+		$this->copy_options = $copy_options;
+		foreach ($this->copy_options as $k => $v) {
+			assert('is_int($k)');
+			assert('$v === 1 || $v === 2 || $v === 3');
+		}
 		$this->requested_ts = $requested_ts;
 		$this->finished_ts = $finished_ts;
 	}
@@ -106,5 +116,25 @@ class Request {
 		$clone = clone $this;
 		$clone->finished_ts = $finished_ts;
 		return $clone;
+	}
+
+	// TODO: there is a hidden dependency on ilCopyWizardOption here
+	const SKIP = 1;
+	const COPY = 2;
+	const LINK = 3;
+
+	/**
+	 * Get copy setting for the object with the given ref_id.
+	 *
+	 * Defaults to skip.
+	 *
+	 * @param	int		$ref_id
+	 * @return 	mixed	$option;
+	 */
+	public function getCopyOptionFor($ref_id) {
+		if (!isset($this->copy_options[$ref_id])) {
+			return self::SKIP;
+		}
+		return $this->copy_options[$ref_id];
 	}
 }
