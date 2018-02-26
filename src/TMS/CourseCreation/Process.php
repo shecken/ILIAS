@@ -29,7 +29,7 @@ class Process {
 		// TODO: This should be comming from the request since
 		// users will be able to place their course somewhere else
 		// soon.
-		$parent = $tree->getParentId($request->getCourseRefId());
+		$parent = $this->tree->getParentId($request->getCourseRefId());
 
 		// TODO: Turn this into something testable
 		$source = \ilObjectFactory::getInstanceByRefId($request->getCourseRefId());
@@ -58,7 +58,7 @@ class Process {
 		$sub_nodes = $this->tree->getSubTreeIds($request->getCourseRefId());
 		$options = [];
 		foreach ($sub_nodes as $sub) {
-			$options[$sub] = $request->getCopyOptionFor($sub);
+			$options[$sub] = ["type" => $request->getCopyOptionFor($sub)];
 		}
 		return $options;
 	}
