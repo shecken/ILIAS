@@ -58,10 +58,9 @@ abstract class ilButtonBase implements ilToolbarItem
 	 * 
 	 * @return self
 	 */
-	public static function getInstance()
-	{
-		
-	}
+	/**
+	 * deleted abstract static function getInstance
+	 */
 	// cat-tms end
 	
 	//

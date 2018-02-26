@@ -76,10 +76,9 @@ abstract class ilClassificationProvider
 	 * @param string $a_parent_obj_type
 	 * @return bool
 	 */
-	public static function isActive($a_parent_ref_id, $a_parent_obj_id, $a_parent_obj_type)
-	{
-
-	}
+	/**
+	 * deleted abstract static function isActive($a_parent_ref_id, $a_parent_obj_id, $a_parent_obj_type)
+	 */
 	// cat-tms patch end
 	
 	/**
