@@ -176,7 +176,7 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 		// TODO: replace this by just getting the request and
 		// do the actual processing in the cron.
 		$request = $this->request_builder->getRequest(new \DateTime("@{$this->timestamp}"));
-		$process = new Process();
+		$process = new Process($this->dic->repositoryTree());
 		$process->run($request);
 	}
 } 
