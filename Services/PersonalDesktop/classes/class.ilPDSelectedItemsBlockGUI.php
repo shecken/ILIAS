@@ -59,9 +59,9 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 		 */
 		global $ilCtrl;
 
-		$ilCtrl->setParameterByClass('ilpersonaldesktopgui', 'view', $this->view);
+//		$ilCtrl->setParameterByClass('ilpersonaldesktopgui', 'view', $this->view);
 		parent::fillDetailRow();
-		$ilCtrl->setParameterByClass('ilpersonaldesktopgui', 'view', '');
+//		$ilCtrl->setParameterByClass('ilpersonaldesktopgui', 'view', '');
 	}
 	
     /**
@@ -250,7 +250,7 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 		{
 			$this->setEnableDetailRow(false);
 		}
-		$ilCtrl->clearParametersByClass("ilpersonaldesktopgui");
+//		$ilCtrl->clearParametersByClass("ilpersonaldesktopgui");
 		$ilCtrl->clearParameters($this);
 		
 		$ilDB->useSlave(false);
@@ -985,7 +985,8 @@ class ilPDSelectedItemsBlockGUI extends ilBlockGUI implements ilDesktopItemHandl
 					}
 					// render item row
 					$ilBench->start("ilPersonalDesktopGUI", "getListHTML");
-											
+						
+					include_once './Services/Object/classes/class.ilObjectActivation.php';
 					ilObjectActivation::addListGUIActivationProperty($item_list_gui, $item);							
 						
 					$html = $item_list_gui->getListItemHTML($item["ref_id"],
