@@ -90,9 +90,12 @@ class Process {
 		);
 		$mappings = $this->getCopyMappings($sub_nodes);
 		foreach ($sub_nodes as $sub) {
-			$object = $this->getObjectByRefId($sub);
-			assert('method_exists($object, "afterCourseCreation")');
 			$configs = $request->getConfigurationFor($mappings[$sub]);
+			if ($configs === null) {
+				continue;
+			}
+			$object = $this->getObjectByRefId((int)$sub);
+			assert('method_exists($object, "afterCourseCreation")');
 			foreach($configs as $config) {
 				$object->afterCourseCreation($config);
 			}
