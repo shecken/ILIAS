@@ -625,7 +625,7 @@ class ilContainer extends ilObject
 	 * @return new refid if clone has finished or parameter ref id if cloning is still in progress
 	 * @return array(copy_id => xyz, ref_id => new ref_id)
 	 */
-	public function cloneAllObject($session_id, $client_id, $new_type, $ref_id, $clone_source, $options, $soap_call = false, $a_submode = 1)
+	public function cloneAllObject($session_id, $client_id, $new_type, $ref_id, $clone_source, $options, $soap_call = false, $a_submode = 1, $course_creation = false)
 	{
 		global $ilLog;
 		
@@ -672,7 +672,7 @@ class ilContainer extends ilObject
 		$soap_client->enableWSDL(true);
 
 		$ilLog->write(__METHOD__.': Trying to call Soap client...');
-		if($soap_client->init())
+		if(!$course_creation && $soap_client->init())
 		{
 			ilLoggerFactory::getLogger('obj')->info('Calling soap clone method');
 			$res = $soap_client->call('ilClone',array($new_session_id.'::'.$client_id, $copy_id));

@@ -148,4 +148,11 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 			return new StepAdapter($s, $this->crs_ref_id, $this->target_user_id);
 		}, $this->getSortedSteps());
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function finish() {
+		// Nothing to do here...
+	}
 } 
