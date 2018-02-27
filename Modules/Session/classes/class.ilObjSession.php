@@ -542,6 +542,20 @@ class ilObjSession extends ilObject
 		return true;
 	}
 
+	// cat-tms-patch end
+
+	// for course creation
+	/**
+	 * Will be called after course creation with configuration options.
+	 *
+	 * @param	mixed	$config
+	 * @return	void
+	 */
+	public function afterCourseCreation($config) {
+		// implement me
+	}
+
+	// cat-tms-patch end
 
 
 	/**
