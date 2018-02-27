@@ -4901,16 +4901,18 @@ class ilUtil
 		// Temporary fix for feed.php 
 		if(!(bool)$a_set_cookie_invalid) $expire = 0;
 		else $expire = time() - (365*24*60*60);
-		
-		if(!defined('IL_COOKIE_SECURE'))
+		// cat-tms modification start
+		if(defined('IL_COOKIE_SECURE'))
 		{
-			define('IL_COOKIE_SECURE', false);
+			$cookie_secure = IL_COOKIE_SECURE;
+		} else {
+			$cookie_secure = false;
 		}
 
 		setcookie( $a_cookie_name, $a_cookie_value, $expire,
-			IL_COOKIE_PATH, IL_COOKIE_DOMAIN, IL_COOKIE_SECURE, IL_COOKIE_HTTPONLY
+			IL_COOKIE_PATH, IL_COOKIE_DOMAIN, $cookie_secure, IL_COOKIE_HTTPONLY
 		);
-					
+		// cat-tms modification end
 		if((bool)$a_also_set_super_global) $_COOKIE[$a_cookie_name] = $a_cookie_value;
 	}
 	
