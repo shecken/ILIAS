@@ -552,7 +552,50 @@ class ilObjSession extends ilObject
 	 * @return	void
 	 */
 	public function afterCourseCreation($config) {
-		// implement me
+		foreach ($config as $key => $value) {
+			if($key == "session_time") {
+				$appointment = $this->getFirstAppointment();
+				$start_date = $appointment->getStart()->get(IL_CAL_FKT_DATE, "Y-m-d");
+				$end_date = $appointment->getEnd()->get(IL_CAL_FKT_DATE, "Y-m-d");
+
+				$start_hh = $value["hh"];
+				$start_mm = $value["mm"];
+
+				$start_hour = $appointment->getStart()->get(IL_CAL_FKT_DATE, "H");
+				$end_hour = $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H");
+				$start_minutes = $appointment->getStart()->get(IL_CAL_FKT_DATE, "i");
+				$end_minutes = $appointment->getEnd()->get(IL_CAL_FKT_DATE, "i");
+
+				$end_hh = (int)$start_hh + $end_hour - $start_hour;
+				$end_mm = (int)$start_mm + $end_minutes - $start_minutes;
+
+				if ($start_hh < 10) {
+					$start_hh = "0$start_hh";
+				}
+				if ($start_mm < 10) {
+					$start_mm = "0$start_mm";
+				}
+				if ($end_hh < 10) {
+					$end_hh = "0$end_hh";
+				}
+				if ($end_mm < 10) {
+					$end_mm = "0$end_mm";
+				}
+
+				$dt_start = $start_date." $start_hh:$start_mm:00";
+				$new_start_date = new ilDateTime($dt_start, IL_CAL_DATETIME);
+
+				$dt_end = $end_date." $end_hh:$end_mm:00";
+				$new_end_date = new ilDateTime($dt_end, IL_CAL_DATETIME);
+
+				$appointment->setStart($new_start_date);
+				$appointment->setEnd($new_end_date);
+				$appointment->update();
+			}
+			else {
+				throw new \RuntimeException("Can't process configuration '$key'");
+			}
+		}
 	}
 
 	// cat-tms-patch end
