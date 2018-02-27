@@ -1201,7 +1201,16 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 	 * @return	void
 	 */
 	public function afterCourseCreation($config) {
-		// TODO: fill me...
+		foreach ($config as $key => $value) {
+			if($key == "course_period") {
+				$this->setCourseStart(new ilDate($value["start"], IL_CAL_DATE));
+				$this->setCourseEnd(new ilDate($value["end"], IL_CAL_DATE));
+				$this->update();
+			}
+			else {
+				throw new \RuntimeException("Can't process configuration '$key'");
+			}
+		}
 	}
 
 	// cat-tms-patch end
