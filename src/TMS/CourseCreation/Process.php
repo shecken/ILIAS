@@ -8,6 +8,8 @@ namespace ILIAS\TMS\CourseCreation;
  * Creates courses based on templates.
  */
 class Process {
+	const WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S = 2;
+
 	/**
 	 * @var	\ilTree
 	 */
@@ -48,13 +50,16 @@ class Process {
 			$request->getCourseRefId(),
 			$this->getCopyWizardOptions($request),
 			false,
-			1
+			1,
+			true
 			// TODO: maybe reintroduce user parameter again? what was it good for?
 			// TODO: maybe reintroduce timeout param to this method again
 		);
 
 		$ref_id = $res["ref_id"];
 		$request = $request->withTargetRefIdAndFinishedTS((int)$ref_id, new \DateTime());
+
+		sleep(self::WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S);
 
 		$this->configureCopiedObjects($request);
 	}
