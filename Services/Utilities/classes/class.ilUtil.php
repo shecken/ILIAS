@@ -4912,7 +4912,7 @@ class ilUtil
 		setcookie( $a_cookie_name, $a_cookie_value, $expire,
 			IL_COOKIE_PATH, IL_COOKIE_DOMAIN, $cookie_secure, IL_COOKIE_HTTPONLY
 		);
-		// cat-tms-patch send
+		// cat-tms-patch end
 		if((bool)$a_also_set_super_global) $_COOKIE[$a_cookie_name] = $a_cookie_value;
 	}
 	
