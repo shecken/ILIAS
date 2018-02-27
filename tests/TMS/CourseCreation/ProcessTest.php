@@ -117,4 +117,49 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 
 		$process->_configureCopiedObjects($request);
 	}
+
+	public function test_don_t_configureCopiedObjects() {
+		$tree = $this->createMock(\ilTree::class);
+		$db = $this->createMock(\ilDBInterface::class);
+		$request = $this->createMock(CourseCreation\Request::class);
+
+		$process = $this->getMockBuilder(_CourseCreationProcess::class)
+			->setMethods(["getCopyMappings", "getObjectByRefId"])
+			->setConstructorArgs([$tree, $db])
+			->getMock();
+
+		$target_ref_id = 23;
+		$source_ref_id = 42;
+		$request
+			->expects($this->once())
+			->method("getTargetRefId")
+			->willReturn($target_ref_id);
+
+		$ref_ids = [3];
+		$tree
+			->expects($this->once())
+			->method("getSubTreeIds")
+			->with($target_ref_id)
+			->willReturn($ref_ids);
+
+		$mapping = [ $target_ref_id => $source_ref_id, 3 => 1];
+		$process
+			->expects($this->once())
+			->method("getCopyMappings")
+			->with([23, 3])  // original obj_id is added
+			->willReturn($mapping);
+
+		$process
+			->expects($this->never())
+			->method("getObjectByRefId");
+
+		$request
+			->expects($this->exactly(2))
+			->method("getConfigurationFor")
+			->withConsecutive([$source_ref_id], [1])
+			->will($this->onConsecutiveCalls(null, null));
+
+		$process->_configureCopiedObjects($request);
+	}
+
 }
