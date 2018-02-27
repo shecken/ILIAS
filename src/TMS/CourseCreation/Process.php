@@ -62,6 +62,7 @@ class Process {
 		sleep(self::WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S);
 
 		$this->adjustCourseTitle($request);
+		$this->setCourseOnline($request);
 		$this->configureCopiedObjects($request);
 
 		return $request;
@@ -95,6 +96,19 @@ class Process {
 		$matches = [];
 		preg_match("/^(.*)\s-\s.*$/", $title, $matches);
 		$crs->setTitle($matches[1]);
+		$crs->update();
+	}
+
+	/**
+	 * Set course online.
+	 *
+	 * @param	Request		$request
+	 * @return void
+	 */
+	protected function setCourseOnline($request) {
+		$crs_ref_id = $request->getTargetRefId();
+		$crs = $this->getObjectByRefId($crs_ref_id);
+		$crs->setOfflineStatus(false);
 		$crs->update();
 	}
 
