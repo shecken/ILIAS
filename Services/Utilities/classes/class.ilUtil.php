@@ -4901,7 +4901,7 @@ class ilUtil
 		// Temporary fix for feed.php 
 		if(!(bool)$a_set_cookie_invalid) $expire = 0;
 		else $expire = time() - (365*24*60*60);
-		// cat-tms modification start
+		// cat-tms-patch start
 		if(defined('IL_COOKIE_SECURE'))
 		{
 			$cookie_secure = IL_COOKIE_SECURE;
@@ -4912,7 +4912,7 @@ class ilUtil
 		setcookie( $a_cookie_name, $a_cookie_value, $expire,
 			IL_COOKIE_PATH, IL_COOKIE_DOMAIN, $cookie_secure, IL_COOKIE_HTTPONLY
 		);
-		// cat-tms modification end
+		// cat-tms-patch send
 		if((bool)$a_also_set_super_global) $_COOKIE[$a_cookie_name] = $a_cookie_value;
 	}
 	
