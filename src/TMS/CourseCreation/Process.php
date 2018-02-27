@@ -28,7 +28,7 @@ class Process {
 	/**
 	 * Run the course creation process for a given course.
 	 *
-	 * @return	void
+	 * @return Request
 	 */
 	public function run(Request $request) {
 		// TODO: get this from somewhere
@@ -62,6 +62,8 @@ class Process {
 		sleep(self::WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S);
 
 		$this->configureCopiedObjects($request);
+
+		return $request;
 	}
 
 	/**
