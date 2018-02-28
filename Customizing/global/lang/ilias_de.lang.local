@@ -645,7 +645,7 @@ gev#:#bill_data_complete#:#Rechungsdaten komplett
 gev#:#gev_period#:#Zeitraum:
 gev#:#gev_personal_data#:#Personendaten
 gev#:#gev_points#:#WB-Punkte
-gev#:#gev_wb_time#:#WB-Zeit
+gev#:#gev_wb_time#:#WB-Zeit (1 Punkt = 15 Minuten)
 gev#:#gev_dec_training_wb_time_sum#:#WB-Zeit gesamt
 gev#:#gev_dec_building_block_is_idd_relevant#:#IDD anrechenbar
 gev#:#gev_points_at_end_of_cert_year#:#voraussichtliche Punkte bis zum Ende des aktuellen Zertifizierungsjahres
