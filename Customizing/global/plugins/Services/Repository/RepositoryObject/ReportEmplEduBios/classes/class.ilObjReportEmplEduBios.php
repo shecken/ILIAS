@@ -29,22 +29,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 								->settingBool('truncate_orgu_filter', $this->plugin->txt('truncate_orgu_filter')));
 	}
 
-
-	protected function pointsInCertYearSql($year)
-	{
-		$course_may_be_in_wbd = '('.$this->courseIsWbdBooked()
-									.' OR '.$this->courseNotOlderThanOneYear().')';
-
-		return   "FLOOR(SUM( IF (	usrcrs.begin_date >= usr.begin_of_certification + INTERVAL ".($year-1)." YEAR "
-				."		AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL ".$year." YEAR)"
-				."		AND ".$this->participationWBDRelevant()
-				."		AND ".$course_may_be_in_wbd
-				."		, usrcrs.credit_points"
-				."		, 0"
-				."		)"
-				."	)/ 3)";
-	}
-
 	protected function getRoleIdsForRoleTitles(array $titles)
 	{
 		$query = 'SELECT obj_id FROM object_data '
@@ -68,17 +52,8 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		return $this->getRoleIdsForRoleTitles(gevWBD::$wbd_tp_service_roles);
 	}
 
-	private function ifUserCertPeriodValidThenElse($statement_if_true, $statement_if_false)
-	{
-		return 'IF ( usr.begin_of_certification >= \''.self::EARLIEST_CERT_START.'\''
-							.'   ,'.$statement_if_true
-							.'   ,'.$statement_if_false.')';
-	}
-
 	public function buildQueryStatement()
 	{
-		$points_total = 'FLOOR(SUM( IF(usrcrs.credit_points > 0, usrcrs.credit_points, 0) )/3)';
-
 		$query =
 			'SELECT'
 			.'	usr.user_id'
@@ -90,7 +65,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'	,orgu_all.org_unit'
 			.'	,orgu_all.org_unit_above1'
 			.'	,orgu_all.org_unit_above2'
-			.'	,roles.roles'
 			.'	,usr.begin_of_certification'
 			.'	,SUM(IF(usrcrs.booking_status = '.$this->gIldb->quote('gebucht', "text")
 			.'      AND usrcrs.participation_status ='.$this->gIldb->quote('teilgenommen', "text")
@@ -108,7 +82,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'			AND usrcrs.credit_points > 0'
 			.'			AND usrcrs.booking_status = \'gebucht\''
 			.'			'.$this->filterWBDImported()
-			.$this->whereConditions($query);
+			.$this->whereConditions();
 
 		$query .= '	GROUP BY usr.user_id'
 
@@ -123,7 +97,24 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			'	WHERE '.$this->gIldb->in('usr.user_id', $this->relevant_users, false, 'integer')
 			.' 		AND usr.hist_historic = 0';
 		$where = $this->possiblyAddLastnameCondition($where);
-		$where = $this->possiblyAddWbdRelevantCondition($where);
+		$where = $this->possiblyAddYearCondition($where);
+		return $where;
+	}
+
+	private function possiblyAddYearCondition($where)
+	{
+		$selection  = $this->filter_selections['year'];
+		if(is_null($selection) || empty($selection)) {
+			return $where;
+		}
+		$start = $selection."-01-01";
+		$end = ++$selection."-01-01";
+
+		$where.= "	AND((usrcrs.begin_date >= ".$this->gIldb->quote($start, "text").PHP_EOL
+				."		 AND usrcrs.begin_date < ".$this->gIldb->quote($end, "text").")".PHP_EOL
+				."		OR (usrcrs.end_date >= ".$this->gIldb->quote($start, "text").PHP_EOL
+				."		 AND usrcrs.end_date < ".$this->gIldb->quote($end, "text")."))".PHP_EOL
+				;
 		return $where;
 	}
 
@@ -132,16 +123,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		$input = $this->filter_selections['lastname'];
 		if (is_string($input) && $input !== '') {
 			return $where.'		AND usr.lastname LIKE '.$this->gIldb->quote($input.'%', 'text');
-		}
-		return $where;
-	}
-
-	private function possiblyAddWbdRelevantCondition($where)
-	{
-		$selection = $this->filter_selections['wbd_relevant'];
-		if ($selection) {
-			return $where.'		AND (roles.num_wbd_roles > 0 '
-						.'			OR usr.okz != '.$this->gIldb->quote("-empty-", 'text').')';
 		}
 		return $where;
 	}
@@ -219,18 +200,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 
 		return
 			$f->sequence(
-				$f->option(
-					$txt('wbd_relevant_only'),
-					''
-				),
-				$f->option(
-					$txt('filter_no_wbd_imported'),
-					''
-				),
-				$f->option(
-					$lng->txt('gev_org_unit_recursive'),
-					''
-				)->clone_with_checked(!(bool)$this->getSettingsDataFor("truncate_orgu_filter")),
 				$f->multiselect(
 					$lng->txt("gev_org_unit_short"),
 					'',
@@ -239,25 +208,36 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 				$f->text(
 					$txt('lastname_filter'),
 					''
-				)
-			)->map(function ($wbd_relevant, $no_wbd_imp, $recursive, $orgu_selection, $lastname) use ($self) {
+				),
+				$f->singleselect(
+					$txt('filter_year'),
+					'',
+					$this->yearOptions()
+				)->default_choice((int)date('Y'))
+			)->map(function ($orgu_selection, $lastname, $year) use ($self) {
 								return array(
-									'wbd_relevant' => $wbd_relevant
-									,'no_wbd_imp' => $no_wbd_imp
-									,'recursive' => $recursive
-									,'orgu_selection' => $orgu_selection
-									,'lastname' => $lastname);
+									'orgu_selection' => $orgu_selection,
+									'lastname' => $lastname,
+									'year' => $year
+								);
 			}, $tf->dict(
 				array(
-								'wbd_relevant' => $tf->bool()
-								,'no_wbd_imp' => $tf->bool()
-								,'recursive' => $tf->bool()
-								,'orgu_selection' => $tf->lst($tf->int())
-								,'lastname' => $tf->string()
-								)
+					'orgu_selection' => $tf->lst($tf->int()),
+					'lastname' => $tf->string(),
+					'year' => $tf->int()
+				)
 			));
 	}
 
+	private function yearOptions()
+	{
+		$current = (int)date('Y');
+		$return = [];
+		for ($i = $current - 10; $i < $current + 4; $i++) {
+			$return[$i] = (string)$i;
+		}
+		return $return;
+	}
 
 	private function getRelevantOrgus()
 	{
@@ -328,10 +308,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		$table
 						->column("lastname", $this->plugin->txt("lastname"), true)
 						->column("firstname", $this->plugin->txt("firstname"), true)
-						->column("points_sum", $this->plugin->txt("overall_points_cert_period"), true)
-						->column("points_total_goa", $this->plugin->txt("overall_points_goa"), true)
-						->column("cert_period", $this->plugin->txt("cert_period"), true)
-						->column("attention", $this->plugin->txt("critical"), true)
 						->column("login", $this->plugin->txt("login"), true)
 						->column("cp_passed", $this->txt("cp_passed"), true)
 						->column("cp_passed_and_booked", $this->txt("cp_passed_and_booked"), true)
@@ -339,12 +315,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 						->column("job_number", $this->plugin->txt("job_number"), true)
 						->column("od_bd", $this->plugin->txt("od_bd"), true, "", false, false)
 						->column("org_unit", $this->plugin->txt("orgu_short"), true)
-						->column("roles", $this->plugin->txt("roles"), true)
-						->column("points_year1", "1", true)
-						->column("points_year2", "2", true)
-						->column("points_year3", "3", true)
-						->column("points_year4", "4", true)
-						->column("points_year5", "5", true);
+						->column("roles", $this->plugin->txt("roles"), true);
 		return parent::buildTable($table);
 	}
 
