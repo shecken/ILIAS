@@ -40,21 +40,11 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	protected $parent_cmd;
 
 	/**
-	 * @var string
+	 * @var int
 	 */
-	protected $player_title;
+	protected $parent_ref_id;
 
-	/**
-	 * @var string
-	 */
-	protected $confirm_button_label;
-
-	/**
-	 * @var string
-	 */
-	protected $overview_description;
-
-	final public function __construct(\ilLanguage $lng, \ilCtrl $ctrl, $gui, array $parent_guis, $parent_cmd) {
+	final public function __construct(\ilLanguage $lng, \ilCtrl $ctrl, $gui, array $parent_guis, $parent_cmd, $parent_ref_id) {
 		assert('is_object($gui)');
 		assert('is_string($parent_cmd)');
 		$this->lng = $lng;
@@ -63,6 +53,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 		$this->gui = $gui;
 		$this->parent_guis = $parent_guis;
 		$this->parent_cmd = $parent_cmd;
+		$this->parent_ref_id = $parent_ref_id;
 	}
 
 	/**
@@ -113,6 +104,14 @@ class ILIASBindings implements Wizard\ILIASBindings {
 				\ilUtil::sendInfo($message, true);
 			}
 		}
+		$this->ctrl->setParameterByClass($this->parent_guis[0], "ref_id", $this->parent_ref_id);
 		$this->ctrl->redirectByClass($this->parent_guis, $this->parent_cmd);
+	}
+
+	/**
+	 * @param	int	$parent_ref_id
+	 */
+	public function setParentRefId($parent_ref_id) {
+		$this->parent_ref_id = $parent_ref_id;
 	}
 }

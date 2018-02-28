@@ -42,7 +42,7 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	protected $request_builder;
 
 	/**
-	 * @var \Closure
+	 * @var callable
 	 */
 	protected $signal_new_ref_id;
 
@@ -61,7 +61,7 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 *
 	 * TODO: turn timestamp to \DateTime, document it as member
 	 */
-	public function __construct($dic, RequestBuilder $request_builder, $user_id, $session_id, $crs_ref_id, $timestamp, \Closure $signal_new_ref_id = null) {
+	public function __construct($dic, RequestBuilder $request_builder, $user_id, $session_id, $crs_ref_id, $timestamp, callable $signal_new_ref_id = null) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_int($user_id)');
 		assert('is_string($session_id)');

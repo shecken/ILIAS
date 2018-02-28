@@ -38,6 +38,7 @@ trait CourseListGUIExtension {
 	}
 
 	protected function getCreateCourseCommandLink() {
+		$this->ctrl->setParameterByClass("ilCourseCreationGUI", "parent_ref_id", $this->parent_ref_id);
 		$this->ctrl->setParameterByClass("ilCourseCreationGUI", "ref_id", $this->ref_id);
 		return $this->ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilCourseCreationGUI"], $this->getCreateCourseCommand());
 	}
