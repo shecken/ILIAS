@@ -1207,6 +1207,77 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 				$this->setCourseEnd(new ilDate($value["end"], IL_CAL_DATE));
 				$this->update();
 			}
+			else if ($key == "important_information") {
+				$this->setImportantInformation($value);
+				$this->update();
+			}
+			else if ($key == "venue_free_text" && ilPluginAdmin::isPluginActive('venues')) {
+				$vplug = ilPluginAdmin::getPluginObjectById('venues');
+				$vactions = $vplug->getActions();
+				$vassignment = $vactions->getAssignment((int)$this->getId());
+
+				if($vassignment && $vassignment->isCustomAssignment()) {
+					$vassignment = $vassignment->withVenueText($value);
+					$vactions->updateAssignment($vassignment);
+				} else {
+					$vactions->removeAssignment((int)$this->getId());
+					$vassignment = $vactions->createCustomVenueAssignment(
+						(int)$this->getId(),
+						$value
+					);
+				}
+			}
+			else if ($key == "venue_fixed" && ilPluginAdmin::isPluginActive('venues')) {
+				$vplug = ilPluginAdmin::getPluginObjectById('venues');
+				$vactions = $vplug->getActions();
+				$vassignment = $vactions->getAssignment((int)$this->getId());
+
+				if($vassignment && $vassignment->isListAssignment()) {
+					$vassignment = $vassignment->withVenueId((int)$value);
+					$vactions->updateAssignment($vassignment);
+				}
+				else {
+					$vactions->removeAssignment((int)$this->getId());
+					$vassignment = $vactions->createListVenueAssignment(
+						(int)$this->getId(),
+						(int)$value
+					);
+				}
+			}
+			else if ($key == "provider_free_text" && ilPluginAdmin::isPluginActive('trainingprovider')) {
+				$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
+				$pactions = $pplug->getActions();
+				$passignment = $pactions->getAssignment((int)$this->getId());
+
+				if($passignment && $passignment->isCustomAssignment()) {
+					$passignment = $passignment->withProviderText($value);
+					$pactions->updateAssignment($passignment);
+				}
+				else {
+					$pactions->removeAssignment((int)$this->getId());
+					$passignment = $pactions->createCustomProviderAssignment(
+						(int)$this->getId(),
+						$value
+					);
+				}
+			}
+			else if ($key == "provider_fixed" && ilPluginAdmin::isPluginActive('trainingprovider')) {
+				$pplug = ilPluginAdmin::getPluginObjectById('trainingprovider');
+				$pactions = $pplug->getActions();
+				$passignment = $pactions->getAssignment((int)$this->getId());
+
+				if($passignment && $passignment->isListAssignment()) {
+					$passignment = $passignment->withProviderId((int)$value);
+					$pactions->updateAssignment($passignment);
+				}
+				else {
+					$pactions->removeAssignment((int)$this->getId());
+					$passignment = $pactions->createListProviderAssignment(
+						(int)$this->getId(),
+						(int)$value
+					);
+				}
+			}
 			else {
 				throw new \RuntimeException("Can't process configuration '$key'");
 			}
