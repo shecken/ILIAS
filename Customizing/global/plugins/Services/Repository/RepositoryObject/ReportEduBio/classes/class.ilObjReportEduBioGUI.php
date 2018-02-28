@@ -194,7 +194,7 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 		} else {
 			$rec["status"] = self::$in_progress_img;
 		}
-		$rec['credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['credit_points']);
+		$rec['wb_time'] = gevCourseUtils::convertCreditpointsToFormattedDuration(40);//(int)$rec['credit_points']);
 		if ($rec["begin_date"] == "0000-00-00" && $rec["end_date"] == "0000-00-00") {
 			$rec["date"] = $no_entry;
 		} elseif ($rec["end_date"] == "0000-00-00") {
@@ -254,7 +254,7 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
 			$rec["date"] = ilDatePresentation::formatDate($start)." - <br/>".ilDatePresentation::formatDate($end);
 		}
-		$rec['credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['credit_points']);
+		$rec['wb_time'] = gevCourseUtils::convertCreditpointsToFormattedDuration(40);//(int)$rec['credit_points']);
 		$rec["wbd"] = in_array($rec["okz"], array("OKZ1", "OKZ2", "OKZ3"))
 					? $lng->txt("yes")
 					: $lng->txt("no");
