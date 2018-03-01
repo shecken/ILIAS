@@ -55,6 +55,10 @@ class gevDesktopGUI
 		$cmd = $this->ctrl->getCmd();
 		$this->checkProfileComplete($cmd, $next_class);
 
+		if ($next_class != "gevuserprofilegui" && $cmd != "toMyProfile") {
+			$this->checkNeedsWBDRegistration($cmd, $next_class);
+		}
+
 		if ($cmd == "") {
 			$cmd = "toMyCourses";
 		}
@@ -458,6 +462,25 @@ class gevDesktopGUI
 		if (!$utils->isProfileComplete() && !($cmd == "toMyProfile" || $next_class == "gevuserprofilegui")) {
 			ilUtil::sendFailure($this->lng->txt("gev_profile_incomplete"), true);
 			$this->ctrl->redirect($this, "toMyProfile");
+		}
+	}
+
+	protected function checkNeedsWBDRegistration($cmd, $next_class)
+	{
+		require_once("Services/GEV/WBD/classes/class.gevWBD.php");
+		global $ilUser;
+		$wbd = gevWBD::getInstanceByObj($ilUser);
+		if ($wbd->hasWBDRelevantRole() && !$wbd->hasDoneWBDRegistration()) {
+			//two ways: GEV is TP or  TPBasic
+			if ($wbd->canBeRegisteredAsTPService()) {
+				if ($next_class != "gevwbdtpserviceregistrationgui") {
+					$this->ctrl->redirectByClass("gevWBDTPServiceRegistrationGUI");
+				}
+			} else {
+				if ($next_class != "gevwbdtpbasicregistrationgui") {
+					$this->ctrl->redirectByClass("gevWBDTPBasicRegistrationGUI");
+				}
+			}
 		}
 	}
 
