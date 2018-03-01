@@ -10,7 +10,7 @@ require_once("Services/Component/classes/class.ilPluginAdmin.php");
  * Enhances a course access handler with methods required for the course creation.
  */
 trait CourseAccessExtension {
-	static function _checkAccessExtension($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id) {
+	static public function _checkAccessExtension($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id) {
 		if ($a_cmd === "create_course_from_template") {
 			return self::_mayUserCreateCourseFromTemplate((int)$a_ref_id, (int)$a_user_id);
 		}
@@ -32,7 +32,10 @@ trait CourseAccessExtension {
 		}
 		global $DIC;
 		$access = $DIC->access();
-		if (!$access->checkAccessOfUser($a_user_id, "copy", "initTargetSelection", $a_ref_id, "crs")) {
+		if (!$access->checkAccessOfUser($a_user_id, "copy", "", $a_ref_id, "crs")) {
+			return false;
+		}
+		if (!self::_userCanInsertCourseInParentCategory($a_user_id, $a_ref_id)) {
 			return false;
 		}
 		if (!self::_userCanSeeCopySettingsObject($a_user_id, $a_ref_id)) {
@@ -41,7 +44,7 @@ trait CourseAccessExtension {
 		return true;
 	}
 
-	static function _isTemplateCourse($ref_id) {
+	static public function _isTemplateCourse($ref_id) {
 		assert('is_int($ref_id)');
 		global $DIC;
 		$tree = $DIC->repositoryTree();
@@ -49,7 +52,17 @@ trait CourseAccessExtension {
 		return count($tree->getSubTree($node, false, ["xcps"])) > 0;
 	}
 
-	static function _userCanSeeCopySettingsObject($user_id, $ref_id) {
+	static public function _userCanInsertCourseInParentCategory($user_id, $ref_id) {
+		assert('is_int($user_id)');
+		assert('is_int($ref_id)');
+		global $DIC;
+		$tree = $DIC->repositoryTree();
+		$node = $tree->getNodeData($ref_id);
+		$access = $DIC->access();
+		return $access->checkAccessOfUser($user_id, "create_crs", "", $node["parent"]);
+	}
+
+	static public function _userCanSeeCopySettingsObject($user_id, $ref_id) {
 		assert('is_int($ref_id)');
 		assert('is_int($user_id)');
 		global $DIC;
