@@ -160,15 +160,7 @@ class gevWBD
 	);
 
 	public static $wbd_relevant_roles = array(
-		"UA"
-		,"84er"
-		,"59er"
-		,"AVL"
-		,"DBV UVG"
-		,"int. Referent"
-		,"TP Service"
-		,"TP Basis"
-		,"VP"
+		"VP"
 	);
 
 
