@@ -92,15 +92,11 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'	,orgu_all.org_unit_above2'
 			.'	,roles.roles'
 			.'	,usr.begin_of_certification'
-			.'	,'.$points_total.' as points_total_goa'
-			.'	,'.$this->ifUserCertPeriodValidThenElse('usr.begin_of_certification', $this->gIldb->quote('-', 'text')).' as cert_period'
-			.'	,'.$this->ifUserCertPeriodValidThenElse($this->pointsInCertYearSql(1), $this->gIldb->quote('-', 'text')).' as points_year1'
-			.'	,'.$this->ifUserCertPeriodValidThenElse($this->pointsInCertYearSql(2), $this->gIldb->quote('-', 'text')).' as points_year2'
-			.'	,'.$this->ifUserCertPeriodValidThenElse($this->pointsInCertYearSql(3), $this->gIldb->quote('-', 'text')).' as points_year3'
-			.'	,'.$this->ifUserCertPeriodValidThenElse($this->pointsInCertYearSql(4), $this->gIldb->quote('-', 'text')).' as points_year4'
-			.'	,'.$this->ifUserCertPeriodValidThenElse($this->pointsInCertYearSql(5), $this->gIldb->quote('-', 'text')).' as points_year5'
-			.'	,'.$this->pointsInCurrentPeriod().' as points_sum'
-			.'	,'.$this->attention().'	AS attention'
+			.'	,SUM(IF(usrcrs.booking_status = '.$this->gIldb->quote('gebucht', "text")
+			.'      AND usrcrs.participation_status ='.$this->gIldb->quote('teilgenommen', "text")
+			.'     ,usrcrs.credit_points,0)) AS cp_passed'
+			.'	,SUM(IF(usrcrs.booking_status = '.$this->gIldb->quote('gebucht', "text")
+			.'     ,usrcrs.credit_points,0)) AS cp_passed_and_booked'
 			.'	FROM hist_user usr'
 			.'	JOIN usr_data usrd'
 			.'		ON usr.user_id = usrd.usr_id'
@@ -110,9 +106,8 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'		ON orgu_all.usr_id = usr.user_id'
 			.'	LEFT JOIN hist_usercoursestatus as usrcrs'
 			.'		ON usr.user_id = usrcrs.usr_id'
-			.'			AND usrcrs.hist_historic = 0 '
+			.'			AND usrcrs.hist_historic = 0'
 			.'			AND usrcrs.credit_points > 0'
-			.'			AND usrcrs.participation_status = \'teilgenommen\''
 			.'			AND usrcrs.booking_status = \'gebucht\''
 			.'			'.$this->filterWBDImported()
 			.$this->whereConditions($query);
@@ -120,6 +115,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		$query .= '	GROUP BY usr.user_id'
 
 					.'	'.$this->queryOrder();
+					var_dump($query);
 		return $query;
 	}
 
@@ -178,6 +174,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'	GROUP BY usr_id'.PHP_EOL;
 	}
 
+<<<<<<< HEAD
 	private function WBDAndTPSRolesCount()
 	{
 		$wbd_relevant_condition = $this->gIldb->in('rol_id', $this->getWbdRelevantRoleIds(), false, 'integer');
@@ -260,6 +257,8 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		return $this->gIldb->quote((new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d'), 'date');
 	}
 
+=======
+>>>>>>> b7d26c4... adjust query - rename vars
 	protected function getFilterSettings()
 	{
 		$filter = $this->filter();
@@ -421,6 +420,11 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 						->column("cert_period", $this->plugin->txt("cert_period"), true)
 						->column("attention", $this->plugin->txt("critical"), true)
 						->column("login", $this->plugin->txt("login"), true)
+<<<<<<< HEAD
+=======
+						->column("cp_passed", $this->txt("cp_passed"), true)
+						->column("cp_passed_and_booked", $this->txt("cp_passed_and_booked"), true)
+>>>>>>> b7d26c4... adjust query - rename vars
 						->column("adp_number", $this->plugin->txt("adp_number"), true)
 						->column("job_number", $this->plugin->txt("job_number"), true)
 						->column("od_bd", $this->plugin->txt("od_bd"), true, "", false, false)
