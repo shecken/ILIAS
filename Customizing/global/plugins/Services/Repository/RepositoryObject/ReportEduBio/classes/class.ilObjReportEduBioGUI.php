@@ -102,42 +102,17 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 
 	protected function renderOverview() {
 		$tpl = new ilTemplate("tpl.gev_edu_bio_overview.html", true, true, $this->object->plugin->getDirectory());
-		$this->insertAcademyPoints($tpl);
-		if($this->object->getWBD()->getWBDTPType() === gevWBD::WBD_TP_SERVICE ) {
-			$this->insertWBDPoints($tpl);
-			if ($this->object->getWBD()->transferPointsFromWBD()) {
-				$tpl->setVariable("WBDPOINTSVISIBIBLE", "visible");
-			} else {
-				$tpl->setVariable("WBDPOINTSVISIBIBLE", "invisible");
-				if($this->object->getWBD()->transferPointsToWBD()) {
-					ilUtil::sendInfo($this->plugin->txt("wbd_transfer_on"));
-				} elseif($this->object->getWBD()->wbdRegistrationIsPending()) {
-					ilUtil::sendInfo($this->plugin->txt("wbd_reg_pending"));
-				}
-			}
-		} else {
-			$tpl->setVariable("WBDPOINTSVISIBIBLE", "invisible");
-		}
+		$this->insertPoints($tpl);
 		return $tpl->get();
 	}
 
-	protected function insertAcademyPoints($tpl) {
-		$tpl->setVariable("ACA_TRANSFERED_SUM_TITLE", $this->object->plugin->txt("aca_transferred_points_filter"));
-		$tpl->setVariable("ACA_TO_TRANSFER_SUM_TITLE", $this->object->plugin->txt("aca_to_transdfer_points_filter"));
-		$aux = $this->object->academy_points["transfered_sum"];
-		$tpl->setVariable("ACA_TRANSFERED_SUM", $aux ? $aux : 0);
-		$aux = $this->object->academy_points["to_transfer_sum"];
-		$tpl->setVariable("ACA_TO_TRANSFER_SUM", $aux ? $aux : 0);
-	}
-
-	protected function insertWBDPoints($tpl) {
-		$tpl->setVariable("WBD_SUM_TITLE", $this->object->plugin->txt("points_in_wbd"));
-		$tpl->setVariable("WBD_SUM_CERT_PERIOD_TITLE", $this->object->plugin->txt("points_in_wbd_cert_period"));
-		$tpl->setVariable("WBD_CERT_PERIOD", $this->object->wbd_data["cert_period"]);
-		$aux = $this->object->wbd_data["sum"];
-		$tpl->setVariable("WBD_SUM", $aux ? $aux : 0);
-		$aux = $this->object->wbd_data["sum_cert_period"];
-		$tpl->setVariable("WBD_SUM_CERT_PERIOD", $aux ? $aux : 0);
+	protected function insertPoints($tpl) {
+		$tpl->setVariable("SUM_HIST_POINTS", $this->object->plugin->txt("sum_hist_points"));
+		$tpl->setVariable("SUM_HIST_BOOKED_POINTS", $this->object->plugin->txt("sum_hist_booked_points"));
+		$aux = gevCourseUtils::convertCreditpointsToFormattedDuration($this->object->points["sum_hist_points"]);
+		$tpl->setVariable("HIST_POINTS", $aux);
+		$aux = gevCourseUtils::convertCreditpointsToFormattedDuration($this->object->points["sum_hist_booked_points"]);
+		$tpl->setVariable("HIST_BOOKED_POINTS", $aux);
 	}
 
 	protected function getBill() {
