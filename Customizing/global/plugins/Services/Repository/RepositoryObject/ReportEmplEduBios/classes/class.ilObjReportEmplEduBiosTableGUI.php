@@ -28,10 +28,8 @@ class ilObjReportEmplEduBiosTableGUI extends catTableGUI {
 			$this->tpl->setVariable("VAL_EDU_BIO_LINK", $a_set['edu_bio_link']);
 			$this->tpl->parseCurrentBlock();
 		}
-		$this->tpl->setVariable("VAL_POINTS_SUM", $a_set['points_sum']);
-		$this->tpl->setVariable("VAL_POINTS_TOTAL_GOA", $a_set['points_total_goa']);
-		$this->tpl->setVariable("VAL_CERT_PERIOD", $a_set['cert_period']);
-		$this->tpl->setVariable("VAL_ATTENTION", $a_set['attention']);
+		$this->tpl->setVariable("VAL_CP_PASSED", $a_set['cp_passed']);
+		$this->tpl->setVariable("VAL_CP_PASSED_AND_BOOKED", $a_set['cp_passed_and_booked']);
 		$this->tpl->setVariable("VAL_ADP_NUMBER", $a_set['adp_number']);
 		$this->tpl->setVariable("VAL_JOB_NUMBER", $a_set['job_number']);
 		$this->tpl->setVariable("VAL_OD_BD", $a_set['od_bd']);
