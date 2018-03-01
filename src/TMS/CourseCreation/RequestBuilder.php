@@ -31,5 +31,29 @@ interface RequestBuilder {
 	 * @var	\DateTime	$requested_ts
 	 * @return	Request
 	 */
-	public function getRequest();
+	public function getRequest(\DateTime $requested_ts);
+
+	/**
+	 * Set a copy option for the given ref_id.
+	 *
+	 * @param	int		$ref_id
+	 * @param	mixed 	$copy_option from Request
+	 * @return	self
+	 */
+	public function setCopyOptionFor($ref_id, $copy_option);
+
+	/**
+	 * Add some configuration data that is given to the copy of the given object
+	 * after the ILIAS copy process.
+	 *
+	 * The object needs to implement a "afterCourseCreation" method, which will
+	 * receive the data.
+	 *
+	 * The data needs to be serializeable via json.
+	 *
+	 * @param	\ilObject	$object
+	 * @param	mixed		$data	that is json_serializeable
+	 * @return  self
+	 */
+	public function addConfigurationFor(\ilObject $object, $data);
 }

@@ -25,4 +25,11 @@ interface Wizard {
 	 * @return	Step[]
 	 */
 	public function getSteps();
+
+	/**
+	 * Clean up wizard after steps are processed.
+	 *
+	 * @return void
+	 */
+	public function finish();
 }

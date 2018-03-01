@@ -259,6 +259,7 @@ class Player {
 			}
 		}
 		$this->state_db->delete($state);
+		$this->wizard->finish();
 		$this->ilias_bindings->redirectToPreviousLocation($messages, true);
 	}
 
