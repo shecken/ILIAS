@@ -112,6 +112,7 @@ class ILIASBindings implements Wizard\ILIASBindings {
 	 * @param	int	$parent_ref_id
 	 */
 	public function setParentRefId($parent_ref_id) {
+		assert('is_int($parent_ref_id)');
 		$this->parent_ref_id = $parent_ref_id;
 	}
 }

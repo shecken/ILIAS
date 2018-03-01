@@ -12,11 +12,18 @@ require_once("Services/Component/classes/class.ilPluginAdmin.php");
 trait CourseAccessExtension {
 	static function _checkAccessExtension($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id) {
 		if ($a_cmd === "create_course_from_template") {
-			return self::_mayUserCreateCourseFromTemplate($a_ref_id, $a_user_id);
+			return self::_mayUserCreateCourseFromTemplate((int)$a_ref_id, (int)$a_user_id);
 		}
 	}
 
-	static function _mayUserCreateCourseFromTemplate($a_ref_id, $a_user_id) {
+	/**
+	 * @param	int	$a_ref_id
+	 * @param	int	$a_user_id
+	 * @return	bool
+	 */
+	static public function _mayUserCreateCourseFromTemplate($a_ref_id, $a_user_id) {
+		assert('is_int($a_ref_id)');
+		assert('is_int($a_user_id)');
 		if (!\ilPluginAdmin::isPluginActive("xccr") || !\ilPluginAdmin::isPluginActive("xcps")) {
 			return false;
 		}
