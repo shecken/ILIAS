@@ -87,7 +87,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 		$query .= '	GROUP BY usr.user_id'
 
 					.'	'.$this->queryOrder();
-					var_dump($query);
 		return $query;
 	}
 
