@@ -35,10 +35,5 @@ class ilObjReportEmplEduBiosTableGUI extends catTableGUI {
 		$this->tpl->setVariable("VAL_OD_BD", $a_set['od_bd']);
 		$this->tpl->setVariable("VAL_ORG_UNIT", $a_set['org_unit']);
 		$this->tpl->setVariable("VAL_ROLES", $a_set['roles']);
-		$this->tpl->setVariable("VAL_POINTS_YEAR1", $a_set['points_year1']);
-		$this->tpl->setVariable("VAL_POINTS_YEAR2", $a_set['points_year2']);
-		$this->tpl->setVariable("VAL_POINTS_YEAR3", $a_set['points_year3']);
-		$this->tpl->setVariable("VAL_POINTS_YEAR4", $a_set['points_year4']);
-		$this->tpl->setVariable("VAL_POINTS_YEAR5", $a_set['points_year5']);
 	}
 }
