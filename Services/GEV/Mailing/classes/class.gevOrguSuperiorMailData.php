@@ -257,6 +257,7 @@ class gevOrguSuperiorMailData extends ilMailData
 			case "zentrales Training (AD)":
 				return "zentrales $a_type";
 			case "dezentrales Training (AD)":
+			case "LE-Training dezentral (ID)":
 				return "dezentrales $a_type";
 			case "Grundausbildung (AD)":
 			case "Grundausbildung (ID)":

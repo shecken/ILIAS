@@ -569,9 +569,13 @@ class gevUserImport {
 			$entry['wbd_topic'] =  $entry['crs_wbd_content'];
 
 		}
+		$dec = 0;
+		if($entry['edu_program'] == 'dezentrales Training (AD)' || $entry['edu_program'] == 'LE-Training dezentral (ID)') {
+			$dec = 1;
+		}
 		if($client == 'GEV'){
 			$entry['old_usr_id'] = $entry['usr_id'];
-			$entry['is_decentral'] = ($entry['edu_program'] == 'dezentrales Training (AD)') ? 1 : 0;
+			$entry['is_decentral'] = $dec;
 			$entry['last_wbd_report'] = ($entry['last_wbd_report']) ? $entry['last_wbd_report'] : 'NULL';
 
 		}
