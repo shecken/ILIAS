@@ -141,8 +141,7 @@ class ilObjReportEduBio extends ilObjReportBase
 	{
 		$points = array();
 		$period = $this->filter->get("period");
-		$points['sum_hist_points'] = $this->getSumPoints($period["start"], $period["end"], true);
-		$points['sum_hist_booked_points'] = $this->getSumPoints($period["start"], $period["end"], false);
+		$points['sum_hist_points'] = $this->getSumPoints($period["start"], $period["end"]);
 		return $points;
 	}
 
@@ -151,12 +150,8 @@ class ilObjReportEduBio extends ilObjReportBase
 	 *
 	 * @return int
 	 */
-	protected function getSumPoints($start, $end, $paricipate)
+	protected function getSumPoints($start, $end)
 	{
-		$par = "";
-		if($paricipate) {
-			$par = "		AND usrcrs.participation_status = ".$this->gIldb->quote('teilgenommen', 'text');
-		}
 		$query = "SELECT SUM(usrcrs.credit_points) sum "
 				."	FROM hist_usercoursestatus usrcrs "
 				."	JOIN hist_course crs"
@@ -164,7 +159,7 @@ class ilObjReportEduBio extends ilObjReportBase
 				."	WHERE usrcrs.hist_historic = 0 "
 				."		AND usrcrs.usr_id = ".$this->gIldb->quote($this->target_user_id, 'integer')
 				."		AND crs.hist_historic = 0 "
-				.$par
+				."		AND usrcrs.participation_status = ".$this->gIldb->quote('teilgenommen', 'text')
 				."		AND ".$this->gIldb->in('usrcrs.function', array('Mitglied', 'Teilnehmer'), false, 'text')
 				."		AND usrcrs.booking_status = ".$this->gIldb->quote('gebucht', 'text')
 				."		AND usrcrs.credit_points > 0 "
