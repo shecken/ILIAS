@@ -1853,3 +1853,30 @@ orgu#:#ext_id#:#ADE-Nummer
 gev#:#bol_link_label_cockpit#:#BOL
 gev#:#xacc_copy#:#Kostenerfassung kopieren
 gev#:#xfbk_copy#:#Sternefeedback kopieren
+ev#:#xbbp_copy#:#Pool für Trainingsbausteine kopieren
+gev#:#xcgo_copy#:#Karriereziel kopieren
+gev#:#xatd_copy#:#ASTD-Report kopieren
+gev#:#xrbi_copy#:#Rechnungsreport kopieren
+gev#:#xrbt_copy#:#Report Teilnahmen nach Trainingsvorlage kopieren
+gev#:#xbbv_copy#:#Report Buchungen nach Veranstaltungsort kopieren
+gev#:#xrcg_copy#:#Unternehmensreport kopieren
+gev#:#xrcp_copy#:#Gutscheincodereport kopieren
+gev#:#xrcn_copy#:#Gutscheincodereport kopieren
+gev#:#xreb_copy#:#Bildungsbiografie kopieren
+gev#:#xrea_copy#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner kopieren
+gev#:#x34i_copy#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i kopieren
+gev#:#xeeb_copy#:#Report Bildungsbiografien meiner Mitarbeiter / Vertriebspartner kopieren
+gev#:#xexb_copy#:#Prüfungsbiografie kopieren
+gev#:#xrts_copy#:#Report Beispiel kopieren
+gev#:#xroa_copy#:#Report Teilnahmen nach Organisationseinheit kopieren
+gev#:#xsp_copy#:#Studienprogrammreport kopieren
+gev#:#xspo_copy#:#Report Ausbildungs- und Qualifizierungspässe kopieren
+gev#:#xttc_copy#:#Report Trainereinsätze nach TEP-Kategorie kopieren
+gev#:#xoto_copy#:#Report Trainereinsätze nach Organisationseinheiten und Trainern kopieren
+gev#:#xrtw_copy#:#Report Trainerauslastung kopieren
+gev#:#xrta_copy#:#Report über Teilnahmen an Trainings kopieren
+gev#:#xtda_copy#:#Report Trainingsauslastung (Ausblick) kopieren
+gev#:#xtdr_copy#:#Report Trainingsauslastung (Auswertung) kopieren
+gev#:#xwbe_copy#:#Report über Fehler bei der WBD-Meldung kopieren
+gev#:#xwbp_copy#:#Report über gemeldete Bildungspunkte kopieren
+gev#:#xtas_copy#:#Assessment Center für [KARRIEREZIEL] kopieren
