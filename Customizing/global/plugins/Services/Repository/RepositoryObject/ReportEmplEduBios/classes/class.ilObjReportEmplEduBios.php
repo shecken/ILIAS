@@ -66,10 +66,11 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'	,orgu_all.org_unit_above1'
 			.'	,orgu_all.org_unit_above2'
 			.'	,usr.begin_of_certification'
-			.'	,SUM(IF(usrcrs.booking_status = '.$this->gIldb->quote('gebucht', "text")
-			.'      AND usrcrs.participation_status ='.$this->gIldb->quote('teilgenommen', "text")
+			.'	,SUM(IF(usrcrs.participation_status = '.$this->gIldb->quote('teilgenommen', "text")
 			.'     ,usrcrs.credit_points,0)) AS cp_passed'
 			.'	,SUM(IF(usrcrs.booking_status = '.$this->gIldb->quote('gebucht', "text")
+			.'          AND (usrcrs.participation_status = "nicht gesetzt"'
+			.'				OR usrcrs.participation_status = "teilgenommen")'
 			.'     ,usrcrs.credit_points,0)) AS cp_passed_and_booked'
 			.'	FROM hist_user usr'
 			.'	JOIN usr_data usrd'
@@ -104,7 +105,7 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 	{
 		$selection  = $this->filter_selections['year'];
 		if(is_null($selection) || empty($selection)) {
-			return $where;
+			$selection = date("Y");
 		}
 		$start = $selection."-01-01";
 		$end = ++$selection."-01-01";
