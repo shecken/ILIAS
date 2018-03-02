@@ -569,6 +569,8 @@ class ilParticipationStatusAdminGUI
 			// gev-patch end
 		}
 
+		$this->getParticipationStatus()->getAttendanceList();
+
 		// confirmation 
 		// gev-patch start
 		/*
