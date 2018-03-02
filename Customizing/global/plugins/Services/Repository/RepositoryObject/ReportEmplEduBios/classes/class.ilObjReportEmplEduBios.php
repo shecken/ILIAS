@@ -68,10 +68,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'	,usr.begin_of_certification'
 			.'	,SUM(IF(usrcrs.participation_status = '.$this->gIldb->quote('teilgenommen', "text")
 			.'     ,usrcrs.credit_points,0)) AS cp_passed'
-			.'	,SUM(IF(usrcrs.booking_status = '.$this->gIldb->quote('gebucht', "text")
-			.'          AND (usrcrs.participation_status = "nicht gesetzt"'
-			.'				OR usrcrs.participation_status = "teilgenommen")'
-			.'     ,usrcrs.credit_points,0)) AS cp_passed_and_booked'
 			.'	FROM hist_user usr'
 			.'	JOIN usr_data usrd'
 			.'		ON usr.user_id = usrd.usr_id'
@@ -310,7 +306,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 						->column("firstname", $this->plugin->txt("firstname"), true)
 						->column("login", $this->plugin->txt("login"), true)
 						->column("cp_passed", $this->txt("cp_passed"), true)
-						->column("cp_passed_and_booked", $this->txt("cp_passed_and_booked"), true)
 						->column("adp_number", $this->plugin->txt("adp_number"), true)
 						->column("job_number", $this->plugin->txt("job_number"), true)
 						->column("od_bd", $this->plugin->txt("od_bd"), true, "", false, false)
