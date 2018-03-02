@@ -29,7 +29,6 @@ class ilObjReportEmplEduBiosTableGUI extends catTableGUI {
 			$this->tpl->parseCurrentBlock();
 		}
 		$this->tpl->setVariable("VAL_CP_PASSED", $a_set['cp_passed']);
-		$this->tpl->setVariable("VAL_CP_PASSED_AND_BOOKED", $a_set['cp_passed_and_booked']);
 		$this->tpl->setVariable("VAL_ADP_NUMBER", $a_set['adp_number']);
 		$this->tpl->setVariable("VAL_JOB_NUMBER", $a_set['job_number']);
 		$this->tpl->setVariable("VAL_OD_BD", $a_set['od_bd']);
