@@ -95,8 +95,7 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 		return 	$this->title->render()
 				.($this->object->deliverFilter() !== null ? $this->object->deliverFilter()->render() : "")
 				.($this->spacer !== null ? $this->spacer->render() : "")
-				.($this->object->getWBD()->getWBDTPType() !== gevWBD::WBD_NO_SERVICE ?
-					$this->renderOverview().($this->spacer !== null ? $this->spacer->render() : "") : "")
+				.($this->renderOverview().($this->spacer !== null ? $this->spacer->render() : ""))
 				.$this->renderTable();
 	}
 
