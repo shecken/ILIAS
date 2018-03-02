@@ -100,8 +100,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'	FROM hist_user usr'
 			.'	JOIN usr_data usrd'
 			.'		ON usr.user_id = usrd.usr_id'
-			.'	JOIN ('.$this->WBDAndTPSRolesCount().') AS roles'
-			.'		ON roles.usr_id = usr.user_id'
 			.'	JOIN ('.$this->allOrgusOfUser().') AS orgu_all'
 			.'		ON orgu_all.usr_id = usr.user_id'
 			.'	LEFT JOIN hist_usercoursestatus as usrcrs'
@@ -174,91 +172,6 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'	GROUP BY usr_id'.PHP_EOL;
 	}
 
-<<<<<<< HEAD
-	private function WBDAndTPSRolesCount()
-	{
-		$wbd_relevant_condition = $this->gIldb->in('rol_id', $this->getWbdRelevantRoleIds(), false, 'integer');
-		$tp_service_condition = $this->gIldb->in('rol_id', $this->getTpServiceRoleIds(), false, 'integer');
-		return
-			'SELECT usr_id'.PHP_EOL
-			.'	,SUM(IF('.$wbd_relevant_condition.',1,0)) AS num_wbd_roles'.PHP_EOL
-			.'	,SUM(IF('.$tp_service_condition.',1,0)) AS num_tp_service_roles'.PHP_EOL
-			.'	,GROUP_CONCAT(DISTINCT rol_title ORDER BY rol_title ASC SEPARATOR \', \') AS roles '.PHP_EOL
-			.'	FROM hist_userrole '.PHP_EOL
-			.'	WHERE action >= 0 AND hist_historic = 0 '.PHP_EOL
-			.'		AND '.$this->gIldb->in("usr_id", $this->relevant_users, false, 'integer').PHP_EOL
-			.'	GROUP BY usr_id '.PHP_EOL;
-	}
-
-	private function attention()
-	{
-		$no_tp_service_condition =
-			"(roles.num_tp_service_roles = 0"
-			."	AND usr.wbd_type != ".$this->gIldb->quote(gevWBD::WBD_TP_SERVICE, "text")
-			.")";
-		$tp_service_condition =
-			"(roles.num_tp_service_roles > 0"
-			."	OR usr.wbd_type = ".$this->gIldb->quote(gevWBD::WBD_TP_SERVICE, "text")
-			.")";
-
-		$cert_year_sql = " YEAR( CURDATE( ) ) - YEAR( begin_of_certification ) "
-						."- ( DATE_FORMAT( CURDATE( ) , '%m%d' ) < DATE_FORMAT( begin_of_certification, '%m%d' ) )";
-		return
-			'CASE '.PHP_EOL
-			.'	WHEN '.$no_tp_service_condition.' THEN \'\''.PHP_EOL
-			.'		WHEN '.$tp_service_condition.PHP_EOL
-			.'			 AND usr.begin_of_certification <= '.$this->gIldb->quote(self::EARLIEST_CERT_START, 'date').' THEN \'X\''.PHP_EOL
-			.'		WHEN '.$cert_year_sql.' = 1 AND '.$this->pointsInCurrentPeriod().' < 40 THEN \'X\''.PHP_EOL
-			.'		WHEN '.$cert_year_sql.' = 2 AND '.$this->pointsInCurrentPeriod().' < 80 THEN \'X\''.PHP_EOL
-			.'		WHEN '.$cert_year_sql.' = 3 AND '.$this->pointsInCurrentPeriod().' < 120 THEN \'X\''.PHP_EOL
-			.'		WHEN '.$cert_year_sql.' = 4 AND '.$this->pointsInCurrentPeriod().' < 160 THEN \'X\''.PHP_EOL
-			.'		ELSE \'\''.PHP_EOL
-			.'END'.PHP_EOL;
-	}
-
-
-	private function pointsInCurrentPeriod()
-	{
-		$course_takes_place_in_cert_period =
-				'	usrcrs.begin_date >= usr.begin_of_certification'
-				.'		AND usrcrs.begin_date < (usr.begin_of_certification + INTERVAL 5 YEAR)';
-
-
-		$course_may_be_in_wbd = '('.$this->courseIsWbdBooked()
-									.' OR '.$this->courseNotOlderThanOneYear().')';
-
-		return 'FLOOR(SUM( IF ('.$course_takes_place_in_cert_period
-				.'		AND '.$this->participationWBDRelevant()
-				.'		AND '.$course_may_be_in_wbd
-				."        , usrcrs.credit_points"
-				."        , 0"
-				."        )"
-				."   )/3)";
-	}
-
-
-	private function courseIsWbdBooked()
-	{
-		return '(usrcrs.wbd_booking_id != \'-empty-\' AND usrcrs.wbd_booking_id IS NOT NULL )';
-	}
-
-	private function courseNotOlderThanOneYear()
-	{
-		return 'usrcrs.end_date >= '.$this->oneYearBeforeNow();
-	}
-
-	private function participationWBDRelevant()
-	{
-		return $this->gIldb->in('usrcrs.okz', array('OKZ1','OKZ2','OKZ3'), false, 'text');
-	}
-
-	private function oneYearBeforeNow()
-	{
-		return $this->gIldb->quote((new DateTime())->sub(new DateInterval('P1Y'))->format('Y-m-d'), 'date');
-	}
-
-=======
->>>>>>> b7d26c4... adjust query - rename vars
 	protected function getFilterSettings()
 	{
 		$filter = $this->filter();
@@ -420,11 +333,8 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 						->column("cert_period", $this->plugin->txt("cert_period"), true)
 						->column("attention", $this->plugin->txt("critical"), true)
 						->column("login", $this->plugin->txt("login"), true)
-<<<<<<< HEAD
-=======
 						->column("cp_passed", $this->txt("cp_passed"), true)
 						->column("cp_passed_and_booked", $this->txt("cp_passed_and_booked"), true)
->>>>>>> b7d26c4... adjust query - rename vars
 						->column("adp_number", $this->plugin->txt("adp_number"), true)
 						->column("job_number", $this->plugin->txt("job_number"), true)
 						->column("od_bd", $this->plugin->txt("od_bd"), true, "", false, false)
