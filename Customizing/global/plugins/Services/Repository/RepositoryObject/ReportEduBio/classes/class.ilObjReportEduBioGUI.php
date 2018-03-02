@@ -107,11 +107,8 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 
 	protected function insertPoints($tpl) {
 		$tpl->setVariable("SUM_HIST_POINTS", $this->object->plugin->txt("sum_hist_points"));
-		$tpl->setVariable("SUM_HIST_BOOKED_POINTS", $this->object->plugin->txt("sum_hist_booked_points"));
 		$aux = gevCourseUtils::convertCreditpointsToFormattedDuration($this->object->points["sum_hist_points"]);
 		$tpl->setVariable("HIST_POINTS", $aux);
-		$aux = gevCourseUtils::convertCreditpointsToFormattedDuration($this->object->points["sum_hist_booked_points"]);
-		$tpl->setVariable("HIST_BOOKED_POINTS", $aux);
 	}
 
 	protected function getBill() {
