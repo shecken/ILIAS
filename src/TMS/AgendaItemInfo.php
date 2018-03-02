@@ -29,4 +29,26 @@ interface AgendaItemInfo extends Component {
 	 * @return	string
 	 */
 	public function getTopics();
+
+	/**
+	 * Get the contents of the AgendaItem
+	 *
+	 * @return	string
+	 */
+	public function getContents();
+
+	/**
+	 * Get IDD-relevance of the AgendaItem
+	 *
+	 * @return	bool
+	 */
+	public function getIDDRelevant();
+
+	/**
+	 * Get the goals of the AgendaItem
+	 *
+	 * @return	string
+	 */
+	public function getGoals();
+
 }

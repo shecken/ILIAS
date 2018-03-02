@@ -42,6 +42,11 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	protected $request_builder;
 
 	/**
+	 * @var callable
+	 */
+	protected $signal_new_ref_id;
+
+	/**
 	 * @param	\ArrayAccess|array $dic
 	 * @param	\RequestBuilder	$request_builder
 	 * @param	string	$component_class	the user that performs the wizard 
@@ -50,9 +55,13 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @param	int	$crs_ref_id 			course that should get booked
 	 * @param	int	$target_user_id			the user the booking is made for
 	 * @param	int	$timestamp				timestamp the process was started
+	 * TODO: turn this into a more appropriate mechanism
+	 * @param	\Closure	$signal_new_ref_id	This closure is called once the process is
+	 *                                          finished and the new ref_id is determined.
 	 *
+	 * TODO: turn timestamp to \DateTime, document it as member
 	 */
-	public function __construct($dic, RequestBuilder $request_builder, $user_id, $session_id, $crs_ref_id, $timestamp) {
+	public function __construct($dic, RequestBuilder $request_builder, $user_id, $session_id, $crs_ref_id, $timestamp, callable $signal_new_ref_id = null) {
 		assert('is_array($dic) || ($dic instanceof \ArrayAccess)');
 		assert('is_int($user_id)');
 		assert('is_string($session_id)');
@@ -64,6 +73,7 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 		$this->session_id = $session_id;
 		$this->crs_ref_id = $crs_ref_id;
 		$this->timestamp = $timestamp;
+		$this->signal_new_ref_id = $signal_new_ref_id;
 	}
 
 	/**
@@ -165,5 +175,20 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 			$s->setRequestBuilder($this->request_builder);
 			return $s;
 		}, $this->getSortedSteps());
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function finish() {
+		// TODO: replace this by just getting the request and
+		// do the actual processing in the cron.
+		$request = $this->request_builder->getRequest(new \DateTime("@{$this->timestamp}"));
+		$process = new Process($this->dic->repositoryTree(), $this->dic->database());
+		$request = $process->run($request);
+		if ($this->signal_new_ref_id !== null) {
+			call_user_func($this->signal_new_ref_id, $request->getTargetRefId());
+		}
 	}
 } 

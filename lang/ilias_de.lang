@@ -1,4 +1,4 @@
-* Copyright (c) 1998-2017 ILIAS open source e-Learning e.V., Extended GPL, see docs/LICENSE */
+/* Copyright (c) 1998-2018 ILIAS open source e-Learning e.V., Extended GPL, see docs/LICENSE */
 /**
 * ILIAS language file
 *
@@ -363,12 +363,12 @@ assessment#:#adm_settings_templates#:#Einstellungsvorlagen
 assessment#:#all_available_question_pools#:#Alle vorhandenen Fragenpools
 assessment#:#allow_images#:#Grafikunterstützung für Antworten
 assessment#:#allowedextensions#:#Erlaubte Dateierweiterungen
-assessment#:#allowedextensions_info#:#Geben Sie eine kommagetrennte Liste der erlaubten Dateierweiterungen an, wenn Sie das Hochladen auf bestimmte Dateitypen einschränken wollen (z.B. .doc, .pdf, .odt).
+assessment#:#allowedextensions_info#:#Geben Sie eine kommagetrennte Liste der erlaubten Dateierweiterungen an, wenn Sie das Hochladen auf bestimmte Dateitypen einschränken wollen (z.B. doc, pdf, odt).
 assessment#:#analyze_errortext#:#Text analysieren
 assessment#:#gap_combination#:#Lückentext-Kombination
 assessment#:#answer#:#Antwort
 assessment#:#tst_failed_imp_skl_thresholds#:#Der Import der Schwellenwerte für folgende Kompetenzen wurde übersprungen, weil die zugehörige Kompetenz im lokalen System eine abweichende Liste von Ausprägungen aufweist.
-assessment#:#tst_failed_imp_qst_skl_assign#:#Die Zuweisungen der Fragen zu fogenden Kompetenzen konnte durch den Import nicht hergestellt werden. Die entsprechenden Kompetenzen konnten im hiesigen System nicht identifiziert werden.
+assessment#:#tst_failed_imp_qst_skl_assign#:#Die Zuweisungen der Fragen zu folgenden Kompetenzen konnte durch den Import nicht hergestellt werden. Die entsprechenden Kompetenzen konnten im hiesigen System nicht identifiziert werden.
 assessment#:#ass_skl_import_fails_remove_btn#:#Diese Meldung entfernen
 assessment#:#answer_image#:#Antwort-Grafik
 assessment#:#answer_is_not_correct_but_positive#:#Sie haben Punkte für Ihre Lösung erhalten. Allerdings handelt es sich dabei nicht um die beste Lösung.
@@ -545,6 +545,13 @@ assessment#:#ects_grade_f#:#es sind erhebliche Verbesserungen erforderlich
 assessment#:#ects_grade_f_short#:#NICHT BESTANDEN###deprecated
 assessment#:#ects_grade_fx#:#es sind Verbesserungen erforderlich, bevor die Leistung anerkannt wird
 assessment#:#ects_grade_fx_short#:#NICHT BESTANDEN###deprecated
+assessment#:#ects_grade_a_desc#:#ausgezeichnete Leistungen und nur wenige unbedeutende Fehler
+assessment#:#ects_grade_b_desc#:#überdurchschnittliche Leistungen, aber einige Fehler
+assessment#:#ects_grade_c_desc#:#insgesamt gute und solide Arbeit, jedoch mit einigen grundlegenden Fehlern
+assessment#:#ects_grade_d_desc#:#mittelmäßig, jedoch deutliche Mängel
+assessment#:#ects_grade_e_desc#:#die gezeigten Leistungen entsprechen den Mindestanforderungen
+assessment#:#ects_grade_f_desc#:#es sind erhebliche Verbesserungen erforderlich
+assessment#:#ects_grade_fx_desc#:#es sind Verbesserungen erforderlich, bevor die Leistung anerkannt wird
 assessment#:#ects_output_of_ects_grades#:#Ausgabe von ECTS-Noten
 assessment#:#ects_range_error_a#:#Bitte geben Sie einen Wert zwischen 0 und 100 für die ECTS-Note A an!###deprecated
 assessment#:#ects_range_error_b#:#Bitte geben Sie einen Wert zwischen 0 und 100 für die ECTS-Note B an!###deprecated
@@ -795,6 +802,7 @@ assessment#:#ass_lac_expression_not_supported_by_cur_question#:#Für die aktuell
 assessment#:#ass_lac_operator_not_supported_by_expression#:#Die Operation "%s" wird für den Vergleich mit dem Ausdruck "%s" nicht unterstützt.###deprecated
 assessment#:#tst_skill_triggerings_num_req_answers#:#Benötigte Anzahl Antworten für Kompetenzerhebungen
 assessment#:#tst_skill_triggerings_num_req_answers_desc#:#Kompetenzen werden erst erhoben, wenn mindestens diese Anzahl Antworten zur Berechnung der Kompetenz-Ausprägung beitragen.
+assessment#:#tst_skill_triggerings_num_req_answers_not_reached_warn#:#Mindestens eine im Test adressierte Kompetenz ist nicht ausreichend vielen Fragen zugeordnet.<br />Die Mindestanzahl für zugewiesene Fragen: %s
 assessment#:#qpl_qst_skl_usg_skill_col#:#Kompetenz
 assessment#:#qpl_qst_skl_usg_numq_col#:#Fragenanzahl im gesamten Pool, welche die Kompetenz adressieren
 assessment#:#qpl_qst_skl_usg_sklpnt_col#:#Summe aller Kompetenzpunkte je Kompetenz
@@ -1918,8 +1926,8 @@ book#:#book_object_updated#:#Das Buchungsobjekt wurde geändert.
 book#:#book_objects_list#:#Buchungsobjekte
 book#:#book_period#:#Dauer
 book#:#book_pool_added#:#Ein Buchungspool wurde angelegt.
-book#:#book_public_log#:#Benutzer sehen Reservierungen
-book#:#book_public_log_info#:#Benutzer können auch den Reiter „Reservierungen“ einsehen.
+book#:#book_public_log#:#Benutzer sehen alle Reservierungen
+book#:#book_public_log_info#:#Benutzer mit Leserecht können im Reiter „Reservierungen“ auch Reservierungen anderer Benutzer einsehen.
 book#:#book_reservation_block#:#Blockieren###deprecated
 book#:#book_reservation_cancel#:#Stornieren###deprecated
 book#:#book_reservation_confirmed#:#Die Buchung wurde erfolgreich durchgeführt.
@@ -2750,7 +2758,6 @@ common#:#condition_deleted#:#Die Vorbedingung wurde gelöscht.
 common#:#condition_finished#:#Beendet
 common#:#condition_not_finished#:#Nicht beendet
 common#:#condition_passed#:#Bestanden
-common#:#condition_accredited_or_passed#:#Akkreditiert oder bestanden
 common#:#condition_precondition#:#Vorbedingungen:###deprecated
 common#:#condition_select_object#:#Bitte wählen Sie das Objekt aus, das für die Vorbedingung genutzt werden soll.
 common#:#condition_select_one#:#-Bitte wählen Sie eine Bedingung aus-###deprecated
@@ -6550,9 +6557,9 @@ crs#:#crs_moved_objective#:#Das Lernziel wurde verschoben.###deprecated
 crs#:#crs_new_search#:#Neue Suche###deprecated
 crs#:#crs_new_status#:#Ihr Status:
 crs#:#crs_new_subscription#:#Beitritt zum Kurs "%s"
-crs#:#crs_new_subscription_body#:#%s1 ist dem Kurs %s2 beigetreten.
+crs#:#crs_new_subscription_body#:#%1$s ist dem Kurs %2$s beigetreten.
 crs#:#crs_new_subscription_request#:#Aufnahmeantrag für Kurs "%s"
-crs#:#crs_new_subscription_request_body#:#%s hat einen Aufnahmeantrag für den Kurs "%s" gestellt.
+crs#:#crs_new_subscription_request_body#:#%1$s hat einen Aufnahmeantrag für den Kurs "%2$s" gestellt.
 crs#:#crs_new_subscription_request_body2#:#Um den Benutzer zum Kurs zuzulassen oder den Antrag abzuweisen, müssen Sie die Mitgliederverwaltung des Kurses aufrufen.\nWählen Sie dazu bitte folgenden Link:
 crs#:#crs_news#:#Mail zum Kurs
 crs#:#crs_no_archive_selected#:#Sie haben kein Archiv ausgewählt
@@ -6696,7 +6703,7 @@ crs#:#crs_reg_user_already_assigned#:#Sie sind bereits Mitglied dieses Kurses###
 crs#:#crs_reg_user_already_subscribed#:#Sie haben bereits einen Aufnahmeantrag gestellt! Bitte warten Sie auf die Bestätigung.
 crs#:#crs_reg_user_blocked#:#Ihr Zugang wurde gesperrt###deprecated
 crs#:#crs_registration#:#Zum Kurs beitreten
-crs#:#crs_registration_deactivated#:#Nur Kursdministratoren und Kurstutoren können Benutzer in den Kurs aufnehmen.
+crs#:#crs_registration_deactivated#:#Nur Kursadministratoren und Kurstutoren können Benutzer in den Kurs aufnehmen.
 crs#:#crs_registration_limited#:#Zeitlich begrenzter Beitritt
 crs#:#crs_registration_type#:#Beitrittsverfahren
 crs#:#crs_registration_unlimited#:#Zeitlich unbegrenzt###deprecated
@@ -10703,6 +10710,7 @@ survey#:#phrase_added#:#Phrase hinzugefügt
 survey#:#phrase_new#:#Neue Phrase erstellen
 survey#:#phrase_saved#:#Die Phrase wurde erfolgreich gespeichert
 survey#:#please_enter_mail_code#:#Bitte verwenden Sie den Platzhalter für den Zugangscode [code].
+survey#:#please_enter_mail_url#:#Bitte verwenden Sie den Platzhalter für die URL [url].
 survey#:#please_enter_mail_message#:#Bitte geben Sie einen Nachrichteninhalt ein.###deprecated
 survey#:#please_enter_mail_subject#:#Bitte geben Sie einen Betreff ein.###deprecated
 survey#:#please_select#:#-- bitte auswählen --
@@ -11246,6 +11254,7 @@ trac#:#vm_times_of_day#:#Tageszeiten innerhalb des Zeitraums###deprecated
 tstv#:#tstv_create#:#Testzertifikat erstellen
 tstv#:#tstv_create_info#:#Wählen Sie einen Test, für den Sie ein Zertifikat benötigen
 user#:#clipboard_add_btn#:#Der Zwischenablage hinzufügen
+user#:#clipboard_add_from_btn#:#Aus der Zwischenablage hinzufügen
 user#:#clipboard_user_added#:#Die ausgewählten Benutzer wurden der Zwischenablage hinzugefügt.
 user#:#clipboard_table_title#:#Zwischenablage (Benutzerkonten)
 user#:#enable_local_user_administration#:#Lokale Benutzerverwaltung aktivieren
@@ -11712,7 +11721,9 @@ dcl#:#dcl_export_started#:#Asynchroner Export gestartet
 dcl#:#dcl_export_finished#:#Export Abgeschlossen
 dcl#:#dcl_supported_filetypes#:#Erlaubte Dateiendungen
 dcl#:#dcl_supported_filetypes_desc#:#Sie können hier kommagetrennt Dateiendungen angeben. Zum Beispiel: pdf, docx
-dcl#:#dcl_no_export_data_available#:#Keine Daten oder Felder für den Export verfügbar
+dcl#:#dcl_no_export_data_available#:#Keine Daten oder Felder für den Export verfügbar.
+dcl#:#dcl_no_export_content_available#:#Keine Daten für den Export verfügbar.
+dcl#:#dcl_no_export_fields_available#:#Keine Felder für den Export aktiviert. Markieren Sie mindestens ein Feld als "Exportierbar" in den <a href="%s">Tabelleneinstellungen</a>.
 common#:#obj_dcl_duplicate#:#Datensammlung kopieren
 survey#:#freetext_answers#:#Freitext-Antworten
 forum#:#frm_at_least_one_moderator#:#Es muss mindestens ein Moderator zugewiesen sein.
@@ -14036,7 +14047,8 @@ rbac#:#htlm_read_learning_progress#:#Benutzer kann Lernfortschritt anderer Benut
 rbac#:#sahs_read_learning_progress#:#Benutzer kann Lernfortschritt anderer Benutzer einsehen
 rbac#:#tst_read_learning_progress#:#Benutzer kann Lernfortschritt anderer Benutzer einsehen
 rbac#:#exc_read_learning_progress#:#Benutzer kann Lernfortschritt anderer Benutzer einsehen
-rbac#:#sess_read_learning_progress#:#Benutzer kann Lernfortschritt anderer Benutzer einsehen
+rbac#:#file_read_learning_progress#:#Benutzer kann Lernfortschritt anderer Benutzer einsehen
+rbac#:#mcst_read_learning_progress#:#Benutzer kann Lernfortschritt anderer Benutzer einsehen
 content#:#cont_progress_icons#:#Fortschritts-Icons
 content#:#cont_progress_icons_info#:#Zeigt Fortschritts-Icons anstatt der Kapitel- und Seiten-Icons im Inhaltsverzeichnis an. Fortschrittsinformationen werden von ILIAS ab Version 5.0 gespeichert.
 content#:#cont_self_assessment#:#Selbsttests
@@ -14407,6 +14419,10 @@ wfe#:#start_listening#:#Listener aktivieren
 wfe#:#stop_listening#:#Listener deaktivieren
 wfe#:#static_input_form_header#:#Eingabedaten für alle Instanzen des Workflows
 wfe#:#start_event_form_header#:#Relevante Ereignisse für den Start der Workflows
+wfe#:#wfe_sure_to_delete_process_def#:#Sind Sie sicher, dass Sie die Definition löschen möchten?
+wfe#:#wfe_request_missing_process_id#:#Für die gewählte Aktion wurde keine Prozess-ID übertragen.
+wfe#:#wfe_started_listening#:#Der Prozess wurde scharf geschaltet.
+wfe#:#wfe_stopped_listening#:#Der Prozess wurde unscharf geschaltet, das Event wird nicht berücksichtigt.
 common#:#ps_export_scorm#:#SCORM-Protokolldaten
 common#:#enable_export_scorm_desc#:#Erlaube den Export von Persönlichen Daten aus SCORM-Lernmodulen
 mail#:#link_check_introduction#:#die folgenden Externen Links sind ungültig:
@@ -14547,7 +14563,7 @@ scormtrac#:#student_response#:#student_response: Antwort
 scormtrac#:#ostatus#:#Status des Lernziels
 prtf#:#prtf_blog_page_created#:#Blog wurde hinzugefügt.
 wiki#:#wiki_adv_md_hidden#:#Dieser Block wird aktuell nicht präsentiert.###deprecated
-wiki#:#wiki_page_list_form_info#:#Fügt eine Liste mit Wiki-Seiten hinzu, die nachfolgenden Metadaten zugeordnet sind.
+wiki#:#wiki_page_list_form_info#:#Fügt eine Liste mit Wiki-Seiten hinzu, die nachfolgenden Metadaten zugeordnet sind. Es werden nur durchsuchbare Metadatenfelder aus den Metadatensätzen des Wikis angeboten.
 content#:#cont_pc_amdpl#:#Seitenliste
 meta#:#udf_type_selectmulti#:#Auswahlliste (Mehrfachauswahl)
 wiki#:#wiki_no_page_found#:#Es wurden keine Seiten zum Suchbegriff '$1' gefunden.
@@ -14800,7 +14816,7 @@ exc#:#exc_adopt_group_teams_conflict#:#Benutzer "%1$s" ist bereits in Gruppe "%2
 exc#:#exc_adopt_group_teams_added#:#%s Benutzer wurden hinzugefügt.
 exc#:#exc_adopt_group_teams_blocked#:#%s Benutzer waren bereits vorhanden.
 exc#:#exc_deadline_ext_mismatch#:#Die Nachfrist muss nach dem Abgabetermin enden.
-exc#:#exc_peer_review_ass_setting_info#:#Nachdem der Abgabetermin und ggfs. die Nachfrist verstrichen sind, können Teilnehmer ihre Arbeitsergebnisse gegenseitig bewerten. Genaue Einstellungen zum Peer-Feedback werden im gleichnamigen Reiter vorgenommen. Der Reiter wird eingeblendet, wenn diese Option aktiviert und gepeichert wurde.
+exc#:#exc_peer_review_ass_setting_info#:#Nachdem der Abgabetermin und ggfs. die Nachfrist verstrichen sind, können Teilnehmer ihre Arbeitsergebnisse gegenseitig bewerten. Genaue Einstellungen zum Peer-Feedback werden im gleichnamigen Reiter vorgenommen. Der Reiter wird eingeblendet, wenn diese Option aktiviert und gespeichert wurde.
 exc#:#exc_peer_review_min_number#:#Geforderte Anzahl von Feedbacks
 exc#:#exc_peer_review_min_number_info#:#Anzahl von Feedback, die ein Teilnehmer den Peers geben muss. Sollte die Anzahl der geforderten Feedbacks die Anzahl der tatsächlichen Einreichungen übersteigen, wird die geforderte Anzahl automatisch auf die Anzahl der tatsächlichen Einreichungen reduziert.
 exc#:#exc_criteria_catalogues#:#Kriterienkataloge
@@ -15058,7 +15074,7 @@ awrn#:#awareness_settings#:#Einstellungen
 awrn#:#awrn_enable#:#Aktiviere „Wer ist online?“-Anzeige
 crs#:#crs_mem_contacts#:#Tutorielle Betreuung
 user#:#user_awrn_all_users#:#Alle Benutzer
-user#:#user_awrn_all_users_info#:#Alle Benutzer der Plattform werden aufgelistet.
+user#:#user_awrn_all_users_info#:#Alle Benutzer der Plattform werden aufgelistet. Achtung: Wird die Option "Online und offline" gewählt, ist bei hoher Benutzerzahl mit erheblichen Performanzeinbußen zu rechnen.
 crs#:#crs_awrn_support_contacts#:#Kursbetreuung
 crs#:#crs_awrn_support_contacts_info#:#Benutzer, die den Kurs betreuen, werden aufgelistet. Die jeweiligen Benutzer werden im Reiter Mitglieder des Kurses für die Kursbetreuung eingetragen.
 awrn#:#awrn_inactive#:#Keine Anzeige
@@ -15077,7 +15093,7 @@ awrn#:#awrn_caching_period#:#Caching-Zeitraum
 awrn#:#awrn_caching_period_info#:#Dieser Zeitraum wird abgewartet, bevor die Anzahl der Benutzer in der Top-Anzeige aktualisiert und neue Online-Benutzer ermittelt werden.
 awrn#:#awrn_seconds#:#Sek.
 awrn#:#awrn_max_nr_entries#:#Anzahl max. Einträge
-awrn#:#awrn_max_nr_entries_info#:#Diese Anzahl an Einträgen wird maximal in der „Wer ist online?“-Liste angezeigt.
+awrn#:#awrn_max_nr_entries_info#:#Diese Anzahl an Einträgen wird maximal in der „Wer ist online?“-Liste angezeigt. Diese Einstellung beeinflusst die Performanz der Anzeige in der Top-Bar nicht wesentlich.
 awrn#:#awrn_hide_from_awareness#:#Mich nicht in „Wer ist online?“-Anzeige auflisten
 awrn#:#awrn_hide_from_awareness_info#:#Die „Wer ist online?“-Anzeige erscheint oben im Kopf der Anwendung und listet ausgewählte Benutzer auf (z.B. Kontakte oder Mitglieder Ihrer Kurse).
 common#:#contact_sysadmin#:#Technische Betreuung kontaktieren
@@ -15591,6 +15607,7 @@ style#:#add_system_style#:#Neuer System Style
 style#:#add_substyle#:#Neuer Substyle
 style#:#skin_id#:#Skin-ID
 style#:#skin_name#:#Skin Name
+style#:#skin_version#:#Skin Version
 style#:#skin#:#Skin
 style#:#style_id#:#Style-ID
 style#:#Style#:#Style
@@ -15665,6 +15682,7 @@ style#:#can_not_read_less_file#:#Less Datei kann nicht gelesen werden. Pfad:
 style#:#msg_sys_style_created#:#Die neue System Style Datei wurde erfolgreich erstellt.
 style#:#skin_id_description#:#Skins sind Behälter für Styles und Substyles. Die Skin-ID setzt den Namen des Ordners, welcher alle Informationen zu Styles und Substyles beinhaltet. Die Skin-ID darf sich nur aus Buchstaben, Nummern sowie Bindestrichen zusammensetzen.
 style#:#skin_name_description#:#Der Skin Name kann als Beschreibung für das Einsatzgebiet verwendet werden. Er wird in allen UI Elementen aufgelistet, in denen ein Skin ausgewählt werden kann.
+style#:#skin_version_description#:#Die Skin Version wird genutzt um die Styles, nach Änderungen, neu zu cachen. Sie wird automatisch aktualisiert.
 style#:#style_id_description#:#Die Style-ID wird für Style-spezifische css- und less-Dateien unterhalb des Skin Ordners verwendet. Die Style-ID darf sich nur aus Buchstaben, Nummern sowie Bindestrichen zusammensetzen.
 style#:#style_name_description#:#Der Style Name kann als Beschreibung für das Einsatzgebiet verwendet werden. Er wird in allen UI Elementen aufgelistet, in denen ein Skin ausgewählt werden kann.
 style#:#sub_style#:#Substyle
@@ -15795,6 +15813,7 @@ exc#:#exc_tbl_filter_submission#:#Abgabe
 exc#:#exc_tbl_filter_has_submission#:#Hat abgegeben
 exc#:#exc_tbl_filter_has_no_submission#:#Hat noch nicht abgegeben
 iass#:#general#:#Allgemein
+iass#:#iass_copy#:#Individuelle Bewertung kopieren
 iass#:#iass_content#:#Inhalt
 iass#:#iass_record_template#:#Vorlage Prüfungsnotiz
 iass#:#iass_graded_by#:#Bewertet von
@@ -15888,6 +15907,9 @@ chatroom#:#chat_osc_leave_grp_conv#:#Konversation verlassen
 chatroom#:#chat_osc_user_left_grp_conv#:#Der Benutzer '%s' hat die Gruppenkonversation verlassen.
 chatroom#:#chat_osc_dont_accept_msg#:#Sie können aktuell von anderen Personen nicht zu Konversationen eingeladen werden. Dies können Sie bei Bedarf in Ihren <a href="%s">'Persönlichen Einstellungen'</a> ändern.
 chatroom#:#chat_osc_doesnt_accept_msg#:#Konversationen nicht möglich
+chatroom#:#chat_osc_subs_rej_msgs#:#Ihr Chat-Partner möchte zur Zeit keine Nachrichten empfangen. Er kann den Empfang von Chat-Nachrichten in seinen Chat-Einstellungen wieder aktivieren.
+chatroom#:#chat_osc_subs_rej_msgs_p#:#Die folgenden Konversationspartner möchten aktuell keine Nachrichten mehr empfangen: %s
+chatroom#:#chat_osc_self_rej_msgs#:#Sie können aktuell nicht an der Conversation teilnehmen, da Sie den Empfang von Chat-Nachrichten in Ihren Einstellungen aktuell unterdrückt haben.
 usr#:#user_actions#:#Benutzeraktionen
 usr#:#user_action#:#Benutzeraktion
 buddysystem#:#buddy_handle_contact_request#:#Kontaktanfrage
@@ -16061,3 +16083,7 @@ tms#:#tms_mailsubject_reminder#:#Erinnerung:
 tms#:#placeholder_desc_oac_reminder#:#Für Übernachtungsliste - wird nur bei Erinnerungen gesetzt.
 tms#:#placeholder_mailsubject_oac_reminder#:#Bestätigung:
 tms#:#create_course_from_template#:#Kurs aus Vorlage erzeugen
+tms#:#choose_course_template#:#Vorlage auswählen
+wiki#:#wiki_pg_list_no_search_fields#:#Es befinden sich keine durchsuchbaren Metadatenfelder in den Metadatensätzen des Wikis.
+content#:#cont_transl_master_language_not_allowed#:#Um eine Übersetzung zu importieren, müssen sie zumindest eine zusätzliche Sprache unter "Einstellungen" > "Mehrsprachigkeit" aktivieren.
+rbac#:#sess_read_learning_progress#:#User can view learning progress of other users###26 01 2018 new variable

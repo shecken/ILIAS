@@ -725,10 +725,14 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->method("delete")
 			->willReturn($state);
 
+		$this->wizard
+			->expects($this->once())
+			->method("finish");
+
 		$this->ilias_bindings
 			->expects($this->once())
-			->method("redirectToPreviousLocation", true)
-			->with([$conf1, $conf3]);
+			->method("redirectToPreviousLocation")
+			->with([$conf1, $conf3], true);
 
 		$no_view = $this->player->run("confirm", []);
 		$this->assertNull($no_view);

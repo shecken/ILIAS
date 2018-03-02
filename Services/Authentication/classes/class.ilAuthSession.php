@@ -169,7 +169,7 @@ class ilAuthSession
 
 	/**
 	 * Set authenticated user id
-	 * @param type $a_id
+	 * @param int $a_id
 	 */
 	public function setUserId($a_id)
 	{
