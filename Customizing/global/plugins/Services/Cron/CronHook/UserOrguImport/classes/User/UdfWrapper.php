@@ -181,18 +181,31 @@ class UdfWrapper
 
 	protected function formatForUpdate(array $data)
 	{
-
 		return $data;
 	}
 
+	/**
+	 * Get all values corresponding to $field id assigned to users.
+	 * Possibly filter return value values.
+	 *
+	 * @param	int	$field_id
+	 * @param	string|int[]	$valuee_filter
+	 * @return	string[int]	usr_id => value
+	 */
+	public function userIdsByPropertyValues($field_id, array $values_filter)
+	{
+		return array_keys($this->userIdsFieldRelation($field_id, $values_filter));
+	}
 
 	/**
 	 * Get all values corresponding to $field id assigned to users.
+	 * Possibly filter return value values.
 	 *
 	 * @param	int	$field_id
+	 * @param	string|int[]	$valuee_filter
 	 * @return	string[int]	usr_id => value
 	 */
-	public function userIdsFieldRelation($field_id)
+	public function userIdsFieldRelation($field_id, array $values_filter = [])
 	{
 		assert('is_int($field_id)');
 		if (!$this->keyword($field_id)) {
@@ -202,6 +215,9 @@ class UdfWrapper
 				.'	FROM udf_text'
 				.'	WHERE field_id = '.$this->db->quote($field_id, 'integer')
 				.'		AND value IS NOT NULL AND value != \'\'';
+		if (count($values_filter) > 0) {
+			$query .= '		AND '.$this->db->in('value', $values_filter, false, 'text');
+		}
 		$res = $this->db->query($query);
 		$return = [];
 		while ($rec = $this->db->fetchAssoc($res)) {
