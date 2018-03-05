@@ -37,3 +37,5 @@ wbd_relevant_only#:#Zeige mir nur Personen die weiterbildungspflichtig sind nach
 truncate_orgu_filter#:#Filter für Organisationseinheiten vorbelegen
 overall_points_goa#:#Gesamtpunktzahl GOA
 filter_no_wbd_imported#:#Keine Trainings aus der WBD
+cp_passed#:#erwirkte Weiterbildungsstunden im Sinne der IDD
+filter_year#:#Jahr

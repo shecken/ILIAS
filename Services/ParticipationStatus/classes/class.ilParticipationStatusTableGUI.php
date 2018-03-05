@@ -50,7 +50,9 @@ class ilParticipationStatusTableGUI extends ilTable2GUI
 		$this->addColumn($this->lng->txt("login"), "login");
 		$this->addColumn($this->lng->txt("objs_orgu"), "org");
 		$this->addColumn($this->lng->txt("ptst_admin_status"), "status");
-		$this->addColumn($this->lng->txt("gev_points"), "cpoints");
+		//gev-patch #3629 start
+		$this->addColumn($this->lng->txt("gev_wb_time_hint"), "cpoints");
+		//gev-patch #3629 end
 		$this->addColumn($this->lng->txt("ptst_admin_changed_by"), "changed_on");
 
 		//gev-patch #2286 start
@@ -157,10 +159,13 @@ class ilParticipationStatusTableGUI extends ilTable2GUI
 
 		if(!$this->may_write)
 		{
+			//gev-patch #3629 start
+			$wb_time = gevCourseUtils::convertCreditpointsToFormattedDuration($a_set['cpoints']);
 			$this->tpl->setCurrentBlock("read_only_bl");
 			$this->tpl->setVariable("STATUS_STATIC", $this->status->statusToString($a_set["status"]));
-			$this->tpl->setVariable("POINTS_STATIC", $a_set["cpoints"]);
+			$this->tpl->setVariable("POINTS_STATIC", $wb_time);
 			$this->tpl->parseCurrentBlock();
+			//gev-patch #3629 end
 		}
 		else
 		{

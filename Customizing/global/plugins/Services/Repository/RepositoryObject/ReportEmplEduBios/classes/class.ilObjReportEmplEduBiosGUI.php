@@ -119,7 +119,7 @@ class ilObjReportEmplEduBiosGUI extends ilObjReportBaseGUI
 		}
 
 		$rec = self::getODBD($rec);
-
+		$rec["cp_passed"] = gevCourseUtils::convertCreditpointsToFormattedDuration($rec['cp_passed']);
 		$rec["edu_bio_link"] = ilObjReportEduBio::getEduBioLinkFor($rec["user_id"]);
 
 		return parent::transformResultRow($rec);
@@ -139,7 +139,7 @@ class ilObjReportEmplEduBiosGUI extends ilObjReportBaseGUI
 		if ($rec['cert_period'] != "-") {
 			$rec['cert_period'] = ilDatePresentation::formatDate(new ilDate($rec['cert_period'], IL_CAL_DATE));
 		}
-
+		$rec["cp_passed"] = gevCourseUtils::convertCreditpointsToFormattedDuration($rec['cp_passed']);
 		$rec = self::getODBD($rec);
 
 		return parent::transformResultRowXLSX($rec);
