@@ -188,4 +188,14 @@ class Factory
 	{
 		return new ExitConfig($this->settings);
 	}
+
+	public function OrgusCleanup()
+	{
+		return new OrgusCleanup(
+			$this->tree,
+			$this->rep_utils,
+			$this->IliasGlobalRoleManagement(),
+			$this->OrguFactory()->OrguConfig()
+		);
+	}
 }
