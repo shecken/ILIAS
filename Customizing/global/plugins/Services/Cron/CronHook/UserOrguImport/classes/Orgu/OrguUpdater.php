@@ -60,7 +60,6 @@ class OrguUpdater
 	{
 		$this->add($diff->toCreate());
 		$this->update($diff->toChange());
-		//$this->remove($diff->toDelete());
 	}
 
 	/**
