@@ -145,11 +145,23 @@ class UserLocator
 		return $return;
 	}
 
+	/**
+	 * Get relevant users which have a pnr withing argument.
+	 *
+	 * @param	string[]	$pnrs
+	 * @return	User\Users
+	 */
 	public function relevantUsersWithPNRs(array $pnrs)
 	{
 		return $this->usersByUserIds($this->relevantUserIdsWithPNRs($pnrs));
 	}
 
+	/**
+	 * Get relevant user ids which have a pnr withing argument.
+	 *
+	 * @param	string[]	$pnrs
+	 * @return	User\Users
+	 */
 	public function relevantUserIdsWithPNRs(array $pnrs)
 	{
 		return $this->udf_w->userIdsByPropertyValues(

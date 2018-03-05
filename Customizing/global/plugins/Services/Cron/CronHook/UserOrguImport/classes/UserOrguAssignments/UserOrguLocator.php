@@ -47,6 +47,14 @@ class UserOrguLocator
 		);
 	}
 
+	/**
+	 * Get assignemnts by provided data.
+	 *
+	 * @param	string[int]	$user_id_rels	pnr => usr_id
+	 * @param	string[int]	$references	ref_id => import_id
+	 * @param	UserOrguIdentifier	$ident
+	 * @param 	string	$udf_key
+	 */
 	protected function getAssignmentsBy(
 		array $user_id_rels,
 		array $references,
@@ -119,6 +127,12 @@ class UserOrguLocator
 		return $return;
 	}
 
+	/**
+	 * Get ref_id => import_id relations in a subtree ref_id
+	 *
+	 * @param	int	$ref_id
+	 * @return	string[int]
+	 */
 	protected function getImportByRefIdUnder($ref_id)
 	{
 		$relevant_orgus = array_diff(
