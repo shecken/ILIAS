@@ -178,6 +178,11 @@ class UserOrguLocator
 		return array_flip($this->getPNRsByUserId());
 	}
 
+	/**
+	 * Get all usr_id => pnr relations
+	 *
+	 * @return string[int]
+	 */
 	public function getPNRsByUserId()
 	{
 		return $this->udf->userIdsFieldRelation($this->udf->fieldId(User\UdfWrapper::PROP_PNR));
