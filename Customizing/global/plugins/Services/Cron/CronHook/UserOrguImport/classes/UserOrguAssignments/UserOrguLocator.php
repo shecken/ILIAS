@@ -37,10 +37,10 @@ class UserOrguLocator
 	 *
 	 * @return	UOA\Assignments
 	 */
-	public function getAssignments()
+	public function getAssignmentsAmong(array $pnrs)
 	{
 		return $this->getAssignmentsBy(
-			$this->getPNRsByUserId(),
+			$this->getPNRsByUserIdAmong($pnrs),
 			$this->getImportIdByRef(),
 			$this->identifier,
 			User\UdfWrapper::PROP_PNR
@@ -148,9 +148,9 @@ class UserOrguLocator
 	 *
 	 * @return int[string]
 	 */
-	public function getPNRsByUserId()
+	public function getPNRsByUserIdAmong(array $relevant_pnrs)
 	{
-		return $this->udf->userIdsFieldRelation($this->udf->fieldId(User\UdfWrapper::PROP_PNR));
+		return $this->udf->userIdsFieldRelation($this->udf->fieldId(User\UdfWrapper::PROP_PNR), $relevant_pnrs);
 	}
 
 
@@ -162,6 +162,11 @@ class UserOrguLocator
 	public function geUserIdsByPNR()
 	{
 		return array_flip($this->getPNRsByUserId());
+	}
+
+	public function getPNRsByUserId()
+	{
+		return $this->udf->userIdsFieldRelation($this->udf->fieldId(User\UdfWrapper::PROP_PNR));
 	}
 
 	/**
