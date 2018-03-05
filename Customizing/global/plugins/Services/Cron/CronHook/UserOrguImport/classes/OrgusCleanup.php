@@ -4,6 +4,12 @@ namespace CaT\IliasUserOrguImport;
 
 class OrgusCleanup
 {
+
+	protected $tree;
+	protected $rep_utils;
+	protected $grm;
+	protected $oc;
+
 	public function __construct($tree, $rep_utils, IliasGlobalRoleManagement $grm, Orgu\OrguConfig $oc)
 	{
 		$this->tree = $tree;
