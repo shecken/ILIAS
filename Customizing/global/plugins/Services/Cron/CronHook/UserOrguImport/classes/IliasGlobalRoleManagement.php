@@ -103,4 +103,15 @@ class IliasGlobalRoleManagement
 		$this->rbac_admin->revokePermission($ref_id, $role_id);
 		$this->rbac_admin->grantPermission($role_id, $op_ids, $ref_id);
 	}
+
+	/**
+	 * Get the number of users assigned to any ilias role.
+	 *
+	 * @param	int	$role_id
+	 * @return	int
+	 */
+	public function numberOfAssignedUsers(array $role_ids)
+	{
+		return (int)$this->rbac_review->getNumberOfAssignedUsers($role_ids);
+	}
 }
