@@ -189,6 +189,11 @@ class Factory
 		return new ExitConfig($this->settings);
 	}
 
+	/**
+	 * Get the orgu cleanup utility object.
+	 *
+	 * @return	OrgusCleanup
+	 */
 	public function OrgusCleanup()
 	{
 		return new OrgusCleanup(
