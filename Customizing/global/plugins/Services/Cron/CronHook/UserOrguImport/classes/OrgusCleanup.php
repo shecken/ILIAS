@@ -50,7 +50,7 @@ class OrgusCleanup
 		while ($ref_id = array_shift($iter)) {
 			foreach ($this->tree->getChildsByType($ref_id, 'orgu') as $node_data) {
 				$sub_ref_id = $node_data['ref_id'];
-				if (!in_array($ref_id, $exit_subtree)) {
+				if (!in_array($sub_ref_id, $exit_subtree)) {
 					array_push($iter, $sub_ref_id);
 					$orgu = new \ilObjOrgUnit($sub_ref_id);
 					$members = $this->grm->numberOfAssignedUsers([$orgu->getSuperiorRole(),$orgu->getEmployeeRole()]);
