@@ -101,7 +101,7 @@ class RecursiveMeberCounterTest extends PHPUnit_Framework_TestCase
 		} catch (\Exception $e) {
 		}
 		try {
-			$rc->addNode('foo', 1, 'bar'); // invalid parent
+			$rc->addNode('sn11', 1, 'bar'); // invalid parent
 			$this->assertFalse('did not throw');
 		} catch (\Exception $e) {
 		}
