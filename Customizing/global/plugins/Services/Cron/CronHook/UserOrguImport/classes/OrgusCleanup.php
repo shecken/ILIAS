@@ -26,37 +26,43 @@ class OrgusCleanup
 	 */
 	public function cleanupEmptyOrgus()
 	{
+		$member_counter = new RecursiveMemberCounter();
+
+
+
 		$exit_subtree = $this->tree->getSubTree(
 			$this->tree->getNodeTreeData($this->oc->getExitRefId()),
 			false,
 			'orgu'
 		);
 		$root_ref_id = $this->oc->getRootRefId();
-		$delete_candidates = [];
-		// all leafs are candidates, since they obviously contain no
-		// orgus which have any assignment, so get all leafs first
-		foreach ($this->tree->getSubTree($this->tree->getNodeTreeData($root_ref_id), false, 'orgu') as $ref_id) {
-			if ($ref_id !== $root_ref_id && !in_array($ref_id, $exit_subtree)) {
-				// leafs contain no children
-				if (count($this->tree->getChildsByType($ref_id, 'orgu')) === 0) {
-					$delete_candidates[] = (int)$ref_id;
+		$iter = [];
+		foreach ($this->tree->getChildsByType($root_ref_id, 'orgu') as $node_data) {
+			$ref_id = $node_data['ref_id'];
+			if (!in_array($ref_id, $exit_subtree)) {
+				$iter[] = $ref_id;
+				$orgu = new \ilObjOrgUnit($ref_id);
+				$members = $this->grm->numberOfAssignedUsers([$orgu->getSuperiorRole(),$orgu->getEmployeeRole()]);
+				$member_counter->addNode($ref_id, $members);
+			}
+		}
+
+		while ($ref_id = array_shift($iter)) {
+			foreach ($this->tree->getChildsByType($ref_id, 'orgu') as $node_data) {
+				$sub_ref_id = $node_data['ref_id'];
+				if (!in_array($ref_id, $exit_subtree)) {
+					array_push($iter, $sub_ref_id);
+					$orgu = new \ilObjOrgUnit($sub_ref_id);
+					$members = $this->grm->numberOfAssignedUsers([$orgu->getSuperiorRole(),$orgu->getEmployeeRole()]);
+					$member_counter->addNode($sub_ref_id, $members, $ref_id);
 				}
 			}
 		}
-		$delete = [];
-		while ($candidate = array_shift($delete_candidates)) {
-			$orgu = new \ilObjOrgUnit($candidate);
-			// a candidate should be deleted, if it has no user assignments
-			if (0 === $this->grm->numberOfAssignedUsers([$orgu->getSuperiorRole(),$orgu->getEmployeeRole()])) {
-				$delete[] = $candidate;
-				// if an orgu is to be deleted, its parent is a delete candidate as well
-				$parent = (int)$this->tree->getParentId($candidate);
-				if ($parent !== $root_ref_id) { // ignore tree root
-					array_push($delete_candidates, $parent);
-				}
-			}
-		}
-		$this->remove($delete);
+
+		$rec_member_count = $member_counter->recursiveMembers();
+		$this->remove(array_keys(array_filter($rec_member_count, function ($cnt) {
+			return $cnt === 0;
+		})));
 	}
 
 	/**
