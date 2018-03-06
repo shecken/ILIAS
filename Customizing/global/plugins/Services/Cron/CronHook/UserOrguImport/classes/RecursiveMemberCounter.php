@@ -5,12 +5,34 @@ namespace CaT\IliasUserOrguImport;
 class RecursiveMemberCounter
 {
 
+	/**
+	 * @var string|int[][string|int]
+	 */
 	protected $children = [];
+
+	/**
+	 * @var string|int[string|int]
+	 */
 	protected $parents = [];
+
+	/**
+	 * @var int[string|int]
+	 */
 	protected $num_members = [];
+
+	/**
+	 * @var int[string|int]
+	 */
 	protected $depth = [];
 
-
+	/**
+	 * Add a node under parent havin a certain number of members.
+	 * Parent must be present, if defined. Node must not be present.
+	 *
+	 * @param	string|int	$node_id
+	 * @param	int	$members
+	 * @param	string|int|null	$parent
+	 */
 	public function addNode($node_id, $num_members, $parent = null)
 	{
 		assert('is_string($node_id) || is_int($node_id)');
@@ -34,6 +56,12 @@ class RecursiveMemberCounter
 		$this->num_members[$node_id] = $num_members;
 	}
 
+	/**
+	 * Get an array of node-ids corresponding to the children of a node.
+	 *
+	 * @param	string|int	$node_id
+	 * @return	string|int[]
+	 */
 	public function children($node_id)
 	{
 		assert('is_string($node_id) || is_int($node_id)');
@@ -43,6 +71,13 @@ class RecursiveMemberCounter
 		return $this->children[$node_id];
 	}
 
+	/**
+	 * Get the node-id corresponding to the parent of a node or null,
+	 * if node is root.
+	 *
+	 * @param	string|int	$node_id
+	 * @return	string|int|null
+	 */
 	public function parent($node_id)
 	{
 		assert('is_string($node_id) || is_int($node_id)');
@@ -52,6 +87,13 @@ class RecursiveMemberCounter
 		return $this->parents[$node_id];
 	}
 
+
+	/**
+	 * Get the number of members associated with a node.
+	 *
+	 * @param	string|int	$node_id
+	 * @return	int
+	 */
 	public function members($node_id)
 	{
 		assert('is_string($node_id) || is_int($node_id)');
@@ -61,6 +103,12 @@ class RecursiveMemberCounter
 		return $this->num_members[$node_id];
 	}
 
+	/**
+	 * Get the depth of a node.
+	 *
+	 * @param	string|int	$node_id
+	 * @return	int
+	 */
 	public function depth($node_id)
 	{
 		assert('is_string($node_id) || is_int($node_id)');
@@ -70,6 +118,12 @@ class RecursiveMemberCounter
 		return $this->depth[$node_id];
 	}
 
+	/**
+	 * Get the associative array node-id => recursive members.
+	 *
+	 * @param	string|int	$node_id
+	 * @return	int[string|int]
+	 */
 	public function recursiveMembers()
 	{
 		$swp_depth = $this->depth;
