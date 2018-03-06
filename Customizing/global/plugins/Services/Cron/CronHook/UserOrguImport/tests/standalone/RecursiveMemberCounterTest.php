@@ -94,31 +94,37 @@ class RecursiveMeberCounterTest extends PHPUnit_Framework_TestCase
 			$rc->addNode('sn11', 1, null); // allready present
 			$this->assertFalse('did not throw');
 		} catch (\Exception $e) {
+			$this->assertTrue(true);
 		}
 		try {
 			$rc->addNode('sn11', 1, 'n1'); // allready present
 			$this->assertFalse('did not throw');
 		} catch (\Exception $e) {
+			$this->assertTrue(true);
 		}
 		try {
 			$rc->addNode('sn11', 1, 'bar'); // invalid parent
 			$this->assertFalse('did not throw');
 		} catch (\Exception $e) {
+			$this->assertTrue(true);
 		}
 		try {
 			$rc->children('foo'); // invalid node
 			$this->assertFalse('did not throw');
 		} catch (\Exception $e) {
+			$this->assertTrue(true);
 		}
 		try {
 			$rc->parent('foo'); // invalid node
 			$this->assertFalse('did not throw');
 		} catch (\Exception $e) {
+			$this->assertTrue(true);
 		}
 		try {
 			$rc->members('foo'); // invalid node
 			$this->assertFalse('did not throw');
 		} catch (\Exception $e) {
+			$this->assertTrue(true);
 		}
 	}
 
