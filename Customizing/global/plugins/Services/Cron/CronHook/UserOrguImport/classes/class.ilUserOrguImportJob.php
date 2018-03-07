@@ -93,6 +93,8 @@ class ilUserOrguImportJob extends ilCronJob
 			ilCronManager::ping($this->getId());
 			$this->exitUsers();
 			ilCronManager::ping($this->getId());
+			$this->cleanupEmptyOrgus();
+			ilCronManager::ping($this->getId());
 		} catch (\Exception $e) {
 			$this->ec->addError('A fatal error occured, aborting import:'.$e->getMessage());
 		}
@@ -105,9 +107,11 @@ class ilUserOrguImportJob extends ilCronJob
 	protected function updateUsers()
 	{
 		$u_f = $this->f->UserFactory();
-		$excel_users = $u_f->ExcelUsers()->users();
+		$source = $u_f->ExcelUsers();
+		$excel_pnrs = $source->deliveredPNRs();
+		$excel_users = $source->users();
 		if ($excel_users) {
-			$ilias_users = $u_f->UserLocator()->relevantUsers();
+			$ilias_users = $u_f->UserLocator()->relevantUsersWithPNRs($excel_pnrs);
 			$diff = $u_f->Difference($ilias_users, $excel_users);
 			$this->f->UserFactory()->UserUpdater()->applyDiff($diff);
 		} else {
@@ -134,7 +138,8 @@ class ilUserOrguImportJob extends ilCronJob
 
 		$excel_user_orgu = $uo_f->UserOrguExcel()->assignments();
 		if ($excel_user_orgu) {
-			$ilias_user_orgu = $uo_f->UserOrguLocator()->getAssignments();
+			$excel_pnrs = $this->f->UserFactory()->ExcelUsers()->deliveredPNRs();
+			$ilias_user_orgu = $uo_f->UserOrguLocator()->getAssignmentsAmong($excel_pnrs);
 			$diff = $uo_f->Difference($ilias_user_orgu, $excel_user_orgu);
 			$uo_f->UserOrguUpdater()->applyDiff($diff);
 		} else {
@@ -145,5 +150,10 @@ class ilUserOrguImportJob extends ilCronJob
 	protected function exitUsers()
 	{
 		$this->f->ExitUserManagement()->exitUsers();
+	}
+
+	protected function cleanupEmptyOrgus()
+	{
+		$this->f->OrgusCleanup()->cleanupEmptyOrgus();
 	}
 }
