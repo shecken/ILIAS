@@ -26,14 +26,19 @@ trait LinkHelper {
 	}
 
 	/**
+	 * @param	string[]	$parent_guis
+	 * @param	string	$parent_cmd
 	 * @param	int	$parent_ref_id
 	 * @param	int|string $template_ref_id
 	 * @return	string
 	 */
-	protected function getCreateCourseCommandLink($parent_ref_id, $template_ref_id, $async = false) {
+	protected function getCreateCourseCommandLink($parent_guis, $parent_cmd, $parent_ref_id, $template_ref_id, $async = false) {
+		assert('is_string($parent_cmd)');
 		assert('is_int($parent_ref_id)');
 		assert('is_int($template_ref_id) || is_string($template_ref_id)');
 		$ctrl = $this->getCtrl();
+		$ctrl->setParameterByClass("ilCourseCreationGUI", "parent_guis", implode(".", $parent_guis));
+		$ctrl->setParameterByClass("ilCourseCreationGUI", "parent_cmd", $parent_cmd);
 		$ctrl->setParameterByClass("ilCourseCreationGUI", "parent_ref_id", $parent_ref_id);
 		$ctrl->setParameterByClass("ilCourseCreationGUI", "ref_id", $template_ref_id);
 		return $ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilCourseCreationGUI"], $this->getCreateCourseCommand(), "", $async);
@@ -80,12 +85,18 @@ trait LinkHelper {
 	}
 
 	/**
+	 * @param	\ILIAS\UI\Factory $ui_factory
+	 * @param	CourseTemplateInfo[]	$info
+	 * @param	string[]	$parent_guis
+	 * @param	string		$parent_cmd
+	 * @param	int			$parent_ref_id
 	 * @return	ILIAS\UI\Component\Modal\Modal
 	 */
-	protected function getCourseTemplateSelectionModal(\ILIAS\UI\Factory $ui_factory, array $info, $parent_ref_id) {
+	protected function getCourseTemplateSelectionModal(\ILIAS\UI\Factory $ui_factory, array $info, array $parent_guis, $parent_cmd, $parent_ref_id) {
+		assert('is_string($parent_cmd)');
 		assert('is_int($parent_ref_id)');
 		$placeholder = "_REF_ID_";
-		$link = $this->getCreateCourseCommandLink($parent_ref_id, $placeholder, true);
+		$link = $this->getCreateCourseCommandLink($parent_guis, $parent_cmd, $parent_ref_id, $placeholder, true);
 		$select_name = "course_template_select";
 
 		$next_button = $ui_factory->button()
@@ -114,11 +125,19 @@ trait LinkHelper {
 	}
 
 	/**
+	 * @param	\ILIAS\UI\Factory $ui_factory
+	 * @param	\ILIAS\UI\Factory $ui_renderer
+	 * @param	\ilToolbarGUI $toolbar
+	 * @param	CourseTemplateInfo[]	$info
+	 * @param	string[]	$parent_guis
+	 * @param	string		$parent_cmd
+	 * @param	int			$parent_ref_id
 	 * @return void
 	 */
-	protected function addCourseTemplateSelectionModalToToolbar(\ILIAS\UI\Factory $ui_factory, \ILIAS\UI\Renderer $ui_renderer, \ilToolbarGUI $toolbar, array $info, $parent_ref_id) {
+	protected function addCourseTemplateSelectionModalToToolbar(\ILIAS\UI\Factory $ui_factory, \ILIAS\UI\Renderer $ui_renderer, \ilToolbarGUI $toolbar, array $info, array $parent_guis, $parent_cmd, $parent_ref_id) {
 		assert('is_int($parent_ref_id)');
-		$modal = $this->getCourseTemplateSelectionModal($ui_factory, $info, $parent_ref_id);
+		assert('is_string($parent_cmd)');
+		$modal = $this->getCourseTemplateSelectionModal($ui_factory, $info, $parent_guis, $parent_cmd, $parent_ref_id);
 		$button = $ui_factory->button()
 			->primary(
 				$this->getCreateCourseCommandLabel(),

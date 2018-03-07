@@ -36,7 +36,7 @@ trait CourseListGUIExtension {
 		if ($this->getCreateCourseAccessGranted()) {
 			$commands[] =
 				[ "cmd" => $this->getCreateCourseCommand()
-				, "link" => $this->getCreateCourseCommandLink((int)$this->parent_ref_id, (int)$this->ref_id)
+				, "link" => $this->getCreateCourseCommandLink(["ilRepositoryGUI"], "frameset", (int)$this->parent_ref_id, (int)$this->ref_id)
 				, "frame" => ""
 				, "lang_var" => $this->getCreateCourseCommandLngVar()
 				, "txt" => null
