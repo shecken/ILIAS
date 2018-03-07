@@ -8,14 +8,14 @@ include_once("./Services/Form/classes/class.ilSubEnabledFormPropertyGUI.php");
 /**
 * This class represents a groupable selection list property in a property form.
 *
-* @author Stefan Hecken <stefan.hecken@concepts-and-training.de>
+* @author Stefan Hecken <stefan.hecken@concepts-and-training.de> 
 */
 class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 {
 	protected $cust_attr = array();
 	protected $groups = array();
 	protected $value;
-
+	
 	/**
 	* Constructor
 	*
@@ -72,8 +72,8 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 	{
 		return $this->value;
 	}
-
-
+	
+	
 	/**
 	* Set value by array
 	*
@@ -92,7 +92,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 	* Check input, strip slashes etc. set alert, if input is not ok.
 	*
 	* @return	boolean		Input ok, true/false
-	*/
+	*/	
 	function checkInput()
 	{
 		global $lng;
@@ -119,12 +119,12 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 
 		return $this->checkSubItemsInput();
 	}
-
+	
 	public function addCustomAttribute($a_attr)
 	{
 		$this->cust_attr[] = $a_attr;
 	}
-
+	
 	public function getCustomAttributes()
 	{
 		return (array) $this->cust_attr;
@@ -181,7 +181,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 
 		return $tpl->get();
 	}
-
+	
 	/**
 	* Insert property html
 	*
@@ -196,7 +196,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 
 	/**
 	 * Set initial sub form visibility, optionally add dynamic value-based condition
-	 *
+	 * 
 	 * @see ilObjBookingPoolGUI
 	 * @param bool $a_value
 	 * @param string $a_condition
@@ -204,7 +204,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 	function setHideSubForm($a_value, $a_condition = null)
 	{
 		$this->hide_sub = (bool)$a_value;
-
+		
 		if($a_condition)
 		{
 			$this->addCustomAttribute('onchange="if(this.value '.$a_condition.')'.
