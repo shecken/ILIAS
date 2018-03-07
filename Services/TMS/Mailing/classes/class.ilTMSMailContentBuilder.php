@@ -16,6 +16,7 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 
 	const CUSTOM_WRAPPER = './Customizing/global/skin/%s/Services/Mail/tpl.html_mail_template.html';
 	const CUSTOM_IMAGES = './Customizing/global/skin/%s/Services/Mail/img/';
+	const DEFAULT_CUSTOM_SKIN = 'custom';
 
 	//get all placeholder ids (w/o [])
 	//read: lookahead for bracket, all chars, end with bracket
@@ -66,9 +67,15 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 	 * @inheritdoc
 	 */
 	public function withStyleFor(Mailing\Recipient $recipient) {
-		$obj_user = new \ilObjUser($recipient->getUserId());
+		if($recipient->getUserId()) {
+			$obj_user = new \ilObjUser($recipient->getUserId());
+			$skin = $obj_user->getPref('skin');
+		} else {
+			$skin = self::DEFAULT_CUSTOM_SKIN;
+		}
+
 		$clone = clone $this;
-		$clone->skin = $obj_user->getPref('skin');
+		$clone->skin = $skin;
 		return $clone;
 	}
 
