@@ -79,7 +79,7 @@ class ilMaterialListHelper
 	 */
 	public function getCustomId()
 	{				
-		return gevCourseUtils::getInstance($this->course_id)->getCustomId();
+		return gevCourseUtils::getInstance($this->course_id)->getId();
 	}
 	
 	/**
@@ -118,7 +118,7 @@ class ilMaterialListHelper
 	 */
 	public function getContact()
 	{				
-		return "Ad-Schulung.de@generali.com";
+		return "generali-onlineakademie@generali.com";
 	}
 	
 	/**

@@ -12,6 +12,8 @@
 *
 */
 
+include('./maintenance.inc.php');
+
 require_once("Services/Init/classes/class.ilInitialisation.php");
 ilInitialisation::initILIAS();
 
@@ -24,5 +26,3 @@ global $ilCtrl, $ilBench;
 $ilCtrl->setTargetScript("ilias.php");
 $ilCtrl->callBaseClass();
 $ilBench->save();
-
-?>

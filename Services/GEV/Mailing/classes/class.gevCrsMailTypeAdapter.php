@@ -9,18 +9,22 @@ require_once './Services/MailTemplates/classes/class.ilMailTypeAdapter.php';
  * @author Jörg Lützenkirchen <luetzenkirchen@leifos.com>
  * @version $Id$
  */
-class gevCrsMailTypeAdapter extends ilMailTypeAdapter {
+class gevCrsMailTypeAdapter extends ilMailTypeAdapter
+{
 	private $placeholders = null;
-	
-	public function getCategoryNameLocalized($category_name, $lng) {
+
+	public function getCategoryNameLocalized($category_name, $lng)
+	{
 		return 'GEVCrs';
 	}
 
-	public function getTemplateTypeLocalized($category_name, $template_type, $lng) {
+	public function getTemplateTypeLocalized($category_name, $template_type, $lng)
+	{
 		return 'Generisch';
 	}
 
-	protected function getPlaceholders() {
+	protected function getPlaceholders()
+	{
 		if ($this->placeholders == null) {
 			$this->placeholders = array(
 				  array("Mobil"							, "Mobilfunknummer des Teilnehmers")
@@ -34,12 +38,12 @@ class gevCrsMailTypeAdapter extends ilMailTypeAdapter {
 				, array("Trainingstyp"					, "Typ des Training")
 				, array("Trainingsthemen"				, "alle Themen des Trainings aus Mehrfachauswahl")
 				, array("WP"							, "maximale Anzahl von Bildungspunkte, die für das Training erreicht werden können")
+				, array("WB-Zeit"						, "Die dem Kurs Entsprechende Weiterbildungszeit")
 				, array("Methoden"						, "Methoden des Trainings aus Mehrfachauswahl")
 				, array("Medien"						, "beim Training verwendete Medien aus Mehrfachauswahl")
 				, array("Zielgruppen"					, "Zielgruppen des Trainings aus Mehrfachauswahl")
 				, array("Inhalt"						, "Inhalt des Trainings aus Freitext")
 				, array("Ziele und Nutzen"				, "Ziele und Nutzen des Trainings aus Freitext")
-				, array("ID"							, "Maßnahmennummer des Trainings")
 				, array("Startdatum"					, "Beginndatum des Trainings")
 				, array("Startzeit"						, "Uhrzeit des Beginns des Trainings")
 				, array("Enddatum"						, "Enddatum des Trainings")
@@ -88,17 +92,18 @@ class gevCrsMailTypeAdapter extends ilMailTypeAdapter {
 				, array("Nachtagabreise"				, "Ja, wenn der Benutzer eine Nachtagabreise angegeben hat, sonst Nein.")
 				, array("Liste"							, "Liste der Teilnehmer am Training")
 				, array("Organisatorisches"				, "Feld Organisatorisches aus den Trainingsdetails")
+				, array("Feedback_URL"					, "Links zu den Feedbacks aus dem Kurs.")
 				);
 		}
-	
+
 		return $this->placeholders;
 	}
 
-	public function getPlaceholdersLocalized($category_name = '', $template_type = '', $lng = '') {
+	public function getPlaceholdersLocalized($category_name = '', $template_type = '', $lng = '')
+	{
 		$ret = array();
 
-		foreach($this->getPlaceholders() as $item)
-		{
+		foreach ($this->getPlaceholders() as $item) {
 			$ret[] = array(
 				'placeholder_code'          => strtoupper($item[0]),
 				'placeholder_name'          => $item[0],
@@ -109,11 +114,11 @@ class gevCrsMailTypeAdapter extends ilMailTypeAdapter {
 		return $ret;
 	}
 
-	public function getPlaceHolderPreviews($category_name = '', $template_type = '', $lng = '') {
+	public function getPlaceHolderPreviews($category_name = '', $template_type = '', $lng = '')
+	{
 		$ret = array();
 
-		foreach($this->getPlaceholders() as $item)
-		{
+		foreach ($this->getPlaceholders() as $item) {
 			$ret[] = array(
 				'placeholder_code'			=> strtoupper($item[0]),
 				'placeholder_content'       => $item[0]
@@ -123,13 +128,12 @@ class gevCrsMailTypeAdapter extends ilMailTypeAdapter {
 		return $ret;
 	}
 
-	public function hasAttachmentsPreview() {
+	public function hasAttachmentsPreview()
+	{
 		return false;
 	}
 
-	public function getAttachmentsPreview() {
-
+	public function getAttachmentsPreview()
+	{
 	}
 }
-
-?>

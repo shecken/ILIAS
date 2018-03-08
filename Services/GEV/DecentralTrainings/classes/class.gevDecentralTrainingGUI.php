@@ -234,12 +234,8 @@ class gevDecentralTrainingGUI
 		$form = ($a_form === null) ? $this->buildChooseTemplateAndTrainersForm($this->user_id, $this->date)
 								   : $a_form;
 
-		$tpl = new ilTemplate("tpl.gev_notice.html", false, false, "Services/GEV/DecentralTrainings");
-		$tpl->setVariable("NOTICE", $this->lng->txt("gev_dec_training_notice"));
-
 		return   $title->render()
 				.$form->getHTML()
-				.$tpl->get()
 				;
 	}
 
@@ -942,8 +938,8 @@ class gevDecentralTrainingGUI
 		$form = new catPropertyFormGUI();
 		$form->setTemplate("tpl.gev_dec_training_choose_template_form.html", "Services/GEV/Desktop");
 		$form->setTitle($this->lng->txt("gev_dec_training_choose_template_and_trainers"));
-		$form->addCommandButton("createTraining", $this->lng->txt("continue"));
 		$form->addCommandButton("cancel", $this->lng->txt("cancel"));
+		$form->addCommandButton("createTraining", $this->lng->txt("continue"));
 		$this->ctrl->setParameter($this, "date", $this->date);
 		$form->setFormAction($this->ctrl->getFormAction($this));
 
@@ -1232,7 +1228,6 @@ class gevDecentralTrainingGUI
 			$orgu_selection->setValue($a_form_values["orgu_id"]);
 		}
 		$orgu_selection->setRecursive(false);
-		$orgu_selection->setRequired(true);
 		$orgu_selection->setDisabled($a_form_values["no_changes_allowed"]);
 		$form->addItem($orgu_selection);
 
@@ -1471,7 +1466,6 @@ class gevDecentralTrainingGUI
 			$orgu_selection->setValue($a_form_values["orgu_id"]);
 		}
 		$orgu_selection->setRecursive(false);
-		$orgu_selection->setRequired(true);
 		$orgu_selection->setDisabled($a_form_values["no_changes_allowed"]);
 		$form->addItem($orgu_selection);
 

@@ -206,7 +206,6 @@ class gevMyTrainingsAdmin {
 			array( gevSettings::CRS_AMD_START_DATE			=> "start_date"
 				 , gevSettings::CRS_AMD_END_DATE 			=> "end_date"
 				 
-				 , gevSettings::CRS_AMD_CUSTOM_ID			=> "custom_id"
 				 , gevSettings::CRS_AMD_TYPE 				=> "type"
 				 
 				 , gevSettings::CRS_AMD_VENUE 				=> "location"

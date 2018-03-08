@@ -69,7 +69,7 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 
 		$data_base = array("TRAININGSTYP" 					=> $crs_utils->getType()
 							,"TRAININGSTITEL" 				=> $crs_utils->getTitle()
-							,"ID" 							=> $crs_utils->getCustomId()
+							,"ID" 							=> ""
 							,"STARTDATUM" 					=> $crs_utils->getStartDate()
 							,"ZEITPLAN" 					=> $crs_utils->getSchedule()[0]
 							,"INHALT" 						=> $crs_utils->getContents()
@@ -208,7 +208,7 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 
 		$data_base = array("TRAININGSTYP" 					=> $crs_utils->getType()
 							,"TRAININGSTITEL" 				=> $request->settings()->title()
-							,"ID" 							=> $crs_utils->getCustomId()
+							,"ID" 							=> ""
 							,"STARTDATUM" 					=> $request->settings()->start()->get(IL_CAL_DATE)
 							,"ZEITPLAN" 					=> $start_time."-".$end_time
 							,"INHALT" 						=> gevCourseBuildingBlockUtils::content(null, $this->gDB, $crs_request_id)

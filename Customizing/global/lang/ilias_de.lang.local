@@ -644,7 +644,11 @@ gev#:#new_bill_saved#:#Neue Rechung angelegt.
 gev#:#bill_data_complete#:#Rechungsdaten komplett
 gev#:#gev_period#:#Zeitraum:
 gev#:#gev_personal_data#:#Personendaten
-gev#:#gev_points#:#Punkte
+gev#:#gev_points#:#WB-Punkte
+gev#:#gev_wb_time#:#WB-Zeit
+gev#:#gev_wb_time_hint#:#WB-Zeit (1 Punkt = 15 Minuten)
+gev#:#gev_dec_training_wb_time_sum#:#WB-Zeit gesamt
+gev#:#gev_dec_building_block_is_idd_relevant#:#IDD anrechenbar
 gev#:#gev_points_at_end_of_cert_year#:#voraussichtliche Punkte bis zum Ende des aktuellen Zertifizierungsjahres
 gev#:#gev_points_in_academy#:#Bildungspunkte in der Generali Online Akademie im ausgewählten Zeitraum
 gev#:#gev_points_in_five_years#:#Punkte im 5-Jahres-Zeitraum
@@ -1186,13 +1190,14 @@ gev#:#usr_id#:#Benutzer-ID
 gev#:#crs_id#:#Kurs-ID
 gev#:#gev_rep_roles#:#Rollen
 gev#:#ts#:#Zeitpunkt
+gev#:#gev_feedback#:#Feedback abgeben
 gev#:#gev_warning_to_book_crs_self_because_period#:#Sie haben bereits ein oder mehrere andere Trainings im gleichen Zeitraum gebucht.
 gev#:#gev_warning_to_book_crs_for_others_because_period#:#Der Mitarbeiter / Vertriebspartner hat bereits ein oder mehrere andere Trainings im gleichen Zeitraum gebucht.
 gev#:#gev_login_express#:#Anmelden
 gev#:#gev_login_express_existend_account#:#Ich habe in der Generali Online Akademie bereits ein Benutzerkonto.
 gev#:#gev_login_express_new_account#:#Ich möchte mich in der Online Akademie registrieren um künftig Webinare einfach nutzen zu können.
 gev#:#gev_express_login#:#Express Login
-gev#:#gev_login_express_no_login#:#Express Login <u>ohne</u> Bildungspunkte
+gev#:#gev_login_express_no_login#:#Express Login <u>ohne</u> Gutschrift von Weiterbildungszeit.
 gev#:#gev_login_express_companyname#:#Firmenname
 gev#:#gev_login_express_vnumber#:#Vermittlernummer
 gev#:#gev_login_express_agreement#:#Ja, ich stimme der <a href='/Customizing/global/skin/genv/static/documents/GEV_Makler_Finale_Nutzungsbedingungen_Express_Login.pdf' target='_blank' class='blue'>Nutzungsvereinbarung</a> und der darin enthaltenen datenschutzrechtlichen Einwilligungserklärung zu, um mich für das Training zu registrieren.
@@ -1209,6 +1214,7 @@ gev#:#gev_default_role_agtid_does_not_exist#:#Lokale Benutzer können nicht hinz
 gev#:#gev_new_pos_self_learnings_in_table#:#Die Selbstlernkurse finden Sie ab sofort am Ende der Trainingsübersicht!
 gev#:#gev_finalize_booking_booked_out_error#:#Das Training konnte leider nicht für Sie gebucht werden, da es inzwischen ausgebucht ist.
 gev#:#gev_crs_srch_my_table_desc_advice#:#Hinweis:<br />Die Selbstlernkurse finden Sie ab sofort am Ende der Trainingsübersicht bzw. im Reiter "Selbstlernkurs"!
+gev#:#gev_feedback#:#Feedback abgeben
 gev#:#gev_venue_room_nr#:#Raumnummer
 gev#:#gev_venue_free_text#:#Freitext Veranstaltungsort
 gev#:#gev_orga_info#:#Organisatorisches
@@ -1252,7 +1258,7 @@ gev#:#gev_dec_crs_building_block_new#:#Neuer Baustein
 gev#:#gev_dec_crs_building_block_base_data#:#Bausteininformationen
 gev#:#gev_dec_training_creation_requested#:#Das dezentrale Training wird für sie angelegt.
 gev#:#gev_dec_please_select_building_block#:#Bitte wählen Sie einen Baustein aus.
-gev#:#gev_dec_training_open_requests_header#:#Derzeit wird dieses dezentrale Training für sie angelegt:
+gev#:#gev_dec_training_open_requests_header#:#Derzeit wird dieses dezentrale Training für Sie angelegt:
 gev#:#gev_dec_training_open_requests_time_info#:#Die Wartezeit zur Anlage eines dezentralen Trainings beträgt derzeit etwa %s Minuten. <br /><br /><b>Bleiben sie auf dieser Seite, um nach der Anlage des Trainings Buchungen vornehmen zu können.</b></br><br /><b>Nach der Anlage des Training erhalten sie außerdem eine E-Mail, die einen Link zu den Trainingsbuchungen enthält.</b>
 gev#:#gev_dec_training_presence_fix#:#Präsenztraining (fester Ablaufplan)
 gev#:#gev_dec_training_webinar_fix#:#Webinar (fester Ablaufplan)
@@ -1845,3 +1851,32 @@ mass#:#mass_save_amend#:#Änderung speichern
 orgu#:#edit_ext_id#:#ADE-Nummer
 orgu#:#ext_id#:#ADE-Nummer
 gev#:#bol_link_label_cockpit#:#BOL
+gev#:#xacc_copy#:#Kostenerfassung kopieren
+gev#:#xfbk_copy#:#Sternefeedback kopieren
+ev#:#xbbp_copy#:#Pool für Trainingsbausteine kopieren
+gev#:#xcgo_copy#:#Karriereziel kopieren
+gev#:#xatd_copy#:#ASTD-Report kopieren
+gev#:#xrbi_copy#:#Rechnungsreport kopieren
+gev#:#xrbt_copy#:#Report Teilnahmen nach Trainingsvorlage kopieren
+gev#:#xbbv_copy#:#Report Buchungen nach Veranstaltungsort kopieren
+gev#:#xrcg_copy#:#Unternehmensreport kopieren
+gev#:#xrcp_copy#:#Gutscheincodereport kopieren
+gev#:#xrcn_copy#:#Gutscheincodereport kopieren
+gev#:#xreb_copy#:#Bildungsbiografie kopieren
+gev#:#xrea_copy#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner kopieren
+gev#:#x34i_copy#:#Report Teilnahme nach Mitarbeiter / Vertriebspartner 34i kopieren
+gev#:#xeeb_copy#:#Report Bildungsbiografien meiner Mitarbeiter / Vertriebspartner kopieren
+gev#:#xexb_copy#:#Prüfungsbiografie kopieren
+gev#:#xrts_copy#:#Report Beispiel kopieren
+gev#:#xroa_copy#:#Report Teilnahmen nach Organisationseinheit kopieren
+gev#:#xsp_copy#:#Studienprogrammreport kopieren
+gev#:#xspo_copy#:#Report Ausbildungs- und Qualifizierungspässe kopieren
+gev#:#xttc_copy#:#Report Trainereinsätze nach TEP-Kategorie kopieren
+gev#:#xoto_copy#:#Report Trainereinsätze nach Organisationseinheiten und Trainern kopieren
+gev#:#xrtw_copy#:#Report Trainerauslastung kopieren
+gev#:#xrta_copy#:#Report über Teilnahmen an Trainings kopieren
+gev#:#xtda_copy#:#Report Trainingsauslastung (Ausblick) kopieren
+gev#:#xtdr_copy#:#Report Trainingsauslastung (Auswertung) kopieren
+gev#:#xwbe_copy#:#Report über Fehler bei der WBD-Meldung kopieren
+gev#:#xwbp_copy#:#Report über gemeldete Bildungspunkte kopieren
+gev#:#xtas_copy#:#Assessment Center für [KARRIEREZIEL] kopieren

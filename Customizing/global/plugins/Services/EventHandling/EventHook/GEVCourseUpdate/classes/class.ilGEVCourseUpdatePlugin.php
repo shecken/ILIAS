@@ -73,7 +73,6 @@ class ilGEVCourseUpdatePlugin extends ilEventHookPlugin
 			if ($this->crs_utils->getRefId() && $_GET["ref_id"] && $this->crs_utils->getRefId() == $_GET["ref_id"]) {
 				$this->crs_utils->warningIfTemplateWithDates();
 			}
-			$this->maybeSetTemplateCustomId();
 
 			$this->crs_utils->updateDerivedCourses();
 
@@ -85,25 +84,6 @@ class ilGEVCourseUpdatePlugin extends ilEventHookPlugin
 		catch (Exception $e) {
 			$this->gLog->write("Error in GEVCourseUpdate::updateTemplateCourse: ".print_r($e, true));
 		}
-	}
-	
-	protected function maybeSetTemplateCustomId() {
-		require_once("Services/GEV/Utils/classes/class.gevSettings.php");
-		
-		if ($this->crs_utils->getCustomId()) {
-			return;
-		}
-		
-		$tmplt = $this->crs_utils->getTemplateCustomId();
-		if (!$tmplt) {
-			return;
-		}
-		$tmplt = explode(" ", $tmplt);
-		$tmplt = $tmplt[0];
-		
-		$custom_id = gevCourseUtils::createNewTemplateCustomId($tmplt);
-		$this->crs_utils->setCustomId($custom_id);
-
 	}
 
 	protected function compareCourse(array $crs_to_compare) {

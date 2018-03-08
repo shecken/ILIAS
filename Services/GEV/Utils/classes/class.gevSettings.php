@@ -29,8 +29,10 @@ class gevSettings
 
 	// Block "Trainingsverwaltung"
 	// Nummer der Maßnahme
+	// OBSOLET!
 	const CRS_AMD_CUSTOM_ID 		= "crs_amd_custom_id";
 	// Nummernkreis
+	// OBSOLET!
 	const CRS_AMD_CUSTOM_ID_TEMPLATE = "crs_amd_custom_id_template";
 	// Trainingsvorlage (nicht im Konzept)
 	const CRS_AMD_TEMPLATE_TITLE	= "crs_amd_template_title";
@@ -77,6 +79,7 @@ class gevSettings
 	const CRS_AMD_TARGET_GROUP_DESC	= "crs_amd_target_group_desc";
 
 	// Fachschulung
+	// OBSOLET!
 	const CRS_AMD_EXPERT_TRAINING	= "crs_amd_expert_training";
 	// Bildungspunkte
 	const CRS_AMD_CREDIT_POINTS		= "crs_amd_credit_points";
@@ -103,6 +106,7 @@ class gevSettings
 	// harte Stornofrist
 	const CRS_AMD_ABSOLUTE_CANCEL_DEADLINE = "crs_amd_absolute_cancel_deadline";
 	// relevante Themen
+	// OBSOLET!
 	const CRS_AMD_DBV_HOT_TOPIC = "crs_amd_dbv_hot_topic";
 	// maximale Teilnehmer auf der Warteliste
 	const CRS_AMD_MAX_WAITING_LIST_LENGTH = "crs_amd_max_waiting_list_length";
@@ -139,6 +143,9 @@ class gevSettings
 
 	//Lernzeit
 	const CRS_AMD_LEARNING_TIME = "crs_amd_learning_time";
+
+	// Typen für ASTD-Kategorien
+	const CRS_AMD_ASTD_CATEGORY = "crs_amd_astd_category";
 
 	// Crs User PState
 	const CRS_USR_STATE_SUCCESS			= "erfolgreich";
@@ -259,6 +266,15 @@ class gevSettings
 	//Kostenstelle VFS
 	const USR_UDF_FINANCIAL_ACCOUNT	= "usr_udf_financial_account";
 
+	const USR_UDF_ORGU_SAP = 'usr_udf_orgu_sap';
+	const USR_UDF_FLAG_KU = 'usr_udf_flag_ku';
+	const USR_UDF_PERSONAL_ID = 'usr_udf_personal_id';
+	const USR_UDF_FINANCIAL_ACCOUNT_LONG = 'usr_udf_financial_account_long';
+	const USR_UDF_FUNCTION = 'usr_udf_function';
+	const USR_UDF_ENTRY_DATE_KO = 'usr_udf_entry_date_ko';
+	const USR_UDF_INACTIVE_START = 'usr_udf_inactive_start';
+	const USR_UDF_INACTIVE_END = 'usr_udf_inactive_end';
+	const USR_UDF_SUPERIOR_OF_USR = 'usr_udf_superior_of_usr';
 
 
 
@@ -320,10 +336,11 @@ class gevSettings
 		,'Stellung VFS'
 
 		,'Paisy-Personalnummer VFS'
-		,'Kostenstelle VFS'
-
+		,'Kostenstelle'
+		,'Bezeichnung Kostenstelle'
 		,'AD-Titel'
-		,'Eintrittsdatum'
+		,'Eintrittsdatum KU'
+		,'Eintrittsdatum KO'
 		,'Austrittsdatum'
 		,'IHK Registernummer'
 
@@ -340,6 +357,13 @@ class gevSettings
 		,'Nächste durchzuführende WBD Aktion'
 		,'Vorheriger TP-Service'
 		,'WBD Punkte nachmelden ab'
+		,'Kennzeichen KU'
+		,'Organisationseinheit SAP'
+		,'Personalnummer'
+		,'Funktion'
+		,'inaktiv von'
+		,'inaktiv bis'
+		,'Vorgesetzter'
 	);
 
 	public static $LOCAL_USER_MANDATORY_UDF_FIELDS = array(
@@ -494,6 +518,7 @@ class gevSettings
 		, "MA"
 		, "FK"
 		, "IDD"
+		, "Admin LE"
 		);
 
 	// Names of roles that count as admins
@@ -671,7 +696,7 @@ class gevSettings
 		, "OD/FD ID"				=> "ID"
 		, "BD ID"					=> "ID"
 		, "Agt-Id"					=> "HGB §84"
-		, "VA"						=> "HGB §84"
+		, "VA"						=> "AAD"
 		, "NFK"						=> "AAD"
 		, "FDA"						=> "AAD"
 		//, "Ausbilder"				=> "nicht relevant"

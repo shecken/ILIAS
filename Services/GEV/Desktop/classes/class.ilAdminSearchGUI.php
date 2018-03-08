@@ -101,6 +101,12 @@ class ilAdminSearchGUI {
 		}
 		else {
 			$search_opts = array();
+			$year = date('Y');
+			$search_opts["period"] = array(
+				"start" => time(),
+				"end" => strtotime((date('Y')+1).date('-m-d'))
+				);
+
 		}
 
 		foreach ($search_opts as $key => $value) {
@@ -181,9 +187,6 @@ class ilAdminSearchGUI {
 
 		$title = new ilTextInputGUI($this->lng->txt("title"), "title");
 		$form->addItem($title);
-		
-		$custom_id = new ilTextInputGUI($this->lng->txt("gev_course_id"), "custom_id");
-		$form->addItem($custom_id);
 		
 		$type = new ilSelectInputGUI($this->lng->txt("gev_course_type"), "type");
 		$type->setOptions(gevCourseUtils::getTypeOptions());

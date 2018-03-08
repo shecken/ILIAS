@@ -323,11 +323,17 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 		$form_add_building_block->getTemplate()->setVariable("DEST_AND_USE",$content->render());
 		$form_add_building_block->getTemplate()->setVariable("DEST_AND_USE_LABEL",$this->lng->txt("gev_targets_and_benefit"));
 
-		$wp = new ilTextInputGUI($this->lng->txt("gev_dec_building_wp"), "wp");
+		$wp = new ilHiddenInputGUI("wp");
 		$wp->setValue("");
-		$wp->setSize(300);
-		$form_add_building_block->getTemplate()->setVariable("WP",$wp->render());
-		$form_add_building_block->getTemplate()->setVariable("WP_LABEL",$this->lng->txt("gev_dec_building_wp"));
+		$form_add_building_block->getTemplate()->setVariable("WP",$wp->getToolbarHTML());
+
+
+		$wb_time = new ilTextInputGUI($this->lng->txt("gev_dec_building_wp"), "wb_time");
+		$wb_time->setValue("");
+		$wb_time->setDisabled(true);
+		$wb_time->setSize(5);
+		$form_add_building_block->getTemplate()->setVariable("WB_TIME",$wb_time->render());
+		$form_add_building_block->getTemplate()->setVariable("WP_LABEL",$this->lng->txt("gev_wb_time"));
 
 		$hidden = new ilHiddenInputGUI("isWP");
 		$hidden->setValue("");
@@ -352,7 +358,7 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 		
 
 		$wp = gevCourseBuildingBlockUtils::wp($this->crs_ref_id,null,$this->crs_request_id);
-		$crs_tbl->setAdiceInfoRight("gev_dec_training_wp_sum",$wp);
+		$crs_tbl->setAdiceInfoRight("gev_dec_training_wb_time_sum",gevCourseUtils::convertCreditpointsToFormattedDuration((int)$wp));
 		
 		$crs_tbl->setTopCommands(false);
 		$html = $crs_tbl->getHTML(); 

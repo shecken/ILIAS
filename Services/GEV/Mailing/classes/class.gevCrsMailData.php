@@ -112,7 +112,10 @@ class gevCrsMailData extends ilMailData {
 				
 				break;
 			case "WP":
-				$val = $this->crs_utils->getCreditPoints();
+				$val = $this->crs_utils->getCreditPoints()/3;
+				break;
+			case "WB-ZEIT":
+				$val = $this->crs_utils->getCreditedDurationFormatted();
 				break;
 			case "METHODEN":
 				$methods = $this->crs_utils->getMethods();
@@ -152,9 +155,6 @@ class gevCrsMailData extends ilMailData {
 				if (!$a_markup) {
 					$val = strip_tags($val);
 				}
-				break;
-			case "ID":
-				$val = $this->crs_utils->getCustomId();
 				break;
 			case "STARTDATUM":
 				$val = $this->crs_utils->getFormattedStartDate();
@@ -367,6 +367,9 @@ class gevCrsMailData extends ilMailData {
 					$names[] = ilObjUser::_lookupFullname($user_id);
 				}
 				$val = implode("<br />", $names);
+				break;
+			case "FEEDBACK_URL":
+				$val = implode("<br />", $this->crs_utils->getLinkForEachFeedbackObject());
 				break;
 			default:
 				return $a_placeholder_code;

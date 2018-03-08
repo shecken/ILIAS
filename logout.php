@@ -10,6 +10,8 @@
 * @package ilias-core
 */
 
+setcookie("bypass_maintenance_page", null, -1);
+
 require_once("Services/Init/classes/class.ilInitialisation.php");
 ilInitialisation::initILIAS();
 
@@ -20,4 +22,3 @@ $ilCtrl->callBaseClass();
 $ilBench->save();
 
 exit;
-?>

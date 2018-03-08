@@ -589,7 +589,7 @@ class gevWBDDataConnector extends wbdDataConnector {
 				.$this->ilDB->quote($creator_id,"integer").",\n"
 				.$this->ilDB->quote($usr_id,"integer").",\n"
 				.$this->ilDB->quote($crs_id,"integer").",\n"
-				.$this->ilDB->quote($credit_points,"integer").",\n"
+				.$this->ilDB->quote(3*$credit_points,"integer").",\n"
 				.$this->ilDB->quote(0,"integer").",\n"
 				.$this->ilDB->quote(0,"integer").",\n"
 				.$this->ilDB->quote($okz,"text").",\n"

@@ -71,7 +71,6 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 		$this->addColumn("", "expand", "0px", false, "catTableExpandButton");
 
 		$this->addColumn($this->gLng->txt("title"), "title");
-		$this->addColumn($this->gLng->txt("gev_training_id"), "custom_id");
 		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
 		//$this->addColumn($this->gLng->txt("gev_learning_cat"), "category");
 		$this->addColumn($this->gLng->txt("gev_location"), "location");
@@ -121,6 +120,17 @@ class gevMyTrainingsApTableGUI extends catAccordionTableGUI {
 				.' / ' .$a_set['mbr_min'] .'-' .$a_set['mbr_max'];
 
 		$course_link = ilTEPView::getTitleLinkForCourse($this->gAccess, $this->gCtrl, $a_set["crs_ref_id"]);
+
+		$this->gCtrl->setParameterByClass("gevMemberListDeliveryGUI", "ref_id", $a_set["crs_ref_id"]);
+		$memberlist_link = $this->gCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "trainer");
+		$signature_list_link = $this->gCtrl->getLinkTargetByClass("gevMemberListDeliveryGUI", "download_signature_list");
+		$this->gCtrl->clearParametersByClass("gevMemberListDeliveryGUI");
+
+		$this->gCtrl->setParameter($this->parent_obj, "crsrefid", $a_set['crs_ref_id']);
+		$this->gCtrl->setParameter($this->parent_obj, "crs_id", $a_set['obj_id']);
+		$setstatus_link = $this->gCtrl->getLinkTarget($this->parent_obj, "listStatus");
+		$bookings_link = $this->gCtrl->getLinkTarget($this->parent_obj, "viewBookings");
+		$this->gCtrl->clearParameters($this->parent_obj);
 
 		$this->tpl->setVariable("TITLE_LINK", $course_link);
 		$this->tpl->setVariable("TITLE", $a_set["title"]);

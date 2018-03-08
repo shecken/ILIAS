@@ -267,7 +267,6 @@ class gevDecentralTrainingBuildingBlockAdminGUI {
 					,"training_categories" => $bu_utils->getTrainingCategories()
 					,"gdv_topic" => $bu_utils->getGDVTopic()
 					,"topic" => $bu_utils->getTopic()
-					,"dbv_topic" => $bu_utils->getDBVTopic()
 					,"move_to_course" => $bu_utils->getMoveToCourseText()
 				);
 
@@ -350,15 +349,6 @@ class gevDecentralTrainingBuildingBlockAdminGUI {
 		}
 		$form_gui->addItem($topic);
 
-		$topic_options = $amd_utils->getOptions(gevSettings::CRS_AMD_DBV_HOT_TOPIC);
-		$dbv_topic = new ilSelectInputGUI($this->lng->txt("gev_dec_training_dbv_topic"),"frm_dbv_topic");
-		$options = array("" => "-") + $topic_options;
-		$dbv_topic->setOptions($options);
-		if($vals["dbv_topic"]){
-			$dbv_topic->setValue($vals["dbv_topic"]);
-		}
-		$form_gui->addItem($dbv_topic);
-
 		/*************************
 		* BEWERTUNG
 		*************************/
@@ -440,7 +430,6 @@ class gevDecentralTrainingBuildingBlockAdminGUI {
 		$bu_utils->setTrainingCategories($training_category);
 		
 		$bu_utils->setTopic($form->getInput("frm_topic"));
-		$bu_utils->setDBVTopic($form->getInput("frm_dbv_topic"));
 		$bu_utils->setMoveToCourse(($form->getInput("frm_move_to_course") == "Ja") ? 1 : 0);
 
 		$bu_utils->update();
@@ -478,7 +467,6 @@ class gevDecentralTrainingBuildingBlockAdminGUI {
 		$bu_utils->setTrainingCategories($training_category);
 
 		$bu_utils->setTopic($form->getInput("frm_topic"));
-		$bu_utils->setDBVTopic($form->getInput("frm_dbv_topic"));
 		$bu_utils->setMoveToCourse(($form->getInput("frm_move_to_course") == "Ja") ? 1 : 0);
 
 		$bu_utils->save();

@@ -124,12 +124,17 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				$f->multiselectsearch(
 					$txt("course_type"),
 					"",
-					array("(hc.edu_program = ".$db->quote("dezentrales Training (AD)", "text")." AND hc.dct_type = ".$db->quote("fixed", "text").')'
+					array("((hc.edu_program = ".$db->quote("dezentrales Training (AD)", "text")
+						." OR hc.edu_program = ".$db->quote("LE-Training dezentral (ID)", "text").")"
+						." AND hc.dct_type = ".$db->quote("fixed", "text").')'
 								=> $txt("dec_fixed")
-							,"(hc.edu_program = ".$db->quote("dezentrales Training (AD)", "text")." AND hc.dct_type = ".$db->quote("flexible", "text").')'
+							,"((hc.edu_program = ".$db->quote("dezentrales Training (AD)", "text")
+							." OR hc.edu_program = ".$db->quote("LE-Training dezentral (ID)", "text").")"
+							." AND hc.dct_type = ".$db->quote("flexible", "text").')'
 								=> $txt("dec_flexible")
-							,"hc.edu_program != ".$db->quote("dezentrales Training (AD)", "text")
-					=> $txt("non_dec"))
+							,"(hc.edu_program != ".$db->quote("dezentrales Training (AD)", "text")
+							." AND hc.edu_program != ".$db->quote("LE-Training dezentral (ID)", "text").")"
+								=> $txt("non_dec"))
 				),
 				$f->multiselectsearch(
 					$txt("wbd_relevant"),
@@ -141,7 +146,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 					)
 				),
 				$f->multiselectsearch(
-					$txt("edupoints"),
+					$txt("wb_time"),
 					"",
 					array('(hc.max_credit_points > 0 OR hc.crs_id < 0)'
 								=> $txt('trainings_w_points')
@@ -187,6 +192,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 
 		$sum_data = array();
 
+		$cp_unit = ' '.$this->plugin->txt('cp_unit');
 		foreach ($data as &$row) {
 			$row = call_user_func($callback, $row);
 			foreach (self::$columns_to_sum as $column) {
@@ -195,11 +201,13 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				}
 				$sum_data[$column] += $row[$column];
 			}
+			$row['wp_part'] = gevCourseUtils::convertCreditpointsToTime((int)$row['wp_part'])[gevCourseUtils::CREDITED_DURATION_HOURS].$cp_unit;
 		}
 
 		$sum_data['type'] = $this->plugin->txt('sum');
 		$sum_data['part_user'] = '--';
 		$sum_data['book_user'] = '--';
+		$sum_data['wp_part'] = gevCourseUtils::convertCreditpointsToTime((int)$sum_data['wp_part'])[gevCourseUtils::CREDITED_DURATION_HOURS].$cp_unit;
 		$data['sum'] = $sum_data;
 
 		return $data;
@@ -221,7 +229,7 @@ class ilObjReportCompanyGlobal extends ilObjReportBase
 				->column('book_user', $this->plugin->txt('members'), true)
 				->column('crs_cnt_part', $this->plugin->txt('cnt_crs'), true)
 				->column('part_book', $this->plugin->txt('participations'), true)
-				->column('wp_part', $this->plugin->txt('edu_points'), true)
+				->column('wp_part', $this->plugin->txt('wb_time'), true)
 				->column('part_user', $this->plugin->txt('members'), true);
 		return parent::buildTable($table);
 	}

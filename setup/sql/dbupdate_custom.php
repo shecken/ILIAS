@@ -6434,3 +6434,123 @@ foreach (ilStudyProgrammeType::getAllTypes() as $type) {
 }
 
 ?>
+
+<#271>
+<?php
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+$credit_points_field_id = gevSettings::getInstance()->getAMDFieldId(gevSettings::CRS_AMD_CREDIT_POINTS);
+global $ilDB;
+$q = 'UPDATE adv_md_values_int'
+	.'	SET value = 3*value'
+	.'	WHERE field_id = '.$ilDB->quote($credit_points_field_id,'integer')
+	.'	AND value IS NOT NULL';
+$ilDB->manipulate($q);
+?>
+
+<#272>
+<?php
+$q = 'UPDATE hist_course'
+	.'	SET max_credit_points = 3*max_credit_points'
+	.'	WHERE max_credit_points != '.$ilDB->quote('-empty-','text')
+	.'		AND max_credit_points IS NOT NULL'
+	.'		AND max_credit_points != '.$ilDB->quote(-1,'integer');
+$ilDB->manipulate($q);
+?>
+
+<#273>
+<?php
+$q = 'UPDATE hist_usercoursestatus'
+	.'	SET credit_points = 3*credit_points'
+	.'	WHERE credit_points != '.$ilDB->quote(-1,'integer')
+	.'		AND credit_points != '.$ilDB->quote('-empty-','text')
+	.'		AND credit_points IS NOT NULL';
+$ilDB->manipulate($q);
+?>
+
+<#274>
+<?php
+global $ilDB;
+$ilDB->dropTableColumn("dct_building_block", "dbv_topic");
+?>
+
+<#275>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_date', array('obj_id'), 'doi');
+?>
+
+<#276>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_date', array('field_id'), 'dfi');
+?>
+
+<#277>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_int', array('obj_id'), 'ioi');
+?>
+
+<#278>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_int', array('field_id'), 'ifi');
+?>
+
+<#279>
+<?php
+global $ilDB;
+$ilDB->addIndex('adv_md_values_text', array('field_id'), 'tfi');
+?>
+
+<#280>
+<?php
+global $ilDB;
+$where = array("topic" => array("text", "AdcoCard"));
+$field = array("topic" => array("text", "AdvoCard"));
+$ilDB->update('dct_building_block', $field, $where);
+?>
+
+<#281>
+<?php
+global $ilDB;
+if (!$ilDB->tableColumnExists('hist_course', 'astd_category')) {
+	$ilDB->addTableColumn('hist_course', 'astd_category', array(
+		'type' => 'text',
+		'length' => 255,
+		'notnull' => false
+		));
+}
+?>
+
+<#282>
+<?php
+require_once "Customizing/class.ilCustomInstaller.php";
+ilCustomInstaller::maybeInitClientIni();
+ilCustomInstaller::maybeInitPluginAdmin();
+ilCustomInstaller::maybeInitObjDefinition();
+ilCustomInstaller::maybeInitAppEventHandler();
+ilCustomInstaller::maybeInitTree();
+ilCustomInstaller::maybeInitRBAC();
+ilCustomInstaller::maybeInitObjDataCache();
+ilCustomInstaller::maybeInitUserToRoot();
+ilCustomInstaller::maybeInitSettings();
+
+global $ilDB;
+require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+require_once("Services/GEV/WBD/classes/class.gevWBD.php");
+
+$query = "SELECT usr_id FROM usr_data WHERE usr_id NOT IN (6, 13)";
+$result = $ilDB->query($query);
+
+while($row = $ilDB->fetchAssoc($result)) {
+	$util = gevUserUtils::getInstance((int)$row['usr_id']);
+	$wbd = gevWBD::getInstance((int)$row['usr_id']);
+
+	if($util->hasRoleIn(array("VP"))) {
+		$wbd->setWBDTPType(gevWBD::WBD_EDU_PROVIDER);
+		continue;
+	}
+	$wbd->setWBDTPType(gevWBD::WBD_NO_SERVICE);
+}
+?>

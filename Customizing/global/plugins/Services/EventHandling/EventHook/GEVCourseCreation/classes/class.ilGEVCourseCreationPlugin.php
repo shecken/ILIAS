@@ -55,7 +55,6 @@ class ilGEVCourseCreationPlugin extends ilEventHookPlugin
 				$source_utils->getMaterialList()->copyTo($target_obj_id);
 			}
 
-			$this->setCustomId($target_utils, $source_utils);
 			$this->setMailSettings($source_obj_id, $target_obj_id);
 			$this->activateCertificateMaybe($source_obj_id, $target_obj_id);
 
@@ -69,18 +68,6 @@ class ilGEVCourseCreationPlugin extends ilEventHookPlugin
 		gevCourseUtils::possiblyReferenceIntoSamePRGS($source, $target);
 
 		$ilLog->write("Cloned course ".$a_target_ref_id." from course ". $a_source_ref_id);		
-	}
-		
-	public function setCustomId($a_target_utils, $a_source_utils) {
-		if ($a_source_utils->isTemplate()) {
-			$custom_id_tmplt = $a_source_utils->getCustomId();
-		}
-		else {
-			$custom_id_tmplt = gevCourseUtils::extractCustomId($a_target_utils->getCustomId());
-		}
-
-		$custom_id = gevCourseUtils::createNewCustomId($custom_id_tmplt);
-		$a_target_utils->setCustomId($custom_id);
 	}
 	
 	public function setMailSettings($a_source_obj_id, $a_target_obj_id) {

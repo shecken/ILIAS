@@ -33,7 +33,6 @@ class gevCourseSignatureList extends fpdf {
 		$this->metadata = array(
 			"Titel" => $crs_utils->getTitle()
 			, "Untertitel" => $crs_utils->getSubtitle()
-			, "Nummer der Maßnahme" => $crs_utils->getCustomId()
 			, "Datum" => ($crs_utils->getStartDate() !== null && $crs_utils->getEndDate() !== null)
 						 	? ilDatePresentation::formatPeriod($crs_utils->getStartDate(), $crs_utils->getEndDate())
 							: ""
@@ -115,9 +114,6 @@ class gevCourseSignatureList extends fpdf {
 		$this->Ln(5);
 		$this->SetFont('Arial','',8);
 		$header_info = utf8_decode($this->metadata["Titel"]);
-		if($this->metadata["Nummer der Maßnahme"]) {
-			$header_info .= ", ".$this->metadata["Nummer der Maßnahme"];
-		}
 		$this->Cell(20,10,$header_info);
 		$this->Image($this->img,170,6,30);
 		$this->Ln(30);

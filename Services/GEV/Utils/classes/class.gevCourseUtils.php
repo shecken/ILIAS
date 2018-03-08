@@ -146,6 +146,69 @@ class gevCourseUtils
 		return $bl;
 	}
 
+	/**
+	 * Returns links to an feedback gui by given ids.
+	 *
+	 * @param 	int[]
+	 * @return 	string[]
+	 */
+	public function getFeedbackLinkById($ref_id)
+	{
+		global $ilCtrl,$ilUser;
+
+		$ilCtrl->setParameterByClass("ilFeedbackGUI", "ref_id", $ref_id);
+		$link = $ilCtrl->getLinkTargetByClass(array(
+			"ilObjPluginDispatchGUI",
+			"ilObjScaledFeedbackGUI",
+			"ilFeedbackGUI"
+			),
+			"showContent"
+		);
+
+		return $link;
+	}
+
+	/**
+	 * Get all nodes for the type xfbk (ScaledFeedback)
+	 *
+	 * @return 	void
+	 */
+	protected function getFeedbackNodes()
+	{
+		global $tree;
+		$crs_ref_id = $this->getRefId();
+		return $tree->getChildsByTypeFilter($crs_ref_id, array("xfbk"));
+	}
+
+	/**
+	 * Get ref_ids from undone feedbacks.
+	 *
+	 * @param 	int 	$user_id
+	 * @return 	int[]
+	 */
+	public function getUndoneFeedbackRefIds($user_id)
+	{
+		$ids = array();
+		$nodes = $this->getFeedbackNodes();
+
+		if(empty($nodes)) {
+			return $ids;
+		}
+
+		foreach($nodes as $node) {
+			$feedback_obj = ilObjectFactory::getInstanceByRefId($node["ref_id"]);
+			$obj_actions = $feedback_obj->getObjectActions();
+			if(
+				!$obj_actions->checkRepeat($feedback_obj->getId(), $user_id) &&
+				$feedback_obj->getSettings()->getOnline()
+			) {
+				$ids[] = $node['ref_id'];
+			}
+		}
+
+		return $ids;
+	}
+
 	public static function gotoBooking($a_crs_id)
 	{
 		global $ilCtrl;
@@ -478,7 +541,8 @@ class gevCourseUtils
 
 	public function isDecentralTraining()
 	{
-		return $this->getEduProgramm() == "dezentrales Training (AD)";
+		return $this->getEduProgramm() == "dezentrales Training (AD)" ||
+			   $this->getEduProgramm() == "LE-Training dezentral (ID)";
 	}
 
 	public function isCentralTraining()
@@ -742,6 +806,11 @@ class gevCourseUtils
 	public function setDBVHotTopic($a_topic)
 	{
 		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_DBV_HOT_TOPIC, $a_topic);
+	}
+
+	public function getASTDCategory()
+	{
+		return $this->amd->getField($this->crs_id, gevSettings::CRS_AMD_ASTD_CATEGORY);
 	}
 
 	public function getFee()
@@ -2717,12 +2786,11 @@ class gevCourseUtils
 
 		$arr = array("Titel" => $this->getTitle()
 					, "Untertitel" => $this->getSubtitle()
-					, "Nummer der Maßnahme" => $this->getCustomId()
 					, "Datum" => ($start_date !== null && $end_date !== null)
 								 ? ilDatePresentation::formatPeriod($this->getStartDate(), $this->getEndDate())
 								 : ""
 					, "Veranstaltungsort" => $venue_title
-					, "Bildungspunkte" => $this->getCreditPoints()
+					, "WB-Zeit" => $this->getCreditedDurationFormatted()
 					, "Trainer" => 	($trainerList !== null)
 					 				? implode(", ", $trainerList)
 					 				: " "
@@ -2731,11 +2799,11 @@ class gevCourseUtils
 					);
 
 		if ($a_type === self::MEMBERLIST_HOTEL) {
-			unset($arr["Bildungspunkte"]);
+			unset($arr["WB-Zeit"]);
 		}
 
 		if ($this->isPraesenztraining()) {
-			$arr["Bei Rückfragen"] = "Ad-Schulung.de@generali.com";
+			$arr["Bei Rückfragen"] = "generali-onlineakademie@generali.com";
 		}
 		return $arr;
 	}
@@ -3136,11 +3204,7 @@ class gevCourseUtils
 		$officer_contact = $this->getTrainingOfficerContactInfo();
 
 		$vals = array(
-			  array( $this->gLng->txt("gev_course_id")
-				   , true
-				   , $this->getCustomId()
-				   )
-			, array( $this->gLng->txt("gev_course_type")
+			  array( $this->gLng->txt("gev_course_type")
 				   , true
 				   , implode(", ", $this->getType())
 				   )
@@ -3178,9 +3242,9 @@ class gevCourseUtils
 					   $bill !== null?$bill->getAmount():0
 				   )." &euro;"
 				   	)
-			, array( $this->gLng->txt("gev_credit_points")
+			, array( $this->gLng->txt("gev_wb_time")
 				   , true
-				   , $this->getCreditPoints()
+				   , $this->getCreditedDurationFormatted()
 				   )
 			);
 
@@ -3333,19 +3397,6 @@ class gevCourseUtils
 			$additional_where .= " AND od.title LIKE ".$db->quote("%".$a_search_options["title"]."%", "text");
 		}
 
-		if (array_key_exists("custom_id", $a_search_options)) {
-			$custom_id_field_id = $gev_set->getAMDFieldId(gevSettings::CRS_AMD_CUSTOM_ID);
-
-			// this is knowledge from the course amd plugin!
-
-			$additional_join .=
-				" LEFT JOIN adv_md_values_text custom_id".
-				"   ON cs.obj_id = custom_id.obj_id ".
-				"   AND custom_id.field_id = ".$db->quote($custom_id_field_id, "integer")
-				;
-			$additional_where .=
-				" AND custom_id.value LIKE ".$db->quote("%".$a_search_options["custom_id"]."%", "text");
-		}
 
 		if (array_key_exists("type", $a_search_options)) {
 			$additional_where .=
@@ -3442,8 +3493,7 @@ class gevCourseUtils
 		$count = count($crss);
 
 		$crs_amd =
-			array( gevSettings::CRS_AMD_CUSTOM_ID			=> "custom_id"
-				 , gevSettings::CRS_AMD_TYPE 				=> "type"
+			array( gevSettings::CRS_AMD_TYPE 				=> "type"
 				 , gevSettings::CRS_AMD_VENUE 				=> "location"
 				 , gevSettings::CRS_AMD_START_DATE			=> "start_date"
 				 , gevSettings::CRS_AMD_END_DATE 			=> "end_date"
@@ -3738,6 +3788,29 @@ class gevCourseUtils
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get a link foreach feedback object in a course.
+	 *
+	 * @return array
+	 */
+	public function getLinkForEachFeedbackObject()
+	{
+		include_once('./Services/Link/classes/class.ilLink.php');
+
+		$ret = array();
+		$feedbacks = $this->objsInCourseOfType("xfbk");
+
+		if(count($feedbacks) == 0){
+			return $ret;
+		}
+
+		foreach ($feedbacks as $feedback) {
+			$ret[] = $feedback['title'] .": ".ilLink::_getStaticLink($feedback['ref_id'], "xfbk", true, "");
+		}
+
+		return $ret;
 	}
 
 	public function getCustomAttachments()
@@ -4078,5 +4151,53 @@ class gevCourseUtils
 		$crs_ref->update();
 		$crs_ref->createReference();
 		$crs_ref->putInTree($ref_id);
+	}
+
+	const CREDITED_DURATION_HOURS = 'hours';
+	const CREDITED_DURATION_MINUTES = 'minutes';
+
+	/**
+	 * Convert the credit points to a time-duration.
+	 *
+	 * @param	int	$c_p
+	 * @return	int[string]
+	 */
+	public static function convertCreditpointsToTime($c_p)
+	{
+		assert('is_int($c_p) || is_null($c_p)');
+		$minutes_over_full_hours_equivalent = $c_p%4;
+		$full_hours_equivalent = $c_p - $minutes_over_full_hours_equivalent;
+
+		return [self::CREDITED_DURATION_HOURS => $full_hours_equivalent/4
+				,self::CREDITED_DURATION_MINUTES => $minutes_over_full_hours_equivalent*15];
+	}
+
+	/**
+	 * Get the time-creditpoints equivalent of this course.
+	 *
+	 * @return	int[string]
+	 */
+	public function getCreditedDuration()
+	{
+		$c_p = (int)$this->getCreditPoints();
+		return self::convertCreditpointsToTime($c_p);
+	}
+
+	/**
+	 * Same as above, but formated.
+	 */
+	public static function convertCreditpointsToFormattedDuration($c_p)
+	{
+		assert('is_int($c_p) || is_null($c_p)');
+		global $lng;
+		$wb_time = self::convertCreditpointsToTime((int)$c_p);
+		$hours = $wb_time[gevCourseUtils::CREDITED_DURATION_HOURS];
+		$minutes = $wb_time[gevCourseUtils::CREDITED_DURATION_MINUTES];
+		return $hours.' Std. '.$minutes.' Min.';
+	}
+	public function getCreditedDurationFormatted()
+	{
+		$c_p = (int)$this->getCreditPoints();
+		return self::convertCreditpointsToFormattedDuration($c_p);
 	}
 }

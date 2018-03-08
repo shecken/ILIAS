@@ -320,9 +320,9 @@ class gevUserUtils
 		require_once("Services/ParticipationStatus/classes/class.ilParticipationStatus.php");
 		$booked = array_diff(
 			$this->filter_for_online_courses($this->getBookedCourses()),
-			$this->getCoursesWithStatusIn(array( ilParticipationStatus::STATUS_SUCCESSFUL
-												,ilParticipationStatus::STATUS_ABSENT_EXCUSED
-												,ilParticipationStatus::STATUS_ABSENT_NOT_EXCUSED))
+			$this->getCoursesWithFeedbackDoneAndStatusIn(array( ilParticipationStatus::STATUS_SUCCESSFUL
+																,ilParticipationStatus::STATUS_ABSENT_EXCUSED
+																,ilParticipationStatus::STATUS_ABSENT_NOT_EXCUSED))
 		);
 
 		$booked_amd = gevAMDUtils::getInstance()->getTable($booked, $crs_amd, array(), array(), $additional_where);
@@ -481,7 +481,6 @@ class gevUserUtils
 			array( gevSettings::CRS_AMD_START_DATE			=> "start_date"
 				 , gevSettings::CRS_AMD_END_DATE 			=> "end_date"
 
-				 , gevSettings::CRS_AMD_CUSTOM_ID			=> "custom_id"
 				 , gevSettings::CRS_AMD_TYPE 				=> "type"
 
 				 , gevSettings::CRS_AMD_VENUE 				=> "location"
@@ -1335,15 +1334,20 @@ class gevUserUtils
 	/**
 	*	Get all courses where the participation status is set for user.
 	*/
-	public function getCoursesWithStatusIn(array $stati)
+	public function getCoursesWithFeedbackDoneAndStatusIn(array $stati)
 	{
-		$query = 	"SELECT crs_id FROM crs_pstatus_usr WHERE "
+		$query = 	"SELECT crs_id FROM crs_pstatus_usr "
+					." JOIN object_data ON obj_id = crs_id "
+					." WHERE "
 					."	".$this->db->in('status', $stati, false, 'integer')
 					."	AND user_id = ".$this->db->quote($this->user_id, "integer");
 		$res = $this->db->query($query);
 		$return = array();
 		while ($rec = $this->db->fetchAssoc($res)) {
-			$return[] = $rec["crs_id"];
+			$crs_utils = gevCourseUtils::getInstance($rec["crs_id"]);
+			if(count($crs_utils->getUndoneFeedbackRefIds($this->user_id)) == 0) {
+				$return[] = $rec["crs_id"];
+			}
 		}
 		return $return;
 	}

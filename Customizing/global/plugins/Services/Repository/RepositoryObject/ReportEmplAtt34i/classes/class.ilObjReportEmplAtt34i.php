@@ -176,7 +176,7 @@ class ilObjReportEmplAtt34i extends ilObjReportBase
 			->column("venue", $this->plugin->txt("location"), true)
 			->column("type", $this->plugin->txt("learning_type"), true)
 			->column("date", $this->plugin->txt("date"), true)
-			->column("credit_points", $this->plugin->txt("credit_points"), true)
+			->column("credit_points", $this->plugin->txt("wb_time"), true)
 			->column("participation_status", $this->plugin->txt("participation_status"), true)
 			;
 		return parent::buildTable($table);

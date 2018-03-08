@@ -258,6 +258,16 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			}
 		}
 
+		$mediathek_ref_id = gevSettings::getInstance()->getCockpitMediathekRefId();
+		$may_see_mediathek = $this->gAccess->checkAccess('read','',$mediathek_ref_id);
+
+		if($may_see_mediathek) {
+			$this->gCtrl->setParameterByClass('ilrepositorygui','ref_id',$mediathek_ref_id);
+			$items['mediathek'] = array($this->gLng->txt('gev_mediathek'),$this->gCtrl->getLinkTargetByClass(array('ilrepositorygui','ilrepositorygui'),'render'));
+			$this->gCtrl->setParameterByClass('ilrepositorygui','ref_id',null);
+		}
+
+
 		$na_quali_ref_id = gevSettings::getInstance()->getNAQualiCourseRefId();
 		if ($na_quali_ref_id !== null && $this->gAccess->checkAccess("visible", "", $na_quali_ref_id)) {
 			$link = $this->buildJillInstanceLink($na_quali_ref_id);
@@ -339,15 +349,6 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 					= array($this->gLng->txt("gev_my_assessments"), "ilias.php?baseClass=gevDesktopGUI&cmd=toMyAssessments");
 			}
 		}
-		$mediathek_ref_id = gevSettings::getInstance()->getCockpitMediathekRefId();
-		$may_see_mediathek = $this->gAccess->checkAccess('read','',$mediathek_ref_id);
-
-		if($may_see_mediathek) {
-			$this->gCtrl->setParameterByClass('ilrepositorygui','ref_id',$mediathek_ref_id);
-			$items['mediathek'] = array($this->gLng->txt('gev_mediathek'),$this->gCtrl->getLinkTargetByClass(array('ilrepositorygui','ilrepositorygui'),'render'));
-			$this->gCtrl->setParameterByClass('ilrepositorygui','ref_id',null);
-		}
-
 		return $items;
 	}
 

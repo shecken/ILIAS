@@ -42,12 +42,11 @@ class ilAdminSearchTableGUI extends catAccordionTableGUI {
 
 		$this->addColumn($this->gLng->txt("title"), "title");
 		$this->addColumn($this->gLng->txt("status"));
-		$this->addColumn($this->gLng->txt("gev_course_id"), 'custom_id');
 		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
 		$this->addColumn($this->gLng->txt("gev_location"), "location");
 		$this->addColumn($this->gLng->txt("date"), "date");
 		$this->addColumn($this->gLng->txt("tutor"));
-		$this->addColumn($this->gLng->txt("gev_points"), "points");
+		$this->addColumn($this->gLng->txt("gev_wb_time"), "points");
 		$this->addColumn("&euro;", "fee");
 		$this->addColumn($this->gLng->txt("mbrcount"));
 		$this->addColumn($this->gLng->txt("actions"), null, "20px", false);
@@ -89,12 +88,11 @@ class ilAdminSearchTableGUI extends catAccordionTableGUI {
 
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("STATUS", $a_set["status"]);
-		$this->tpl->setVariable("CUSTOM_ID", $a_set["custom_id"]);
 		$this->tpl->setVariable("TYPE", $a_set["type"]);
 		$this->tpl->setVariable("LOCATION", $a_set["location"]?$a_set["location"]:"-");
 		$this->tpl->setVariable("DATE", $date);
 		$this->tpl->setVariable("TRAINER", $a_set['trainer']);
-		$this->tpl->setVariable("POINTS", $a_set["points"]);
+		$this->tpl->setVariable("POINTS", gevCourseUtils::convertCreditpointsToFormattedDuration($a_set["points"]));
 		$this->tpl->setVariable("FEE", gevCourseUtils::formatFee($a_set["fee"]));
 		$this->tpl->setVariable("MEMBERS", $a_set["members"]);
 		$this->tpl->setVariable("ACTIONS", $this->addActionMenu($a_set));

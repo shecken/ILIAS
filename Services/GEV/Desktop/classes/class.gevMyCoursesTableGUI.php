@@ -57,7 +57,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
 		$this->addColumn($this->gLng->txt("gev_location"), "location");
 		$this->addColumn($this->gLng->txt("date"), "start_date");
-		$this->addColumn($this->gLng->txt("gev_points"), "points");
+		$this->addColumn($this->gLng->txt("gev_wb_time"), "points");
 		$this->addColumn("&euro;", "fee");
 		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "actions", "20px", false);
 
@@ -65,12 +65,14 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->booked_img = '<img src="'.ilUtil::getImagePath("gev_booked_icon.png").'" />';
 		$this->waiting_img = '<img src="'.ilUtil::getImagePath("gev_waiting_icon.png").'" />';
 		$this->virtualclass_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-classroom.png").'" />';
+		$this->feedback_img = '<img src="'.ilUtil::getImagePath("gev_feedback_action.png").'" />';
 
 		$legend = new catLegendGUI();
 		$legend->addItem($this->cancel_img, "gev_cancel_training")
 			   ->addItem($this->booked_img, "gev_booked")
 			   ->addItem($this->waiting_img, "gev_waiting")
-			   ->addItem($this->virtualclass_img, "gev_virtual_class");
+			   ->addItem($this->virtualclass_img, "gev_virtual_class")
+			   ->addItem($this->feedback_img, "gev_feedback");
 		$this->setLegend($legend);
 
 		$this->setData($data);
@@ -141,6 +143,10 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		if ($show_webex_link) {
 			$action .= '&nbsp;<a href="'.$crs_utils->getVirtualClassLink().'" target="_blank">'.$this->virtualclass_img.'</a>';
 		}
+		$undone_feedback_ref_ids = $crs_utils->getUndoneFeedbackRefIds($this->user_id);
+		foreach($undone_feedback_ref_ids as $ref_id) {
+			$action .= '&nbsp;<a href="'.$crs_utils->getFeedbackLinkById($ref_id).'" target="_blank">'.$this->feedback_img.'</a>';
+		}
 
 		$action = ltrim($action, "&nbsp;");
 
@@ -160,12 +166,14 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 			$show_absolute_cancel_date = ilDateTime::_before($now, $a_set["absolute_cancel_date"]);
 		}
 
+		$wb_time = gevCourseUtils::convertCreditpointsToFormattedDuration($a_set['points']);
+
 		$this->tpl->setVariable("TITLE", $a_set["title"]);
 		$this->tpl->setVariable("STATUS", $status);
 		$this->tpl->setVariable("TYPE", $a_set["type"]);
 		$this->tpl->setVariable("LOCATION", ($a_set["location"] != "") ? $a_set["location"] : $a_set["location_free_text"]);
 		$this->tpl->setVariable("DATE", $date);
-		$this->tpl->setVariable("POINTS", $a_set["points"]);
+		$this->tpl->setVariable("POINTS", $wb_time);
 		$this->tpl->setVariable("FEE", gevCourseUtils::formatFee($a_set["fee"]));
 		$this->tpl->setVariable("ACTIONS", $action);
 		$this->tpl->setVariable("TARGET_GROUP", $a_set["target_group"]);

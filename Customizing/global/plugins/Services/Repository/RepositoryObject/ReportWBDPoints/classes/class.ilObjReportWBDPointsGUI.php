@@ -90,4 +90,23 @@ class ilObjReportWBDPointsGUI extends ilObjReportBaseGUI
 		$content .= $settings_form->getHTML();
 		$this->gTpl->setContent($content);
 	}
+
+	public static function transformResultRow($rec)
+	{
+		return self::transformResultRowCommon($rec);
+	}
+
+	public static function transformResultRowXLSX($rec)
+	{
+		return self::transformResultRowCommon($rec);
+	}
+
+	public static function transformResultRowCommon($rec) {
+		if($rec['credit_points'] > 0) {
+			$rec['credit_points'] = gevCourseUtils::convertCreditpointsToFormattedDuration((int)$rec['credit_points']);
+		} else {
+			$rec['credit_points'] = '';
+		}
+		return $rec;
+	}
 }

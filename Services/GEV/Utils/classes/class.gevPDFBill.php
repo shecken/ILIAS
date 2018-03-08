@@ -48,7 +48,7 @@ class gevPDFBill extends ilPDFBill {
 		$app = $crs_utils->getFormattedAppointment();
 		
 		$this->setAbout("Rechnung");
-		$this->setTitle("Veranstaltungstitel: ".$crs_utils->getTitle().", ".$crs_utils->getCustomId()
+		$this->setTitle("Veranstaltungstitel: ".$crs_utils->getTitle()
 					   .($app?(", ".$app):""));
 		$this->setPretext("Für die Weiterbildung des Teilnehmers ".$user_utils->getFirstname()." ".$user_utils->getLastname().
 						  " erlauben wir uns, folgende Rechnung zu stellen:");

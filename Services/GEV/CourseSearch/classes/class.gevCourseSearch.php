@@ -119,18 +119,7 @@ class gevCourseSearch {
 			$additional_join .= " LEFT JOIN object_data od ON cs.obj_id = od.obj_id\n";
 			$additional_where .= " AND od.title LIKE ".$this->gDB->quote("%".$a_search_options["title"]."%", "text")."\n";
 		}
-		if (array_key_exists("custom_id", $a_search_options)) {
-			$custom_id_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_CUSTOM_ID);
-			
-			// this is knowledge from the course amd plugin!
-			$additional_join .= 
-				" LEFT JOIN adv_md_values_text custom_id\n".
-				"   ON cs.obj_id = custom_id.obj_id\n".
-				"   AND custom_id.field_id = ".$this->gDB->quote($custom_id_field_id, "integer")."\n"
-				;
-			$additional_where .=
-				" AND custom_id.value LIKE ".$this->gDB->quote("%".$a_search_options["custom_id"]."%", "text")."\n";
-		}
+
 		if (array_key_exists("type", $a_search_options)) {
 			$types = $a_search_options["type"];
 			$is_prae = false;
@@ -222,7 +211,10 @@ class gevCourseSearch {
 		$hour = $this->gDB->quote(date("H"), "text");
 		$minute = $this->gDB->quote(date("i"),"text");
 		// try to narrow down the set as much as possible to avoid permission checks
-		$query = "SELECT DISTINCT cs.obj_id \n".
+		$query = "SELECT DISTINCT cs.obj_id,\n".
+				// gev-Patch start 3592
+				"IF(timing.timing_type = 1, true, \n".
+				"    IF(timing.timing_start < ".time()." AND timing.timing_end > ".time().", true, false)) AS is_in_time\n".
 				 " FROM crs_settings cs\n".
 				 " LEFT JOIN object_reference oref\n".
 				 "   ON cs.obj_id = oref.obj_id\n".
@@ -242,11 +234,12 @@ class gevCourseSearch {
 				 " \nLEFT JOIN adv_md_values_text schedule\n".
 				 "   ON cs.obj_id = schedule.obj_id \n".
 				 "   AND schedule.field_id = ".$this->gDB->quote($schedule_field_id, "integer").
+				 // this is knowledge from course timings
+				 " \nLEFT JOIN crs_items timing\n".
+				 "   ON timing.obj_id = oref.ref_id\n".
 				
 				 $additional_join.
 				 " \nWHERE cs.activation_type = 1\n".
-				 "   AND cs.activation_start < ".time().
-				 "   \nAND cs.activation_end > ".time().
 				 "   \nAND oref.deleted IS NULL\n".
 				 "   AND is_template.value = ".$this->gDB->quote("Nein", "text").
 				 "   \nAND (  ( (ltype.value LIKE 'Pr_senztraining' OR ltype.value = 'Webinar')\n".
@@ -286,10 +279,14 @@ class gevCourseSearch {
 				 "		)\n".
 				 $additional_where.
 				 "";
-				 
+
 		$res = $this->gDB->query($query);
 		$crss = array();
 		while($val = $this->gDB->fetchAssoc($res)) {
+			if($val['is_in_time'] == 0) {
+				continue;
+			}
+			// gev-Patch end 3592
 			$crs_utils = gevCourseUtils::getInstance($val["obj_id"]);
 
 			if ( $this->gUser->getId() !== 0 && (
