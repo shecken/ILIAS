@@ -248,8 +248,9 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 				$gen->getHomepage()
 			);
 			$venue_text = array_filter($venue_text, function($val) {return trim($val) !== '';});
+			$venue_text = implode('<br />', $venue_text);
 		}
-		return implode('<br />', $venue_text);
+		return $venue_text;
 	}
 
 	/**
