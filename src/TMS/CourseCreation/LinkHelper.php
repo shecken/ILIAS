@@ -61,6 +61,33 @@ trait LinkHelper {
 	}
 
 	/**
+	 * Get radiogroup input gui
+	 *
+	 * @param	array<string,CourseTemplateInfo[]>	$info
+	 * @param	string	$select_name
+	 * @return	\ilRadioGroupInputGUI
+	 */
+	protected function getRadioGroupInputGUIForCourseTemplates(array $info, $select_name) {
+		assert('is_string($select_name)');
+
+		require_once("Services/Form/classes/class.ilSubEnabledFormPropertyGUI.php");
+		require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
+		require_once("Services/Table/interfaces/interface.ilTableFilterItem.php");
+		require_once("Services/Form/classes/class.ilRadioGroupInputGUI.php");
+		$templates = new \ilRadioGroupInputGUI($this->txt('settings_venue_source'), "woho[]");
+		$templates->setRequired(true);
+
+		foreach ($info as $type => $template_by_cat) {
+			$ro_fromcourse = new \ilRadioOption($type, $type);
+			$ro_fromcourse->addSubItem($this->getGroupableSelectInputGUIForCourseTemplates($template_by_cat, $select_name));
+
+			$templates->addOption($ro_fromcourse);
+		}
+
+		return $templates;
+	}
+
+	/**
 	 * @param	array<string,CourseTemplateInfo[]>	$info
 	 * @param	string	$select_name
 	 * @return	\ilGroupableSelectInputGUI
@@ -114,7 +141,7 @@ trait LinkHelper {
 				});";
 			});
 
-		$select = $this->getGroupableSelectInputGUIForCourseTemplates($info, $select_name);
+		$select = $this->getRadioGroupInputGUIForCourseTemplates($info, $select_name);
 
 		return $ui_factory->modal()
 			->roundtrip(
@@ -137,6 +164,7 @@ trait LinkHelper {
 	protected function addCourseTemplateSelectionModalToToolbar(\ILIAS\UI\Factory $ui_factory, \ILIAS\UI\Renderer $ui_renderer, \ilToolbarGUI $toolbar, array $info, array $parent_guis, $parent_cmd, $parent_ref_id) {
 		assert('is_int($parent_ref_id)');
 		assert('is_string($parent_cmd)');
+
 		$modal = $this->getCourseTemplateSelectionModal($ui_factory, $info, $parent_guis, $parent_cmd, $parent_ref_id);
 		$button = $ui_factory->button()
 			->primary(
