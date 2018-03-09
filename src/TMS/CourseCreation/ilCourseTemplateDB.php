@@ -47,6 +47,10 @@ class ilCourseTemplateDB implements CourseTemplateDB {
 					}
 
 					$type = $this->getCourseType($p["child"]);
+					// If there is no type defined the template is misconfigured and should not be displayed
+					if(is_null($type)) {
+						continue;
+					}
 					if (!array_key_exists($type, $crs_template_info)) {
 						$crs_template_info[$type] = [];
 					}
@@ -106,19 +110,19 @@ class ilCourseTemplateDB implements CourseTemplateDB {
 		$xccl = $this->getFirstChildOfByType($ref_id, "xccl");
 
 		if(is_null($xccl)) {
-			return "";
+			return null;
 		}
 
 		$type_id = $xccl->getCourseClassification()->getType();
 		if(is_null($type_id)) {
-			return "";
+			return null;
 		}
 
 		$actions = $xccl->getActions();
 		return array_shift($actions->getTypeName($type_id));
 	}
 
-		/**
+	/**
 	 * Get first child by type recursive
 	 *
 	 * @param int 	$ref_id
