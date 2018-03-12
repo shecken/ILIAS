@@ -77,6 +77,7 @@ trait LinkHelper {
 		require_once("Services/Form/classes/class.ilRadioGroupInputGUI.php");
 		$templates = new \ilRadioGroupInputGUI($this->txt('settings_venue_source'), $group_name);
 		$templates->setRequired(true);
+		$set_default_value = true;
 
 		foreach ($info as $type => $template_by_cat) {
 			$type_md5 = md5($type);
@@ -84,6 +85,10 @@ trait LinkHelper {
 			$ro_fromcourse->addSubItem($this->getGroupableSelectInputGUIForCourseTemplates($template_by_cat, $select_name, $type_md5));
 
 			$templates->addOption($ro_fromcourse);
+			if($set_default_value) {
+				$templates->setValue($type_md5);
+				$set_default_value = false;
+			}
 		}
 
 		return $templates;
