@@ -68,12 +68,16 @@ class TMS_CourseCreation_CourseListGUIExtensionTest extends PHPUnit_Framework_Te
 
 	public function test_enhances_getCommands() {
 		$base = [1,2,3,4];
+		$this->gui_fake->parent_ref_id = 10;
+		$this->gui_fake->ref_id = 20;
 		$this->gui_fake->commands = $base;
 		$commands = $this->gui_fake->getCommands();
 		$this->assertCount(count($base)+1, $commands);
 	}
 
 	public function test_inserts_create_command_in_getCommands() {
+		$this->gui_fake->parent_ref_id = 10;
+		$this->gui_fake->ref_id = 20;
 		$commands = $this->gui_fake->getCommands();
 		$expected = 
 			[["cmd" => $this->gui_fake->create_course_cmd

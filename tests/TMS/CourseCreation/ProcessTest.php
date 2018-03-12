@@ -17,11 +17,19 @@ if (!class_exists(\ilObject::class)) {
 class _SpecialObject extends \ilObject {
 	public function afterCourseCreation() {
 	}
+	function setOfflineStatus($a_value)	{
+	}
 }
 
 class _CourseCreationProcess extends CourseCreation\Process {
 	public function _getCopyWizardOptions($request) {
 		return $this->getCopyWizardOptions($request);
+	}
+	public function _adjustCourseTitle($request) {
+		return $this->adjustCourseTitle($request);
+	}
+	public function _setCourseOnline($request) {
+		return $this->setCourseOnline($request);
 	}
 	public function _configureCopiedObjects($request) {
 		return $this->configureCopiedObjects($request);
@@ -162,4 +170,79 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 		$process->_configureCopiedObjects($request);
 	}
 
+	public function test_adjustCourseTitle() {
+		$tree = $this->createMock(\ilTree::class);
+		$db = $this->createMock(\ilDBInterface::class);
+		$request = $this->createMock(CourseCreation\Request::class);
+
+		$process = $this->getMockBuilder(_CourseCreationProcess::class)
+			->setMethods(["getObjectByRefId"])
+			->setConstructorArgs([$tree, $db])
+			->getMock();
+
+		$target_ref_id = 23;
+		$request
+			->expects($this->once())
+			->method("getTargetRefId")
+			->willReturn($target_ref_id);
+
+		$object = $this->createMock(\ilObject::class);
+		$process
+			->expects($this->once())
+			->method("getObjectByRefId")
+			->with($target_ref_id)
+			->willReturn($object);
+
+		$title = "blablabla - foo - Kopie (2)";
+		$object
+			->expects($this->once())
+			->method("getTitle")
+			->willReturn($title);
+
+		$object
+			->expects($this->once())
+			->method("setTitle")
+			->with("blablabla - foo");
+
+		$object
+			->expects($this->once())
+			->method("update");
+
+		$process->_adjustCourseTitle($request);
+	}
+
+	public function test_setCourseOnline() {
+		$tree = $this->createMock(\ilTree::class);
+		$db = $this->createMock(\ilDBInterface::class);
+		$request = $this->createMock(CourseCreation\Request::class);
+
+		$process = $this->getMockBuilder(_CourseCreationProcess::class)
+			->setMethods(["getObjectByRefId"])
+			->setConstructorArgs([$tree, $db])
+			->getMock();
+
+		$target_ref_id = 23;
+		$request
+			->expects($this->once())
+			->method("getTargetRefId")
+			->willReturn($target_ref_id);
+
+		$object = $this->createMock(_SpecialObject::class);
+		$process
+			->expects($this->once())
+			->method("getObjectByRefId")
+			->with($target_ref_id)
+			->willReturn($object);
+
+		$object
+			->expects($this->once())
+			->method("setOfflineStatus")
+			->with(false);
+
+		$object
+			->expects($this->once())
+			->method("update");
+
+		$process->_setCourseOnline($request);
+	}
 }

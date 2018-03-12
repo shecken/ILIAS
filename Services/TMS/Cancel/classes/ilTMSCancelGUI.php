@@ -70,15 +70,15 @@ abstract class ilTMSCancelGUI  extends Wizard\Player {
 	public function executeCommand() {
 		// TODO: Check if current user may book course for other user here.
 		// assert('$this->g_user->getId() === $_GET["usr_id"]');
-		if(!$this->canCancelForUser($_GET["usr_id"])) {
+		assert('is_numeric($_GET["usr_id"])');
+		$usr_id = (int)$_GET["usr_id"];
+
+		if(!$this->canCancelForUser($usr_id)) {
 			$this->redirectToPreviousLocation(array("nope"), false);
 		}
 
 		assert('is_numeric($_GET["crs_ref_id"])');
-		assert('is_numeric($_GET["usr_id"])');
-
 		$crs_ref_id = (int)$_GET["crs_ref_id"];
-		$usr_id = (int)$_GET["usr_id"];
 
 		$ilias_bindings = new Booking\ILIASBindings
 			( $this->g_lng

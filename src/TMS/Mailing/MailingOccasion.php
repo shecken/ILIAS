@@ -35,7 +35,7 @@ interface MailingOccasion extends Component {
 	public function templateIdent();
 
 	/**
-	 * get mails for this occasion
+	 * Get mails for this occasion.
 	 *
 	 * @param string 	$event
 	 * @param array<string, mixed> 	$parameter

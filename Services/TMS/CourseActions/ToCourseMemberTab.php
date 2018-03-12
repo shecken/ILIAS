@@ -15,7 +15,6 @@ class ToCourseMemberTab extends TMS\CourseActionImpl
 	public function isAllowedFor($usr_id)
 	{
 		$course = $this->entity->object();
-		var_dump($this->hasAccess($course->getRefId()));
 		return $this->hasAccess($course->getRefId());
 	}
 
