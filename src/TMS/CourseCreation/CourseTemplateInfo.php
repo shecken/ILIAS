@@ -24,17 +24,24 @@ class CourseTemplateInfo {
 	protected $category_title;
 
 	/**
+	 * @var	string|null
+	 */
+	protected $type_title;
+
+	/**
 	 * @param	string	$title
 	 * @param	int	$ref_id
 	 * @param	string|null	$category_title
 	 */
-	public function __construct($title, $ref_id, $category_title) {
+	public function __construct($title, $ref_id, $category_title, $type_title) {
 		assert('is_string($title)');
 		assert('is_int($ref_id)');
 		assert('is_string($category_title) || is_null($category_title)');
+		assert('is_string($type_title) || is_null($type_title)');
 		$this->title = $title;
 		$this->ref_id = $ref_id;
 		$this->category_title = $category_title;
+		$this->type_title = $type_title;
 	}
 
 	/**
@@ -56,5 +63,12 @@ class CourseTemplateInfo {
 	 */
 	public function getCategoryTitle() {
 		return $this->category_title;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function getTypeTitle() {
+		return $this->type_title;
 	}
 }

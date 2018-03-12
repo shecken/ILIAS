@@ -17,8 +17,14 @@ class ilCourseTemplateDB implements CourseTemplateDB {
 	 */
 	protected $tree;
 
-	public function __construct(\ilTree $tree) {
+	/**
+	 * @var \ilObjectDefinition
+	 */
+	protected $obj_definition;
+
+	public function __construct(\ilTree $tree, \ilObjectDefinition $obj_definition) {
 		$this->tree = $tree;
+		$this->obj_definition = $obj_definition;
 	}
 
 	/**
@@ -39,14 +45,24 @@ class ilCourseTemplateDB implements CourseTemplateDB {
 					if (!self::_mayUserCreateCourseFromTemplate($user_id, (int)$p["child"])) {
 						break;
 					}
-					$cat = $this->getCategoryTitle($path);
-					if (!isset($crs_template_info[$cat])) {
-						$crs_template_info[$cat] = [];
+
+					$type = $this->getCourseType($p["child"]);
+					// If there is no type defined the template is misconfigured and should not be displayed
+					if(is_null($type)) {
+						continue;
 					}
-					$crs_template_info[$cat][] = new CourseTemplateInfo(
+					if (!array_key_exists($type, $crs_template_info)) {
+						$crs_template_info[$type] = [];
+					}
+					$cat = $this->getCategoryTitle($path);
+					if (!array_key_exists($cat, $crs_template_info[$type])) {
+						$crs_template_info[$type][$cat] = [];
+					}
+					$crs_template_info[$type][$cat][] = new CourseTemplateInfo(
 						$this->purgeTemplateInTitle($p["title"]),
 						(int)$p["child"],
-						$cat
+						$cat,
+						$type
 					);
 				}
 			}
@@ -81,5 +97,56 @@ class ilCourseTemplateDB implements CourseTemplateDB {
 			return $matches[1];
 		}
 		return $title;
+	}
+
+	/**
+	 * Get course classifiaction type of the course template
+	 *
+	 * @param int 	$ref_id
+	 *
+	 * @return string
+	 */
+	protected function getCourseType($ref_id) {
+		$xccl = $this->getFirstChildOfByType($ref_id, "xccl");
+
+		if(is_null($xccl)) {
+			return null;
+		}
+
+		$type_id = $xccl->getCourseClassification()->getType();
+		if(is_null($type_id)) {
+			return null;
+		}
+
+		$actions = $xccl->getActions();
+		return array_shift($actions->getTypeName($type_id));
+	}
+
+	/**
+	 * Get first child by type recursive
+	 *
+	 * @param int 	$ref_id
+	 * @param string 	$search_type
+	 *
+	 * @return Object 	of search type
+	 */
+	protected function getFirstChildOfByType($ref_id, $search_type) {
+		$childs = $this->tree->getChilds($ref_id);
+
+		foreach ($childs as $child) {
+			$type = $child["type"];
+			if($type == $search_type) {
+				return \ilObjectFactory::getInstanceByRefId($child["child"]);
+			}
+
+			if($this->obj_definition->isContainer($type)) {
+				$ret = $this->getFirstChildOfByType($child["child"], $search_type);
+				if(! is_null($ret)) {
+					return $ret;
+				}
+			}
+		}
+
+		return null;
 	}
 }
