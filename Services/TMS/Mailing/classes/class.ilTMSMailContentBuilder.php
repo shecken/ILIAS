@@ -70,6 +70,10 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 		if($recipient->getUserId()) {
 			$obj_user = new \ilObjUser($recipient->getUserId());
 			$skin = $obj_user->getPref('skin');
+			if(is_null($skin)) {
+				$skin = $obj_user->getPref('style');
+			}
+
 		} else {
 			$skin = self::DEFAULT_CUSTOM_SKIN;
 		}
@@ -198,7 +202,6 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 				return $bracket;
 			}
 		}
-
 		$bracket = file_get_contents(self::DEFAULT_WRAPPER);
 		return $bracket;
 	}
