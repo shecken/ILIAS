@@ -67,19 +67,21 @@ trait LinkHelper {
 	 * @param	string	$select_name
 	 * @return	\ilRadioGroupInputGUI
 	 */
-	protected function getRadioGroupInputGUIForCourseTemplates(array $info, $select_name) {
+	protected function getRadioGroupInputGUIForCourseTemplates(array $info, $select_name, $group_name) {
 		assert('is_string($select_name)');
+		assert('is_string($group_name)');
 
 		require_once("Services/Form/classes/class.ilSubEnabledFormPropertyGUI.php");
 		require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 		require_once("Services/Table/interfaces/interface.ilTableFilterItem.php");
 		require_once("Services/Form/classes/class.ilRadioGroupInputGUI.php");
-		$templates = new \ilRadioGroupInputGUI($this->txt('settings_venue_source'), "woho[]");
+		$templates = new \ilRadioGroupInputGUI($this->txt('settings_venue_source'), $group_name);
 		$templates->setRequired(true);
 
 		foreach ($info as $type => $template_by_cat) {
-			$ro_fromcourse = new \ilRadioOption($type, $type);
-			$ro_fromcourse->addSubItem($this->getGroupableSelectInputGUIForCourseTemplates($template_by_cat, $select_name));
+			$type_md5 = md5($type);
+			$ro_fromcourse = new \ilRadioOption($type, $type_md5);
+			$ro_fromcourse->addSubItem($this->getGroupableSelectInputGUIForCourseTemplates($template_by_cat, $select_name, $type_md5));
 
 			$templates->addOption($ro_fromcourse);
 		}
@@ -92,7 +94,7 @@ trait LinkHelper {
 	 * @param	string	$select_name
 	 * @return	\ilGroupableSelectInputGUI
 	 */
-	protected function getGroupableSelectInputGUIForCourseTemplates(array $info, $select_name) {
+	protected function getGroupableSelectInputGUIForCourseTemplates(array $info, $select_name, $type) {
 		assert('is_string($select_name)');
 
 		ksort($info, SORT_NATURAL);
@@ -106,7 +108,7 @@ trait LinkHelper {
 		}
 
 		require_once("Services/Form/classes/class.ilGroupableSelectInputGUI.php");
-		$select = new \ilGroupableSelectInputGUI("", $select_name);
+		$select = new \ilGroupableSelectInputGUI("", $select_name."[".$type."]");
 		$select->setGroups($info);
 		return $select;
 	}
@@ -125,23 +127,35 @@ trait LinkHelper {
 		$placeholder = "_REF_ID_";
 		$link = $this->getCreateCourseCommandLink($parent_guis, $parent_cmd, $parent_ref_id, $placeholder, true);
 		$select_name = "course_template_select";
+		$group_name = "tpl_group";
 
 		$next_button = $ui_factory->button()
 			->standard(
 				ucfirst($this->g_lng->txt("next")),
 				""
 			)
-			->withAdditionalOnLoadCode(function($id) use ($link, $select_name, $placeholder) {
+			->withAdditionalOnLoadCode(function($id) use ($link, $select_name, $placeholder, $group_name) {
 				return "$('#$id').on('click', function(ev) {
 					var link = '$link';
-					var ref_id = $('select[name^=$select_name]').val();
+					tpl_type = '';
+					tpl_types = $('input:radio[name=$group_name]');
+
+					$(tpl_types).each(function() {
+						if($(this).prop('checked')) {
+							tpl_type = $(this).val();
+						}
+					});
+
+					select_name = '$select_name' + '\\\[' + tpl_type + '\\\]';
+					var ref_id = $('select[name^=' + select_name + ']').val();
+
 					link = link.replace('$placeholder', ref_id);
 					window.location.href = link;
 					ev.preventDefault();
 				});";
 			});
 
-		$select = $this->getRadioGroupInputGUIForCourseTemplates($info, $select_name);
+		$select = $this->getRadioGroupInputGUIForCourseTemplates($info, $select_name, $group_name);
 
 		return $ui_factory->modal()
 			->roundtrip(
