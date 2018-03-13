@@ -19,6 +19,7 @@ class Player {
 	const COMMAND_NEXT	= "next";
 	const COMMAND_CONFIRM = "confirm";
 	const COMMAND_PREVIOUS = "previous";
+	const COMMAND_SAVE = "save";
 
 	/**
 	 * @var Wizard	
@@ -68,6 +69,8 @@ class Player {
 				return $this->ilias_bindings->redirectToPreviousLocation([$aborted], false);
 			case self::COMMAND_NEXT:
 				return $this->runStep($state, $post);
+			case self::COMMAND_SAVE:
+				return $this->runStep($state, $post, false);
 			case self::COMMAND_PREVIOUS:
 				return $this->runPreviousStep($state);
 			case self::COMMAND_CONFIRM:
@@ -81,9 +84,10 @@ class Player {
 	 *
 	 * @param	State	$state
 	 * @param	array|null	$post
+	 * @param	bool|null	$next_when_ok   advance to next step when current step is ok.
 	 * @return	string
 	 */
-	protected function runStep(State $state, array $post = null) {
+	protected function runStep(State $state, array $post = null, $next_when_ok = true) {
 		$steps = $this->wizard->getSteps();
 
 		if ($content = $this->maybeRunOverview($state, count($steps))) {
@@ -99,7 +103,7 @@ class Player {
 		$current_step = $steps[$step_number];
 		$form = $this->buildStepForm($step_number, $current_step);
 
-		if ($content = $this->maybeProcessUserInput($state, $step_number, $current_step, $form, $post)) {
+		if ($content = $this->maybeProcessUserInput($state, $step_number, $current_step, $form, $post, $next_when_ok)) {
 			return $content;
 		}
 
@@ -134,9 +138,10 @@ class Player {
 	 * @param	Step	$step
 	 * @param	\ilPropertyFormGUI	$form
 	 * @param	array|null	$post
+	 * @param	bool	$next_when_ok   advance to next step when current step is ok.
 	 * @return	null|string	returns null if input was processed 
 	 */
-	public function maybeProcessUserInput(State $state, $step_number, Step $step, \ilPropertyFormGUI $form, $post) {
+	public function maybeProcessUserInput(State $state, $step_number, Step $step, \ilPropertyFormGUI $form, $post, $next_when_ok) {
 		assert('is_int($step_number)');
 		assert('is_array($post) || is_null($post)');
 		if ($post) {
@@ -145,8 +150,11 @@ class Player {
 				$data = $step->getData($form);
 				if ($data !== null) {
 					$state = $state
-						->withStepData($step_number, $data)
-						->withNextStep();
+						->withStepData($step_number, $data);
+					if ($next_when_ok) {
+						$state = $state
+							->withNextStep();
+					}
 					$this->state_db->save($state);
 					return $this->runStep($state);
 				}
@@ -198,6 +206,7 @@ class Player {
 		if($step_number > 0) {
 			$form->addCommandButton(self::COMMAND_PREVIOUS, $this->ilias_bindings->txt("previous"));
 		}
+		$form->addCommandButton(self::COMMAND_SAVE, $this->ilias_bindings->txt("save"));
 		$form->addCommandButton(self::COMMAND_NEXT, $this->ilias_bindings->txt("next"));
 		$form->addCommandButton(self::COMMAND_ABORT, $this->ilias_bindings->txt("abort"));
 
