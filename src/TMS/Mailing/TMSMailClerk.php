@@ -88,6 +88,7 @@ class TMSMailClerk {
 
 			if(is_null($mail_to_address)) {
 				$err = array('There was no mail address given.', 'Mail was not sent');
+				$mail_to_address = '';
 			} else {
 				$this->sender->setFrom($mail_from_address, $mail_from_name);
 				$this->sender->ClearAllRecipients(); //only send to one recipient!
