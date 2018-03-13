@@ -134,7 +134,7 @@ class TMSMailClerk {
 				$crs_ref_id,
 				(string)$subject,
 				(string)$msg_plain,
-				implode(PHPEOL, $err)
+				implode(PHP_EOL, $err)
 			);
 		}
 	}
