@@ -12,8 +12,7 @@ interface Recipient {
 
 	/**
 	 *
-	 * @throws Exception if there is no mail address
-	 * @return string
+	 * @return string | null
 	 */
 	public function getMailAddress();
 
