@@ -40,7 +40,7 @@ class ilTMSMailRecipient implements Mailing\Recipient {
 		if($this->mail) {
 			return $this->mail;
 		} else {
-			throw new \Exception('There is no mail address for this recipient');
+			return null;
 		}
 	}
 
