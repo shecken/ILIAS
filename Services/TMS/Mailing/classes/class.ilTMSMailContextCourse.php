@@ -19,6 +19,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		'OFFICE_LAST_NAME' => 'placeholder_desc_crs_admin_lastname',
 		'OFFICE_MAIL' => 'placeholder_desc_crs_admin_mail',
 		'VENUE' => 'placeholder_desc_crs_venue',
+		'VENUE_NAME' => 'placeholder_desc_crs_venuename',
 		'TRAINING_PROVIDER' => 'placeholder_desc_crs_provider'
 	);
 
@@ -73,6 +74,8 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 				return $this->adminEmail();
 			case 'VENUE':
 				return $this->crsVenue();
+			case 'VENUE_NAME':
+				return $this->crsVenueName();
 			case 'TRAINING_PROVIDER':
 				return $this->crsProvider();
 			default:
@@ -215,21 +218,31 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		return $admin;
 	}
 
+
 	/**
-	 * @return string | null
+	 * @return [CaT\Plugins\Venues\ilActions | null, CaT\Plugins\Venues\VenueAssignment | null]
 	 */
-	public function crsVenue() {
+	protected function getCrsVenueAssignmentAndActions() {
 		if(!ilPluginAdmin::isPluginActive('venues')) {
 			return null;
 		}
 		$vplug = ilPluginAdmin::getPluginObjectById('venues');
-		$vactions = $vplug->getActions();
+		$vactions =  $vplug->getActions();
 		$vassignment = $vactions->getAssignment($this->getCourseObjectId());
-
 		if(! $vassignment) { //no venue configured at course.
+			$vassignment = null;
+		}
+		return [$vactions, $vassignment];
+	}
+
+	/**
+	 * @return string | null
+	 */
+	public function crsVenue() {
+		list($vactions, $vassignment) = $this->getCrsVenueAssignmentAndActions();
+		if(is_null($vassignment)) {
 			return null;
 		}
-
 		if($vassignment->isCustomAssignment()) {
 			$venue_text = $vassignment->getVenueText();
 		} else {
@@ -251,6 +264,23 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 			$venue_text = implode('<br />', $venue_text);
 		}
 		return $venue_text;
+	}
+
+	/**
+	 * @return string | null
+	 */
+	public function crsVenueName() {
+		list($vactions, $vassignment) = $this->getCrsVenueAssignmentAndActions();
+		if(is_null($vassignment)) {
+			return null;
+		}
+		if($vassignment->isCustomAssignment()) {
+			return null; //or: the first line?
+		}
+		$vid = $vassignment->getVenueId();
+		$v = $vactions->getVenue($vid);
+		$gen = $v->getGeneral();
+		return $gen->getName();
 	}
 
 	/**
