@@ -16074,6 +16074,7 @@ tms#:#placeholder_desc_crs_trainer_lastname#:#Nachname des Trainers am Kurs
 tms#:#placeholder_desc_crs_admin_firstname#:#Vorname des Admins am Kurs
 tms#:#placeholder_desc_crs_admin_lastname#:#Nachname des Admins am Kurs
 tms#:#placeholder_desc_crs_venue#:#Veranstaltungsort des Kurses
+tms#:#placeholder_desc_crs_venuename#:#Name des Veranstaltungsorts
 tms#:#placeholder_desc_crs_provider#:#Trainingsanbieter
 tms#:#placeholder_desc_crs_admin_mail#:#E-Mail des Admins am Kurs
 tms#:#to_course_member_tab#:#Buchungen vornehmen
