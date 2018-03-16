@@ -8,7 +8,7 @@ use ILIAS\TMS\Mailing;
  */
 class ilTMSMailContextUser implements Mailing\MailContext {
 
-	private static $PLACEHOLDER = array(
+	protected static $PLACEHOLDER = array(
 		'MAIL_SALUTATION' => 'placeholder_desc_user_salutation',
 		'FIRST_NAME' => 'placeholder_desc_user_firstName',
 		'LAST_NAME' => 'placeholder_desc_user_lastName',
@@ -62,14 +62,14 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	 * @inheritdoc
 	 */
 	public function placeholderIds() {
-		return array_keys($this::$PLACEHOLDER);
+		return array_keys(static::$PLACEHOLDER);
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function placeholderDescriptionForId($placeholder_id) {
-		return $this->g_lang->txt(self::$PLACEHOLDER[$placeholder_id]);
+		return $this->g_lang->txt(static::$PLACEHOLDER[$placeholder_id]);
 	}
 
 	/**
@@ -82,7 +82,7 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	/**
 	 * @return ilObjUser
 	 */
-	private function getUser(){
+	protected function getUser(){
 		if(! $this->usr) {
 			$this->usr = new \ilObjUser($this->usr_id);
 		}
@@ -92,7 +92,7 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	/**
 	 * @return string
 	 */
-	private function salutation() {
+	protected function salutation() {
 		global $DIC;
 		$salutation = 'salutation';
 		$gender = $this->getUser()->getGender();
@@ -108,20 +108,20 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	/**
 	 * @return string
 	 */
-	private function firstName() {
+	protected function firstName() {
 		return $this->getUser()->getFirstname();
 	}
 	/**
 	 * @return string
 	 */
-	private function lastName() {
+	protected function lastName() {
 		return $this->getUser()->getLastname();
 	}
 
 	/**
 	 * @return string
 	 */
-	private function login() {
+	protected function login() {
 		return $this->getUser()->getLogin();
 	}
 }
