@@ -141,6 +141,7 @@ class ilTMSMailContentBuilder implements Mailing\MailContentBuilder {
 				$files = $this->readDir($images_path);
 				return $files;
 			}
+			return [];
 		}
 		$files = $this->readDir(self::DEFAULT_IMAGES);
 		return $files;
