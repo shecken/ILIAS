@@ -109,16 +109,17 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 			->willReturn($form);
 
 		$this->ilias_bindings
-			->expects($this->exactly(4))
+			->expects($this->exactly(5))
 			->method("txt")
-			->withConsecutive(["previous"], ["next"], ["abort"], ["title"])
-			->will($this->onConsecutiveCalls("lng_previous", "lng_next", "lng_abort", "lng_title"));
+			->withConsecutive(["previous"], ["save"], ["next"], ["abort"], ["title"])
+			->will($this->onConsecutiveCalls("lng_previous", "lng_save", "lng_next", "lng_abort", "lng_title"));
 
 		$form
-			->expects($this->exactly(3))
+			->expects($this->exactly(4))
 			->method("addCommandButton")
 			->withConsecutive
 				( ["previous", "lng_previous"]
+				, ["save", "lng_save"]
 				, ["next", "lng_next"]
 				, ["abort", "lng_abort"]
 				);
@@ -341,6 +342,77 @@ class TMS_Wizard_PlayerTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals($html, $view);
 	}
+
+	public function test_process_data_ok_save() {
+		$step_number = 1;
+		$state = new Wizard\State($this->wizard_id, $step_number);
+		$this->state_db
+			->expects($this->once())
+			->method("load")
+			->with($this->wizard_id)
+			->willReturn($state);
+
+		$step1 = $this->createStepMock();
+		$step2 = $this->createStepMock();
+		$step3 = $this->createStepMock();
+		$this->wizard
+			->expects($this->atLeastOnce())
+			->method("getSteps")
+			->willReturn([$step1, $step2, $step3]);
+
+		$form_step2 = $this->createFormMock();
+		$form_step3 = $this->createFormMock();
+		$this->ilias_bindings
+			->expects($this->exactly(2))
+			->method("getForm")
+			->will($this->onConsecutiveCalls($form_step2, $form_step3));
+
+		$step1
+			->expects($this->never())
+			->method($this->anything());
+
+		$step2
+			->expects($this->atLeastOnce())
+			->method("appendToStepForm")
+			->with($form_step2);
+
+		$post = ["foo" => "bar"];
+		$form_step2
+			->expects($this->once())
+			->method("setValuesByArray")
+			->with($post);
+
+		$form_step2
+			->expects($this->once())
+			->method("checkInput")
+			->willReturn(true);
+
+		$data = ["bar" => "baz"];
+		$step2
+			->expects($this->once())
+			->method("getData")
+			->with($form_step2)
+			->willReturn($data);
+
+		$new_state = $state
+			->withStepData(1, $data);
+
+		$this->state_db
+			->expects($this->once())
+			->method("save")
+			->with($new_state);
+
+		$html = "HTML OUTPUT STEP 2";
+		$form_step2
+			->expects($this->once())
+			->method("getHTML")
+			->willReturn($html);
+
+		$view = $this->player->run("save", $post);
+
+		$this->assertEquals($html, $view);
+	}
+
 
 	public function test_process_build_only_on_no_post() {
 		$step_number = 1;
