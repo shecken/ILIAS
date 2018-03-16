@@ -176,6 +176,15 @@ class Request {
 		return $this->copy_options[$ref_id];
 	}
 
+    /**
+     * Get all copy options.
+     *
+     * @return array<int,int>
+     */
+    public function getCopyOptions() {
+        return $this->copy_options;
+    }
+
 	/**
 	 * Get the configuration data for the object with the given ref_id.
 	 *
@@ -190,4 +199,13 @@ class Request {
 		}
 		return $this->configuration[$ref_id];
 	}
+
+    /**
+     * Get all configurations.
+     *
+     * @return array<int,int>
+     */
+    public function getConfigurations() {
+        return $this->configuration;
+    }
 }
