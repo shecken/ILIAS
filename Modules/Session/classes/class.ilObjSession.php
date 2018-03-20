@@ -569,6 +569,16 @@ class ilObjSession extends ilObject
 				$end_hh = (int)$start_hh + $end_hour - $start_hour;
 				$end_mm = (int)$start_mm + $end_minutes - $start_minutes;
 
+				if ($end_mm < 0) {
+					$end_hh = $end_hh - 1;
+					$end_mm = 60 + $end_mm;
+				}
+
+				if ($end_mm >= 60) {
+					$end_hh = $end_hh + 1;
+					$end_mm = $end_mm - 60;
+				}
+
 				if ($start_hh < 10) {
 					$start_hh = "0$start_hh";
 				}

@@ -16074,13 +16074,22 @@ tms#:#placeholder_desc_crs_trainer_lastname#:#Nachname des Trainers am Kurs
 tms#:#placeholder_desc_crs_admin_firstname#:#Vorname des Admins am Kurs
 tms#:#placeholder_desc_crs_admin_lastname#:#Nachname des Admins am Kurs
 tms#:#placeholder_desc_crs_venue#:#Veranstaltungsort des Kurses
+tms#:#placeholder_desc_crs_venuename#:#Name des Veranstaltungsorts
 tms#:#placeholder_desc_crs_provider#:#Trainingsanbieter
 tms#:#placeholder_desc_crs_admin_mail#:#E-Mail des Admins am Kurs
 tms#:#to_course_member_tab#:#Buchungen vornehmen
 tms#:#cancel_course#:#Training absagen
 tms#:#placeholder_desc_reminder#:#Für Einladungsmails - wird nur bei Erinnerungen gesetzt.
 tms#:#tms_mailsubject_reminder#:#Erinnerung:
+tms#:#placeholder_desc_oac_reminder#:#Für Übernachtungsliste - wird nur bei Erinnerungen gesetzt.
+tms#:#placeholder_mailsubject_oac_reminder#:#Bestätigung:
 tms#:#create_course_from_template#:#Kurs aus Vorlage erzeugen
+tms#:#choose_course_template#:#Vorlage auswählen
 wiki#:#wiki_pg_list_no_search_fields#:#Es befinden sich keine durchsuchbaren Metadatenfelder in den Metadatensätzen des Wikis.
 content#:#cont_transl_master_language_not_allowed#:#Um eine Übersetzung zu importieren, müssen sie zumindest eine zusätzliche Sprache unter "Einstellungen" > "Mehrsprachigkeit" aktivieren.
 rbac#:#sess_read_learning_progress#:#User can view learning progress of other users###26 01 2018 new variable
+tms#:#placeholder_desc_current_user_salutation#:#Aktueller Benutzer, Anrede
+tms#:#placeholder_desc_current_user_firstName#:#Aktueller Benutzer, Vorname
+tms#:#placeholder_desc_current_user_lastName#:#Aktueller Benutzer, Nachname
+tms#:#placeholder_desc_current_user_login#:#Aktueller Benutzer, Login
+tms#:#placeholder_desc_current_user_email#:#Aktueller Benutzer, E-Mail

@@ -156,6 +156,16 @@ class Request {
 		return $clone;
 	}
 
+	/**
+	 * @param	\DateTime	$finished_ts
+	 * @return self
+	 */
+	public function withFinishedTS(\DateTime $finished_ts) {
+		$clone = clone $this;
+		$clone->finished_ts = $finished_ts;
+		return $clone;
+	}
+
 	// TODO: there is a hidden dependency on ilCopyWizardOption here
 	const SKIP = 1;
 	const COPY = 2;
@@ -176,6 +186,15 @@ class Request {
 		return $this->copy_options[$ref_id];
 	}
 
+    /**
+     * Get all copy options.
+     *
+     * @return array<int,int>
+     */
+    public function getCopyOptions() {
+        return $this->copy_options;
+    }
+
 	/**
 	 * Get the configuration data for the object with the given ref_id.
 	 *
@@ -190,4 +209,13 @@ class Request {
 		}
 		return $this->configuration[$ref_id];
 	}
+
+    /**
+     * Get all configurations.
+     *
+     * @return array<int,int>
+     */
+    public function getConfigurations() {
+        return $this->configuration;
+    }
 }

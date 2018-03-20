@@ -74,7 +74,9 @@ class TMSMailClerk {
 			$attachments = $mail->getAttachments();
 			$template_ident = $mail->getTemplateIdentifier();
 
-			$builder =  $this->content_builder->withData($template_ident, $contexts);
+			$builder =  $this->content_builder
+				->withStyleFor($recipient)
+				->withData($template_ident, $contexts);
 
 			$subject = $builder->getSubject();
 			$msg_html = $builder->getMessage();
@@ -84,27 +86,33 @@ class TMSMailClerk {
 			$mail_to_address = $recipient->getMailAddress();
 			$mail_to_name = $recipient->getUserName();
 
-			$this->sender->setFrom($mail_from_address, $mail_from_name);
-			$this->sender->ClearAllRecipients(); //only send to one recipient!
-			$this->sender->ClearCCs();
-			$this->sender->ClearBCCs();
-			$this->sender->addAddress($mail_to_address, $mail_to_name);
-			$this->sender->Subject = $subject;
-			$this->sender->Body = $msg_html;
-			$this->sender->AltBody = $msg_plain;
-			foreach ($embedded as $embed) {
-				list($path, $file) = $embed;
-				$this->sender->AddEmbeddedImage($path, $file);
-			}
-			if($attachments !== null) {
-				foreach($attachments->getAttachments() as $attachment) {
-					$this->sender->addAttachment($attachment->getAttachmentPath());
+			if(is_null($mail_to_address)) {
+				$err = array('There was no mail address given.', 'Mail was not sent');
+				$mail_to_address = '';
+			} else {
+				$this->sender->setFrom($mail_from_address, $mail_from_name);
+				$this->sender->ClearAllRecipients(); //only send to one recipient!
+				$this->sender->ClearCCs();
+				$this->sender->ClearBCCs();
+				$this->sender->addAddress($mail_to_address, $mail_to_name);
+				$this->sender->Subject = $subject;
+				$this->sender->Body = $msg_html;
+				$this->sender->AltBody = $msg_plain;
+				foreach ($embedded as $embed) {
+					list($path, $file) = $embed;
+					$this->sender->AddEmbeddedImage($path, $file);
 				}
+				if($attachments !== null) {
+					foreach($attachments->getAttachments() as $attachment) {
+						$this->sender->addAttachment($attachment->getAttachmentPath());
+					}
+				}
+
+				if(! $this->sender->Send()) {
+					$err[] = $this->sender->ErrorInfo;
+				};
 			}
 
-			if(! $this->sender->Send()) {
-				$err[] = $this->sender->ErrorInfo;
-			};
 
 			$mail_to_usr_id = $recipient->getUserId();
 			$mail_to_usr_login = $recipient->getUserLogin();
@@ -126,7 +134,7 @@ class TMSMailClerk {
 				$crs_ref_id,
 				(string)$subject,
 				(string)$msg_plain,
-				implode(PHPEOL, $err)
+				implode(PHP_EOL, $err)
 			);
 		}
 	}

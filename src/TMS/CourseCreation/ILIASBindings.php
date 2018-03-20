@@ -104,15 +104,8 @@ class ILIASBindings implements Wizard\ILIASBindings {
 				\ilUtil::sendInfo($message, true);
 			}
 		}
-		$this->ctrl->setParameterByClass($this->parent_guis[0], "ref_id", $this->parent_ref_id);
+		$last_gui = $this->parent_guis[count($this->parent_guis)-1];
+		$this->ctrl->setParameterByClass($last_gui, "ref_id", $this->parent_ref_id);
 		$this->ctrl->redirectByClass($this->parent_guis, $this->parent_cmd);
-	}
-
-	/**
-	 * @param	int	$parent_ref_id
-	 */
-	public function setParentRefId($parent_ref_id) {
-		assert('is_int($parent_ref_id)');
-		$this->parent_ref_id = $parent_ref_id;
 	}
 }

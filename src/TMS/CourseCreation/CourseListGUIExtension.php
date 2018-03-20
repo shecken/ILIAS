@@ -9,6 +9,22 @@ namespace ILIAS\TMS\CourseCreation;
  * create the course.
  */
 trait CourseListGUIExtension {
+	use LinkHelper;
+
+	/**
+	 * @return	\ilCtrl
+	 */
+	protected function getCtrl() {
+		return $this->ctrl;
+	}
+
+	/**
+	 * @return \ilLanguage
+	 */
+	protected function getLng() {
+		return $this->lng;
+	}
+
 	/**
 	 * Overwritten from ilObjectListGUI. Enhances the supplied commands by
 	 * a custom command for the course creation.
@@ -20,7 +36,7 @@ trait CourseListGUIExtension {
 		if ($this->getCreateCourseAccessGranted()) {
 			$commands[] =
 				[ "cmd" => $this->getCreateCourseCommand()
-				, "link" => $this->getCreateCourseCommandLink()
+				, "link" => $this->getCreateCourseCommandLink(["ilRepositoryGUI"], "frameset", (int)$this->parent_ref_id, (int)$this->ref_id)
 				, "frame" => ""
 				, "lang_var" => $this->getCreateCourseCommandLngVar()
 				, "txt" => null
@@ -31,22 +47,6 @@ trait CourseListGUIExtension {
 				];
 		}
 		return $commands;
-	}
-
-	protected function getCreateCourseCommand() {
-		return "create_course_from_template";
-	}
-
-	protected function getCreateCourseCommandLink() {
-		$this->ctrl->setParameterByClass("ilCourseCreationGUI", "parent_ref_id", $this->parent_ref_id);
-		$this->ctrl->setParameterByClass("ilCourseCreationGUI", "ref_id", $this->ref_id);
-		return $this->ctrl->getLinkTargetByClass(["ilRepositoryGUI", "ilCourseCreationGUI"], $this->getCreateCourseCommand());
-	}
-
-	protected function getCreateCourseCommandLngVar() {
-		assert('!is_null($this->lng)');
-		$this->lng->loadLanguageModule("tms");
-		return "create_course_from_template";
 	}
 
 	protected function getCreateCourseAccessGranted() {

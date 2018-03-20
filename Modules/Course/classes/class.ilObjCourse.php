@@ -1278,6 +1278,10 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 					);
 				}
 			}
+			else if ($key == "title") {
+				$this->setTitle($config["title"]);
+				$this->update();
+			}
 			else {
 				throw new \RuntimeException("Can't process configuration '$key'");
 			}

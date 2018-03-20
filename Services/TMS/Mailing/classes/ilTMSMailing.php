@@ -88,15 +88,18 @@ class ilTMSMailing implements Mailing\Actions {
 		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextILIAS.php');
 		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextUser.php');
 		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextCourse.php');
+		require_once('./Services/TMS/Mailing/classes/class.ilTMSMailContextCurrentUser.php');
 
 		$context_ilias = new \ilTMSMailContextILIAS();
 		$context_user = new \ilTMSMailContextUser(0);
 		$context_course = new \ilTMSMailContextCourse(0);
+		$context_current_user = new \ilTMSMailContextCurrentUser();
 
 		return array(
 			'ilTMSMailContextIlias' => $context_ilias
 			,'ilTMSMailContextUser' => $context_user
 			,'ilTMSMailContextCourse' => $context_course
+			,'ilTMSMailContextCurrentUser' => $context_current_user
 		);
 	}
 }
