@@ -146,6 +146,31 @@ class UserLocator
 	}
 
 	/**
+	 * Get relevant users which have a pnr withing argument.
+	 *
+	 * @param	string[]	$pnrs
+	 * @return	User\Users
+	 */
+	public function relevantUsersWithPNRs(array $pnrs)
+	{
+		return $this->usersByUserIds($this->relevantUserIdsWithPNRs($pnrs));
+	}
+
+	/**
+	 * Get relevant user ids which have a pnr withing argument.
+	 *
+	 * @param	string[]	$pnrs
+	 * @return	User\Users
+	 */
+	public function relevantUserIdsWithPNRs(array $pnrs)
+	{
+		return $this->udf_w->userIdsByPropertyValues(
+			$this->udf_w->fieldId(UdfWrapper::PROP_PNR),
+			$pnrs
+		);
+	}
+
+	/**
 	 * Get the list of all relevant Users within ilias.
 	 *
 	 * @return User\Users

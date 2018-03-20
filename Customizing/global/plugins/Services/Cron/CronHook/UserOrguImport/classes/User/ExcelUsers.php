@@ -50,6 +50,10 @@ class ExcelUsers
 			'Austrittsdatum' => UdfWrapper::PROP_EXIT_DATE
 			];
 
+	public static $delivered_pnrs_conversions = [
+			'P.Nr.' => UdfWrapper::PROP_PNR
+	];
+
 	public function __construct(
 		Base\Filesystem\ImportFiles $import_files,
 		Data\DataExtractor $extractor,
@@ -87,6 +91,21 @@ class ExcelUsers
 			}
 		}
 		return $users;
+	}
+
+	/**
+	 * Get PNRs delivered with current import file.
+	 *
+	 * @return	string[]
+	 */
+	public function deliveredPNRs()
+	{
+		$path = $this->import_files->getCurrentUserFilePath();
+		$return = [];
+		foreach ($this->extractor->extractContent($path, self::$conversions) as $row) {
+			$return[] = $row[UdfWrapper::PROP_PNR];
+		}
+		return array_unique($return);
 	}
 
 	protected function checkRow(array $row)

@@ -44,7 +44,6 @@ class UserUpdater
 		if ($this->checkConfig()) {
 			$this->add($diff->toCreate());
 			$this->update($diff->toChange());
-			$this->remove($diff->toDelete());
 		} else {
 			$this->ec->addError('User import not configured.');
 		}

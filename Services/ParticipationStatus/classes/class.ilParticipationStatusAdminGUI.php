@@ -378,40 +378,34 @@ class ilParticipationStatusAdminGUI
 		global $ilToolbar, $ilCtrl, $lng, $tpl;
 		
 		$helper = ilParticipationStatusHelper::getInstance($course);
-		
-		if (($helper->getCourseNeedsAttendanceList() || $helper->getCourseNeedsInvitationMailConfirmation()) && $may_write) {
+
+		if($may_write)
+		{
+			require_once "Services/Form/classes/class.ilFileInputGUI.php";
 			$ilToolbar->setFormAction($ilCtrl->getFormAction($gui), true);
+			$file = new ilFileInputGUI($lng->txt("ptst_admin_attendance_list"), "atlst");
+			$ilToolbar->addInputItem($file, true);
+
+			$ilToolbar->addFormButton($lng->txt("upload"), "uploadAttendanceList");
+
+			$ilToolbar->addSeparator();
 		}
-		
-		if($helper->getCourseNeedsAttendanceList())
+		if($pstatus->getAttendanceList())
 		{
 			if($may_write)
 			{
-				require_once "Services/Form/classes/class.ilFileInputGUI.php";
-				$file = new ilFileInputGUI($lng->txt("ptst_admin_attendance_list"), "atlst");
-				$ilToolbar->addInputItem($file, true);
-				
-				$ilToolbar->addFormButton($lng->txt("upload"), "uploadAttendanceList");
+				$ilToolbar->addButton($lng->txt("delete"), 
+					$ilCtrl->getLinkTarget($gui, "deleteAttendanceList"));
 
 				$ilToolbar->addSeparator();
 			}
-			if($pstatus->getAttendanceList())
-			{
-				if($may_write)
-				{
-					$ilToolbar->addButton($lng->txt("delete"), 
-						$ilCtrl->getLinkTarget($gui, "deleteAttendanceList"));
 
-					$ilToolbar->addSeparator();
-				}
-				
-				$ilToolbar->addButton($lng->txt("ptst_admin_view_attendance_list"),
-					$ilCtrl->getLinkTarget($gui, "viewAttendanceList"));
-			}
-			else
-			{
-				$ilToolbar->addText($lng->txt("ptst_admin_no_attendance_list"));
-			}
+			$ilToolbar->addButton($lng->txt("ptst_admin_view_attendance_list"),
+				$ilCtrl->getLinkTarget($gui, "viewAttendanceList"));
+		}
+		else
+		{
+			$ilToolbar->addText($lng->txt("ptst_admin_no_attendance_list"));
 		}
 
 		if ($helper->getCourseNeedsAttendanceList() && $helper->getCourseNeedsInvitationMailConfirmation()) {
@@ -568,6 +562,8 @@ class ilParticipationStatusAdminGUI
 			$this->returnToList();
 			// gev-patch end
 		}
+
+		$this->getParticipationStatus()->getAttendanceList();
 
 		// confirmation 
 		// gev-patch start
