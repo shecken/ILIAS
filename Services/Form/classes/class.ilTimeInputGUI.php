@@ -227,7 +227,7 @@ class ilTimeInputGUI extends ilSubEnabledFormPropertyGUI
 		$tpl->setVariable("TXT_HOURS", $lng->txt("form_hours"));
 		$val = array();
 		for ($i=0; $i<=$this->getMaxHours(); $i++) {
-			$val[$i] = $i;
+			$val[$i] = str_pad($i, 2, "0", STR_PAD_LEFT);
 		}
 		$tpl->setVariable(
 			"HOURS",
@@ -247,7 +247,7 @@ class ilTimeInputGUI extends ilSubEnabledFormPropertyGUI
 		$tpl->setVariable("TXT_MINUTES", $lng->txt("form_minutes"));
 		$val = array();
 		for ($i=0; $i<=59; $i) {
-			$val[$i] = $i;
+			$val[$i] = str_pad($i, 2, "0", STR_PAD_LEFT);
 			$i = $i + $this->getMinuteStepSize();
 		}
 		$tpl->setVariable(
@@ -270,7 +270,7 @@ class ilTimeInputGUI extends ilSubEnabledFormPropertyGUI
 			$tpl->setVariable("TXT_SECONDS", $lng->txt("form_seconds"));
 			$val = array();
 			for ($i=0; $i<=59; $i++) {
-				$val[$i] = $i;
+				$val[$i] = str_pad($i, 2, "0", STR_PAD_LEFT);
 			}
 			$tpl->setVariable(
 				"SECONDS",
