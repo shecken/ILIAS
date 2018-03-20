@@ -469,4 +469,30 @@ class gevCourseSearch {
 	public function isActiveTabSelflearning($active_tab) {
 		return self::TAB_SELF == $active_tab;
 	}
+
+	/**
+	 * Get a sorted array of categories.
+	 *
+	 * @return array
+	 */
+	public function getSortedCategoriesOptions()
+	{
+		global $lng;
+		$all = $lng->txt("gev_crs_srch_all");
+
+		$result = array();
+		$prefer_categories = gevSettings::$PREFER_CATEGORIES;
+		$all_categories = gevCourseUtils::getCategorieOptions();
+		array_shift($all_categories);
+		$result = array_filter($prefer_categories, function($val) use(&$all_categories) {
+			if(in_array($val, $all_categories)) {
+				unset($all_categories[$val]);
+				return true;
+			}
+			return false;
+		});
+
+		ksort($result);
+		return array_merge(array($all => $all), $result) + $all_categories;
+	}
 }
