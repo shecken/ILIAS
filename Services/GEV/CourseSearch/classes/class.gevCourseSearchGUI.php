@@ -237,7 +237,7 @@ class gevCourseSearchGUI {
 		$form->addItem($type);*/
 		
 		$categorie = new ilSelectInputGUI($this->gLng->txt("gev_course_categorie"), "categorie");
-		$categorie->setOptions(gevCourseUtils::getCategorieOptions());
+		$categorie->setOptions($this->crs_srch->getSortedCategoriesOptions());
 		$form->addItem($categorie);
 		
 		$target_group = new ilSelectInputGUI($this->gLng->txt("gev_target_group"), "target_group");
