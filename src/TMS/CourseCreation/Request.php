@@ -156,6 +156,16 @@ class Request {
 		return $clone;
 	}
 
+	/**
+	 * @param	\DateTime	$finished_ts
+	 * @return self
+	 */
+	public function withFinishedTS(\DateTime $finished_ts) {
+		$clone = clone $this;
+		$clone->finished_ts = $finished_ts;
+		return $clone;
+	}
+
 	// TODO: there is a hidden dependency on ilCopyWizardOption here
 	const SKIP = 1;
 	const COPY = 2;
