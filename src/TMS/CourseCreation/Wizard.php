@@ -172,10 +172,6 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @inheritdoc
 	 */
 	public function finish() {
-		// TODO: replace this by just getting the request and
-		// do the actual processing in the cron.
-		$request = $this->request_builder->getRequest(new \DateTime("@{$this->timestamp}"));
-		$process = new Process($this->dic->repositoryTree(), $this->dic->database());
-		$request = $process->run($request);
+		$this->request_builder->getRequest(new \DateTime("@{$this->timestamp}"));
 	}
 } 

@@ -61,6 +61,15 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($new_ts, $clone->getFinishedTS());
 	}
 
+	public function test_withFinishedTS() {
+		$new_ts = new \DateTime("2000-12-31 23:59");
+		$clone = $this->request->withFinishedTS($new_ts);
+
+		$this->assertEquals($this->finished_ts, $this->request->getFinishedTS());
+		$this->assertEquals($this->target_ref_id, $clone->getTargetRefId());
+		$this->assertEquals($new_ts, $clone->getFinishedTS());
+	}
+
 	public function test_finishedTS_is_nullable() {
 		$request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], [], $this->request_ts, null);
 		$this->assertEquals(null, $request->getFinishedTS());
