@@ -989,6 +989,24 @@ class gevUserUtils
 		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE, $a_date->get(IL_CAL_DATE));
 	}
 
+	public function getEntryDateKo()
+	{
+		$val = $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE_KO);
+		if (!trim($val)) {
+			return null;
+		}
+		try {
+			return new ilDate($val, IL_CAL_DATE);
+		} catch (Exception $e) {
+			return null;
+		}
+	}
+
+	public function setEntryDateKo(ilDate $a_date)
+	{
+		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE_KO, $a_date->get(IL_CAL_DATE));
+	}
+
 	public function getExitDate()
 	{
 		$val = $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_EXIT_DATE);
