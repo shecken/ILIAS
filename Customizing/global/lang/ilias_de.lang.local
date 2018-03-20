@@ -532,7 +532,8 @@ gev#:#gev_email#:#E-Mail-Adresse
 gev#:#gev_com_email#:#Kommunikations E-Mail-Adresse
 gev#:#gev_employee_booking#:#Buchungen meiner Mitarbeiter / Vertriebspartner
 gev#:#gev_employee_booking_desc#:#Hier sehen Sie alle aktuellen Buchungen Ihrer Mitarbeiter / Vertriebspartner.
-gev#:#gev_entry_date#:#Eintrittsdatum
+gev#:#gev_entry_date#:#Eintrittsdatum KU
+gev#:#gev_entry_date_ko#:#Eintrittsdatum KO
 gev#:#date_stable#:#Trainingstage
 gev#:#date_stable_desc#:#Feste Dauer. Letzter Tag automatisch eingestellt.
 gev#:#gev_event_title#:#Veranstaltungstitel
