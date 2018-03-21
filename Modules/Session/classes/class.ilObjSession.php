@@ -579,18 +579,10 @@ class ilObjSession extends ilObject
 					$end_mm = $end_mm - 60;
 				}
 
-				if ($start_hh < 10) {
-					$start_hh = "0$start_hh";
-				}
-				if ($start_mm < 10) {
-					$start_mm = "0$start_mm";
-				}
-				if ($end_hh < 10) {
-					$end_hh = "0$end_hh";
-				}
-				if ($end_mm < 10) {
-					$end_mm = "0$end_mm";
-				}
+				$start_hh = str_pad($start_hh, 2, "0", STR_PAD_LEFT);
+				$start_mm = str_pad($start_mm, 2, "0", STR_PAD_LEFT);
+				$end_hh = str_pad($end_hh, 2, "0", STR_PAD_LEFT);
+				$end_mm = str_pad($end_mm, 2, "0", STR_PAD_LEFT);
 
 				$dt_start = $start_date." $start_hh:$start_mm:00";
 				$new_start_date = new ilDateTime($dt_start, IL_CAL_DATETIME);
