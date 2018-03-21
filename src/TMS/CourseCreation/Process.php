@@ -64,6 +64,7 @@ class Process {
 		$this->adjustCourseTitle($request);
 		$this->setCourseOnline($request);
 		$this->configureCopiedObjects($request);
+		$this->setAdministrator($request);
 
 		return $request;
 	}
@@ -138,6 +139,18 @@ class Process {
 				$object->afterCourseCreation($config);
 			}
 		}
+	}
+
+	/**
+	 * Make the creating user the administrator.
+	 *
+	 * @param	Request $request
+	 * @return	null
+	 */
+	protected function setAdministrator(Request $request) {
+		$crs_ref_id = $request->getTargetRefId();
+		$crs = $this->getObjectByRefId($crs_ref_id);
+		$crs->getMemberObject()->add($request->getUserId(), IL_CRS_ADMIN);
 	}
 
 	/**
