@@ -619,15 +619,12 @@ class ilObjSession extends ilObject
 	 * @return void
 	 */
 	protected function updateFromAgenda() {
-		global $DIC;
-		$log = $DIC->logger()->root();
 		$event_items = (new ilEventItems($this->getId()))->getItems();
 		foreach ($event_items as $event_item) {
 			if(\ilObject::_lookupType($event_item, true) == "xage") {
 				$agenda = ilObjectFactory::getInstanceByRefId($event_item);
 				$actions = $agenda->getAgendaEntryActions();
 				$start_and_end = $actions->getDayStartAndEnd();
-				$log->dump($start_and_end);
 				if(is_null($start_and_end["start"]) || is_null($start_and_end["end"])) {
 					continue;
 				}
