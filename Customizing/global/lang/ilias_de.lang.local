@@ -784,7 +784,7 @@ gev#:#gev_wbd_registration_has_bwv_id_cmd#:#Weiter
 gev#:#gev_wbd_registration_has_bwv_id_cmd_service#:#Weiter
 gev#:#gev_wbd_registration_header_note#:#Registrieren Sie sich bei der Weiterbildungsdatenbank.
 gev#:#gev_wbd_registration_no_bwv_id#:#Nein, ich habe noch keine GDV Vermittler-ID und werde diese in meinem Benutzeraccount nachtragen.
-gev#:#gev_wbd_registration_no_bwv_id_cmd#:#Anmeldung ohne Eröffnung eines Kontos und vorerst ohne Übermittlung der Punkte
+gev#:#gev_wbd_registration_no_bwv_id_cmd#:#Anmeldung ohne Eröffnung eines Kontos und vorerst ohne Übermittlung der Weiterbildungszeit
 gev#:#gev_wbd_registration_question_basis#:#Haben Sie bereits ein Weiterbildungskonto im Rahmen der Brancheninitiative „gut beraten“?
 gev#:#gev_wbd_registration_question_service#:#Sofern die Generali nicht Ihr Trusted Partner Service sein soll, oder Sie bereits an anderer Stelle eine Kontoeröffnung beantragt haben, nutzen Sie unten stehende Eingabefelder.
 gev#:#gev_wbd_relevant#:#WBD relevant
@@ -1458,7 +1458,7 @@ gev#:#xrcg_delete#:#Unternehmensreport löschen
 gev#:#xrcg_visible#:#sichtbar
 gev#:#xrcg_edit_permission#:#schreibberechtigt
 gev#:#gev_give_affiliate_tp_service#:#Hiermit erteile ich den %s (<a href='/Customizing/global/skin/genv/static/documents/GEV_TPS_Wechsel_AAD.pdf' target='_blank' class='blue'>als AAD</a> / <a href='/Customizing/global/skin/genv/static/documents/GEV_TPS_Wechsel_§84HGB.pdf' target='_blank'  class='blue'>als §84HGB</a>) zur Verwaltung des WBD-Benutzerkontos als Trusted Partner Service.
-gev#:#gev_give_affiliate_wbd#:#Hiermit erteile ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_TPS_Wechsel_Auftrag_BDL.pdf' target='_blank' class='blue'>Einwilligung zur Eintragung von Weiterbildungspunkten und -maßnahmen</a> in die WBD.
+gev#:#gev_give_affiliate_wbd#:#Hiermit erteile ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_TPS_Wechsel_Auftrag_BDL.pdf' target='_blank' class='blue'>Einwilligung zur Eintragung von Weiterbildungszeit und -maßnahmen</a> in die WBD.
 gev#:#gev_give_affiliate_tp_service_old#:#Name des vorherigen TP-Service oder "Selbstpfleger"
 gev#:#xrcg_edit_permission#:#schreibberechtigt
 gev#:#xatd_add#:#ASTD Report hinzufügen
