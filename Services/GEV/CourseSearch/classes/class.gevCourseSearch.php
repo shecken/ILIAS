@@ -481,18 +481,23 @@ class gevCourseSearch {
 		$all = $lng->txt("gev_crs_srch_all");
 
 		$result = array();
+		$filter = array();
 		$prefer_categories = gevSettings::$PREFER_CATEGORIES;
 		$all_categories = gevCourseUtils::getCategorieOptions();
 		array_shift($all_categories);
-		$result = array_filter($prefer_categories, function($val) use(&$all_categories) {
+		$filter = array_filter($prefer_categories, function($val) use(&$all_categories) {
 			if(in_array($val, $all_categories)) {
 				unset($all_categories[$val]);
 				return true;
 			}
 			return false;
 		});
-
-		ksort($result);
-		return array_merge(array($all => $all), $result) + $all_categories;
+		$result[''] = array($all => $all);
+		if(count($filter) != 0) {
+			ksort($filter);
+			$result[gevSettings::SRTF_TOP_TRAININGS] = $filter;
+		}
+		$result[gevSettings::SRTF_TOPIC_SELECTION] = $all_categories;
+		return $result;//array_merge(array($all => $all), $result) + $all_categories;
 	}
 }
