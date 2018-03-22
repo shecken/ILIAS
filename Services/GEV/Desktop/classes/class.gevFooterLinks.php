@@ -107,10 +107,10 @@ class gevFooterLinks {
 			, "desc" => "gev_footer_academy_benried"
 			, "display" => ($uutils instanceof gevUserUtils)
 			),
-		/*Academy Benried*/array
+		/*Academy AM*/array
 			( "link" => "./Customizing/global/skin/genv/static/documents/am-akademie.pdf"
 			, "desc" => "gev_footer_academy_am"
-			, "display" => true
+			, "display" => ($uutils instanceof gevUserUtils)
 			)
 		);
 	}
