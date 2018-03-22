@@ -2255,6 +2255,10 @@ class ilUtil
             header('Pragma: public');
 		}
 
+		//gev-patch 3653 do not show pre loader on download
+		ilUtil::setCookie("download_started", "started", false, false, false);
+		//gev-patch end
+
 		header("Connection: close");
 		echo $a_data;
 		exit;
