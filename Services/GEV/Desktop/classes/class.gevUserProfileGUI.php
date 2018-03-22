@@ -329,6 +329,11 @@ class gevUserProfileGUI
 		$entry_date->setValue($_entry_date?ilDatePresentation::formatDate($_entry_date):"");
 		$form->addItem($entry_date);
 
+		$entry_date_ko = new ilNonEditableValueGUI($this->lng->txt("gev_entry_date_ko"));
+		$_entry_date_ko = $this->user_utils->getEntryDateKo();
+		$entry_date_ko->setValue($_entry_date_ko?ilDatePresentation::formatDate($_entry_date_ko):"");
+		$form->addItem($entry_date_ko);
+
 		$exit_date = new ilNonEditableValueGUI($this->lng->txt("gev_exit_date"));
 		$_exit_date = $this->user_utils->getExitDate();
 		$exit_date->setValue($_exit_date?ilDatePresentation::formatDate($_exit_date):"");
