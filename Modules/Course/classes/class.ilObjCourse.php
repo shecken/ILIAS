@@ -1100,14 +1100,12 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 
 			$src = $vactions->getAssignment($src_id);
 
-			if($src === false) {
-				return;
-			}
-
-			if($src->isCustomAssignment()) {
-				$vactions->createCustomVenueAssignment($target_id, $src->getVenueText());
-			} else {
-				$vactions->createListVenueAssignment($target_id, (int)$src->getVenueId());
+			if($src !== false) {
+				if($src->isCustomAssignment()) {
+					$vactions->createCustomVenueAssignment($target_id, $src->getVenueText());
+				} else {
+					$vactions->createListVenueAssignment($target_id, (int)$src->getVenueId());
+				}
 			}
 		}
 
@@ -1117,14 +1115,12 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 
 			$src = $pactions->getAssignment($src_id);
 
-			if($src === false) {
-				return;
-			}
-
-			if($src->isCustomAssignment()) {
-				$pactions->createCustomProviderAssignment($target_id, $src->getProviderText());
-			} else {
-				$pactions->createListProviderAssignment($target_id, (int)$src->getProviderId());
+			if($src !== false) {
+				if($src->isCustomAssignment()) {
+					$pactions->createCustomProviderAssignment($target_id, $src->getProviderText());
+				} else {
+					$pactions->createListProviderAssignment($target_id, (int)$src->getProviderId());
+				}
 			}
 		}
 	}
