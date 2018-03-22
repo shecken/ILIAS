@@ -35,13 +35,13 @@ trait CourseInfoHelper {
 
 		if($filter_doubles) {
 			$prios = array();
-			$filter_doubles = function(CourseInfo $ci) use (&$prios) {
+			$filter_doubles_fnc = function(CourseInfo $ci) use (&$prios) {
 				if(!in_array($ci->getPriority(), $prios)) {
 					$prios[] = $ci->getPriority();
 					return $ci;
 				}
 			};
-			$info = array_filter($info, $filter_doubles);
+			$info = array_filter($info, $filter_doubles_fnc);
 		}
 
 		$sort_by_prio = function(CourseInfo $a, CourseInfo $b) {
