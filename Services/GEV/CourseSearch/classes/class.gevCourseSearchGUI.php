@@ -208,7 +208,7 @@ class gevCourseSearchGUI {
 		require_once("Services/Form/classes/class.ilDateDurationInputGUI.php");
 		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
 		require_once("Services/Calendar/classes/class.ilDate.php");
-		
+		require_once("Services/Form/classes/class.ilGroupableSelectInputGUI.php");
 		require_once("Services/CaTUIComponents/classes/class.catTitleGUI.php");
 		
 
@@ -236,8 +236,8 @@ class gevCourseSearchGUI {
 		$type->setOptions(gevCourseUtils::getTypeOptions());
 		$form->addItem($type);*/
 		
-		$categorie = new ilSelectInputGUI($this->gLng->txt("gev_course_categorie"), "categorie");
-		$categorie->setOptions($this->crs_srch->getSortedCategoriesOptions());
+		$categorie = new ilGroupableSelectInputGUI($this->gLng->txt("gev_course_categorie"), "categorie");
+		$categorie->setGroups($this->crs_srch->getSortedCategoriesOptions());
 		$form->addItem($categorie);
 		
 		$target_group = new ilSelectInputGUI($this->gLng->txt("gev_target_group"), "target_group");

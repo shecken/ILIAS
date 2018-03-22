@@ -379,6 +379,10 @@ class gevSettings
 	const SRTF_SPEAK_COMP = "Sprachkompetenz";
 	const SRTF_IMPULS = "Impulsvorträge";
 
+	// Headers for selecton topics
+	const SRTF_TOP_TRAININGS = "Top-Trainings";
+	const SRTF_TOPIC_SELECTION = "Themenauswahl";
+
 	public static $PREFER_CATEGORIES = array(
 		self::SRTF_SOZIAL_COMP => self::SRTF_SOZIAL_COMP,
 		self::SRTF_PERSONAL_COMP => self::SRTF_PERSONAL_COMP,
