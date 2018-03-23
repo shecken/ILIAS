@@ -318,10 +318,7 @@ class gevUserUtils
 		$additional_where = " AND (amd6.value != 'Praxisbegleitung (AD)' OR amd6.value IS NULL)";
 
 		require_once("Services/ParticipationStatus/classes/class.ilParticipationStatus.php");
-		var_dump($this->filter_for_online_courses($this->getBookedCourses()));
-		var_dump($this->getCoursesWithFeedbackDoneAndStatusIn(array( ilParticipationStatus::STATUS_SUCCESSFUL
-																,ilParticipationStatus::STATUS_ABSENT_EXCUSED
-																,ilParticipationStatus::STATUS_ABSENT_NOT_EXCUSED)));
+
 		$booked = array_diff(
 			$this->filter_for_online_courses($this->getBookedCourses()),
 			$this->getCoursesWithFeedbackDoneAndStatusIn(array( ilParticipationStatus::STATUS_SUCCESSFUL
