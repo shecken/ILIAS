@@ -104,9 +104,15 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 		{
 			$valid = false;
 		}
-
-		if(!array_key_exists($_POST[$this->getPostVar()], (array) $this->getOptions()))
-		{
+		$groups = $this->getGroups();
+		$found = false;
+		foreach($groups as $group) {
+			if(array_key_exists($_POST[$this->getPostVar()], $group))
+			{
+				$found = true;
+			}
+		}
+		if(!$found) {
 			$this->setAlert($lng->txt('msg_invalid_post_input'));
 			return false;
 		}
