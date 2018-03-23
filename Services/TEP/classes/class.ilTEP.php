@@ -409,9 +409,20 @@ class ilTEP
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		$evg = gevOrgUnitUtils::getInstanceByImportId("evg");
 		$uvg = gevOrgUnitUtils::getInstanceByImportId("uvg");
-		
+		$konzern = gevOrgUnitUtils::getInstanceByImportId("konzern");
+
+		$rekru = array($evg->getRefId());
+
+		$konzern = gevOrgUnitUtils::getInstanceByImportId("konzern");
+		foreach ($konzern->getChildren() as $ids) {
+			$child_obj = new ilObjOrgUnit($ids["ref_id"]);
+			if($child_obj->getImportId() != "konzern_exit_user") {
+				$rekru[] = $child_obj->getRefId();
+			}
+		}
+
 		return array( "view" => self::getOrgUnitNamesAndIds(array($uvg->getRefId()))
-					, "view_rekru" => self::getOrgUnitNamesAndIds(array($evg->getRefId()))
+					, "view_rekru" => self::getOrgUnitNamesAndIds($rekru)
 					);
 	}
 
@@ -419,9 +430,20 @@ class ilTEP
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		$evg = gevOrgUnitUtils::getInstanceByImportId("evg");
 		$uvg = gevOrgUnitUtils::getInstanceByImportId("uvg");
+		$konzern = gevOrgUnitUtils::getInstanceByImportId("konzern");
+
+		$rekru = array($evg->getRefId(),$uvg->getRefId());
+
+		$konzern = gevOrgUnitUtils::getInstanceByImportId("konzern");
+		foreach ($konzern->getChildren() as $ids) {
+			$child_obj = new ilObjOrgUnit($ids["ref_id"]);
+			if($child_obj->getImportId() != "konzern_exit_user") {
+				$rekru[] = $child_obj->getRefId();
+			}
+		}
 		
 		return array( "view" => array()
-					, "view_rekru" => self::getOrgUnitNamesAndIds(array($evg->getRefId(),$uvg->getRefId()))
+					, "view_rekru" => self::getOrgUnitNamesAndIds($rekru)
 					);
 	}
 	// gev-patch end
