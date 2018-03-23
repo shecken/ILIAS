@@ -461,12 +461,15 @@ class ilParticipationStatusAdminGUI
 		$crs_utils = gevCourseUtils::getInstanceByObj($this->getCourse());
 
 		$status = $_POST["status"];
-		$points = $_POST["cpoints"];
-		
+		// cat-gev-patch start 3655
+		$wbd_times = $_POST["cpoints"];
+
 		if(!$this->mayWrite() ||
 			!is_array($status) ||
-			!is_array($points))
+			!is_array($wbd_times))
+			// cat-gev-patch end
 		{
+
 			
 			// gev-patch start
 			//$ilCtrl->redirect($this, "listStatus");
@@ -480,14 +483,20 @@ class ilParticipationStatusAdminGUI
 		$invalid = array();
 		
 		// currently only invalid points possible
-		foreach($points as $user_id => $point)
-		{	
+		// cat-gev-patch start 3655
+		foreach($wbd_times as $user_id => $times)
+		{
+			$point = $this->calcPoints($times["time"]);
+			$points[$user_id] = $point;
+			// cat-gev-patch end
+
 			if($point != "" && !is_numeric($point))
 			{
 				$invalid["points"][] = $user_id;				
 				continue;
 			}		
 			$point = (int)$point;
+			
 			if($point < 0 || $point > $max)
 			{
 				$invalid["points"][] = $user_id;		
@@ -526,7 +535,7 @@ class ilParticipationStatusAdminGUI
 				$user_points = 0;
 			}
 			// gev-patch end
-			
+
 			$this->getParticipationStatus()->setStatus($user_id, $status, $setLPState);
 			$this->getParticipationStatus()->setCreditPoints($user_id, $user_points);
 		}	
@@ -710,6 +719,24 @@ class ilParticipationStatusAdminGUI
 			}
 		}
 		$this->returnToList();
+	}
+
+	/**
+	 * Calculate points from wb time
+	 *
+	 * @param string[] 	$times
+	 *
+	 * @return int
+	 */
+	protected function calcPoints(array $times) {
+		$hour = (int)$times["h"];
+		$minutes = (int)$times["m"];
+
+		$points = 0;
+		$points = $hour * 4;
+		$points += $minutes / 15;
+
+		return $points;
 	}
 	// gev-patch end
 }
