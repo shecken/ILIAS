@@ -377,6 +377,26 @@ class ilTEP
 			}
 		}
 
+		$konzern = gevOrgUnitUtils::getInstanceByImportId("konzern");
+		foreach ($konzern->getChildren() as $ids) {
+			$child_obj = new ilObjOrgUnit($ids["ref_id"]);
+			if(ilObject::_lookupObjId($ids["ref_id"]) != gevSettings::getInstance()->getDBVPOUTemplateUnitId()
+				&& $child_obj->getImportId() != "konzern_exit_user"
+			) {
+				$ous[$ids["ref_id"]] = ilObject::_lookupTitle($ids["obj_id"]);
+				$orgu = gevOrgUnitUtils::getInstance(ilObject::_lookupObjId($ids["ref_id"]));
+
+				$childs = $orgu->getOrgUnitsOneTreeLevelBelow();
+				$childs = array_map(function($v) { return $v["ref_id"];}, $childs);
+
+				if(!empty($childs)) {
+					foreach (gevOrgUnitUtils::getAllChildren($childs) as $child) {
+						$ous[$child["ref_id"]] = ilObject::_lookupTitle($child["obj_id"]);
+					}
+				}
+			}
+		}
+
 		$base = gevOrgUnitUtils::getInstanceByImportId("gev_base");
 		$base_ref_id = $base->getRefId();
 		
