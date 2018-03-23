@@ -191,7 +191,21 @@ class ilParticipationStatusTableGUI extends ilTable2GUI
 
 			$this->tpl->setCurrentBlock("edit_bl");
 			$this->tpl->setVariable("ID", $a_set["id"]);
-			$this->tpl->setVariable("POINTS", $a_set["cpoints"]);
+
+			// cat-gev-patch start 3655
+			$wb_time = gevCourseUtils::convertCreditpointsToTime((int)$a_set['cpoints']);
+			$hh = str_pad($wb_time["hours"], 2, "0", STR_PAD_LEFT);
+			$mm = str_pad($wb_time["minutes"], 2, "0", STR_PAD_LEFT);
+			$date = date("Y-m-d")." ".$hh.":".$mm.":00";
+
+			$si = new ilDateTimeInputGUI("", "cpoints[".$a_set["id"]."]");
+			$si->setShowDate(false);
+			$si->setShowTime(true);
+			$si->setMinuteStepSize(15);
+			$si->setDate(new ilDateTime($date, IL_CAL_DATETIME));
+			$this->tpl->setVariable("WBD_TIME_SELECT",$si->render());
+			// cat-gev-patch end
+
 			$this->tpl->setVariable("PMAX", strlen($this->helper->getMaxCreditPoints()));
 			
 			if(is_array($this->invalid["points"]) &&
