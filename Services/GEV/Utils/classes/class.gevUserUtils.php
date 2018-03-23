@@ -318,6 +318,7 @@ class gevUserUtils
 		$additional_where = " AND (amd6.value != 'Praxisbegleitung (AD)' OR amd6.value IS NULL)";
 
 		require_once("Services/ParticipationStatus/classes/class.ilParticipationStatus.php");
+
 		$booked = array_diff(
 			$this->filter_for_online_courses($this->getBookedCourses()),
 			$this->getCoursesWithFeedbackDoneAndStatusIn(array( ilParticipationStatus::STATUS_SUCCESSFUL
@@ -1354,7 +1355,7 @@ class gevUserUtils
 	*/
 	public function getCoursesWithFeedbackDoneAndStatusIn(array $stati)
 	{
-		$query = 	"SELECT crs_id FROM crs_pstatus_usr "
+		$query = 	"SELECT crs_id, status FROM crs_pstatus_usr "
 					." JOIN object_data ON obj_id = crs_id "
 					." WHERE "
 					."	".$this->db->in('status', $stati, false, 'integer')
@@ -1363,7 +1364,11 @@ class gevUserUtils
 		$return = array();
 		while ($rec = $this->db->fetchAssoc($res)) {
 			$crs_utils = gevCourseUtils::getInstance($rec["crs_id"]);
-			if(count($crs_utils->getUndoneFeedbackRefIds($this->user_id)) == 0) {
+			if(($rec["status"] == ilParticipationStatus::STATUS_SUCCESSFUL
+					&& count($crs_utils->getUndoneFeedbackRefIds($this->user_id)) == 0
+				)
+				|| $rec["status"] != ilParticipationStatus::STATUS_SUCCESSFUL
+			) {
 				$return[] = $rec["crs_id"];
 			}
 		}
