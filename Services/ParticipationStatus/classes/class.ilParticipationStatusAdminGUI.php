@@ -729,14 +729,8 @@ class ilParticipationStatusAdminGUI
 	 * @return int
 	 */
 	protected function calcPoints(array $times) {
-		$hour = (int)$times["h"];
-		$minutes = (int)$times["m"];
-
-		$points = 0;
-		$points = $hour * 4;
-		$points += $minutes / 15;
-
-		return $points;
+		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
+		return gevCourseUtils::convertTimeToCreditPoints($times);
 	}
 	// gev-patch end
 }
