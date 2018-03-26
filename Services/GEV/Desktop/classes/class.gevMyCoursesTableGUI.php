@@ -143,9 +143,12 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		if ($show_webex_link) {
 			$action .= '&nbsp;<a href="'.$crs_utils->getVirtualClassLink().'" target="_blank">'.$this->virtualclass_img.'</a>';
 		}
-		$undone_feedback_ref_ids = $crs_utils->getUndoneFeedbackRefIds($this->user_id);
-		foreach($undone_feedback_ref_ids as $ref_id) {
-			$action .= '&nbsp;<a href="'.$crs_utils->getFeedbackLinkById($ref_id).'" target="_blank">'.$this->feedback_img.'</a>';
+
+		if(in_array($this->user_id, $this->getSuccessfullParticipants())) {
+			$undone_feedback_ref_ids = $crs_utils->getUndoneFeedbackRefIds($this->user_id);
+			foreach($undone_feedback_ref_ids as $ref_id) {
+				$action .= '&nbsp;<a href="'.$crs_utils->getFeedbackLinkById($ref_id).'" target="_blank">'.$this->feedback_img.'</a>';
+			}
 		}
 
 		$action = ltrim($action, "&nbsp;");
@@ -207,5 +210,20 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 	public function numericOrdering($a_field)
 	{
 		return $a_field == "fee";
+	}
+
+	/**
+	 * Get chached successfull participants of course
+	 *
+	 * @param ilCourseUtils 	$crs_utils
+	 *
+	 * @return int[]
+	 */
+	protected function getSuccessfullParticipants(ilCourseUtils $crs_utils) {
+		if($this->success_user === nulll) {
+			$this->success_user = $crs_utils->getSuccessfullParticipants();
+		}
+
+		return $this->success_user();
 	}
 }
