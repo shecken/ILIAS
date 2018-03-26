@@ -379,7 +379,7 @@ class gevSettings
 	const SRTF_SPEAK_COMP = "Sprachkompetenz";
 	const SRTF_IMPULS = "Impulsvorträge";
 	const SRTF_LEADERSHIP_SKILLS_PERS = "Führungskompetenz ID (Persönlichkeit)";
-	const SRTF_LEADERSHIP_SKILLS_TOOLS = "Führungskompetenz ID (Skills und Tools)";
+	const SRTF_LEADERSHIP_SKILLS_TOOLS = "Führungskompetenz ID (Skills & Tools)";
 
 	// Headers for selecton topics
 	const SRTF_TOP_TRAININGS = "Top-Trainings";
