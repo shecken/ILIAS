@@ -51,7 +51,7 @@ class gevExpressRegistrationGUI
 				require_once("Services/Authentication/classes/class.ilSession.php");
 				$crs_utils = gevCourseUtils::getInstance($_GET["crs_id"]);
 				ilSession::set("gev_after_registration", $crs_utils->getPermanentBookingLink());
-				ilUtil::redirect("gev_registration.php");
+				ilUtil::redirect("gev_registration.php?goto=startAgentRegistration");
 				break;
 			case "redirectLogin":
 				require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
