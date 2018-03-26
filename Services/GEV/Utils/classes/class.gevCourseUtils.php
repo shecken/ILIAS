@@ -4200,4 +4200,24 @@ class gevCourseUtils
 		$c_p = (int)$this->getCreditPoints();
 		return self::convertCreditpointsToFormattedDuration($c_p);
 	}
+
+	/**
+	 * Converts times (h:m) into credit points
+	 * $time["h"] => hours
+	 * $time["m"] => minutes
+	 *
+	 * @param string[] 	$times
+	 *
+	 * @return int
+	 */
+	public static function convertTimeToCreditPoints(array $times) {
+		$hour = (int)$times["h"];
+		$minutes = (int)$times["m"];
+
+		$points = 0;
+		$points = $hour * 4;
+		$points += $minutes / 15;
+
+		return $points;
+	}
 }
