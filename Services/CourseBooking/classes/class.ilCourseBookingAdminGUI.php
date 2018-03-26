@@ -523,6 +523,10 @@ class ilCourseBookingAdminGUI
 			} else {
 				$parent = $ou_tree->getParent($ou_ref_id);
 				while ($parent) {
+					/** 
+					 * obj id 9 is a system folder object.
+					 * we have to ignore that as parent
+					 */
 					if($parent == 9) {
 						break;
 					}
