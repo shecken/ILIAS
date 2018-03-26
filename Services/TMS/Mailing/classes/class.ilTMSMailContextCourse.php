@@ -131,7 +131,10 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		$sessions = $this->getSessionAppointments();
 		foreach ($sessions as $sortdat => $times) {
 			list($date, $start, $end) = $times;
-			$schedule[] = sprintf("%s, %s - %s", $date, $start, $end);
+			$schedule[] = sprintf("%s, %s - %s %s",
+				$date,
+				$start, $end, $this->g_lang->txt('oclock')
+			);
 		}
 		return implode('<br>', $schedule);
 	}
