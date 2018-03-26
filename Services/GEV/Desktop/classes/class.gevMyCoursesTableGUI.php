@@ -144,7 +144,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 			$action .= '&nbsp;<a href="'.$crs_utils->getVirtualClassLink().'" target="_blank">'.$this->virtualclass_img.'</a>';
 		}
 
-		if(in_array($this->user_id, $this->getSuccessfullParticipants())) {
+		if(in_array($this->user_id, $this->getSuccessfullParticipants($crs_utils))) {
 			$undone_feedback_ref_ids = $crs_utils->getUndoneFeedbackRefIds($this->user_id);
 			foreach($undone_feedback_ref_ids as $ref_id) {
 				$action .= '&nbsp;<a href="'.$crs_utils->getFeedbackLinkById($ref_id).'" target="_blank">'.$this->feedback_img.'</a>';
@@ -215,11 +215,11 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 	/**
 	 * Get chached successfull participants of course
 	 *
-	 * @param ilCourseUtils 	$crs_utils
+	 * @param gevCourseUtils 	$crs_utils
 	 *
 	 * @return int[]
 	 */
-	protected function getSuccessfullParticipants(ilCourseUtils $crs_utils) {
+	protected function getSuccessfullParticipants(gevCourseUtils $crs_utils) {
 		if($this->success_user === nulll) {
 			$this->success_user = $crs_utils->getSuccessfullParticipants();
 		}
