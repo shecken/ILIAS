@@ -481,23 +481,42 @@ class gevCourseSearch {
 		$all = $lng->txt("gev_crs_srch_all");
 
 		$result = array();
-		$filter = array();
-		$prefer_categories = gevSettings::$PREFER_CATEGORIES;
+		$tt = array();
+		$ttl = array();
+
+		$top_trainings = gevSettings::$TOP_TRAININGS;
+		$top_trainings_lead = gevSettings::$TOP_TRAININGS_LEAD;
 		$all_categories = gevCourseUtils::getCategorieOptions();
+
 		array_shift($all_categories);
-		$filter = array_filter($prefer_categories, function($val) use(&$all_categories) {
+
+		$tt = array_filter($top_trainings, function($val) use(&$all_categories) {
 			if(in_array($val, $all_categories)) {
 				unset($all_categories[$val]);
 				return true;
 			}
 			return false;
 		});
+
+		$ttl = array_filter($top_trainings_lead, function($val) use(&$all_categories) {
+			if(in_array($val, $all_categories)) {
+				unset($all_categories[$val]);
+				return true;
+			}
+			return false;
+		});
+
 		$result[''] = array($all => $all);
-		if(count($filter) != 0) {
-			ksort($filter);
-			$result[gevSettings::SRTF_TOP_TRAININGS] = $filter;
+		if(count($tt) != 0) {
+			ksort($tt);
+			$result[gevSettings::SRTF_TOP_TRAININGS] = $tt;
+		}
+		if(count($ttl) != 0) {
+			ksort($ttl);
+			$result[gevSettings::SRTF_TOP_TRAININGS_LEAD] = $ttl;
 		}
 		$result[gevSettings::SRTF_TOPIC_SELECTION] = $all_categories;
-		return $result;//array_merge(array($all => $all), $result) + $all_categories;
+
+		return $result;
 	}
 }

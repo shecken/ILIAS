@@ -378,12 +378,15 @@ class gevSettings
 	const SRTF_PC_IT_COMP_ID = "PC- / IT-Kompetenz (ID)";
 	const SRTF_SPEAK_COMP = "Sprachkompetenz";
 	const SRTF_IMPULS = "Impulsvorträge";
+	const SRTF_LEADERSHIP_SKILLS_PERS = "Führungskompetenz ID (Persönlichkeit)";
+	const SRTF_LEADERSHIP_SKILLS_TOOLS = "Führungskompetenz ID (Skills und Tools)";
 
 	// Headers for selecton topics
 	const SRTF_TOP_TRAININGS = "Top-Trainings";
+	const SRTF_TOP_TRAININGS_LEAD = "Top-Trainings (Führung)";
 	const SRTF_TOPIC_SELECTION = "Themenauswahl";
 
-	public static $PREFER_CATEGORIES = array(
+	public static $TOP_TRAININGS = array(
 		self::SRTF_SOZIAL_COMP => self::SRTF_SOZIAL_COMP,
 		self::SRTF_PERSONAL_COMP => self::SRTF_PERSONAL_COMP,
 		self::SRTF_METHODS_COMP => self::SRTF_METHODS_COMP,
@@ -391,6 +394,11 @@ class gevSettings
 		self::SRTF_PC_IT_COMP_ID => self::SRTF_PC_IT_COMP_ID,
 		self::SRTF_SPEAK_COMP => self::SRTF_SPEAK_COMP,
 		self::SRTF_IMPULS => self::SRTF_IMPULS
+	);
+
+	public static $TOP_TRAININGS_LEAD = array(
+		self::SRTF_LEADERSHIP_SKILLS_PERS => self::SRTF_LEADERSHIP_SKILLS_PERS,
+		self::SRTF_LEADERSHIP_SKILLS_TOOLS => self::SRTF_LEADERSHIP_SKILLS_TOOLS
 	);
 
 	// Role mapping
