@@ -215,11 +215,11 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 	/**
 	 * Get chached successfull participants of course
 	 *
-	 * @param ilCourseUtils 	$crs_utils
+	 * @param gevCourseUtils 	$crs_utils
 	 *
 	 * @return int[]
 	 */
-	protected function getSuccessfullParticipants(ilCourseUtils $crs_utils) {
+	protected function getSuccessfullParticipants(gevCourseUtils $crs_utils) {
 		if($this->success_user === nulll) {
 			$this->success_user = $crs_utils->getSuccessfullParticipants();
 		}
