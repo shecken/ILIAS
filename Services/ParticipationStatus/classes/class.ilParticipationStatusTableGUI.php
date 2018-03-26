@@ -206,8 +206,6 @@ class ilParticipationStatusTableGUI extends ilTable2GUI
 			$this->tpl->setVariable("WBD_TIME_SELECT",$si->render());
 			// cat-gev-patch end
 
-			$this->tpl->setVariable("PMAX", strlen($this->helper->getMaxCreditPoints()));
-			
 			if(is_array($this->invalid["points"]) &&
 				in_array($a_set["id"], $this->invalid["points"]))
 			{
