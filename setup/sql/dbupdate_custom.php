@@ -180,3 +180,14 @@ if( !$ilDB->tableExists('copy_mappings') )
 	$ilDB->addPrimaryKey('copy_mappings', array('obj_id', 'source_id'));
 }
 ?>
+<#16>
+<?php
+	if ($ilDB->tableColumnExists("event_appointment", "days_offset"))
+	{
+		$ilDB->modifyTableColumn("event_appointment", "days_offset", array(
+			"type" => "integer",
+			"notnull" => false,
+			"length" => 4,
+			"default" => null));
+	}
+?>
