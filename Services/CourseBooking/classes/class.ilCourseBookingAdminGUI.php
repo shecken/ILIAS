@@ -500,20 +500,41 @@ class ilCourseBookingAdminGUI
 		$form->setFormAction($ilCtrl->getFormAction($this, "assignMembersFromOrgUnit"));
 		$form->setTitle($lng->txt("crsbook_admin_add_org_unit"));
 
-
 		require_once "Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php";
 		$ou_tree = ilObjOrgUnitTree::_getInstance();
+
+		$filter_ignore_import_id = function($orgu) {
+			$child_obj = new ilObjOrgUnit($orgu);
+			return in_array($child_obj->getImportId(), array("konzern_exit_user"));
+		};
 
 		$book_rcrsv = $ou_tree->getOrgusWhereUserHasPermissionForOperation("book_employees_rcrsv");
 		$book = $ou_tree->getOrgusWhereUserHasPermissionForOperation("book_employees");
 
+		// cat-gev-patch start
 		$ou_ids = array();
 		foreach ($ou_tree->getAllChildren(ilObjOrgUnit::getRootOrgRefId()) as $ou_ref_id) {
+			if($filter_ignore_import_id((int)$ou_ref_id)) {
+				continue;
+			}
+
 			if (in_array($ou_ref_id, $book) || in_array($ou_ref_id, $book_rcrsv)) {
 				$ou_ids[] = $ou_ref_id;
 			} else {
 				$parent = $ou_tree->getParent($ou_ref_id);
 				while ($parent) {
+					/** 
+					 * obj id 9 is a system folder object.
+					 * we have to ignore that as parent
+					 */
+					if($parent == 9) {
+						break;
+					}
+
+					if($filter_ignore_import_id((int)$parent)) {
+						break;
+					}
+
 					if (in_array($parent, $book_rcrsv)) {
 						$ou_ids[] = $ou_ref_id;
 						break;
@@ -522,6 +543,7 @@ class ilCourseBookingAdminGUI
 				}
 			}
 		}
+		// cat-gev-patch end
 
 		if (!sizeof($ou_ids)) {
 			//gev-patch start
