@@ -88,6 +88,9 @@ class ILIASBindings implements Wizard\ILIASBindings {
 		else if ($id == "overview_description") {
 			$id = $summary;
 		}
+		else if ($id == "confirm") {
+			$id = "create_course";
+		}
 		return $this->lng->txt($id);
 	}
 
