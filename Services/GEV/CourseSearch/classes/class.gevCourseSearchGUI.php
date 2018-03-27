@@ -199,7 +199,10 @@ class gevCourseSearchGUI {
 		if ($this->search_form !== null) {
 			return $this->search_form;
 		}
-		
+
+		$all = $this->gLng->txt("gev_crs_srch_all");
+
+		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 		require_once("Services/CaTUIComponents/classes/class.catPropertyFormGUI.php");
 		require_once("Services/Form/classes/class.ilFormSectionHeaderGUI.php");
 		require_once("Services/Form/classes/class.ilTextInputGUI.php");
@@ -210,17 +213,15 @@ class gevCourseSearchGUI {
 		require_once("Services/Calendar/classes/class.ilDate.php");
 		require_once("Services/Form/classes/class.ilGroupableSelectInputGUI.php");
 		require_once("Services/CaTUIComponents/classes/class.catTitleGUI.php");
-		
-
 
 		$form = new catPropertyFormGUI();
 		$form->setTemplate("tpl.gev_search_form.html", "Services/GEV/Desktop");
 		$this->gCtrl->setParameter($this, "active_tab", $this->active_tab);
 		$form->setFormAction($this->gCtrl->getFormAction($this));
 		$form->addCommandButton("search", $this->gLng->txt("search"));
-		
+
 		$form->setId('gevCourseSearchForm');
-		
+
 		global $tpl;
 		// http://www.jacklmoore.com/colorbox/
 		$tpl->addJavaScript("Services/CaTUIComponents/js/colorbox-master/jquery.colorbox-min.js");
@@ -231,27 +232,27 @@ class gevCourseSearchGUI {
 
 		$title = new ilTextInputGUI($this->gLng->txt("title"), "title");
 		$form->addItem($title);
-		
+
 		/*$type = new ilSelectInputGUI($this->gLng->txt("gev_course_type"), "type");
 		$type->setOptions(gevCourseUtils::getTypeOptions());
 		$form->addItem($type);*/
-		
+
 		$categorie = new ilGroupableSelectInputGUI($this->gLng->txt("gev_course_categorie_top"), "categorie");
 		$categorie->setGroups($this->crs_srch->getSortedCategoriesOptions());
 		$form->addItem($categorie);
-		
+
 		$target_group = new ilSelectInputGUI($this->gLng->txt("gev_target_group"), "target_group");
 		$target_group->setOptions(gevCourseUtils::getTargetGroupOptions());
 		$form->addItem($target_group);
 
 		$location = new ilSelectInputGUI($this->gLng->txt("udf_type_venueselect"), "location");
-		$location->setOptions(gevCourseUtils::getLocationOptions());
+		$location->setOptions(array($all => $all) + gevOrgUnitUtils::getVenueNames());
 		$form->addItem($location);
-		
+
 		/*$provider = new ilSelectInputGUI($this->gLng->txt("udf_type_providerselect"), "provider");
 		$provider->setOptions(gevCourseUtils::getProviderOptions());
 		$form->addItem($provider);*/
-		
+
 		$period = new ilDateDurationInputGUI($this->gLng->txt("time_segment"), "period");
 		$now = new ilDate(date("Y-m-d"), IL_CAL_DATE);
 		$period->setStart($now);
