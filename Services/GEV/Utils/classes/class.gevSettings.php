@@ -374,7 +374,6 @@ class gevSettings
 	const SRTF_SOZIAL_COMP = "Soziale Kompetenz";
 	const SRTF_PERSONAL_COMP = "Persönliche Kompetenz";
 	const SRTF_METHODS_COMP = "Methodenkompetenz";
-	const SRTF_PC_IT_COMP_AD = "PC- / IT-Kompetenz (AD)";
 	const SRTF_PC_IT_COMP_ID = "PC- / IT-Kompetenz (ID)";
 	const SRTF_SPEAK_COMP = "Sprachkompetenz";
 	const SRTF_IMPULS = "Impulsvorträge";
@@ -390,7 +389,6 @@ class gevSettings
 		self::SRTF_SOZIAL_COMP => self::SRTF_SOZIAL_COMP,
 		self::SRTF_PERSONAL_COMP => self::SRTF_PERSONAL_COMP,
 		self::SRTF_METHODS_COMP => self::SRTF_METHODS_COMP,
-		self::SRTF_PC_IT_COMP_AD => self::SRTF_PC_IT_COMP_AD,
 		self::SRTF_PC_IT_COMP_ID => self::SRTF_PC_IT_COMP_ID,
 		self::SRTF_SPEAK_COMP => self::SRTF_SPEAK_COMP,
 		self::SRTF_IMPULS => self::SRTF_IMPULS
