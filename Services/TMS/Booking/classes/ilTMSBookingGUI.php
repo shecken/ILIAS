@@ -70,10 +70,15 @@ abstract class ilTMSBookingGUI {
 
 	public function executeCommand() {
 		assert('is_numeric($_GET["crs_ref_id"])');
-		assert('is_numeric($_GET["usr_id"])');
+		assert('is_numeric($_GET["usr_id"]) || !in_array("usr_id", $_GET)');
 
 		$crs_ref_id = (int)$_GET["crs_ref_id"];
-		$usr_id = (int)$_GET["usr_id"];
+		if(in_array("usr_id", $_GET)) {
+			$usr_id = (int)$_GET["usr_id"];
+		} else {
+			global $DIC;
+			$usr_id = (int)$DIC->user()->getId();
+		}
 
 		$ilias_bindings = new Booking\ILIASBindings
 			( $this->g_lng
@@ -139,8 +144,13 @@ abstract class ilTMSBookingGUI {
 	 * @return string
 	 */
 	protected function getPlayerTitle() {
-		assert('is_numeric($_GET["usr_id"])');
-		$usr_id = (int)$_GET["usr_id"];
+		assert('is_numeric($_GET["usr_id"]) || !in_array("usr_id", $_GET)');
+		if(in_array("usr_id", $_GET)) {
+			$usr_id = (int)$_GET["usr_id"];
+		} else {
+			global $DIC;
+			$usr_id = $DIC->user()->getId();
+		}
 
 		if($usr_id === (int)$this->g_user->getId()) {
 			return $this->g_lng->txt("booking");
@@ -169,7 +179,7 @@ abstract class ilTMSBookingGUI {
 	}
 
 	/**
-	 * Get the component class this GUI processes as steps. 
+	 * Get the component class this GUI processes as steps.
 	 *
 	 * @return	string
 	 */
