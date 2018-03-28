@@ -31,6 +31,9 @@ class Process {
 	 * @return Request
 	 */
 	public function run(Request $request) {
+		$new_global_ilUser = new \ilObjUser($request->getUserId());
+		$old_global_ilUser = $this->overwriteGlobalILUser($new_global_ilUser);
+
 		// TODO: get this from somewhere
 		$client_id = "tms52";
 
@@ -50,8 +53,7 @@ class Process {
 			$request->getCourseRefId(),
 			$this->getCopyWizardOptions($request),
 			false,
-			1,
-			true
+			1
 			// TODO: maybe reintroduce user parameter again? what was it good for?
 			// TODO: maybe reintroduce timeout param to this method again
 		);
@@ -64,7 +66,8 @@ class Process {
 		$this->adjustCourseTitle($request);
 		$this->setCourseOnline($request);
 		$this->configureCopiedObjects($request);
-		$this->setAdministrator($request);
+
+		$this->overwriteGlobalILUser($old_global_ilUser);
 
 		return $request;
 	}
@@ -142,18 +145,6 @@ class Process {
 	}
 
 	/**
-	 * Make the creating user the administrator.
-	 *
-	 * @param	Request $request
-	 * @return	null
-	 */
-	protected function setAdministrator(Request $request) {
-		$crs_ref_id = $request->getTargetRefId();
-		$crs = $this->getObjectByRefId($crs_ref_id);
-		$crs->getMemberObject()->add($request->getUserId(), IL_CRS_ADMIN);
-	}
-
-	/**
 	 * Get copy mappings for ref_ids, where target => source.
 	 *
 	 * @param	int[]	$ref_ids
@@ -185,6 +176,23 @@ class Process {
 		$object = \ilObjectFactory::getInstanceByRefId($ref_id);
 		assert('$object instanceof \ilObject');
 		return $object;
+	}
+
+	/**
+	 * Here be dragons.
+	 *
+	 * @param 	\ilObjUser	$new_global_ilUser
+	 * @return	\ilObjUser	old_global_ilUser
+	 */
+	protected function overwriteGlobalILUser($new_global_ilUser) {
+		// Don't try this at home or at all
+		global $DIC;
+		global $ilUser;
+		$old_global_ilUser = $DIC->user();
+		$ilUser = $new_global_ilUser;
+		$DIC->offsetUnset("ilUser");
+		$DIC["ilUser"] = $new_global_ilUser;
+		return $old_global_ilUser;
 	}
 }
 
