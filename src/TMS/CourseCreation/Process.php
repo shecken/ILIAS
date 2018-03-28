@@ -163,7 +163,7 @@ class Process {
 	 */
 	protected function cloneAllObject(Request $request)
 	{
-		global $ilLog, $ilAccess,$ilErr,$rbacsystem,$tree;
+		global $ilLog, $ilAccess,$ilErr,$rbacsystem;
 
 		include_once('./Services/Link/classes/class.ilLink.php');
 		include_once('Services/CopyWizard/classes/class.ilCopyWizardOptions.php');
