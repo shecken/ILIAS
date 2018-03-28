@@ -42,6 +42,8 @@ class Process {
 		$this->setCourseOnline($request);
 		$this->configureCopiedObjects($request);
 
+		\ilSession::destroy($request->getSessionId());
+
 		return $request;
 	}
 
