@@ -16096,3 +16096,4 @@ tms#:#placeholder_desc_current_user_email#:#Aktueller Benutzer, E-Mail
 tms#:#oclock#:#Uhr
 tms#:#create_course#:#Training anlegen
 tms#:#placeholder_desc_crs_booking_link#:#Link zur Kursbuchung
+tms#:#course_creation_message#:#Derzeit wird das Training %s für sie angelegt.
