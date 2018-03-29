@@ -26,6 +26,14 @@ interface RequestBuilder {
 	public function setCourseRefId($crs_ref_id);
 
 	/**
+	 * Set the parent for the new course.
+	 *
+	 * @var	int		$new_parent_ref_id
+	 * @return	self
+	 */
+	public function setNewParentRefId($new_parent_ref_id);
+
+	/**
 	 * Get the request object requested as of given timestamp.
 	 *
 	 * @var	\DateTime	$requested_ts
