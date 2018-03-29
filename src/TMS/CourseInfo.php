@@ -25,6 +25,7 @@ interface CourseInfo extends Component {
 	const CONTEXT_IDD_RELEVANT = 18;
 	const CONTEXT_XETR_TIME_INFO = 19;
 	const CONTEXT_GENERAL_BOOKING_LINK = 20;
+	const CONTEXT_XCCL_TOPICS = 21;
 
 	/**
 	 * Get a label for this step in the process.
