@@ -619,7 +619,8 @@ class ilObjSession extends ilObject
 	 * @return void
 	 */
 	protected function updateFromAgenda() {
-		$event_items = (new ilEventItems($this->getId()))->getItems();
+		include_once('./Modules/Session/classes/class.ilEventItems.php');
+		$event_items = (new \ilEventItems($this->getId()))->getItems();
 		foreach ($event_items as $event_item) {
 			if(\ilObject::_lookupType($event_item, true) == "xage") {
 				$agenda = ilObjectFactory::getInstanceByRefId($event_item);
