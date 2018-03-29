@@ -41,6 +41,7 @@ class Process {
 		$this->adjustCourseTitle($request);
 		$this->setCourseOnline($request);
 		$this->configureCopiedObjects($request);
+		$this->setOwner($request);
 
 		\ilSession::_destroy($request->getSessionId());
 
@@ -117,6 +118,32 @@ class Process {
 				$object->afterCourseCreation($config);
 			}
 		}
+	}
+
+	/**
+	 * Make sure the owner of template is owner of created course
+	 *
+	 * @param Request 	$request
+	 *
+	 * @return void
+	 */
+	protected function setOwner(Request $request) {
+		global $DIC;
+		$log = $DIC->logger()->root();
+		$target_crs_ref_id = $request->getTargetRefId();
+		$target_crs = $this->getObjectByRefId($target_crs_ref_id);
+		$target_crs_obj_id = $target_crs->getId();
+
+		$tpl_crs_ref_id = $request->getCourseRefId();
+		$tpl_crs = $this->getObjectByRefId($tpl_crs_ref_id);
+
+		$tpl_owner = $tpl_crs->getOwner();
+
+		// ilObject::update() doesn't change the owner of an object
+		$where = array("obj_id" => array("integer", $target_crs_obj_id));
+		$values = array("owner" => array("integer", $tpl_owner));
+
+		$this->db->update("object_data", $values, $where);
 	}
 
 	/**
