@@ -80,6 +80,8 @@ abstract class ilTMSBookingGUI {
 			$usr_id = (int)$DIC->user()->getId();
 		}
 
+		$this->setParameter($crs_ref_id, $usr_id);
+
 		$ilias_bindings = new Booking\ILIASBindings
 			( $this->g_lng
 			, $this->g_ctrl
@@ -116,7 +118,6 @@ abstract class ilTMSBookingGUI {
 			, $state_db
 			);
 
-		$this->setParameter($crs_ref_id, $usr_id);
 		$this->g_ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
 
 		$cmd = $this->g_ctrl->getCmd("start");
