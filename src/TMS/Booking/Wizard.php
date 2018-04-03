@@ -48,8 +48,8 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	/**
 	 * @param	string $wizard_id
 	 * @param	\ArrayAccess|array $dic
-	 * @param	string	$component_class	the user that performs the wizard 
-	 * @param	int	$acting_user_id			the user that performs the wizard 
+	 * @param	string	$component_class	the user that performs the wizard
+	 * @param	int	$acting_user_id			the user that performs the wizard
 	 * @param	int	$crs_ref_id 			course that should get booked
 	 * @param	int	$target_user_id			the user the booking is made for
 	 */
@@ -116,7 +116,7 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	protected function getSortedSteps() {
 		$steps = $this->getApplicableSteps();
 		if (count($steps) === 0) {
-			throw new \LogicException("No booking steps defined.");
+			return $steps;
 		}
 		usort($steps, function (Step $a, Step $b) {
 			if ($a->getPriority() < $b->getPriority()) {
@@ -155,4 +155,4 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	public function finish() {
 		// Nothing to do here...
 	}
-} 
+}
