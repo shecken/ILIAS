@@ -22,7 +22,7 @@ class Player {
 	const COMMAND_SAVE = "save";
 
 	/**
-	 * @var Wizard	
+	 * @var Wizard
 	 */
 	protected $wizard;
 
@@ -90,6 +90,12 @@ class Player {
 	protected function runStep(State $state, array $post = null, $next_when_ok = true) {
 		$steps = $this->wizard->getSteps();
 
+		if(count($steps) === 0) {
+			require_once "./Services/Utilities/classes/class.ilUtil.php";
+			\ilUtil::sendInfo($this->ilias_bindings->txt("no_steps_available"));
+			return '';
+		}
+
 		if ($content = $this->maybeRunOverview($state, count($steps))) {
 			assert('is_null($post)');
 			return $content;
@@ -132,14 +138,14 @@ class Player {
 
 	/**
 	 * Process user input, if there is any.
-	 * 
+	 *
 	 * @param	State	$state
 	 * @param	int		$step_number
 	 * @param	Step	$step
 	 * @param	\ilPropertyFormGUI	$form
 	 * @param	array|null	$post
 	 * @param	bool	$next_when_ok   advance to next step when current step is ok.
-	 * @return	null|string	returns null if input was processed 
+	 * @return	null|string	returns null if input was processed
 	 */
 	public function maybeProcessUserInput(State $state, $step_number, Step $step, \ilPropertyFormGUI $form, $post, $next_when_ok) {
 		assert('is_int($step_number)');
@@ -284,4 +290,4 @@ class Player {
 		}
 		return new State($this->wizard->getId(), self::START_WITH_STEP);
 	}
-} 
+}
