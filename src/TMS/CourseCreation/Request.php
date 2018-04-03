@@ -29,6 +29,11 @@ class Request {
 	protected $crs_ref_id;
 
 	/**
+	 * @var	int
+	 */
+	protected $new_parent_ref_id;
+
+	/**
 	 * @var array<int,int>
 	 */
 	protected $copy_options;
@@ -64,6 +69,7 @@ class Request {
 			$user_id,
 			$session_id,
 			$crs_ref_id,
+			$new_parent_ref_id,
 			array $copy_options,
 			array $configuration,
 			\DateTime $requested_ts,
@@ -74,11 +80,13 @@ class Request {
 		assert('is_int($user_id)');
 		assert('is_string($session_id)');
 		assert('is_int($crs_ref_id)');
+		assert('is_int($new_parent_ref_id)');
 		assert('is_int($target_ref_id) || is_null($target_ref_id)');
 		$this->id = $id;
 		$this->user_id = $user_id;
 		$this->session_id = $session_id;
 		$this->crs_ref_id = $crs_ref_id;
+		$this->new_parent_ref_id = $new_parent_ref_id;
 		$this->copy_options = $copy_options;
 		foreach ($this->copy_options as $k => $v) {
 			assert('is_int($k)');
@@ -120,6 +128,13 @@ class Request {
 	 */
 	public function getCourseRefId() {
 		return $this->crs_ref_id;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getNewParentRefId() {
+		return $this->new_parent_ref_id;
 	}
 
 	/**

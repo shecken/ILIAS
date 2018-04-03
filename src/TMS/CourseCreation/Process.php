@@ -217,7 +217,7 @@ class Process {
 		$session_id = $request->getSessionId();
 		$client_id = CLIENT_ID;
 		$new_type = "crs";
-		$ref_id = $this->tree->getParentId($request->getCourseRefId());
+		$ref_id = $request->getNewParentRefId();
 		$clone_source = $request->getCourseRefId();
 		$options = $this->getCopyWizardOptions($request);
 		$a_submode = 1;

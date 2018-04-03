@@ -12,10 +12,11 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 		$this->user_id = 43;
 		$this->session_id = "SESSION_ID";
 		$this->crs_ref_id = 1337;
+		$this->new_parent_ref_id = 2342;
 		$this->request_ts = new \DateTime("1985-04-05 13:37");
 		$this->target_ref_id = 4242;
 		$this->finished_ts = new \DateTime("now");
-		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], [], $this->request_ts, $this->target_ref_id, $this->finished_ts);
+		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $this->new_parent_ref_id, [], [], $this->request_ts, $this->target_ref_id, $this->finished_ts);
 	}
 
 	public function test_getId() {
@@ -42,8 +43,12 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->target_ref_id, $this->request->getTargetRefId());
 	}
 
+	public function test_getNewParentRefId() {
+		$this->assertEquals($this->new_parent_ref_id, $this->request->getNewParentRefId());
+	}
+
 	public function test_targetRefId_is_nullable() {
-		$request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], [], $this->request_ts, null, null);
+		$request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $this->new_parent_ref_id, [], [], $this->request_ts, null, null);
 		$this->assertEquals(null, $request->getTargetRefId());
 	}
 
@@ -71,7 +76,7 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 	}
 
 	public function test_finishedTS_is_nullable() {
-		$request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], [], $this->request_ts, null);
+		$request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $this->new_parent_ref_id, [], [], $this->request_ts, null);
 		$this->assertEquals(null, $request->getFinishedTS());
 	}
 
@@ -81,7 +86,7 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 			, 456 => 3
 			];
 
-		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $options, [], $this->request_ts, $this->target_ref_id, $this->finished_ts);
+		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $this->new_parent_ref_id, $options, [], $this->request_ts, $this->target_ref_id, $this->finished_ts);
 
 		$this->assertEquals(2, $this->request->getCopyOptionFor(123));
 		$this->assertEquals(3, $this->request->getCopyOptionFor(456));
@@ -96,7 +101,7 @@ class TMS_CourseCreation_RequestTest extends PHPUnit_Framework_TestCase {
 			, 456 => [$obj2]
 			];
 
-		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, [], $configuration, $this->request_ts, $this->target_ref_id, $this->finished_ts);
+		$this->request = new CourseCreation\Request($this->id, $this->user_id, $this->session_id, $this->crs_ref_id, $this->new_parent_ref_id, [], $configuration, $this->request_ts, $this->target_ref_id, $this->finished_ts);
 
 		$this->assertSame([$obj1], $this->request->getConfigurationFor(123));
 		$this->assertSame([$obj2], $this->request->getConfigurationFor(456));
