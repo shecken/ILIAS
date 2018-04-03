@@ -90,7 +90,7 @@ class Player {
 	protected function runStep(State $state, array $post = null, $next_when_ok = true) {
 		$steps = $this->wizard->getSteps();
 
-		if(count($steps === 0)) {
+		if(count($steps) === 0) {
 			require_once "./Services/Utilities/classes/class.ilUtil.php";
 			\ilUtil::sendInfo($this->ilias_bindings->txt("no_steps_available"));
 			return '';
