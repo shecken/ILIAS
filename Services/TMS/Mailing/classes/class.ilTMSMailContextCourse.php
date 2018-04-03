@@ -1,5 +1,8 @@
 <?php
 use ILIAS\TMS\Mailing;
+use ILIAS\TMS\CourseInfoHelper;
+use \ILIAS\TMS\CourseInfo;
+use CaT\Ente\ILIAS\ilHandlerObjectHelper;
 
 /* Copyright (c) 2017 Nils Haagen <nils.haagen@concepts-and-training.de> */
 
@@ -7,6 +10,10 @@ use ILIAS\TMS\Mailing;
  * Course-related placeholder-values
  */
 class ilTMSMailContextCourse implements Mailing\MailContext {
+
+	use CourseInfoHelper;
+	use ilHandlerObjectHelper;
+
 	private static $PLACEHOLDER = array(
 		'COURSE_TITLE' => 'placeholder_desc_crs_title',
 		'COURSE_LINK' => 'placeholder_desc_crs_link',
@@ -20,7 +27,8 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		'OFFICE_MAIL' => 'placeholder_desc_crs_admin_mail',
 		'VENUE' => 'placeholder_desc_crs_venue',
 		'VENUE_NAME' => 'placeholder_desc_crs_venuename',
-		'TRAINING_PROVIDER' => 'placeholder_desc_crs_provider'
+		'TRAINING_PROVIDER' => 'placeholder_desc_crs_provider',
+		'BOOKING_LINK' => 'placeholder_desc_crs_booking_link'
 	);
 
 	/**
@@ -43,8 +51,22 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		$this->crs_ref_id = $crs_ref_id;
 
 		global $DIC;
-		$this->g_lang = $DIC->language();
+		$this->DIC = $DIC;
+		$this->g_lang = $this->DIC->language();
 		$this->g_lang->loadLanguageModule("tms");
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function getDIC() {
+		return $this->DIC;
+	}
+	/**
+	 * @inheritdoc
+	 */
+	public function getEntityRefId() {
+		return $this->crs_ref_id;
 	}
 
 	/**
@@ -78,6 +100,8 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 				return $this->crsVenueName();
 			case 'TRAINING_PROVIDER':
 				return $this->crsProvider();
+			case 'BOOKING_LINK':
+				return $this->crsBookingLink();
 			default:
 				return null;
 		}
@@ -131,7 +155,10 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		$sessions = $this->getSessionAppointments();
 		foreach ($sessions as $sortdat => $times) {
 			list($date, $start, $end) = $times;
-			$schedule[] = sprintf("%s, %s - %s", $date, $start, $end);
+			$schedule[] = sprintf("%s, %s - %s %s",
+				$date,
+				$start, $end, $this->g_lang->txt('oclock')
+			);
 		}
 		return implode('<br>', $schedule);
 	}
@@ -421,6 +448,21 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 			$admin_id = (int)$admins[0];
 			return new \ilObjUser($admin_id);
 		}
+		return null;
+	}
+
+	/**
+	 * Get url to course-booking (via ente).
+	 *
+	 * @return string | null
+	 */
+	protected function crsBookingLink() {
+		$course_info = $this->getCourseInfo(CourseInfo::CONTEXT_GENERAL_BOOKING_LINK);
+		if(count($course_info) > 0) {
+			$course_info = array_shift($course_info);
+			return $course_info->getValue();
+		}
+
 		return null;
 	}
 

@@ -25,6 +25,9 @@ class ilTMSSuperiorBookingGUI extends \ilTMSBookingGUI {
 	 * @inheritdocs
 	 */
 	protected function setParameter($crs_ref_id, $usr_id) {
+		assert('is_int($crs_ref_id) || is_null($crs_ref_id)');
+		assert('is_int($usr_id) || is_null($usr_id)');
+
 		$this->g_ctrl->setParameterByClass("ilTMSSuperiorBookingGUI", "crs_ref_id", $crs_ref_id);
 		$this->g_ctrl->setParameterByClass("ilTMSSuperiorBookingGUI", "usr_id", $usr_id);
 	}

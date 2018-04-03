@@ -16093,3 +16093,10 @@ tms#:#placeholder_desc_current_user_firstName#:#Aktueller Benutzer, Vorname
 tms#:#placeholder_desc_current_user_lastName#:#Aktueller Benutzer, Nachname
 tms#:#placeholder_desc_current_user_login#:#Aktueller Benutzer, Login
 tms#:#placeholder_desc_current_user_email#:#Aktueller Benutzer, E-Mail
+tms#:#oclock#:#Uhr
+tms#:#create_course#:#Training anlegen
+tms#:#placeholder_desc_crs_booking_link#:#Link zur Kursbuchung
+tms#:#course_creation_message#:#Derzeit wird das Training "%s" für Sie angelegt.
+search#:#search_for_orgu_members#:#Nach Organisationseinheiten suchen
+search#:#search_for_orgu_members_orgu#:#Organisationseinheit
+search#:#search_for_orgu_members_recursive#:#Darunterliegende einbeziehen?
