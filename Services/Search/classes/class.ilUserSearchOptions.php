@@ -101,29 +101,29 @@ class ilUserSearchOptions
 			switch($field)
 			{
 				case 'login':
-				case 'firstname':	
-				case 'lastname':	
-				case 'email':	
+				case 'firstname':
+				case 'lastname':
+				case 'email':
 					$fields[$counter]['autoComplete'] = true;
 					break;
-				
+
 				case 'title':
 					$fields[$counter]['lang'] = $lng->txt('person_title');
 					break;
-				
+
 				// SELECTS
-				
+
 				case 'gender':
 					$fields[$counter]['type'] = FIELD_TYPE_SELECT;
 					$fields[$counter]['values'] = array(0 => $lng->txt('please_choose'),
 													'f' => $lng->txt('gender_f'),
-													'm' => $lng->txt('gender_m'));					
+													'm' => $lng->txt('gender_m'));
 					break;
-				
+
 				case 'sel_country':
-					$fields[$counter]['type'] = FIELD_TYPE_SELECT;										
+					$fields[$counter]['type'] = FIELD_TYPE_SELECT;
 					$fields[$counter]['values'] = array(0 => $lng->txt('please_choose'));
-					
+
 					// #7843 -- see ilCountrySelectInputGUI
 					$lng->loadLanguageModule('meta');
 					include_once('./Services/Utilities/classes/class.ilCountry.php');
@@ -131,9 +131,9 @@ class ilUserSearchOptions
 					{
 						$fields[$counter]['values'][$c] = $lng->txt('meta_c_'.$c);
 					}
-					asort($fields[$counter]['values']);					
+					asort($fields[$counter]['values']);
 					break;
-					
+
 				case 'org_units':
 					$fields[$counter]['type'] = FIELD_TYPE_SELECT;
 
@@ -151,11 +151,11 @@ class ilUserSearchOptions
 					{
 						$options[$org_ref_id] = $path;
 					}
-					
+
 					$fields[$counter]['values'] = $options;
 					break;
-						
-					
+
+
 				// begin-patch lok
 				case 'interests_general':
 				case 'interests_help_offered':
@@ -163,21 +163,21 @@ class ilUserSearchOptions
 					$fields[$counter]['type'] = FIELD_TYPE_MULTI;
 					break;
 				// end-patch lok
-					
-					
-					
-										
+
+
+
+
 				/*
 				case 'active':
 					$fields[$counter]['type'] = FIELD_TYPE_SELECT;
 					$fields[$counter]['values'] = array(-1 => $lng->txt('please_choose'),
 													'1' => $lng->txt('active'),
 													'0' => $lng->txt('inactive'));
-					
+
 					break;
-				*/				
+				*/
 			}
-			
+
 			++$counter;
 		}
 		 $fields = ilUserSearchOptions::__appendUserDefinedFields($fields,$counter);
@@ -209,7 +209,7 @@ class ilUserSearchOptions
 					 'interests_help_looking'
 		);
 		// end-patch lok
-			
+
 	}
 
 	public static function _isSearchable($a_key)
@@ -243,7 +243,7 @@ class ilUserSearchOptions
 		include_once './Services/User/classes/class.ilUserDefinedFields.php';
 
 		$user_defined_fields = ilUserDefinedFields::_getInstance();
-		
+
 		foreach($user_defined_fields->getSearchableDefinitions() as $definition)
 		{
 			$fields[$counter]['values'] = ilUserSearchOptions::__prepareValues($definition['field_values']);
@@ -276,5 +276,20 @@ class ilUserSearchOptions
 		}
 		return $new_values ? $new_values : array();
 	}
+
+	//cat-tms-patch start
+	public static function getOrgusAsOption() {
+		include_once './Modules/OrgUnit/classes/class.ilObjOrgUnit.php';
+		include_once './Modules/OrgUnit/classes/class.ilObjOrgUnitTree.php';
+
+		$root = ilObjOrgUnit::getRootOrgRefId();
+		$tree = ilObjOrgUnitTree::_getInstance();
+		$nodes = $tree->getAllChildren($root);
+		$options = $tree->getTitles($nodes);
+		unset($options[$root]);
+		return $options;
+	}
+	//cat-tms-patch end
+
 }
 ?>
