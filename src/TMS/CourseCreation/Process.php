@@ -10,6 +10,13 @@ namespace ILIAS\TMS\CourseCreation;
 class Process {
 	const WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S = 2;
 	const SOAP_TIMEOUT = 30;
+	const EDU_TRACKING = "xetr";
+	const COURSE_CLASSIFICATION = "xccl";
+
+	private static $RUN_AT_LAST = array(
+		self::EDU_TRACKING,
+		self::COURSE_CLASSIFICATION
+	);
 
 	/**
 	 * @var	\ilTree
@@ -106,6 +113,7 @@ class Process {
 			[$target_ref_id],
 			$this->tree->getSubTreeIds($target_ref_id)
 		);
+		$last = array();
 		$mappings = $this->getCopyMappings($sub_nodes);
 		foreach ($sub_nodes as $sub) {
 			$configs = $request->getConfigurationFor($mappings[$sub]);
@@ -114,8 +122,19 @@ class Process {
 			}
 			$object = $this->getObjectByRefId((int)$sub);
 			assert('method_exists($object, "afterCourseCreation")');
+
+			if(in_array($object->getType(), self::$RUN_AT_LAST)) {
+				$last[] = array("object" => $object, "configs" => $configs);
+				continue;
+			}
+
 			foreach($configs as $config) {
 				$object->afterCourseCreation($config);
+			}
+		}
+		foreach($last as $obj) {
+			foreach($obj['configs'] as $config) {
+				$obj['object']->afterCourseCreation($config);
 			}
 		}
 	}
