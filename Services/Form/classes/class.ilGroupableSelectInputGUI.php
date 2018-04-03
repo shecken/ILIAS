@@ -15,6 +15,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 	protected $cust_attr = array();
 	protected $groups = array();
 	protected $value;
+	protected $length;
 	
 	/**
 	* Constructor
@@ -26,6 +27,7 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 	{
 		parent::__construct($a_title, $a_postvar);
 		$this->setType("select");
+		$this->length = 0;
 	}
 
 	/**
@@ -72,8 +74,29 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 	{
 		return $this->value;
 	}
-	
-	
+
+	/**
+	 * Get max text length.
+	 *
+	 * @return int
+	 */
+	public function getTextLength()
+	{
+		return $this->length;
+	}
+
+	/**
+	 * Set max text length.
+	 *
+	 * @param 	int 	$length
+	 * @return 	void
+	 */
+	public function setTextLength($length)
+	{
+		assert('is_int($length)');
+		$this->length = $length;
+	}
+
 	/**
 	* Set value by array
 	*
@@ -166,7 +189,11 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 			foreach($options as $value => $option_title) {
 				$tpl->setCurrentBlock("prop_select_option");
 				$tpl->setVariable("VAL_SELECT_OPTION", $value);
+				$tpl->setVariable("TXT_SELECT_OPTION_TITLE", $option_title);
 				$tpl->setVariable("TXT_SELECT_OPTION", $option_title);
+				if($this->getTextLength() > 0) {
+					$tpl->setVariable("TXT_SELECT_OPTION", $this->getAdjustTitle($option_title));
+				}
 				if((string) $value == (string) $this->getValue())
 				{
 					$tpl->setVariable("CHK_SEL_OPTION", 'selected="selected"');
@@ -180,6 +207,21 @@ class ilGroupableSelectInputGUI extends ilSubEnabledFormPropertyGUI
 		}
 
 		return $tpl->get();
+	}
+
+	/**
+	 * Get a title adjust by length property.
+	 *
+	 * @param 	string 	$title
+	 * @return 	string
+	 */
+	private function getAdjustTitle($title)
+	{
+		assert('is_string($title)');
+		if(strlen($title) >= $this->length) {
+			return substr($title, 0, $this->getTextLength())."...";
+		}
+		return $title;
 	}
 	
 	/**
