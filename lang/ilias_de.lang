@@ -16100,3 +16100,4 @@ tms#:#course_creation_message#:#Derzeit wird das Training "%s" für Sie angelegt
 search#:#search_for_orgu_members#:#Nach Organisationseinheiten suchen
 search#:#search_for_orgu_members_orgu#:#Organisationseinheit
 search#:#search_for_orgu_members_recursive#:#Darunterliegende einbeziehen?
+tms#:#booking_not_available#:#Der Kurs ist nicht buchbar.
