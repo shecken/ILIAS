@@ -25,10 +25,11 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 	{
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $ilCtrl, $lng, $ilAccess;
+		global $DIC;
 
-		$this->gLng = $lng;
-		$this->gCtrl = $ilCtrl;
+		$this->gLng = $DIC->language();
+		$this->gCtrl = $DIC->ctrl();
+		$this->gUser = $DIC->user();
 
 		$user_util = gevUserUtils::getInstance($a_user_id);
 
@@ -38,7 +39,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->setTitle("gev_my_courses");
 		$this->setSubtitle("gev_my_courses_desc");
 		$this->setImage("GEV_img/ico-head-my-training-deployments.png");
-		$this->setFormAction($ilCtrl->getFormAction($a_parent_obj, "view"));
+		$this->setFormAction($this->gCtrl->getFormAction($a_parent_obj, "view"));
 
 		$data = $user_util->getBookedAndWaitingCourseInformation();
 
