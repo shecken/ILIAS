@@ -47,6 +47,9 @@ class Process {
 
 		$this->adjustCourseTitle($request);
 		$this->setCourseOnline($request);
+
+		sleep(self::WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S);
+
 		$this->configureCopiedObjects($request);
 		$this->setOwner($request);
 
