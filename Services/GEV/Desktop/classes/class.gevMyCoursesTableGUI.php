@@ -184,10 +184,30 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->tpl->setVariable("CONTENTS", $a_set["content"]);
 		$this->tpl->setVariable("CRS_LINK", gevCourseUtils::getLinkTo($a_set["obj_id"]));
 
-		$tutors = $crs_utils->getTrainers(true);
-		$tutors = implode("; ", $tutors);
+		require_once("Services/Link/classes/class.ilLink.php");
+		$tutor_ids = $crs_utils->getTrainers();
 
-		$this->tpl->setVariable("TUTORS", $tutors);
+		$cnt = 0;
+		foreach ($tutor_ids as $tutor_id) {
+			$fullname = $this->gUser->_lookupFullname($tutor_id);
+			$user_utils = gevUserUtils::getInstance($tutor_id);
+			$trainer_profile = $user_utils->getTrainerprofile();
+			if($cnt > 0) {
+				$fullname = ", ".$fullname;
+			}
+			if($trainer_profile == "" || is_null($trainer_profile)) {
+				$this->tpl->setCurrentBlock("tutors");
+				$this->tpl->setVariable("TUTOR", $fullname);
+				$this->tpl->parseCurrentBlock();
+			} else {
+				$link = ilLink::_getStaticLink($trainer_profile,'file',true, "download");
+				$this->tpl->setCurrentBlock("tutorslink");
+				$this->tpl->setVariable("TUTOR_WITH_LINK", $fullname);
+				$this->tpl->setVariable("TUTOR_LINK", $link);
+				$this->tpl->parseCurrentBlock();
+			}
+			$cnt++;
+		}
 
 		if ($a_set["overnights"]) {
 			$this->tpl->setCurrentBlock("overnights");
