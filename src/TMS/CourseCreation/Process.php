@@ -8,7 +8,7 @@ namespace ILIAS\TMS\CourseCreation;
  * Creates courses based on templates.
  */
 class Process {
-	const WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S = 2;
+	const WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S = 5;
 	const SOAP_TIMEOUT = 30;
 	const EDU_TRACKING = "xetr";
 	const COURSE_CLASSIFICATION = "xccl";
@@ -49,6 +49,8 @@ class Process {
 		$this->setCourseOnline($request);
 		$this->configureCopiedObjects($request);
 		$this->setOwner($request);
+
+		sleep(self::WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S);
 
 		\ilSession::_destroy($request->getSessionId());
 
