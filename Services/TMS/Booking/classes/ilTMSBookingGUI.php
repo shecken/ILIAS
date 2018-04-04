@@ -73,7 +73,7 @@ abstract class ilTMSBookingGUI {
 		assert('is_numeric($_GET["usr_id"]) || !in_array("usr_id", $_GET)');
 
 		$crs_ref_id = (int)$_GET["crs_ref_id"];
-		if(in_array("usr_id", $_GET)) {
+		if(array_key_exists("usr_id", $_GET)) {
 			$usr_id = (int)$_GET["usr_id"];
 		} else {
 			global $DIC;
