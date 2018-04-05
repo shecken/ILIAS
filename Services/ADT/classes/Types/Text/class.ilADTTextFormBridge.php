@@ -46,6 +46,16 @@ class ilADTTextFormBridge extends ilADTFormBridge
 		return ($a_adt instanceof ilADTText);
 	}
 	
+	public function setMultiValues($multi_vals)
+	{
+		$this->multi_vals = $multi_vals;
+	}
+
+	public function getMultiValues()
+	{
+		return $this->multi_vals;
+	}
+
 	public function addToForm()
 	{		
 		$def = $this->getADT()->getCopyOfDefinition();
@@ -53,7 +63,11 @@ class ilADTTextFormBridge extends ilADTFormBridge
 		if(!$this->isMulti())
 		{
 			$text = new ilTextInputGUI($this->getTitle(), $this->getElementId());
-						
+
+			if($this->getMultiValues()) {
+				$text->setMulti(true);
+			}
+
 			if($def->getMaxLength())
 			{
 				$max = $def->getMaxLength();
@@ -83,19 +97,44 @@ class ilADTTextFormBridge extends ilADTFormBridge
 		
 		$this->addBasicFieldProperties($text, $def);
 	
-		$text->setValue($this->getADT()->getText());	
-		
+
+		$value = $this->getADT()->getText();
+		if($this->getMultiValues()) {
+			if(!is_null($value)) {
+				$value = unserialize($value);
+				$text->setValue($value);
+			}
+		}
+
+		$text->setValue($value);
+
 		$this->addToParentElement($text);
 	}
 	
 	public function importFromPost()
 	{
+		$value = $this->getForm()->getInput($this->getElementId());
+		if($this->getMultiValues()) {
+			foreach ($value as $key => $item) {
+				if($item == "") {
+					unset($value[$key]);
+				}
+			}
+			if(!is_null($value)) {
+				$value = serialize($value);
+			}
+		}
 		// ilPropertyFormGUI::checkInput() is pre-requisite
-		$this->getADT()->setText($this->getForm()->getInput($this->getElementId()));
-	
+		$this->getADT()->setText($value);
+
 		$field = $this->getForm()->getItemByPostvar($this->getElementId());
-		$field->setValue($this->getADT()->getText());
-	}	
+		$value = $this->getADT()->getText();
+
+		if($this->getMultiValues()) {
+			$value = unserialize($value);
+		}
+		$field->setValue($value);
+	}
 }
 
 ?>
