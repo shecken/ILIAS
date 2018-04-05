@@ -203,6 +203,12 @@ class ilAdvancedMDRecordGUI
 				{
 					$element->setDisabled(true);
 				}
+				$settings = gevSettings::getInstance();
+				if($def->getFieldId() == $settings->getAMDFieldId(gevSettings::CRS_AMD_LINK_TARGET) ||
+				   $def->getFieldId() == $settings->getAMDFieldId(gevSettings::CRS_AMD_LINK_NAME)
+				) {
+					$element->setMultiValues(true);
+				}
 			}
 			
 			$adt_group_form->addToForm();			
