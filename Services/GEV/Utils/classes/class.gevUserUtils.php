@@ -1063,6 +1063,16 @@ class gevUserUtils
 		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_HPE, $a_hpe);
 	}
 
+	public function getTrainerprofile()
+	{
+		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_TRAINER_PROFILE);
+	}
+
+	public function setTrainerprofile($id)
+	{
+		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_TRAINER_PROFILE, $id);
+	}
+
 
 	public function getFormattedContactInfo()
 	{

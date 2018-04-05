@@ -275,6 +275,7 @@ class gevSettings
 	const USR_UDF_INACTIVE_START = 'usr_udf_inactive_start';
 	const USR_UDF_INACTIVE_END = 'usr_udf_inactive_end';
 	const USR_UDF_SUPERIOR_OF_USR = 'usr_udf_superior_of_usr';
+	const USR_UDF_TRAINER_PROFILE = 'usr_udf_trainer_profile';
 
 
 
@@ -364,6 +365,7 @@ class gevSettings
 		,'inaktiv von'
 		,'inaktiv bis'
 		,'Vorgesetzter'
+		,'Trainerprofil'
 	);
 
 	public static $LOCAL_USER_MANDATORY_UDF_FIELDS = array(
