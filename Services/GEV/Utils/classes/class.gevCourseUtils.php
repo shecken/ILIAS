@@ -1662,6 +1662,16 @@ class gevCourseUtils
 		$this->amd->setField($this->crs_id, gevSettings::CRS_AMD_TEP_ORGU, $a_tep_orgu);
 	}
 
+	public function getLinkNames()
+	{
+		return unserialize($this->amd->getField($this->crs_id, gevSettings::CRS_AMD_LINK_NAME));
+	}
+
+	public function getLinkTargets()
+	{
+		return unserialize($this->amd->getField($this->crs_id, gevSettings::CRS_AMD_LINK_TARGET));
+	}
+
 	// options for course search
 
 	public static function getTypeOptions()

@@ -222,6 +222,25 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 			$cnt++;
 		}
 
+		$link_names = $crs_utils->getLinkNames();
+		$link_targets = $crs_utils->getLinkTargets();
+
+		if(count($link_targets) != 0) {
+			$this->tpl->setVariable("LINK", "Links");
+			$result = array();
+			foreach($link_targets as $key => $target) {
+				$name = $target;
+				if(array_key_exists($key, $link_names)) {
+					$name = $link_names[$key];
+				}
+
+				$this->tpl->setCurrentBlock("links");
+				$this->tpl->setVariable("LINK_TARGET", $target);
+				$this->tpl->setVariable("LINK_NAME", $name);
+				$this->tpl->parseCurrentBlock();
+			}
+		}
+
 		$this->tpl->setVariable("FREE_PLACES", $unlimited
 											 ? $this->gLng->txt("gev_unlimited")
 											 : $a_set["free_places"]

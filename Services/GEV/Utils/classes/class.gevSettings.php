@@ -58,6 +58,12 @@ class gevSettings
 	// Organisatorisches
 	const CRS_AMD_ORGA				= "crs_amd_orga";
 
+	// Block Links
+	// Linkname
+	const CRS_AMD_LINK_NAME			= "crs_amd_link_name";
+	// Linkziel
+	const CRS_AMD_LINK_TARGET		= "crs_amd_link_target";
+
 	// Block Trainingsinhalte
 	// Trainingsthema
 	const CRS_AMD_TOPIC 			= "crs_amd_topic";
