@@ -915,3 +915,36 @@ $records = array(
 gevAMDUtils::createAMDRecords($records, array("crs"));
 
 ?>
+
+<#34>
+<?php
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+$options = array(
+	 "Fachwissen"
+	, "SUHK - Privatkunden"
+	, "SUHK - Firmenkunden"
+	, "Leben und Rente"
+	, "Betriebliche Altersvorsorge"
+	, "Kooperationspartner"
+	, "Vertrieb"
+	, "Akquise / Verkauf"
+	, "Beratungs- und Tarifierungstools"
+	, "Büromanagment"
+	, "Neue Medien"
+	, "Unternehmensführung"
+	, "Agenturmanagment"
+	, "Führung"
+	, "Persönlichkeit"
+	, "Erstausbildung"
+	, "Ausbilder"
+	, "Azubi"
+	, "Qualifizierungsprogramme"
+	, "Sprachtrainings"
+	, "GDS Werkstadt"
+);
+
+$amdutils = gevAMDUtils::getInstance();
+$amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_TOPIC, $options);
+
+?>
