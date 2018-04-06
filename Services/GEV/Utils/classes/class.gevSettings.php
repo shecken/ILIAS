@@ -388,7 +388,7 @@ class gevSettings
 	const SRTF_LEADERSHIP_SKILLS_PERS = "Führungskompetenz ID (Persönlichkeit)";
 	const SRTF_LEADERSHIP_SKILLS_TOOLS = "Führungskompetenz ID (Skills und Tools)";
 	const SRFT_LANGUAGE_TRAINING = "Sprachtrainings";
-	const SRFT_GDS_WORKSHOP = "GDS Werkstadt";
+	const SRFT_GDS_WORKSHOP = "GDS-Werkstatt";
 	const SRFT_ACCELERATING_TECHNICAL_EXCELLENCE = "Accelerating Technical Excellence (GATE)";
 	const SRFT_DEVELOPING_INSURANCE_CULTURE = "Developing Insurance Culture (GATE)";
 	const SRFT_SHAPING_THE_INDUSTRY = "Shaping the industry (GATE)";
