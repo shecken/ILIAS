@@ -108,6 +108,10 @@ class ILIASBindings implements Wizard\ILIASBindings {
 		else if ($id == "overview_description") {
 			return $this->overview_description;
 		}
+		else if ($id == "no_steps_available") {
+			$id = "booking_not_available";
+		}
+
 		return $this->lng->txt($id);
 	}
 

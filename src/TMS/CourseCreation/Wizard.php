@@ -160,7 +160,6 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 			$this->getUserId(),
 			$this->getSessionId()
 		);
-		$this->request_builder->setCourseRefId($this->getEntityRefId());
 		return array_map(function($s) {
 			$s->setRequestBuilder($this->request_builder);
 			return $s;
