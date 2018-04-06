@@ -941,7 +941,7 @@ $options = array(
 	, "Azubi"
 	, "Qualifizierungsprogramme"
 	, "Sprachtrainings"
-	, "GDS Werkstatt"
+	, "GDS Werkstadt"
 );
 
 $amdutils = gevAMDUtils::getInstance();
