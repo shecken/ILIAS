@@ -397,8 +397,8 @@ class gevSettings
 	const SRTF_TOP_TRAININGS = "Top-Trainings";
 	const SRTF_TOP_TRAININGS_LEAD = "Top-Trainings (Führung)";
 	const SRTF_TOPIC_SELECTION = "Themenauswahl";
-	const SRFT_FURTHER_SEMINAR_PROGRAMS = "Weitere Seminare";
-	const SRFT_GATE = "Gate";
+	const SRFT_FURTHER_SEMINAR_PROGRAMS = "Weitere Seminarprogramme";
+	const SRFT_GATE = "GATE";
 
 	public static $TOP_TRAININGS = array(
 		self::SRTF_SOZIAL_COMP => self::SRTF_SOZIAL_COMP,
