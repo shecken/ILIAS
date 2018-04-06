@@ -534,11 +534,11 @@ class gevCourseSearch {
 			$result[gevSettings::SRTF_TOP_TRAININGS_LEAD] = $ttl;
 		}
 		if(count($fsp) != 0) {
-			ksort($ttl);
+			ksort($fsp);
 			$result[gevSettings::SRFT_FURTHER_SEMINAR_PROGRAMS] = $fsp;
 		}
 		if(count($g) != 0) {
-			ksort($ttl);
+			ksort($g);
 			$result[gevSettings::SRFT_GATE] = $g;
 		}
 		$result[gevSettings::SRTF_TOPIC_SELECTION] = $all_categories;
