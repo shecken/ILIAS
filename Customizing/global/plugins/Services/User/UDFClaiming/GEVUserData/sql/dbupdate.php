@@ -841,3 +841,11 @@ gevUDFUtils::createUDFFields(array(
 	));
 
 ?>
+
+<#17>
+<?php
+
+require_once("Services/GEV/Utils/classes/class.gevUDFUtils.php");
+gevUDFUtils::renameUDFField(gevSettings::USR_UDF_TRAINER_PROFILE, "Trainersteckbrief ID");
+
+?>
