@@ -25,10 +25,11 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 	{
 		parent::__construct($a_parent_obj, $a_parent_cmd, $a_template_context);
 
-		global $ilCtrl, $lng, $ilAccess;
+		global $DIC;
 
-		$this->gLng = $lng;
-		$this->gCtrl = $ilCtrl;
+		$this->gLng = $DIC->language();
+		$this->gCtrl = $DIC->ctrl();
+		$this->gUser = $DIC->user();
 
 		$user_util = gevUserUtils::getInstance($a_user_id);
 
@@ -38,7 +39,7 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->setTitle("gev_my_courses");
 		$this->setSubtitle("gev_my_courses_desc");
 		$this->setImage("GEV_img/ico-head-my-training-deployments.png");
-		$this->setFormAction($ilCtrl->getFormAction($a_parent_obj, "view"));
+		$this->setFormAction($this->gCtrl->getFormAction($a_parent_obj, "view"));
 
 		$data = $user_util->getBookedAndWaitingCourseInformation();
 
@@ -184,10 +185,30 @@ class gevCoursesTableGUI extends catAccordionTableGUI
 		$this->tpl->setVariable("CONTENTS", $a_set["content"]);
 		$this->tpl->setVariable("CRS_LINK", gevCourseUtils::getLinkTo($a_set["obj_id"]));
 
-		$tutors = $crs_utils->getTrainers(true);
-		$tutors = implode("; ", $tutors);
+		require_once("Services/Link/classes/class.ilLink.php");
+		$tutor_ids = $crs_utils->getTrainers();
 
-		$this->tpl->setVariable("TUTORS", $tutors);
+		$cnt = 0;
+		foreach ($tutor_ids as $tutor_id) {
+			$fullname = $this->gUser->_lookupFullname($tutor_id);
+			$user_utils = gevUserUtils::getInstance($tutor_id);
+			$trainer_profile = $user_utils->getTrainerprofile();
+			if($cnt > 0) {
+				$fullname = ", ".$fullname;
+			}
+			if($trainer_profile == "" || is_null($trainer_profile)) {
+				$this->tpl->setCurrentBlock("tutors");
+				$this->tpl->setVariable("TUTOR", $fullname);
+				$this->tpl->parseCurrentBlock();
+			} else {
+				$link = ilLink::_getStaticLink($trainer_profile,'file',true, "download");
+				$this->tpl->setCurrentBlock("tutorslink");
+				$this->tpl->setVariable("TUTOR_WITH_LINK", $fullname);
+				$this->tpl->setVariable("TUTOR_LINK", $link);
+				$this->tpl->parseCurrentBlock();
+			}
+			$cnt++;
+		}
 
 		if ($a_set["overnights"]) {
 			$this->tpl->setCurrentBlock("overnights");

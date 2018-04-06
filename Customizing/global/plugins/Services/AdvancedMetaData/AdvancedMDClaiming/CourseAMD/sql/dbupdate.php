@@ -883,3 +883,35 @@ $options = array(
 
 $amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_ASTD_CATEGORY, $options);
 ?>
+
+<#33>
+<?php
+
+require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+
+$records = array(
+	"Links" => array(
+		null,
+		array(
+			"Linkname" => array(
+				gevSettings::CRS_AMD_LINK_NAME,
+				null,
+				false,
+				null,
+				ilAdvancedMDFieldDefinition::TYPE_TEXT
+			),
+			"Linkziel" => array(
+				gevSettings::CRS_AMD_LINK_TARGET,
+				null,
+				false,
+				null,
+				ilAdvancedMDFieldDefinition::TYPE_TEXT
+			)
+		)
+	)
+);
+gevAMDUtils::createAMDRecords($records, array("crs"));
+
+?>
