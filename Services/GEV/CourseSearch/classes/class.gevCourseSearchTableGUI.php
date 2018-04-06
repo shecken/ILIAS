@@ -225,7 +225,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		$link_names = $crs_utils->getLinkNames();
 		$link_targets = $crs_utils->getLinkTargets();
 
-		if(count($link_targets) != 0) {
+		if(count($link_targets) != 0 && $link_targets != false) {
 			$this->tpl->setVariable("LINK", "Links");
 			$result = array();
 			foreach($link_targets as $key => $target) {
