@@ -188,7 +188,7 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 					$tutors .= $fullname;
 				} else {
 					$link = ilLink::_getStaticLink($trainer_profile,'file',true, "download");
-					$tutors .= "<a href='".$link."'>".$fullname."</a>";
+					$tutors .= "<a href='".$link."' style='color: #729FCF; text-decoration: underline;'>".$fullname."</a>";
 				}
 				$cnt++;
 			}
