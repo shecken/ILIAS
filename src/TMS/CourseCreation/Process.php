@@ -271,7 +271,7 @@ class Process {
 	 *
 	 * @return bool
 	 */
-	protected function checkCloneFinished($copy_id) {
+	protected function waitForCloneFinished($copy_id) {
 		assert('is_int($copy_id)');
 		$time = time();
 
