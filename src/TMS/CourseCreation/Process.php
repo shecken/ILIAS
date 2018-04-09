@@ -258,10 +258,7 @@ class Process {
 			throw new \RuntimeException("Could not clone course via SOAP.");
 		}
 
-		$time = time();
-		while(!$this->checkCloneFinished($copy_id, $time)) {
-			sleep(self::WAIT_FOR_OBJ_CLONED_CHECK);
-		}
+		$this->waitForCloneFinished($copy_id);
 
 		return (int)$res;
 	}
@@ -270,22 +267,26 @@ class Process {
 	 * Checks the copy wizard has totaly finished
 	 *
 	 * @param int 	$copy_id
-	 * @param int 	$time 	Timestamp og beginning cloning check
 	 * @throws Exception 	If cloning passed a specific timespan
 	 *
 	 * @return bool
 	 */
-	protected function checkCloneFinished($copy_id, $time) {
+	protected function checkCloneFinished($copy_id) {
 		assert('is_int($copy_id)');
+		$time = time();
 
-		if(time() >= $time + self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL) {
-			throw new Exception("Max duration time for cloning is passed: "
-				.(self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL / 60)
-				. " seconds."
-			);
+		while(!ilCopyWizardOptions::_isFinished($copy_id)) {
+			if(time() >= $time + self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL) {
+				throw new Exception("Max duration time for cloning is passed: "
+					.(self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL / 60)
+					. " seconds."
+				);
+			}
+
+			sleep(self::WAIT_FOR_OBJ_CLONED_CHECK);
 		}
 
-		return ilCopyWizardOptions::_isFinished($copy_id);
+		return true;
 	}
 }
 
