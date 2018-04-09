@@ -9,6 +9,8 @@ namespace ILIAS\TMS\CourseCreation;
  */
 class Process {
 	const WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S = 5;
+	const WAIT_FOR_OBJ_CLONED_CHECK = 5;
+	const MAX_CLONE_WAITING_TIME_BEVORE_CANCEL = 120000;
 	const SOAP_TIMEOUT = 30;
 	const EDU_TRACKING = "xetr";
 	const COURSE_CLASSIFICATION = "xccl";
@@ -41,19 +43,26 @@ class Process {
 	public function run(Request $request) {
 		$ref_id = $this->cloneAllObject($request);
 
+		$time = time();
+		while(!ilCopyWizardOptions::_isFinished($ref_id)) {
+			sleep(self::WAIT_FOR_OBJ_CLONED_CHECK);
+
+			if(time() >= $time + self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL) {
+				throw new Exception("Max duration time for cloning is passed: "
+					.(self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL / 60)
+					. " seconds."
+				);
+			}
+		}
+
 		$request = $request->withTargetRefIdAndFinishedTS((int)$ref_id, new \DateTime());
 
 		sleep(self::WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S);
 
 		$this->adjustCourseTitle($request);
 		$this->setCourseOnline($request);
-
-		sleep(self::WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S);
-
 		$this->configureCopiedObjects($request);
 		$this->setOwner($request);
-
-		sleep(self::WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S);
 
 		\ilSession::_destroy($request->getSessionId());
 
