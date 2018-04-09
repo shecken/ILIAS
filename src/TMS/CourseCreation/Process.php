@@ -43,18 +43,6 @@ class Process {
 	public function run(Request $request) {
 		$ref_id = $this->cloneAllObject($request);
 
-		$time = time();
-		while(!ilCopyWizardOptions::_isFinished($ref_id)) {
-			sleep(self::WAIT_FOR_OBJ_CLONED_CHECK);
-
-			if(time() >= $time + self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL) {
-				throw new Exception("Max duration time for cloning is passed: "
-					.(self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL / 60)
-					. " seconds."
-				);
-			}
-		}
-
 		$request = $request->withTargetRefIdAndFinishedTS((int)$ref_id, new \DateTime());
 
 		sleep(self::WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S);
@@ -273,6 +261,30 @@ class Process {
 		}
 
 		return (int)$res;
+	}
+
+	/**
+	 * Checks the copy wizard has totaly finished
+	 *
+	 * @param int 	$copy_id
+	 * @throws Exception 	If cloning passed a specific timespan
+	 *
+	 * @return bool
+	 */
+	protected function checkCloneFinished($copy_id) {
+		assert('is_int($copy_id)');
+
+		$time = time();
+		while(!ilCopyWizardOptions::_isFinished($copy_id)) {
+			sleep(self::WAIT_FOR_OBJ_CLONED_CHECK);
+
+			if(time() >= $time + self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL) {
+				throw new Exception("Max duration time for cloning is passed: "
+					.(self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL / 60)
+					. " seconds."
+				);
+			}
+		}
 	}
 }
 
