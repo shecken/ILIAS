@@ -258,7 +258,7 @@ class Process {
 			throw new \RuntimeException("Could not clone course via SOAP.");
 		}
 
-		$this->waitForCloneFinished($copy_id);
+		$this->waitForCloneFinished((int)$copy_id);
 
 		return (int)$res;
 	}
