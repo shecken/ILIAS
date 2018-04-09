@@ -275,7 +275,7 @@ class Process {
 		assert('is_int($copy_id)');
 		$time = time();
 
-		while(!ilCopyWizardOptions::_isFinished($copy_id)) {
+		while(!\ilCopyWizardOptions::_isFinished($copy_id)) {
 			if(time() >= $time + self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL) {
 				throw new Exception("Max duration time for cloning is passed: "
 					.(self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL / 60)
