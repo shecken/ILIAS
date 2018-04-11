@@ -10,7 +10,7 @@ namespace ILIAS\TMS\CourseCreation;
 class Process {
 	const WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S = 5;
 	const WAIT_FOR_OBJ_CLONED_CHECK = 5;
-	const MAX_CLONE_WAITING_TIME_BEVORE_CANCEL = 600000;
+	const MAX_CLONE_WAITING_TIME_BEVORE_CANCEL = 600;
 	const SOAP_TIMEOUT = 30;
 	const EDU_TRACKING = "xetr";
 	const COURSE_CLASSIFICATION = "xccl";
@@ -278,7 +278,7 @@ class Process {
 		while(!\ilCopyWizardOptions::_isFinished($copy_id)) {
 			if(time() >= $time + self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL) {
 				throw new Exception("Max duration time for cloning is passed: "
-					.(self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL / 60)
+					.self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL
 					. " seconds."
 				);
 			}
