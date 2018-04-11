@@ -171,6 +171,6 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	 * @inheritdoc
 	 */
 	public function finish() {
-		$this->request_builder->getRequest(new \DateTime("@{$this->timestamp}"));
+		$this->request_builder->getRequest(new \DateTime());
 	}
 } 
