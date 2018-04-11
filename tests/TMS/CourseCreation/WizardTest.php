@@ -201,11 +201,6 @@ class TMS_CourseCreation_WizardTest extends PHPUnit_Framework_TestCase {
 			->method("setUserIdAndSessionId")
 			->with($user_id, $session_id)
 			->willReturn($request_builder);
-		$request_builder
-			->expects($this->once())
-			->method("setCourseRefId")
-			->with($crs_ref_id)
-			->willReturn($request_builder);
 
 		$component1
 			->expects($this->once())

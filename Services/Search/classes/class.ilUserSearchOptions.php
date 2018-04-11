@@ -287,6 +287,7 @@ class ilUserSearchOptions
 		$nodes = $tree->getAllChildren($root);
 		$options = $tree->getTitles($nodes);
 		unset($options[$root]);
+		natcasesort($options);
 		return $options;
 	}
 	//cat-tms-patch end
