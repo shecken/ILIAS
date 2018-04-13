@@ -45,6 +45,17 @@ class FilterFactory {
 	}
 
 	/**
+	 * Get a filter by date.
+	 *
+	 * @param	string	$label
+	 * @param	string	$description
+	 * @return	Filters\Date
+	 */
+	public function date($label, $description) {
+		return new Filters\Date($this, $label, $description);
+	}
+
+	/**
 	 * Get a filter that represents an option.
 	 *
 	 * @param	string	$label
