@@ -8,10 +8,9 @@ namespace ILIAS\TMS\CourseCreation;
  * Creates courses based on templates.
  */
 class Process {
-	const WAIT_FOR_DB_TO_INCORPORATE_CHANGES_IN_S = 5;
-	const WAIT_FOR_OBJ_CLONED_CHECK = 5;
-	const MAX_CLONE_WAITING_TIME_BEVORE_CANCEL = 600000;
-	const SOAP_TIMEOUT = 30;
+	const WAIT_FOR_OBJ_CLONED_CHECK_IN_S = 5;
+	const MAX_CLONE_WAITING_TIME_BEVORE_CANCEL_IN_S = 600;
+	const SOAP_TIMEOUT_IN_S = 30;
 	const EDU_TRACKING = "xetr";
 	const COURSE_CLASSIFICATION = "xccl";
 
@@ -243,7 +242,7 @@ class Process {
 		include_once 'Services/WebServices/SOAP/classes/class.ilSoapClient.php';
 
 		$soap_client = new \ilSoapClient();
-		$soap_client->setResponseTimeout(self::SOAP_TIMEOUT);
+		$soap_client->setResponseTimeout(self::SOAP_TIMEOUT_IN_S);
 		$soap_client->enableWSDL(true);
 
 		$ilLog->write(__METHOD__.': Trying to call Soap client...');
@@ -276,14 +275,14 @@ class Process {
 		$time = time();
 
 		while(!\ilCopyWizardOptions::_isFinished($copy_id)) {
-			if(time() >= $time + self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL) {
+			if(time() >= $time + self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL_IN_S) {
 				throw new Exception("Max duration time for cloning is passed: "
-					.(self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL / 60)
+					.self::MAX_CLONE_WAITING_TIME_BEVORE_CANCEL_IN_S
 					. " seconds."
 				);
 			}
 
-			sleep(self::WAIT_FOR_OBJ_CLONED_CHECK);
+			sleep(self::WAIT_FOR_OBJ_CLONED_CHECK_IN_S);
 		}
 
 		return true;

@@ -355,7 +355,7 @@ class ilTMSMailContextCourse implements Mailing\MailContext {
 		if(count($sessions) > 0) {
 			foreach ($sessions as $session) {
 				$appointment = $session->getFirstAppointment();
-				$sort_date = $appointment->getStart()->get(IL_CAL_FKT_DATE, "Ymd");
+				$sort_date = $appointment->getStart()->get(IL_CAL_FKT_DATE, "YmdHi");
 				$start_date = $appointment->getStart()->get(IL_CAL_FKT_DATE, "d.m.Y");
 				$start_time = $appointment->getStart()->get(IL_CAL_FKT_DATE, "H:i");
 				$end_time = $appointment->getEnd()->get(IL_CAL_FKT_DATE, "H:i");
