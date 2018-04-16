@@ -222,6 +222,7 @@ class DisplayFilter
 	public function buildFilterValues(\ILIAS\TMS\Filter\Filters\Sequence $sequence, array $post_values)
 	{
 		$navi = new \ILIAS\TMS\Filter\Navigator($sequence);
+
 		$ret = array();
 
 		while ($filter = $this->getNextFilter($navi)) {
@@ -230,8 +231,10 @@ class DisplayFilter
 				$filter = $navi->current();
 			}
 
+
 			$current_class = get_class($filter);
 			$value = $post_values[$navi->path()];
+
 			switch ($current_class) {
 				case "ILIAS\TMS\Filter\Filters\Date":
 					$date = $filter->default_date();
@@ -248,12 +251,11 @@ class DisplayFilter
 					$end = $filter->default_end();
 
 					if ($value !== null) {
+
 						$value = $this->unserializeValue($value);
-
-						$start = $this->createDateTime($value["start"]["date"]);
-						$end = $this->createDateTime($value["end"]["date"]);
+						$start = $this->createDateTime($value["start"]);
+						$end = $this->createDateTime($value["end"]);
 					}
-
 					array_push($ret, $start);
 					array_push($ret, $end);
 					break;
@@ -347,15 +349,11 @@ class DisplayFilter
 					throw new \Exception("Filter class not known");
 			}
 		}
-
 		return $ret;
 	}
 
-	protected function createDateTime(array $date)
+	protected function createDateTime($date)
 	{
-		return new \DateTime($date["y"]."-"
-						.str_pad($date["m"], 2, "0", STR_PAD_LEFT)
-						."-"
-						.str_pad($date["d"], 2, "0", STR_PAD_LEFT));
+		return \DateTime::createFromFormat('d.m.Y',$date);
 	}
 }
