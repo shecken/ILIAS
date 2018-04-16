@@ -55,7 +55,12 @@ class SqlQueryInterpreter {
 		} elseif( $field instanceof Derived\Count ) {
 			return ' COUNT(*)';
 		} elseif( $field instanceof Derived\GroupConcat ) {
-			return ' GROUP_CONCAT('.$this->interpretField($field->argument()).' SEPARATOR \''.$field->separator().'\')';
+			$order_by = '';
+			$order_by_f = $field->orderBy();
+			if($order_by_f !== null) {
+				$order_by = 'ORDER BY '.$order_by_f->name().' '.$field->orderDirection();
+			}
+			return ' GROUP_CONCAT('.$this->interpretField($field->argument()).' '.$order_by.' SEPARATOR \''.$field->separator().'\' )';
 		} elseif( $field instanceof Derived\FromUnixtime ) {
 			return ' FROM_UNIXTIME('.$this->interpretField($field->argument()).')';
 		} elseif( $field instanceof Derived\Avg ) {
