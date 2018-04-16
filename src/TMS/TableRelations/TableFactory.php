@@ -165,8 +165,21 @@ class TableFactory {
 	 * @param	string	$separator
 	 * @return	AbsractDerivedField
 	 */
-	public function groupConcat($name, Filters\Predicates\Field $field, $separator = ', ') {
-		return new Tables\DerivedFields\GroupConcat($this->predicate_factory, $name, $field, $separator);
+	public function groupConcat(
+		$name,
+		Filters\Predicates\Field $field,
+		$separator = ', ',
+		Filters\Predicates\Field $order_by = null,
+		$order_direction = 'ASC'
+	) {
+		return new Tables\DerivedFields\GroupConcat(
+			$this->predicate_factory, 
+			$name,
+			$field,
+			$separator,
+			$order_by,
+			$order_direction
+		);
 	}
 
 	public function concat($name, Filters\Predicates\Field $field_1, Filters\Predicates\Field $field_2, $inbetween = null) {
