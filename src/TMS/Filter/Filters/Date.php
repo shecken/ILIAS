@@ -78,7 +78,7 @@ class Date extends Filter {
 	 * @inheritdocs
 	 */
 	protected function clone_with_new_mappings($mappings, $mapping_result_types) {
-		return new DatePeriod($this->factory, $this->label(), $this->description(),
+		return new Date($this->factory, $this->label(), $this->description(),
 						$this->default, $mappings, $mapping_result_types);
 
 	}
