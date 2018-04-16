@@ -22,6 +22,19 @@ class FilterGUIFactory {
 	}
 
 	/**
+	 * Get the gui of Dateperiod Filter
+	 *
+	 * @param	Filter		$filter
+	 * @param	string		$path
+	 * @return	FilterGUI
+	 */
+	public function date_gui(Filters\Date $filter, $path) {
+		require_once ("Services/TMS/Filter/classes/class.catFilterDateGUI.php");
+		return new \catFilterDateGUI($filter, $path);
+	}
+
+
+	/**
 	 * Get the gui of Option Filter
 	 *
 	 * @param	Filter		$filter

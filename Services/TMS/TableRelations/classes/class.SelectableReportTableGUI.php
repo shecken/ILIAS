@@ -120,10 +120,11 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	 */
 	public function fillRow($set) {
 		$relevant = $this->relevantColumns();
+
 		foreach ($this->order as $column_id) {
 			if(isset($relevant[$column_id])) {
 				$this->tpl->setCurrentBlock($column_id);
-				$this->tpl->setVariable('VAL_'.strtoupper($column_id),$set[$column_id]);
+				$this->tpl->setVariable('VAL_'.strtoupper($column_id),(string)$set[$column_id]);
 				$this->tpl->parseCurrentBlock();
 			}
 		}

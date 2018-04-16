@@ -90,6 +90,9 @@ class DisplayFilter
 			case "ILIAS\TMS\Filter\Filters\DatePeriod":
 				return $this->gui_factory->dateperiod_gui($filter, $navi->path());
 				break;
+			case "ILIAS\TMS\Filter\Filters\Date":
+				return $this->gui_factory->date_gui($filter, $navi->path());
+				break;
 			case "ILIAS\TMS\Filter\Filters\Multiselect":
 				return $this->gui_factory->multiselect_gui($filter, $navi->path());
 				break;
@@ -230,12 +233,23 @@ class DisplayFilter
 			$current_class = get_class($filter);
 			$value = $post_values[$navi->path()];
 			switch ($current_class) {
+				case "ILIAS\TMS\Filter\Filters\Date":
+					$date = $filter->default_date();
+
+					if ($value !== null) {
+						$value = $this->unserializeValue($value);
+						$date = \DateTime::createFromFormat('d.m.Y',$value);
+					}
+
+					array_push($ret, $date);
+					break;
 				case "ILIAS\TMS\Filter\Filters\DatePeriod":
 					$start = $filter->default_begin();
 					$end = $filter->default_end();
 
 					if ($value !== null) {
 						$value = $this->unserializeValue($value);
+
 						$start = $this->createDateTime($value["start"]["date"]);
 						$end = $this->createDateTime($value["end"]["date"]);
 					}
