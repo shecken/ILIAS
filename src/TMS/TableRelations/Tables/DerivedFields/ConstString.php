@@ -11,6 +11,11 @@ class ConstString extends T\DerivedField  {
 
 	protected $value;
 
+	/**
+	 * @param	Filters\PredicateFactory	$f
+	 * @param	string	$name
+	 * @param	string	$value
+	 */
 	public function __construct(Filters\PredicateFactory $f, $name, $value = '') {
 		assert('is_string($name)');
 		assert('is_string($value)');
