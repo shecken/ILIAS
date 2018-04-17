@@ -91,6 +91,8 @@ class SqlQueryInterpreter {
 			return ' IF('.$this->interpretPredicate($field->condition()).','.$this->interpretField($field->met()).','.$this->interpretField($field->notMet()).')';
 		} elseif($field instanceof Derived\ConstInt) {
 			return $this->gIldb->quote($field->value(), 'integer');
+		} elseif($field instanceof Derived\ConstString) {
+			return $this->gIldb->quote($field->value(), 'text');
 		} else {
 			throw new TableRelationsException("Unknown field type".$field->name());
 		}
