@@ -191,3 +191,24 @@ if( !$ilDB->tableExists('copy_mappings') )
 			"default" => null));
 	}
 ?>
+
+<#17>
+<?php
+    // anything withing ccm not in cm
+    $q = 'SELECT ccm.obj_id, ccm.source_id FROM crs_copy_mappings ccm'
+    .'	LEFT JOIN copy_mappings cm'
+    .'		ON ccm.obj_id = cm.obj_id'
+    .'			AND ccm.source_id = cm.source_id'
+    .'	WHERE cm.obj_id IS NULL';
+    $res = $ilDB->query($q);
+    while($rec = $ilDB->fetchAssoc($res)) {
+        $ilDB->insert('copy_mappings',
+                      ['obj_id' => ['integer',$rec['obj_id']]
+                      ,'source_id' => ['integer',$rec['source_id']]]);
+    }
+    ?>
+
+<#18>
+<?php
+    $ilDB->dropTable('crs_copy_mappings');
+?>
