@@ -294,6 +294,8 @@ class TableFactory {
 	 */
 	public function constString($name, $value = '')
 	{
+		assert('is_string($name)');
+		assert('is_string($value)');
 		return new Tables\DerivedFields\ConstString($this->predicate_factory, $name, $value);
 	}
 }
