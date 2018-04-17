@@ -285,4 +285,17 @@ class TableFactory {
 	{
 		return new Tables\DerivedFields\ConstInt($this->predicate_factory, $name, $value);
 	}
+
+	/**
+	 * Constant string value.
+	 *
+	 * @param	string	name
+	 * @param	string	$value
+	 */
+	public function constString($name, $value = '')
+	{
+		assert('is_string($name)');
+		assert('is_string($value)');
+		return new Tables\DerivedFields\ConstString($this->predicate_factory, $name, $value);
+	}
 }
