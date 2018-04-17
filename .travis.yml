@@ -3,6 +3,6 @@ php:
     - 5.6
     - 7.0
 install:
-    composer install -d=./libs/composer/
-script: phpunit -v --bootstrap libs/composer/vendor/autoload.php tests/
+    cd ./libs/composer && composer install
+script: cd .. && cd .. && phpunit -v --bootstrap libs/composer/vendor/autoload.php tests/
 
