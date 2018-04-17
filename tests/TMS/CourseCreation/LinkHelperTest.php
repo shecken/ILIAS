@@ -19,9 +19,6 @@ class LinkHelperMock {
 	protected function sendInfo() {
 	}
 
-	protected function getCourseCreationPlugin() {
-	}
-
 	public function _maybeShowRequestInfo() {
 		return $this->maybeShowRequestInfo();
 	}
@@ -271,7 +268,7 @@ class LinkHelperTest extends TestCase {
 				->disableOriginalConstructor()
 				->getMock();
 
-			$usr->expects($this->exactly(2))
+			$usr->expects($this->exactly(3))
 				->method("getId")
 				->will($this->returnValue(2));
 
