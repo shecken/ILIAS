@@ -5,7 +5,7 @@ use ILIAS\TMS\TableRelations\Tables as T;
 use ILIAS\TMS\Filter as Filters;
 
 /**
- * Calculate the average over a field.
+ * String rvalue abstraction
  */
 class ConstString extends T\DerivedField  {
 
