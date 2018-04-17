@@ -26,7 +26,14 @@ trait LinkHelper {
 	/**
 	 * @return \ilCourseCreationPlugin
 	 */
-	abstract protected function getCourseCreationPlugin();
+	protected function getCourseCreationPlugin() {
+		require_once("Services/Component/classes/class.ilPluginAdmin.php");
+		if (!\ilPluginAdmin::isPluginActive("xccr")) {
+			return null;
+		}
+
+		return \ilPluginAdmin::getPluginObjectById("xccr");
+	}
 
 	/**
 	 * Send an info message to user gui
@@ -219,7 +226,7 @@ trait LinkHelper {
 	 *       injected dependencies, also LinkHelper should get a new name then.
 	 * @return ILIAS\TMS\CourseCreation/Request[]
 	 */
-	protected function maybeShowRequestInfo($xccr_plugin)
+	protected function maybeShowRequestInfo($xccr_plugin = null)
 	{
 		$requests = $this->getUsersDueRequests($this->getUser(), $this->getCourseCreationPlugin());
 		if (count($requests) === 0) {
@@ -274,7 +281,7 @@ trait LinkHelper {
 		$actions = $xccr_plugin->getActions();
 		$this->setCachedRequests((int)$user->getId(), $actions->getDueRequestsOf($user));
 
-		return $this->getCachedRequests();
+		return $this->getCachedRequests((int)$user->getId());
 	}
 
 	/**
