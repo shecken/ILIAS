@@ -227,7 +227,11 @@ class ilObjCategory extends ilContainer
 		$new_obj->saveIcons($this->getBigIconPath(),
 			$this->getSmallIconPath(),
 			$this->getTinyIconPath());
-		
+
+		// cat-tms-patch start (1101)
+		$this->updateNewObjectSettings($new_obj);
+		// cat-tms-patch end
+
 	 	return $new_obj;
 	}
 	
