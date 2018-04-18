@@ -18,6 +18,13 @@ require_once "./Services/Container/classes/class.ilContainer.php";
 */
 class ilObjCategory extends ilContainer
 {
+	// cat-tms-patch start (1101)
+	/**
+	 * @var bool
+	 */
+	protected $show_in_cockpit;
+	// cat-tms-patch end
+
 	/**
 	* Constructor
 	* @access	public
@@ -280,6 +287,28 @@ class ilObjCategory extends ilContainer
 		include_once './Services/Object/classes/class.ilObjectActivation.php';
 		ilObjectActivation::addAdditionalSubItemInformation($a_item_data);
 	}
+
+	// cat-tms-patch start (1101)
+	/**
+	 * Should the cockpit be displayed in the cockpit
+	 *
+	 * @return bool
+	 */
+	public function getShowInCockpit() {
+		return $this->show_in_cockpit;
+	}
+
+	/**
+	 * Should the cockpit be displayed in the cockpit
+	 *
+	 * @param bool 	$show_in_cockpit
+	 *
+	 * @return void
+	 */
+	public function setShowInCockpit($show_in_cockpit) {
+		$this->show_in_cockpit = $show_in_cockpit;
+	}
+	// cat-tms-patch end
 	
 } // END class.ilObjCategory
 ?>
