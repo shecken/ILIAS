@@ -41,11 +41,32 @@ trait ilObjCategoryExtension {
 	}
 
 	/**
+	 * Update the TMS special settings
+	 *
+	 * @return void
+	 */
+	protected function deleteTMSSettings() {
+		$this->CategoryDB()->deleteFor((int)$this->getId());
+	}
+
+	/**
 	 * Selects the TMS special settings
 	 *
 	 * @return void
 	 */
 	protected function selectTMSSettings() {
 		$this->tms_settings = $this->CategoryDB()->selectFor((int)$this->getId());
+	}
+
+	protected function throwUpdateEvent() {
+		global $DIC;
+		$ilAppEventHandler = $DIC['ilAppEventHandler'];
+		$ilAppEventHandler->raise(
+			'Modules/Category',
+			'tms_update',
+			array('object' => $this
+				,'show_in_cockpit' => $this->getShowInCockpit()
+			)
+		);
 	}
 }
