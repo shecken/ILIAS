@@ -40,4 +40,17 @@ class CategoryDB {
 
 		return new Settings($obj_id, (bool)$row["show_in_cockpit"]);
 	}
+
+	/**
+	 * Deletes the settings for object
+	 *
+	 * @param int 	$obj_id
+	 *
+	 * @return void
+	 */
+	public function deleteFor($obj_id) {
+		$query = "DELETE FROM ".self::TABLE_NAME.PHP_EOL
+				." WHERE obj_id = ".$this->db->quote($obj_id, "integer");
+		$this->db->manipulate($query);
+	}
 }
