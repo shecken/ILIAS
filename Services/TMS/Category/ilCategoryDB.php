@@ -1,7 +1,7 @@
 <?php
 require_once("Services/TMS/Category/Settings.php");
 
-class CategoryDB {
+class ilCategoryDB {
 	const TABLE_NAME = "tms_cat_settings";
 
 	public function __construct(ilDBInterface $db) {

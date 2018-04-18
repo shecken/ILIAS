@@ -4,8 +4,8 @@ trait ilObjCategoryExtension {
 	public function CategoryDB() {
 		if($this->category_db === null) {
 			global $DIC;
-			require_once("Services/TMS/Category/CategoryDB.php");
-			$this->category_db = new CategoryDB($DIC->database());
+			require_once("Services/TMS/Category/ilCategoryDB.php");
+			$this->category_db = new ilCategoryDB($DIC->database());
 		}
 
 		return $this->category_db;
