@@ -12,6 +12,31 @@ trait ilObjCategoryExtension {
 	}
 
 	/**
+	* @inheritdoc
+	*/
+	function update()
+	{
+		$this->updateTMSSettings();
+		$ret = parent::update();
+		$this->throwUpdateEvent();
+
+		return $ret;
+	}
+
+	/**
+	 * read
+	 *
+	 * @access public
+	 * @param
+	 * @return
+	 */
+	public function read()
+	{
+		$this->selectTMSSettings();
+		parent::read();
+	}
+
+	/**
 	 * Should the cockpit be displayed in the cockpit
 	 *
 	 * @return bool

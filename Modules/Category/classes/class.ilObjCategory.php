@@ -297,33 +297,5 @@ class ilObjCategory extends ilContainer
 		include_once './Services/Object/classes/class.ilObjectActivation.php';
 		ilObjectActivation::addAdditionalSubItemInformation($a_item_data);
 	}
-
-	// cat-tms-patch start (1101)
-	/**
-	* @inheritdoc
-	*/
-	function update()
-	{
-		$this->updateTMSSettings();
-		$ret = parent::update();
-		$this->throwUpdateEvent();
-
-		return $ret;
-	}
-
-	/**
-	 * read
-	 *
-	 * @access public
-	 * @param
-	 * @return
-	 */
-	public function read()
-	{
-		$this->selectTMSSettings();
-		parent::read();
-	}
-	// cat-tms-patch end
-	
 } // END class.ilObjCategory
 ?>
