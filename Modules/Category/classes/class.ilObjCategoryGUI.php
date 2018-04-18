@@ -24,6 +24,10 @@ class ilObjCategoryGUI extends ilContainerGUI
 	
 	const CONTAINER_SETTING_TAXBLOCK = "tax_sblock_";
 
+	// cat-tms-patch start (1101)
+	const F_SHOW_IN_COCKPI = "show_in_cockpit";
+	// cat-tms-patch end
+
 	/**
 	* Constructor
 	* @access public
@@ -36,6 +40,10 @@ class ilObjCategoryGUI extends ilContainerGUI
 		//$this->ctrl =& $ilCtrl;
 		//$this->ctrl->saveParameter($this,array("ref_id","cmdClass"));
 		$GLOBALS['lng']->loadLanguageModule('cat');
+
+		// cat-tms-patch start (1101)
+		$GLOBALS['lng']->loadLanguageModule('tms');
+		// cat-tms-patch end
 
 		$this->type = "cat";
 		parent::__construct($a_data,(int) $a_id,$a_call_by_reference,false);
@@ -57,7 +65,7 @@ class ilObjCategoryGUI extends ilContainerGUI
 
 		$next_class = $this->ctrl->getNextClass($this);
 		$cmd = $this->ctrl->getCmd();
-		
+
 		// show repository tree
 		$this->showRepTree();
 		
@@ -678,6 +686,13 @@ class ilObjCategoryGUI extends ilContainerGUI
 				)
 			);
 
+		// cat-tms-patch start (1101)
+		$cb = new ilCheckboxInputGUI($this->lng->txt("show_in_cockpit"), self::F_SHOW_IN_COCKPI);
+		$cb->setChecked($this->object->getShowInCockpit());
+		$cb->setValue(1);
+		$form->addItem($cb);
+		// cat-tms-patch end
+
 		$form->addCommandButton("update", $this->lng->txt("save"));
 //		$form->addCommandButton("addTranslation", $this->lng->txt("add_translation"));		
 
@@ -713,6 +728,12 @@ class ilObjCategoryGUI extends ilContainerGUI
 				$this->object->addTranslation($title, $desc, $lang, true);	
 				$this->object->setTitle($title);
 				$this->object->setDescription($desc);
+
+				// cat-tms-patch start (1101)
+				$show_in_cockpit = $form->getInput(self::F_SHOW_IN_COCKPI);
+				$this->object->setShowInCockpit((bool)$show_in_cockpit);
+				// cat-tms-patch end
+
 				$this->object->update();
 				
 				$this->saveSortingSettings($form);

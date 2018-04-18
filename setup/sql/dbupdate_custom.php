@@ -212,3 +212,29 @@ if( !$ilDB->tableExists('copy_mappings') )
 <?php
     $ilDB->dropTable('crs_copy_mappings');
 ?>
+
+<#19>
+<?php
+if( !$ilDB->tableExists('tms_cat_settings') )
+{
+	$ilDB->createTable('tms_cat_settings', array(
+		'obj_id' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true
+		),
+		'show_in_cockpit' => array(
+			'type' => 'integer',
+			'length' => 1,
+			'notnull' => true
+		)
+	));
+
+	$ilDB->addPrimaryKey('tms_cat_settings', array('obj_id'));
+}
+?>
+
+<#20>
+<?php
+	$ilCtrlStructureReader->getStructure();
+?>
