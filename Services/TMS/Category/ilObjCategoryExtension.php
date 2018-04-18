@@ -57,6 +57,15 @@ trait ilObjCategoryExtension {
 	}
 
 	/**
+	 * Creates basic TMS settings
+	 *
+	 * @return void
+	 */
+	protected function createTMSSettings() {
+		$this->tms_settings = $this->CategoryDB()->create((int)$this->getId());
+	}
+
+	/**
 	 * Update the TMS special settings
 	 *
 	 * @return void
@@ -83,6 +92,11 @@ trait ilObjCategoryExtension {
 		$this->tms_settings = $this->CategoryDB()->selectFor((int)$this->getId());
 	}
 
+	/**
+	 * Throws an category update event
+	 *
+	 * @return void
+	 */
 	protected function throwUpdateEvent() {
 		global $DIC;
 		$ilAppEventHandler = $DIC['ilAppEventHandler'];
@@ -93,5 +107,19 @@ trait ilObjCategoryExtension {
 				,'show_in_cockpit' => $this->getShowInCockpit()
 			)
 		);
+	}
+
+	/**
+	 * Copy settings of soruce to target
+	 *
+	 * @param ilObjCategory 	$new_obj
+	 *
+	 * @return void
+	 */
+	protected function updateNewObjectSettings(ilObjCategory $new_object) {
+		$new_object->createTMSSettings();
+		$new_object->setShowInCockpit($this->getShowInCockpit());
+		$new_object->updateTMSSettings();
+		$new_object->throwUpdateEvent();
 	}
 }
