@@ -29,17 +29,29 @@ class UnboundCategoryProvider extends SeparatedUnboundProvider {
 	}
 
 	protected function getCockpitItems(Entity $entity) {
-		return [
-			new CockpitItemImpl(
-					$entity,
-					$this->owner()->getTitle(),
-					$this->owner()->getTitle(),
-					ilLink::_getLink($this->owner()->getRefId(), "cat"),
-					$this->getIconPath($this->owner()->getId()),
-					$this->getIconPath($this->owner()->getId()),
-					$this->owner()->getRefId()
-				)
-		];
+		$ret = [];
+
+		if($this->checkVisible()) {
+			$ret[] =
+				new CockpitItemImpl(
+						$entity,
+						$this->owner()->getTitle(),
+						$this->owner()->getTitle(),
+						ilLink::_getLink($this->owner()->getRefId(), "cat"),
+						$this->getIconPath($this->owner()->getId()),
+						$this->getIconPath($this->owner()->getId()),
+						$this->owner()->getRefId()
+				);
+		}
+
+		return $ret;
+	}
+
+	protected function checkVisible() {
+		global $DIC;
+		$access = $DIC->access();
+
+		return $access->checkAccess("visible", "", $this->owner()->getRefId());
 	}
 
 	protected function getIconPath($obj_id) {
