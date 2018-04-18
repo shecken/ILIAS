@@ -52,7 +52,11 @@ class ilObjCategory extends ilContainer
 	function delete()
 	{
 		global $ilDB,$ilAppEventHandler;
-		
+
+		// cat-tms-patch start (1101)
+		$this->deleteTMSSettings();
+		// cat-tms-patch end
+
 		// always call parent delete function first!!
 		if (!parent::delete())
 		{
@@ -76,7 +80,7 @@ class ilObjCategory extends ilContainer
 				$tax->delete();
 			}
 		}
-		
+
 		$ilAppEventHandler->raise('Modules/Category',
 			'delete',
 			array('object' => $this,
@@ -301,7 +305,10 @@ class ilObjCategory extends ilContainer
 	function update()
 	{
 		$this->updateTMSSettings();
-		return parent::update();
+		$ret = parent::update();
+		$this->throwUpdateEvent();
+
+		return $ret;
 	}
 
 	/**
