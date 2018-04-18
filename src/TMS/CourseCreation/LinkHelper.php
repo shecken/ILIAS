@@ -224,7 +224,7 @@ trait LinkHelper {
 	/**
 	 * TODO: This should be moved to ILIAS\TMS\CourseCreation\LinkHelper, with tests and properly
 	 *       injected dependencies, also LinkHelper should get a new name then.
-	 * @return ILIAS\TMS\CourseCreation/Request[]
+	 * @return bool | null
 	 */
 	protected function maybeShowRequestInfo($xccr_plugin = null)
 	{
@@ -238,6 +238,8 @@ trait LinkHelper {
 		list($request) = $requests;
 		$message = sprintf($this->getLng()->txt("course_creation_message"), $this->getTrainingTitleByRequest($request));
 		$this->sendInfo($message);
+
+		return true;
 	}
 
 	/**
