@@ -8,6 +8,10 @@ class ilCategoryDB {
 		$this->db = $db;
 	}
 
+	public function create($obj_id) {
+		return new Settings($obj_id, false);
+	}
+
 	/**
 	 * Inserts a new settings entry or updates
 	 *
