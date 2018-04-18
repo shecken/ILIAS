@@ -3,6 +3,10 @@
 /* Copyright (c) 1998-2013 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 require_once "./Services/Container/classes/class.ilContainer.php";
+// cat-tms-patch start (1101)
+require_once("Services/TMS/Category/ilObjCategoryExtension.php");
+require_once("Services/TMS/Category/Settings.php");
+// cat-tms-patch end
 
 
 /** @defgroup ModulesCategory Modules/Category
@@ -19,10 +23,12 @@ require_once "./Services/Container/classes/class.ilContainer.php";
 class ilObjCategory extends ilContainer
 {
 	// cat-tms-patch start (1101)
+	use ilObjCategoryExtension;
+
 	/**
-	 * @var bool
+	 * @var \Settings
 	 */
-	protected $show_in_cockpit;
+	protected $tms_settings;
 	// cat-tms-patch end
 
 	/**
@@ -290,23 +296,25 @@ class ilObjCategory extends ilContainer
 
 	// cat-tms-patch start (1101)
 	/**
-	 * Should the cockpit be displayed in the cockpit
-	 *
-	 * @return bool
-	 */
-	public function getShowInCockpit() {
-		return $this->show_in_cockpit;
+	* @inheritdoc
+	*/
+	function update()
+	{
+		$this->updateTMSSettings();
+		return parent::update();
 	}
 
 	/**
-	 * Should the cockpit be displayed in the cockpit
+	 * read
 	 *
-	 * @param bool 	$show_in_cockpit
-	 *
-	 * @return void
+	 * @access public
+	 * @param
+	 * @return
 	 */
-	public function setShowInCockpit($show_in_cockpit) {
-		$this->show_in_cockpit = $show_in_cockpit;
+	public function read()
+	{
+		$this->selectTMSSettings();
+		parent::read();
 	}
 	// cat-tms-patch end
 	
