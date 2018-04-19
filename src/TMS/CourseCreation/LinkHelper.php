@@ -14,9 +14,36 @@ trait LinkHelper {
 	abstract protected function getCtrl();
 
 	/**
-	 * @return \ilLanguage
-	 */
+	* @return \ilLanguage
+	*/
 	abstract protected function getLng();
+
+	/**
+	 * @return \ilObjUser
+	 */
+	abstract protected function getUser();
+
+	/**
+	 * @return \ilCourseCreationPlugin
+	 */
+	protected function getCourseCreationPlugin() {
+		require_once("Services/Component/classes/class.ilPluginAdmin.php");
+		if (!\ilPluginAdmin::isPluginActive("xccr")) {
+			return null;
+		}
+
+		return \ilPluginAdmin::getPluginObjectById("xccr");
+	}
+
+	/**
+	 * Send an info message to user gui
+	 *
+	 * @param string 	$message
+	 *
+	 * @return void
+	 */
+	abstract protected function sendInfo($message);
+
 
 	/**
 	 * @return	string
@@ -192,5 +219,92 @@ trait LinkHelper {
 			)->withOnClick($modal->getShowSignal());
 
 		$toolbar->addText($ui_renderer->render([$button, $modal]));
+	}
+
+	/**
+	 * TODO: This should be moved to ILIAS\TMS\CourseCreation\LinkHelper, with tests and properly
+	 *       injected dependencies, also LinkHelper should get a new name then.
+	 * @return bool | null
+	 */
+	protected function maybeShowRequestInfo($xccr_plugin = null)
+	{
+		$requests = $this->getUsersDueRequests($this->getUser(), $this->getCourseCreationPlugin());
+		if (count($requests) === 0) {
+			return;
+		}
+		// This assertion assumes that every user is only allowed to create one training at
+		// a time. See e.g. TMS-1013.
+		assert('count("$requests") == 1');
+		list($request) = $requests;
+		$message = sprintf($this->getLng()->txt("course_creation_message"), $this->getTrainingTitleByRequest($request));
+		$this->sendInfo($message);
+
+		return true;
+	}
+
+	/**
+	 * TODO: This does not belong here as well is also baldy suited for the job.
+	 *
+	 * @param	Request $request
+	 * @throws	\RuntimeException if title could not be determined
+	 * @return	string
+	 */
+	protected function getTrainingTitleByRequest(\ILIAS\TMS\CourseCreation\Request $request)
+	{
+		$configs = $request->getConfigurations();
+		foreach ($configs as $obj => $css) {
+			foreach ($css as $cs) {
+				foreach ($cs as $key => $value) {
+					if ($key === "title") {
+						return $value;
+					}
+				}
+			}
+		}
+		throw new \RuntimeException("Expected every request to have a configuration for the course title.");
+	}
+
+	/**
+	 * TODO: This should be moved to ILIAS\TMS\CourseCreation\LinkHelper, with tests and properly
+	 *       injected dependencies.
+	 * @return ILIAS\TMS\CourseCreation/Request[]
+	 */
+	protected function getUsersDueRequests(\ilObjUser $user, $xccr_plugin = null)
+	{
+		$cached_requests = $this->getCachedRequests((int)$user->getId());
+		if ($cached_requests !== null) {
+			return $cached_requests;
+		}
+
+		if (is_null($xccr_plugin)) {
+			return [];
+		}
+
+		$actions = $xccr_plugin->getActions();
+		$this->setCachedRequests((int)$user->getId(), $actions->getDueRequestsOf($user));
+
+		return $this->getCachedRequests((int)$user->getId());
+	}
+
+	/**
+	 * Get the requests is cached for the user
+	 *
+	 * @param int 	$usr_id
+	 *
+	 * @return ILIAS\TMS\CourseCreation\Request[]
+	 */
+	protected function getCachedRequests($usr_id) {
+		return $this->cached_requests[$usr_id];
+	}
+
+	/**
+	 * Get the requests is cached for the user
+	 * @param int 	$usr_id
+	 * @param ILIAS\TMS\CourseCreation\Request[] 	$requests
+	 *
+	 * @return void
+	 */
+	protected function setCachedRequests($usr_id, array $requests) {
+		$this->cached_requests[$usr_id] = $requests;
 	}
 }
