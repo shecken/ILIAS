@@ -212,7 +212,6 @@ class Player {
 		if($step_number > 0) {
 			$form->addCommandButton(self::COMMAND_PREVIOUS, $this->ilias_bindings->txt("previous"));
 		}
-		$form->addCommandButton(self::COMMAND_SAVE, $this->ilias_bindings->txt("save"));
 		$form->addCommandButton(self::COMMAND_NEXT, $this->ilias_bindings->txt("next"));
 		$form->addCommandButton(self::COMMAND_ABORT, $this->ilias_bindings->txt("abort"));
 
