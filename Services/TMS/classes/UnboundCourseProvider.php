@@ -68,7 +68,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				$entity,
 				$owner,
 				$this->user,
-				10,
+				100,
 				[
 					CourseAction::CONTEXT_USER_BOOKING,
 					CourseAction::CONTEXT_EMPLOYEE_BOOKING,
@@ -80,7 +80,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				$entity,
 				$owner,
 				$this->user,
-				70,
+				200,
 				[
 					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
 					CourseAction::CONTEXT_MY_TRAININGS
@@ -90,7 +90,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				$entity,
 				$owner,
 				$this->user,
-				80,
+				600,
 				[
 					CourseAction::CONTEXT_MY_ADMIN_TRAININGS,
 					CourseAction::CONTEXT_MY_TRAININGS
