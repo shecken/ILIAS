@@ -64,6 +64,17 @@ class ilTMSMailRecipient implements Mailing\Recipient {
 	/**
 	 * @inheritdoc
 	 */
+	public function isInactiveUser() {
+		if(is_null($this->getUserId())) {
+			return false;
+		}
+		$user = new \ilObjUser($this->getUserId());
+		return (bool)$user->getActive() === false;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
 	public function getUserName() {
 		if($this->usr_id) {
 			$nam = \ilObjUser::_lookupName($this->usr_id);
