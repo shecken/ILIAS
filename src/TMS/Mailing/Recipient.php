@@ -29,6 +29,13 @@ interface Recipient {
 	public function getUserLogin();
 
 	/**
+	 * Check, if user is active (or not an ilUser)
+	 *
+	 * @return bool
+	 */
+	public function isInactiveUser();
+
+	/**
 	 *
 	 * @return string | null
 	 */

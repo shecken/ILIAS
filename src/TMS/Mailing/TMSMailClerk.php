@@ -69,6 +69,7 @@ class TMSMailClerk {
 		$mail_from_name = $this->from->getUserName();
 
 		foreach ($mails as $mail) {
+			$do_send = true;
 			$recipient = $mail->getRecipient();
 			$contexts = $mail->getContexts();
 			$attachments = $mail->getAttachments();
@@ -89,7 +90,14 @@ class TMSMailClerk {
 			if(is_null($mail_to_address)) {
 				$err = array('There was no mail address given.', 'Mail was not sent');
 				$mail_to_address = '';
-			} else {
+				$do_send = false;
+			}
+			if($recipient->isInactiveUser()) {
+				$err = array('The user is inactive.');
+				$do_send = false;
+			}
+
+			if($do_send) {
 				$this->sender->setFrom($mail_from_address, $mail_from_name);
 				$this->sender->ClearAllRecipients(); //only send to one recipient!
 				$this->sender->ClearCCs();
@@ -107,7 +115,6 @@ class TMSMailClerk {
 						$this->sender->addAttachment($attachment->getAttachmentPath());
 					}
 				}
-
 				if(! $this->sender->Send()) {
 					$err[] = $this->sender->ErrorInfo;
 				};
