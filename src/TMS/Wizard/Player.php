@@ -19,7 +19,7 @@ class Player {
 	const COMMAND_NEXT	= "next";
 	const COMMAND_CONFIRM = "confirm";
 	const COMMAND_PREVIOUS = "previous";
-	const COMMAND_SAVE = "save";
+	const COMMAND_SAVE = "save_step";
 
 	/**
 	 * @var Wizard
