@@ -132,7 +132,7 @@ class LinkHelperTest extends TestCase {
 			->method("getUser")
 			->will($this->returnValue($usr));
 
-		$this->assertNull($link_helper->_maybeShowRequestInfo());
+		$this->assertTrue($link_helper->_maybeShowRequestInfo());
 	}
 
 	public function test_openRequestsWithPlugin() {
@@ -197,7 +197,7 @@ class LinkHelperTest extends TestCase {
 				->method("getUser")
 				->will($this->returnValue($usr));
 
-			$this->assertNull($link_helper->_maybeShowRequestInfo());
+			$this->assertTrue($link_helper->_maybeShowRequestInfo());
 		}
 	}
 
