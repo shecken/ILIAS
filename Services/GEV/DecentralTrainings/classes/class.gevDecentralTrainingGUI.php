@@ -1106,6 +1106,10 @@ class gevDecentralTrainingGUI
 
 		$form->addItem($trnrs);
 
+		$flexible = new ilHiddenInputGUI("flexible");
+		$flexible->setValue("false");
+		$form->addItem($flexible);
+
 		/*************************
 		* TITEL
 		*************************/
@@ -1337,6 +1341,10 @@ class gevDecentralTrainingGUI
 		$crs_request_id = new ilHiddenInputGUI("crs_request_id");
 		$crs_request_id->setValue($this->crs_request_id);
 		$form->addItem($crs_request_id);
+
+		$flexible = new ilHiddenInputGUI("flexible");
+		$flexible->setValue("true");
+		$form->addItem($flexible);
 
 		/*************************
 		* TITEL
