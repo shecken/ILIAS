@@ -234,7 +234,7 @@ trait LinkHelper {
 		}
 		// This assertion assumes that every user is only allowed to create one training at
 		// a time. See e.g. TMS-1013.
-		assert('count("$requests") == 1');
+		assert('count($requests) == 1');
 		list($request) = $requests;
 		$message = sprintf($this->getLng()->txt("course_creation_message"), $this->getTrainingTitleByRequest($request));
 		$this->sendInfo($message);
