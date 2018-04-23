@@ -387,11 +387,18 @@ class gevSettings
 	const SRTF_IMPULS = "Impulsvorträge";
 	const SRTF_LEADERSHIP_SKILLS_PERS = "Führungskompetenz ID (Persönlichkeit)";
 	const SRTF_LEADERSHIP_SKILLS_TOOLS = "Führungskompetenz ID (Skills und Tools)";
+	const SRFT_LANGUAGE_TRAINING = "Sprachtrainings";
+	const SRFT_GDIS_WORKSHOP = "GDIS-Werkstatt";
+	const SRFT_ACCELERATING_TECHNICAL_EXCELLENCE = "Accelerating Technical Excellence (GATE)";
+	const SRFT_DEVELOPING_INSURANCE_CULTURE = "Developing Insurance Culture (GATE)";
+	const SRFT_SHAPING_THE_INDUSTRY = "Shaping the industry (GATE)";
 
-	// Headers for selecton topics
+	// Headers for selection topics
 	const SRTF_TOP_TRAININGS = "Top-Trainings";
 	const SRTF_TOP_TRAININGS_LEAD = "Top-Trainings (Führung)";
 	const SRTF_TOPIC_SELECTION = "Themenauswahl";
+	const SRFT_FURTHER_SEMINAR_PROGRAMS = "Weitere Seminarprogramme";
+	const SRFT_GATE = "GATE";
 
 	public static $TOP_TRAININGS = array(
 		self::SRTF_SOZIAL_COMP => self::SRTF_SOZIAL_COMP,
@@ -405,6 +412,17 @@ class gevSettings
 	public static $TOP_TRAININGS_LEAD = array(
 		self::SRTF_LEADERSHIP_SKILLS_PERS => self::SRTF_LEADERSHIP_SKILLS_PERS,
 		self::SRTF_LEADERSHIP_SKILLS_TOOLS => self::SRTF_LEADERSHIP_SKILLS_TOOLS
+	);
+
+	public static $FURTHER_SEMINAR_PROGRAMS = array(
+		self::SRFT_LANGUAGE_TRAINING => self::SRFT_LANGUAGE_TRAINING,
+		self::SRFT_GDIS_WORKSHOP => self::SRFT_GDIS_WORKSHOP
+	);
+
+	public static $GATE = array(
+		self::SRFT_ACCELERATING_TECHNICAL_EXCELLENCE => self::SRFT_ACCELERATING_TECHNICAL_EXCELLENCE,
+		self::SRFT_DEVELOPING_INSURANCE_CULTURE => self::SRFT_DEVELOPING_INSURANCE_CULTURE,
+		self::SRFT_SHAPING_THE_INDUSTRY => self::SRFT_SHAPING_THE_INDUSTRY
 	);
 
 	// Role mapping

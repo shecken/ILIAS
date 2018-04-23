@@ -486,6 +486,8 @@ class gevCourseSearch {
 
 		$top_trainings = gevSettings::$TOP_TRAININGS;
 		$top_trainings_lead = gevSettings::$TOP_TRAININGS_LEAD;
+		$further_seminiar_programs = gevSettings::$FURTHER_SEMINAR_PROGRAMS;
+		$gate = gevSettings::$GATE;
 		$all_categories = gevCourseUtils::getCategorieOptions();
 
 		array_shift($all_categories);
@@ -506,6 +508,22 @@ class gevCourseSearch {
 			return false;
 		});
 
+		$fsp = array_filter($further_seminiar_programs, function($val) use(&$all_categories) {
+			if(in_array($val, $all_categories)) {
+				unset($all_categories[$val]);
+				return true;
+			}
+			return false;
+		});
+
+		$g = array_filter($gate, function($val) use(&$all_categories) {
+			if(in_array($val, $all_categories)) {
+				unset($all_categories[$val]);
+				return true;
+			}
+			return false;
+		});
+
 		$result[''] = array($all => $all);
 		if(count($tt) != 0) {
 			ksort($tt);
@@ -514,6 +532,14 @@ class gevCourseSearch {
 		if(count($ttl) != 0) {
 			ksort($ttl);
 			$result[gevSettings::SRTF_TOP_TRAININGS_LEAD] = $ttl;
+		}
+		if(count($fsp) != 0) {
+			ksort($fsp);
+			$result[gevSettings::SRFT_FURTHER_SEMINAR_PROGRAMS] = $fsp;
+		}
+		if(count($g) != 0) {
+			ksort($g);
+			$result[gevSettings::SRFT_GATE] = $g;
 		}
 		$result[gevSettings::SRTF_TOPIC_SELECTION] = $all_categories;
 
