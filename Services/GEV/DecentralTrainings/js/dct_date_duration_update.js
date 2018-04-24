@@ -1,7 +1,7 @@
 function ilInitDuration(event,args,prefix)
 {
 
-	if($("#flexible").val == false) {
+	if($("#flexible").val() == false) {
 		$prefix = "";
 	}
 
