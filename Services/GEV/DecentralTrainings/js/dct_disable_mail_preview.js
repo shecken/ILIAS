@@ -95,9 +95,42 @@ function gevShowMailPreview(){
 			values["TRAININGSTITEL"] = "";
 		}
 
-		values["STARTDATUM"] = $('#date\\[date\\]_d').val().padLeft(2,"0") + "." + $('#date\\[date\\]_m').val().padLeft(2,"0") + "." + $('#date\\[date\\]_y').val();
-		values["ZEITPLAN"] = $('#time\\[start\\]\\[time\\]_h').val().padLeft(2,"0") + ":" + $('#time\\[start\\]\\[time\\]_m').val().padLeft(2,"0") + "-" + $('#time\\[end\\]\\[time\\]_h').val().padLeft(2,"0") + ":" + $('#time\\[end\\]\\[time\\]_m').val().padLeft(2,"0");
-		
+		if($("#flexible").val() == true) {
+			values["STARTDATUM"] = $('#date\\[date\\]_d').val().padLeft(2,"0") + "." + $('#date\\[date\\]_m').val().padLeft(2,"0") + "." + $('#date\\[date\\]_y').val();
+			values["ZEITPLAN"] = $('#time\\[start\\]\\[time\\]_h').val().padLeft(2,"0") + ":" + $('#time\\[start\\]\\[time\\]_m').val().padLeft(2,"0") + "-" + $('#time\\[end\\]\\[time\\]_h').val().padLeft(2,"0") + ":" + $('#time\\[end\\]\\[time\\]_m').val().padLeft(2,"0");
+		} else {
+			var start_h = new Array();
+			var start_m = new Array();
+			var end_h = new Array();
+			var end_m = new Array();
+
+			values["STARTDATUM"] = $('#date\\[start\\]\\[date\\]_d').val().padLeft(2,"0") + "." + $('#date\\[start\\]\\[date\\]_m').val().padLeft(2,"0") + "." + $('#date\\[start\\]\\[date\\]_y').val();
+			values["ENDDATUM"] = $('#date\\[end\\]\\[date\\]_d').val().padLeft(2,"0") + "." + $('#date\\[end\\]\\[date\\]_m').val().padLeft(2,"0") + "." + $('#date\\[end\\]\\[date\\]_y').val();
+			$("select[id^='schedule_starts']").each(function(index) {
+				if($(this).attr('name').indexOf('[start]')!= 0) {
+						if($(this).attr('name').indexOf('_h')) {
+							start_h[index] = $(this).val().padLeft(2, "0");
+						}
+						if($(this).attr('name').indexOf('_m')) {
+							start_m[index] = $(this).val().padLeft(2, "0");
+						}
+				}
+				if($(this).attr('name').indexOf('[end]')!= 0) {
+						if($(this).attr('name').indexOf('_h')) {
+							end_h[index] = $(this).val().padLeft(2, "0");
+						}
+						if($(this).attr('name').indexOf('_m')) {
+							end_m[index] = $(this).val().padLeft(2, "0");
+						}
+				}
+			});
+			var cnt = 0;
+			for(var i = 0; i < start_h.length; i+=4) {
+				values["ZEITPLAN"][cnt] = start_h[i] + ':' + start_m[i+1] + '-' + end_h[i+2] + ':' + end_m[i+3];
+				cnt++;
+			}
+		}
+
 		if(typeof tinyMCE !== 'undefined') {
 			var org_info = tinyMCE.activeEditor.getContent();
 			org_info = org_info.replace("<p>","").replace("</p>","");
