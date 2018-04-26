@@ -266,6 +266,7 @@ var ilMultiFormValues = {
 		{
 			$(element).find('select').each(function(idx) {
 				var value = 0;
+				$(this).removeAttr('selected');
 				switch(idx) {
 					case 0:
 					value = parseInt(preset.substr(0, 2), 10);
