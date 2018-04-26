@@ -94,7 +94,7 @@ function gevShowMailPreview(){
 		} else {
 			values["TRAININGSTITEL"] = "";
 		}
-console.log($("#flexible").val());
+
 		if($("#flexible").val() == true) {
 			values["STARTDATUM"] = $('#date\\[date\\]_d').val().padLeft(2,"0") + "." + $('#date\\[date\\]_m').val().padLeft(2,"0") + "." + $('#date\\[date\\]_y').val();
 			values["ZEITPLAN"] = $('#time\\[start\\]\\[time\\]_h').val().padLeft(2,"0") + ":" + $('#time\\[start\\]\\[time\\]_m').val().padLeft(2,"0") + "-" + $('#time\\[end\\]\\[time\\]_h').val().padLeft(2,"0") + ":" + $('#time\\[end\\]\\[time\\]_m').val().padLeft(2,"0");
@@ -131,8 +131,6 @@ console.log($("#flexible").val());
 			}
 		}
 
-
-console.log(values["ZEITPLAN"]);
 		if(typeof tinyMCE !== 'undefined') {
 			var org_info = tinyMCE.activeEditor.getContent();
 			org_info = org_info.replace("<p>","").replace("</p>","");
