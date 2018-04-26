@@ -103,6 +103,7 @@ function gevShowMailPreview(){
 			var start_m = new Array();
 			var end_h = new Array();
 			var end_m = new Array();
+			values["ZEITPLAN"] = new Array();
 
 			values["STARTDATUM"] = $('#date\\[start\\]\\[date\\]_d').val().padLeft(2,"0") + "." + $('#date\\[start\\]\\[date\\]_m').val().padLeft(2,"0") + "." + $('#date\\[start\\]\\[date\\]_y').val();
 			values["ENDDATUM"] = $('#date\\[end\\]\\[date\\]_d').val().padLeft(2,"0") + "." + $('#date\\[end\\]\\[date\\]_m').val().padLeft(2,"0") + "." + $('#date\\[end\\]\\[date\\]_y').val();
