@@ -1,5 +1,10 @@
 function ilInitDuration(event,args,prefix)
 {
+
+	if($("#flexible").val() == false) {
+		$prefix = "";
+	}
+
 	old = new Date(
 			document.getElementById("date[date]_y").options[document.getElementById("date[date]_y").selectedIndex].value, 
 			document.getElementById("date[date]_m").selectedIndex, 
@@ -9,7 +14,7 @@ function ilInitDuration(event,args,prefix)
 			0
 		);
 	
-	document.getElementById(prefix + "[start][time]_m").setAttribute("onChange", "ilUpdateEndDate()");
+	document.getElementById(prefix + "[start][time]_m").setAttribute("onChange", "ilUpdateEndDate("+prefix+")");
 
 	document.getElementById(prefix + "[end][time]_h").disabled = true;
 	document.getElementById(prefix + "[end][time]_m").disabled = true;
@@ -20,31 +25,30 @@ function ilInitDuration(event,args,prefix)
 	});
 }
 
-function ilUpdateEndDate(cal)
+function ilUpdateEndDate(prefix)
 {
-	var start;	
+	var start;
 	var end;
 	var diff;
-	
-		start = new Date(
-			document.getElementById("date[date]_y").options[document.getElementById("date[date]_y").selectedIndex].value, 
-			document.getElementById("date[date]_m").selectedIndex, 
-			document.getElementById("date[date]_d").selectedIndex + 1,
-			document.getElementById(prefix + "[start][time]_h").selectedIndex,
-			document.getElementById(prefix + "[start][time]_m").selectedIndex,
-			0
-		);
-			
 
-		end = new Date(
-			document.getElementById("date[date]_y").options[document.getElementById("date[date]_y").selectedIndex].value, 
-			document.getElementById("date[date]_m").selectedIndex, 
-			document.getElementById("date[date]_d").selectedIndex + 1,
-			document.getElementById(prefix + "[end][time]_h").selectedIndex,
-			document.getElementById(prefix + "[end][time]_m").selectedIndex,
-			0
-		);
-		
+	start = new Date(
+		document.getElementById("date[date]_y").options[document.getElementById("date[date]_y").selectedIndex].value, 
+		document.getElementById("date[date]_m").selectedIndex, 
+		document.getElementById("date[date]_d").selectedIndex + 1,
+		document.getElementById(prefix + "[start][time]_h").selectedIndex,
+		document.getElementById(prefix + "[start][time]_m").selectedIndex,
+		0
+	);
+
+	end = new Date(
+		document.getElementById("date[date]_y").options[document.getElementById("date[date]_y").selectedIndex].value, 
+		document.getElementById("date[date]_m").selectedIndex, 
+		document.getElementById("date[date]_d").selectedIndex + 1,
+		document.getElementById(prefix + "[end][time]_h").selectedIndex,
+		document.getElementById(prefix + "[end][time]_m").selectedIndex,
+		0
+	);
+
 	diff = end.getTime() - old.getTime();
 	end.setTime(start.getTime() + diff);
 
