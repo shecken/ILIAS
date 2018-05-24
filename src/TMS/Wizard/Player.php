@@ -21,6 +21,15 @@ class Player {
 	const COMMAND_PREVIOUS = "previous";
 	const COMMAND_SAVE = "save_step";
 
+	const TXT_CANCEL = 'abort';
+	const TXT_NEXT = 'next';
+	const TXT_PREVIOUS = 'previous';
+	const TXT_TITLE = 'title';
+	const TXT_CONFIRM = 'confirm';
+	const TXT_OVERVIEW_DESCRIPTION = 'overview_description';
+	const TXT_NO_STEPS_AVAILABLE = 'no_steps_available';
+	const TXT_ABORTED = 'aborted';
+
 	/**
 	 * @var Wizard
 	 */
