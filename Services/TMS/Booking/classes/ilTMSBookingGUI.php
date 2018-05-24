@@ -81,6 +81,28 @@ abstract class ilTMSBookingGUI {
 		$this->execute_show = $execute_show;
 	}
 
+	/**
+	 * Get the translations-decorator.
+	 *
+	 * @return  \ILIAS\TMS\Translations
+	 */
+	protected function getTranslations() {
+		$trans = new \ILIAS\TMS\TranslationsImpl(
+			array(
+				Wizard\Player::TXT_TITLE => $this->g_lng->txt('booking'),
+				Wizard\Player::TXT_CONFIRM => $this->g_lng->txt('booking_confirm'),
+				Wizard\Player::TXT_CANCEL => $this->g_lng->txt('cancel'),
+				Wizard\Player::TXT_NEXT => $this->g_lng->txt('btn_next'),
+				Wizard\Player::TXT_PREVIOUS => $this->g_lng->txt('btn_previous'),
+				Wizard\Player::TXT_OVERVIEW_DESCRIPTION => $this->g_lng->txt('booking_overview_description'),
+				Wizard\Player::TXT_NO_STEPS_AVAILABLE => $this->g_lng->txt('no_steps_available'),
+				Wizard\Player::TXT_ABORTED => $this->g_lng->txt('process_aborted')
+			)
+		);
+		return $trans;
+	}
+
+
 	public function executeCommand() {
 		assert('is_numeric($_GET["crs_ref_id"])');
 		assert('is_numeric($_GET["usr_id"]) || !in_array("usr_id", $_GET)');
@@ -96,14 +118,12 @@ abstract class ilTMSBookingGUI {
 		$this->setParameter($crs_ref_id, $usr_id);
 
 		$ilias_bindings = new Booking\ILIASBindings
-			( $this->g_lng
-			, $this->g_ctrl
+			(
+			  $this->g_ctrl
 			, $this
 			, $this->parent_gui
 			, $this->parent_cmd
-			, $this->getPlayerTitle()
-			, $this->getConfirmButtonLabel()
-			, $this->getOverViewDescription()
+			, $this->getTranslations()
 			);
 
 		$booking_allowed = $this->bookingAllowed($crs_ref_id, $usr_id);
@@ -187,46 +207,6 @@ abstract class ilTMSBookingGUI {
 		assert('is_int($crs_ref_id)');
 		$crs_obj_id = (int)\ilObject::_lookupObjId($crs_ref_id);
 		return $crs_obj_id;
-	}
-
-	/**
-	 * Get the title of the player.
-	 *
-	 * @return string
-	 */
-	protected function getPlayerTitle() {
-		assert('is_numeric($_GET["usr_id"]) || !in_array("usr_id", $_GET)');
-		if(in_array("usr_id", $_GET)) {
-			$usr_id = (int)$_GET["usr_id"];
-		} else {
-			global $DIC;
-			$usr_id = $DIC->user()->getId();
-		}
-
-		if($usr_id === (int)$this->g_user->getId()) {
-			return $this->g_lng->txt("booking");
-		}
-
-		require_once("Services/User/classes/class.ilObjUser.php");
-		return sprintf($this->g_lng->txt("booking_for"), ilObjUser::_lookupFullname($usr_id));
-	}
-
-	/**
-	 * Get a description for the overview step.
-	 *
-	 * @return string
-	 */
-	protected function getOverViewDescription() {
-		return $this->g_lng->txt("booking_overview_description");
-	}
-
-	/**
-	 * Get the label for the confirm button.
-	 *
-	 * @return string
-	 */
-	protected function getConfirmButtonLabel() {
-		return $this->g_lng->txt("booking_confirm");
 	}
 
 	/**

@@ -42,6 +42,32 @@ class ilTMSSuperiorCancelGUI extends \ilTMSCancelGUI {
 		}
 		$this->fireBookingEvent($event, $target_usr_id, $crs_ref_id);
 	}
+
+	/**
+	 * Get the title of the player.
+	 *
+	 * @return string
+	 */
+	protected function getPlayerTitle() {
+		assert('is_numeric($_GET["usr_id"])');
+		$usr_id = (int)$_GET["usr_id"];
+
+		require_once("Services/User/classes/class.ilObjUser.php");
+		return sprintf($this->g_lng->txt("canceling_for"), ilObjUser::_lookupFullname($usr_id));
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function getTranslations() {
+		$trans = new \ILIAS\TMS\TranslationsImpl(
+			array(
+				static::TXT_TITLE => $this->getPlayerTitle(),
+			),
+			parent::getTranslations()
+		);
+		return $trans;
+	}
 }
 
 /**
