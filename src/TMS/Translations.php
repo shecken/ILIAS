@@ -6,16 +6,12 @@ namespace ILIAS\TMS;
 
 
 /**
- * This is the interface to a decorator for accumulating translations.
+ * A translation will resolve an id/label to a text.
  */
 interface Translations  {
 
 	/**
-	 * @return array <string, string>
-	 */
-	public function getTxts();
-
-	/**
+	 * Return the resolved text for $id.
 	 * @param 	string 	$id
 	 * @return 	string
 	 */

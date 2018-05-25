@@ -16,26 +16,14 @@ class TranslationsImpl implements Translations  {
 	private $parent;
 
 	/**
-	 * @var array <string, string>
+	 * @var array <string, mixed>
 	 */
-	private $translations = array();
+	private $txts = array();
 
 
-	public function __construct(array $translations, Translations $parent = null) {
+	public function __construct(array $txts, Translations $parent = null) {
 		$this->parent = $parent;
-
-		$parent_trans = array();
-		if(! is_null($this->parent)){
-			$parent_trans = $this->parent->getTxts();
-		}
-		$this->translations = array_replace($parent_trans, $translations);
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function getTxts() {
-		return $this->translations;
+		$this->txts = $txts;
 	}
 
 	/**
@@ -43,11 +31,11 @@ class TranslationsImpl implements Translations  {
 	 */
 	public function getTxt($id) {
 		assert('is_string($id)');
-		$txts = $this->getTxts();
-		if(array_key_exists($id, $txts)) {
-			return $txts[$id];
-		} else {
-			return '-' .$id .'-';
+		if(array_key_exists($id, $this->txts)) {
+			return $this->txts[$id];
+		} elseif (! is_null($this->parent)) {
+			return $this->parent->getTxt($id);
 		}
+		return '-' .$id .'-';
 	}
 }
