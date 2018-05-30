@@ -66,9 +66,8 @@ class gevCourseSignatureList extends fpdf {
 			$usr_utils = gevUserUtils::getInstance($usr_id);
 			$firstname =  $usr_utils->getFirstname();
 			$lastname = $usr_utils->getLastname();
-			$orgus = $usr_utils->getAllOrgUnitTitlesUserIsMember();
-			$orgus = implode(", ",$orgus);
-			$participants["$lastname $firstname"] = array($firstname, $lastname, $orgus);
+			$cost_centre = $usr_utils->getFinancialAccount();
+			$participants["$lastname $firstname"] = array($firstname, $lastname, $cost_centre);
 		}
 		
 		ksort($participants, SORT_NATURAL | SORT_FLAG_CASE);
