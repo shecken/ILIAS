@@ -24,21 +24,28 @@ class gevBuildingBlockUtils
 	protected $topic;
 	protected $pool_id;
 
-	public static $possible_topics = array("Organisation" => "Organisation"
-						   ,"Alterssicherung" => "Alterssicherung"
-						   ,"Einkommenssicherung" => "Einkommenssicherung"
-						   ,"Vermögenssicherung" => "Vermögenssicherung"
-						   ,"Konzepte ohne Gesundheitsprüfung" => "Konzepte ohne Gesundheitsprüfung"
-						   ,"Betriebliche Altersvorsorge" => "Betriebliche Altersvorsorge"
-						   ,"Immobilienfinanzierung" => "Immobilienfinanzierung"
-						   ,"Gewerbe" => "Gewerbe"
-						   ,"Technische Versicherung" => "Technische Versicherung"
-						   ,"Transportversicherung" => "Transportversicherung"
-						   ,"AdcoCard" => "AdvoCard"
-						   ,"Highlights Privatkunden" => "Highlights Privatkunden"
-						   ,"myGenerali" => "myGenerali"
-						   ,"Heilwesen" => "Heilwesen"
-						   ,"KFZ-Versicherung" => "KFZ-Versicherung");
+	public static $possible_topics = array(
+		"Organisation" => "Organisation",
+		"Alterssicherung" => "Alterssicherung",
+		"Einkommenssicherung" => "Einkommenssicherung",
+		"Vermögenssicherung" => "Vermögenssicherung",
+		"Konzepte ohne Gesundheitsprüfung" => "Konzepte ohne Gesundheitsprüfung",
+		"Betriebliche Altersvorsorge" => "Betriebliche Altersvorsorge",
+		"Immobilienfinanzierung" => "Immobilienfinanzierung",
+		"Gewerbe" => "Gewerbe",
+		"Technische Versicherung" => "Technische Versicherung",
+		"Transportversicherung" => "Transportversicherung",
+		"AdcoCard" => "AdvoCard",
+		"Highlights Privatkunden" => "Highlights Privatkunden",
+		"myGenerali" => "myGenerali",
+		"Heilwesen" => "Heilwesen",
+		"KFZ-Versicherung" => "KFZ-Versicherung",
+		"Dialog (ID)" => "Dialog (ID)",
+		"Unabhängige Vertriebspartner" => "Unabhängige Vertriebspartner",
+		"AachenMünchener" => "AachenMünchener",
+		"GDAG" => "GDAG",
+		"Central" => "Central"
+	);
 
 	protected function __construct($a_building_block_id = null)
 	{
