@@ -58,7 +58,7 @@ class gevCourseSignatureList extends fpdf {
 
 		$this->SetWidths(array(35,35,65,55));
 		$this->SetFont('Arial','B',10);
-		$this->Row(array($this->gLng->txt("lastname"),$this->gLng->txt("firstname"),$this->gLng->txt("objs_orgu"),$this->gLng->txt("gev_signature")));
+		$this->Row(array($this->gLng->txt("lastname"),$this->gLng->txt("firstname"),$this->gLng->txt("cost_centre"),$this->gLng->txt("gev_signature")));
 		$this->SetFont('Arial','',10);
 		$y0 = $this->GetY();
 		$participants = array();
