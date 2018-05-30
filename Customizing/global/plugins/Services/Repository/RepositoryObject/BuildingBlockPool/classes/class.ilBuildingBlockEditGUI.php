@@ -140,6 +140,7 @@ class ilBuildingBlockEditGUI {
 		}
 
 		$topic_options = gevBuildingBlockUtils::getAllPossibleTopics();
+		asort($topic_options, SORT_FLAG_CASE | SORT_NATURAL);
 		$topic = new ilSelectInputGUI($this->gLng ->txt("gev_dec_training_topic"),"frm_topic");
 		$options = array("" => "-") + $topic_options;
 		$topic->setOptions($options);
