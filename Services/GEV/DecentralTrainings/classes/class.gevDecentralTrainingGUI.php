@@ -1544,9 +1544,8 @@ class gevDecentralTrainingGUI
 
 		if ($a_form_values["target_groups"] && $a_fill) {
 			$cbx_group_target_groups->setValue($a_form_values["target_groups"]);
-		} else {
-			$cbx_group_target_groups->setValue(array("Unabhängige Vertriebspartner"));
 		}
+
 		$form->addItem($cbx_group_target_groups);
 
 		/*************************
