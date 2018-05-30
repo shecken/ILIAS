@@ -257,8 +257,11 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 			$this->tpl->parseCurrentBlock();
 		}
 
-		if ($a_set["type"] == "Webinar") {
-			$this->tpl->setCurrentBlock("webinar_time");
+		if (
+			($a_set["type"] == "Webinar" || $a_set["type"] == "Präsenztraining") &&
+			($a_set["end_date"] == $a_set["start_date"])
+		) {
+			$this->tpl->setCurrentBlock("time");
 			$this->tpl->setVariable("TIME", $a_set["schedule"][0]);
 			$this->tpl->parseCurrentBlock();
 		}
