@@ -155,6 +155,7 @@ class gevUserProfileGUI
 		require_once("Services/Form/classes/class.ilRadioOption.php");
 		require_once("Services/Form/classes/class.ilEMailInputGUI.php");
 		require_once("Services/Form/classes/class.ilNonEditableValueGUI.php");
+		require_once("Services/Form/classes/class.ilUserLoginInputGUI.php");
 
 		$form = new ilPropertyFormGUI();
 		$form->addCommandButton("save", $this->lng->txt("save"));
@@ -164,7 +165,7 @@ class gevUserProfileGUI
 		$section1->setTitle($this->lng->txt("gev_personal_data"));
 		$form->addItem($section1);
 
-		$username = new ilTextInputGUI($this->lng->txt("gev_username_free"), "username");
+		$username = new ilUserLoginInputGUI($this->lng->txt("gev_username_free"), "username");
 		$username->setRequired(true);
 		$username->setValue($this->user->getLogin());
 		$form->addItem($username);
