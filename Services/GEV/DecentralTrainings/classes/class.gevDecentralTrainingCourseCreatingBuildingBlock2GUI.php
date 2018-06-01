@@ -232,7 +232,12 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 		$form_add_building_block->getTemplate()->setVariable("BTN_CMD","toAddCrsBuildingBlock");
 		$form_add_building_block->getTemplate()->setVariable("BTN_VALUE",$this->lng->txt("gev_dec_training_add_building_block"));
 
-		$building_block_json_link = $this->ctrl->getLinkTargetByClass("gevDecentralTrainingCreateBuildingBlockDataGUI", 'changeData', '', true);
+		try {
+			$building_block_json_link = $this->ctrl->getLinkTargetByClass("gevDecentralTrainingCreateBuildingBlockDataGUI", 'changeData', '', true);
+		}
+		catch (\ilCtrlException $e) {
+			$building_block_json_link = $this->ctrl->getLinkTargetByClass(["ilRepositoryGUI", "gevDecentralTrainingCreateBuildingBlockDataGUI"], 'changeData', '', true);
+		}
 		$form_add_building_block->getTemplate()->setVariable("BUILDING_BLOCK_JSON",$building_block_json_link);
 		$form_add_building_block->setFormAction($this->ctrl->getFormAction($this));
 		$form_add_building_block->setShowTopButtons(false);
@@ -964,7 +969,12 @@ class gevDecentralTrainingCourseCreatingBuildingBlock2GUI {
 		$settings = gevSettings::getInstance();
 		$mail_utils = gevMailUtils::getInstance();
 
-		$mail_preview_json = $this->ctrl->getLinkTargetByClass("gevDecentralTrainingCreateMailPreviewDataGUI", 'createPreviewData', '', true);
+		try {
+			$mail_preview_json = $this->ctrl->getLinkTargetByClass("gevDecentralTrainingCreateMailPreviewDataGUI", 'createPreviewData', '', true);
+		}
+		catch (\ilCtrlException $e) {
+			$mail_preview_json = $this->ctrl->getLinkTargetByClass(["ilRepositoryGUI", "gevDecentralTrainingCreateMailPreviewDataGUI"], 'createPreviewData', '', true);
+		}
 		$tpl->setVariable("MAIL_PREVIEW_JSON", $mail_preview_json);
 		
 		if($this->crs_ref_id !== null) {

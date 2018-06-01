@@ -27,6 +27,7 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 
 		$this->gLng = $lng;
 		$this->gCtrl = $ilCtrl;
+		$this->gUser = $ilUser;
 
 		$this->active_tab = $a_active_tab;
 		$this->in_search = $a_in_search;
@@ -194,11 +195,51 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 			$this->tpl->parseCurrentBlock();
 		}
 
+		require_once("Services/Link/classes/class.ilLink.php");
 		$crs_utils = gevCourseUtils::getInstance($a_set["obj_id"]);
-		$tutors = $crs_utils->getTrainers(true);
-		$tutors = implode("; ", $tutors);
+		$tutor_ids = $crs_utils->getTrainers();
 
-		$this->tpl->setVariable("TUTORS", $tutors);
+		$cnt = 0;
+		foreach ($tutor_ids as $tutor_id) {
+			$fullname = $this->gUser->_lookupFullname($tutor_id);
+			$user_utils = gevUserUtils::getInstance($tutor_id);
+			$trainer_profile = $user_utils->getTrainerprofile();
+			if($cnt > 0) {
+				$fullname = ", ".$fullname;
+			}
+
+			if($trainer_profile == "" || is_null($trainer_profile)) {
+				$this->tpl->setCurrentBlock("tutors");
+				$this->tpl->setVariable("TUTOR", $fullname);
+				$this->tpl->parseCurrentBlock();
+			} else {
+				$link = ilLink::_getStaticLink($trainer_profile,'file',true, "download");
+				$this->tpl->setCurrentBlock("tutorslink");
+				$this->tpl->setVariable("TUTOR_WITH_LINK", $fullname);
+				$this->tpl->setVariable("TUTOR_LINK", $link);
+				$this->tpl->parseCurrentBlock();
+			}
+			$cnt++;
+		}
+
+		$link_names = $crs_utils->getLinkNames();
+		$link_targets = $crs_utils->getLinkTargets();
+
+		if(count($link_targets) != 0 && $link_targets != false) {
+			$this->tpl->setVariable("LINK", "Links");
+			$result = array();
+			foreach($link_targets as $key => $target) {
+				$name = $target;
+				if(array_key_exists($key, $link_names)) {
+					$name = $link_names[$key];
+				}
+
+				$this->tpl->setCurrentBlock("links");
+				$this->tpl->setVariable("LINK_TARGET", $target);
+				$this->tpl->setVariable("LINK_NAME", $name);
+				$this->tpl->parseCurrentBlock();
+			}
+		}
 
 		$this->tpl->setVariable("FREE_PLACES", $unlimited
 											 ? $this->gLng->txt("gev_unlimited")
@@ -216,8 +257,11 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 			$this->tpl->parseCurrentBlock();
 		}
 
-		if ($a_set["type"] == "Webinar") {
-			$this->tpl->setCurrentBlock("webinar_time");
+		if (
+			($a_set["type"] == "Webinar" || $a_set["type"] == "Präsenztraining") &&
+			($a_set["end_date"] == $a_set["start_date"])
+		) {
+			$this->tpl->setCurrentBlock("time");
 			$this->tpl->setVariable("TIME", $a_set["schedule"][0]);
 			$this->tpl->parseCurrentBlock();
 		}

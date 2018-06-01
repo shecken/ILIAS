@@ -105,7 +105,7 @@ class ilObjReportEduBio extends ilObjReportBase
 				->select("usrcrs.end_date")
 				->select("crs.venue")
 				->select("crs.provider")
-				->select("crs.tutor")
+				->select_raw("GROUP_CONCAT(DISTINCT tutors.usr_id SEPARATOR ';') AS tutor")
 				->select("usrcrs.credit_points")
 				->select("crs.fee")
 				->select("usrcrs.participation_status")
@@ -121,6 +121,10 @@ class ilObjReportEduBio extends ilObjReportBase
 					->on("crs.crs_id = usrcrs.crs_id AND crs.hist_historic = 0")
 				->left_join("object_reference oref")
 					->on("crs.crs_id = oref.obj_id")
+				->left_join('hist_usercoursestatus tutors')
+					->on('tutors.crs_id = usrcrs.crs_id AND tutors.function = \'Trainer\''
+						.'	AND tutors.hist_historic = 0')
+				->group_by("usrcrs.crs_id")
 				->compile();
 		return $query;
 	}

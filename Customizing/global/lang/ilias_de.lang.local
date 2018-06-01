@@ -373,7 +373,7 @@ gev#:#evg_email#:#E-Mail-Adresse
 gev#:#evg_mandatory#:#Sie müssen dieses Feld bestätigen, um sich registrieren zu können.
 gev#:#evg_toc#:#Ja, ich stimme der <a href='/Customizing/global/skin/genv/static/documents/GEV_NB_Finale_Nutzungsbedingungen.pdf' target='_blank' class='blue'>Nutzungsvereinbarung</a> zu, um auf die Generali Online Akademie zugreifen zu können.
 gev#:#uvg_toc#:#Ja, ich stimme der <a href='/Customizing/global/skin/genv/static/documents/GEV_Makler_Finale_Nutzungsbedingungen.pdf' target='_blank' class='blue'>Nutzungsvereinbarung</a> zu, um auf die Generali Online Akademie zugreifen zu können.
-gev#:#evg_wbd#:#Hiermit erteile ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_BDL_Auftrag_BDL.pdf' target='_blank' class='blue'>Einwilligung zur Eintragung von Weiterbildungspunkten und -maßnahmen</a> in die WBD.
+gev#:#evg_wbd#:#Hiermit erteile ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_BDL_Auftrag_BDL.pdf' target='_blank' class='blue'>Einwilligung zur Eintragung von Weiterbildungszeit und -maßnahmen</a> in die WBD.
 gev#:#gev_accept_book_cond#:#Hiermit akzeptiere ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_Allg_Trainingsinfos Praesenz.pdf' target='_blank'  class='blue'>Buchungs- und Stornierungsbedingungen</a> der Generali Online Akademie.
 gev#:#gev_accomodations#:#Übernachtungen
 gev#:#gev_activity#:#Aktivität
@@ -405,7 +405,7 @@ gev#:#gev_bill_recipient#:#Rechnungsempfänger
 gev#:#gev_bill_number#:#Rechnungsnummer
 gev#:#gev_birthname#:#Geburtsname
 gev#:#gev_birthplace#:#Geburtsort
-gev#:#gev_book_contact_onside#:#Ad-Schulung.de@generali.com
+gev#:#gev_book_contact_onside#:#generali-onlineakademie.de@generali.com
 gev#:#gev_book_contact_pe#:#Kontakt PE
 gev#:#gev_book_contact_webinar#:#Generali-Webinare.de@generali.com
 gev#:#gev_book_course#:#Training buchen
@@ -482,6 +482,7 @@ gev#:#coupon_codes_used_sofar#:#Eingelöste Gutscheincodes
 gev#:#edit_course_bill_data#:#Rechungsdaten bearbeiten
 gev#:#gev_course_bill_title#:#Buchung des Trainings "%s" für "%s"
 gev#:#gev_course_categorie#:#Themenauswahl
+gev#:#gev_course_categorie_top#:#Themenauswahl/Kompetenzen aus Top-Trainings
 gev#:#gev_course_expired#:#Der gewählte Kurs ist nicht mehr verfügbar.
 gev#:#gev_course_id#:#Nr. der Maßnahme
 gev#:#gev_course_is_full#:#Leider ist das Training bereits ausgebucht.
@@ -532,7 +533,8 @@ gev#:#gev_email#:#E-Mail-Adresse
 gev#:#gev_com_email#:#Kommunikations E-Mail-Adresse
 gev#:#gev_employee_booking#:#Buchungen meiner Mitarbeiter / Vertriebspartner
 gev#:#gev_employee_booking_desc#:#Hier sehen Sie alle aktuellen Buchungen Ihrer Mitarbeiter / Vertriebspartner.
-gev#:#gev_entry_date#:#Eintrittsdatum
+gev#:#gev_entry_date#:#Eintrittsdatum Konzerunternehmen
+gev#:#gev_entry_date_ko#:#Eintrittsdatum Konzern
 gev#:#date_stable#:#Trainingstage
 gev#:#date_stable_desc#:#Feste Dauer. Letzter Tag automatisch eingestellt.
 gev#:#gev_event_title#:#Veranstaltungstitel
@@ -783,7 +785,7 @@ gev#:#gev_wbd_registration_has_bwv_id_cmd#:#Weiter
 gev#:#gev_wbd_registration_has_bwv_id_cmd_service#:#Weiter
 gev#:#gev_wbd_registration_header_note#:#Registrieren Sie sich bei der Weiterbildungsdatenbank.
 gev#:#gev_wbd_registration_no_bwv_id#:#Nein, ich habe noch keine GDV Vermittler-ID und werde diese in meinem Benutzeraccount nachtragen.
-gev#:#gev_wbd_registration_no_bwv_id_cmd#:#Anmeldung ohne Eröffnung eines Kontos und vorerst ohne Übermittlung der Punkte
+gev#:#gev_wbd_registration_no_bwv_id_cmd#:#Anmeldung ohne Eröffnung eines Kontos und vorerst ohne Übermittlung der Weiterbildungszeit
 gev#:#gev_wbd_registration_question_basis#:#Haben Sie bereits ein Weiterbildungskonto im Rahmen der Brancheninitiative „gut beraten“?
 gev#:#gev_wbd_registration_question_service#:#Sofern die Generali nicht Ihr Trusted Partner Service sein soll, oder Sie bereits an anderer Stelle eine Kontoeröffnung beantragt haben, nutzen Sie unten stehende Eingabefelder.
 gev#:#gev_wbd_relevant#:#WBD relevant
@@ -1156,7 +1158,7 @@ gev#:#gev_confirm_training_cancellation#:#Möchten sie das Training wirklich abs
 gev#:#gev_cancel_training_action#:#Absagen
 gev#:#gev_cancellation#:#Absage
 gev#:#gev_training_cancelled#:#Das Training wurde erfolgreich abgesagt. Bitte denken Sie daran, verbleibende Mitglieder des Trainings, die nicht automatisch entfernt werden konnten, eventuell zu benachrichten und vom Training zu entfernen.
-gev#:#gev_needs_wbd_acceptance#:#Sie müssen die Einwilligung zur Eintragung von Weiterbildungspunkten und -maßnahmen in die WBD erteilen, um fortfahren zu können.
+gev#:#gev_needs_wbd_acceptance#:#Sie müssen die Einwilligung zur Eintragung von Weiterbildungszeit und -maßnahmen in die WBD erteilen, um fortfahren zu können.
 gev#:#gev_company_name#:#Firmenname
 gev#:#gev_pstatus_mail_date_title#:#Die Einladung zum Seminar wurde verschickt am:
 gev#:#gev_pstatus_mail_confirm_title#:#Einladungsmail ist versandt:
@@ -1195,7 +1197,7 @@ gev#:#gev_warning_to_book_crs_self_because_period#:#Sie haben bereits ein oder m
 gev#:#gev_warning_to_book_crs_for_others_because_period#:#Der Mitarbeiter / Vertriebspartner hat bereits ein oder mehrere andere Trainings im gleichen Zeitraum gebucht.
 gev#:#gev_login_express#:#Anmelden
 gev#:#gev_login_express_existend_account#:#Ich habe in der Generali Online Akademie bereits ein Benutzerkonto.
-gev#:#gev_login_express_new_account#:#Ich möchte mich in der Online Akademie registrieren um künftig Webinare einfach nutzen zu können.
+gev#:#gev_login_express_new_account#:#Ich möchte mich in der Generali Online Akademie registrieren um künftig Webinare einfach nutzen zu können.
 gev#:#gev_express_login#:#Express Login
 gev#:#gev_login_express_no_login#:#Express Login <u>ohne</u> Gutschrift von Weiterbildungszeit.
 gev#:#gev_login_express_companyname#:#Firmenname
@@ -1309,6 +1311,7 @@ gev#:#gev_footer_infos_wbd_registration#:#Unterlagen zur WBD Registrierung
 gev#:#gev_footer_contact#:#Kontakt
 gev#:#gev_footer_imprint#:#Impressum
 gev#:#gev_footer_academy_benried#:#Generali Akademie GmbH, Bernried
+gev#:#gev_footer_academy_am#:#Akademie der AachenMünchener
 gev#:#gev_dec_training_venue_free_text_info#:#Name, Straße Hausnr., PLZ Ort
 gev#:#gev_dec_training_add_building_block#:#Baustein hinzufügen
 gev#:#gev_dec_activate#:#Aktivieren
@@ -1456,7 +1459,7 @@ gev#:#xrcg_delete#:#Unternehmensreport löschen
 gev#:#xrcg_visible#:#sichtbar
 gev#:#xrcg_edit_permission#:#schreibberechtigt
 gev#:#gev_give_affiliate_tp_service#:#Hiermit erteile ich den %s (<a href='/Customizing/global/skin/genv/static/documents/GEV_TPS_Wechsel_AAD.pdf' target='_blank' class='blue'>als AAD</a> / <a href='/Customizing/global/skin/genv/static/documents/GEV_TPS_Wechsel_§84HGB.pdf' target='_blank'  class='blue'>als §84HGB</a>) zur Verwaltung des WBD-Benutzerkontos als Trusted Partner Service.
-gev#:#gev_give_affiliate_wbd#:#Hiermit erteile ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_TPS_Wechsel_Auftrag_BDL.pdf' target='_blank' class='blue'>Einwilligung zur Eintragung von Weiterbildungspunkten und -maßnahmen</a> in die WBD.
+gev#:#gev_give_affiliate_wbd#:#Hiermit erteile ich die <a href='/Customizing/global/skin/genv/static/documents/GEV_TPS_Wechsel_Auftrag_BDL.pdf' target='_blank' class='blue'>Einwilligung zur Eintragung von Weiterbildungszeit und -maßnahmen</a> in die WBD.
 gev#:#gev_give_affiliate_tp_service_old#:#Name des vorherigen TP-Service oder "Selbstpfleger"
 gev#:#xrcg_edit_permission#:#schreibberechtigt
 gev#:#xatd_add#:#ASTD Report hinzufügen

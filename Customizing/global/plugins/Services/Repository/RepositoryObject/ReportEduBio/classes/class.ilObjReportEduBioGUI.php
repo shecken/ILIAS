@@ -142,7 +142,8 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 	}
 
 	public static function transformResultRow($rec) {
-		global $lng;
+		global $lng, $DIC;
+		$gUser = $DIC->user();
 		$no_entry = $lng->txt("gev_table_no_entry");
 
 		$rec["fee"] = (($rec["bill_id"] != -1 || gevUserUtils::getInstance(self::$target_user_id)->paysFees()) && $rec["fee"] != -1)
@@ -172,7 +173,27 @@ class ilObjReportEduBioGUI extends ilObjReportBaseGUI {
 			$end = new ilDate($rec["end_date"], IL_CAL_DATE);
 			$rec["date"] = ilDatePresentation::formatDate($start)." - <br/>".ilDatePresentation::formatDate($end);
 		}
-
+		if ($rec['tutor'] != null) {
+			require_once("Services/Link/classes/class.ilLink.php");
+			$tutor_ids = explode(";", $rec['tutor']);
+			$cnt = 0;
+			foreach ($tutor_ids as $tutor_id) {
+				$fullname = $gUser->_lookupFullname($tutor_id);
+				$user_utils = gevUserUtils::getInstance($tutor_id);
+				$trainer_profile = $user_utils->getTrainerprofile();
+				if($cnt > 0) {
+					$fullname = "<br/> ".$fullname;
+				}
+				if($trainer_profile == "" || is_null($trainer_profile)) {
+					$tutors .= $fullname;
+				} else {
+					$link = ilLink::_getStaticLink($trainer_profile,'file',true, "download");
+					$tutors .= "<a href='".$link."' style='color: #729FCF; text-decoration: underline;'>".$fullname."</a>";
+				}
+				$cnt++;
+			}
+			$rec['tutor'] = $tutors;
+		}
 		$rec["action"] = "";
 		if ($rec["bill_id"] != -1 && $rec["bill_id"] != "-empty-") {
 			$params = array("bill_id" => $rec["bill_id"],  "target_user_id" => self::$target_user_id);

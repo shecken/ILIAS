@@ -1106,6 +1106,10 @@ class gevDecentralTrainingGUI
 
 		$form->addItem($trnrs);
 
+		$flexible = new ilHiddenInputGUI("flexible");
+		$flexible->setValue("false");
+		$form->addItem($flexible);
+
 		/*************************
 		* TITEL
 		*************************/
@@ -1338,6 +1342,10 @@ class gevDecentralTrainingGUI
 		$crs_request_id->setValue($this->crs_request_id);
 		$form->addItem($crs_request_id);
 
+		$flexible = new ilHiddenInputGUI("flexible");
+		$flexible->setValue("true");
+		$form->addItem($flexible);
+
 		/*************************
 		* TITEL
 		*************************/
@@ -1536,9 +1544,8 @@ class gevDecentralTrainingGUI
 
 		if ($a_form_values["target_groups"] && $a_fill) {
 			$cbx_group_target_groups->setValue($a_form_values["target_groups"]);
-		} else {
-			$cbx_group_target_groups->setValue(array("Unabhängige Vertriebspartner"));
 		}
+
 		$form->addItem($cbx_group_target_groups);
 
 		/*************************

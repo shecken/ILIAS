@@ -58,6 +58,12 @@ class gevSettings
 	// Organisatorisches
 	const CRS_AMD_ORGA				= "crs_amd_orga";
 
+	// Block Links
+	// Linkname
+	const CRS_AMD_LINK_NAME			= "crs_amd_link_name";
+	// Linkziel
+	const CRS_AMD_LINK_TARGET		= "crs_amd_link_target";
+
 	// Block Trainingsinhalte
 	// Trainingsthema
 	const CRS_AMD_TOPIC 			= "crs_amd_topic";
@@ -275,6 +281,7 @@ class gevSettings
 	const USR_UDF_INACTIVE_START = 'usr_udf_inactive_start';
 	const USR_UDF_INACTIVE_END = 'usr_udf_inactive_end';
 	const USR_UDF_SUPERIOR_OF_USR = 'usr_udf_superior_of_usr';
+	const USR_UDF_TRAINER_PROFILE = 'usr_udf_trainer_profile';
 
 
 
@@ -364,12 +371,59 @@ class gevSettings
 		,'inaktiv von'
 		,'inaktiv bis'
 		,'Vorgesetzter'
+		,'Trainerprofil'
 	);
 
 	public static $LOCAL_USER_MANDATORY_UDF_FIELDS = array(
 		'Eintrittsdatum'
 	);
 
+	// get prefered crs categories for search filter
+	const SRTF_SOZIAL_COMP = "Soziale Kompetenz";
+	const SRTF_PERSONAL_COMP = "Persönliche Kompetenz";
+	const SRTF_METHODS_COMP = "Methodenkompetenz";
+	const SRTF_PC_IT_COMP_ID = "PC- / IT-Kompetenz (ID)";
+	const SRTF_SPEAK_COMP = "Sprachkompetenz";
+	const SRTF_IMPULS = "Impulsvorträge";
+	const SRTF_LEADERSHIP_SKILLS_PERS = "Führungskompetenz ID (Persönlichkeit)";
+	const SRTF_LEADERSHIP_SKILLS_TOOLS = "Führungskompetenz ID (Skills und Tools)";
+	const SRFT_LANGUAGE_TRAINING = "Sprachtrainings";
+	const SRFT_GDIS_WORKSHOP = "GDIS-Werkstatt";
+	const SRFT_ACCELERATING_TECHNICAL_EXCELLENCE = "Accelerating Technical Excellence (GATE)";
+	const SRFT_DEVELOPING_INSURANCE_CULTURE = "Developing Insurance Culture (GATE)";
+	const SRFT_SHAPING_THE_INDUSTRY = "Shaping the industry (GATE)";
+
+	// Headers for selection topics
+	const SRTF_TOP_TRAININGS = "Top-Trainings";
+	const SRTF_TOP_TRAININGS_LEAD = "Top-Trainings (Führung)";
+	const SRTF_TOPIC_SELECTION = "Themenauswahl";
+	const SRFT_FURTHER_SEMINAR_PROGRAMS = "Weitere Seminarprogramme";
+	const SRFT_GATE = "GATE";
+
+	public static $TOP_TRAININGS = array(
+		self::SRTF_SOZIAL_COMP => self::SRTF_SOZIAL_COMP,
+		self::SRTF_PERSONAL_COMP => self::SRTF_PERSONAL_COMP,
+		self::SRTF_METHODS_COMP => self::SRTF_METHODS_COMP,
+		self::SRTF_PC_IT_COMP_ID => self::SRTF_PC_IT_COMP_ID,
+		self::SRTF_SPEAK_COMP => self::SRTF_SPEAK_COMP,
+		self::SRTF_IMPULS => self::SRTF_IMPULS
+	);
+
+	public static $TOP_TRAININGS_LEAD = array(
+		self::SRTF_LEADERSHIP_SKILLS_PERS => self::SRTF_LEADERSHIP_SKILLS_PERS,
+		self::SRTF_LEADERSHIP_SKILLS_TOOLS => self::SRTF_LEADERSHIP_SKILLS_TOOLS
+	);
+
+	public static $FURTHER_SEMINAR_PROGRAMS = array(
+		self::SRFT_LANGUAGE_TRAINING => self::SRFT_LANGUAGE_TRAINING,
+		self::SRFT_GDIS_WORKSHOP => self::SRFT_GDIS_WORKSHOP
+	);
+
+	public static $GATE = array(
+		self::SRFT_ACCELERATING_TECHNICAL_EXCELLENCE => self::SRFT_ACCELERATING_TECHNICAL_EXCELLENCE,
+		self::SRFT_DEVELOPING_INSURANCE_CULTURE => self::SRFT_DEVELOPING_INSURANCE_CULTURE,
+		self::SRFT_SHAPING_THE_INDUSTRY => self::SRFT_SHAPING_THE_INDUSTRY
+	);
 
 	// Role mapping
 	public static $VMS_ROLE_MAPPING = array(

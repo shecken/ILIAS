@@ -40,8 +40,8 @@ class UserOrguUpdater
 	 */
 	public function applyDiff(UOA\AssignmentsDifference $diff)
 	{
-		$this->add($diff->toCreate());
 		$this->remove($diff->toDelete());
+		$this->add($diff->toCreate());
 	}
 
 

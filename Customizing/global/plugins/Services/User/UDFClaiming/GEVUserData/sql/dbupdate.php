@@ -813,3 +813,39 @@ gevUDFUtils::createUDFFields(array(
 	));
 
 ?>
+
+<#16>
+<?php
+
+require_once("Services/GEV/Utils/classes/class.gevUDFUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+require_once("Services/User/classes/class.ilUserDefinedFields.php");
+
+gevUDFUtils::createUDFFields(array(
+	"Trainerprofil" => array( gevSettings::USR_UDF_TRAINER_PROFILE
+											, UDF_TYPE_TEXT
+											, array( "visible"				=> true
+												   , "changeable"			=> false
+												   , "searchable"			=> false
+												   , "required"				=> false
+												   , "export"				=> true
+												   , "course_export"		=> false
+												   , "group_export"			=> false
+												   , "registration_visible"	=> false
+												   , "visible_lua"			=> false
+												   , "changeable_lua"		=> false
+												   , "certificate"			=> false
+												   )
+											, null
+											)
+	));
+
+?>
+
+<#17>
+<?php
+
+require_once("Services/GEV/Utils/classes/class.gevUDFUtils.php");
+gevUDFUtils::renameUDFField(gevSettings::USR_UDF_TRAINER_PROFILE, "Trainersteckbrief ID");
+
+?>

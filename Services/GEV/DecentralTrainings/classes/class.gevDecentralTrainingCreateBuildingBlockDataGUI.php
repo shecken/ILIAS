@@ -29,6 +29,10 @@ class gevDecentralTrainingCreateBuildingBlockDataGUI {
 		}
 	}
 
+	// This makes ilRepositoryGUI happy.
+	public function setCreationMode($foo) {
+	}
+
 	public function changeData() {
 		$selected = $_GET["selected"];
 		if($_GET["type"] == 0) {

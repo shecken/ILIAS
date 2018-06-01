@@ -34,6 +34,10 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 		}
 	}
 
+	// This makes ilRepositoryGUI happy.
+	public function setCreationMode($foo) {
+	}
+
 	protected function createPreviewData() {
 		if(isset($_GET["crs_ref_id"]) || isset($_GET["crs_template_id"])) {
 			$id = isset($_GET["crs_ref_id"]) ? $_GET["crs_ref_id"] : null;

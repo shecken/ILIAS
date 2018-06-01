@@ -883,3 +883,125 @@ $options = array(
 
 $amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_ASTD_CATEGORY, $options);
 ?>
+
+<#33>
+<?php
+
+require_once("Services/AdvancedMetaData/classes/class.ilAdvancedMDFieldDefinition.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+
+$records = array(
+	"Links" => array(
+		null,
+		array(
+			"Linkname" => array(
+				gevSettings::CRS_AMD_LINK_NAME,
+				null,
+				false,
+				null,
+				ilAdvancedMDFieldDefinition::TYPE_TEXT
+			),
+			"Linkziel" => array(
+				gevSettings::CRS_AMD_LINK_TARGET,
+				null,
+				false,
+				null,
+				ilAdvancedMDFieldDefinition::TYPE_TEXT
+			)
+		)
+	)
+);
+gevAMDUtils::createAMDRecords($records, array("crs"));
+
+?>
+
+<#34>
+<?php
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+$options = array(
+	  "SUHK - Privatkunden"
+	, "SUHK - Firmenkunden"
+	, "Leben und Rente"
+	, "Betriebliche Altersvorsorge"
+	, "Akquise / Verkauf"
+	, "Beratungs- und Tarifierungstools"
+	, "Büromanagement"
+	, "Neue Medien"
+	, "Agenturmanagement"
+	, "Führung"
+	, "VA-Ausbildung"
+	, "Azubi-Ausbildung"
+	, "Qualifizierungsprogramme"
+	, "Assistanceleistungen"
+	, "Investment"
+	, "Kranken und Pflege"
+	, "Rechtsschutz"
+	, "Bausparen und Finanzieren"
+	, "Sprachtrainings"
+	, "GDS-Werkstatt"
+	, "Soziale Kompetenz"
+	, "Persönliche Kompetenz"
+	, "Methodenkompetenz"
+	, "PC- / IT-Kompetenz (ID)"
+	, "Sprachkompetenz"
+	, "Impulsvorträge"
+	, "Führungskompetenz ID (Persönlichkeit)"
+	, "Führungskompetenz ID (Skills und Tools)"
+	, "Accelerating Technical Excellence (GATE)"
+	, "Developing Insurance Culture (GATE)"
+	, "Shaping the industry (GATE)"
+);
+
+sort($options);
+
+$amdutils = gevAMDUtils::getInstance();
+$amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_TOPIC, $options);
+
+?>
+
+<#35>
+<?php
+require_once("Services/GEV/Utils/classes/class.gevSettings.php");
+require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+$options = array(
+	  "SUHK - Privatkunden"
+	, "SUHK - Firmenkunden"
+	, "Leben und Rente"
+	, "Betriebliche Altersvorsorge"
+	, "Akquise / Verkauf"
+	, "Beratungs- und Tarifierungstools"
+	, "Büromanagement"
+	, "Neue Medien"
+	, "Agenturmanagement"
+	, "Führung"
+	, "VA-Ausbildung"
+	, "Azubi-Ausbildung"
+	, "Qualifizierungsprogramme"
+	, "Assistanceleistungen"
+	, "Investment"
+	, "Kranken und Pflege"
+	, "Rechtsschutz"
+	, "Bausparen und Finanzieren"
+	, "Sprachtrainings"
+	, "GDIS-Werkstatt"
+	, "Soziale Kompetenz"
+	, "Persönliche Kompetenz"
+	, "Methodenkompetenz"
+	, "PC- / IT-Kompetenz (ID)"
+	, "Sprachkompetenz"
+	, "Impulsvorträge"
+	, "Führungskompetenz ID (Persönlichkeit)"
+	, "Führungskompetenz ID (Skills und Tools)"
+	, "Accelerating Technical Excellence (GATE)"
+	, "Developing Insurance Culture (GATE)"
+	, "Shaping the industry (GATE)"
+);
+
+sort($options);
+
+$amdutils = gevAMDUtils::getInstance();
+$amdutils->updateOptionsOfAMDField(gevSettings::CRS_AMD_TOPIC, $options);
+
+?>

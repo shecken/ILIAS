@@ -155,6 +155,7 @@ class gevUserProfileGUI
 		require_once("Services/Form/classes/class.ilRadioOption.php");
 		require_once("Services/Form/classes/class.ilEMailInputGUI.php");
 		require_once("Services/Form/classes/class.ilNonEditableValueGUI.php");
+		require_once("Services/Form/classes/class.ilUserLoginInputGUI.php");
 
 		$form = new ilPropertyFormGUI();
 		$form->addCommandButton("save", $this->lng->txt("save"));
@@ -164,7 +165,7 @@ class gevUserProfileGUI
 		$section1->setTitle($this->lng->txt("gev_personal_data"));
 		$form->addItem($section1);
 
-		$username = new ilTextInputGUI($this->lng->txt("gev_username_free"), "username");
+		$username = new ilUserLoginInputGUI($this->lng->txt("gev_username_free"), "username");
 		$username->setRequired(true);
 		$username->setValue($this->user->getLogin());
 		$form->addItem($username);
@@ -328,6 +329,11 @@ class gevUserProfileGUI
 		$_entry_date = $this->user_utils->getEntryDate();
 		$entry_date->setValue($_entry_date?ilDatePresentation::formatDate($_entry_date):"");
 		$form->addItem($entry_date);
+
+		$entry_date_ko = new ilNonEditableValueGUI($this->lng->txt("gev_entry_date_ko"));
+		$_entry_date_ko = $this->user_utils->getEntryDateKo();
+		$entry_date_ko->setValue($_entry_date_ko?ilDatePresentation::formatDate($_entry_date_ko):"");
+		$form->addItem($entry_date_ko);
 
 		$exit_date = new ilNonEditableValueGUI($this->lng->txt("gev_exit_date"));
 		$_exit_date = $this->user_utils->getExitDate();

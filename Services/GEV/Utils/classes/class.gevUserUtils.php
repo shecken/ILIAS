@@ -318,6 +318,7 @@ class gevUserUtils
 		$additional_where = " AND (amd6.value != 'Praxisbegleitung (AD)' OR amd6.value IS NULL)";
 
 		require_once("Services/ParticipationStatus/classes/class.ilParticipationStatus.php");
+
 		$booked = array_diff(
 			$this->filter_for_online_courses($this->getBookedCourses()),
 			$this->getCoursesWithFeedbackDoneAndStatusIn(array( ilParticipationStatus::STATUS_SUCCESSFUL
@@ -989,6 +990,24 @@ class gevUserUtils
 		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE, $a_date->get(IL_CAL_DATE));
 	}
 
+	public function getEntryDateKo()
+	{
+		$val = $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE_KO);
+		if (!trim($val)) {
+			return null;
+		}
+		try {
+			return new ilDate($val, IL_CAL_DATE);
+		} catch (Exception $e) {
+			return null;
+		}
+	}
+
+	public function setEntryDateKo(ilDate $a_date)
+	{
+		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_ENTRY_DATE_KO, $a_date->get(IL_CAL_DATE));
+	}
+
 	public function getExitDate()
 	{
 		$val = $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_EXIT_DATE);
@@ -1042,6 +1061,16 @@ class gevUserUtils
 	public function setHPE($a_hpe)
 	{
 		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_HPE, $a_hpe);
+	}
+
+	public function getTrainerprofile()
+	{
+		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_TRAINER_PROFILE);
+	}
+
+	public function setTrainerprofile($id)
+	{
+		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_TRAINER_PROFILE, $id);
 	}
 
 
@@ -1336,7 +1365,7 @@ class gevUserUtils
 	*/
 	public function getCoursesWithFeedbackDoneAndStatusIn(array $stati)
 	{
-		$query = 	"SELECT crs_id FROM crs_pstatus_usr "
+		$query = 	"SELECT crs_id, status FROM crs_pstatus_usr "
 					." JOIN object_data ON obj_id = crs_id "
 					." WHERE "
 					."	".$this->db->in('status', $stati, false, 'integer')
@@ -1345,7 +1374,11 @@ class gevUserUtils
 		$return = array();
 		while ($rec = $this->db->fetchAssoc($res)) {
 			$crs_utils = gevCourseUtils::getInstance($rec["crs_id"]);
-			if(count($crs_utils->getUndoneFeedbackRefIds($this->user_id)) == 0) {
+			if(($rec["status"] == ilParticipationStatus::STATUS_SUCCESSFUL
+					&& count($crs_utils->getUndoneFeedbackRefIds($this->user_id)) == 0
+				)
+				|| $rec["status"] != ilParticipationStatus::STATUS_SUCCESSFUL
+			) {
 				$return[] = $rec["crs_id"];
 			}
 		}
