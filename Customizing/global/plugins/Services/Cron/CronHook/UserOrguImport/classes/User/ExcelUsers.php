@@ -86,8 +86,6 @@ class ExcelUsers
 			$row = $this->postprocessRow($row);
 			if ($this->checkRow($row)) {
 				$users->add(new User\User($row, $ident));
-			} else {
-				$this->e_c->addError('Invalid User data: '.Base\Log\DatabaseLog::arrayToString($row));
 			}
 		}
 		return $users;
@@ -110,21 +108,50 @@ class ExcelUsers
 
 	protected function checkRow(array $row)
 	{
-		$kz_ku_set = trim((string)$row[UdfWrapper::PROP_FLAG_KU]) !== '';
+
 		$pnr_set = trim((string)$row[UdfWrapper::PROP_PNR]) !== '';
+		if (!$pnr_set) {
+			$this->e_c->addError('No pnr set for user');
+			return false;
+		}
+		$kz_ku_set = trim((string)$row[UdfWrapper::PROP_FLAG_KU]) !== '';
+		if (!$kz_ku_set) {
+			$this->e_c->addError('No ku set for user with pnr '.$row[UdfWrapper::PROP_PNR]);
+		}
 		$orgus_set = trim((string)$row[UdfWrapper::PROP_ORGUS]) !== '';
+		if (!$orgus_set) {
+			$this->e_c->addError('No orgu set for user with pnr '.$row[UdfWrapper::PROP_PNR]);
+		}
 		$mail_set = trim((string)$row[UdfWrapper::PROP_EMAIL]) !== '';
+		if (!$mail_set) {
+			$this->e_c->addError('No mail set for user with pnr '.$row[UdfWrapper::PROP_PNR]);
+		}
 		$firstname_set = trim((string)$row[UdfWrapper::PROP_FIRSTNAME]) !== '';
+		if (!$firstname_set) {
+			$this->e_c->addError('No firsname set for user with pnr '.$row[UdfWrapper::PROP_PNR]);
+		}
 		$lastname_set = trim((string)$row[UdfWrapper::PROP_LASTNAME]) !== '';
+		if (!$lastname_set) {
+			$this->e_c->addError('No lastname set for user with pnr '.$row[UdfWrapper::PROP_PNR]);
+		}
 		$function_set = trim((string)$row[UdfWrapper::PROP_FUNCTION]) !== '';
+		if (!$function_set) {
+			$this->e_c->addError('No function set for user with pnr '.$row[UdfWrapper::PROP_PNR]);
+		}
 		$gender = trim((string)$row[UdfWrapper::PROP_GENDER]);
 		$gender_set = $gender === 'm' || $gender === 'f';
+		if (!$gender_set) {
+			$this->e_c->addError('No gender set for user with pnr '.$row[UdfWrapper::PROP_PNR]);
+		}
 		$dates_set =
 			$row[UdfWrapper::PROP_INACTIVE_BEGIN] !== false &&
 			$row[UdfWrapper::PROP_INACTIVE_END] !== false &&
 			$row[UdfWrapper::PROP_ENTRY_DATE_KU] !== false &&
 			$row[UdfWrapper::PROP_ENTRY_DATE_KO] !== false &&
 			$row[UdfWrapper::PROP_EXIT_DATE] !== false;
+		if (!$dates_set) {
+			$this->e_c->addError('Ivalid dates for user with pnr '.$row[UdfWrapper::PROP_PNR]);
+		}
 		return	$kz_ku_set
 			&&	$pnr_set
 			&&	$orgus_set
