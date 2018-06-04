@@ -841,7 +841,7 @@ class ilTemplate extends ilTemplateX
 		{
 			include_once "Services/Link/classes/class.ilLink.php";
 			// spx-patch start
-			$link_items["http://www.seepex.com/en/imprint/"] = array($lng->txt("imprint"), true);
+			$link_items["https://www.seepex.com/en/footernavigation/imprint/"] = array($lng->txt("imprint"), true);
 			// spx-patch end
 		}
 
