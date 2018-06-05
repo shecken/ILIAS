@@ -58,7 +58,7 @@ class gevCourseSignatureList extends fpdf {
 
 		$this->SetWidths(array(35,35,65,55));
 		$this->SetFont('Arial','B',10);
-		$this->Row(array($this->gLng->txt("lastname"),$this->gLng->txt("firstname"),$this->gLng->txt("objs_orgu"),$this->gLng->txt("gev_signature")));
+		$this->Row(array($this->gLng->txt("lastname"),$this->gLng->txt("firstname"),$this->gLng->txt("cost_centre"),$this->gLng->txt("gev_signature")));
 		$this->SetFont('Arial','',10);
 		$y0 = $this->GetY();
 		$participants = array();
@@ -66,9 +66,8 @@ class gevCourseSignatureList extends fpdf {
 			$usr_utils = gevUserUtils::getInstance($usr_id);
 			$firstname =  $usr_utils->getFirstname();
 			$lastname = $usr_utils->getLastname();
-			$orgus = $usr_utils->getAllOrgUnitTitlesUserIsMember();
-			$orgus = implode(", ",$orgus);
-			$participants["$lastname $firstname"] = array($firstname, $lastname, $orgus);
+			$cost_centre = $usr_utils->getFinancialAccount();
+			$participants["$lastname $firstname"] = array($firstname, $lastname, $cost_centre);
 		}
 		
 		ksort($participants, SORT_NATURAL | SORT_FLAG_CASE);

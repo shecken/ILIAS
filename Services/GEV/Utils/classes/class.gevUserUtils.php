@@ -1970,11 +1970,11 @@ class gevUserUtils
 		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_PAISY_NUMBER, $a_nr);
 	}
 
-	public function getFinancialAccountVFS()
+	public function getFinancialAccount()
 	{
 		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_FINANCIAL_ACCOUNT);
 	}
-	public function setFinancialAccountVFS($a_nr)
+	public function setFinancialAccount($a_nr)
 	{
 		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_FINANCIAL_ACCOUNT, $a_nr);
 	}
