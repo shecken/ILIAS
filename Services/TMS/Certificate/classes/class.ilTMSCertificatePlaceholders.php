@@ -188,6 +188,10 @@ class ilTMSCertificatePlaceholders {
 
 
 	protected function iddTime($usr_id) {
+		require_once("Services/Component/classes/class.ilPluginAdmin.php");
+		if(!\ilPluginAdmin::isPluginActive('xetr')) {
+			return null;
+		}
 		$edutracking = $this->getFirstChildOfByType($this->crs_obj->getRefId(), 'xetr');
 		if(! $edutracking) {
 			return $edutracking;
