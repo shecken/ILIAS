@@ -10,9 +10,15 @@ class Date extends Filter {
 	 */
 	private $default;
 
-	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $label, $description,
-			\DateTime $default = null,
-			array $mappings = array(), array $mapping_result_types = array()) {
+	public function __construct(
+		\ILIAS\TMS\Filter\FilterFactory $factory,
+		$label,
+		$description,
+		$visible,
+		\DateTime $default = null,
+		array $mappings = array(),
+		array $mapping_result_types = array()
+	) {
 		assert('is_string($label)');
 		assert('is_string($description)');
 
@@ -20,6 +26,7 @@ class Date extends Filter {
 		$this->setLabel($label);
 		$this->setDescription($description);
 		$this->setMappings($mappings, $mapping_result_types);
+		$this->setVisible($visible);
 
 		if ($default === null) {
 			$this->default = new \DateTime(date("Y")."-01-01");
@@ -68,6 +75,7 @@ class Date extends Filter {
 				$this->factory,
 				$this->label(),
 				$this->description(),
+				$this->isVisible(),
 				$dt,
 				$ms,
 				$mrts);

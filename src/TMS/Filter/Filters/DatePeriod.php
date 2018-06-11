@@ -25,10 +25,17 @@ class DatePeriod extends Filter {
 	 */
 	private $period_max;
 
-	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $label, $description,
-			\DateTime $default_begin = null, \DateTime $default_end = null,
-			\DateTime $period_min = null, \DateTime $period_max = null,
-			array $mappings = array(), array $mapping_result_types = array()) {
+	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory,
+		$label,
+		$description,
+		$visible,
+		\DateTime $default_begin = null,
+		\DateTime $default_end = null,
+		\DateTime $period_min = null,
+		\DateTime $period_max = null,
+		array $mappings = array(),
+		array $mapping_result_types = array()
+	) {
 		assert('is_string($label)');
 		assert('is_string($description)');
 
@@ -36,6 +43,7 @@ class DatePeriod extends Filter {
 		$this->setLabel($label);
 		$this->setDescription($description);
 		$this->setMappings($mappings, $mapping_result_types);
+		$this->setVisible($visible);
 
 		if ($default_begin === null) {
 			$this->default_begin = new \DateTime(date("Y")."-01-01");

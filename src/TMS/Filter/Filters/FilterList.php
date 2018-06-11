@@ -16,7 +16,20 @@ abstract class FilterList extends Filter {
 	 * @param	Filter[]	$subs
 	 */
 	protected function setSubs($subs) {
-		$this->subs = array_map(function(Filter $f) { return $f; }, $subs);
+		$subs = array_filter($subs,
+			function($f) {
+				return $f->isVisible();
+			}
+		);
+
+		$subs = array_map(
+			function(Filter $f) {
+				return $f;
+			}
+			, $subs
+		);
+
+		$this->subs = array_values($subs);
 	}
 
 	/**
