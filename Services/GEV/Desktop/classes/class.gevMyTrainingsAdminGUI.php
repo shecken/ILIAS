@@ -187,26 +187,10 @@ class gevMyTrainingsAdminGUI {
 		$ilCtrl->setParameter($a_parent_gui, "crsrefid", $a_crs_ref_id);
 		ilParticipationStatusAdminGUI::renderToolbar($a_parent_gui, $pstatus, $crs_obj, $may_write, $may_finalize);
 		global $ilToolbar;
-
-		require_once("Services/GEV/Utils/classes/class.gevCourseUtils.php");
-		$crs_utils = gevCourseUtils::getInstanceByObj($crs_obj);
-		$min_parti = ($crs_utils->getMinParticipants() === null) ? 0 : $crs_utils->getMinParticipants();
-		$succ_parti = $crs_utils->getSuccessfullParticipants();
-
-		$getSuccessfullParticipants = "";
-		if($min_parti > count($succ_parti)) {
-			$tpl_adivce = new ilTemplate("tpl.gev_my_advice.html", true, true, "Services/GEV/Desktop");
-			$tpl_adivce->setCurrentBlock("advice");
-			$tpl_adivce->setVariable("ADVICE", sprintf($lng->txt("gev_training_min_participation_count_not_reached"),$min_parti));
-			$tpl_adivce->parseCurrentBlock();
-
-			$getSuccessfullParticipants = $tpl_adivce->get();
-		}
 		
 		$ret = ( $title->render()
 			   . $ilToolbar->getHTML()
 			   . $spacer->render()
-			   . $getSuccessfullParticipants
 			   . $ptstatusgui->getHTML()
 			   );
 		$ilToolbar->setHidden(true);
