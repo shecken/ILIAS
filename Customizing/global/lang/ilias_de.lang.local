@@ -1374,7 +1374,6 @@ gev#:#gev_crs_search_present#:#Präsenztraining
 gev#:#gev_crs_search_webinar#:#Webinar
 gev#:#gev_crs_search_self_learn#:#Selbstlernkurs
 gev#:#gev_crs_search_virtual_training#:#Virtuelles Training
-gev#:#gev_training_min_participation_count_not_reached#:#Bitte beachten Sie! Wenn für dieses Training Bildungspunkte vergeben werden sollen, ist eine Mindestteilnehmerzahl von %s punkteberechtigten Personen erforderlich.
 gev#:#cancel_training#:#Training absagen
 gev#:#crs_cancel_training#:#Training absagen
 gev#:#gev_report_mode#:#Report Ansicht
