@@ -807,7 +807,6 @@ class gevBookingGUI
 			if (!$this->isSelfLearningCourse() && !$this->isCoachingCourse()) {
 				if ($booked) {
 					$automails->send("self_booking_to_booked", array($this->user_id));
-					$automails->send("invitation", array($this->user_id));
 				} else {
 					$automails->send("self_booking_to_waiting", array($this->user_id));
 				}
