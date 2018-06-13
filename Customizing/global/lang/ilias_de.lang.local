@@ -1372,12 +1372,9 @@ gev#:#gev_coupon_report_admin_mode#:#Admin-Modus
 gev#:#gev_dec_forward_to_kurs#:#zum Kurs
 gev#:#gev_crs_search_all#:#Alle Trainings
 gev#:#gev_crs_search_present#:#Präsenztraining
-gev#:#gev_crs_search_top#:#TOP Trainings
-gev#:#gev_crs_search_le#:#LE Bildungsprogramm
 gev#:#gev_crs_search_webinar#:#Webinar
 gev#:#gev_crs_search_self_learn#:#Selbstlernkurs
 gev#:#gev_crs_search_virtual_training#:#Virtuelles Training
-gev#:#gev_training_min_participation_count_not_reached#:#Bitte beachten Sie! Wenn für dieses Training Bildungspunkte vergeben werden sollen, ist eine Mindestteilnehmerzahl von %s punkteberechtigten Personen erforderlich.
 gev#:#cancel_training#:#Training absagen
 gev#:#crs_cancel_training#:#Training absagen
 gev#:#gev_report_mode#:#Report Ansicht
