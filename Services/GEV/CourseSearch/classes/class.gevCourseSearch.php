@@ -125,11 +125,10 @@ class gevCourseSearch {
 		if (array_key_exists("type", $a_search_options)) {
 			$edu_types = $a_search_options["type"];
 
-			if (in_array("LE-Training zentral (ID)", $edu_types)) {
+			if (in_array("LE-Training zentral (ID)", $edu_types) || in_array("HR-Training (ID)", $edu_types)) {
 
 				$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
 
-				// this is knowledge from the course amd plugin!
 				$additional_join .=
 					" LEFT JOIN adv_md_values_text edu_program\n".
 					"   ON cs.obj_id = edu_program.obj_id\n".
@@ -139,19 +138,6 @@ class gevCourseSearch {
 					" AND edu_program.value LIKE ".$this->gDB->quote("%".$edu_types["edu_program"]."%", "text")."\n";
 			}
 
-			if (in_array("HR-Training (ID)", $edu_types)) {
-
-				$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
-
-				// this is knowledge from the course amd plugin!
-				$additional_join .=
-					" LEFT JOIN adv_md_values_text edu_program\n".
-					"   ON cs.obj_id = edu_program.obj_id\n".
-					"   AND edu_program.field_id = ".$this->gDB->quote($edu_program_field_id, "integer")."\n";
-					;
-				$additional_where .=
-					" AND edu_program.value LIKE ".$this->gDB->quote("%".$edu_types["edu_program"]."%", "text")."\n";
-			}
 			unset($a_search_options["type"]["edu_program"]);
 		}
 
