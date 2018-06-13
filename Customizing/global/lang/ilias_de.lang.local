@@ -1307,6 +1307,7 @@ gev#:#gev_footer_bipro_superior#:#Weiterbildungsprogramme 2015 Führungskräfte
 gev#:#gev_footer_infos_decentral#:#Allgemeine Informationen Generali Präsenztrainings
 gev#:#gev_footer_infos_webinar#:#Allgemeine Informationen zu Generali Webinaren
 gev#:#gev_footer_terms_of_use#:#Nutzungsvereinbarungen
+gev#:#gev_footer_dsgvo#:#Datenschutzerklärung
 gev#:#gev_footer_infos_wbd_registration#:#Unterlagen zur WBD Registrierung
 gev#:#gev_footer_contact#:#Kontakt
 gev#:#gev_footer_imprint#:#Impressum
@@ -1371,9 +1372,12 @@ gev#:#gev_coupon_report_admin_mode#:#Admin-Modus
 gev#:#gev_dec_forward_to_kurs#:#zum Kurs
 gev#:#gev_crs_search_all#:#Alle Trainings
 gev#:#gev_crs_search_present#:#Präsenztraining
+gev#:#gev_crs_search_top#:#TOP Trainings
+gev#:#gev_crs_search_le#:#LE Bildungsprogramm
 gev#:#gev_crs_search_webinar#:#Webinar
 gev#:#gev_crs_search_self_learn#:#Selbstlernkurs
 gev#:#gev_crs_search_virtual_training#:#Virtuelles Training
+gev#:#gev_training_min_participation_count_not_reached#:#Bitte beachten Sie! Wenn für dieses Training Bildungspunkte vergeben werden sollen, ist eine Mindestteilnehmerzahl von %s punkteberechtigten Personen erforderlich.
 gev#:#cancel_training#:#Training absagen
 gev#:#crs_cancel_training#:#Training absagen
 gev#:#gev_report_mode#:#Report Ansicht
