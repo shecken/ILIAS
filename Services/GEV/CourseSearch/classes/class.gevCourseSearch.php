@@ -122,18 +122,38 @@ class gevCourseSearch {
 			$additional_where .= " AND od.title LIKE ".$this->gDB->quote("%".$a_search_options["title"]."%", "text")."\n";
 		}
 
-		// if (array_key_exists("edu_program", $a_search_options)) {
-		// 	$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
+		if (array_key_exists("type", $a_search_options)) {
+			$edu_types = $a_search_options["type"];
 
-		// 	// this is knowledge from the course amd plugin!
-		// 	$additional_join .=
-		// 		" LEFT JOIN adv_md_values_text edu_program\n".
-		// 		"   ON cs.obj_id = edu_program.obj_id\n".
-		// 		"   AND edu_program.field_id = ".$this->gDB->quote($edu_program_field_id, "integer")."\n";
-		// 		;
-		// 	$additional_where .=
-		// 		" AND edu_program.value LIKE ".$this->gDB->quote("%".$a_search_options["edu_program"]."%", "text")."\n";
-		// }
+			if (in_array("LE-Training zentral (ID)", $edu_types)) {
+
+				$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
+
+				// this is knowledge from the course amd plugin!
+				$additional_join .=
+					" LEFT JOIN adv_md_values_text edu_program\n".
+					"   ON cs.obj_id = edu_program.obj_id\n".
+					"   AND edu_program.field_id = ".$this->gDB->quote($edu_program_field_id, "integer")."\n";
+					;
+				$additional_where .=
+					" AND edu_program.value LIKE ".$this->gDB->quote("%".$edu_types["edu_program"]."%", "text")."\n";
+			}
+
+			if (in_array("HR-Training (ID)", $edu_types)) {
+
+				$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
+
+				// this is knowledge from the course amd plugin!
+				$additional_join .=
+					" LEFT JOIN adv_md_values_text edu_program\n".
+					"   ON cs.obj_id = edu_program.obj_id\n".
+					"   AND edu_program.field_id = ".$this->gDB->quote($edu_program_field_id, "integer")."\n";
+					;
+				$additional_where .=
+					" AND edu_program.value LIKE ".$this->gDB->quote("%".$edu_types["edu_program"]."%", "text")."\n";
+			}
+			unset($a_search_options["type"]["edu_program"]);
+		}
 
 		if (array_key_exists("type", $a_search_options)) {
 			$types = $a_search_options["type"];
@@ -153,7 +173,7 @@ class gevCourseSearch {
 					$additional_where .= " AND ";
 				}
 				$additional_where .=$this->gDB->in("ltype.value", $types, $negate = false, $a_type = "text").$close_bracked."\n";
-			} else {
+			} else if ($is_prae) {
 				$additional_where .= ")";
 			}
 			
@@ -294,7 +314,7 @@ class gevCourseSearch {
 				 "		)\n".
 				 $additional_where.
 				 "";
-//var_dump($query);die();
+
 		$res = $this->gDB->query($query);
 		$crss = array();
 		while($val = $this->gDB->fetchAssoc($res)) {
@@ -419,10 +439,10 @@ class gevCourseSearch {
 				$options["prae"] = "Präsenztraining";
 				break;
 			case self::TAB_TOP:
-				$a_serach_opts["edu_program"] = "LE-Training zentral (ID)";
+				$options["edu_program"] = "LE-Training zentral (ID)";
 				break;
 			case self::TAB_LE:
-				$a_serach_opts["edu_program"] = "HR-Training (ID)";
+				$options["edu_program"] = "HR-Training (ID)";
 				break;
 			case self::TAB_WEBINAR:
 				$options["webinar"] = "Webinar";
