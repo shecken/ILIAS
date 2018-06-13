@@ -76,8 +76,8 @@ class gevFooterLinks {
 				}
 			),
 		 /*AGB*/array
-		 	( "link" => "./static_pages.php?tpl=agb"
-			 ,"desc" => "gev_footer_terms_of_use"
+			( "link" => "./static_pages.php?tpl=dsvgo"
+			 ,"desc" => "gev_footer_dsgvo"
 			 ,"display" => function() use ($uutils) {
 					if($uutils) {
 						if (!$uutils->hasRoleIn(array("VP"))) {
