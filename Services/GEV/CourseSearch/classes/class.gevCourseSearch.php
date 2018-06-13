@@ -122,23 +122,16 @@ class gevCourseSearch {
 			$additional_where .= " AND od.title LIKE ".$this->gDB->quote("%".$a_search_options["title"]."%", "text")."\n";
 		}
 
-		if (array_key_exists("type", $a_search_options)) {
-			$edu_types = $a_search_options["type"];
+		if (array_key_exists("edu_program", $a_search_options)) {
+			$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
 
-			if (in_array("LE-Training zentral (ID)", $edu_types) || in_array("HR-Training (ID)", $edu_types)) {
-
-				$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
-
-				$additional_join .=
-					" LEFT JOIN adv_md_values_text edu_program\n".
-					"   ON cs.obj_id = edu_program.obj_id\n".
-					"   AND edu_program.field_id = ".$this->gDB->quote($edu_program_field_id, "integer")."\n";
-					;
-				$additional_where .=
-					" AND edu_program.value LIKE ".$this->gDB->quote("%".$edu_types["edu_program"]."%", "text")."\n";
-			}
-
-			unset($a_search_options["type"]["edu_program"]);
+			$additional_join .=
+				" LEFT JOIN adv_md_values_text edu_program\n".
+				"   ON cs.obj_id = edu_program.obj_id\n".
+				"   AND edu_program.field_id = ".$this->gDB->quote($edu_program_field_id, "integer")."\n";
+				;
+			$additional_where .=
+				" AND edu_program.value LIKE ".$this->gDB->quote("%".$a_search_options["edu_program"]."%", "text")."\n";
 		}
 
 		if (array_key_exists("type", $a_search_options)) {
@@ -425,10 +418,10 @@ class gevCourseSearch {
 				$options["prae"] = "Präsenztraining";
 				break;
 			case self::TAB_TOP:
-				$options["edu_program"] = "LE-Training zentral (ID)";
+				$a_serach_opts["edu_program"] = "LE-Training zentral (ID)";
 				break;
 			case self::TAB_LE:
-				$options["edu_program"] = "HR-Training (ID)";
+				$a_serach_opts["edu_program"] = "HR-Training (ID)";
 				break;
 			case self::TAB_WEBINAR:
 				$options["webinar"] = "Webinar";
