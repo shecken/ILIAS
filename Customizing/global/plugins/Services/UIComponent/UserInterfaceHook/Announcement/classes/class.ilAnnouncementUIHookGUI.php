@@ -33,8 +33,8 @@ class ilAnnouncementUIHookGUI extends ilUIHookPluginGUI
 	{
 		if (
 			$part != "template_get" ||
-			$par["tpl_id"] != "Services/MainMenu/tpl.main_menu.html" //||
-			//$_COOKIE["gev_dsgvo"][$this->g_user->getId()] === "dsgvo"
+			$par["tpl_id"] != "Services/MainMenu/tpl.main_menu.html" ||
+			$_COOKIE["gev_dsgvo"][$this->g_user->getId()] === "dsgvo"
 		) {
 			return parent::getHTML($comp, $part, $par);
 		}
