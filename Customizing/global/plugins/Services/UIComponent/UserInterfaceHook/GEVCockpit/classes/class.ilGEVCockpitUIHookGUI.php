@@ -178,7 +178,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 			$crs_search = gevCourseSearch::getInstance($this->target_user_id);
 			$tab = $crs_search->getActiveTab();
 			$active = "search_$tab";
-			if (!in_array($active, array("search_onside", "search_webinar", "search_wbt"))) {
+			if (!in_array($active, array("search_onside", "search_top", "search_le", "search_webinar", "search_wbt"))) {
 				return "search_all";
 			}
 			return $active;

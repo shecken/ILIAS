@@ -12,6 +12,8 @@ require_once("Modules/Course/classes/class.ilObjCourseAccess.php");
 class gevCourseSearch {
 	const TAB_ALL = "all";
 	const TAB_PRAESENZ = "onside";
+	const TAB_TOP = "top";
+	const TAB_LE = "le";
 	const TAB_WEBINAR = "webinar";
 	const TAB_SELF = "wbt";
 	const TAB_VIRTUEL_TRAINING = "virt";
@@ -120,6 +122,18 @@ class gevCourseSearch {
 			$additional_where .= " AND od.title LIKE ".$this->gDB->quote("%".$a_search_options["title"]."%", "text")."\n";
 		}
 
+		if (array_key_exists("edu_program", $a_search_options)) {
+			$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
+
+			$additional_join .=
+				" LEFT JOIN adv_md_values_text edu_program\n".
+				"   ON cs.obj_id = edu_program.obj_id\n".
+				"   AND edu_program.field_id = ".$this->gDB->quote($edu_program_field_id, "integer")."\n";
+				;
+			$additional_where .=
+				" AND edu_program.value LIKE ".$this->gDB->quote("%".$a_search_options["edu_program"]."%", "text")."\n";
+		}
+
 		if (array_key_exists("type", $a_search_options)) {
 			$types = $a_search_options["type"];
 			$is_prae = false;
@@ -138,7 +152,7 @@ class gevCourseSearch {
 					$additional_where .= " AND ";
 				}
 				$additional_where .=$this->gDB->in("ltype.value", $types, $negate = false, $a_type = "text").$close_bracked."\n";
-			} else {
+			} else if ($is_prae) {
 				$additional_where .= ")";
 			}
 			
@@ -403,6 +417,12 @@ class gevCourseSearch {
 			case self::TAB_PRAESENZ:
 				$options["prae"] = "Präsenztraining";
 				break;
+			case self::TAB_TOP:
+				$a_serach_opts["edu_program"] = "LE-Training zentral (ID)";
+				break;
+			case self::TAB_LE:
+				$a_serach_opts["edu_program"] = "HR-Training (ID)";
+				break;
 			case self::TAB_WEBINAR:
 				$options["webinar"] = "Webinar";
 				break;
@@ -431,6 +451,16 @@ class gevCourseSearch {
 			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "onside");
 			$this->search_tabs["onside"] = array
 				( "gev_crs_search_present"
+				, $this->gCtrl->getLinkTargetByClass("gevCourseSearchGUI")
+				);
+			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "top");
+			$this->search_tabs["top"] = array
+				( "gev_crs_search_top"
+				, $this->gCtrl->getLinkTargetByClass("gevCourseSearchGUI")
+				);
+			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "le");
+			$this->search_tabs["le"] = array
+				( "gev_crs_search_le"
 				, $this->gCtrl->getLinkTargetByClass("gevCourseSearchGUI")
 				);
 			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "webinar");
