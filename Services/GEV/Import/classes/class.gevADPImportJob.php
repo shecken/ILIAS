@@ -1,5 +1,6 @@
 <?php
 require_once("Services/Cron/classes/class.ilCronJob.php");
+require_once("Services/Cron/classes/class.ilCronManager.php");
 require_once("Services/Cron/classes/class.ilCronJobResult.php");
 
 /**
@@ -79,6 +80,7 @@ class gevADPImportJob extends ilCronJob
 		$results = array();
 		while ($tmp = $iv_file->readCSVLine($handle, self::DELIMETER)) {
 			$results[] = $tmp[0];
+			ilCronManager::ping($this->getId());
 		}
 
 		if ($results[0] == "DPNR") {
