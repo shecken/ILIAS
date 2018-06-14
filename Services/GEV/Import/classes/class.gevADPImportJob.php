@@ -83,7 +83,7 @@ class gevADPImportJob extends ilCronJob
 			ilCronManager::ping($this->getId());
 		}
 
-		if ($results[0] == "DPNR") {
+		if ($results[0] == "ADPNR") {
 			array_shift($results);
 		}
 		$db->createEntries($results);
