@@ -70,6 +70,6 @@ class gevADPDB
 	private function delete()
 	{
 		$query = "DELETE FROM ".self::TABLENAME;
-		$this->db->query($query);
+		$this->db->manipulate($query);
 	}
 }
