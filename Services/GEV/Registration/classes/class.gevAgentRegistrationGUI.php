@@ -15,12 +15,13 @@ class gevAgentRegistrationGUI
 {
 	public function __construct()
 	{
-		global $lng, $ilCtrl, $tpl, $ilLog;
+		global $lng, $ilCtrl, $tpl, $ilLog, $ilDB;
 
 		$this->lng = &$lng;
 		$this->ctrl = &$ilCtrl;
 		$this->tpl = &$tpl;
 		$this->log = &$ilLog;
+		$this->db = &$ilDB;
 		$this->import = null;
 		$this->stellennummer_data = null;
 
@@ -54,57 +55,19 @@ class gevAgentRegistrationGUI
 		$this->tpl->show();
 	}
 
-	protected function getImport()
+	/**
+	 * Check for valid adp_number.
+	 *
+	 * @param 	int 	$adp_number
+	 * @return 	bool
+	 */
+	protected function checkValidAdpNumber($adp_number)
 	{
-		if ($this->import === null) {
-			require_once("gev_utils.php");
-			$this->import = get_gev_import();
-		}
+		assert('is_string($adp_number)');
 
-		return $this->import;
-	}
-
-	protected function loadStellennummerData($a_stellennummer)
-	{
-		if ($this->stellennummer_data === null) {
-			$import = $this->getImport();
-			$this->stellennummer_data = $import->get_stelle($a_stellennummer);
-		}
-	}
-
-	protected function getStellennummerData($a_stellennummer)
-	{
-		$this->loadStellennummerData($a_stellennummer);
-
-		if ($this->stellennummer_data["stellennummer"] != $a_stellennummer) {
-			throw new Exception("gevRegistrationGUI::getStellennummerData: stellennummer does not match.");
-		}
-
-		return $this->stellennummer_data;
-	}
-
-	protected function isValidStellennummer($a_stellennummer)
-	{
-		$this->loadStellennummerData($a_stellennummer);
-		return $this->stellennummer_data !== false && $this->stellennummer_data["stellennummer"] == $a_stellennummer;
-	}
-
-	protected function isAgent($a_stellennummer)
-	{
-		$data = $this->getStellennummerData($a_stellennummer);
-		return in_array($data["vermittlerstatus"], array("608", "650", "651", "679", "674"));
-	}
-
-	protected function getVermittlerStatus($a_stellennummer)
-	{
-		$data = $this->getStellennummerData($a_stellennummer);
-		return $data["vermittlerstatus"];
-	}
-
-	protected function getOrgUnitImportId($a_stellennummer)
-	{
-		$data = $this->getStellennummerData($a_stellennummer);
-		return $data["org_unit"];
+		require_once("./Services/GEV/Import/classes/class.gevADPDB.php");
+		$adp_import = new gevADPDB($this->db);
+		return $adp_import->checkForAdpNumber($adp_number);
 	}
 
 	protected function startAgentRegistration($a_form = null)
@@ -225,8 +188,8 @@ class gevAgentRegistrationGUI
 			$chb->setAlert($this->lng->txt("evg_mandatory"));
 		}
 
-		$stellennummer = $form->getInput("position");
-		if (!($this->isValidStellennummer($stellennummer) && $this->isAgent($stellennummer))) {
+		$adp_number = $form->getInput("position");
+		if (!$this->checkValidAdpNumber($adp_number)) {
 			$err = true;
 			$form->getItemByPostVar("position")->setAlert($this->lng->txt("gev_evg_registration_not_found"));
 		}
