@@ -26,5 +26,6 @@
 		<cron id="gev_mail_reminder_webinar" class="gevReminderWebinarJob" path="Services/GEV/Mailing/classes/CronJobs/" />
 		<cron id="dct_creation" class="gevDecentralTrainingCreationJob" path="Services/GEV/DecentralTrainings/classes/" />
 		<cron id="gev_decentral_trainings_cleanup" class="gevDecentralTrainingsCleanupJob" path="Services/GEV/Utils/classes/" />
+		<cron id="gev_adp_import" class="gevADPImportJob" path="Services/GEV/Import/classes/" />
 	</crons>
 </service>
