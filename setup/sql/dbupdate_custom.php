@@ -6554,3 +6554,32 @@ while($row = $ilDB->fetchAssoc($result)) {
 	$wbd->setWBDTPType(gevWBD::WBD_NO_SERVICE);
 }
 ?>
+<#283>
+<?php
+
+if (!$ilDB->tableExists('adp_import')) {
+	$ilDB->createTable('adp_import', array(
+		'id' => array(
+			'type' => 'integer',
+			'length' => 4,
+			'notnull' => true,
+			'default' => 0
+		),
+		'adp_number' => array(
+			'type' => 'text',
+			'length' => 10,
+			'notnull' => true,
+			'default' => 0
+		),
+		'last_change' => array(
+			'type' => 'text',
+			'length' => 10,
+			'notnull' => true,
+			'default' => "-"
+		)
+	));
+
+	$ilDB->addPrimaryKey('adp_import', array('id'));
+}
+
+?>
