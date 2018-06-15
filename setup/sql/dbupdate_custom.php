@@ -6590,8 +6590,7 @@ if (!$ilDB->tableColumnExists('adp_import', 'vms_text')) {
 	$ilDB->addTableColumn('adp_import', 'vms_text', array(
 		'type' => 'text',
 		'length' => 64,
-		'notnull' => true,
-		'default' => "-"
+		'notnull' => false
 	));
 }
 ?>
@@ -6601,8 +6600,7 @@ if (!$ilDB->tableColumnExists('adp_import', 'agent_status')) {
 	$ilDB->addTableColumn('adp_import', 'agent_status', array(
 		'type' => 'integer',
 		'length' => 4,
-		'notnull' => true,
-		'default' => 0
+		'notnull' => false
 	));
 }
 ?>
