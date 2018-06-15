@@ -44,6 +44,32 @@ class gevADPDB
 	}
 
 	/**
+	 * Get the status of the agent.
+	 *
+	 * @param 	string 	$adp_number
+	 * @return 	int
+	 */
+	public function getAgentStatus($adp_number)
+	{
+		asssert('is_string($adp_number)');
+
+		$query =
+			 "SELECT agent_status".PHP_EOL
+			."FROM ".self::TABLENAME.PHP_EOL
+			."WHERE adp_number = ".$this->db->quote($adp_number, "text");
+		;
+		$result = $this->db->query($query);
+
+		if ($this->db->numRows($result) != 1) {
+			throw new Exception("The request for agent status returns an incorrect number of results.");
+		}
+
+		$row = $this->db->fetchAssoc($result);
+
+		return (int)$row['agent_status'];
+	}
+
+	/**
 	 * Create a table entries.
 	 *
 	 * @param 	string[] 	$adp_number
