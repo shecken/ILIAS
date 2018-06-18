@@ -31,6 +31,4 @@ class gevADPFile
 	{
 		return fgetcsv($handle, 0, $delimeter);
 	}
-
-
 }

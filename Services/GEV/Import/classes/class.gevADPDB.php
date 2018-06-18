@@ -23,6 +23,26 @@ class gevADPDB
 	}
 
 	/**
+	 * Get a db tupel by adp_number.
+	 *
+	 * @param 	string 	$adp_number
+	 * @return 	array
+	 */
+	public function getEntryByAdpNumber($adp_number)
+	{
+		assert('is_string($adp_number)');
+
+		$query =
+			 "SELECT id, adp_number, last_change, vms_text, agent_status".PHP_EOL
+			."FROM ".self::TABLENAME.PHP_EOL
+			."WHERE adp_number = ".$this->db->quote($adp_number, "text").PHP_EOL
+		;
+		$result = $this->db->query($query);
+
+		return $this->db->fetchAssoc($result);
+	}
+
+	/**
 	 * Check for an adp_number.
 	 *
 	 * @param 	string 	$adp_number
@@ -35,7 +55,7 @@ class gevADPDB
 		$query =
 			 "SELECT id".PHP_EOL
 			."FROM ".self::TABLENAME.PHP_EOL
-			."WHERE adp_number = ".$this->db->quote($adp_number, "text");
+			."WHERE adp_number = ".$this->db->quote($adp_number, "text").PHP_EOL
 		;
 
 		$result = $this->db->query($query);
@@ -44,21 +64,49 @@ class gevADPDB
 	}
 
 	/**
+	 * Get the status of the agent.
+	 *
+	 * @param 	string 	$adp_number
+	 * @return 	int
+	 */
+	public function getAgentStatus($adp_number)
+	{
+		assert('is_string($adp_number)');
+
+		$query =
+			 "SELECT agent_status".PHP_EOL
+			."FROM ".self::TABLENAME.PHP_EOL
+			."WHERE adp_number = ".$this->db->quote($adp_number, "text").PHP_EOL
+		;
+		$result = $this->db->query($query);
+
+		$row = $this->db->fetchAssoc($result);
+
+		return (int)$row['agent_status'];
+	}
+
+	/**
 	 * Create a table entries.
 	 *
-	 * @param 	string[] 	$adp_number
+	 * @param 	string[] 	$values
 	 * @return 	void
 	 */
-	public function createEntries(array $adp_numbers)
+	public function createEntries(array $values)
 	{
+		$id = 0;
 		$this->delete();
-		foreach ($adp_numbers as $key => $apd_number) {
-			$values = array(
-				'id' => ['integer', $key],
-				'adp_number' => ['text', $apd_number],
-				'last_change' => ['text', date("Y-m-d")]
+		global $ilLog;
+		$ilLog->dump($values);
+		foreach ($values as $key => $value) {
+			$result = array(
+				'id' => ['integer', $id],
+				'adp_number' => ['text', $key],
+				'last_change' => ['text', date("Y-m-d")],
+				'vms_text' => ['text', $value['vms_text']],
+				'agent_status' => ['integer', $value['agent_status']]
 			);
-			$this->db->insert(self::TABLENAME, $values);
+			$this->db->insert(self::TABLENAME, $result);
+			$id++;
 		}
 	}
 
