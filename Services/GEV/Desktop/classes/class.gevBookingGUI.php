@@ -802,13 +802,13 @@ class gevBookingGUI
 		require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
 		$booked = $a_status == ilCourseBooking::STATUS_BOOKED;
 		$automails = new gevCrsAutoMails($this->crs_id);
-		$crs_start = new DateTime($this->crs_utils->getFormattedStartDate());
-		$today = new DateTime('now');
-		$undershot = $this->isInvMailDaysUndershot($crs_start, $today);
 
 		if ($this->isSelfBooking()) {
 			if (!$this->isSelfLearningCourse() && !$this->isCoachingCourse()) {
 				if ($booked) {
+					$crs_start = new DateTime($this->crs_utils->getFormattedStartDate());
+					$today = new DateTime('now');
+					$undershot = $this->isInvMailDaysUndershot($crs_start, $today);
 					$automails->send("self_booking_to_booked", array($this->user_id));
 					if($undershot) {
 						$automails->send("invitation", array($this->user_id));
