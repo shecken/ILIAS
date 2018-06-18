@@ -83,7 +83,7 @@ class gevADPImportJob extends ilCronJob
 
 		$skip_first_loop = true;
 		while ($adp = $file->readCSVLine($adp_handle, self::DELIMETER)) {
-			if ($skip_first_loop) {
+			if ($skip_first_loop || !is_numeric($adp[0])) {
 				$skip_first_loop = false;
 				continue;
 			}
@@ -92,7 +92,7 @@ class gevADPImportJob extends ilCronJob
 
 		$skip_first_loop = true;
 		while ($stelle = $file->readCSVLine($stelle_handle, self::DELIMETER)) {
-			if ($skip_first_loop) {
+			if ($skip_first_loop || !is_numeric($stelle[5])) {
 				$skip_first_loop = false;
 				continue;
 			}
