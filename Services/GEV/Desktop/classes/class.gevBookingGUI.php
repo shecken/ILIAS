@@ -802,11 +802,17 @@ class gevBookingGUI
 		require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
 		$booked = $a_status == ilCourseBooking::STATUS_BOOKED;
 		$automails = new gevCrsAutoMails($this->crs_id);
+		$crs_start = new DateTime($this->crs_utils->getFormattedStartDate());
+		$today = new DateTime('now');
+		$undershot = $this->isInvMailDaysUndershot($crs_start, $today);
 
 		if ($this->isSelfBooking()) {
 			if (!$this->isSelfLearningCourse() && !$this->isCoachingCourse()) {
 				if ($booked) {
 					$automails->send("self_booking_to_booked", array($this->user_id));
+					if($undershot) {
+						$automails->send("invitation", array($this->user_id));
+					}
 				} else {
 					$automails->send("self_booking_to_waiting", array($this->user_id));
 				}
@@ -839,5 +845,38 @@ class gevBookingGUI
 										 		  : $this->lng->txt("gev_was_booked_waiting_employee"), $this->user_utils->getFirstname()." ".$this->user_utils->getLastname(), $this->crs_utils->getTitle()), true);
 			$this->toCourseSearch();
 		}
+	}
+
+	/**
+	 * Get the day before course start an invite mail will be sent.
+	 *
+	 * @return 	int
+	 */
+	protected function getDaysBeforeSendInviteMail()
+	{
+		$additional_mail_settings = new gevCrsAdditionalMailSettings($this->crs_id);
+		return $additional_mail_settings->getInvitationMailingDate();
+	}
+
+	/**
+	 * Checks whether the interval between to dates in days is under
+	 * the amount of days the invite mail will be sent.
+	 *
+	 * @param 	DateTime 	$crs_start
+	 * @param 	DateTime 	$today
+	 * @return 	bool 		true = undershot; false = not undershot
+	 */
+	protected function isInvMailDaysUndershot(DateTime $crs_start, DateTime $today)
+	{
+		$interval = $today->diff($crs_start);
+		$formated_interval = (int)$interval->format('%r%a');
+		$days_before_inv_mail = $this->getDaysBeforeSendInviteMail();
+
+		if ($formated_interval > $days_before_inv_mail) {
+			return false;
+		} else if ($formated_interval < $days_before_inv_mail) {
+			return true;
+		}
+		return true;
 	}
 }
