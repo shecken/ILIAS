@@ -71,7 +71,7 @@ class gevADPDB
 	 */
 	public function getAgentStatus($adp_number)
 	{
-		asssert('is_string($adp_number)');
+		assert('is_string($adp_number)');
 
 		$query =
 			 "SELECT agent_status".PHP_EOL
@@ -79,10 +79,6 @@ class gevADPDB
 			."WHERE adp_number = ".$this->db->quote($adp_number, "text").PHP_EOL
 		;
 		$result = $this->db->query($query);
-
-		if ($this->db->numRows($result) != 1) {
-			throw new Exception("The request for agent status returns an incorrect number of results.");
-		}
 
 		$row = $this->db->fetchAssoc($result);
 
