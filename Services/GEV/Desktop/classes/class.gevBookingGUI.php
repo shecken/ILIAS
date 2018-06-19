@@ -872,6 +872,10 @@ class gevBookingGUI
 		$formated_interval = (int)$interval->format('%r%a');
 		$days_before_inv_mail = $this->getDaysBeforeSendInviteMail();
 
+		if ($days_before_inv_mail == 0) {
+			return true;
+		}
+
 		if ($formated_interval > $days_before_inv_mail) {
 			return false;
 		} else if ($formated_interval < $days_before_inv_mail) {
