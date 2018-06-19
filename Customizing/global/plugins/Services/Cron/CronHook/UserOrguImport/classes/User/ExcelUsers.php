@@ -60,7 +60,7 @@ class ExcelUsers
 			];
 
 	public static $delivered_pnrs_conversions = [
-			'P.Nr.' => UdfWrapper::PROP_PNR
+			'Personalnummer' => UdfWrapper::PROP_PNR
 	];
 
 	public function __construct(
