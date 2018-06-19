@@ -100,6 +100,9 @@ class ExcelOrgus
 						$this->import_files->getCurrentOrguFilePath()
 						,self::$conversions)) as $orgu_path) {
 			$aux = null;
+
+			$orgu_path = $this->preprocessRow($orgu_path);
+
 			foreach ($orgu_path as $level) {
 				if($aux === $level || in_array($level, self::$NO_ASSIGNMENT)) {
 					break;
@@ -111,6 +114,13 @@ class ExcelOrgus
 		return $orgus;
 	}
 
+	protected function preprocessRow(array $row) {
+		$ret = [];
+		foreach ($row as $key => $value) {
+			$ret[$key] = trim($value);
+		}
+		return $ret;
+	}
 
 	protected function postprocessRow(array $row, $root_id)
 	{

@@ -66,6 +66,7 @@ class UserOrguExcel
 			return null;
 		}
 		foreach ($this->xlsx->extractContent($path, self::$conversions_assignments) as $row) {
+			$row = $this->preprocessRow($row);
 			$row = $this->postprocessRow($row);
 			if ($this->checkRow($row)) {
 				if ($row[self::EXIT_DATE] === '' || $row[self::EXIT_DATE] > $date) { // skip assignments of exited users
@@ -76,6 +77,14 @@ class UserOrguExcel
 			}
 		}
 		return $ass_s;
+	}
+
+	protected function preprocessRow(array $row) {
+		$ret = [];
+		foreach ($row as $key => $value) {
+			$ret[$key] = trim($value);
+		}
+		return $ret;
 	}
 
 	protected function postprocessRow(array $row)
