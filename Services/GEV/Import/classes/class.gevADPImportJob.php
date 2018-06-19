@@ -10,7 +10,8 @@ require_once("Services/Cron/classes/class.ilCronJobResult.php");
  */
 class gevADPImportJob extends ilCronJob
 {
-	const IV_FILE_PATH = "/var/drbd/www/files/UserOrguImport/adp.dat";
+	const ADP_FILE_PATH = "/var/drbd/www/files/UserOrguImport/adp.dat";
+	const STELLE_FILE_PATH = "/var/drbd/www/files/UserOrguImport/stelle.dat";
 	const DELIMETER = "%";
 
 	/**
@@ -73,19 +74,37 @@ class gevADPImportJob extends ilCronJob
 
 		$cron_result = new ilCronJobResult();
 		$db = new gevADPDB($ilDB);
-		$iv_file = new gevADPFile();
-		
-		$handle = $iv_file->open(self::IV_FILE_PATH);
-		
+		$file = new gevADPFile();
+
+		$adp_handle = $file->open(self::ADP_FILE_PATH);
+		$stelle_handle = $file->open(self::STELLE_FILE_PATH);
+
 		$results = array();
-		while ($tmp = $iv_file->readCSVLine($handle, self::DELIMETER)) {
-			$results[] = $tmp[0];
+
+		$skip_first_loop = true;
+		while ($adp = $file->readCSVLine($adp_handle, self::DELIMETER)) {
+			if ($skip_first_loop || !is_numeric($adp[0])) {
+				$skip_first_loop = false;
+				continue;
+			}
+			$results[$adp[0]] = array();
+		}
+
+		$skip_first_loop = true;
+		while ($stelle = $file->readCSVLine($stelle_handle, self::DELIMETER)) {
+			if ($skip_first_loop || !is_numeric($stelle[5])) {
+				$skip_first_loop = false;
+				continue;
+			}
+			if (array_key_exists($stelle[5], $results)) {
+				$results[$stelle[5]] = [
+					'agent_status' => $stelle[6],
+					'vms_text' => $stelle[7]
+				];
+			}
 			ilCronManager::ping($this->getId());
 		}
 
-		if ($results[0] == "ADPNR") {
-			array_shift($results);
-		}
 		$db->createEntries($results);
 
 		$cron_result->setStatus(ilCronJobResult::STATUS_OK);
