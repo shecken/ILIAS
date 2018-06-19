@@ -43,10 +43,10 @@ class ExcelOrgus
 
 	public static $conversions = [
 			'LE' => self::COLUMN_LE,
-			'Ressort' => self::COLUMN_RESSORT,
-			'Abteilung' => self::COLUMN_DEPARTMENT,
-			'Gruppe' => self::COLUMN_GROUP,
-			'Team' => self::COLUMN_TEAM
+			'RESSORT' => self::COLUMN_RESSORT,
+			'ABTEILUNG' => self::COLUMN_DEPARTMENT,
+			'GRUPPE' => self::COLUMN_GROUP,
+			'TEAM' => self::COLUMN_TEAM
 			];
 
 	/**
