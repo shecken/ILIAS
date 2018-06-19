@@ -27,19 +27,28 @@ class ExcelUsers
 
 
 	public static $conversions = [
-			'BuKr' => UdfWrapper::PROP_FLAG_KU,
+			//'BuKr' => UdfWrapper::PROP_FLAG_KU,
+			//'Ressort' => self::COLUMN_RESSORT,
+			//'Abteilung' => self::COLUMN_DEPARTMENT,
+			//'Gruppe' => self::COLUMN_GROUP,
+			//'Team' => self::COLUMN_TEAM,
+			//'P.Nr.' => UdfWrapper::PROP_PNR,
+			//'NACHN' => UdfWrapper::PROP_LASTNAME,
+			//'VORNA' => UdfWrapper::PROP_FIRSTNAME,
+			//'Anstellungsverhältn.' => UdfWrapper::PROP_FUNCTION,
+			'Buchungskreis' => UdfWrapper::PROP_FLAG_KU,
 			'LE' => self::COLUMN_LE,
-			'Ressort' => self::COLUMN_RESSORT,
-			'Abteilung' => self::COLUMN_DEPARTMENT,
-			'Gruppe' => self::COLUMN_GROUP,
-			'Team' => self::COLUMN_TEAM,
-			'P.Nr.' => UdfWrapper::PROP_PNR,
-			'NACHN' => UdfWrapper::PROP_LASTNAME,
-			'VORNA' => UdfWrapper::PROP_FIRSTNAME,
+			'RESSORT' => self::COLUMN_RESSORT,
+			'ABTEILUNG' => self::COLUMN_DEPARTMENT,
+			'GRUPPE' => self::COLUMN_GROUP,
+			'TEAM' => self::COLUMN_TEAM,
+			'Personalnummer' => UdfWrapper::PROP_PNR,
+			'Nachname' => UdfWrapper::PROP_LASTNAME,
+			'Vorname' => UdfWrapper::PROP_FIRSTNAME,
 			'Emailadresse MitArb' => UdfWrapper::PROP_EMAIL,
 			'Kostenstelle' => UdfWrapper::PROP_COST_CENTRE,
 			'Kostenstelle lang' => UdfWrapper::PROP_COST_CENTRE_LONG,
-			'Anstellungsverhältn.' => UdfWrapper::PROP_FUNCTION,
+			'Anstellungsverhältnis' => UdfWrapper::PROP_FUNCTION,
 			'Geschlecht' => UdfWrapper::PROP_GENDER,
 			'Geburtsdatum' => UdfWrapper::PROP_BIRTHDAY ,
 			'Eintrittsdatum in KU' => UdfWrapper::PROP_ENTRY_DATE_KU,
@@ -51,7 +60,7 @@ class ExcelUsers
 			];
 
 	public static $delivered_pnrs_conversions = [
-			'P.Nr.' => UdfWrapper::PROP_PNR
+			'Personalnummer' => UdfWrapper::PROP_PNR
 	];
 
 	public function __construct(
@@ -83,6 +92,7 @@ class ExcelUsers
 			return null;
 		}
 		foreach ($this->extractor->extractContent($path, self::$conversions) as $row) {
+			$row = $this->preprocessRow($row);
 			$row = $this->postprocessRow($row);
 			if ($this->checkRow($row)) {
 				$users->add(new User\User($row, $ident));
@@ -163,6 +173,14 @@ class ExcelUsers
 			&&	$dates_set;
 	}
 
+	protected function preprocessRow(array $row) {
+		$ret = [];
+		foreach ($row as $key => $value) {
+			$ret[$key] = trim($value);
+		}
+		return $ret;
+	}
+
 	protected function postprocessRow(array $row)
 	{
 		$row[UdfWrapper::PROP_ORGUS] = implode(', ', Base\Orgu\ExcelOrgus::normalizedOrguPath($row));
@@ -173,9 +191,11 @@ class ExcelUsers
 		unset($row[self::COLUMN_TEAM]);
 		switch ($row[UdfWrapper::PROP_GENDER]) {
 			case 'männlich':
+			case 'Herr':
 				$gender = 'm';
 				break;
 			case 'weiblich':
+			case 'Frau':
 				$gender = 'f';
 				break;
 			default:

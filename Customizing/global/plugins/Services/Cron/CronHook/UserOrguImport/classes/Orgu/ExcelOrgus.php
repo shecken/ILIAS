@@ -22,11 +22,16 @@ class ExcelOrgus
 	const COLUMN_GROUP = 'group';
 	const COLUMN_TEAM = 'team';
 
-	protected static $NO_ASSIGNMENT = ['keine Zuordnung','Nicht zugeordnet','Keine Beschreibung'];
+	protected static $NO_ASSIGNMENT = [
+		'Keine Zuordnung',
+		'keine Zuordnung',
+		'Nicht zugeordnet',
+		'nicht zugeordnet',
+		'Keine Beschreibung',
+		'keine Beschreibung'
+	];
 
 	protected $orgu_id_set = [];
-
-	const NO_PARENT_ID = 'd41d8cd98f00b204e9800998ecf8427e'; //self::idByOrguPath([]);
 
 	public function __construct(ImportFiles $import_files, DataExtractor $extractor, OrguIdentifier $ident, ErrorCollection $ec)
 	{
@@ -38,10 +43,10 @@ class ExcelOrgus
 
 	public static $conversions = [
 			'LE' => self::COLUMN_LE,
-			'Ressort' => self::COLUMN_RESSORT,
-			'Abteilung' => self::COLUMN_DEPARTMENT,
-			'Gruppe' => self::COLUMN_GROUP,
-			'Team' => self::COLUMN_TEAM
+			'RESSORT' => self::COLUMN_RESSORT,
+			'ABTEILUNG' => self::COLUMN_DEPARTMENT,
+			'GRUPPE' => self::COLUMN_GROUP,
+			'TEAM' => self::COLUMN_TEAM
 			];
 
 	/**
@@ -95,6 +100,9 @@ class ExcelOrgus
 						$this->import_files->getCurrentOrguFilePath()
 						,self::$conversions)) as $orgu_path) {
 			$aux = null;
+
+			$orgu_path = $this->preprocessRow($orgu_path);
+
 			foreach ($orgu_path as $level) {
 				if($aux === $level || in_array($level, self::$NO_ASSIGNMENT)) {
 					break;
@@ -106,6 +114,13 @@ class ExcelOrgus
 		return $orgus;
 	}
 
+	protected function preprocessRow(array $row) {
+		$ret = [];
+		foreach ($row as $key => $value) {
+			$ret[$key] = trim($value);
+		}
+		return $ret;
+	}
 
 	protected function postprocessRow(array $row, $root_id)
 	{
@@ -124,7 +139,7 @@ class ExcelOrgus
 			$row_aux = self::normalizedOrguPath($row);
 			if(count($row_aux) === 0) {
 				continue;
-			} 
+			}
 			do {
 				if(count($row_aux) === 0) {
 					break;
