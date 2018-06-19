@@ -46,13 +46,13 @@ class UserOrguExcel
 	const EXIT_DATE = 'exit_date';
 
 	protected static $conversions_assignments = [
-				'P.Nr.' => self::USER_ID,
+				'Personalnummer' => self::USER_ID,
 				'LE' => Orgu\ExcelOrgus::COLUMN_LE,
-				'Ressort' => Orgu\ExcelOrgus::COLUMN_RESSORT,
-				'Abteilung' => Orgu\ExcelOrgus::COLUMN_DEPARTMENT,
-				'Gruppe' => Orgu\ExcelOrgus::COLUMN_GROUP,
-				'Team' => Orgu\ExcelOrgus::COLUMN_TEAM,
-				'Anstellungsverhältn.' => self::COLUMN_FUNCTION,
+				'RESSORT' => Orgu\ExcelOrgus::COLUMN_RESSORT,
+				'ABTEILUNG' => Orgu\ExcelOrgus::COLUMN_DEPARTMENT,
+				'GRUPPE' => Orgu\ExcelOrgus::COLUMN_GROUP,
+				'TEAM' => Orgu\ExcelOrgus::COLUMN_TEAM,
+				'Anstellungsverhältnis' => self::COLUMN_FUNCTION,
 				'Austrittsdatum' => self::EXIT_DATE
 				];
 
