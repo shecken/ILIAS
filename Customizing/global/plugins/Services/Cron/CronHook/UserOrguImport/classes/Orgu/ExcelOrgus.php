@@ -22,11 +22,16 @@ class ExcelOrgus
 	const COLUMN_GROUP = 'group';
 	const COLUMN_TEAM = 'team';
 
-	protected static $NO_ASSIGNMENT = ['keine Zuordnung','Nicht zugeordnet','Keine Beschreibung'];
+	protected static $NO_ASSIGNMENT = [
+		'Keine Zuordnung',
+		'keine Zuordnung',
+		'Nicht zugeordnet',
+		'nicht zugeordnet',
+		'Keine Beschreibung',
+		'keine Beschreibung'
+	];
 
 	protected $orgu_id_set = [];
-
-	const NO_PARENT_ID = 'd41d8cd98f00b204e9800998ecf8427e'; //self::idByOrguPath([]);
 
 	public function __construct(ImportFiles $import_files, DataExtractor $extractor, OrguIdentifier $ident, ErrorCollection $ec)
 	{
@@ -124,7 +129,7 @@ class ExcelOrgus
 			$row_aux = self::normalizedOrguPath($row);
 			if(count($row_aux) === 0) {
 				continue;
-			} 
+			}
 			do {
 				if(count($row_aux) === 0) {
 					break;

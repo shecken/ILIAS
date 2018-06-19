@@ -173,7 +173,7 @@ class ExcelUsers
 			&&	$dates_set;
 	}
 
-	protected function preprocessRow($row)(array $row) {
+	protected function preprocessRow(array $row) {
 		$ret = [];
 		foreach ($row as $key => $value) {
 			$ret[$key] = trim($value);
