@@ -14344,3 +14344,4 @@ ecs#:#ecs_refresh_participants#:#ECS-Teilnehmer aktualisieren
 mass#:#mass_grade_self#:#Eigene Bewertung eintragen
 mass#:#mass_grade_self_info#:#Erlaubt dem Teilnehmer seine Bewertung selbst vorzunehmen.
 crs#:#cost_centre#:#Kostenstelle / Organisationseinheit SAP
+gev#:#no_mail_template#:#Es ist ein Fehler bei dem Mailversand aufgetreten, da eine Mailvorlage nicht verfügbar ist.

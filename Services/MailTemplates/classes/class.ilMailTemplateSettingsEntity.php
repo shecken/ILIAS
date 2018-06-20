@@ -10,6 +10,14 @@ class ilMailTemplateSettingsEntity
 
 	protected $ilDB = null;
 	
+	// gev_patch_3679 start
+	public function __construct()
+	{
+		global $DIC;
+		$this->g_lng = $DIC->language();
+	}
+	// gev_patch_3679 end
+
 	public function setTemplateCategoryName($template_category_name)
 	{
 		$this->template_category_name = $template_category_name;
@@ -96,7 +104,9 @@ class ilMailTemplateSettingsEntity
 
 		if ($this->ilDB->numRows($result) != 1)
 		{
-			throw new Exception('Illegal response: numRows != 1 in '. $query);
+			// gev_patch_3679 start
+			throw new Exception($this->g_lng->txt('no_mail_template'));
+			//gev_patch_3679 end 
 		}
 		
 		$this->populateFromRow( $this->ilDB->fetchAssoc($result) );
