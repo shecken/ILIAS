@@ -118,7 +118,6 @@ class ExcelUsers
 
 	protected function checkRow(array $row)
 	{
-
 		$pnr_set = trim((string)$row[UdfWrapper::PROP_PNR]) !== '';
 		if (!$pnr_set) {
 			$this->e_c->addError('No pnr set for user');
@@ -144,10 +143,7 @@ class ExcelUsers
 		if (!$lastname_set) {
 			$this->e_c->addError('No lastname set for user with pnr '.$row[UdfWrapper::PROP_PNR]);
 		}
-		$function_set = trim((string)$row[UdfWrapper::PROP_FUNCTION]) !== '';
-		if (!$function_set) {
-			$this->e_c->addError('No function set for user with pnr '.$row[UdfWrapper::PROP_PNR]);
-		}
+
 		$gender = trim((string)$row[UdfWrapper::PROP_GENDER]);
 		$gender_set = $gender === 'm' || $gender === 'f';
 		if (!$gender_set) {
@@ -168,7 +164,6 @@ class ExcelUsers
 			&&	$mail_set
 			&&	$firstname_set
 			&&	$lastname_set
-			&&	$function_set
 			&&	$gender_set
 			&&	$dates_set;
 	}
