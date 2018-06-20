@@ -86,7 +86,7 @@ class gevADPDB
 
 		$row = $this->db->fetchAssoc($result);
 
-		return (int)$row['agent_status'];
+		return $row['agent_status'];
 	}
 
 	/**
