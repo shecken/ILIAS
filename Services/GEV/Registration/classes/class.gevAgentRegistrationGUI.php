@@ -248,7 +248,8 @@ class gevAgentRegistrationGUI
 		}
 
 		$adp_number = $form->getInput("position");
-		if (!$this->checkValidAdpNumber($adp_number) && !$this->isAgent($adp_number)) {
+
+		if (!$this->checkValidAdpNumber($adp_number) || !$this->isAgent($adp_number)) {
 			$err = true;
 			$form->getItemByPostVar("position")->setAlert($this->lng->txt("gev_evg_registration_not_found"));
 		}
