@@ -78,7 +78,7 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 							,"ZEITPLAN" 					=> $crs_utils->getSchedule()[0]
 							,"INHALT" 						=> $crs_utils->getContents()
 							,"ZIELE UND NUTZEN" 			=> $crs_utils->getGoals()
-							,"WP" 							=> $crs_utils->getCreditPoints()
+							,"WB-ZEIT" 						=> $crs_utils->getCreditedDurationFormatted()
 							,"VO-NAME" 						=> $venue_title
 							,"VO-STRAßE" 					=> $crs_utils->getVenueStreet()
 							,"VO-HAUSNUMMER" 				=> $crs_utils->getVenueHouseNumber()
@@ -217,7 +217,7 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 							,"ZEITPLAN" 					=> $start_time."-".$end_time
 							,"INHALT" 						=> gevCourseBuildingBlockUtils::content(null, $this->gDB, $crs_request_id)
 							,"ZIELE UND NUTZEN" 			=> gevCourseBuildingBlockUtils::targetAndBenefits(null, $this->gDB, $crs_request_id)
-							,"WP" 							=> gevCourseBuildingBlockUtils::wp(null, $this->gDB, $crs_request_id)
+							,"WB-ZEIT" 						=> $crs_utils->getCreditedDurationFormatted()
 							,"VO-NAME" 						=> ""
 							,"VO-STRAßE" 					=> $crs_utils->getVenueStreet()
 							,"VO-HAUSNUMMER" 				=> $crs_utils->getVenueHouseNumber()
