@@ -80,6 +80,10 @@ class gevADPDB
 		;
 		$result = $this->db->query($query);
 
+		if ($this->db->numRows($result) < 1) {
+			return -1;
+		}
+
 		$row = $this->db->fetchAssoc($result);
 
 		return (int)$row['agent_status'];

@@ -93,7 +93,7 @@ class gevAgentRegistrationGUI
 
 		$status = $this->getDB()->getAgentStatus($adp_number);
 
-		if (in_array($status, self::$VALID_AGENT_STATUSES)) {
+		if ($status != -1 && in_array($status, self::$VALID_AGENT_STATUSES)) {
 			return true;
 		}
 
