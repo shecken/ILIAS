@@ -84,7 +84,9 @@ class ilMailTemplateSettingsEntity
 		
 		if ($this->ilDB->numRows($result) != 1)
 		{
-			throw new Exception('Illegal response: numRows != 1 in '. $query);
+			// gev_patch_3679 start
+			throw new Exception($this->g_lng->txt('no_mail_template'));
+			//gev_patch_3679 end
 		}
 		$this->populateFromRow( $this->ilDB->fetchAssoc($result) );
 		
