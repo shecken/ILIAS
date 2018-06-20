@@ -209,6 +209,7 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 
 		$venue_title = "";
 		$venue_id = $request->settings()->venueObjId();
+		$cp = gevCourseBuildingBlockUtils::wp(null, $this->gDB, $crs_request_id);
 
 		$data_base = array("TRAININGSTYP" 					=> $crs_utils->getType()
 							,"TRAININGSTITEL" 				=> $request->settings()->title()
@@ -217,7 +218,7 @@ class gevDecentralTrainingCreateMailPreviewDataGUI {
 							,"ZEITPLAN" 					=> $start_time."-".$end_time
 							,"INHALT" 						=> gevCourseBuildingBlockUtils::content(null, $this->gDB, $crs_request_id)
 							,"ZIELE UND NUTZEN" 			=> gevCourseBuildingBlockUtils::targetAndBenefits(null, $this->gDB, $crs_request_id)
-							,"WB-ZEIT" 						=> $crs_utils->getCreditedDurationFormatted()
+							,"WB-ZEIT" 						=> gevCourseUtils::convertCreditpointsToFormattedDuration($cp)
 							,"VO-NAME" 						=> ""
 							,"VO-STRAßE" 					=> $crs_utils->getVenueStreet()
 							,"VO-HAUSNUMMER" 				=> $crs_utils->getVenueHouseNumber()
