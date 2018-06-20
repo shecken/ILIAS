@@ -1885,3 +1885,4 @@ gev#:#xtdr_copy#:#Report Trainingsauslastung (Auswertung) kopieren
 gev#:#xwbe_copy#:#Report über Fehler bei der WBD-Meldung kopieren
 gev#:#xwbp_copy#:#Report über gemeldete Bildungspunkte kopieren
 gev#:#xtas_copy#:#Assessment Center für [KARRIEREZIEL] kopieren
+gev#:#no_mail_template#:#Es ist ein Fehler bei dem Mailversand aufgetreten, da eine Mailvorlage nicht verfügbar ist.
