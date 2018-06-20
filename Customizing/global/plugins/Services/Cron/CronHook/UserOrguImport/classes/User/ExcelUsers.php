@@ -111,7 +111,7 @@ class ExcelUsers
 		$path = $this->import_files->getCurrentUserFilePath();
 		$return = [];
 		foreach ($this->extractor->extractContent($path, self::$conversions) as $row) {
-			$return[] = $row[UdfWrapper::PROP_PNR];
+			$return[] = trim($row[UdfWrapper::PROP_PNR]);
 		}
 		return array_unique($return);
 	}
