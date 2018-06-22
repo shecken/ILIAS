@@ -418,10 +418,10 @@ class gevCourseSearch {
 				$options["prae"] = "Präsenztraining";
 				break;
 			case self::TAB_TOP:
-				$a_serach_opts["edu_program"] = "LE-Training zentral (ID)";
+				$a_serach_opts["edu_program"] = "HR-Training (ID)";
 				break;
 			case self::TAB_LE:
-				$a_serach_opts["edu_program"] = "HR-Training (ID)";
+				$a_serach_opts["edu_program"] = "LE-Training zentral (ID)";
 				break;
 			case self::TAB_WEBINAR:
 				$options["webinar"] = "Webinar";
