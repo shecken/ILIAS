@@ -394,8 +394,8 @@ class gevSettings
 	const SRFT_SHAPING_THE_INDUSTRY = "Shaping the industry (GATE)";
 
 	// Headers for selection topics
-	const SRTF_TOP_TRAININGS = "Top-Trainings";
-	const SRTF_TOP_TRAININGS_LEAD = "Top-Trainings (Führung)";
+	const SRTF_TOP_TRAININGS = "ToP-Trainings";
+	const SRTF_TOP_TRAININGS_LEAD = "ToP-Trainings (Führung)";
 	const SRTF_TOPIC_SELECTION = "Themenauswahl";
 	const SRFT_FURTHER_SEMINAR_PROGRAMS = "Weitere Seminarprogramme";
 	const SRFT_GATE = "GATE";
