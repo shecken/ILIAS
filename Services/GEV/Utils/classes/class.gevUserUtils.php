@@ -1979,6 +1979,15 @@ class gevUserUtils
 		$this->udf_utils->setField($this->user_id, gevSettings::USR_UDF_FINANCIAL_ACCOUNT, $a_nr);
 	}
 
+	public function getOrguSAP()
+	{
+		return $this->udf_utils->getField($this->user_id, gevSettings::USR_UDF_ORGU_SAP);
+	}
+	public function setOrguSAP($value)
+	{
+		$this->udf_utils->setField($this->usr_id, gevSettings::USR_UDF_ORGU_SAP, $value);
+	}
+
 	public static function userIsInactive($a_user_id)
 	{
 		global $ilDB;
