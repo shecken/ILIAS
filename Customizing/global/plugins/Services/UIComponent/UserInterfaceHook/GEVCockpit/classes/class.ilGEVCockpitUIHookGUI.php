@@ -371,7 +371,7 @@ class ilGEVCockpitUIHookGUI extends ilUIHookPluginGUI
 	{
 		$items = array
 			( "search"
-				=> array("Suche/Kompetenzen aus Top-Trainings")
+				=> array("Suche/Kompetenzen aus ToP-Trainings")
 			);
 		$crs_search = gevCourseSearch::getInstance($this->target_user_id);
 		$search_tabs = $crs_search->getPossibleTabs();
