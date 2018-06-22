@@ -6604,3 +6604,13 @@ if (!$ilDB->tableColumnExists('adp_import', 'agent_status')) {
 	));
 }
 ?>
+
+<#286>
+<?php
+
+if (!$ilDB->tableExists('dct_building_block')) {
+	$query = "UPDATE dct_building_block set topic = 'AdvoCard' where topic = 'AdcoCard'";
+	$ilDB->manipulate($query);
+}
+
+?>
