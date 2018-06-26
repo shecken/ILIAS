@@ -405,7 +405,7 @@ class gevCourseSearch {
 		return $info;
 	}
 
-	public function addSearchForTypeByActiveTab($a_serach_opts, $a_active_tab) {
+	public function addSearchForTypeByActiveTab($a_search_opts, $a_active_tab) {
 		$options = array();
 
 		switch($a_active_tab) {
