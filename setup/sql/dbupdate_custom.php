@@ -6614,3 +6614,61 @@ if (!$ilDB->tableExists('dct_building_block')) {
 }
 
 ?>
+
+<#287>
+<?php
+// init helper class
+require_once "Customizing/class.ilCustomInstaller.php";
+
+ilCustomInstaller::initPluginEnv();
+ilCustomInstaller::activatePlugin(IL_COMP_SERVICE, "AdvancedMetaData", "amdc", "CourseAMD");
+?>
+
+<#288>
+<?php
+	require_once("Services/GEV/Utils/classes/class.gevAMDUtils.php");
+
+	$settings = gevAMDUtils::getInstance();
+
+	$field_id = $settings->getFieldId("Trainingskategorie");
+
+	$query = 
+		 "SELECT obj_id, field_id, value, sub_type, sub_id".PHP_EOL
+		."FROM adv_md_values_text".PHP_EOL
+		."WHERE field_id = ".$this->db->quote($field_id, "integer").PHP_EOL
+	;
+
+	$result = $this->db->query($query);
+
+	$tmp = array();
+	$i = 0;
+	while ($row = $this->db->fetchAssoc($result)) {
+		$values = unserialize($row["value"]);
+		foreach ($values as $key => $value) {
+			if ($value == "GDIS-Werkstatt") {
+				$values[$key] = "GDS-Werkstatt";
+			}
+		}
+
+		$tmp[$i]["obj_id"] = $row["obj_id"];
+		$tmp[$i]["field_id"] = $row["field_id"];
+		$tmp[$i]["value"] = serialize($values);
+		$tmp[$i]["sub_type"] = $row["sub_type"];
+		$tmp[$i]["sub_id"] = $row["sub_id"];
+		$i++;
+	}
+
+	foreach ($tmp as $value) {
+		$query = 
+			 "UPDATE adv_md_values_text".PHP_EOL
+			."	SET value = ".$this->db->quote($value["value"], "text").PHP_EOL
+			."WHERE".PHP_EOL
+			."	obj_id = ".$this->db->quote($value["obj_id"], "integer").PHP_EOL
+			."	field_id = ".$this->db->quote($value["field_id"], "integer").PHP_EOL
+			."	sub_type = ".$this->db->quote($value["sub_type"], "text").PHP_EOL
+			."	sub_id = ".$this->db->quote($value["sub_id"], "integer").PHP_EOL
+		;
+
+		$this->db->manipulate($query);
+	}
+?>
