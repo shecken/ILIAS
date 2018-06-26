@@ -405,8 +405,9 @@ class gevCourseSearch {
 		return $info;
 	}
 
-	public function addSearchForTypeByActiveTab($a_serach_opts, $a_active_tab) {
+	public function addSearchForTypeByActiveTab($a_search_opts, $a_active_tab) {
 		$options = array();
+		$edus = "";
 
 		switch($a_active_tab) {
 			case self::TAB_ALL:
@@ -418,10 +419,10 @@ class gevCourseSearch {
 				$options["prae"] = "Präsenztraining";
 				break;
 			case self::TAB_TOP:
-				$a_serach_opts["edu_program"] = "HR-Training (ID)";
+				$edus = "HR-Training (ID)";
 				break;
 			case self::TAB_LE:
-				$a_serach_opts["edu_program"] = "LE-Training zentral (ID)";
+				$edus = "LE-Training zentral (ID)";
 				break;
 			case self::TAB_WEBINAR:
 				$options["webinar"] = "Webinar";
@@ -432,10 +433,11 @@ class gevCourseSearch {
 			default:
 				//throw exception()
 		}
-		
-		$a_serach_opts["type"] = $options;
-		
-		return $a_serach_opts;
+
+		$a_search_opts["type"] = $options;
+		$a_search_opts["edu_program"] = $edus;
+
+		return $a_search_opts;
 	}
 
 	public function getPossibleTabs() {
