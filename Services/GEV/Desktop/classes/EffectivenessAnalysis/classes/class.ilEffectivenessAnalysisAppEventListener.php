@@ -26,7 +26,6 @@ class ilEffectivenessAnalysisAppEventListener implements ilAppEventListener {
 				} else {
 					$due_date = "0000-00-00";
 				}
-
 			}
 
 			self::writeLog(__METHOD__, "Due date: ".$due_date);
