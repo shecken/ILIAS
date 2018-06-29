@@ -6,7 +6,7 @@
  */
 class ilEffectivenessAnalysisReminderDB {
 	const TABLE_NAME = "eff_analysis_maillog";
-	const SEQUENCE_TABLE_NAME = "eff_ana_maillog_seq";
+	const SEQUENCE_TABLE_NAME = "eff_ana_maillog";
 
 	/**
 	 * @var ilDB
@@ -68,12 +68,27 @@ class ilEffectivenessAnalysisReminderDB {
 			);
 
 			$this->db->createTable(self::TABLE_NAME, $fields);
-			$this->db->addPrimaryKey(self::TABLE_NAME, array('id'));
 		}
 	}
 
 	public function createSequence() {
 		$this->db->createSequence(self::SEQUENCE_TABLE_NAME);
+	}
+
+	public function updateTable2() {
+		if(!$this->db->tableColumnExists(self::TABLE_NAME, "id")) {
+			$field = array(
+					'type' => 'integer',
+					'length' => 4,
+					'notnull' => true
+				);
+
+			$this->db->addTableColumn(self::TABLE_NAME, "id", $field);
+		}
+	}
+
+	public function createPrimaryKey() {
+		$this->db->addPrimaryKey(self::TABLE_NAME, array('id'));
 	}
 
 	/**

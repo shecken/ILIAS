@@ -21,3 +21,19 @@ require_once("Customizing/global/plugins/Services/Cron/CronHook/EffectivenessAna
 $db = new ilEffectivenessAnalysisReminderDB($ilDB);
 $db->createSequence();
 ?>
+
+<#4>
+<?php
+global $ilDB;
+require_once("Customizing/global/plugins/Services/Cron/CronHook/EffectivenessAnalysisReminder/classes/ilEffectivenessAnalysisReminderDB.php");
+$db = new ilEffectivenessAnalysisReminderDB($ilDB);
+$db->updateTable2();
+?>
+
+<#5>
+<?php
+global $ilDB;
+require_once("Customizing/global/plugins/Services/Cron/CronHook/EffectivenessAnalysisReminder/classes/ilEffectivenessAnalysisReminderDB.php");
+$db = new ilEffectivenessAnalysisReminderDB($ilDB);
+$db->createPrimaryKey();
+?>
