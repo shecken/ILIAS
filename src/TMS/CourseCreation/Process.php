@@ -50,6 +50,7 @@ class Process {
 		$this->setCourseOnline($request);
 		$this->configureCopiedObjects($request);
 		$this->setOwner($request);
+		$this->assignCreatorRole($request);
 
 		\ilSession::_destroy($request->getSessionId());
 
@@ -167,6 +168,25 @@ class Process {
 	}
 
 	/**
+	 * Assigns creator to specified role
+	 *
+	 * @param Request 	$request
+	 *
+	 * @return void
+	 */
+	protected function assignCreatorRole(Request $request) {
+		$user_id = $request->getUserId();
+		$crs_ref_id = $request->getCourseRefId();
+
+		$xcps = $this->getChildById($crs_ref_id, "xcps");
+
+		if(!is_null($xcps)) {
+			$role_id = $xcps->getExtendedSettings()->getRoleId();
+			$this->rbacadmin->assignUser($role_id,$user_id);
+		}
+	}
+
+	/**
 	 * Get copy mappings for ref_ids, where target => source.
 	 *
 	 * @param	int[]	$ref_ids
@@ -279,6 +299,8 @@ class Process {
 	protected function getTemplateParentRefId($tpl_ref_id) {
 		return $this->tree->getParentId($tpl_ref_id);
 	}
+
+
 
 	/**
 	 * Checks the copy wizard has totaly finished
