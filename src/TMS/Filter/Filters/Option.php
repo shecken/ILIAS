@@ -17,6 +17,7 @@ class Option extends Filter
 		\ILIAS\TMS\Filter\FilterFactory $factory,
 		$label,
 		$description,
+		$visible,
 		array $mappings = array(),
 		array $mapping_result_types = array(),
 		$checked = false
@@ -30,6 +31,7 @@ class Option extends Filter
 		$this->setDescription($description);
 		$this->setMappings($mappings, $mapping_result_types);
 		$this->setChecked($checked);
+		$this->setVisible($visible);
 	}
 
 	/**

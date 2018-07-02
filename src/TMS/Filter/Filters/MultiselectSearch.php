@@ -13,14 +13,20 @@ class MultiselectSearch extends SelectBase {
 	 */
 	protected $default_choice;
 
-	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $label, $description, $options,
-								array $mappings = array(), array $mapping_result_types = array()
-								, array $default_choice = array()) 
-	{
+	public function __construct(
+		\ILIAS\TMS\Filter\FilterFactory $factory,
+		$label,
+		$description,
+		$options,
+		$visible,
+		array $mappings = array(),
+		array $mapping_result_types = array(),
+		array $default_choice = array()
+	) {
 		assert('is_string($label)');
 		assert('is_string($description)');
 
-		parent::__construct($factory, $label, $description, $options, $mappings, $mapping_result_types);
+		parent::__construct($factory, $label, $description, $options, $visible, $mappings, $mapping_result_types);
 
 		$keys = array_keys($options);
 		$tf = $factory->type_factory();

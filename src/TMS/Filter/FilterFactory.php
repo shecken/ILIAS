@@ -38,10 +38,11 @@ class FilterFactory {
 	 *
 	 * @param	string	$label
 	 * @param	string	$description
+	 * @param 	bool 	$visible
 	 * @return	Filters\DatePeriodFilter
 	 */
-	public function dateperiod($label, $description) {
-		return new Filters\DatePeriod($this, $label, $description);
+	public function dateperiod($label, $description, $visible = true) {
+		return new Filters\DatePeriod($this, $label, $description, $visible);
 	}
 
 	/**
@@ -49,10 +50,11 @@ class FilterFactory {
 	 *
 	 * @param	string	$label
 	 * @param	string	$description
+	 * @param 	bool 	$visible
 	 * @return	Filters\Date
 	 */
-	public function date($label, $description) {
-		return new Filters\Date($this, $label, $description);
+	public function date($label, $description, $visible = true) {
+		return new Filters\Date($this, $label, $description, $visible);
 	}
 
 	/**
@@ -60,10 +62,11 @@ class FilterFactory {
 	 *
 	 * @param	string	$label
 	 * @param	string	$description
+	 * @param 	bool 	$visible
 	 * @return	Filters\Filter
 	 */
-	public function option($label, $description) {
-		return new Filters\Option($this, $label, $description);
+	public function option($label, $description, $visible = true) {
+		return new Filters\Option($this, $label, $description, $visible);
 	}
 
 	/**
@@ -73,10 +76,11 @@ class FilterFactory {
 	 * @param	string	$label
 	 * @param	string	$description
 	 * @param	array	$options		int|string => string
+	 * @param 	bool 	$visible
 	 * @return	Filters\Filter
 	 */
-	public function multiselect($label, $description, $options) {
-		return new Filters\Multiselect($this, $label, $description, $options);
+	public function multiselect($label, $description, $options, $visible = true) {
+		return new Filters\Multiselect($this, $label, $description, $options, $visible);
 	}
 
 	/**
@@ -88,10 +92,11 @@ class FilterFactory {
 	 * @param	string	$label
 	 * @param	string	$description
 	 * @param	array	$options		int|string => string
+	 * @param 	bool 	$visible
 	 * @return	Filters\Filter
 	 */
-	public function multiselectsearch($label, $description, $options) {
-		return new Filters\MultiselectSearch($this, $label, $description, $options);
+	public function multiselectsearch($label, $description, $options, $visible = true) {
+		return new Filters\MultiselectSearch($this, $label, $description, $options, $visible);
 	}
 
 	/**
@@ -101,10 +106,11 @@ class FilterFactory {
 	 * @param	string	$label
 	 * @param	string	$description
 	 * @param	array	$options		int|string => string
+	 * @param 	bool 	$visible
 	 * @return	Filters\Filter
 	 */
-	public function singleselect($label, $description, $options) {
-		return new Filters\Singleselect($this, $label, $description, $options);
+	public function singleselect($label, $description, $options, $visible = true) {
+		return new Filters\Singleselect($this, $label, $description, $options, $visible);
 	}
 
 	/**
@@ -112,10 +118,11 @@ class FilterFactory {
 	 *
 	 * @param	string	$label
 	 * @param	string	$description
+	 * @param 	bool 	$visible
 	 * @return	Filters\Filter
 	 */
-	public function text($label, $description) {
-		return new Filters\Text($this, $label, $description);
+	public function text($label, $description, $visible = true) {
+		return new Filters\Text($this, $label, $description, $visible);
 	}
 
 	/**

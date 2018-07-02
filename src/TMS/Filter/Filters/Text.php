@@ -5,8 +5,14 @@
 namespace ILIAS\TMS\Filter\Filters;
 
 class Text extends Filter {
-	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $label, $description,
-								array $mappings = array(), array $mapping_result_types = array()) {
+	public function __construct(
+		\ILIAS\TMS\Filter\FilterFactory $factory,
+		$label,
+		$description,
+		$visible,
+		array $mappings = array(),
+		array $mapping_result_types = array()
+	) {
 		assert('is_string($label)');
 		assert('is_string($description)');
 
@@ -14,6 +20,7 @@ class Text extends Filter {
 		$this->setLabel($label);
 		$this->setDescription($description);
 		$this->setMappings($mappings, $mapping_result_types);
+		$this->setVisible($visible);
 	}
 
 	/**

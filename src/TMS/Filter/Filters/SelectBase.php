@@ -10,8 +10,15 @@ abstract class SelectBase extends Filter {
 	 */
 	protected $options;
 
-	public function __construct(\ILIAS\TMS\Filter\FilterFactory $factory, $label, $description, $options,
-								array $mappings = array(), array $mapping_result_types = array()) {
+	public function __construct(
+		\ILIAS\TMS\Filter\FilterFactory $factory,
+		$label,
+		$description,
+		$options,
+		$visible,
+		array $mappings = array(),
+		array $mapping_result_types = array()		
+	) {
 		assert('is_string($label)');
 		assert('is_string($description)');
 
@@ -19,6 +26,7 @@ abstract class SelectBase extends Filter {
 		$this->setLabel($label);
 		$this->setDescription($description);
 		$this->setMappings($mappings, $mapping_result_types);
+		$this->setVisible($visible);
 
 		$this->options = $options;
 	}

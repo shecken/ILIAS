@@ -146,8 +146,11 @@ class Helper {
 		$item = new ilCheckboxInputGUI($this->g_lng->txt('only_bookable'), self::F_ONLY_BOOKABLE);
 		$form->addItem($item);
 
-		$item = new ilCheckboxInputGUI($this->g_lng->txt('idd_relevant'), self::F_IDD_RELEVANT);
-		$form->addItem($item);
+		require_once("Services/Component/classes/class.ilPluginAdmin.php");
+		if(\ilPluginAdmin::isPluginActive("xetr")) {
+			$item = new ilCheckboxInputGUI($this->g_lng->txt('idd_relevant'), self::F_IDD_RELEVANT);
+			$form->addItem($item);	
+		}
 
 		$item = new ilHiddenInputGUI('cmd');
 		$item->setValue('submit');

@@ -30,6 +30,11 @@ abstract class Filter {
 	 */
 	private $mapping_result_types = array();
 
+	/**
+	 * @var bool
+	 */
+	private $visible = true;
+
 	protected function setFactory(\ILIAS\TMS\Filter\FilterFactory $factory) {
 		$this->factory = $factory;
 	}
@@ -193,4 +198,23 @@ abstract class Filter {
 	 * @return	self
 	 */
 	abstract protected function clone_with_new_mappings($mappings, $mapping_result_types);
+
+	/**
+	 * Get the flag the filter should be rendered or not
+	 *
+	 * @return bool
+	 */
+	final protected function setVisible($value) {
+		assert('is_bool($value)');
+		$this->visible = $value;
+	}
+
+	/**
+	 * Get the flag the filter should be rendered or not
+	 *
+	 * @return bool
+	 */
+	final public function isVisible() {
+		return $this->visible;
+	}
 }
