@@ -52,8 +52,15 @@ class Singleselect extends SelectBase {
 		}
 
 		list($ms, $mrts) = $this->getMappings();
-		return new Singleselect($this->factory, $this->label(), $this->description(),
-						$this->options, $ms, $mrts, $default_choice);
+		return new Singleselect(
+			$this->factory,
+			$this->label(),
+			$this->description(),
+			$this->options,
+			$this->isVisible(),
+			$ms,
+			$mrts,$default_choice
+		);
 	}
 
 	/**
@@ -61,6 +68,6 @@ class Singleselect extends SelectBase {
 	 */
 	protected function clone_with_new_mappings($mappings, $mapping_result_types) {
 		return new Singleselect($this->factory, $this->label(), $this->description(),
-						$this->options, $mappings, $mapping_result_types, $this->default_choice);
+						$this->options, $this->isVisible(), $mappings, $mapping_result_types, $this->default_choice);
 	}
 }

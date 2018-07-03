@@ -52,16 +52,32 @@ class Multiselect extends SelectBase {
 		}
 
 		list($ms, $mrts) = $this->getMappings();
-		return new Multiselect($this->factory, $this->label(), $this->description(),
-						$this->options, $ms, $mrts, $default_choice);
+		return new Multiselect(
+			$this->factory,
+			$this->label(),
+			$this->description(),
+			$this->options,
+			$this->$this->isVisible(),
+			$ms,
+			$mrts,
+			$default_choice
+		);
 	}
 
 	/**
 	 * @inheritdocs
 	 */
 	protected function clone_with_new_mappings($mappings, $mapping_result_types) {
-		return new Multiselect($this->factory, $this->label(), $this->description(),
-						$this->options, $mappings, $mapping_result_types, $this->default_choice);
+		return new Multiselect(
+			$this->factory,
+			$this->label(),
+			$this->description(),
+			$this->options,
+			$this->isVisible(),
+			$mappings,
+			$mapping_result_types,
+			$this->default_choice
+		);
 	}
 
 	public function use_all_if_nothing(array $values, \ILIAS\TMS\Filter\Types\Type $result_type) {
