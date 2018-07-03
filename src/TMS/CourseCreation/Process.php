@@ -31,9 +31,19 @@ class Process {
 	 */
 	protected $db;
 
-	public function __construct(\ilTree $tree, \ilDBInterface $db) {
+	/**
+	 * @var \ilObjectDefinition
+	 */
+	protected $objdefinition;
+
+	public function __construct(
+		\ilTree $tree,
+		\ilDBInterface $db,
+		\ilObjectDefinition $objdefinition
+	) {
 		$this->tree = $tree;
 		$this->db = $db;
+		$this->objdefinition = $objdefinition;
 	}
 
 	/**
@@ -50,6 +60,7 @@ class Process {
 		$this->setCourseOnline($request);
 		$this->configureCopiedObjects($request);
 		$this->setOwner($request);
+		$this->assignCreatorRole($request);
 
 		\ilSession::_destroy($request->getSessionId());
 
@@ -167,6 +178,53 @@ class Process {
 	}
 
 	/**
+	 * Assigns creator to specified role
+	 *
+	 * @param Request 	$request
+	 *
+	 * @return void
+	 */
+	protected function assignCreatorRole(Request $request) {
+		$user_id = $request->getUserId();
+		$crs_ref_id = $request->getCourseRefId();
+		$target_crs_ref_id = $request->getTargetRefId();
+
+		$xcps = $this->getFirstChildOfByType($crs_ref_id, "xcps");
+
+		if(!is_null($xcps)) {
+			$xcps->assignUserToRole($user_id, $target_crs_ref_id);
+		}
+	}
+
+	/**
+	 * Get first child by type recursive
+	 *
+	 * @param int 	$ref_id
+	 * @param string 	$search_type
+	 *
+	 * @return Object 	of search type
+	 */
+	protected function getFirstChildOfByType($ref_id, $search_type) {
+		$childs = $this->tree->getChilds($ref_id);
+
+		foreach ($childs as $child) {
+			$type = $child["type"];
+			if($type == $search_type) {
+				return \ilObjectFactory::getInstanceByRefId($child["child"]);
+			}
+
+			if($this->objdefinition->isContainer($type)) {
+				$ret = $this->getFirstChildOfByType($child["child"], $search_type);
+				if(! is_null($ret)) {
+					return $ret;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get copy mappings for ref_ids, where target => source.
 	 *
 	 * @param	int[]	$ref_ids
@@ -279,6 +337,8 @@ class Process {
 	protected function getTemplateParentRefId($tpl_ref_id) {
 		return $this->tree->getParentId($tpl_ref_id);
 	}
+
+
 
 	/**
 	 * Checks the copy wizard has totaly finished
