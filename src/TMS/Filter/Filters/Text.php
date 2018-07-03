@@ -48,7 +48,13 @@ class Text extends Filter {
 	 * @inheritdocs
 	 */
 	protected function clone_with_new_mappings($mappings, $mapping_result_types) {
-		return new Text($this->factory, $this->label(), $this->description(),
-						$mappings, $mapping_result_types);
+		return new Text(
+			$this->factory,
+			$this->label(),
+			$this->description(),
+			$this->isVisible(),
+			$mappings,
+			$mapping_result_types
+		);
 	}
 }

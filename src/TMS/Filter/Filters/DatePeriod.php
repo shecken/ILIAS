@@ -125,9 +125,18 @@ class DatePeriod extends Filter {
 		}
 
 		list($ms, $mrts) = $this->getMappings();
-		return new DatePeriod($this->factory, $this->label(), $this->description(),
-						$this->default_begin, $dt, $this->period_min, $this->period_max,
-						$ms, $mrts);
+		return new DatePeriod(
+			$this->factory,
+			$this->label(),
+			$this->description(),
+			$this->isVisible(),
+			$this->default_begin,
+			$dt,
+			$this->period_min,
+			$this->period_max,
+			$ms,
+			$mrts
+		);
 	}
 
 	/**
@@ -142,9 +151,18 @@ class DatePeriod extends Filter {
 		}
 
 		list($ms, $mrts) = $this->getMappings();
-		return new DatePeriod($this->factory, $this->label(), $this->description(),
-						$this->default_begin, $this->default_end, $dt, $this->period_max,
-						$ms, $mrts);
+		return new DatePeriod(
+			$this->factory,
+			$this->label(),
+			$this->description(),
+			$this->isVisible(),
+			$this->default_begin,
+			$this->default_end,
+			$dt,
+			$this->period_max,
+			$ms,
+			$mrts
+		);
 	}
 
 	/**
@@ -160,18 +178,36 @@ class DatePeriod extends Filter {
 		}
 
 		list($ms, $mrts) = $this->getMappings();
-		return new DatePeriod($this->factory, $this->label(), $this->description(),
-						$this->default_begin, $this->default_end, $this->period_min,
-						$dt, $ms, $mrts);
+		return new DatePeriod(
+			$this->factory,
+			$this->label(),
+			$this->description(),
+			$this->isVisible(),
+			$this->default_begin,
+			$this->default_end,
+			$this->period_min,
+			$dt,
+			$ms,
+			$mrts
+		);
 	}
 
 	/**
 	 * @inheritdocs
 	 */
 	protected function clone_with_new_mappings($mappings, $mapping_result_types) {
-		return new DatePeriod($this->factory, $this->label(), $this->description(),
-						$this->default_begin, $this->default_end, $this->period_min,
-						$this->period_max, $mappings, $mapping_result_types);
+		return new DatePeriod(
+			$this->factory,
+			$this->label(),
+			$this->description(),
+			$this->isVisible(),
+			$this->default_begin,
+			$this->default_end,
+			$this->period_min,
+			$this->period_max,
+			$mappings,
+			$mapping_result_types
+		);
 
 	}
 }

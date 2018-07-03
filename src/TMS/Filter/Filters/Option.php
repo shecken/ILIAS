@@ -67,6 +67,7 @@ class Option extends Filter
 			$this->factory,
 			$this->label(),
 			$this->description(),
+			$this->isVisible(),
 			$mappings,
 			$mapping_result_types,
 			$this->getChecked()
@@ -80,6 +81,7 @@ class Option extends Filter
 			$this->factory,
 			$this->label(),
 			$this->description(),
+			$this->isVisible(),
 			$mappings[0],
 			$mappings[1],
 			$checked
