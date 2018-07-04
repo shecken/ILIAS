@@ -11,18 +11,16 @@ interface UDFWrapper {
 	/**
 	 * Get the fields visible in local user administration.
 	 *
-	 * @return array<int, array>
+	 * @return array<int, string> 	field_id=>field_name
 	 */
 	public function getLUAVisibleFields();
 
 
 	/**
-	 * Get the field's value for the given user.
+	 * add to "master"-space and hook to $usr_data->field('usr_id')
 	 *
-	 * @param string 	$name
-	 * @param int 		$usr_id
-	 * @return mixed
+	 * @return space
 	 */
-	public function getFieldValue($field_name, $usr_id);
+	public function appendUDFs($space, $usr_table, $usr_id_field);
 
 }
