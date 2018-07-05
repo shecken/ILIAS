@@ -38,6 +38,13 @@ class ilSessionAppEventListener {
 						}
 						break;
 				}
+				break;
+			case 'Services/User':
+				switch($a_event) {
+					case 'deleteUser':
+						self::deleteTutorFromAllLecture((int)$a_parameter["usr_id"]);
+						break;
+				}
 		}
 	}
 
@@ -131,6 +138,34 @@ class ilSessionAppEventListener {
 			$assigned_tutors = array_filter($assigned_tutors, function($id) use ($usr_id) { return $id != $usr_id;});
 			$session->setAssignedTutors($assigned_tutors);
 
+			$session->update();
+
+			if(count($assigned_tutors) == 0) {
+				$session->setTutorSource(ilObjSession::TUTOR_CFG_MANUALLY);
+			}
+
+			$session->update();
+		}
+	}
+
+	/**
+	 * Deletes a tutor from all lists as lecture
+	 *
+	 * @param int 	$usr_id
+	 * @param int 	$crs_ref_id
+	 *
+	 * @return void
+	 */
+	protected static function deleteTutorFromAllLecture($usr_id) {
+		assert('is_int($usr_id)');
+
+		foreach (self::getAllSessions() as $session) {
+			$assigned_tutors = $session->getAssignedTutorsIds();
+			$assigned_tutors = array_filter($assigned_tutors, function($id) use ($usr_id) { return $id != $usr_id;});
+			$session->setAssignedTutors($assigned_tutors);
+
+			$session->update();
+
 			if(count($assigned_tutors) == 0) {
 				$session->setTutorSource(ilObjSession::TUTOR_CFG_MANUALLY);
 			}
@@ -178,6 +213,23 @@ class ilSessionAppEventListener {
 		foreach($sessions as $session)
 		{
 			$ret[] = ilObjectFactory::getInstanceByRefId($session['ref_id']);
+		}
+
+		return $ret;
+	}
+
+	/**
+	 * Get all sessions
+	 *
+	 * @return ilSession[]
+	 */
+	protected static function getAllSessions() {
+		global $DIC;
+		$g_tree = $DIC->repositoryTree();
+
+		$ret = array();
+		foreach(\ilObject::_getObjectsByType("sess") as $sess) {
+			$ret[] = \ilObjectFactory::getInstanceByObjId($sess["obj_id"]);
 		}
 
 		return $ret;
