@@ -14331,3 +14331,8 @@ tms#:#placeholder_desc_crs_members_count#:#Anzahl Teilnehmer (Trainer + Teilnehm
 search#:#search_for_orgu_members#:#Nach Organisationseinheiten suchen
 search#:#search_for_orgu_members_orgu#:#Organisationseinheit
 search#:#search_for_orgu_members_recursive#:#Darunterliegende einbeziehen?
+tms#:#pl_course_type#:#Kurstyp
+tms#:#pl_course_start_date#:#Startdatum des Kurses
+tms#:#pl_course_start_date#:#Enddatum des Kurses
+tms#:#pl_idd_learning_time#:#IDD-Lernzeit
+tms#:#pl_idd_learning_time_user#:#IDD-Lernzeit des Benutzers
