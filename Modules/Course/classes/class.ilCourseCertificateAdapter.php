@@ -255,7 +255,7 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		$ret = array();
 		$ret["COURSE_TYPE"] = $this->g_lng->txt("pl_course_type");
 		$ret["COURSE_STARTDATE"] = $this->g_lng->txt("pl_course_start_date");
-		$ret["COURSE_ENDDATE"] = $this->g_lng->txt("pl_course_start_date");
+		$ret["COURSE_ENDDATE"] = $this->g_lng->txt("pl_course_end_date");
 		$ret["IDD_TIME"] = $this->g_lng->txt("pl_idd_learning_time");
 		$ret["IDD_USER_TIME"] = $this->g_lng->txt("pl_idd_learning_time_user");
 		return $ret;
