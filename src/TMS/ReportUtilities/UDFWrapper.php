@@ -1,6 +1,9 @@
 <?php
 namespace ILIAS\TMS\ReportUtilities;
 
+use ILIAS\TMS\Filter;
+use ILIAS\TMS\TableRelations;
+
 /**
  * Provide centralized access to ILIAS' UDFs.
  *
@@ -17,10 +20,21 @@ interface UDFWrapper {
 
 
 	/**
-	 * add to "master"-space and hook to $usr_data->field('usr_id')
+	 * Add UDFs to "master"-space and hook to a table/field providing the user's id.
 	 *
-	 * @return space
+	 * @param TableRelations\TableFactory 		$tf
+	 * @param Filter\PredicateFactory 			$pf
+	 * @param TableRelations\Tables\TableSpace 	$space
+	 * @param TableRelations\Tables\Table 		$usr_table
+	 * @param string 							$usr_id_field_name
+	 * @return TableRelations\Tables\TableSpace
 	 */
-	public function appendUDFs($space, $usr_table, $usr_id_field);
+	public function appendUDFs(
+		TableRelations\TableFactory $tf,
+		Filter\PredicateFactory $pf,
+		TableRelations\Tables\TableSpace $space,
+		TableRelations\Tables\Table $usr_table,
+		$usr_id_field_name
+	);
 
 }
