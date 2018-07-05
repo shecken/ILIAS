@@ -307,7 +307,8 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 		$ret["IDD_TIME"] = $this->transformIDDLearningTimeToString($et_action->select()->getMinutes())." ".$this->g_lng->txt("form_hours");
 
 		$course_member = $this->getFirstChildOfByType($crs_ref_id, "xcmb");
-		$ret["IDD_USER_TIME"] = $this->transformIDDLearningTimeToString($course_member->getMinutesFor($user_id))." ".$this->g_lng->txt("form_hours");
+		$cmb_actions = $course_member->getActions();
+		$ret["IDD_USER_TIME"] = $this->transformIDDLearningTimeToString($cmb_actions->getMinutesFor($user_id))." ".$this->g_lng->txt("form_hours");
 
 		return $ret;
 	}
