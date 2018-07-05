@@ -339,3 +339,11 @@ if( !$ilDB->tableExists('tms_cat_settings') )
 <?php
 $ilCtrlStructureReader->getStructure();
 ?>
+<#29>
+<?php
+require_once("Services/TMS/Mailing/classes/class.ilTMSMailingLogsDB.php");
+global $DIC;
+$ilDB = $DIC->database();
+$db = new ilTMSMailingLogsDB($ilDB);
+$db->update1();
+?>
