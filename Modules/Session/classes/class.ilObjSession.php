@@ -1250,7 +1250,9 @@ class ilObjSession extends ilObject
 	 */
 	public function addAssignedTutor($usr_id) {
 		assert('is_integer($usr_id)');
-		$this->assigned_tutors[$usr_id] = \ilObjectFactory::getInstanceByObjId($usr_id, false);
+		if(ilObjUser::userExists(array($usr_id))) {
+			$this->assigned_tutors[$usr_id] = \ilObjectFactory::getInstanceByObjId($usr_id, false);
+		}
 	}
 
 	/**
