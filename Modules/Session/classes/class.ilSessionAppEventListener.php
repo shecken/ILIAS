@@ -29,14 +29,6 @@ class ilSessionAppEventListener {
 					case 'update':
 						self::updateSessionAppointments($a_parameter['object']);
 						break;
-					case "deleteParticipant":
-						self::deleteTutorFromLecture((int)$a_parameter["usr_id"], (int)$a_parameter["obj_id"]);
-						break;
-					case "addParticipant":
-						if($a_parameter["role_id"] == IL_CRS_TUTOR) {
-							self::setTutorAsLecture((int)$a_parameter["usr_id"], (int)$a_parameter["obj_id"]);
-						}
-						break;
 				}
 				break;
 			case 'Services/User':
@@ -45,7 +37,37 @@ class ilSessionAppEventListener {
 						self::deleteTutorFromAllLecture((int)$a_parameter["usr_id"]);
 						break;
 				}
+				break;
+			case "Services/AccessControl":
+				if($a_parameter["type"] == "crs") {
+					switch($a_event) {
+						case "deassignUser":
+							if($a_parameter["role_id"] == self::getDefaultTutorRoleFor((int)$a_parameter["obj_id"])) {
+								self::deleteTutorFromLecture((int)$a_parameter["usr_id"], (int)$a_parameter["obj_id"]);
+							}
+							break;
+						case "assignUser":
+							if($a_parameter["role_id"] == self::getDefaultTutorRoleFor((int)$a_parameter["obj_id"])) {
+								self::setTutorAsLecture((int)$a_parameter["usr_id"], (int)$a_parameter["obj_id"]);
+							}
+							break;
+					}
+				}
 		}
+	}
+
+	/**
+	 * Get the id of the default tutor role for coruse
+	 *
+	 * @param int 	$crs_id
+	 *
+	 * @return int | null
+	 */
+	protected static function getDefaultTutorRoleFor($crs_id) {
+		$ref_id = array_shift(\ilObject::_getAllReferences($crs_id));
+		$crs = \ilObjectFactory::getInstanceByRefId((int)$ref_id);
+
+		return $crs->getDefaultTutorRole();
 	}
 
 	/**
