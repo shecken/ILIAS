@@ -339,3 +339,8 @@ if( !$ilDB->tableExists('tms_cat_settings') )
 <?php
 $ilCtrlStructureReader->getStructure();
 ?>
+<#29>
+<?php
+$ilCtrlStructureReader->getStructure();
+?>
+
