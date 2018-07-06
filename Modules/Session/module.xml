@@ -20,6 +20,7 @@
 		<event type="raise" id="addSubscriber" />
 		<!-- cat-tms-patch start -->
 		<event type="listen" id="Modules/Course" />
+		<event type="listen" id="Services/User" />
 		<!-- cat-tms-patch end -->
 	</events>
 </module>
