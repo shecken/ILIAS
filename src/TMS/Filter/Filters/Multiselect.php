@@ -57,7 +57,7 @@ class Multiselect extends SelectBase {
 			$this->label(),
 			$this->description(),
 			$this->options,
-			$this->$this->isVisible(),
+			$this->isVisible(),
 			$ms,
 			$mrts,
 			$default_choice
