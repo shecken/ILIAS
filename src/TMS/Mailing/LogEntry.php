@@ -57,10 +57,16 @@ class LogEntry {
 	 * @var string
 	 */
 	protected $subject;
+
 	/**
 	 * @var string
 	 */
 	protected $msg;
+
+	/**
+	 * @var string[]
+	 */
+	protected $attachments;
 
 	/**
 	 * @var string
@@ -80,12 +86,13 @@ class LogEntry {
 	 * @param string  	$usr_mail
 	 * @param string  	$subject
 	 * @param string  	$msg
+	 * @param string[] 	$attachments
 	 * @param string  	$error
 	 */
 	public function __construct($id, \ilDateTime $date,
 			$event, $crs_ref_id, $template_ident,
 			$usr_id, $usr_login, $usr_name, $usr_mail,
-			$subject = '', $msg = '', $error='') {
+			$subject = '', $msg = '', array $attachments=[], $error='') {
 
 		assert('is_int($id)');
 		assert('is_string($event)');
@@ -110,6 +117,7 @@ class LogEntry {
 		$this->usr_mail = $usr_mail;
 		$this->subject = $subject;
 		$this->msg = $msg;
+		$this->attachments = $attachments;
 		$this->error = $error;
 	}
 
@@ -195,6 +203,13 @@ class LogEntry {
 	*/
 	public function getMessage() {
 		return $this->msg;
+	}
+
+	/**
+	* @return string[]
+	*/
+	public function getAttachments() {
+		return $this->attachments;
 	}
 
 	/**

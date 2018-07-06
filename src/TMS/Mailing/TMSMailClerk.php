@@ -70,6 +70,7 @@ class TMSMailClerk {
 		foreach ($mails as $mail) {
 			$do_send = true;
 			$err = array();
+			$log_attachments = array();
 
 			$recipient = $mail->getRecipient();
 			$contexts = $mail->getContexts();
@@ -114,7 +115,9 @@ class TMSMailClerk {
 				}
 				if($attachments !== null) {
 					foreach($attachments->getAttachments() as $attachment) {
-						$this->sender->addAttachment($attachment->getAttachmentPath());
+						$attachment_path = $attachment->getAttachmentPath();
+						$this->sender->addAttachment($attachment_path);
+						$log_attachments[] = substr($attachment_path, strrpos($attachment_path, '/') + 1);
 					}
 				}
 				if(! $this->sender->Send()) {
@@ -142,6 +145,7 @@ class TMSMailClerk {
 				$crs_ref_id,
 				(string)$subject,
 				(string)$msg_plain,
+				$log_attachments,
 				implode(PHP_EOL, $err)
 			);
 		}

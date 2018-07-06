@@ -32,7 +32,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 	 */
 	public function log($event, $template_ident, $usr_mail,
 		$usr_name = '', $usr_id = null, $usr_login = '',
-		$crs_ref_id = null, $subject = '', $msg = '', $error='') {
+		$crs_ref_id = null, $subject = '', $msg = '', array $attachments=[], $error='') {
 
 		$id = $this->getNextId();
 		$date = new \ilDateTime(date('c'), IL_CAL_DATETIME);
@@ -40,7 +40,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 		$entry = new LogEntry($id, $date,
 			$event, $crs_ref_id, $template_ident,
 			$usr_id, $usr_login, $usr_name, $usr_mail,
-			$subject, $msg, $error);
+			$subject, $msg, $attachments, $error);
 
 		$values = array(
 			"id" => array("integer", $entry->getId()),
@@ -53,6 +53,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 			"subject" => array("text", $entry->getSubject()),
 			"msg" => array("text", $entry->getMessage()),
 			"error" => array("text", $entry->getError()),
+			"attachments" => array("text", implode(',', $entry->getAttachments()))
 		);
 		if(! is_null($entry->getCourseRefId())) {
 			$values["crs_ref_id"] = array("integer", $entry->getCourseRefId());
@@ -73,7 +74,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 		$query = "SELECT" .PHP_EOL
 				." id, datetime, event, crs_ref_id, template_ident,"
 				." usr_id, usr_login, usr_mail, usr_name,"
-				." subject, msg, error" .PHP_EOL
+				." subject, msg, error, attachments" .PHP_EOL
 				." FROM ".static::TABLE_NAME .PHP_EOL
 				." WHERE crs_ref_id = " .$this->db->quote($ref_id, "integer")
 				.PHP_EOL;
@@ -103,6 +104,7 @@ class ilTMSMailingLogsDB implements LoggingDB {
 				(string)$row["usr_mail"],
 				(string)$row["subject"],
 				(string)$row["msg"],
+				explode(',', $row['attachments']),
 				(string)$row["error"]
 			);
 			$ret[] = $entry;
@@ -209,4 +211,19 @@ class ilTMSMailingLogsDB implements LoggingDB {
 		$this->db->createSequence(static::TABLE_NAME);
 	}
 
+	/**
+	 * Create attachments-field
+	 *
+	 * @return void
+	 */
+	public function update1(){
+		if (!$this->db->tableColumnExists(self::TABLE_NAME, "attachments")) {
+			$field = array(
+				'type' 		=> 'clob',
+				'notnull' 	=> true,
+				'default' 	=> ''
+			);
+			$this->db->addTableColumn(self::TABLE_NAME, "attachments", $field);
+		}
+	}
 }

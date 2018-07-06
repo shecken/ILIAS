@@ -335,12 +335,23 @@ if( !$ilDB->tableExists('tms_cat_settings') )
 	$ilDB->addPrimaryKey('tms_cat_settings', array('obj_id'));
 }
 ?>
+
 <#28>
 <?php
 $ilCtrlStructureReader->getStructure();
 ?>
+
 <#29>
 <?php
 $ilCtrlStructureReader->getStructure();
+?>
+
+<#30>
+<?php
+require_once("Services/TMS/Mailing/classes/class.ilTMSMailingLogsDB.php");
+global $DIC;
+$ilDB = $DIC->database();
+$db = new ilTMSMailingLogsDB($ilDB);
+$db->update1();
 ?>
 
