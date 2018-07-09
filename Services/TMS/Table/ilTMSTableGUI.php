@@ -18,13 +18,24 @@ final class ilTMSTableGUI extends ilTable2GUI
 	protected $fill_row;
 
 	/**
+	 * @var array
+	 */
+	protected $selectable_columns;
+
+	/**
 	 * @var string
 	 */
 	protected $table_id;
 
-	public function __construct(TMSTableParentGUI $parent_gui, $parent_cmd, \Closure $fill_row, $table_id)
-	{
+	public function __construct(
+		TMSTableParentGUI $parent_gui,
+		$parent_cmd,
+		\Closure $fill_row,
+		$table_id,
+		array $selectable_columns = array()
+	) {
 		$this->fill_row = $fill_row;
+		$this->selectable_columns = $selectable_columns;
 		$this->setId($table_id);
 		parent::__construct($parent_gui, $parent_cmd);
 		$this->setEnableTitle(true);
@@ -40,6 +51,11 @@ final class ilTMSTableGUI extends ilTable2GUI
 	{
 		$fnc = $this->fill_row;
 		$fnc($this, $a_set);
+	}
+
+	public function getSelectableColumns()
+	{
+		return $this->selectable_columns;
 	}
 
 	/**
