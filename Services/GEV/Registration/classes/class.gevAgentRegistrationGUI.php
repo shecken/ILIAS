@@ -106,11 +106,11 @@ class gevAgentRegistrationGUI
 	 * @param 	string 	$jobnumber
 	 * @param 	array
 	 */
-	protected function getEntriesForJobumber($jobnumber)
+	protected function getEntriesForJobnumber($jobnumber)
 	{
 		assert('is_string($jobnumber)');
 
-		return $this->getDB()->getEntryByJobumber($jobnumber);
+		return $this->getDB()->getEntryByJobnumber($jobnumber);
 	}
 
 	/**
@@ -192,12 +192,12 @@ class gevAgentRegistrationGUI
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 
 		$user_id = $user->getId();
-		$adp_number = $form->getInput("position");
-		$data = $this->getEntriesForAdpNumber($adp_number);
+		$jobnumber = $form->getInput("position");
+		$data = $this->getEntriesForJobnumber($jobnumber);
 		$vermittlerstatus = $data['agent_status'];
 
-		$user_utils->setADPNumberGEV($data["adp_number"]);
-		$user_utils->setJobNumber($data["adp_number"]);
+		$user_utils->setADPNumberGEV($data["jobnumber"]);
+		$user_utils->setJobNumber($data["jobnumber"]);
 		$user_utils->setAgentKey($data["vms"]);
 
 		$role_title = gevSettings::$VMS_ROLE_MAPPING[$vermittlerstatus][0];
