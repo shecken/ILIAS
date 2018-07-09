@@ -71,20 +71,20 @@ class gevAgentRegistrationGUI
 	/**
 	 * Check for valid jobnumber.
 	 *
-	 * @param 	int 	$jobnumber
+	 * @param 	string 	$jobnumber
 	 * @return 	bool
 	 */
 	protected function checkValidJobnumber($jobnumber)
 	{
 		assert('is_string($jobnumber)');
 
-		return $this->getDB()->checkForAdpNumber($jobnumber);
+		return $this->getDB()->checkForJobnumber($jobnumber);
 	}
 
 	/**
 	 * Check whether 'vermittlerstatus' is a agent status.
 	 *
-	 * @param 	int 	$jobnumber
+	 * @param 	string 	$jobnumber
 	 * @return 	bool	true = is a agent; false = isn't a agent
 	 */
 	protected function isAgent($jobnumber)
