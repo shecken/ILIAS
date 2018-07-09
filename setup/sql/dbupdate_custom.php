@@ -6680,6 +6680,11 @@ if ($ilDB->tableExists('adp_import')) {
 	$ilDB->renameTable('adp_import', 'jobnumber_import');
 }
 
+?>
+
+<#290>
+<?php
+
 if ($ilDB->tableExists('jobnumber_import')) {
 	if ($ilDB->tableColumnExists('adp_number')) {
 		$ilDB->renameTableColumn('jobnumber_import', 'adp_number', 'jobnumber');
