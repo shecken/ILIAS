@@ -26,7 +26,11 @@ class gevJobnumberImportJob extends ilCronJob
 	 */
 	public function getTitle()
 	{
+<<<<<<< HEAD:Services/GEV/Import/classes/class.gevJobnumberImportJob.php
 		return "Import von Maklernummern";
+=======
+		return "Import von Makler Stellennummern";
+>>>>>>> 48caa78a353273103b57a8e2a6d608b34c6793ab:Services/GEV/Import/classes/class.gevADPImportJob.php
 	}
 
 	/**
@@ -81,12 +85,12 @@ class gevJobnumberImportJob extends ilCronJob
 
 		$skip_first_loop = true;
 		while ($stelle = $file->readCSVLine($stelle_handle, self::DELIMETER)) {
-			if ($skip_first_loop || !is_numeric($stelle[5])) {
+			if ($skip_first_loop || !is_numeric($stelle[0])) {
 				$skip_first_loop = false;
 				continue;
 			}
 
-			$results[$stelle[5]] = [
+			$results[$stelle[0]] = [
 				'agent_status' => $stelle[6],
 				'vms_text' => $stelle[7]
 			];
