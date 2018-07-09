@@ -72,8 +72,8 @@ class gevJobnumberImportJob extends ilCronJob
 		global $ilDB;
 
 		$cron_result = new ilCronJobResult();
-		$db = new gevADPDB($ilDB);
-		$file = new gevADPFile();
+		$db = new gevJobnumberDB($ilDB);
+		$file = new gevJobnumberFile();
 
 		$stelle_handle = $file->open(self::STELLE_FILE_PATH);
 
