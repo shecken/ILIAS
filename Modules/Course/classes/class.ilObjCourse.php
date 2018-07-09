@@ -2430,7 +2430,7 @@ class ilObjCourse extends ilContainer implements ilMembershipRegistrationCodes
 			global $ilAppEventHandler;
 			$ilAppEventHandler->raise(
 				'Modules/Course',
-				Booking\Actions::EVENT_USER_FILLEDUP_FROM_WAITING,
+				\ILIAS\TMS\Booking\Actions::EVENT_USER_FILLEDUP_FROM_WAITING,
 				array(
 					 'crs_ref_id' => $this->getRefId(),
 					 'usr_id' => (int)$user_id
