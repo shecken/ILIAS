@@ -10,7 +10,6 @@ require_once("Services/Cron/classes/class.ilCronJobResult.php");
  */
 class gevADPImportJob extends ilCronJob
 {
-	const ADP_FILE_PATH = "/var/drbd/www/files/UserOrguImport/adp.dat";
 	const STELLE_FILE_PATH = "/var/drbd/www/files/UserOrguImport/stelle.dat";
 	const DELIMETER = "%";
 
@@ -27,7 +26,7 @@ class gevADPImportJob extends ilCronJob
 	 */
 	public function getTitle()
 	{
-		return "Import von ADP Nummern";
+		return "Import von Makler Stellennummern";
 	}
 
 	/**
@@ -76,32 +75,21 @@ class gevADPImportJob extends ilCronJob
 		$db = new gevADPDB($ilDB);
 		$file = new gevADPFile();
 
-		$adp_handle = $file->open(self::ADP_FILE_PATH);
 		$stelle_handle = $file->open(self::STELLE_FILE_PATH);
 
 		$results = array();
 
 		$skip_first_loop = true;
-		while ($adp = $file->readCSVLine($adp_handle, self::DELIMETER)) {
-			if ($skip_first_loop || !is_numeric($adp[0])) {
-				$skip_first_loop = false;
-				continue;
-			}
-			$results[$adp[0]] = array();
-		}
-
-		$skip_first_loop = true;
 		while ($stelle = $file->readCSVLine($stelle_handle, self::DELIMETER)) {
-			if ($skip_first_loop || !is_numeric($stelle[5])) {
+			if ($skip_first_loop || !is_numeric($stelle[0])) {
 				$skip_first_loop = false;
 				continue;
 			}
-			if (array_key_exists($stelle[5], $results)) {
-				$results[$stelle[5]] = [
-					'agent_status' => $stelle[6],
-					'vms_text' => $stelle[7]
-				];
-			}
+
+			$results[$stelle[0]] = [
+				'agent_status' => $stelle[6],
+				'vms_text' => $stelle[7]
+			];
 			ilCronManager::ping($this->getId());
 		}
 
