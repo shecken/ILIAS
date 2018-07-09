@@ -26,11 +26,7 @@ class gevJobnumberImportJob extends ilCronJob
 	 */
 	public function getTitle()
 	{
-<<<<<<< HEAD:Services/GEV/Import/classes/class.gevJobnumberImportJob.php
 		return "Import von Maklernummern";
-=======
-		return "Import von Makler Stellennummern";
->>>>>>> 48caa78a353273103b57a8e2a6d608b34c6793ab:Services/GEV/Import/classes/class.gevADPImportJob.php
 	}
 
 	/**
