@@ -1,13 +1,13 @@
 <?php
 
 /**
- * Database class. Handles adp methods.
+ * Database class. Handles jobnumber methods.
  *
  * @author Daniel Weise <daniel.weise@concepts-and-training.de>
  */
-class gevADPDB
+class gevJobnumberDB
 {
-	const TABLENAME = "adp_import";
+	const TABLENAME = "jobnumber_import";
 
 	/**
 	 * @var ilDB
@@ -23,19 +23,19 @@ class gevADPDB
 	}
 
 	/**
-	 * Get a db tupel by adp_number.
+	 * Get a db tupel by jobnumber.
 	 *
-	 * @param 	string 	$adp_number
+	 * @param 	string 	$jobnumber
 	 * @return 	array
 	 */
-	public function getEntryByAdpNumber($adp_number)
+	public function getEntryByJobnumber($jobnumber)
 	{
-		assert('is_string($adp_number)');
+		assert('is_string($jobnumber)');
 
 		$query =
-			 "SELECT id, adp_number, last_change, vms_text, agent_status".PHP_EOL
+			 "SELECT id, jobnumber, last_change, vms_text, agent_status".PHP_EOL
 			."FROM ".self::TABLENAME.PHP_EOL
-			."WHERE adp_number = ".$this->db->quote($adp_number, "text").PHP_EOL
+			."WHERE jobnumber = ".$this->db->quote($jobnumber, "text").PHP_EOL
 		;
 		$result = $this->db->query($query);
 
@@ -43,19 +43,19 @@ class gevADPDB
 	}
 
 	/**
-	 * Check for an adp_number.
+	 * Check for an jobnumber.
 	 *
-	 * @param 	string 	$adp_number
+	 * @param 	string 	$jobnumber
 	 * @return 	bool
 	 */
-	public function checkForAdpNumber($adp_number)
+	public function checkForJobnumber($jobnumber)
 	{
-		assert('is_string($adp_number)');
+		assert('is_string($jobnumber)');
 
 		$query =
 			 "SELECT id".PHP_EOL
 			."FROM ".self::TABLENAME.PHP_EOL
-			."WHERE adp_number = ".$this->db->quote($adp_number, "text").PHP_EOL
+			."WHERE jobnumber = ".$this->db->quote($jobnumber, "text").PHP_EOL
 		;
 
 		$result = $this->db->query($query);
@@ -66,17 +66,17 @@ class gevADPDB
 	/**
 	 * Get the status of the agent.
 	 *
-	 * @param 	string 	$adp_number
+	 * @param 	string 	$jobnumber
 	 * @return 	int
 	 */
-	public function getAgentStatus($adp_number)
+	public function getAgentStatus($jobnumber)
 	{
-		assert('is_string($adp_number)');
+		assert('is_string($jobnumber)');
 
 		$query =
 			 "SELECT agent_status".PHP_EOL
 			."FROM ".self::TABLENAME.PHP_EOL
-			."WHERE adp_number = ".$this->db->quote($adp_number, "text").PHP_EOL
+			."WHERE jobnumber = ".$this->db->quote($jobnumber, "text").PHP_EOL
 		;
 		$result = $this->db->query($query);
 
@@ -104,7 +104,7 @@ class gevADPDB
 		foreach ($values as $key => $value) {
 			$result = array(
 				'id' => ['integer', $id],
-				'adp_number' => ['text', $key],
+				'jobnumber' => ['text', $key],
 				'last_change' => ['text', date("Y-m-d")],
 				'vms_text' => ['text', $value['vms_text']],
 				'agent_status' => ['integer', $value['agent_status']]

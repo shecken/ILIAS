@@ -8,7 +8,7 @@ require_once("Services/Cron/classes/class.ilCronJobResult.php");
  *
  * @author Daniel Weise <daniel.weise@concepts-and-training.de>
  */
-class gevADPImportJob extends ilCronJob
+class gevJobnumberImportJob extends ilCronJob
 {
 	const STELLE_FILE_PATH = "/var/drbd/www/files/UserOrguImport/stelle.dat";
 	const DELIMETER = "%";
@@ -18,7 +18,7 @@ class gevADPImportJob extends ilCronJob
 	 */
 	public function getId()
 	{
-		return "gev_adp_import";
+		return "gev_jobnumber_import";
 	}
 
 	/**
@@ -26,7 +26,7 @@ class gevADPImportJob extends ilCronJob
 	 */
 	public function getTitle()
 	{
-		return "Import von Makler Stellennummern";
+		return "Import von Maklernummern";
 	}
 
 	/**
@@ -66,8 +66,8 @@ class gevADPImportJob extends ilCronJob
 	 */
 	public function run()
 	{
-		require_once("./Services/GEV/Import/classes/class.gevADPFile.php");
-		require_once("./Services/GEV/Import/classes/class.gevADPDB.php");
+		require_once("./Services/GEV/Import/classes/class.gevJobnumberFile.php");
+		require_once("./Services/GEV/Import/classes/class.gevJobnumberDB.php");
 
 		global $ilDB;
 
@@ -90,6 +90,7 @@ class gevADPImportJob extends ilCronJob
 				'agent_status' => $stelle[6],
 				'vms_text' => $stelle[7]
 			];
+
 			ilCronManager::ping($this->getId());
 		}
 

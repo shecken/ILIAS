@@ -5,7 +5,7 @@
  *
  * @author Daniel Weise <daniel.weise@concepts-and-training.de>
  */
-class gevADPFile
+class gevJobnumberFile
 {
 	/**
 	 * Open a file and return a file handle.

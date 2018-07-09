@@ -22,9 +22,9 @@ class gevAgentRegistrationGUI
 	];
 
 	/**
-	 * @var gevADPDB
+	 * @var gevJobnumberDB
 	 */
-	protected $gevAdpDB;
+	protected $gev_jobnumber_DB;
 
 	public function __construct()
 	{
@@ -69,29 +69,29 @@ class gevAgentRegistrationGUI
 	}
 
 	/**
-	 * Check for valid adp_number.
+	 * Check for valid jobnumber.
 	 *
-	 * @param 	int 	$adp_number
+	 * @param 	int 	$jobnumber
 	 * @return 	bool
 	 */
-	protected function checkValidAdpNumber($adp_number)
+	protected function checkValidJobnumber($jobnumber)
 	{
-		assert('is_string($adp_number)');
+		assert('is_string($jobnumber)');
 
-		return $this->getDB()->checkForAdpNumber($adp_number);
+		return $this->getDB()->checkForAdpNumber($jobnumber);
 	}
 
 	/**
 	 * Check whether 'vermittlerstatus' is a agent status.
 	 *
-	 * @param 	int 	$adp_number
+	 * @param 	int 	$jobnumber
 	 * @return 	bool	true = is a agent; false = isn't a agent
 	 */
-	protected function isAgent($adp_number)
+	protected function isAgent($jobnumber)
 	{
-		assert('is_string($adp_number)');
+		assert('is_string($jobnumber)');
 
-		$status = $this->getDB()->getAgentStatus($adp_number);
+		$status = $this->getDB()->getAgentStatus($jobnumber);
 
 		if ($status != -1 && in_array($status, self::$VALID_AGENT_STATUSES)) {
 			return true;
@@ -101,16 +101,16 @@ class gevAgentRegistrationGUI
 	}
 
 	/**
-	 * Get entries for adp_number.
+	 * Get entries for jobnumber.
 	 *
-	 * @param 	string 	$adp_number
+	 * @param 	string 	$jobnumber
 	 * @param 	array
 	 */
-	protected function getEntriesForAdpNumber($adp_number)
+	protected function getEntriesForJobumber($jobnumber)
 	{
-		assert('is_string($adp_number)');
+		assert('is_string($jobnumber)');
 
-		return $this->getDB()->getEntryByAdpNumber($adp_number);
+		return $this->getDB()->getEntryByJobumber($jobnumber);
 	}
 
 	/**
@@ -120,12 +120,12 @@ class gevAgentRegistrationGUI
 	 */
 	protected function getDB()
 	{
-		if ($this->gevAdpDB === null) {
-			require_once("./Services/GEV/Import/classes/class.gevADPDB.php");
-			$this->gevAdpDB = new gevADPDB($this->db);
+		if ($this->gev_jobnumber_DB === null) {
+			require_once("./Services/GEV/Import/classes/class.gevJobnumberDB.php");
+			$this->gev_jobnumber_DB = new gevJobnumberDB($this->db);
 		}
 
-		return $this->gevAdpDB;
+		return $this->gev_jobnumber_DB;
 	}
 
 	protected function startAgentRegistration($a_form = null)
@@ -247,9 +247,9 @@ class gevAgentRegistrationGUI
 			$chb->setAlert($this->lng->txt("evg_mandatory"));
 		}
 
-		$adp_number = $form->getInput("position");
+		$jobnumber = $form->getInput("position");
 
-		if (!$this->checkValidAdpNumber($adp_number) || !$this->isAgent($adp_number)) {
+		if (!$this->checkValidJobnumber($jobnumber) || !$this->isAgent($jobnumber)) {
 			$err = true;
 			$form->getItemByPostVar("position")->setAlert($this->lng->txt("gev_evg_registration_not_found"));
 		}
