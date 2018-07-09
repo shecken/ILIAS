@@ -6686,7 +6686,7 @@ if ($ilDB->tableExists('adp_import')) {
 <?php
 
 if ($ilDB->tableExists('jobnumber_import')) {
-	if ($ilDB->tableColumnExists('adp_number')) {
+	if ($ilDB->tableColumnExists('jobnumber_import', 'adp_number')) {
 		$ilDB->renameTableColumn('jobnumber_import', 'adp_number', 'jobnumber');
 	}
 }
