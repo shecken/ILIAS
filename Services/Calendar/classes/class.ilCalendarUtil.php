@@ -569,6 +569,13 @@ class ilCalendarUtil
 			$format = str_replace("YYYY", "Y", $format);
 			$format = str_replace("HH", "H", $format);
 			$format = str_replace("hh", "h", $format);
+
+			// cat-tms-patch start 1591
+			if($a_add_time == 2)
+			{
+				$format = str_replace("ss", "s", $format);
+			}
+			// cat-tms-patch end 1591
 		}
 		
 		return $format;
