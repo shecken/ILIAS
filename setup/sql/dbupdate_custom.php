@@ -355,3 +355,11 @@ $db = new ilTMSMailingLogsDB($ilDB);
 $db->update1();
 ?>
 
+<#31>
+<?php
+
+$query = "UPDATE il_orgu_positions SET title = 'Mitarbeiter' WHERE title = 'Employees'";
+$ilDB->manipulate($query);
+$query = "UPDATE il_orgu_positions SET title = 'Vorgesetzte' WHERE title = 'Superiors'";
+$ilDB->manipulate($query);
+?>
