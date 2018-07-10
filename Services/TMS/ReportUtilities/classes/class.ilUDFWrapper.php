@@ -104,7 +104,9 @@ trait ilUDFWrapper {
 	 * @return string
 	 */
 	private function sanitizeUDFName($name) {
-		return str_replace('-', '', $name);
+		$name = str_replace('-', '', $name);
+		$name = str_replace(' ', '', $name);
+		return $name;
 	}
 
 	/**

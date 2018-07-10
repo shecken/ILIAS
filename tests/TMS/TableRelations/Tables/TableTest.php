@@ -74,7 +74,7 @@ class TableTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * @expectedException ILIAS\TMS\TableRelations\Tables\TableException
 	 */
-	public function test_wrong_filed() {
+	public function test_wrong_field() {
 		$t = $this->tableSample();
 		$t->addField($this->tf->Field("field1","table_id1"));
 	}
