@@ -481,7 +481,7 @@ abstract class ilTMSBookingGUI {
 				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
 	/**
