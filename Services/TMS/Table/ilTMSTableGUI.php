@@ -32,7 +32,7 @@ final class ilTMSTableGUI extends ilTable2GUI
 		$parent_cmd,
 		\Closure $fill_row,
 		$table_id,
-		array $selectable_columns = array()
+		array $selectable_columns
 	) {
 		$this->fill_row = $fill_row;
 		$this->selectable_columns = $selectable_columns;
