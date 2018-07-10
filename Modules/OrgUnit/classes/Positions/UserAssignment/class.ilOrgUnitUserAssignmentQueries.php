@@ -209,4 +209,18 @@ class ilOrgUnitUserAssignmentQueries {
 		$q = "DELETE FROM il_orgu_ua WHERE user_id = " . $DIC->database()->quote($user_id, "integer");
 		$DIC->database()->manipulate($q);
 	}
+
+	// cat-tms-patch start
+	/**
+	 * Get user with any position
+	 *
+	 * @return int[] 	$user_ids
+	 */
+	public function getUserIdsWithAtLeastOnePosition() {
+		return ilOrgUnitUserAssignment::innerjoin("il_orgu_authority", "position_id", "position_id")
+			->where([])
+			->get()
+		;
+	}
+	// cat-tms-patch end
 }

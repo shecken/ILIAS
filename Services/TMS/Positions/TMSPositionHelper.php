@@ -33,6 +33,14 @@ class TMSPositionHelper {
 		return array_unique($user_ids);
 	}
 
+	/**
+	 * Get all user id where position has authority for specified org units
+	 *
+	 * @param ilOrgUnitPosition[] 	$positions
+	 * @param int[] 	$orgus
+	 *
+	 * @return int[]
+	 */
 	public function getUserIdsForPositionsAndOrgunits(array $positions, array $orgus) {
 		$user_ids = array();
 		foreach($positions as $position) {
@@ -170,5 +178,16 @@ class TMSPositionHelper {
 		}
 
 		return $ids;
+	}
+
+	/**
+	 * Get all user ids with at last one position
+	 *
+	 * @return int[]
+	 */
+	public function getUserIdsWithAtLeastOnePositionWithAuthority() {
+		$assignemnts = $this->orgua_queries->getUserIdsWithAtLeastOnePosition();
+		$user_ids = array_map(function($ua) { return $ua->getUserId();}, $assignemnts);
+		return array_unique($user_ids);
 	}
 }
