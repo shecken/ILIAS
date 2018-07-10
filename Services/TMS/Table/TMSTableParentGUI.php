@@ -29,12 +29,28 @@ abstract class TMSTableParentGUI {
 	abstract protected function tableId();
 
 	/**
+	 * Get the columns which are extra selectable.
+	 *
+	 * @return array
+	 */
+	public function getSelectableColumns()
+	{
+		return array();
+	}
+
+	/**
 	 * Get an instance of the table gui
 	 *
 	 * @return ilTMSTableGUI
 	 */
 	protected function getTMSTableGUI() {
 		require_once("Services/TMS/Table/ilTMSTableGUI.php");
-		return new ilTMSTableGUI($this, $this->tableCommand(), $this->fillRow(), $this->tableId());
+		return new ilTMSTableGUI(
+			$this,
+			$this->tableCommand(),
+			$this->fillRow(),
+			$this->tableId(),
+			$this->getSelectableColumns()
+		);
 	}
 }
