@@ -92,6 +92,59 @@ class ilObjOrgUnitTree {
 		))->getArray('id', 'user_id');
 	}
 
+	//cat-tms-patch start
+
+	/**
+	 * @param $ref_id    int the reference id of the organisational unit.
+	 * @param $recursive bool if true you get the ids of the subsequent orgunits employees too
+	 *
+	 * @return int[] array of user ids.
+	 */
+	public function getAllAssignees($ref_id, $recursive = false)
+	{
+		if ($recursive) {
+			return $this->getAllAssignementsRecursive($ref_id);
+		}
+
+		return $this->getAllAssignements($ref_id);
+	}
+
+	/**
+	 * @param int $ref_id
+	 * @param \ilOrgUnitPosition $ilOrgUnitPosition
+	 *
+	 * @return array
+	 */
+	public function getAllAssignements($ref_id)
+	{
+		$assignee = ilOrgUnitUserAssignment::where(array( 'orgu_id'     => $ref_id))->getArray('id', 'user_id');
+
+		return array_values($assignee);
+	}
+
+	/**
+	 * @param int $ref_id
+	 * @param \ilOrgUnitPosition $ilOrgUnitPosition
+	 *
+	 * @return array
+	 */
+	public function getAllAssignementsRecursive($ref_id)
+	{
+		$orgu_ids = $this->getAllChildren($ref_id);
+
+		$assignees = array();
+		foreach ($orgu_ids as $orgu_id) {
+			$assignee = ilOrgUnitUserAssignment::where(array(
+				'orgu_id' => $orgu_id
+			))->getArray('id', 'user_id');
+
+			$assignees = array_merge($assignees, array_values($assignee));
+		}
+
+		return array_unique($assignees);
+	}
+
+	//cat-tms-patch end
 
 	/**
 	 * @param  $ref_id         int the reference id of the organisational unit.
