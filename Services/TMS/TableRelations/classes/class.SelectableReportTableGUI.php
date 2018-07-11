@@ -145,11 +145,11 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	/**
 	 * Define a column depending on one or several fields. I.e. fields are requested if column is activated.
 	 *
-	 * @param	string	$title 
+	 * @param	string	$title
 	 * @param	string	$column_id
-	 * @param	AbstractField[field_id]	$fields 
-	 * @param	bool	$selectable 
-	 * @param 	bool	$sort 
+	 * @param	AbstractField[field_id]	$fields
+	 * @param	bool	$selectable
+	 * @param 	bool	$sort
 	 * @param 	bool	$no_excel
 	 * @param	bool	$postprocessed_sorting	This setting should be used for all columns which are
 	 *											subjected to postprocessing not conserving order.
@@ -240,11 +240,15 @@ class SelectableReportTableGUI extends ilTable2GUI {
 	 */
 	public function fillRow($set) {
 		$relevant = $this->relevantColumns();
-
 		foreach ($this->order as $column_id) {
 			if(isset($relevant[$column_id])) {
-				$this->tpl->setCurrentBlock($column_id);
-				$this->tpl->setVariable('VAL_'.strtoupper($column_id),(string)$set[$column_id]);
+				if(substr($column_id, 0,4) === 'UDF_') {
+					$this->tpl->setCurrentBlock('udf_block');
+					$this->tpl->setVariable('VAL_UDFFIELD', (string)$set[$column_id]);
+				} else {
+					$this->tpl->setCurrentBlock($column_id);
+					$this->tpl->setVariable('VAL_'.strtoupper($column_id),(string)$set[$column_id]);
+				}
 				$this->tpl->parseCurrentBlock();
 			}
 		}

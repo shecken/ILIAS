@@ -111,9 +111,18 @@ class DatePeriod extends Filter {
 		}
 
 		list($ms, $mrts) = $this->getMappings();
-		return new DatePeriod($this->factory, $this->label(), $this->description(),
-						$dt, $this->default_end, $this->period_min, $this->period_max,
-						$ms, $mrts);
+		return new DatePeriod(
+			$this->factory,
+			$this->label(),
+			$this->description(),
+			$this->isVisible(),
+			$dt,
+			$this->default_end,
+			$this->period_min,
+			$this->period_max,
+			$ms,
+			$mrts
+		);
 	}
 
 	/**
