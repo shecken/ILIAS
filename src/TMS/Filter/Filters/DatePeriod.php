@@ -79,7 +79,10 @@ class DatePeriod extends Filter {
 	 */
 	public function original_content_type() {
 		$tf = $this->factory->type_factory();
-		return $tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime"));
+		return $tf->tuple(
+			$tf->either($tf->cls("\\DateTime"), $tf->string()),
+			$tf->either($tf->cls("\\DateTime"), $tf->string())
+		);
 	}
 
 	/**

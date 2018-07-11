@@ -21,6 +21,10 @@ class StringType extends UnstructuredType
 	 */
 	public function contains($value)
 	{
-		return is_string($value) || is_integer($value);
+		return
+			is_string($value)
+			|| is_integer($value)
+			|| is_bool($value)
+			;
 	}
 }

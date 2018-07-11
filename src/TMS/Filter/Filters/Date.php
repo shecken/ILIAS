@@ -42,7 +42,7 @@ class Date extends Filter {
 	 */
 	public function original_content_type() {
 		$tf = $this->factory->type_factory();
-		return $tf->cls("\\DateTime");
+		return $tf->either($tf->cls("\\DateTime"), $tf->string());
 	}
 
 	/**
