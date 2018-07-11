@@ -111,7 +111,6 @@ class ilObjOrgUnitTree {
 
 	/**
 	 * @param int $ref_id
-	 * @param \ilOrgUnitPosition $ilOrgUnitPosition
 	 *
 	 * @return array
 	 */
@@ -124,7 +123,6 @@ class ilObjOrgUnitTree {
 
 	/**
 	 * @param int $ref_id
-	 * @param \ilOrgUnitPosition $ilOrgUnitPosition
 	 *
 	 * @return array
 	 */
