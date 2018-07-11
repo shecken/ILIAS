@@ -2063,6 +2063,7 @@ return array(
     'TCPDF_IMPORT' => $vendorDir . '/tecnickcom/tcpdf/tcpdf_import.php',
     'TCPDF_PARSER' => $vendorDir . '/tecnickcom/tcpdf/tcpdf_parser.php',
     'TCPDF_STATIC' => $vendorDir . '/tecnickcom/tcpdf/include/tcpdf_static.php',
+    'TMSPositionHelper' => $baseDir . '/../../Services/TMS/Positions/TMSPositionHelper.php',
     'TMSTableParentGUI' => $baseDir . '/../../Services/TMS/Table/TMSTableParentGUI.php',
     'TableDiffFormatter' => $baseDir . '/../../Services/COPage/mediawikidiff/class.WordLevelDiff.php',
     'Text_Diff' => $baseDir . '/../../Services/XHTMLValidator/validator/Text_Diff/Diff.php',
