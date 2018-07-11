@@ -8,31 +8,37 @@ namespace ILIAS\TMS\Filter\Types;
  */
 class EitherType extends Type {
 	/**
-	 * @var	Type[]
+	 * @var	Type
 	 */
-	private $sub_types;
+	private $left;
 
-	public function __construct(array $sub_types) {
-		$this->sub_types = array_map(function(Type $t) { return $t; }, $sub_types);
+	/**
+	 * @var	Type
+	 */
+	private $right;
+
+	public function __construct(Type $left, Type $right) {
+		$this->left  = $left;
+		$this->right = $right;
 	}
 
 	/**
 	 * @inheritdocs
 	 */
 	public function repr() {
-		return "(".implode("|", array_map(function($t) {return $t->repr();}), $this->sub_types).")";
+		return "(".$this->left->repr()."|".$this->right->repr().")";
 	}
 
 	/**
 	 * @inheritdocs
 	 */
 	public function contains($value) {
-		foreach ($this->sub_types as $sub_type) {
-			if ($sub_type->contains($value)) {
-				return true;
-			}
+		if ($this->left->contains($value)) {
+			return true;
 		}
-
+		if ($this->right->contains($value)) {
+			return true;
+		}
 		return false;
 	}
 
@@ -40,14 +46,25 @@ class EitherType extends Type {
 	 * @inheritdocs
 	 */
 	public function unflatten(array &$value) {
-		throw new \Exception("NYI!");
+		$backup = $value;
+		try {
+			return $this->left->unflatten($value);
+		}
+		catch (\InvalidArgumentException $e) {
+			// Must be right-type then...
+		}
+		return $this->right->unflatten($backup);
 	}
 
 	/**
 	 * @inheritdocs
 	 */
 	public function flatten($value) {
-		throw new \Exception("NYI!");
+		if ($this->left->contains($value)) {
+			return $this->left->flatten($value);
+		}
+		assert($this->right->contains($value));
+		return $this->right->flatten($value);
 	}
 
 }

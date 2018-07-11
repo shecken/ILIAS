@@ -190,10 +190,7 @@ class FilterTypeTest extends PHPUnit_Framework_TestCase {
 
 	public function either_provider() {
 		return array
-			( array(function($f) { return $f->either($f->cls("\\stdClass")); }, new \stdClass(), true)
-			, array(function($f) { return $f->either($f->string()); }, "", true)
-			, array(function($f) { return $f->either($f->string()); }, null, false)
-			, array(function($f) { return $f->either($f->int(), $f->string()); }, 1, true)
+			( array(function($f) { return $f->either($f->int(), $f->string()); }, 1, true)
 			, array(function($f) { return $f->either($f->int(), $f->string()); }, "2", true)
 			, array(function($f) { return $f->either($f->int(), $f->string()); }, array("2"), false)
 			);

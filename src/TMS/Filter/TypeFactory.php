@@ -31,9 +31,8 @@ class TypeFactory {
 		return new Types\ClassType($cls_name);
 	}
 
-	public function either(/* ... $sub_types */) {
-		$sub_types = func_get_args();
-		return new Types\EitherType($sub_types);
+	public function either(Types\Type $left, Types\Type $right) {
+		return new Types\EitherType($left, $right);
 	}
 
 	public function lst(Types\Type $of_type) {

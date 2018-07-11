@@ -37,8 +37,6 @@ abstract class Type {
 	 * a flat array (like (a,(b,c)) -> (a,b,c)) and wrap other values in
 	 * array.
 	 *
-	 * ATTENTION: The array will be consumed during that process.
-	 *
 	 * @param	mixed	$value
 	 * @return	array
 	 */
