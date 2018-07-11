@@ -747,6 +747,18 @@ class ActiveRecordList {
 	public function getRaw() {
 		return $this->raw;
 	}
+
+	/**
+	 * Set the primry fieldname
+	 *
+	 * @param string 	$name
+	 *
+	 * @return ActiveRecordList
+	 */
+	public function setPrimaryFieldName($name) {
+		$this->getAR()->getArFieldList()->getPrimaryField()->setName($name);
+		return $this;
+	}
 }
 
 ?>
