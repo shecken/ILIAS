@@ -1388,10 +1388,8 @@ class ilRepositorySearchGUI
 		$query_orgu = (int)$_SESSION['rep_query']['orgu']['orgu_id'];
 		$query_recurse = (bool)$_SESSION['rep_query']['orgu']['recurse'];
 
-		$user_ids = array_merge(
-			$tree->getEmployees($query_orgu, $query_recurse),
-			$tree->getSuperiors($query_orgu, $query_recurse)
-		);
+		$user_ids = $tree->getAllAssignees($query_orgu, $query_recurse);
+
 		$result = new ilSearchResult();
 		foreach ($user_ids as $usr_id) {
 			$result->addEntry($usr_id, 'user', []);
