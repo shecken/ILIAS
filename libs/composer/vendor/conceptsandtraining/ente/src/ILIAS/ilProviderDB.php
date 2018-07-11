@@ -233,7 +233,12 @@ class ilProviderDB implements ProviderDB {
         while ($row = $this->ilDB->fetchAssoc($res)) {
             $obj_id = $row["owner"];
             $ref_id = $nodes_id_mapping[$obj_id];
-            $owner = $this->buildObjectByRefId($ref_id);
+            try {
+                $owner = $this->buildObjectByRefId($ref_id);
+            }
+            catch (\InvalidArgumentException $e) {
+                continue;
+            }
             $ret[] = new Provider
                 ( $object
                 , $this->buildSeparatedUnboundProvider
@@ -255,17 +260,24 @@ class ilProviderDB implements ProviderDB {
             foreach ($obj_ids as $obj_id) {
                 $ref_id = $nodes_id_mapping[$obj_id];
                 $prv_id = array_shift($prv_ids);
-                $owners[$prv_id] = $this->buildObjectByRefId($ref_id);
+                try {
+                    $owners[$prv_id] = $this->buildObjectByRefId($ref_id);
+                }
+                catch (\InvalidArgumentException $e) {
+                    continue;
+                }
             }
-            $ret[] = new Provider
-                ( $object
-                , $this->buildSharedUnboundProvider
-                    ( $owners
-                    , $object_type
-                    , $row["class_name"]
-                    , $row["include_path"]
-                    )
-                );
+            if (count($owners) > 0) {
+                $ret[] = new Provider
+                    ( $object
+                    , $this->buildSharedUnboundProvider
+                        ( $owners
+                        , $object_type
+                        , $row["class_name"]
+                        , $row["include_path"]
+                        )
+                    );
+            }
         }
 
         return $ret;
@@ -423,7 +435,7 @@ class ilProviderDB implements ProviderDB {
     /**
      * Create a shared unbound provider.
      *
-     * @param   array<int,\ilObject>   $owners
+     * @param   array<int,\ilObject>   $owners 	with a minimum 1 entries
      * @param   string      $object_type
      * @param   string      $class_name
      * @param   string      $include_path
@@ -434,6 +446,7 @@ class ilProviderDB implements ProviderDB {
         assert('is_string($class_name)');
         assert('is_string($include_path)');
         assert('file_exists($include_path)');
+        assert('count($owners) > 0');
 
         require_once($include_path);
 
@@ -455,18 +468,28 @@ class ilProviderDB implements ProviderDB {
      * @return  \ilObject
      */
     protected function buildObjectByRefId($ref_id) {
-        return \ilObjectFactory::getInstanceByRefId($ref_id);
+        $obj = \ilObjectFactory::getInstanceByRefId($ref_id, false);
+        if ($obj === false) {
+            throw new \InvalidArgumentException("Cannot build object with obj_id='$ref_id'");
+        }
+        assert($obj instanceof \ilObject);
+        return $obj;
     }
 
     /**
      * Build an object by its object id.
      *
-     * @param   int     $ref_id
+     * @param   int     $obj_id
      * @throws  \InvalidArgumentException if object could not be build
      * @return  \ilObject
      */
-    protected function buildObjectByObjId($ref_id) {
-        return \ilObjectFactory::getInstanceByObjId($ref_id);
+    protected function buildObjectByObjId($obj_id) {
+        $obj = \ilObjectFactory::getInstanceByObjId($ref_id, false);
+        if ($obj === false) {
+            throw new \InvalidArgumentException("Cannot build object with obj_id='$obj_id'");
+        }
+        assert($obj instanceof \ilObject);
+        return $obj;
     }
 
     /**
