@@ -197,7 +197,6 @@ class TMSPositionHelper {
 	 */
 	public function getUserIdsWithAtLeastOnePositionWithAuthority() {
 		$assignemnts = $this->orgua_queries->getUserIdsWithAtLeastOnePosition();
-		$user_ids = array_map(function($ua) { return $ua->getUserId();}, $assignemnts);
-		return array_unique($user_ids);
+		return array_keys($assignemnts);
 	}
 }

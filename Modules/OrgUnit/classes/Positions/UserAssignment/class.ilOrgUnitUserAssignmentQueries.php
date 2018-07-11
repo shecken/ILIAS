@@ -219,7 +219,8 @@ class ilOrgUnitUserAssignmentQueries {
 	public function getUserIdsWithAtLeastOnePosition() {
 		return ilOrgUnitUserAssignment::innerjoin("il_orgu_authority", "position_id", "position_id")
 			->where([])
-			->get()
+			->setPrimaryFieldName('user_id')
+			->getArray('user_id', 'user_id')
 		;
 	}
 	// cat-tms-patch end
