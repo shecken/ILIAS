@@ -27,7 +27,12 @@ class TMSPositionHelper {
 
 		$user_ids = array();
 		foreach ($positons as $positon) {
-			$user_ids = array_merge($user_ids, $this->getUserIdsByPositionAndUser($positon, $user_id));
+			$result = array_map(
+				function($u) { return (int)$u;},
+				$this->getUserIdsByPositionAndUser($positon, $user_id)
+			);
+
+			$user_ids = array_merge($user_ids, $result);
 		}
 
 		return array_unique($user_ids);
@@ -45,9 +50,14 @@ class TMSPositionHelper {
 		$user_ids = array();
 		foreach($positions as $position) {
 			foreach($position->getAuthorities() as $authority) {
+				$result = array_map(
+					function($u) { return (int)$u;},
+					$this->orgua_queries->getUserIdsOfOrgUnitsInPosition($orgus, $authority->getOver())
+				);
+
 				$user_ids = array_merge(
 					$user_ids,
-					$this->orgua_queries->getUserIdsOfOrgUnitsInPosition($orgus, $authority->getOver())
+					$result
 				);
 			}
 		}
