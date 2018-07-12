@@ -224,7 +224,7 @@ class ilTrainingSearchGUI {
 		$view_control = array($button1);
 		$view_control = $this->addSortationObjects($view_control);
 
-		$this->g_ctrl->saveParameter($this, $this->save_parameter);
+		$this->g_ctrl->saveParameter($this, self::$save_parameter);
 
 		$link = $this->g_ctrl->getLinkTarget($this, $cmd, "", false, false);
 		$pagination = $this->g_f->viewControl()->pagination()
