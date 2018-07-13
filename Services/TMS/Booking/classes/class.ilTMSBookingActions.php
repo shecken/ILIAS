@@ -73,6 +73,7 @@ class ilTMSBookingActions implements Booking\Actions {
 
 		require_once("Customizing/global/plugins/Services/Repository/RepositoryObject/BookingModalities/classes/class.ilObjBookingModalities.php");
 
+		$participant->add(295, IL_CRS_MEMBER);
 		if($this->maybeBookAsMember((int)$course->getRefId(), $booking_modality)) {
 			$participant->add($user->getId(), IL_CRS_MEMBER);
 			return Booking\Actions::STATE_BOOKED;

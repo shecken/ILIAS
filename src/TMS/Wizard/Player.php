@@ -300,14 +300,7 @@ class Player {
 		for ($i = 0; $i < count($steps); $i++) {
 			$step = $steps[$i];
 			$data = $state->getStepData($i);
-			try {
-				$message = $step->processStep($data);
-			} catch (OverbookedException $e) {
-				$this->state_db->delete($state);
-				$this->wizard->finish();
-				$this->ilias_bindings->redirectToPreviousLocation(array($this->ilias_bindings->txt($e->getMessage())), false);
-				return;
-			}
+			$message = $step->processStep($data);
 
 			if ($message) {
 				$messages[] = $message;
