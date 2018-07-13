@@ -153,10 +153,19 @@ class Renderer extends AbstractComponentRenderer
 				$url = $component->getTargetURL();
 				$url .= (strpos($url, '?') === false) ?  '?' : '&';
 				$url .= $component->getParameterName() .'=' .$val;
+				// cat-tms-patch start
+				$url = $this->appendCurrentGetParamters($url);
+				// cat-tms-patch end
 				$shy = $f->button()->shy($label, $url);
 			}
 			$items[] = $shy;
 		}
+
+		// cat-tms-patch start
+		if (isset($_GET[$component->getParameterName()])) {
+			$init_label = $options[$_GET[$component->getParameterName()]];
+		}
+		// cat-tms-patch end
 
 		$dd = $f->dropdown()->standard($items)
 			->withLabel($init_label);
@@ -361,6 +370,7 @@ class Renderer extends AbstractComponentRenderer
 		}
 	}
 
+	// cat-tms-patch start
 	protected function renderQickfilter(Component\ViewControl\Quickfilter $component, RendererInterface $default_renderer) {
 		$f = new \ILIAS\UI\Implementation\Factory(
 			new \ILIAS\UI\Implementation\Component\SignalGenerator()
@@ -437,6 +447,7 @@ class Renderer extends AbstractComponentRenderer
 		}
 		return $url;
 	}
+	// cat-tms-patch end
 
 	/**
 	 * @inheritdoc

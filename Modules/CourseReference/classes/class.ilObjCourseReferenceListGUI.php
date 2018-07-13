@@ -95,6 +95,11 @@ class ilObjCourseReferenceListGUI extends ilObjCourseListGUI
 		{
 			$this->substitutions_enabled = true;
 		}
+
+		// cat-tms-patch start
+		global $DIC;
+		$this->user = $DIC->user();
+		// cat-tms-patch end
 	}
 	
 	

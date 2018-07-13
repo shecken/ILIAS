@@ -127,8 +127,11 @@ class Process {
 		);
 		$last = array();
 		$mappings = $this->getCopyMappings($sub_nodes);
+
 		foreach ($sub_nodes as $sub) {
 			$configs = $request->getConfigurationFor($mappings[$sub]);
+			$this->setOwnerToSubObjects((int)$sub, (int)$mappings[$sub]);
+
 			if ($configs === null) {
 				continue;
 			}
@@ -159,8 +162,6 @@ class Process {
 	 * @return void
 	 */
 	protected function setOwner(Request $request) {
-		global $DIC;
-		$log = $DIC->logger()->root();
 		$target_crs_ref_id = $request->getTargetRefId();
 		$target_crs = $this->getObjectByRefId($target_crs_ref_id);
 		$target_crs_obj_id = $target_crs->getId();
@@ -173,6 +174,28 @@ class Process {
 		// ilObject::update() doesn't change the owner of an object
 		$where = array("obj_id" => array("integer", $target_crs_obj_id));
 		$values = array("owner" => array("integer", $tpl_owner));
+
+		$this->db->update("object_data", $values, $where);
+	}
+
+	/**
+	 * Make sure the cloned children get the same owner as in template
+	 *
+	 * @param int 	$trgt_id
+	 * @param int 	$src_id
+	 *
+	 * @return void
+	 */
+	protected function setOwnerToSubObjects($trgt_id, $src_id) {
+		assert('is_int($trgt_id)');
+		assert('is_int($src_id)');
+		$target = $this->getObjectByRefId($trgt_id);
+		$source = $this->getObjectByRefId($src_id);
+
+		$source_owner = $source->getOwner();
+
+		$where = array("obj_id" => array("integer", $target->getId()));
+		$values = array("owner" => array("integer", $source_owner));
 
 		$this->db->update("object_data", $values, $where);
 	}

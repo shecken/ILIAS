@@ -36,10 +36,6 @@ class ilTMSSuperiorCancelGUI extends \ilTMSCancelGUI {
 		$event = Booking\Actions::EVENT_SUPERIOR_CANCELED_COURSE;
 
 		require_once("Services/Membership/classes/class.ilWaitingList.php");
-		$crs_id = \ilObject::_lookupObjId($crs_ref_id);
-		if(\ilWaitingList::_isOnList($target_usr_id, $crs_id))  {
-			$event = Booking\Actions::EVENT_SUPERIOR_CANCELED_WAITING;
-		}
 		$this->fireBookingEvent($event, $target_usr_id, $crs_ref_id);
 	}
 }
