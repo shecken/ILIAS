@@ -7,7 +7,6 @@ namespace ILIAS\TMS\Wizard;
 require_once(__DIR__."/../../../Services/Form/classes/class.ilFormSectionHeaderGUI.php");
 
 use CaT\Ente\ILIAS\ilHandlerObjectHelper;
-use ILIAS\TMS\Booking\OverbookedException;
 
 /**
  * Displays the steps for the wizard a row, gathers user input and afterwards
@@ -301,7 +300,6 @@ class Player {
 			$step = $steps[$i];
 			$data = $state->getStepData($i);
 			$message = $step->processStep($data);
-
 			if ($message) {
 				$messages[] = $message;
 			}
