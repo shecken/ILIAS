@@ -225,6 +225,9 @@ class Process {
 	 * @param int 	$ref_id
 	 * @param string 	$search_type
 	 *
+	 * TODO: dedup with ilCourseTemplateDB and BookingModalitiesDigester in
+	 *       UserCourseHistorizing
+	 *
 	 * @return Object 	of search type
 	 */
 	protected function getFirstChildOfByType($ref_id, $search_type) {
