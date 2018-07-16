@@ -419,7 +419,7 @@ class Renderer extends AbstractComponentRenderer
 			$default_value = $component->getDefaultValue();
 
 			if($default_value != $_GET[$component->getParameterName()]) {
-				$init_label = $options[$_GET[$component->getParameterName()]];
+				$init_label = $options[$_GET[$component->getParameterName()]] ?? $init_label;
 			}
 		}
 
