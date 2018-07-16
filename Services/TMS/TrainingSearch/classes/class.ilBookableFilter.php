@@ -54,18 +54,11 @@ class ilBookableFilter {
 		return false;
 	}
 
-	/**
-	 * Check course title starts with
-	 *
-	 * @param string 	$crs_title
-	 * @param string 	$search_string
-	 *
-	 * @return bool
-	 */
-	public function crsTitleStartsWith($crs_title, $search_string)
+	public function crsTitleContains(string $crs_title, string $search_string) : bool
 	{
-		$length = strlen($search_string);
-		return (substr($crs_title, 0, $length) === $search_string);
+		$crs_title = strtolower($crs_title);
+		$search_string = strtolower($search_string);
+		return strpos($crs_title, $search_string) !== false;
 	}
 
 	/**
