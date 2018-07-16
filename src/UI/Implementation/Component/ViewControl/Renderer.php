@@ -415,7 +415,7 @@ class Renderer extends AbstractComponentRenderer
 			$items[] = $shy;
 		}
 
-		if(array_key_exists($component->getParameterName(), $_GET)) {
+		if(isset($_GET[$component->getParameterName()])) {
 			$default_value = $component->getDefaultValue();
 
 			if($default_value != $_GET[$component->getParameterName()]) {
