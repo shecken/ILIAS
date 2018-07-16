@@ -363,3 +363,24 @@ $ilDB->manipulate($query);
 $query = "UPDATE il_orgu_positions SET title = 'Vorgesetzte' WHERE title = 'Superiors'";
 $ilDB->manipulate($query);
 ?>
+
+<#32>
+<?php
+$query = "SELECT obj_id FROM object_data WHERE object_data.title LIKE 'il_orgu_%' AND object_data.type = 'role'";
+$res = $ilDB->query($query);
+$role_ids = [];
+while($row = $ilDB->fetchAssoc($res)) {
+	$role_ids[] = $row['obj_id'];
+}
+$r_ids = implode(', ', $role_ids);
+$query = "DELETE FROM role_data WHERE role_id IN ($r_ids)";
+$ilDB->manipulate($query);
+$query = "DELETE FROM rbac_fa WHERE rol_id IN ($r_ids)";
+$ilDB->manipulate($query);
+$query = "DELETE FROM rbac_pa WHERE rol_id IN ($r_ids)";
+$ilDB->manipulate($query);
+$query = "DELETE FROM rbac_ua WHERE rol_id IN ($r_ids)";
+$ilDB->manipulate($query);
+$query = "DELETE FROM object_data WHERE obj_id IN ($r_ids)";
+$ilDB->manipulate($query);
+?>
