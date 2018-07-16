@@ -84,7 +84,7 @@ class ilTMSBookingActions implements Booking\Actions {
 			return Booking\Actions::STATE_WAITING_LIST;
 		}
 
-		throw new \LogicException("User can not be booked. Course and waitinglist are overbooked");
+		throw new Booking\OverbookedException("course_overbooked");
 	}
 
 	/**

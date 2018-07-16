@@ -139,12 +139,33 @@ abstract class ilTMSBookingGUI {
 		$this->g_ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
 
 		$cmd = $this->g_ctrl->getCmd("start");
-		$content = $player->run($cmd, $_POST);
+
+		try {
+			$content = $player->run($cmd, $_POST);
+		} catch (Booking\OverbookedException $e) {
+			$state_db->delete($this->getState($state_db, $wizard));
+			$wizard->finish();
+			$ilias_bindings->redirectToPreviousLocation(array($ilias_bindings->txt($e->getMessage())), false);
+			return;
+		}
 		assert('is_string($content)');
 		$this->g_tpl->setContent($content);
 		if($this->execute_show) {
 			$this->g_tpl->show();
 		}
+	}
+
+	/**
+	 * Get the state information about the booking process.
+	 *
+	 * @return	State
+	 */
+	protected function getState($state_db, $wizard) {
+		$state = $state_db->load($wizard->getId());
+		if ($state !== null) {
+			return $state;
+		}
+		return new Wizard\State($wizard->getId(), Wizard\Player::START_WITH_STEP);
 	}
 
 	/**
