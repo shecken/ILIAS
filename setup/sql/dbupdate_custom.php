@@ -372,15 +372,14 @@ $role_ids = [];
 while($row = $ilDB->fetchAssoc($res)) {
 	$role_ids[] = $row['obj_id'];
 }
-$r_ids = implode(', ', $role_ids);
-$query = "DELETE FROM role_data WHERE role_id IN ($r_ids)";
+$query = "DELETE FROM role_data WHERE ".$ilDB->in('role_id', $role_ids, false, 'integer');
 $ilDB->manipulate($query);
-$query = "DELETE FROM rbac_fa WHERE rol_id IN ($r_ids)";
+$query = "DELETE FROM rbac_fa WHERE ".$ilDB->in('rol_id', $role_ids, false, 'integer');
 $ilDB->manipulate($query);
-$query = "DELETE FROM rbac_pa WHERE rol_id IN ($r_ids)";
+$query = "DELETE FROM rbac_pa WHERE ".$ilDB->in('rol_id', $role_ids, false, 'integer');
 $ilDB->manipulate($query);
-$query = "DELETE FROM rbac_ua WHERE rol_id IN ($r_ids)";
+$query = "DELETE FROM rbac_ua WHERE ".$ilDB->in('rol_id', $role_ids, false, 'integer');
 $ilDB->manipulate($query);
-$query = "DELETE FROM object_data WHERE obj_id IN ($r_ids)";
+$query = "DELETE FROM object_data WHERE ".$ilDB->in('obj_id', $role_ids, false, 'integer');
 $ilDB->manipulate($query);
 ?>
