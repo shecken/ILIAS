@@ -6,7 +6,7 @@ use ILIAS\TMS\TableRelations;
 /**
  * Provide access to ILIAS' UDFs.
  *
- * getFieldsVisibleInLocalUserAdministration will return a dict (field_id=>field_name) of UDFs.
+ * getFieldsVisibleInCourseMemberAdministration will return a dict (field_id=>field_name) of UDFs.
  * To use this, setup your space and append UDFs with appendUDFsToSpace();
  * this will extend $space with a DerivedTable (id='udf').
  * Example:
@@ -38,7 +38,7 @@ trait ilUDFWrapper {
 		TableRelations\Tables\TableSpace $space,
 		\SelectableReportTableGUI $table
 	) {
-		$il_udf_definitions = $this->getFieldsVisibleInLocalUserAdministration();
+		$il_udf_definitions = $this->getFieldsVisibleInCourseMemberAdministration();
 		foreach ($il_udf_definitions as $field_id => $field_name) {
 			$col_id = 'UDF_' .(string)$field_id;
 			$table = $table->defineFieldColumn(
@@ -88,11 +88,11 @@ trait ilUDFWrapper {
 	 *
 	 * @return array<int, string> 	field_id=>field_name
 	 */
-	private function getFieldsVisibleInLocalUserAdministration() {
+	private function getFieldsVisibleInCourseMemberAdministration() {
 		require_once 'Services/User/classes/class.ilUserDefinedFields.php';
 		$il_udf = \ilUserDefinedFields::_getInstance();
 		$ret = [];
-		foreach ($il_udf->getLocalUserAdministrationDefinitions() as $udf_def) {
+		foreach ($il_udf->getCourseExportableFields() as $udf_def) {
 			$ret[$udf_def['field_id']] = $this->sanitizeUDFName($udf_def['field_name']);
 		}
 		return $ret;
@@ -145,7 +145,7 @@ trait ilUDFWrapper {
 
 		$udf_nullfield = $tf->constString('nullval', '');
 		$udf_fields = [];
-		foreach ($this->getFieldsVisibleInLocalUserAdministration() as $udf_field_id => $udf_field_name) {
+		foreach ($this->getFieldsVisibleInCourseMemberAdministration() as $udf_field_id => $udf_field_name) {
 			$udf_fid = $pf->int($udf_field_id);
 			$udf_fields[] = $tf->max(
 				$udf_field_name,
