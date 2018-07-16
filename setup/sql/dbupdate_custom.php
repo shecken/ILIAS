@@ -372,7 +372,6 @@ $role_ids = [];
 while($row = $ilDB->fetchAssoc($res)) {
 	$role_ids[] = $row['obj_id'];
 }
-
 $query = "DELETE FROM role_data WHERE ".$ilDB->in('role_id', $role_ids, false, 'integer');
 $ilDB->manipulate($query);
 $query = "DELETE FROM rbac_fa WHERE ".$ilDB->in('rol_id', $role_ids, false, 'integer');
