@@ -541,6 +541,44 @@ class ilObjOrgUnitTree {
 	}
 
 
+	//cat-tms patch start
+	/**
+	 * Get ref-ids of all OrgUnits a user is assinged to.
+	 *
+	 * @param int 	$user_id
+	 * @return int[]
+	 */
+	public function getOrgUnitsOfUser(int $user_id) {
+		$this->buildTempTableWithUsrAssignements();
+		$query = 'SELECT ref_id FROM ' .self::$temporary_table_name
+			.' WHERE user_id = '.$user_id;
+		$res = $this->db->query($query);
+		$ret  = [];
+		while ($row = $this->db->fetchAssoc($res)) {
+			$ret[] = (int)$row['ref_id'];
+		}
+		return $ret;
+	}
+
+	/**
+	 * Get the (visualization-) path of a OrgUnit
+	 *
+	 * @param int 	$orgu_ref_id
+	 * @return string | false
+	 */
+	public function getOrgUnitPath(int $orgu_ref_id) {
+		$this->buildTempTableWithUsrAssignements();
+		$query = 'SELECT DISTINCT path FROM ' .self::$temporary_table_name
+			.' WHERE ref_id = '.$orgu_ref_id;
+		$res = $this->db->query($query);
+
+		if($row = $this->db->fetchAssoc($res)) {
+			return $row['path'];
+		}
+		return false;
+	}
+	//cat-tms patch end
+
 	/**
 	 * Creates a temporary table with all orgu/user assignements. there will be three columns in
 	 * the table orgu_usr_assignements (or specified table-name): ref_id: Reference-IDs of OrgUnits
