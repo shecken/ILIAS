@@ -1508,14 +1508,16 @@ class ilObjUserGUI extends ilObjectGUI
 						$class_path = ["ilAdministrationGUI", "ilObjOrgUnitGUI" ,"ilOrgUnitUserAssignmentGUI"];
 						$link = $this->ctrl->getLinkTargetByClass($class_path, "");
 
-						$orgu_vals[] = sprintf(
+						$orgu_path = $orgu_tree->getOrgUnitPath($orgu_ref_id);
+						$orgu_vals[$orgu_path] = sprintf(
 							'<a href="%s">%s</a>',
 							$link,
-							$orgu_tree->getOrgUnitPath($orgu_ref_id)
+							$orgu_path
 						);
 					}
+					ksort($orgu_vals);
 					$orgus = new ilNonEditableValueGUI($lng->txt('objs_orgu'), 'org_units', true);
-					$orgus->setValue(implode('<br>', $orgu_vals));
+					$orgus->setValue(implode('<br>', array_values($orgu_vals)));
 					//cat-tms patch end
 					$this->form_gui->addItem($orgus);
 				}
