@@ -199,4 +199,67 @@ class TMSPositionHelper {
 		$assignemnts = $this->orgua_queries->getUserIdsWithAtLeastOnePosition();
 		return array_keys($assignemnts);
 	}
+
+	/**
+	 * Get user ids the given user has authority over
+	 *
+	 * @param int 	$usr_is
+	 * @param \ilObjOrgUnitTree 	$orgu_tree
+	 * @return int[]
+	 */
+	public function getAllVisibleUserIdsForUser(int $usr_id, \ilObjOrgUnitTree $orgu_tree) {
+		$visible_users = [];
+		$positions = $this->getPositionsOf($usr_id);
+		foreach ($positions as $pkey => $position) {
+			$orgus = $this->getOrgUnitByPositions([$position], $usr_id);
+			$authorities = $position->getAuthorities();
+
+			foreach ($authorities as $akey => $authority) {
+
+				if((int)$authority->getScope() === \ilOrgUnitAuthority::SCOPE_SAME_ORGU) {
+					if((int)$authority->getOver() === -1) {
+						$v = $this->orgua_queries->getUserIdsOfOrgUnits($orgus);
+					} else {
+						$v = $this->orgua_queries->getUserIdsOfOrgUnitsInPosition($orgus, $authority->getOver());
+					}
+					$visible_users = array_merge($visible_users, $v);
+
+				}
+				if((int)$authority->getScope() === \ilOrgUnitAuthority::SCOPE_SUBSEQUENT_ORGUS) {
+					$subsequent_orgus = [];
+					foreach ($orgus as $orgu_ref_id) {
+						$lower_orgus = array_filter($orgu_tree->getAllChildren($orgu_ref_id),
+							function($o) use ($orgu_ref_id){
+								return $o !== $orgu_ref_id;
+							}
+						);
+						$subsequent_orgus = array_merge($subsequent_orgus, $lower_orgus);
+					}
+					if((int)$authority->getOver() === -1) {
+						$v = $this->orgua_queries->getUserIdsOfOrgUnits($subsequent_orgus);
+					} else {
+						$v = $this->orgua_queries->getUserIdsOfOrgUnitsInPosition($subsequent_orgus, $authority->getOver());
+					}
+					$visible_users = array_merge($visible_users, $v);
+				}
+			}
+
+
+		}
+
+		$visible_users  = array_map(
+			function ($intlike_val) {
+				return (int)$intlike_val;
+			},
+			array_unique($visible_users)
+		);
+
+		$visible_users = array_filter($visible_users,
+			function($entry) use ($usr_id) {
+				return $entry !== $usr_id;
+			}
+		);
+		return $visible_users;
+	}
+
 }
