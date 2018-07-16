@@ -300,7 +300,7 @@ class ilTrainingSearchDB implements TrainingSearchDB {
 			}
 
 			if(array_key_exists(Helper::F_TITLE, $filter)
-				&& !$this->filter->crsTitleStartsWith($title, $filter[Helper::F_TITLE])
+				&& !$this->filter->crsTitleContains($title, $filter[Helper::F_TITLE])
 			) {
 				unset($crs_infos[$key]);
 				continue;
