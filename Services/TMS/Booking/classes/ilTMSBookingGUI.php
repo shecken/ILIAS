@@ -155,12 +155,22 @@ abstract class ilTMSBookingGUI {
 
 		try {
 			$content = $player->run($cmd, $_POST);
-		} catch (Booking\OverbookedException $e) {
+		}
+		catch (Booking\OverbookedException $e) {
 			$state_db->delete($this->getState($state_db, $wizard));
 			$wizard->finish();
 			$ilias_bindings->redirectToPreviousLocation(array($ilias_bindings->txt($e->getMessage())), false);
 			return;
 		}
+		catch (\LogicException $e) {
+			//the exception is thrown in Player::finish;
+			//this is the case when the course was overbooked in the meantime.
+			$state_db->delete($this->getState($state_db, $wizard));
+			$wizard->finish();
+			$ilias_bindings->redirectToPreviousLocation(array($ilias_bindings->txt('course_overbooked')), false);
+			return;
+		}
+
 		assert('is_string($content)');
 		$this->g_tpl->setContent($content);
 		if($this->execute_show) {
