@@ -116,7 +116,7 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	}
 
 	/**
-	 * Get the steps for the booking of the couse sorted by period.
+	 * Get the steps for the booking of the course sorted by period.
 	 *
 	 * @return 	Step[]
 	 */

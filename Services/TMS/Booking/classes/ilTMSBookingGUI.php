@@ -140,6 +140,19 @@ abstract class ilTMSBookingGUI {
 
 		$cmd = $this->g_ctrl->getCmd("start");
 
+		if(count($wizard->getSteps()) == 0
+			&& $this->getState($state_db, $wizard)->getStepNumber() > 0
+		) {
+			//steps went away while a user worked the wizard.
+			//most often, this is the case when a course was
+			//overbooked in the meantime.
+			$state_db->delete($this->getState($state_db, $wizard));
+			$wizard->finish();
+			$ilias_bindings->redirectToPreviousLocation(
+				array($ilias_bindings->txt('course_overbooked')), false);
+			return;
+		}
+
 		try {
 			$content = $player->run($cmd, $_POST);
 		} catch (Booking\OverbookedException $e) {
