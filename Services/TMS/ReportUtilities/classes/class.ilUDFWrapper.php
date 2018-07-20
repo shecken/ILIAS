@@ -6,7 +6,7 @@ use ILIAS\TMS\TableRelations;
 /**
  * Provide access to ILIAS' UDFs.
  *
- * getFieldsVisibleInCourseMemberAdministration will return a dict (field_id=>field_name) of UDFs.
+ * getFieldsVisibleInCourseMemberAdministration will return a dict (field_id=>[internal_name, field_name]) of UDFs.
  * To use this, setup your space and append UDFs with appendUDFsToSpace();
  * this will extend $space with a DerivedTable (id='udf').
  * Example:
@@ -39,12 +39,12 @@ trait ilUDFWrapper {
 		\SelectableReportTableGUI $table
 	) {
 		$il_udf_definitions = $this->getFieldsVisibleInCourseMemberAdministration();
-		foreach ($il_udf_definitions as $field_id => $field_name) {
+		foreach ($il_udf_definitions as $field_id => list($internal_name, $field_name)) {
 			$col_id = 'UDF_' .(string)$field_id;
 			$table = $table->defineFieldColumn(
 				$field_name,
 				$col_id,
-				[$col_id => $space->table('udf')->field($field_name)]
+				[$col_id => $space->table('udf')->field($internal_name)]
 				,true
 			);
 		}
@@ -93,19 +93,13 @@ trait ilUDFWrapper {
 		$il_udf = \ilUserDefinedFields::_getInstance();
 		$ret = [];
 		foreach ($il_udf->getCourseExportableFields() as $udf_def) {
-			$ret[$udf_def['field_id']] = $this->sanitizeUDFName($udf_def['field_name']);
+			//$ret[$udf_def['field_id']] = $this->sanitizeUDFName($udf_def['field_name']);
+			$ret[$udf_def['field_id']] = [
+					'i'.$udf_def['field_id'], //name used internally
+					$udf_def['field_name'] //clear name
+				];
 		}
 		return $ret;
-	}
-
-	/**
-	 * Remove unwanted chars from fieldname.
-	 * @param string 	$name
-	 * @return string
-	 */
-	private function sanitizeUDFName($name) {
-		$name = preg_replace("/[^A-Za-z0-9]/", '', $name);
-		return $name;
 	}
 
 	/**
@@ -144,10 +138,10 @@ trait ilUDFWrapper {
 
 		$udf_nullfield = $tf->constString('nullval', '');
 		$udf_fields = [];
-		foreach ($this->getFieldsVisibleInCourseMemberAdministration() as $udf_field_id => $udf_field_name) {
+		foreach ($this->getFieldsVisibleInCourseMemberAdministration() as $udf_field_id => list($udf_internal_name, $udf_field_name)) {
 			$udf_fid = $pf->int($udf_field_id);
 			$udf_fields[] = $tf->max(
-				$udf_field_name,
+				$udf_internal_name,
 				$tf->ifThenElse(
 					'internal_udf_'.$udf_field_id, //name
 					$udf_txt->field('field_id')->EQ($udf_fid),
