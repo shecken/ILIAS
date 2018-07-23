@@ -304,19 +304,26 @@ class ilCourseCertificateAdapter extends ilCertificateAdapter
 			$ret["COURSE_ENDDATE"] = ilDatePresentation::formatDate($crs_end);
 		}
 
-		$course_classification = $this->getFirstChildOfByType($crs_ref_id, "xccl");
-		$cc_actions = $course_classification->getActions();
-		$ret["COURSE_TYPE"] = array_shift($cc_actions->getTypeName($course_classification->getCourseClassification()->getType()));
+		if(\ilPluginAdmin::isPluginActive('xccl')) { //course classification
+			$course_classification = $this->getFirstChildOfByType($crs_ref_id, "xccl");
+			if($course_classification) {
+				$cc_actions = $course_classification->getActions();
+				$ret["COURSE_TYPE"] = array_shift($cc_actions->getTypeName($course_classification->getCourseClassification()->getType()));
+			}
+		}
 
 		if(\ilPluginAdmin::isPluginActive('xetr')) { //edutracking
-
 			$edu_tracking = $this->getFirstChildOfByType($crs_ref_id, "xetr");
-			$et_action = $edu_tracking->getActionsFor("IDD");
-			$ret["IDD_TIME"] = $this->transformIDDLearningTimeToString($et_action->select()->getMinutes())." ".$this->g_lng->txt("form_hours");
+			if($edu_tracking) {
+				$et_action = $edu_tracking->getActionsFor("IDD");
+				$ret["IDD_TIME"] = $this->transformIDDLearningTimeToString($et_action->select()->getMinutes())." ".$this->g_lng->txt("form_hours");
+			}
 
 			$course_member = $this->getFirstChildOfByType($crs_ref_id, "xcmb");
-			$cmb_actions = $course_member->getActions();
-			$ret["IDD_USER_TIME"] = $this->transformIDDLearningTimeToString($cmb_actions->getMinutesFor($user_id))." ".$this->g_lng->txt("form_hours");
+			if($course_member) {
+				$cmb_actions = $course_member->getActions();
+				$ret["IDD_USER_TIME"] = $this->transformIDDLearningTimeToString($cmb_actions->getMinutesFor($user_id))." ".$this->g_lng->txt("form_hours");
+			}
 		}
 
 		return $ret;
