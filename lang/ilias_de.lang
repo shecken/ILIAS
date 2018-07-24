@@ -14337,3 +14337,6 @@ tms#:#pl_course_end_date#:#Enddatum des Kurses
 tms#:#pl_idd_learning_time#:#IDD-Lernzeit
 tms#:#pl_idd_learning_time_user#:#IDD-Lernzeit des Benutzers
 tms#:#course_overbooked#:#Sie konnten leider nicht auf den Kurs gebucht werden, da dieser in der Zwischenzeit ausgebucht wurde.
+tms#:#pl_course_type_preview#:#Kurstyp-Platzhalter
+tms#:#pl_idd_learning_time_preview#:#11:00
+tms#:#pl_idd_learning_time_user_preview#:#10:35
