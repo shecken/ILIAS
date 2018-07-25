@@ -235,6 +235,9 @@ class TMSPositionHelper {
 						);
 						$subsequent_orgus = array_merge($subsequent_orgus, $lower_orgus);
 					}
+					if(count($subsequent_orgus) === 0) {
+						continue;
+					}
 					if((int)$authority->getOver() === -1) {
 						$v = $this->orgua_queries->getUserIdsOfOrgUnits($subsequent_orgus);
 					} else {
