@@ -119,13 +119,15 @@ trait LinkHelper {
 	protected function getGroupableSelectInputGUIForCourseTemplates(array $info, $select_name, $type) {
 		assert('is_string($select_name)');
 
-		ksort($info, SORT_NATURAL);
+		uksort($cat,'strcasecmp');
 		foreach ($info as $k => $is) {
 			$group = [];
 			foreach($is as $i) {
 				$group[$i->getRefId()] = $i->getTitle();
 			}
-			asort($group, SORT_NATURAL);
+			uasort($group, function($a, $b) {
+				return strcasecmp($a, $b);
+			});
 			$info[$k] = $group;
 		}
 
