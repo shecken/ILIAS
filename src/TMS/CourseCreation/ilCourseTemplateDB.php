@@ -59,7 +59,7 @@ class ilCourseTemplateDB implements CourseTemplateDB {
 						$crs_template_info[$type][$cat] = [];
 					}
 					$crs_template_info[$type][$cat][] = new CourseTemplateInfo(
-						$this->purgeTemplateInTitle($p["title"]),
+						trim($this->purgeTemplateInTitle($p["title"])),
 						(int)$p["child"],
 						$cat,
 						$type
