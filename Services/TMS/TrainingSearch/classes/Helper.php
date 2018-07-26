@@ -128,12 +128,16 @@ class Helper {
 			$actions = $plugin->getActions();
 
 			$item = new ilSelectInputGUI($this->g_lng->txt('type'), self::F_TYPE);
-			$options = array(-1 => "Alle") + $actions->getTypeOptions();
+			$type_options = $actions->getTypeOptions();
+			uasort($type_options, function($a, $b) { return strcasecmp($a, $b);});
+			$options = array(-1 => "Alle") + $type_options;
 			$item->setOptions($options);
 			$form->addItem($item);
 
 			$item = new ilSelectInputGUI($this->g_lng->txt('topic'), self::F_TOPIC);
-			$options = array(-1 => "Alle") + $actions->getTopicOptions();
+			$topic_options = $actions->getTopicOptions();
+			uasort($topic_options, function($a, $b) { return strcasecmp($a, $b);});
+			$options = array(-1 => "Alle") + $topic_options;
 			$item->setOptions($options);
 			$form->addItem($item);
 		}

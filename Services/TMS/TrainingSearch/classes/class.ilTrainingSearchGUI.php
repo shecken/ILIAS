@@ -254,6 +254,7 @@ class ilTrainingSearchGUI {
 	 */
 	protected function addSortationObjects($view_control) {
 		$employees = $this->helper->getUserWhereCurrentCanBookFor((int)$this->g_user->getId());
+		uasort($employees, function($a, $b) { return strcasecmp($a, $b);});
 		if(count($employees) > 1) {
 			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_CHANGE_USER);
 			$view_control[] = $this->g_f->viewControl()->quickfilter($employees)
@@ -270,14 +271,14 @@ class ilTrainingSearchGUI {
 
 			$options = array("" => $this->g_lng->txt("show_all"));
 			$type_options = $actions->getTypeOptions();
-			uasort($type_options, function($a, $b) { return strcmp($a, $b);});
+			uasort($type_options, function($a, $b) { return strcasecmp($a, $b);});
 			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $type_options)
 						->withTargetURL($link, Helper::F_TYPE)
 						->withDefaultValue("")
 						->withLabel($plugin->txt("conf_options_type"));
 
 			$topic_options = $actions->getTopicOptions();
-			uasort($topic_options, function($a, $b) { return strcmp($a, $b);});
+			uasort($topic_options, function($a, $b) { return strcasecmp($a, $b);});
 			$view_control[] = $this->g_f->viewControl()->quickfilter($options + $topic_options)
 						->withTargetURL($link, Helper::F_TOPIC)
 						->withDefaultValue("")
@@ -361,7 +362,7 @@ class ilTrainingSearchGUI {
 	 * @return string[]
 	 */
 	public function getSortOptions() {
-		return array(
+		$vals = array(
 			Helper::S_TITLE_ASC => $this->g_lng->txt(Helper::S_TITLE_ASC),
 			Helper::S_TITLE_DESC => $this->g_lng->txt(Helper::S_TITLE_DESC),
 			Helper::S_PERIOD_ASC => $this->g_lng->txt(Helper::S_PERIOD_ASC),
@@ -369,6 +370,10 @@ class ilTrainingSearchGUI {
 			Helper::S_CITY_ASC => $this->g_lng->txt(Helper::S_CITY_ASC),
 			Helper::S_CITY_DESC => $this->g_lng->txt(Helper::S_CITY_DESC)
 		);
+
+		uasort($vals, function($a, $b) { return strcasecmp($a, $b);});
+
+		return $vals;
 	}
 }
 
