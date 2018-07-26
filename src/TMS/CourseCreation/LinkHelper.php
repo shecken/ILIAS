@@ -119,7 +119,7 @@ trait LinkHelper {
 	protected function getGroupableSelectInputGUIForCourseTemplates(array $info, $select_name, $type) {
 		assert('is_string($select_name)');
 
-		uksort($cat,'strcasecmp');
+		uksort($info,'strcasecmp');
 		foreach ($info as $k => $is) {
 			$group = [];
 			foreach($is as $i) {
