@@ -67,7 +67,7 @@ class ilCourseTemplateDB implements CourseTemplateDB {
 				}
 			}
 		}
-
+		uksort($crs_template_info,'strcasecmp');
 		return $crs_template_info;
 	}
 
