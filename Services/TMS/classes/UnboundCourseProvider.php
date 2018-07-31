@@ -170,9 +170,13 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 			, $this->lng->txt("date").":"
 			, $date
 			, 200
-			, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
-				CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
-			  ]
+			, [
+				CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
+				CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO,
+				CourseInfo::CONTEXT_USER_BOOKING_SUPERIOR_FURTHER_INFO,
+				CourseInfo::CONTEXT_ASSIGNED_TRAINING_FURTHER_INFO,
+				CourseInfo::CONTEXT_ADMIN_OVERVIEW_FURTHER_INFO
+			]
 		);
 
 		$ret[] = $this->createCourseInfoObject($entity
@@ -283,9 +287,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 					, $this->lng->txt("status").":"
 					, $this->lng->txt("booked_as_member")
 					, 600
-					, [
-						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
-					  ]
+					, [CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO,]
 				);
 		}
 
@@ -294,9 +296,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 					, $this->lng->txt("status").":"
 					, $this->lng->txt("booked_on_waitinglist")
 					, 600
-					, [
-						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
-					  ]
+					, [CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO]
 				);
 		}
 
@@ -521,9 +521,13 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 					, $txt("title").":"
 					, nl2br($name)
 					, 300
-					, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
-						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
-					  ]
+					, [
+						CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
+						CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO,
+						CourseInfo::CONTEXT_USER_BOOKING_SUPERIOR_FURTHER_INFO,
+						CourseInfo::CONTEXT_ASSIGNED_TRAINING_FURTHER_INFO,
+						CourseInfo::CONTEXT_ADMIN_OVERVIEW_FURTHER_INFO
+					]
 				);
 
 				$ret[] = $this->createCourseInfoObject($entity
@@ -561,9 +565,13 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 						, $txt("title").":"
 						, join("<br />", $val)
 						, 300
-						, [CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
-							CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO
-						  ]
+						, [
+							CourseInfo::CONTEXT_SEARCH_FURTHER_INFO,
+							CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO,
+							CourseInfo::CONTEXT_USER_BOOKING_SUPERIOR_FURTHER_INFO,
+							CourseInfo::CONTEXT_ASSIGNED_TRAINING_FURTHER_INFO,
+							CourseInfo::CONTEXT_ADMIN_OVERVIEW_FURTHER_INFO
+						]
 					);
 
 					$ret[] = $this->createCourseInfoObject($entity
