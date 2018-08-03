@@ -54,6 +54,12 @@ class SqlQueryInterpreter {
 			return ' SUM('.$this->interpretField($field->argument()).')';
 		} elseif( $field instanceof Derived\Count ) {
 			return ' COUNT(*)';
+		} elseif( $field instanceof Derived\CountField ) {
+			$argument = $this->interpretField($field->argument());
+			if($field->distinct()) {
+				$argument = 'DISTINCT '.$argument;
+			}
+			return ' COUNT('.$argument.')';
 		} elseif( $field instanceof Derived\GroupConcat ) {
 			$order_by = '';
 			$order_by_f = $field->orderBy();
