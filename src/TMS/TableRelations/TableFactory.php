@@ -209,6 +209,10 @@ class TableFactory {
 		return new Tables\DerivedFields\Count($this->predicate_factory, $name);
 	}
 
+	public function countField($name, Filters\Predicates\Field $field, $distinct = false) {
+		return new Tables\DerivedFields\CountField($this->predicate_factory, $name, $field, $distinct);
+	}
+
 	public function sum($name, Filters\Predicates\Field $field) {
 		return new Tables\DerivedFields\Sum($this->predicate_factory, $name, $field);
 	}
