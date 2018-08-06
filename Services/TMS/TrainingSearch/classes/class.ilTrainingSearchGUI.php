@@ -253,8 +253,11 @@ class ilTrainingSearchGUI {
 	 * @return Sortation[]
 	 */
 	protected function addSortationObjects($view_control) {
-		$employees = $this->helper->getUserWhereCurrentCanBookFor((int)$this->g_user->getId());
+		$self_id = (int)$this->g_user->getId();
+		$employees = $this->helper->getUserWhereCurrentCanBookFor($self_id);
+		unset($employees[$self_id]);
 		uasort($employees, function($a, $b) { return strcasecmp($a, $b);});
+		$employees = [$self_id => $this->g_lng->txt('my_training_seach_options')] + $employees;
 		if(count($employees) > 1) {
 			$link = $this->g_ctrl->getLinkTarget($this, ilTrainingSearchGUI::CMD_CHANGE_USER);
 			$view_control[] = $this->g_f->viewControl()->quickfilter($employees)
