@@ -149,6 +149,18 @@ class ilUserTableGUI extends ilTable2GUI
 		return array();
 	}
 
+	// cat-tms-patch start
+	/**
+	 * Get all user defined fields
+	 *
+	 * @return array
+	 */
+	protected function getUserDefinedFields()
+	{
+		return $this->udf_fields;
+	}
+	// cat-tms-patch end
+
 	/**
 	 * Field key
 	 * @param string $a_key field key
@@ -255,10 +267,12 @@ class ilUserTableGUI extends ilTable2GUI
 		// custom user fields
 		if($this->getMode() == self::MODE_USER_FOLDER)
 		{
-			foreach ($this->udf_fields as $k => $field)
+			// cat-tms-patch start
+			foreach ($this->getUserDefinedFields() as $k => $field)
 			{
 				$cols[$k] = $field;
 			}
+			// cat-tms-patch end
 		}
 
 		// fields that are always shown
@@ -309,7 +323,7 @@ class ilUserTableGUI extends ilTable2GUI
 		include_once("./Services/User/classes/class.ilUserQuery.php");
 
 		$additional_fields = [];
-		foreach ($this->udf_fields as $key => $value) {
+		foreach ($this->getUserDefinedFields() as $key => $value) {
 			$additional_fields[$key] = $key;
 		}
 		// cat-tms- patch end
@@ -616,10 +630,12 @@ class ilUserTableGUI extends ilTable2GUI
 		$this->filter["authentication"] = $si->getValue();
 		
 		// udf fields
-		foreach ($this->udf_fields as $id => $f)
+		// cat-tms-patch start
+		foreach ($this->getUserDefinedFields() as $id => $f)
 		{
 			$this->addFilterItemByUdfType($id, $f["type"], true, $f["txt"], $f["options"]);
 		}
+		// cat-tms-patch start
 	}
 
 	/**
