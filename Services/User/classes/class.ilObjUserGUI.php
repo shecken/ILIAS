@@ -1509,11 +1509,14 @@ class ilObjUserGUI extends ilObjectGUI
 						$link = $this->ctrl->getLinkTargetByClass($class_path, "");
 
 						$orgu_path = $orgu_tree->getOrgUnitPath($orgu_ref_id);
+						//cat-tms patch start
+						//tms 1704 open orgu link in new tab
 						$orgu_vals[$orgu_path] = sprintf(
-							'<a href="%s">%s</a>',
+							'<a href="%s" target="_blank">%s</a>',
 							$link,
 							$orgu_path
 						);
+						//cat-tms patch end
 					}
 					ksort($orgu_vals);
 					$orgus = new ilNonEditableValueGUI($lng->txt('objs_orgu'), 'org_units', true);
