@@ -28,19 +28,19 @@ class PresentationRow implements T\PresentationRow {
 	protected $toggle_signal;
 
 	/**
-	 * @var	string
+	 * @var	string|null
 	 */
-	private $title;
+	private $headline;
 
 	/**
-	 * @var	string
+	 * @var	string|null
 	 */
-	private $subtitle;
+	private $subheadline;
 
 	/**
-	 * @var	array
+	 * @var	ILIAS\UI\Component\Button\Button|ILIAS\UI\Component\Dropdown\Dropdown|null
 	 */
-	private $buttons;
+	private $actions;
 
 	/**
 	 * @var	array
@@ -69,6 +69,7 @@ class PresentationRow implements T\PresentationRow {
 
 	public function __construct(SignalGeneratorInterface $signal_generator) {
 		$this->signal_generator = $signal_generator;
+		$this->actions = null;
 		$this->initSignals();
 	}
 
@@ -82,7 +83,7 @@ class PresentationRow implements T\PresentationRow {
 	}
 
 	/**
-	 * Set the show and close signals for this component
+	 * Set the signals for this component.
 	 */
 	protected function initSignals() {
 		$this->show_signal = $this->signal_generator->create();
@@ -116,35 +117,35 @@ class PresentationRow implements T\PresentationRow {
 	/**
 	 * @inheritdoc
 	 */
-	public function withTitle($title) {
-		$this->checkStringArg("string", $title);
+	public function withHeadline($headline) {
+		$this->checkStringArg("string", $headline);
 		$clone = clone $this;
-		$clone->title = $title;
+		$clone->headline = $headline;
 		return $clone;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getTitle() {
-		return $this->title;
+	public function getHeadline() {
+		return $this->headline;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function withSubtitle($subtitle) {
-		$this->checkStringArg("string", $subtitle);
+	public function withSubheadline($subheadline) {
+		$this->checkStringArg("string", $subheadline);
 		$clone = clone $this;
-		$clone->subtitle = $subtitle;
+		$clone->subheadline = $subheadline;
 		return $clone;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getSubtitle() {
-		return $this->subtitle;
+	public function getSubheadline() {
+		return $this->subheadline;
 	}
 
 	/**
@@ -167,7 +168,7 @@ class PresentationRow implements T\PresentationRow {
 	/**
 	 * @inheritdoc
 	 */
-	public function withContent($content) {
+	public function withContent(\ILIAS\UI\Component\Listing\Descriptive $content) {
 		$clone = clone $this;
 		$clone->content = $content;
 		return $clone;
@@ -218,17 +219,16 @@ class PresentationRow implements T\PresentationRow {
 	/**
 	 * @inheritdoc
 	 */
-	public function withButtons(array $buttons) {
+	public function withActions($actions) {
 		$clone = clone $this;
-		$clone->buttons = $buttons;
+		$clone->actions = $actions;
 		return $clone;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function getButtons() {
-		return $this->buttons;
+	public function getActions() {
+		return $this->actions;
 	}
-
 }
