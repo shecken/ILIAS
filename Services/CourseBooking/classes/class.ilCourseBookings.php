@@ -318,6 +318,18 @@ class ilCourseBookings
 	{
 		return $this->getUsersByStatus(ilCourseBooking::STATUS_CANCELLED_WITH_COSTS);
 	}
+
+	// gev-patch start gev_3708
+	/**
+	 * Get all cancelled with budget costs users
+	 *
+	 * @return array
+	 */
+	public function getCancelledWithBudgetCostsUsers()
+	{
+		return $this->getUsersByStatus(ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS);
+	}
+	// gev-patch end gev_3708
 	
 	/**
 	 * Get all cancelled without costs users
