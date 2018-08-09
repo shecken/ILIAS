@@ -427,8 +427,13 @@ class ilCourseBookings
 	public function isCancelled($a_user_id)
 	{
 		$status = $this->getUserStatus($a_user_id);
-		return in_array($status, array(ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS, 
-			ilCourseBooking::STATUS_CANCELLED_WITH_COSTS));
+		// gev-patch start gev_3708
+		return in_array($status, array(
+			ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS,
+			ilCourseBooking::STATUS_CANCELLED_WITH_COSTS,
+			ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS
+		));
+		// gev-patch end gev_3708
 	}
 	
 	
@@ -529,7 +534,8 @@ class ilCourseBookings
 		
 		return false;
 	}
-	
+
+	// gev-patch start gev_3708
 	/**
 	 * Cancel user (with/without costs)
 	 * 
@@ -538,12 +544,13 @@ class ilCourseBookings
 	 * @param bool $a_with_costs
 	 * @return bool	 
 	 */
-	protected function cancelUser($a_user_id, $a_with_costs = false)
+	protected function cancelUser($a_user_id, $status)
 	{		
 		switch($this->getUserStatus($a_user_id))
 		{
 			case ilCourseBooking::STATUS_CANCELLED_WITH_COSTS:
 			case ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS:
+			case ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS:
 				return true;
 				
 			case ilCourseBooking::STATUS_WAITING:
@@ -558,11 +565,7 @@ class ilCourseBookings
 			default:				
 				throw new ilException("CourseBooking: cannot cancel non-member");				
 		}
-		
-		$status = (bool)$a_with_costs 
-			? ilCourseBooking::STATUS_CANCELLED_WITH_COSTS
-			: ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS;
-		
+
 		// gev-patch start
 		// This is not done via ilAccomodationsAppEventHandler to avoid removal of
 		// overnights set for people who are moved to the waiting list.
@@ -578,24 +581,35 @@ class ilCourseBookings
 	 * Cancel user membership with costs
 	 * 
 	 * @throws ilException
-	 * @param int $a_user_id
+	 * @param int $user_id
 	 * @return bool
 	 */
-	public function cancelWithCosts($a_user_id)
+	public function cancelWithCosts($user_id)
 	{
-		return $this->cancelUser($a_user_id, true);
+		return $this->cancelUser($user_id, ilCourseBooking::STATUS_CANCELLED_WITH_COSTS);
 	}
 	
 	/**
 	 * Cancel user membership without costs
 	 * 
-	 * @param int $a_user_id
+	 * @param int $user_id
 	 */
-	public function cancelWithoutCosts($a_user_id)
+	public function cancelWithoutCosts($user_id)
 	{
-		return $this->cancelUser($a_user_id);
+		return $this->cancelUser($user_id, ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS);
 	}
-	
+
+	/**
+	 * Cancel user membership with budget costs.
+	 *
+	 * @param int $user_id
+	 */
+	public function cancelWithBudgetCosts($user_id)
+	{
+		return $this->cancelUser($user_id, ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS);
+	}
+	// gev-patch end gev_3708
+
 	/**
 	 * Add member depending on course status
 	 * 
