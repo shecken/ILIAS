@@ -1,4 +1,7 @@
 <?php
+
+// cat-tms-patch start
+
 /* Copyright (c) 2016 Stefan Hecken, Extended GPL, see docs/LICENSE */
 require_once './libs/composer/vendor/autoload.php';
 
@@ -11,7 +14,7 @@ use Whoops\Exception\Formatter;
  */
 class ilLoggingErrorFileStorage {
 	const KEY_SPACE = 25;
-	const FILE_FORMAT = ".log";
+	const FILE_FORMAT = ".json";
 
 	public function __construct($inspector, $file_path, $file_name) {
 		$this->inspector = $inspector;
@@ -26,12 +29,13 @@ class ilLoggingErrorFileStorage {
 	}
 
 	protected function content() {
-		return "----------\n"
-			  ."error_id: ".$this->file_name."\n"
-			  .$this->pageHeader()
-			  .$this->exceptionContent()
-			  .$this->tablesContent()
-			  ;
+		$part1 = array(
+			"error_id" => $this->file_name,
+			"Exception" =>  $this->exceptionContent()
+		);
+		$part2 = $this->tables();
+		$content = array_merge($part1, $part2);
+		return json_encode($content);
 	}
 
 	public function write() {
@@ -45,56 +49,12 @@ class ilLoggingErrorFileStorage {
 	}
 
 	/**
-	 * Get the header for the page.
-	 *
-	 * @return string
-	 */
-	protected function pageHeader() {
-		return "";
-	}
-
-	/**
 	 * Get a short info about the exception.
 	 *
 	 * @return string
 	 */
 	protected function exceptionContent() {
 		return Formatter::formatExceptionPlain($this->inspector);
-	}
-
-	/**
-	 * Get the header for the page.
-	 *
-	 * @return string
-	 */
-	protected function tablesContent() {
-		$ret = "";
-		foreach ($this->tables() as $title => $content) {
-			$ret .= "\n\n-- $title --\n\n";
-			if (count($content) > 0) {
-				foreach ($content as $key => $value) {
-					$key = str_pad($key, self::KEY_SPACE);
-
-					// indent multiline values, first print_r, split in lines,
-					// indent all but first line, then implode again.
-					$first = true;
-					$indentation = str_pad("", self::KEY_SPACE);
-					$value = implode("\n", array_map(function($line) use (&$first, $indentation) {
-								if ($first) {
-									$first = false;
-									return $line;
-								}
-								return $indentation.$line;
-							}, explode("\n", print_r($value, true))));
-
-					$ret .= "$key: $value\n";
-				}
-			}
-			else {
-				$ret .= "empty\n";
-			}
-		}
-		return $ret;
 	}
 
 	/**
@@ -161,3 +121,5 @@ class ilLoggingErrorFileStorage {
 		return $server;
 	}
 }
+
+// cat-tms-patch end
