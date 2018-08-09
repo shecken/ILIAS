@@ -14340,3 +14340,5 @@ tms#:#course_overbooked#:#Sie konnten leider nicht auf den Kurs gebucht werden, 
 tms#:#pl_course_type_preview#:#Kurstyp-Platzhalter
 tms#:#pl_idd_learning_time_preview#:#11:00
 tms#:#pl_idd_learning_time_user_preview#:#10:35
+mail#:#show_mail_settings#:#Einstellungen anzeigen
+mail#:#show_mail_settings_info#:#Falls aktiviert, können Benutzer Ihre Mail-Einstellungen im Bereich 'Einstellungen oder 'Mail' selber vornehmen.
