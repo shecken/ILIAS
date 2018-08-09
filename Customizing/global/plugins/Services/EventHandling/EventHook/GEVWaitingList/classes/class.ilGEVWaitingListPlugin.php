@@ -33,7 +33,9 @@ class ilGEVWaitingListPlugin extends ilEventHookPlugin
 
 		if ($os == ilCourseBooking::STATUS_BOOKED && in_array($ns, array(ilCourseBooking::STATUS_CANCELLED_WITH_COSTS
 															 , ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS
+															 // gev-patch start gev_3708
 															 , ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS))) {
+															// gev-patch end gev_3708
 			$crs_utils->fillFreePlacesFromWaitingList();
 		}
 	}
