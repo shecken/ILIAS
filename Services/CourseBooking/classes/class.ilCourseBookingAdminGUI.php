@@ -980,7 +980,9 @@ class ilCourseBookingAdminGUI
 			!ilCourseBookingHelper::getInstance($this->getCourse())->isUltimateBookingDeadlineReached()) {
 			if ((in_array($a_status, array(ilCourseBooking::STATUS_BOOKED, ilCourseBooking::STATUS_WAITING)) &&
 					$this->getPermissions()->bookCourseForOthers()) ||
-				(in_array($a_status, array(ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS, ilCourseBooking::STATUS_CANCELLED_WITH_COSTS)) &&
+				// gev-patch start gev_3708
+				(in_array($a_status, array(ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS, ilCourseBooking::STATUS_CANCELLED_WITH_COSTS, ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS)) &&
+				// gev-patch end gev_3708
 					$this->getPermissions()->cancelCourseForOthers())) {
 				return $user_id;
 			}
@@ -1006,6 +1008,9 @@ class ilCourseBookingAdminGUI
 			,ilCourseBooking::STATUS_WAITING => "ToWaitingList"
 			,ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS => "CancelWithoutCosts"
 			,ilCourseBooking::STATUS_CANCELLED_WITH_COSTS => "CancelWithCosts"
+			// gev-patch start gev_3708
+			,ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS => "CancelWithBudgetCosts"
+			// gev-patch end gev_3708
 		);
 		$cmd = "userAction".$map[$user_status];
 
@@ -1148,6 +1153,36 @@ class ilCourseBookingAdminGUI
 		$ilCtrl->redirect($this, "listBookings");
 	}
 
+	// gev-patch start gev_3708
+	/**
+	 * Cancel user with budget costs
+	 */
+	protected function userActionCancelWithBudgetCosts()
+	{
+		global $ilCtrl, $lng, $ilLog;
+
+		$user_id = $this->isUserActionPossible(ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS);
+		if ($user_id) {
+			$bookings = ilCourseBookings::getInstance($this->getCourse());
+			if ($bookings->cancelWithBudgetCosts($user_id)) {
+				$ilLog->write(
+					"ilCourseBookingAdminGUI::userActionCancelWithBudgetCosts:"
+					." send cancellation (admin_cancel_booked_to_cancelled_with_budget_costs)"
+					." course=" . $this->getCourse()->getId()
+					." user=" . $user_id
+				);
+
+				require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
+				$automails = new gevCrsAutoMails($this->getCourse()->getId());
+				$automails->sendDeferred("admin_cancel_booked_to_cancelled_with_budget_costs", array($user_id));
+
+				ilUtil::sendSuccess($lng->txt("crsbook_admin_user_action_done"), true);
+			}
+		}
+
+		$ilCtrl->redirect($this, "listBookings");
+	}
+	// gev-patch end gev_3708
 
 	//
 	// CANCELLATION
