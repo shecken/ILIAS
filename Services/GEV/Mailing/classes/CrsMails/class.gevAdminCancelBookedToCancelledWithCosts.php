@@ -8,7 +8,9 @@ class gevAdminCancelBookedToCancelledWithCosts extends gevCrsAutoMail {
 	}
 	
 	public function _getDescription() {
-		return "Teilnehmer (gebucht) erhält Buchungsstatus 'kostenpflichtig storniert' durch Stornierung durch Admin";
+		// gev-patch start gev_3708
+		return "Teilnehmer (gebucht) erhält Buchungsstatus 'Mit Kosten storniert' durch Stornierung durch Admin";
+		// gev-patch end gev_3708
 	}
 	
 	public function getScheduledFor() {
