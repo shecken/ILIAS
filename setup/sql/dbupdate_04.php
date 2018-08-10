@@ -21735,7 +21735,7 @@ foreach($tests as $testFi => $testQuestions)
 }
 
 ?>
-<#5277>
+<#5251>
 <?php
 $ilSetting = new ilSetting();
 if($ilSetting->get('show_mail_settings', false) === false)
