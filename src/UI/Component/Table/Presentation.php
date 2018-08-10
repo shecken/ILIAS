@@ -9,11 +9,6 @@ namespace ILIAS\UI\Component\Table;
 interface Presentation extends \ILIAS\UI\Component\Component {
 
 	/**
-	 * @return SignalGenerator
-	 */
-	public function getSignalGenerator();
-
-	/*
 	 * Get a table like this with title $title.
 	 *
 	 * @param string 	$title
@@ -44,28 +39,26 @@ interface Presentation extends \ILIAS\UI\Component\Component {
 	public function getViewControls();
 
 	/**
-	 * Return the closure to map some data to the row.
-	 *
-	 * The closure MUST accept the following parameter
-	 * \PresentationRow $row
-	 * mixed $record
-	 * \Factory $ui_factory
-	 * array<string,mixed> $environment
-	 *
-	 * The closure MUST return \PresentationRow
-	 *
-	 * @return \Closure
-	 */
-	public function getRowMapping();
-
-	/*
 	 * Get a table like this with the closure $row_mapping.
+	 * This closure is called by the renderer upon building a row from
+	 * a record. The renderer will call the closure with these parameters:
+     *
+     * $row 		An instance of Component\Table\PresentationRow;
+     *				fill the mutator according to your needs and the structure of
+     *				your record.
+     * $record 		An element of the table's data.
+     * 				This is the actually variable part when rendering rows.
+     * $ui_factory	You might, e.g., want a descriptive listing or and image
+     *				within the content of the row. Use the UI-Factory to build it.
+     * $environment When you need auxillary classes or functions to properly render
+     * 				the data, this is the place to put it.
+     *
+	 * In short:
 	 * The closure MUST accept the following parameter
-	 *   \PresentationRow $row
-	 *   mixed $record
-	 *   \Factory $ui_factory
-	 *   mixed $environment
-	 *
+	 *   \PresentationRow 	$row
+	 *   mixed 				$record
+	 *   \Factory 			$ui_factory
+	 *   mixed 				$environment
 	 * The closure MUST return \PresentationRow
 	 *
 	 * @param \Closure 	$row_mapping
@@ -73,8 +66,17 @@ interface Presentation extends \ILIAS\UI\Component\Component {
 	 */
 	public function withRowMapping(\Closure $row_mapping);
 
+
 	/**
-	 * Add a list of objects the mapping-closure needs for processing.
+	 * Get the closure to construct row-entries with.
+	 *
+	 * @return \Closure
+	 */
+	public function getRowMapping();
+
+	/**
+	 * Add a list of additional things the mapping-closure needs for processing.
+	 * These can be virtually anything.
 	 *
 	 * @param array<string,mixed> 	$environment
 	 * @return \Presentation
@@ -82,7 +84,7 @@ interface Presentation extends \ILIAS\UI\Component\Component {
 	public function withEnvironment(array $environment);
 
 	/**
-	 * Get the environment configured with this table
+	 * Get an array of additionally needed elements to build a data-entry.
 	 *
 	 * @return array<string,mixed>
 	 */
@@ -99,8 +101,10 @@ interface Presentation extends \ILIAS\UI\Component\Component {
 
 	/**
 	 * Get the recordset of this table.
+	 * All elements in $records MUST be processable by the mapping-closure.
 	 *
 	 * @return array<mixed>
 	 */
 	public function getData();
+
 }

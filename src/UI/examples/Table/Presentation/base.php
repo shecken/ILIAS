@@ -14,11 +14,11 @@ function base() {
 	//build table
 	$ptable = $f->table()->presentation(
 		'Presentation Table', //title
-		array($view_controls),
+		$view_controls,
 		function ($row, $record, $ui_factory, $environment) { //mapping-closure
 			return $row
-				->withTitle($record['title'])
-				->withSubTitle($record['type'])
+				->withHeadline($record['title'])
+				->withSubheadline($record['type'])
 				->withImportantFields(
 					array(
 						$record['begin_date'],
@@ -47,10 +47,8 @@ function base() {
 						'Fee: ' => $record['fee']
 					)
 				)
-				->withButtons(
-					array(
-						$ui_factory->button()->standard('book course', '#')
-					)
+				->withActions(
+					$ui_factory->button()->standard('book course', '#')
 				);
 		}
 	);

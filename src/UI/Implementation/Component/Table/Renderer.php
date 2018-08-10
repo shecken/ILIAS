@@ -56,7 +56,6 @@ class Renderer extends AbstractComponentRenderer {
 		$row_mapping = $component->getRowMapping();
 		$data =  $component->getData();
 		foreach ($data as $record) {
-
 			$row = $row_mapping(
 				new PresentationRow($component->getSignalGenerator()),
 				$record,
@@ -67,8 +66,6 @@ class Renderer extends AbstractComponentRenderer {
 			$tpl->setCurrentBlock("row");
 			$tpl->setVariable("ROW", $default_renderer->render($row));
 			$tpl->parseCurrentBlock();
-
-
 		}
 
 		return $tpl->get();
@@ -88,11 +85,12 @@ class Renderer extends AbstractComponentRenderer {
 		$sig_hide = $component->getCloseSignal();
 		$sig_toggle = $component->getToggleSignal();
 		$id = $this->bindJavaScript($component);
+
 		$expander = $f->glyph()->expand("#")
 			->withOnClick($sig_show);
 		$collapser = $f->glyph()->collapse("#")
 			->withOnClick($sig_hide);
-		$shy_expander = $f->button()->shy("Details","#")
+		$shy_expander = $f->button()->shy("more","#")
 			->withOnClick($sig_show);
 
 		$tpl->setVariable("ID",$id);
@@ -100,9 +98,9 @@ class Renderer extends AbstractComponentRenderer {
 		$tpl->setVariable("COLLAPSER", $default_renderer->render($collapser));
 		$tpl->setVariable("SHY_EXPANDER", $default_renderer->render($shy_expander));
 
-		$tpl->setVariable("TITLE", $component->getTitle());
+		$tpl->setVariable("HEADLINE", $component->getHeadline());
 		$tpl->setVariable("TOGGLE_SIGNAL", $sig_toggle);
-		$tpl->setVariable("SUBTITLE", $component->getSubtitle());
+		$tpl->setVariable("SUBHEADLINE", $component->getSubheadline());
 
 		foreach ($component->getImportantFields() as $label => $value) {
 			$tpl->setCurrentBlock("important_field");
@@ -129,9 +127,10 @@ class Renderer extends AbstractComponentRenderer {
 			$tpl->parseCurrentBlock();
 		}
 
-		foreach ($component->getButtons() as $button) {
+		$action = $component->getAction();
+		if(!is_null($action)) {
 			$tpl->setCurrentBlock("button");
-			$tpl->setVariable("BUTTON", $default_renderer->render($button));
+			$tpl->setVariable("BUTTON", $default_renderer->render($action));
 			$tpl->parseCurrentBlock();
 		}
 
@@ -157,8 +156,7 @@ class Renderer extends AbstractComponentRenderer {
 			return
 				"$(document).on('{$show}', function() { il.UI.table.presentation.expandRow('{$id}'); return false; });".
 				"$(document).on('{$close}', function() { il.UI.table.presentation.collapseRow('{$id}'); return false; });".
-				"$(document).on('{$toggle}', function() { il.UI.table.presentation.toggleRow('{$id}'); return false; });".
-				"il.UI.table.presentation.collapseRow('{$id}');";
+				"$(document).on('{$toggle}', function() { il.UI.table.presentation.toggleRow('{$id}'); return false; });";
 		});
 	}
 

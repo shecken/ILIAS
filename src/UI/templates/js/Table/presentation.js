@@ -7,6 +7,7 @@ il.UI.table = il.UI.table || {};
     UI.table.presentation = (function ($) {
         _cls_collapsed = 'collapsed';
         _cls_expanded = 'expanded';
+
         var expandRow = function (id) {
             var row = $('#' + id);
             row.find('.il-table-presentation-row-controls-expander').hide();
