@@ -296,8 +296,9 @@ class gevDecentralTrainingGUI
 		//trainer hinzufügen
 		$form_values["trainer_ids"] = $trainer_ids;
 		//datum hinzufügen
-		$form_values["start_date"] = ($this->date !== null) ? new ilDate($this->date, IL_CAL_DATE)
-															: new ilDate(date("Y-m-d"), IL_CAL_DATE);
+		$date = ($this->date !== null) ? new ilDate($this->date, IL_CAL_DATE) : new ilDate(date("Y-m-d"), IL_CAL_DATE);
+		$form_values["date"] = $date;
+		$form_values["start_date"] = $date;
 
 		$dt_end = DateTime::createFromFormat('Y-m-d', $form_values['start_date']->get(IL_CAL_DATE));
 
