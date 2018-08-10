@@ -76,21 +76,15 @@ class ilTrainingSearchTableGUI {
 			$this->g_lng->txt("header"), //title
 			$view_constrols,
 			function ($row, BookableCourse $record, $ui_factory, $environment) { //mapping-closure
-				$buttons = array();
-				$this->primary = true;
-				$search_actions = $record->getSearchActionLinks($this->g_ctrl, $this->search_user_id, $this->search_user_id != $this->g_user->getId());
-
-				foreach ($search_actions as $label => $search_action) {
-					$buttons[] = $this->createButton($label, $search_action, $ui_factory);
-				}
+				$dropdown = $this->createDropdown($record, $ui_factory);
 
 				return $row
-					->withTitle($record->getTitleValue())
-					->withSubTitle($record->getSubTitleValue())
+					->withHeadline($record->getTitleValue())
+					->withSubheadline($record->getSubTitleValue())
 					->withImportantFields($record->getImportantFields())
 					->withContent($ui_factory->listing()->descriptive($record->getDetailFields()))
 					->withFurtherFields($record->getFurtherFields())
-					->withButtons($buttons);
+					->withAction($dropdown);
 			}
 		);
 
@@ -107,19 +101,23 @@ class ilTrainingSearchTableGUI {
 	 *
 	 * @return Button
 	 */
-	protected function createButton($label, $link, $ui_factory) {
-		if($this->primary) {
-			$this->primary = false;
-			return $ui_factory->button()->primary
-							( $label,
-								$link
-							);
-		}
+	protected function createDropdown($record, $ui_factory)
+	{
+		return $ui_factory->dropdown()
+			->standard(array($ui_factory->button()->shy("a", "d")))
+			->withLabel($this->g_lng->txt("actions"))
+			->withOnLoadCode(function($id) use ($record) {
+				$search_actions = $record->getSearchActionLinks($this->g_ctrl, $this->search_user_id, $this->search_user_id != $this->g_user->getId());
 
-		return $ui_factory->button()->standard
-							( $label,
-								$link
-							);
+				if(count($search_actions) == 0) {
+					return "$('#$id').remove();";
+				}
+
+				foreach ($search_actions as $label => $action) {
+					$content .= '<li><a class="btn btn-link" href="'.$action.'" data-action="'.$action.'" target="_blank">'.$label.'</a></li>';
+				}
+				return "$('#$id + ul').empty(); $('#$id + ul').append('$content');";
+			});
 	}
 }
 
