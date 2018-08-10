@@ -267,7 +267,7 @@ crsbook#:#crsbook_acco_accomodations#:#Übernachtung(en)
 crsbook#:#crsbook_admin_action_book#:#Als Teilnehmer hinzufügen
 crsbook#:#crsbook_admin_action_cancel_with_costs#:#Mit Kosten stornieren
 crsbook#:#crsbook_admin_action_cancel_without_costs#:#Ohne Kosten stornieren
-crsbook#:#crsbook_admin_action_cancel_without_budget_costs#:#Kostenpflichtig stornieren
+crsbook#:#crsbook_admin_action_cancel_with_budget_costs#:#Kostenpflichtig stornieren
 crsbook#:#crsbook_admin_action_to_waiting_list#:#Auf die Warteliste
 crsbook#:#crsbook_admin_add_group#:#Gruppe hinzufügen
 crsbook#:#crsbook_admin_add_org_unit#:#Org.-Einheit hinzufügen

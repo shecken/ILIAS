@@ -255,7 +255,7 @@ class ilCourseBookingMembersTableGUI extends ilTable2GUI
 				// gev-patch start gev_3708
 				if ($a_set["status"] != ilCourseBooking::STATUS_WAITING) {
 					$list->addItem(
-						$this->lng->txt("crsbook_admin_action_cancel_without_budget_costs"),
+						$this->lng->txt("crsbook_admin_action_cancel_with_budget_costs"),
 						"",
 						$this->getLink($a_set["id"], ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS)
 					);
