@@ -204,6 +204,14 @@ abstract class gevCrsAutoMail extends ilAutoMail
 		return $utils->getCancelledWithCostsMembers();
 	}
 
+	// gev-patch start gev_3708
+	protected function getCourseCancelledWithBudgetCostsMembers()
+	{
+		$utils = gevCourseUtils::getInstance($this->crs_id);
+		return $utils->getCancelledWithBudgetCostsMembers();
+	}
+	// gev-patch end gev_3708
+
 	protected function getCourseCancelledWithoutCostsMembers()
 	{
 		$utils = gevCourseUtils::getInstance($this->crs_id);

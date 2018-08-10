@@ -28,6 +28,9 @@ class gevCrsAutoMails extends ilAutoMails
 		, "superior_cancel_booked_to_cancelled_without_costs" 	=> "gevSuperiorCancelBookedToCancelledWithoutCosts"
 		, "superior_cancel_waiting_to_cancelled_without_costs" 	=> "gevSuperiorCancelWaitingToCancelledWithoutCosts"
 		, "admin_cancel_booked_to_cancelled_with_costs" 		=> "gevAdminCancelBookedToCancelledWithCosts"
+		// gev-patch start gev_3708
+		, "admin_cancel_booked_to_cancelled_with_budget_costs" 	=> "gevAdminCancelBookedToCancelledWithBudgetCosts"
+		// gev_patch end gev_3708
 		, "admin_cancel_booked_to_cancelled_without_costs" 		=> "gevAdminCancelBookedToCancelledWithoutCosts"
 		, "admin_cancel_waiting_to_cancelled_without_costs" 	=> "gevAdminCancelWaitingToCancelledWithoutCosts"
 		, "participant_waiting_to_booked" 						=> "gevParticipantWaitingToBooked"

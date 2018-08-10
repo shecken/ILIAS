@@ -16,6 +16,8 @@ class ilCourseBooking
 	const STATUS_CANCELLED_WITH_COSTS = 3;
 	const STATUS_CANCELLED_WITHOUT_COSTS = 4;
 
+	// gev-patch start
+	const STATUS_CANCELLED_WITH_BUDGET_COSTS = 5;
 
 	//
 	// status
@@ -30,12 +32,14 @@ class ilCourseBooking
 	protected static function isValidStatus($a_status)
 	{
 		return in_array($a_status, array(
-			self::STATUS_BOOKED
-			,self::STATUS_WAITING
-			,self::STATUS_CANCELLED_WITH_COSTS
-			,self::STATUS_CANCELLED_WITHOUT_COSTS
+			self::STATUS_BOOKED,
+			self::STATUS_WAITING,
+			self::STATUS_CANCELLED_WITH_COSTS,
+			self::STATUS_CANCELLED_WITHOUT_COSTS,
+			self::STATUS_CANCELLED_WITH_BUDGET_COSTS
 		));
 	}
+	// gev-patch end
 
 
 	//
@@ -350,7 +354,7 @@ class ilCourseBooking
 		if (!$a_show_cancellations) {
 			$status = array(self::STATUS_BOOKED, self::STATUS_WAITING);
 		} else {
-			$status = array(self::STATUS_CANCELLED_WITHOUT_COSTS, self::STATUS_CANCELLED_WITH_COSTS);
+			$status = array(self::STATUS_CANCELLED_WITHOUT_COSTS, self::STATUS_CANCELLED_WITH_COSTS, self::STATUS_CANCELLED_WITH_BUDGET_COSTS);
 		}
 
 		$sql = "SELECT  usr.firstname AS firstname, usr.lastname AS lastname, usr.login AS login, IF(change_usr.login IS NULL, '', change_usr.login) AS stcblogin,"

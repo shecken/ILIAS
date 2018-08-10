@@ -1965,6 +1965,13 @@ class gevCourseUtils
 		return $this->getBookings()->getCancelledWithCostsUsers();
 	}
 
+	// gev-patch start gev_3708
+	public function getCancelledWithBudgetCostsMembers()
+	{
+		return $this->getBookings()->getCancelledWithBudgetCostsUsers();
+	}
+	// gev-patch end gev_3708
+
 	public function getCancelledWithoutCostsMembers()
 	{
 		return $this->getBookings()->getCancelledWithoutCostsUsers();

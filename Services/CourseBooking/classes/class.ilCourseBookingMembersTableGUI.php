@@ -106,6 +106,9 @@ class ilCourseBookingMembersTableGUI extends ilTable2GUI
 			,ilCourseBooking::STATUS_WAITING => $this->lng->txt("crsbook_admin_status_waiting")
 			,ilCourseBooking::STATUS_CANCELLED_WITHOUT_COSTS => $this->lng->txt("crsbook_admin_status_cancelled_without_costs")
 			,ilCourseBooking::STATUS_CANCELLED_WITH_COSTS => $this->lng->txt("crsbook_admin_status_cancelled_with_costs")
+			// gev-patch start gev_3708
+			,ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS => $this->lng->txt("crsbook_admin_status_cancelled_with_budget_costs")
+			// gev-patch end gev_3708
 		);
 		
 		ilDatePresentation::setUseRelativeDates(false);
@@ -249,8 +252,15 @@ class ilCourseBookingMembersTableGUI extends ilTable2GUI
 				}
 				// gev-patch end (2014-10-01)
 
-
-
+				// gev-patch start gev_3708
+				if ($a_set["status"] != ilCourseBooking::STATUS_WAITING) {
+					$list->addItem(
+						$this->lng->txt("crsbook_admin_action_cancel_with_budget_costs"),
+						"",
+						$this->getLink($a_set["id"], ilCourseBooking::STATUS_CANCELLED_WITH_BUDGET_COSTS)
+					);
+				}
+				// gev-patch end gev_3708
 			}
 			
 			$this->tpl->setVariable("ACTIONS", $list->getHTML());
