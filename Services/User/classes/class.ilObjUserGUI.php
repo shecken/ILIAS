@@ -1617,8 +1617,22 @@ class ilObjUserGUI extends ilObjectGUI
 				$lng->txt("hits_per_page"),
 				'hits_per_page'
 			);
-			$options = array(10 => 10, 15 => 15, 20 => 20, 30 => 30, 40 => 40,
-				50 => 50, 100 => 100, 9999 => $this->lng->txt("no_limit"));
+			// gev-patch start gev_3709
+			$options = array(
+				10 => 10,
+				15 => 15,
+				20 => 20,
+				30 => 30,
+				40 => 40,
+				50 => 50,
+				100 => 100,
+				500 => 500,
+				1000 => 1000,
+				2000 => 2000,
+				9999 => $this->lng->txt("no_limit")
+			);
+			// gev-patch end gev_3709
+
 			$hpp->setOptions($options);
 			$hpp->setValue($ilSetting->get("hits_per_page"));
 			$this->form_gui->addItem($hpp);
