@@ -80,4 +80,14 @@ interface Glyph extends \ILIAS\UI\Component\Component, \ILIAS\UI\Component\JavaS
 	 * @return mixed
 	 */
 	public function withHighlight();
+
+	// cat-tms-patch start 1585
+	/**
+	 * Get a Glyph like this with an action.
+	 *
+	 * @param string $action
+	 * @return mixed
+	 */
+	public function withAction($action);
+	// cat-tms-patch end
 }
