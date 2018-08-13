@@ -307,15 +307,24 @@ class Renderer extends AbstractComponentRenderer
 	 */
 	protected function setPaginationBrowseControls(Component\ViewControl\Pagination $component, RendererInterface $default_renderer, &$tpl) {
 		$prev = max(0, $component->getCurrentPage() - 1);
-		$next = $component->getCurrentPage() + 1;
+		// cat-tms-pach start 1585
+		$next = min($component->getCurrentPage() + 1, $component->getNumberOfPages() - 1);
 
 		$f = new \ILIAS\UI\Implementation\Factory(
 			new \ILIAS\UI\Implementation\Component\SignalGenerator()
 		);
 
+		$back = $f->glyph()->back();
+		$forward = $f->glyph()->next();
+
 		if($component->getTriggeredSignals()) {
-			$back = $f->glyph()->back('')->withOnClick($component->getInternalSignal());
-			$forward = $f->glyph()->next('')->withOnClick($component->getInternalSignal());
+			if($prev != 0) {
+				$back = $back->withOnClick($component->getInternalSignal());
+			}
+
+			if($next < $component->getNumberOfPages() - 1) {
+				$forward = $forward->withOnClick($component->getInternalSignal());
+			}
 		} else {
 			$url = $component->getTargetURL();
 			if(strpos($url, '?') === false) {
@@ -332,9 +341,15 @@ class Renderer extends AbstractComponentRenderer
 				$url_next = $base .http_build_query($params);
 			}
 
-			$back = $f->glyph()->back($url_prev);
-			$forward = $f->glyph()->next($url_next);
+			if($prev > 0) {
+				$back = $back->withAction($url_prev);
+			}
+
+			if($next < $component->getNumberOfPages() - 1) {
+				$forward = $forward->withAction($url_next);
+			}
 		}
+		// cat-tms-pach end
 
 		//2do: unavailable action for glyphs
 		if($component->getCurrentPage() === 0) {
