@@ -17,3 +17,12 @@ index 477ee82..d9d6cb8 100644
          //Can't use additional_parameters in safe_mode, calling mail() with null params breaks
          //@link http://php.net/manual/en/function.mail.php
          if (ini_get('safe_mode') or !$this->UseSendmailOptions or is_null($params)) {
+@@ -2398,7 +2398,7 @@ class PHPMailer
+                 }
+             }
+         }
+-        return $body;
++        return rtrim($body);
+     }
+ 
+     /**
