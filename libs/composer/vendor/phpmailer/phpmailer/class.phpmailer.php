@@ -2404,7 +2404,7 @@ class PHPMailer
                 }
             }
         }
-        return $body;
+        return rtrim($body);
     }
 
     /**
