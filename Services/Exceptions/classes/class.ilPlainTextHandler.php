@@ -17,6 +17,10 @@ use Whoops\Exception\Formatter;
 class ilPlainTextHandler extends Handler {
 	const KEY_SPACE = 25;
 
+	// cat-tms-patch start 1388
+	const SIMPL_SAMLE_AUTH_NAME = "SimpleSAMLAuthToken";
+	// cat-tms-patch end
+
 	/**
 	 * Last missing method from HandlerInterface.
 	 *
@@ -149,6 +153,13 @@ class ilPlainTextHandler extends Handler {
 				$content_array[1] = substr($content_array[1], 0, 5)." (SHORTENED FOR SECURITY)";
 				$cookie_content[$key] = implode("=", $content_array);
 			}
+
+			// cat-tms-patch start 1388
+			if(trim($content_array[0]) == self::SIMPL_SAMLE_AUTH_NAME) {
+				$content_array[1] = substr($content_array[1], 0, 5)." (SHORTENED FOR SECURITY)";
+				$cookie_content[$key] = implode("=", $content_array);
+			}
+			// cat-tms-patch end
 		}
 
 		$server["HTTP_COOKIE"] = implode(";", $cookie_content);
