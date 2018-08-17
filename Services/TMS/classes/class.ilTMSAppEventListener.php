@@ -86,17 +86,7 @@ class ilTMSAppEventListener
 	}
 
 	static protected function getProviderDB() {
-		static $provider_db = null;
-
-		if ($provider_db === null) {
-			global $DIC;
-			$provider_db = new \CaT\Ente\ILIAS\ilProviderDB
-				( $DIC["ilDB"]
-				, $DIC["tree"]
-				, $DIC["ilObjDataCache"]
-				, $DIC
-				);
-		}
-		return $provider_db;
+        global $DIC;
+        return $DIC["ente.provider_db"];
 	}
 }
