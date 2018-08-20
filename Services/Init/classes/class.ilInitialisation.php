@@ -1235,34 +1235,35 @@ class ilInitialisation
 
 		self::setSessionCookieParams();
 
-        // cat-tms-patch start
-        self::initTMS();
-        // cat-tms-patch end
+		// cat-tms-patch start
+		self::initTMS();
+		// cat-tms-patch end
 	}
 
-    //cat-tms-patch start
-    protected static function initTMS() {
-        global $DIC;
-        $DIC["ente.provider_db"] = function($c) {
-            $cache = ilGlobalCache::getInstance(ilGlobalCache::COMP_PLUGINS);
-            if ($cache->isActive()) {
-			    return new \CaT\Ente\ILIAS\ilCachedProviderDB
-                    ( $DIC["ilDB"]
-                    , $DIC["tree"]
-                    , $DIC["ilObjDataCache"]
-                    , $cache
-                    );
-            }
-            else {
-			    return new \CaT\Ente\ILIAS\ilProviderDB
-                    ( $DIC["ilDB"]
-                    , $DIC["tree"]
-                    , $DIC["ilObjDataCache"]
-                    );
-            }
-        };
-    }
-    // cat-tms-patch end
+	//cat-tms-patch start
+	protected static function initTMS() {
+		global $DIC;
+		$DIC["ente.provider_db"] = function($c) {
+			$global_cache = ilGlobalCache::getInstance(ilGlobalCache::COMP_PLUGINS);
+			if ($global_cache->isActive()) {
+				$cache = new \CaT\Ente\ILIAS\ilGlobalCache($global_cache);
+				return new \CaT\Ente\ILIAS\ilCachedProviderDB
+					( $DIC["ilDB"]
+					, $DIC["tree"]
+					, $DIC["ilObjDataCache"]
+					, $cache
+					);
+			}
+			else {
+				return new \CaT\Ente\ILIAS\ilProviderDB
+					( $DIC["ilDB"]
+					, $DIC["tree"]
+					, $DIC["ilObjDataCache"]
+					);
+			}
+		};
+	}
+	// cat-tms-patch end
 	
 	/**
 	 * Init user / authentification (level 2)
