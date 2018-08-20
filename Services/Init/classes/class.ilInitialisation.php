@@ -1260,7 +1260,7 @@ class ilInitialisation
                     , $DIC["ilObjDataCache"]
                     );
             }
-        }
+        };
     }
     // cat-tms-patch end
 	
