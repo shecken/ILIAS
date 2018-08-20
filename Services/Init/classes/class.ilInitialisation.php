@@ -1241,7 +1241,7 @@ class ilInitialisation
 	}
 
     //cat-tms-patch start
-    protected static initTMS() {
+    protected static function initTMS() {
         global $DIC;
         $DIC["ente.provider_db"] = function($c) {
             $cache = ilGlobalCache::getInstance(ilGlobalCache::COMP_PLUGINS);
