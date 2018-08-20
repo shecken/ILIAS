@@ -70,7 +70,6 @@ class TreeInconsistenciesCleanup
 	public function removeNonExistingObjectsInTree()
 	{
 		$children = $this->locateNonexistingObjectsInTree();
-		var_dump($children);
 		if (count($children) > 0) {
 			$this->db->manipulate('DELETE FROM tree WHERE '.$this->db->in('child', $children, false, 'integer'));
 			$this->db->manipulate('DELETE FROM object_reference WHERE '.$this->db->in('ref_id', $children, false, 'integer'));
