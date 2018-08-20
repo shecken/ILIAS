@@ -14,7 +14,11 @@ use Whoops\Exception\Formatter;
  */
 class ilLoggingErrorFileStorage {
 	const KEY_SPACE = 25;
-	const FILE_FORMAT = ".json";
+	const FILE_FORMAT = ".log";
+
+	// cat-tms-patch start 1388
+	const SIMPL_SAMLE_AUTH_NAME = "SimpleSAMLAuthToken";
+	// cat-tms-patch end
 
 	public function __construct($inspector, $file_path, $file_name) {
 		$this->inspector = $inspector;
@@ -114,6 +118,13 @@ class ilLoggingErrorFileStorage {
 				$content_array[1] = substr($content_array[1], 0, 5)." (SHORTENED FOR SECURITY)";
 				$cookie_content[$key] = implode("=", $content_array);
 			}
+
+			// cat-tms-patch start 1388
+			if(trim($content_array[0]) == self::SIMPL_SAMLE_AUTH_NAME) {
+				$content_array[1] = substr($content_array[1], 0, 5)." (SHORTENED FOR SECURITY)";
+				$cookie_content[$key] = implode("=", $content_array);
+			}
+			// cat-tms-patch end
 		}
 
 		$server["HTTP_COOKIE"] = implode(";", $cookie_content);
