@@ -383,3 +383,13 @@ $ilDB->manipulate($query);
 $query = "DELETE FROM object_data WHERE ".$ilDB->in('obj_id', $role_ids, false, 'integer');
 $ilDB->manipulate($query);
 ?>
+<#33>
+<?php
+	global $DIC;
+	require_once("Services/Tree/classes/class.ilTree.php");
+	$tree = new ilTree(0);
+	require_once("Services/Object/classes/class.ilObjectDataCache.php");
+	$cache = new ilObjectDataCache();
+	$provider_db = new CaT\Ente\ILIAS\ilProviderDB($DIC->database(), $tree, $cache);
+	$provider_db->addIndizes();
+?>
