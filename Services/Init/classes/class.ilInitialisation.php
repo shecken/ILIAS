@@ -1248,17 +1248,17 @@ class ilInitialisation
 			if ($global_cache->isActive()) {
 				$cache = new \CaT\Ente\ILIAS\ilGlobalCache($global_cache);
 				return new \CaT\Ente\ILIAS\ilCachedProviderDB
-					( $DIC["ilDB"]
-					, $DIC["tree"]
-					, $DIC["ilObjDataCache"]
+					( $c["ilDB"]
+					, $c["tree"]
+					, $c["ilObjDataCache"]
 					, $cache
 					);
 			}
 			else {
 				return new \CaT\Ente\ILIAS\ilProviderDB
-					( $DIC["ilDB"]
-					, $DIC["tree"]
-					, $DIC["ilObjDataCache"]
+					( $c["ilDB"]
+					, $c["tree"]
+					, $c["ilObjDataCache"]
 					);
 			}
 		};
