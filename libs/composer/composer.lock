@@ -76,16 +76,16 @@
         },
         {
             "name": "conceptsandtraining/ente",
-            "version": "3.3.2",
+            "version": "3.3.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/conceptsandtraining/lib-ente.git",
-                "reference": "9f1703f2de48631a7b076512f970b88ba12bf61a"
+                "reference": "c9f85dcf6cde0a4f4797a6060b0d60293316948e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/9f1703f2de48631a7b076512f970b88ba12bf61a",
-                "reference": "9f1703f2de48631a7b076512f970b88ba12bf61a",
+                "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/c9f85dcf6cde0a4f4797a6060b0d60293316948e",
+                "reference": "c9f85dcf6cde0a4f4797a6060b0d60293316948e",
                 "shasum": ""
             },
             "require-dev": {
@@ -108,7 +108,7 @@
                 }
             ],
             "description": "An entity component framework for ILIAS.",
-            "time": "2018-08-20T13:10:20+00:00"
+            "time": "2018-08-20T13:15:08+00:00"
         },
         {
             "name": "conceptsandtraining/lib-excel-wrapper",
