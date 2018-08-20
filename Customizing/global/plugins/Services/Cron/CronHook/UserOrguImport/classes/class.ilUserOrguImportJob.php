@@ -85,6 +85,8 @@ class ilUserOrguImportJob extends ilCronJob
 		$cron_result = new ilCronJobResult();
 		try {
 			ilCronManager::ping($this->getId());
+			$this->cleanupTreeinconsitencies();
+			ilCronManager::ping($this->getId());
 			$this->updateUsers();
 			ilCronManager::ping($this->getId());
 			$this->updateOrgus();
@@ -102,6 +104,14 @@ class ilUserOrguImportJob extends ilCronJob
 		$cron_result->setStatus(ilCronJobResult::STATUS_OK);
 
 		return $cron_result;
+	}
+
+
+	protected function cleanupTreeinconsitencies()
+	{
+		$this->f
+			->TreeInconsistenciesCleanup()
+			->cleanupTreeInconsistencies();
 	}
 
 	protected function updateUsers()
