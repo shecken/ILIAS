@@ -203,4 +203,17 @@ class Factory
 			$this->OrguFactory()->OrguConfig()
 		);
 	}
+
+	/**
+	 * Get the tree inconsistencies cleanup utility object.
+	 *
+	 * @return	TreeInconsistenciesCleanup
+	 */
+	public function TreeInconsistenciesCleanup()
+	{
+		return new TreeInconsistenciesCleanup(
+			$this->db,
+			$this->OrguFactory()->OrguConfig()
+		);
+	}
 }
