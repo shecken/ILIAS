@@ -61,8 +61,14 @@ class TreeInconsistenciesCleanup
 		$return = [];
 		$res = $this->db->query($q);
 		while ($rec = $this->db->fetchAssoc($res)) {
+			$path = $rec['path'];
+			if (substr($path, $import_path) !== 0) {
+				//somehow we got outside of import subtree
+				//lets skip this one to go sure
+				continue;
+			}
 			$return[] = (int)$rec['ref_id'];
-			$return = array_merge($return, $this->getUndeletedSubobjects($rec['path']));
+			$return = array_merge($return, $this->getUndeletedSubobjects($path));
 		}
 		return array_unique($return);
 	}
@@ -73,9 +79,9 @@ class TreeInconsistenciesCleanup
 	 * @param	string
 	 * @return	int[]
 	 */
-	public function getUndeletedSubobjects($path)
+	public function getUndeletedSubobjects($a_path)
 	{
-		$q = 'SELECT ref_id'
+		$q = 'SELECT ref_id, path'
 			.'	FROM object_data'
 			.'	JOIN object_reference USING(obj_id)'
 			.'  JOIN tree ON ref_id = child'
@@ -84,7 +90,14 @@ class TreeInconsistenciesCleanup
 		$return = [];
 		$res = $this->db->query($q);
 		while ($rec = $this->db->fetchAssoc($res)) {
-			$return[] = (int)$rec['ref_id'];
+			$path = $rec['path'];
+			if (substr($path, $a_path) !== 0) {
+				//somehow we got outside of relevant subtree
+				//lets skip this one to go sure
+				continue;
+			}
+			$ref_id = (int)$rec['ref_id'];
+			$return[] = $ref_id;
 		}
 		return $return;
 	}
@@ -132,7 +145,7 @@ class TreeInconsistenciesCleanup
 		if ($import_path === null) {
 			return [];
 		}
-		$q = 'SELECT child'
+		$q = 'SELECT child,path'
 			.'	FROM tree'
 			.'	LEFT JOIN object_reference ref ON ref.ref_id = child'
 			.'	LEFT JOIN object_data data ON ref.obj_id = data.obj_id'
@@ -141,6 +154,17 @@ class TreeInconsistenciesCleanup
 		$return = [];
 		$res = $this->db->query($q);
 		while ($rec = $this->db->fetchAssoc($res)) {
+			$path = $rec['path'];
+			if (substr($path, $import_path) !== 0) {
+				//somehow we got outside of import subtree
+				//lets skip this one to go sure
+				continue;
+			}
+			if (\ilObject::_exists($ref_id, true)) {
+				//apparently it exists after all
+				//better skip it to go sure
+				continue;
+			}
 			$return[] = (int)$rec['child'];
 		}
 		return $return;
