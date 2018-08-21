@@ -11,6 +11,12 @@ class TreeInconsistenciesCleanup
 		$this->oc = $oc;
 	}
 
+	/**
+	 * Perform the cleanup of import subtree. Delete all thrashed objects and
+	 * any deserted entry in tree (i.e. a node without reference or object).
+	 *
+	 * @return	void
+	 */
 	public function cleanupTreeInconsistencies()
 	{
 		// first delete all the objects that landed in thrash somehow
@@ -19,6 +25,11 @@ class TreeInconsistenciesCleanup
 		$this->removeNonExistingObjectsInTree();
 	}
 
+	/**
+	 * Delete all thrashed objcts in subtree.
+	 *
+	 * @return void
+	 */
 	public function deleteObjectsInThrash()
 	{
 		$ref_ids = $this->getRecursiveObjectsInThrash();
@@ -30,6 +41,11 @@ class TreeInconsistenciesCleanup
 		}
 	}
 
+	/**
+	 * Get all thrashed objects in subtree and anything under them.
+	 *
+	 * @return int[]
+	 */
 	protected function getRecursiveObjectsInThrash()
 	{
 		$import_path = $this->importTreePath();
@@ -51,6 +67,12 @@ class TreeInconsistenciesCleanup
 		return array_unique($return);
 	}
 
+	/**
+	 * Get all unthrashed objects under $path.
+	 *
+	 * @param	string
+	 * @return	int[]
+	 */
 	public function getUndeletedSubobjects($path)
 	{
 		$q = 'SELECT ref_id'
@@ -67,6 +89,11 @@ class TreeInconsistenciesCleanup
 		return $return;
 	}
 
+	/**
+	 * Delete anyhing within tree, which has no corresponding object.
+	 *
+	 * @return	void
+	 */
 	public function removeNonExistingObjectsInTree()
 	{
 		$children = $this->locateNonexistingObjectsInTree();
@@ -76,6 +103,11 @@ class TreeInconsistenciesCleanup
 		}
 	}
 
+	/**
+	 * Get path of the import root node.
+	 *
+	 * @return	string
+	 */
 	protected function importTreePath()
 	{
 		$q = 'SELECT path FROM tree'
@@ -89,6 +121,11 @@ class TreeInconsistenciesCleanup
 		return null;
 	}
 
+	/**
+	 * Get all nodes in tree, which dont correspond to any object.
+	 *
+	 * @return	int[]
+	 */
 	public function locateNonexistingObjectsInTree()
 	{
 		$import_path = $this->importTreePath();
