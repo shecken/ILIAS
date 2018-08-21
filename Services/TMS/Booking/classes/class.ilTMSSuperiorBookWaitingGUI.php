@@ -51,6 +51,19 @@ class ilTMSSuperiorBookWaitingGUI extends \ilTMSBookingGUI {
 	}
 
 	/**
+	 * @inheritdoc
+	 */
+	protected function getTranslations() {
+		$trans = new \ILIAS\TMS\TranslationsImpl(
+			array(
+				ILIAS\TMS\Wizard\Player::TXT_TITLE => $this->getPlayerTitle(),
+			),
+			parent::getTranslations()
+		);
+		return $trans;
+	}
+
+	/**
 	 * @inheritdocs
 	 */
 	protected function getDuplicatedCourseMessage($usr_id) {

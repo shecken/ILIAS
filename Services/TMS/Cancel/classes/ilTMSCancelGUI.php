@@ -86,14 +86,11 @@ abstract class ilTMSCancelGUI  extends Wizard\Player {
 		$crs_ref_id = (int)$_GET["crs_ref_id"];
 
 		$ilias_bindings = new Booking\ILIASBindings
-			( $this->g_lng
-			, $this->g_ctrl
+			( $this->g_ctrl
 			, $this
 			, $this->parent_gui
 			, $this->parent_cmd
-			, $this->getPlayerTitle()
-			, $this->getConfirmButtonLabel()
-			, $this->getOverViewDescription()
+			, $this->getTranslations()
 			);
 
 		global $DIC;
@@ -156,38 +153,23 @@ abstract class ilTMSCancelGUI  extends Wizard\Player {
 	}
 
 	/**
-	 * Get the title of the player.
-	 *
-	 * @return string
+	 * @inheritdocs
 	 */
-	protected function getPlayerTitle() {
-		assert('is_numeric($_GET["usr_id"])');
-		$usr_id = (int)$_GET["usr_id"];
+	protected function getTranslations() {
+		$trans = new \ILIAS\TMS\TranslationsImpl(
+			array(
+				static::TXT_TITLE => $this->g_lng->txt('canceling'),
+				static::TXT_OVERVIEW_DESCRIPTION => $this->g_lng->txt('cancel_overview_description'),
+				static::TXT_CONFIRM => $this->g_lng->txt('cancel_confirm'),
 
-		if($usr_id === (int)$this->g_user->getId()) {
-			return $this->g_lng->txt("canceling");
-		}
-
-		require_once("Services/User/classes/class.ilObjUser.php");
-		return sprintf($this->g_lng->txt("canceling_for"), ilObjUser::_lookupFullname($usr_id));
-	}
-
-	/**
-	 * Get a description for the overview step.
-	 *
-	 * @return string
-	 */
-	protected function getOverViewDescription() {
-		return $this->g_lng->txt("cancel_overview_description");
-	}
-
-	/**
-	 * Get the label for the confirm button.
-	 *
-	 * @return string
-	 */
-	protected function getConfirmButtonLabel() {
-		return $this->g_lng->txt("cancel_confirm");
+				static::TXT_CANCEL => $this->g_lng->txt(static::TXT_CANCEL),
+				static::TXT_NEXT => $this->g_lng->txt(static::TXT_NEXT),
+				static::TXT_PREVIOUS => $this->g_lng->txt(static::TXT_PREVIOUS),
+				static::TXT_NO_STEPS_AVAILABLE => $this->g_lng->txt(static::TXT_NO_STEPS_AVAILABLE),
+				static::TXT_ABORTED => $this->g_lng->txt(static::TXT_ABORTED)
+			)
+		);
+		return $trans;
 	}
 
 	/**

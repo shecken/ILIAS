@@ -40,10 +40,16 @@ class ilTMSSelfBookWaitingGUI extends \ilTMSBookingGUI {
 	}
 
 	/**
-	 * @inheritdocs
+	 * @inheritdoc
 	 */
-	protected function getPlayerTitle() {
-		return $this->g_lng->txt("booking_waiting");
+	protected function getTranslations() {
+		$trans = new \ILIAS\TMS\TranslationsImpl(
+			array(
+				ILIAS\TMS\Wizard\Player::TXT_TITLE => $this->g_lng->txt("booking_waiting")
+			),
+			parent::getTranslations()
+		);
+		return $trans;
 	}
 
 	/**
