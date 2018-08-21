@@ -62,7 +62,7 @@ class TreeInconsistenciesCleanup
 		$res = $this->db->query($q);
 		while ($rec = $this->db->fetchAssoc($res)) {
 			$path = $rec['path'];
-			if (substr($path, $import_path) !== 0) {
+			if (strpos($path, $import_path) !== 0) {
 				//somehow we got outside of import subtree
 				//lets skip this one to go sure
 				continue;
@@ -91,7 +91,7 @@ class TreeInconsistenciesCleanup
 		$res = $this->db->query($q);
 		while ($rec = $this->db->fetchAssoc($res)) {
 			$path = $rec['path'];
-			if (substr($path, $a_path) !== 0) {
+			if (strpos($path, $a_path) !== 0) {
 				//somehow we got outside of relevant subtree
 				//lets skip this one to go sure
 				continue;
@@ -148,14 +148,14 @@ class TreeInconsistenciesCleanup
 		$q = 'SELECT child,path'
 			.'	FROM tree'
 			.'	LEFT JOIN object_reference ref ON ref.ref_id = child'
-			.'	LEFT JOIN object_data data ON ref.obj_id = data.obj_id'
+			.'	LEFT JOIN object_data dat ON ref.obj_id = dat.obj_id'
 			.'	WHERE path LIKE '.$this->db->quote($import_path.'.%', 'text')
-			.'		AND (ref.ref_id IS NULL OR data.obj_id IS NULL)';
+			.'		AND (ref.ref_id IS NULL OR dat.obj_id IS NULL)';
 		$return = [];
 		$res = $this->db->query($q);
 		while ($rec = $this->db->fetchAssoc($res)) {
 			$path = $rec['path'];
-			if (substr($path, $import_path) !== 0) {
+			if (strpos($path, $import_path) !== 0) {
 				//somehow we got outside of import subtree
 				//lets skip this one to go sure
 				continue;
