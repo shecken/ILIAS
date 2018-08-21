@@ -35,13 +35,6 @@ class ilTMSSelfBookingGUI extends \ilTMSBookingGUI {
 	/**
 	 * @inheritdoc
 	 */
-	protected function getPlayerTitle() {
-		return $this->g_lng->txt("booking");
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	protected function callOnFinish($acting_usr_id, $target_usr_id, $crs_ref_id){
 		$event = Booking\Actions::EVENT_USER_BOOKED_COURSE;
 		$this->fireBookingEvent($event, $target_usr_id, $crs_ref_id);
