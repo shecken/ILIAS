@@ -205,9 +205,9 @@ class Factory
 	}
 
 	/**
-	 * Get the tree inconsitencies cleanup utility object.
+	 * Get the tree inconsistencies cleanup utility object.
 	 *
-	 * @return	TreeInconsitenciesCleanup
+	 * @return	TreeInconsistenciesCleanup
 	 */
 	public function TreeInconsistenciesCleanup()
 	{
