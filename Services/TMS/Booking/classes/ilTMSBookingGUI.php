@@ -9,7 +9,7 @@ use ILIAS\TMS\Wizard;
 require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 
 /**
- * Displays the TMS superior booking
+ * Displays the TMS (superior) booking.
  *
  * @author Richard Klees <richard.klees@concepts-and-training.de>
  */
@@ -68,6 +68,7 @@ abstract class ilTMSBookingGUI {
 		$this->g_tree = $DIC->repositoryTree();
 		$this->g_objDefinition = $DIC["objDefinition"];
 		$this->g_access = $DIC->access();
+		$this->g_plugin_admin = $DIC['ilPluginAdmin'];
 		$this->g_lng->loadLanguageModule('tms');
 
 		$this->parent_gui = $parent_gui;
@@ -76,7 +77,7 @@ abstract class ilTMSBookingGUI {
 		/**
 		 * ToDo: Remove this flag.
 		 * It's realy ugly, but we need it. If we get here by a plugin parent
-		 * the plugin executes show by him self. So we don't need it here
+		 * the plugin executes show by himself. So we don't need it here.
 		 */
 		$this->execute_show = $execute_show;
 	}
@@ -130,11 +131,29 @@ abstract class ilTMSBookingGUI {
 			, $usr_id
 			, $this->getOnFinishClosure()
 			);
-		$player = new Wizard\Player
-			( $ilias_bindings
-			, $wizard
-			, $state_db
+
+		$approvals_plug = false;
+		if($this->g_plugin_admin::isPluginActive('xbka')) { //booking approvals
+			$approvals_plug = $this->g_plugin_admin::getPluginObjectById('xbka');
+		}
+
+		if($approvals_plug !== false
+		   && count($approvals_plug->getCourseUtils()->getApprovalRoles($crs_ref_id)) > 0) {
+
+			$player = $approvals_plug->getRequestPlayer(
+				$ilias_bindings
+				, $wizard
+				, $state_db
 			);
+
+		} else {
+			$player = new Wizard\Player
+				( $ilias_bindings
+				, $wizard
+				, $state_db
+				);
+		}
+
 
 		$this->g_ctrl->setParameter($this->parent_gui, "s_user", $usr_id);
 
