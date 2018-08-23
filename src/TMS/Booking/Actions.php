@@ -29,14 +29,6 @@ interface Actions {
 	const EVENT_ADMIN_CANCELED_COURSE = 'admin_canceled_user_from_course'; //C05
 	const EVENT_ADMIN_CANCELED_WAITING = 'admin_canceled_user_from_waiting'; //C06
 
-	const EVENT_USER_REQUESTED_COURSEBOOKING = 'user_requested_approval_for_coursebooking'; //
-	const EVENT_COURSEBOOKING_APPROVAL_APPROVED = 'coursebooking_request_was_approved'; //
-	const EVENT_COURSEBOOKING_APPROVAL_DECLINED = 'coursebooking_request_was_declined'; //
-	const EVENT_COURSEBOOKING_REQUEST_APPROVED = 'coursebooking_request_was_approved'; //
-	const EVENT_COURSEBOOKING_REQUEST_DECLINED = 'coursebooking_request_was_declined'; //
-
-
-
 	/**
 	 * Book the given user on the course.
 	 *

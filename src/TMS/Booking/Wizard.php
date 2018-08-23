@@ -95,6 +95,13 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	}
 
 	/**
+	 * Get acting_user_id.
+	 */
+	public function getActingUserId() : int {
+		return $this->acting_user_id;
+	}
+
+	/**
 	 * Get the class of component player is searching steps
 	 *
 	 * @return string
