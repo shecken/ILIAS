@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Helper to get user ids via positions and auhtorites
+ * Helper to get user ids via positions and/or authorities
  *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
  */
@@ -78,7 +78,7 @@ class TMSPositionHelper {
 	}
 
 	/**
-	 * Get all org units where user as position
+	 * Get all org units where user has position
 	 *
 	 * @param ilOrgUnitPosition[] 	$positions
 	 * @param int 	$user_id
@@ -265,4 +265,41 @@ class TMSPositionHelper {
 		return $visible_users;
 	}
 
+	/**
+	 * Get all orgus the user is assigned to.
+	 * Get all users with $position from these orgus.
+	 * If none is found, aquire next higher OrgU and try again.
+	 *
+	 * Note, that there are no checks on authorities.
+	 *
+	 * @return int[]
+	 */
+	public function getNextHigherUsersWithPositionForUser(int $position, int $usr_id) : array
+	{
+		$users = [];
+		$orgus = $this->getAssignmentsOf($usr_id); //ilOrgUnitUserAssignment[]
+		foreach ($orgus as $orgu_assignment) {
+			$orgu_id = $orgu_assignment->getOrguId();
+			$users = array_merge($users, $this->acquireUsersWithPositionFromOrgu($orgu_id, $position));
+		}
+		return $users;
+	}
+
+	/**
+	 * Recursively (walk _up_ the tree!) check for position in orgu.
+	 * @return int[]
+	 */
+	protected function acquireUsersWithPositionFromOrgu(int $orgu_id, int $position) {
+		$result = $this->orgua_queries->getUserIdsOfOrgUnitsInPosition([$orgu_id], $position);
+		if(count($result) === 0) {
+			$tree = \ilObjOrgUnitTree::_getInstance();
+			$orgu_id = $tree->getParent($orgu_id);
+			if(is_null($orgu_id)) {
+				return [];
+			}
+			return $this->acquireUsersWithPositionFromOrgu($orgu_id, $position);
+		}
+		$result = array_map(function($entry){return (int)$entry;}, $result);
+		return $result;
+	}
 }
