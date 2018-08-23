@@ -32,7 +32,8 @@ interface Actions {
 	const EVENT_USER_REQUESTED_COURSEBOOKING = 'user_requested_approval_for_coursebooking'; //
 	const EVENT_COURSEBOOKING_APPROVAL_APPROVED = 'coursebooking_request_was_approved'; //
 	const EVENT_COURSEBOOKING_APPROVAL_DECLINED = 'coursebooking_request_was_declined'; //
-	const EVENT_COURSEBOOKING_REQUEST_CHANGED_STATE = 'coursebooking_request_changed_state'; //
+	const EVENT_COURSEBOOKING_REQUEST_APPROVED = 'coursebooking_request_was_approved'; //
+	const EVENT_COURSEBOOKING_REQUEST_DECLINED = 'coursebooking_request_was_declined'; //
 
 
 
