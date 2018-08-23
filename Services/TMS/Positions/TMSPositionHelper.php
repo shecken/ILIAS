@@ -13,7 +13,8 @@ class TMSPositionHelper {
 	 */
 	protected $orgua_queries;
 
-	public function __construct(ilOrgUnitUserAssignmentQueries $orgua_queries) {
+	public function __construct(ilOrgUnitUserAssignmentQueries $orgua_queries)
+	{
 		$this->orgua_queries = $orgua_queries;
 	}
 
@@ -29,7 +30,7 @@ class TMSPositionHelper {
 		$user_ids = array();
 		foreach ($positons as $positon) {
 			$result = array_map(
-				function($u) { return (int)$u;},
+				function($u) { return (int)$u; },
 				$this->getUserIdsByPositionAndUser($positon, $user_id)
 			);
 
@@ -50,10 +51,10 @@ class TMSPositionHelper {
 	public function getUserIdsForPositionsAndOrgunits(array $positions, array $orgus): array
 	{
 		$user_ids = array();
-		foreach($positions as $position) {
-			foreach($position->getAuthorities() as $authority) {
+		foreach ($positions as $position) {
+			foreach ($position->getAuthorities() as $authority) {
 				$result = array_map(
-					function($u) { return (int)$u;},
+					function($u) { return (int)$u; },
 					$this->orgua_queries->getUserIdsOfOrgUnitsInPosition($orgus, $authority->getOver())
 				);
 
@@ -89,7 +90,7 @@ class TMSPositionHelper {
 	public function getOrgUnitByPositions(array $positions, int $user_id): array
 	{
 		$orgus = array();
-		foreach($positions as $position) {
+		foreach ($positions as $position) {
 			$orgus = array_merge(
 				$orgus,
 				$orgus = $this->orgua_queries->getOrgUnitIdsOfUsersPosition($position->getId(), $user_id)
@@ -108,7 +109,7 @@ class TMSPositionHelper {
 	{
 		$positions = $this->getPositionsOf($user_id);
 		$positions = array_filter($positions, function($p) {
-			if(count($p->getAuthorities()) > 0) {
+			if (count($p->getAuthorities()) > 0) {
 				return $p;
 			}
 		});
@@ -211,8 +212,8 @@ class TMSPositionHelper {
 
 			foreach ($authorities as $akey => $authority) {
 
-				if((int)$authority->getScope() === \ilOrgUnitAuthority::SCOPE_SAME_ORGU) {
-					if((int)$authority->getOver() === -1) {
+				if ((int)$authority->getScope() === \ilOrgUnitAuthority::SCOPE_SAME_ORGU) {
+					if ((int)$authority->getOver() === -1) {
 						$v = $this->orgua_queries->getUserIdsOfOrgUnits($orgus);
 					} else {
 						$v = $this->orgua_queries->getUserIdsOfOrgUnitsInPosition($orgus, $authority->getOver());
@@ -220,7 +221,7 @@ class TMSPositionHelper {
 					$visible_users = array_merge($visible_users, $v);
 
 				}
-				if((int)$authority->getScope() === \ilOrgUnitAuthority::SCOPE_SUBSEQUENT_ORGUS) {
+				if ((int)$authority->getScope() === \ilOrgUnitAuthority::SCOPE_SUBSEQUENT_ORGUS) {
 					$subsequent_orgus = [];
 					foreach ($orgus as $orgu_ref_id) {
 						$lower_orgus = array_filter($orgu_tree->getAllChildren($orgu_ref_id),
@@ -230,10 +231,10 @@ class TMSPositionHelper {
 						);
 						$subsequent_orgus = array_merge($subsequent_orgus, $lower_orgus);
 					}
-					if(count($subsequent_orgus) === 0) {
+					if (count($subsequent_orgus) === 0) {
 						continue;
 					}
-					if((int)$authority->getOver() === -1) {
+					if ((int)$authority->getOver() === -1) {
 						$v = $this->orgua_queries->getUserIdsOfOrgUnits($subsequent_orgus);
 					} else {
 						$v = $this->orgua_queries->getUserIdsOfOrgUnitsInPosition($subsequent_orgus, $authority->getOver());
@@ -300,7 +301,7 @@ class TMSPositionHelper {
 			return $this->acquireUsersWithPositionFromOrgu($orgu_id, $position);
 		}
 
-		$result = array_map(function($entry){return (int)$entry;}, $result);
+		$result = array_map(function($entry){ return (int)$entry; }, $result);
 
 		return $result;
 	}
