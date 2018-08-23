@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Helper to get user ids via positions and/or authorities
  *
@@ -16,13 +18,12 @@ class TMSPositionHelper {
 	}
 
 	/**
-	 * Get all user ids where user has authorities
-	 *
-	 * @param int 	$user_id
+	 * Get all user ids where user has authorities.
 	 *
 	 * @return int[]
 	 */
-	public function getUserIdWhereUserHasAuhtority($user_id) {
+	public function getUserIdWhereUserHasAuhtority(int $user_id): array
+	{
 		$positons = $this->getPositionsOf($user_id);
 
 		$user_ids = array();
@@ -39,14 +40,15 @@ class TMSPositionHelper {
 	}
 
 	/**
-	 * Get all user id where position has authority for specified org units
+	 * Get all user id where position has authority for specified org units.
 	 *
-	 * @param ilOrgUnitPosition[] 	$positions
-	 * @param int[] 	$orgus
+	 * @param ilOrgUnitPosition[] $positions
+	 * @param int[] $orgus
 	 *
 	 * @return int[]
 	 */
-	public function getUserIdsForPositionsAndOrgunits(array $positions, array $orgus) {
+	public function getUserIdsForPositionsAndOrgunits(array $positions, array $orgus): array
+	{
 		$user_ids = array();
 		foreach($positions as $position) {
 			foreach($position->getAuthorities() as $authority) {
@@ -66,26 +68,26 @@ class TMSPositionHelper {
 	}
 
 	/**
-	 * Get all orgu ids where use has any authority
-	 *
-	 * @param int 	$user_id
+	 * Get all orgu ids where use has any authority.
 	 *
 	 * @return int[]
 	 */
-	public function getOrgUnitIdsWhereUserHasAuthority($user_id) {
+	public function getOrgUnitIdsWhereUserHasAuthority(int $user_id): array
+	{
 		$positions = $this->getPositionsOfUserWithAuthority($user_id);
 		return $this->getOrgUnitByPositions($positions, $user_id);
 	}
 
 	/**
-	 * Get all org units where user has position
+	 * Get all org units where user has position.
 	 *
-	 * @param ilOrgUnitPosition[] 	$positions
-	 * @param int 	$user_id
+	 * @param ilOrgUnitPosition[] $positions
+	 * @param int $user_id
 	 *
 	 * @return int[]
 	 */
-	public function getOrgUnitByPositions(array $positions, $user_id) {
+	public function getOrgUnitByPositions(array $positions, int $user_id): array
+	{
 		$orgus = array();
 		foreach($positions as $position) {
 			$orgus = array_merge(
@@ -98,13 +100,12 @@ class TMSPositionHelper {
 	}
 
 	/**
-	 * Get positions where user has any authority
-	 *
-	 * @param int 	$user_id
+	 * Get positions where user has any authority.
 	 *
 	 * @return ilOrgUnitPosition[]
 	 */
-	public function getPositionsOfUserWithAuthority($user_id) {
+	public function getPositionsOfUserWithAuthority(int $user_id): array
+	{
 		$positions = $this->getPositionsOf($user_id);
 		$positions = array_filter($positions, function($p) {
 			if(count($p->getAuthorities()) > 0) {
@@ -115,24 +116,22 @@ class TMSPositionHelper {
 	}
 
 	/**
-	 * Get all orgu assignments of user
-	 *
-	 * @param int 	$user_id
+	 * Get all orgu assignments of user.
 	 *
 	 * @return ilOrgUnitUserAssignment[]
 	 */
-	protected function getAssignmentsOf($user_id) {
+	protected function getAssignmentsOf(int $user_id): array
+	{
 		return $this->orgua_queries->getAssignmentsOfUserId($user_id);
 	}
 
 	/**
-	 * Get positions of user on his aussignments
-	 *
-	 * @param int 	$user_id
+	 * Get positions of user on his aussignments.
 	 *
 	 * @return ilOrgUnitPosition[]
 	 */
-	protected function getPositionsOf($user_id) {
+	protected function getPositionsOf(int $user_id): array
+	{
 		require_once("Modules/OrgUnit/classes/Positions/class.ilOrgUnitPosition.php");
 		$assignments = $this->getAssignmentsOf($user_id);
 		return array_map(function($a) {
@@ -141,14 +140,12 @@ class TMSPositionHelper {
 	}
 
 	/**
-	 * Get all user id via positions
-	 *
-	 * @param ilOrgUnitPosition 	$position
-	 * @param int 	$user_id
+	 * Get all user id via positions.
 	 *
 	 * @return int[]
 	 */
-	protected function getUserIdsByPositionAndUser(ilOrgUnitPosition $position, $user_id) {
+	protected function getUserIdsByPositionAndUser(ilOrgUnitPosition $position, int $user_id): array
+	{
 		require_once("Modules/OrgUnit/classes/Positions/Authorities/class.ilOrgUnitAuthority.php");
 		$ids = array();
 		foreach ($position->getAuthorities() as $authority) {
@@ -191,11 +188,10 @@ class TMSPositionHelper {
 	}
 
 	/**
-	 * Get all user ids with at last one position
-	 *
-	 * @return int[]
+	 * Get all user ids with at last one position.
 	 */
-	public function getUserIdsWithAtLeastOnePositionWithAuthority() {
+	public function getUserIdsWithAtLeastOnePositionWithAuthority(): array
+	{
 		$assignemnts = $this->orgua_queries->getUserIdsWithAtLeastOnePosition();
 		return array_keys($assignemnts);
 	}
@@ -203,11 +199,10 @@ class TMSPositionHelper {
 	/**
 	 * Get user ids the given user has authority over
 	 *
-	 * @param int 	$usr_is
-	 * @param \ilObjOrgUnitTree 	$orgu_tree
 	 * @return int[]
 	 */
-	public function getAllVisibleUserIdsForUser(int $usr_id, \ilObjOrgUnitTree $orgu_tree) {
+	public function getAllVisibleUserIdsForUser(int $usr_id, \ilObjOrgUnitTree $orgu_tree): array
+	{
 		$visible_users = [];
 		$positions = $this->getPositionsOf($usr_id);
 		foreach ($positions as $pkey => $position) {
@@ -278,20 +273,25 @@ class TMSPositionHelper {
 	{
 		$users = [];
 		$orgus = $this->getAssignmentsOf($usr_id); //ilOrgUnitUserAssignment[]
+
 		foreach ($orgus as $orgu_assignment) {
 			$orgu_id = $orgu_assignment->getOrguId();
 			$users = array_merge($users, $this->acquireUsersWithPositionFromOrgu($orgu_id, $position));
 		}
+
 		return $users;
 	}
 
 	/**
 	 * Recursively (walk _up_ the tree!) check for position in orgu.
+	 *
 	 * @return int[]
 	 */
-	protected function acquireUsersWithPositionFromOrgu(int $orgu_id, int $position) {
+	protected function acquireUsersWithPositionFromOrgu(int $orgu_id, int $position): array
+	{
 		$result = $this->orgua_queries->getUserIdsOfOrgUnitsInPosition([$orgu_id], $position);
-		if(count($result) === 0) {
+
+		if (count($result) === 0) {
 			$tree = \ilObjOrgUnitTree::_getInstance();
 			$orgu_id = $tree->getParent($orgu_id);
 			if(is_null($orgu_id)) {
@@ -299,7 +299,9 @@ class TMSPositionHelper {
 			}
 			return $this->acquireUsersWithPositionFromOrgu($orgu_id, $position);
 		}
+
 		$result = array_map(function($entry){return (int)$entry;}, $result);
+
 		return $result;
 	}
 }
