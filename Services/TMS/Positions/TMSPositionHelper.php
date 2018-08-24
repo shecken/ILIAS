@@ -7,7 +7,10 @@ declare(strict_types=1);
  *
  * @author Stefan Hecken 	<stefan.hecken@concepts-and-training.de>
  */
-class TMSPositionHelper {
+class TMSPositionHelper
+{
+	const ORGU_ROOT = 56;
+
 	/**
 	 * @var ilOrgUnitUserAssignmentQueries
 	 */
@@ -290,19 +293,17 @@ class TMSPositionHelper {
 	 */
 	protected function acquireUsersWithPositionFromOrgu(int $orgu_id, int $position): array
 	{
-		$result = $this->orgua_queries->getUserIdsOfOrgUnitsInPosition([$orgu_id], $position);
+		if($orgu_id === self::ORGU_ROOT) {
+			return [];
+		}
 
+		$result = $this->orgua_queries->getUserIdsOfOrgUnitsInPosition([$orgu_id], $position);
 		if (count($result) === 0) {
 			$tree = \ilObjOrgUnitTree::_getInstance();
 			$orgu_id = (int)$tree->getParent($orgu_id);
-			if(is_null($orgu_id)) {
-				return [];
-			}
 			return $this->acquireUsersWithPositionFromOrgu($orgu_id, $position);
 		}
-
 		$result = array_map(function($entry){ return (int)$entry; }, $result);
-
 		return $result;
 	}
 
