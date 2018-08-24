@@ -308,20 +308,13 @@ class TMSPositionHelper {
 
 	/**
 	 * Get all visible users for a user id within $orgu_ids, possibly recursive.
-	 *
-	 * @param	int	$usr_id
-	 * @param	int[]	$orgu_ids
-	 * @param	bool	$recursive
-	 * @return	int[]
 	 */
-	public function getUserIdUderAuthorityOfUserByPositionsAndOrgus(
-		$usr_id,
+	public function getUserIdUnderAuthorityOfUserByPositionsAndOrgus(
+		int $usr_id,
 		array $orgu_ids,
-		$recursive = false) {
-		assert('is_int($usr_id)');
-		assert('is_bool($recursive)');
+		bool $recursive = false)  : array {
 		$requested_orgus = $orgu_ids;
-		if(count($requested_orgus) === 0) {
+		if(count($requested_orgus) === 0){
 			return [];
 		}
 		if($recursive) {
@@ -371,7 +364,7 @@ class TMSPositionHelper {
 	 * @param	int	$orgu_id
 	 * @return	int[]
 	 */
-	public function getSubsequentOrgus($orgu_id)
+	public function getSubsequentOrgus(int $orgu_id) : array
 	{
 		assert('is_int($orgu_id)');
 		$children = \ilObjOrgUnitTree::_getInstance()->getAllChildren($orgu_id);
