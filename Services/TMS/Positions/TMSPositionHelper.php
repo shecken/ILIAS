@@ -276,7 +276,7 @@ class TMSPositionHelper {
 		$orgus = $this->getAssignmentsOf($usr_id); //ilOrgUnitUserAssignment[]
 
 		foreach ($orgus as $orgu_assignment) {
-			$orgu_id = $orgu_assignment->getOrguId();
+			$orgu_id = (int)$orgu_assignment->getOrguId();
 			$users = array_merge($users, $this->acquireUsersWithPositionFromOrgu($orgu_id, $position));
 		}
 
@@ -294,7 +294,7 @@ class TMSPositionHelper {
 
 		if (count($result) === 0) {
 			$tree = \ilObjOrgUnitTree::_getInstance();
-			$orgu_id = $tree->getParent($orgu_id);
+			$orgu_id = (int)$tree->getParent($orgu_id);
 			if(is_null($orgu_id)) {
 				return [];
 			}
