@@ -366,7 +366,7 @@ class TMSPositionHelper {
 	}
 
 	/**
-	 * Get all orgus strictly below $orgu_id
+	 * Get all orgus strictly below $orgu_id recursively
 	 *
 	 * @param	int	$orgu_id
 	 * @return	int[]
