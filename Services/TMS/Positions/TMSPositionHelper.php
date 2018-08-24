@@ -323,14 +323,13 @@ class TMSPositionHelper {
 			}
 		}
 		$rel_users = [];
-
 		foreach($this->orgua_queries->getAssignmentsOfUserId($usr_id) as $assignment) {
 			$position = new \ilOrgUnitPosition($assignment->getPositionId());
 			$orgu_id = (int)$assignment->getOrguId();
 			foreach ($position->getAuthorities() as $authority) {
 
 				$scope = $authority->getScope();
-				$over = $authority->getOver();
+				$over = (int)$authority->getOver();
 				$rel_orgus = [];
 				switch($scope) {
 					case \ilOrgUnitAuthority::SCOPE_ALL_ORGUS:
