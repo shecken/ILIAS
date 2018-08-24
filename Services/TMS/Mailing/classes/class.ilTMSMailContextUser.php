@@ -126,7 +126,7 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	/**
 	 * @return string
 	 */
-	private function email() {
+	protected function email() {
 		return $this->getUser()->getEmail();
 	}
 }
