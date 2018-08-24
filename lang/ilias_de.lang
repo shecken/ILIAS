@@ -14344,3 +14344,8 @@ tms#:#my_training_seach_options#:#Mein Angebot
 mail#:#show_mail_settings#:#Einstellungen anzeigen
 mail#:#show_mail_settings_info#:#Falls aktiviert, können Benutzer Ihre Mail-Einstellungen im Bereich 'Einstellungen oder 'Mail' selber vornehmen.
 common#:#presentation_table_more#:#mehr
+tms#:#placeholder_desc_target_user_salutation#:#Referenzierter Benutzer, Anrede
+tms#:#placeholder_desc_target_user_firstName#:#Referenzierter Benutzer, Vorname
+tms#:#placeholder_desc_target_user_lastName#:#Referenzierter Benutzer, Nachname
+tms#:#placeholder_desc_target_user_login#:#Referenzierter Benutzer, Login
+tms#:#placeholder_desc_target_user_email#:#Referenzierter Benutzer, E-Mail

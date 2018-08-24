@@ -74,7 +74,7 @@ trait ilUDFWrapper {
 		$space = $space
 			->addTableSecondary($udf_table)
 			->addDependency(
-				$tf->TableJoin(
+				$tf->TableLeftJoin(
 					$usr_table,
 					$udf_table,
 					$udf_table->field('usr_id')->EQ($eq_field)

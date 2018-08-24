@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "702e7a3d5af24153716174f1701ee456",
+    "content-hash": "b1abaa92f62b78d567e548891479f5f2",
     "packages": [
         {
             "name": "box/spout",
@@ -76,16 +76,16 @@
         },
         {
             "name": "conceptsandtraining/ente",
-            "version": "3.3.4",
+            "version": "4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/conceptsandtraining/lib-ente.git",
-                "reference": "236942bf92183f8d5cafa3239474e52aeabb9f6a"
+                "reference": "656b99073fa6e649550938e272eca051e2325a6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/236942bf92183f8d5cafa3239474e52aeabb9f6a",
-                "reference": "236942bf92183f8d5cafa3239474e52aeabb9f6a",
+                "url": "https://api.github.com/repos/conceptsandtraining/lib-ente/zipball/656b99073fa6e649550938e272eca051e2325a6d",
+                "reference": "656b99073fa6e649550938e272eca051e2325a6d",
                 "shasum": ""
             },
             "require-dev": {
@@ -108,7 +108,7 @@
                 }
             ],
             "description": "An entity component framework for ILIAS.",
-            "time": "2018-08-20T13:39:14+00:00"
+            "time": "2018-08-23T14:29:44+00:00"
         },
         {
             "name": "conceptsandtraining/lib-excel-wrapper",

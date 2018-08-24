@@ -16,21 +16,6 @@ class ilTMSMailContextCurrentUser extends ilTMSMailContextUser {
 		'CURRENT_USER_EMAIL' => 'placeholder_desc_current_user_email'
 	);
 
-	/**
-	 * @var int
-	 */
-	protected $usr_id;
-
-	/**
-	 * @var ilObjUser
-	 */
-	protected $usr;
-
-	/**
-	 * @var ilLanguage
-	 */
-	protected $g_lang;
-
 
 	public function __construct() {
 		global $DIC;
@@ -59,12 +44,5 @@ class ilTMSMailContextCurrentUser extends ilTMSMailContextUser {
 			default:
 				return null;
 		}
-	}
-
-	/**
-	 * @return string
-	 */
-	private function email() {
-		return $this->getUser()->getEmail();
 	}
 }

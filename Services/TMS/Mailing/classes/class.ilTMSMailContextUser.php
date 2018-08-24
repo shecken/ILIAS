@@ -31,13 +31,11 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	protected $g_lang;
 
 
-	public function __construct($usr_id) {
-		assert('is_int($usr_id)');
-		$this->usr_id = $usr_id;
-
+	public function __construct(int $usr_id) {
 		global $DIC;
 		$this->g_lang = $DIC->language();
 		$this->g_lang->loadLanguageModule("tms");
+		$this->usr_id = $usr_id;
 	}
 
 	/**
@@ -93,7 +91,6 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	 * @return string
 	 */
 	protected function salutation() {
-		global $DIC;
 		$salutation = 'salutation';
 		$gender = $this->getUser()->getGender();
 		if($gender === 'm') {
@@ -102,15 +99,16 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 		if($gender === 'f') {
 			$salutation = 'salutation_f';
 		}
-		return $DIC->language()->txt($salutation);
-
+		return $this->g_lang->txt($salutation);
 	}
+
 	/**
 	 * @return string
 	 */
 	protected function firstName() {
 		return $this->getUser()->getFirstname();
 	}
+
 	/**
 	 * @return string
 	 */
@@ -123,5 +121,12 @@ class ilTMSMailContextUser implements Mailing\MailContext {
 	 */
 	protected function login() {
 		return $this->getUser()->getLogin();
+	}
+
+	/**
+	 * @return string
+	 */
+	private function email() {
+		return $this->getUser()->getEmail();
 	}
 }
