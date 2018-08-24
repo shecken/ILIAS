@@ -1247,7 +1247,7 @@ class ilInitialisation
 			$global_cache = ilGlobalCache::getInstance(ilGlobalCache::COMP_PLUGINS);
 			if ($global_cache->isActive()) {
 				$cache = new \CaT\Ente\ILIAS\ilGlobalCache($global_cache);
-				return new \CaT\Ente\ILIAS\ilCachedProviderDB
+				return new \CaT\Ente\ILIAS\ilCachesOwnerRangeProviderDB
 					( $c["ilDB"]
 					, $c["tree"]
 					, $c["ilObjDataCache"]
