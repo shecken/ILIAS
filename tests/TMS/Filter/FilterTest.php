@@ -30,8 +30,8 @@ class FilterTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf("\\ILIAS\\TMS\\Filter\\Filters\\Filter", $filter);
 		$this->assertEquals("label", $filter->label());
 		$this->assertEquals("description", $filter->description());
-		$this->assertEquals($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $filter->content_type());
-		$this->assertEquals($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $filter->input_type());
+		$this->assertEquals($tf->tuple($tf->either($tf->cls("\\DateTime"), $tf->string()), $tf->either($tf->cls("\\DateTime"), $tf->string())), $filter->content_type());
+		$this->assertEquals($tf->tuple($tf->either($tf->cls("\\DateTime"), $tf->string()), $tf->either($tf->cls("\\DateTime"), $tf->string())), $filter->input_type());
 	}
 
 	public function test_dateperiod_defaults()
@@ -72,7 +72,7 @@ class FilterTest extends PHPUnit_Framework_TestCase
 
 		$this->assertInstanceOf("\\ILIAS\\TMS\\Filter\\Filters\\Filter", $filter);
 		$this->assertEquals($tf->cls("\\ILIAS\\TMS\\Filter\\Predicates\\Predicate"), $filter->content_type());
-		$this->assertEquals($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $filter->input_type());
+		$this->assertEquals($tf->tuple($tf->either($tf->cls("\\DateTime"), $tf->string()), $tf->either($tf->cls("\\DateTime"), $tf->string())), $filter->input_type());
 
 		$predicate = $filter->content(new \DateTime("2000-01-01"), new \DateTime("2000-12-31"));
 
@@ -368,8 +368,8 @@ class FilterTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf("\\ILIAS\\TMS\\Filter\\Filters\\Filter", $filter);
 		$this->assertEquals(null, $filter->label());
 		$this->assertEquals(null, $filter->description());
-		$this->assertEquals($tf->tuple($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $tf->string(), $tf->string()), $filter->content_type());
-		$this->assertEquals($tf->tuple($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $tf->string(), $tf->string()), $filter->input_type());
+		$this->assertEquals($tf->tuple($tf->tuple($tf->either($tf->cls("\\DateTime"), $tf->string()), $tf->either($tf->cls("\\DateTime"), $tf->string())), $tf->string(), $tf->string()), $filter->content_type());
+		$this->assertEquals($tf->tuple($tf->tuple($tf->either($tf->cls("\\DateTime"), $tf->string()), $tf->either($tf->cls("\\DateTime"), $tf->string())), $tf->string(), $tf->string()), $filter->input_type());
 	}
 
 	public function test_sequence_filters_predicate()
@@ -455,8 +455,8 @@ class FilterTest extends PHPUnit_Framework_TestCase
 		$this->assertInstanceOf("\\ILIAS\\TMS\\Filter\\Filters\\Filter", $filter);
 		$this->assertEquals("oolabel", $filter->label());
 		$this->assertEquals("oodescription", $filter->description());
-		$this->assertEquals($tf->option($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $tf->string()), $filter->content_type());
-		$this->assertEquals($tf->option($tf->tuple($tf->cls("\\DateTime"), $tf->cls("\\DateTime")), $tf->string()), $filter->input_type());
+		$this->assertEquals($tf->option($tf->tuple($tf->either($tf->cls("\\DateTime"), $tf->string()), $tf->either($tf->cls("\\DateTime"), $tf->string())), $tf->string()), $filter->content_type());
+		$this->assertEquals($tf->option($tf->tuple($tf->either($tf->cls("\\DateTime"), $tf->string()), $tf->either($tf->cls("\\DateTime"), $tf->string())), $tf->string()), $filter->input_type());
 	}
 
 	public function test_one_of_filter_predicate()

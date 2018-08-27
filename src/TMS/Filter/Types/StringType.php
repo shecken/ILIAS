@@ -24,7 +24,6 @@ class StringType extends UnstructuredType
 		return
 			is_string($value)
 			|| is_integer($value)
-			|| is_bool($value)
 			;
 	}
 }
