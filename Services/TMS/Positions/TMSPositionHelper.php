@@ -280,7 +280,7 @@ class TMSPositionHelper {
 		$orgus = $this->getAssignmentsOf($usr_id); //ilOrgUnitUserAssignment[]
 		foreach ($orgus as $orgu_assignment) {
 			$orgu_id = $orgu_assignment->getOrguId();
-			$users = array_merge($users, $this->acquireUsersWithPositionFromOrgu($orgu_id, $position));
+			$users = array_merge($users, $this->acquireUsersWithPositionFromOrgu((int)$orgu_id, $position));
 		}
 		return $users;
 	}
@@ -297,7 +297,7 @@ class TMSPositionHelper {
 			if(is_null($orgu_id)) {
 				return [];
 			}
-			return $this->acquireUsersWithPositionFromOrgu($orgu_id, $position);
+			return $this->acquireUsersWithPositionFromOrgu((int)$orgu_id, $position);
 		}
 		$result = array_map(function($entry){return (int)$entry;}, $result);
 		return $result;
