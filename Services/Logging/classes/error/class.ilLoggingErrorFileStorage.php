@@ -79,7 +79,7 @@ class ilLoggingErrorFileStorage {
 			, "Files" => $_FILES
 			, "Cookies" => $_COOKIE
 			, "Session" => isset($_SESSION) ? $_SESSION : array()
-			, "Server/Request Data" => $server
+			, "Server Request Data" => $server
 			, "Environment Variables" => $_ENV
 			);
 	}
