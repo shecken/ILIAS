@@ -88,7 +88,7 @@ trait ilUDFWrapper {
 	 *
 	 * @return array<int, string> 	field_id=>field_name
 	 */
-	private function getFieldsVisibleInCourseMemberAdministration() {
+	protected function getFieldsVisibleInCourseMemberAdministration() {
 		require_once 'Services/User/classes/class.ilUserDefinedFields.php';
 		$il_udf = \ilUserDefinedFields::_getInstance();
 		$ret = [];

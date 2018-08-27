@@ -17,7 +17,7 @@ class ButtonTest extends ILIAS_UI_TestBase {
 
 	static $canonical_css_classes = array
 		( "standard" =>	 "btn btn-default"
-		, "primary"	 =>	 "btn btn-default btn-primary"
+		, "primary"	 =>	 "btn btn-primary"
 		, "shy"	 =>	 "btn btn-link"
 		, "tag"	 =>	 "btn btn-tag btn-tag-relevance-veryhigh"
 		);

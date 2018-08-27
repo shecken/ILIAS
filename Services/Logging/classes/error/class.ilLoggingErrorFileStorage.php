@@ -48,6 +48,7 @@ class ilLoggingErrorFileStorage {
 		$file_name = $this->file_path."/".$this->file_name.self::FILE_FORMAT;
 		$stream = fopen($file_name, 'w+');
 		fwrite($stream, $this->content());
+		fwrite($stream, "\n");
 		fclose($stream);
 		chmod($file_name, 0755);
 	}
@@ -79,7 +80,7 @@ class ilLoggingErrorFileStorage {
 			, "Files" => $_FILES
 			, "Cookies" => $_COOKIE
 			, "Session" => isset($_SESSION) ? $_SESSION : array()
-			, "Server/Request Data" => $server
+			, "Server Request Data" => $server
 			, "Environment Variables" => $_ENV
 			);
 	}

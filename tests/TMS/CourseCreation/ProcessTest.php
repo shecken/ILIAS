@@ -13,6 +13,9 @@ if (!class_exists(\ilDBInterface::class)) {
 if (!class_exists(\ilObject::class)) {
 	require_once("Services/Object/classes/class.ilObject.php");
 }
+if (!class_exists(\ilObjectDefinition::class)) {
+	require_once("Services/Object/classes/class.ilObjectDefinition.php");
+}
 
 class _SpecialObject extends \ilObject {
 	public function afterCourseCreation() {
@@ -41,6 +44,7 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 		$tree = $this->createMock(\ilTree::class);
 		$db = $this->createMock(\ilDBInterface::class);
 		$request = $this->createMock(CourseCreation\Request::class);
+		$obj_def = $this->createMock(ilObjectDefinition::class);
 
 		$crs_id = 42;
 
@@ -61,7 +65,7 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 			->withConsecutive([1], [2], [3])
 			->will($this->onConsecutiveCalls(10,20,30));
 
-		$process = new _CourseCreationProcess($tree, $db);
+		$process = new _CourseCreationProcess($tree, $db, $obj_def);
 
 		$expected = [1 => [ "type" => 10], 2 => ["type" => 20], 3 => ["type" => 30]];
 		$options = $process->_getCopyWizardOptions($request);
@@ -73,10 +77,11 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 		$tree = $this->createMock(\ilTree::class);
 		$db = $this->createMock(\ilDBInterface::class);
 		$request = $this->createMock(CourseCreation\Request::class);
+		$obj_def = $this->createMock(ilObjectDefinition::class);
 
 		$process = $this->getMockBuilder(_CourseCreationProcess::class)
-			->setMethods(["getCopyMappings", "getObjectByRefId"])
-			->setConstructorArgs([$tree, $db])
+			->setMethods(["getCopyMappings", "getObjectByRefId", "setOwnerToSubObjects"])
+			->setConstructorArgs([$tree, $db, $obj_def])
 			->getMock();
 
 		$target_ref_id = 23;
@@ -99,6 +104,12 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 			->method("getCopyMappings")
 			->with(array_merge([23], [3, 5, 7]))  // original obj_id is added
 			->willReturn($mapping);
+
+		$process
+			->expects($this->exactly(4))
+			->method("setOwnerToSubObjects")
+			->withConsecutive([23,42],[3,1],[5,2],[7,3])
+			->willReturn(null);
 
 		$object = $this->createMock(_SpecialObject::class);
 		$process
@@ -130,10 +141,11 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 		$tree = $this->createMock(\ilTree::class);
 		$db = $this->createMock(\ilDBInterface::class);
 		$request = $this->createMock(CourseCreation\Request::class);
+		$obj_def = $this->createMock(ilObjectDefinition::class);
 
 		$process = $this->getMockBuilder(_CourseCreationProcess::class)
-			->setMethods(["getCopyMappings", "getObjectByRefId"])
-			->setConstructorArgs([$tree, $db])
+			->setMethods(["getCopyMappings", "getObjectByRefId", "setOwnerToSubObjects"])
+			->setConstructorArgs([$tree, $db, $obj_def])
 			->getMock();
 
 		$target_ref_id = 23;
@@ -158,6 +170,12 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 			->willReturn($mapping);
 
 		$process
+			->expects($this->exactly(2))
+			->method("setOwnerToSubObjects")
+			->withConsecutive([23,42],[3,1])
+			->willReturn(null);
+
+		$process
 			->expects($this->never())
 			->method("getObjectByRefId");
 
@@ -174,10 +192,11 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 		$tree = $this->createMock(\ilTree::class);
 		$db = $this->createMock(\ilDBInterface::class);
 		$request = $this->createMock(CourseCreation\Request::class);
+		$obj_def = $this->createMock(ilObjectDefinition::class);
 
 		$process = $this->getMockBuilder(_CourseCreationProcess::class)
 			->setMethods(["getObjectByRefId"])
-			->setConstructorArgs([$tree, $db])
+			->setConstructorArgs([$tree, $db, $obj_def])
 			->getMock();
 
 		$target_ref_id = 23;
@@ -215,10 +234,11 @@ class TMS_CourseCreation_ProcessTest extends PHPUnit_Framework_TestCase {
 		$tree = $this->createMock(\ilTree::class);
 		$db = $this->createMock(\ilDBInterface::class);
 		$request = $this->createMock(CourseCreation\Request::class);
+		$obj_def = $this->createMock(ilObjectDefinition::class);
 
 		$process = $this->getMockBuilder(_CourseCreationProcess::class)
 			->setMethods(["getObjectByRefId"])
-			->setConstructorArgs([$tree, $db])
+			->setConstructorArgs([$tree, $db, $obj_def])
 			->getMock();
 
 		$target_ref_id = 23;

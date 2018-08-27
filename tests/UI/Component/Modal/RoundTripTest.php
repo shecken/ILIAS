@@ -69,7 +69,7 @@ class RoundTripTest extends ModalBase {
 			</div>
 			<div class="modal-body">Content</div>
 			<div class="modal-footer">
-				<a class="btn btn-default btn-primary" href="" data-action="">Action 1</a>
+				<a class="btn btn-primary" href="" data-action="">Action 1</a>
 				<a class="btn btn-default" href="" data-action="">Action 2</a>
 				<a class="btn btn-default" data-dismiss="modal" aria-label="Close">cancel</a>
 			</div>

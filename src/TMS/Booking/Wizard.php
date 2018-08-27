@@ -83,15 +83,22 @@ class Wizard implements \ILIAS\TMS\Wizard\Wizard {
 	/**
 	 * @inheritdoc
 	 */
-	protected function getEntityRefId() {
+	public function getEntityRefId() {
 		return $this->crs_ref_id;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	protected function getUserId() {
+	public function getUserId() {
 		return $this->target_user_id;
+	}
+
+	/**
+	 * Get acting_user_id.
+	 */
+	public function getActingUserId() : int {
+		return $this->acting_user_id;
 	}
 
 	/**
