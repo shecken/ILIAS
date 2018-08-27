@@ -1,4 +1,4 @@
-+<?php
+<?php
 
 /* Copyright (c) 2018 Richard Klees <richard.klees@concepts-and-training.de> */
 
