@@ -48,6 +48,7 @@ class ilLoggingErrorFileStorage {
 		$file_name = $this->file_path."/".$this->file_name.self::FILE_FORMAT;
 		$stream = fopen($file_name, 'w+');
 		fwrite($stream, $this->content());
+		fwrite($stream, "\n");
 		fclose($stream);
 		chmod($file_name, 0755);
 	}
