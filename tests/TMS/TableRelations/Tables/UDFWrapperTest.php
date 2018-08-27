@@ -30,18 +30,6 @@ class _TestReport{
 			;
 	}
 
-	public function getFieldsVisibleInLocalUserAdministration() {
-		$fields = array(
-			12 => "some field",
-			15 => "some-other-field"
-		);
-		$ret = [];
-		foreach ($fields as $key => $value) {
-			$ret[$key] = $this->sanitizeUDFName($value);
-		}
-		return $ret;
-	}
-
 	public function _appendUDFsToSpace() {
 		return $this->appendUDFsToSpace($this->tf, $this->pf, $this->space, $this->usr_table, 'usr_id');
 	}
@@ -51,6 +39,13 @@ class _TestReport{
 		\SelectableReportTableGUI $table
 	) {
 		return $this->addUDFColumnsToTable($space, $table);
+	}
+
+	protected function getFieldsVisibleInCourseMemberAdministration() {
+		return [
+			12 => ["i12", "twelve"],
+			15 => ["i15", "fifteen"]
+		];
 	}
 }
 
@@ -66,16 +61,6 @@ class UDFWrapperTest extends PHPUnit_Framework_TestCase {
 
 	public function setUp() {
 		$this->tr = new _TestReport();
-	}
-
-	public function test_sanitizeFieldNames() {
-		$this->assertEquals(
-			 array(
-				12 => "somefield",
-				15 => "someotherfield"
-			),
-			$this->tr->getFieldsVisibleInLocalUserAdministration()
-		);
 	}
 
 	public function test_addingToSpace() {
@@ -98,7 +83,7 @@ class UDFWrapperTest extends PHPUnit_Framework_TestCase {
 			array_keys($table->selectable)
 		);
 		$this->assertEquals(
-			'somefield',
+			'twelve',
 			$table->selectable['UDF_12']['txt']
 		);
 	}
