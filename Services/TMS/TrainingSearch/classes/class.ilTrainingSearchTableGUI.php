@@ -76,15 +76,26 @@ class ilTrainingSearchTableGUI {
 			$this->g_lng->txt("header"), //title
 			$view_constrols,
 			function ($row, BookableCourse $record, $ui_factory, $environment) { //mapping-closure
-				$dropdown = $this->createDropdown($record, $ui_factory);
-
-				return $row
+				$row = $row
 					->withHeadline($record->getTitleValue())
 					->withSubheadline($record->getSubTitleValue())
 					->withImportantFields($record->getImportantFields())
 					->withContent($ui_factory->listing()->descriptive($record->getDetailFields()))
-					->withFurtherFields($record->getFurtherFields())
-					->withAction($dropdown);
+					->withFurtherFields($record->getFurtherFields());
+
+				$search_action = $record->getSearchActionLinks(
+					$this->g_ctrl,
+					$this->search_user_id,
+					$this->search_user_id != $this->g_user->getId()
+				);
+
+				if(!is_null($search_action)) {
+					$button = $this->createButton($search_action["label"], $search_action["link"], $ui_factory);
+					$row = $row
+						->withAction($button);
+				}
+
+				return $row;
 			}
 		);
 
@@ -101,23 +112,11 @@ class ilTrainingSearchTableGUI {
 	 *
 	 * @return Button
 	 */
-	protected function createDropdown($record, $ui_factory)
-	{
-		return $ui_factory->dropdown()
-			->standard(array($ui_factory->button()->shy("a", "d")))
-			->withLabel($this->g_lng->txt("actions"))
-			->withOnLoadCode(function($id) use ($record) {
-				$search_actions = $record->getSearchActionLinks($this->g_ctrl, $this->search_user_id, $this->search_user_id != $this->g_user->getId());
-
-				if(count($search_actions) == 0) {
-					return "$('#$id').remove();";
-				}
-
-				foreach ($search_actions as $label => $action) {
-					$content .= '<li><a class="btn btn-link" href="'.$action.'" data-action="'.$action.'" target="_blank">'.$label.'</a></li>';
-				}
-				return "$('#$id + ul').empty(); $('#$id + ul').append('$content');";
-			});
+	protected function createButton($label, $link, $ui_factory) {
+ 		return $ui_factory->button()->primary(
+ 			$label,
+			$link
+		);
 	}
 }
 
