@@ -115,7 +115,8 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO,
 					CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
 					CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO,
-					CourseInfo::CONTEXT_ICAL
+					CourseInfo::CONTEXT_ICAL,
+					CourseInfo::CONTEXT_APPROVALS_OVERVIEW
 				  ]
 			);
 	}
@@ -175,7 +176,8 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO,
 				CourseInfo::CONTEXT_USER_BOOKING_SUPERIOR_FURTHER_INFO,
 				CourseInfo::CONTEXT_ASSIGNED_TRAINING_FURTHER_INFO,
-				CourseInfo::CONTEXT_ADMIN_OVERVIEW_FURTHER_INFO
+				CourseInfo::CONTEXT_ADMIN_OVERVIEW_FURTHER_INFO,
+				CourseInfo::CONTEXT_APPROVALS_OVERVIEW
 			]
 		);
 
@@ -518,6 +520,15 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				);
 
 				$ret[] = $this->createCourseInfoObject($entity
+				, ""
+				, $short_name
+				, 300
+				, [
+					CourseInfo::CONTEXT_APPROVALS_OVERVIEW
+				  ]
+				);
+
+				$ret[] = $this->createCourseInfoObject($entity
 					, $txt("title").":"
 					, nl2br($name)
 					, 300
@@ -537,6 +548,15 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 						, [CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO]
 					);
 			} else {
+				$ret[] = $this->createCourseInfoObject($entity
+				, ""
+				, $name
+				, 300
+				, [
+					CourseInfo::CONTEXT_APPROVALS_OVERVIEW
+				  ]
+				);
+
 				if($city != "") {
 					$ret[] = $this->createCourseInfoObject($entity
 					, ""
@@ -615,6 +635,15 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 					, $provider
 					, 600
 					, [CourseInfo::CONTEXT_SEARCH_DETAIL_INFO]
+				);
+			}
+
+			if($provider != "") {
+				$ret[] = $this->createCourseInfoObject($entity
+					, $txt("title")
+					, $provider
+					, 700
+					, [CourseInfo::CONTEXT_APPROVALS_OVERVIEW]
 				);
 			}
 
