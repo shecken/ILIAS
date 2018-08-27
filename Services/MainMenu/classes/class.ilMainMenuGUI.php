@@ -288,7 +288,9 @@ class ilMainMenuGUI
 				}
 			}
 
-			$this->renderStatusBox($this->tpl);
+			// cat-tms-ptch start 1786
+			//$this->renderStatusBox($this->tpl);
+			// cat-tms-ptch end
 
 			// online help
 			$this->renderHelpButtons();
