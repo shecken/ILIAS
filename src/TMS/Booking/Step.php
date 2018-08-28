@@ -103,5 +103,14 @@ interface Step {
 	 * @return	string|null
 	 */
 	public function	processStep($crs_ref_id, $usr_id, $data);
+
+	/**
+	 * Get a Step like this with an acting user other than global ilUser;
+	 * a Step might be processed in a different context.
+	 *
+	 * @param	int     $usr_id
+	 * @return 	SelfBookingStep
+	 */
+	public function	withActingUser(int $usr_id);
 }
 
