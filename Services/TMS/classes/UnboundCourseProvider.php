@@ -37,7 +37,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 		if ($component_type === CourseInfo::class) {
 			$ret = array();
 
-			$ret[] = $this->getCourseInfoForTitle($entity, $object);
+			$ret = $this->getCourseInfoForTitle($entity, $object);
 			$ret = $this->getCourseInfoForDescription($ret, $entity, $object);
 			$ret = $this->getCourseInfoForPeriodDate($ret, $entity, $object);
 			$ret = $this->getCourseInfoForPeriodTimes($ret, $entity, $object);
@@ -108,17 +108,30 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 	 * @return CourseInfo
 	 */
 	protected function getCourseInfoForTitle(Entity $entity, $object) {
-		return $this->createCourseInfoObject($entity
-				, $this->lng->txt("title")
-				, $object->getTitle()
-				, 100
-				, [CourseInfo::CONTEXT_SEARCH_SHORT_INFO,
-					CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
-					CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO,
-					CourseInfo::CONTEXT_ICAL,
-					CourseInfo::CONTEXT_APPROVALS_OVERVIEW
-				  ]
-			);
+		$ret[] = $this->createCourseInfoObject(
+			$entity,
+			$this->lng->txt("title"),
+			$object->getTitle(),
+			100,
+			[
+				CourseInfo::CONTEXT_SEARCH_SHORT_INFO,
+				CourseInfo::CONTEXT_BOOKING_DEFAULT_INFO,
+				CourseInfo::CONTEXT_USER_BOOKING_SHORT_INFO,
+				CourseInfo::CONTEXT_ICAL
+			]
+		);
+
+		$ret[] = $this->createCourseInfoObject(
+			$entity,
+			"title",
+			$object->getTitle(),
+			100,
+			[
+				CourseInfo::CONTEXT_APPROVALS_OVERVIEW
+			]
+		);
+
+		return $ret;
 	}
 
 	/**
@@ -176,7 +189,15 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				CourseInfo::CONTEXT_USER_BOOKING_FURTHER_INFO,
 				CourseInfo::CONTEXT_USER_BOOKING_SUPERIOR_FURTHER_INFO,
 				CourseInfo::CONTEXT_ASSIGNED_TRAINING_FURTHER_INFO,
-				CourseInfo::CONTEXT_ADMIN_OVERVIEW_FURTHER_INFO,
+				CourseInfo::CONTEXT_ADMIN_OVERVIEW_FURTHER_INFO
+			]
+		);
+
+		$ret[] = $this->createCourseInfoObject($entity
+			, "date"
+			, $date
+			, 200
+			, [
 				CourseInfo::CONTEXT_APPROVALS_OVERVIEW
 			]
 		);
@@ -520,7 +541,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 				);
 
 				$ret[] = $this->createCourseInfoObject($entity
-				, ""
+				, "venue"
 				, $short_name
 				, 300
 				, [
@@ -549,7 +570,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 					);
 			} else {
 				$ret[] = $this->createCourseInfoObject($entity
-				, ""
+				, "venue"
 				, $name
 				, 300
 				, [
@@ -640,7 +661,7 @@ class UnboundCourseProvider extends SeparatedUnboundProvider {
 
 			if($provider != "") {
 				$ret[] = $this->createCourseInfoObject($entity
-					, $txt("title")
+					, "provider"
 					, $provider
 					, 700
 					, [CourseInfo::CONTEXT_APPROVALS_OVERVIEW]
