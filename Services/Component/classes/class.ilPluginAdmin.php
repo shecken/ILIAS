@@ -234,7 +234,9 @@ class ilPluginAdmin
 	 * @return string[]
 	 */
 	protected function parsePluginPhp($plugin_php_file) {
-		include_once($plugin_php_file);
+		//cat-tms-patch start 1791
+		include($plugin_php_file);
+		//cat-tms-patch end
 
 		$values = [
 			"version" => $version,

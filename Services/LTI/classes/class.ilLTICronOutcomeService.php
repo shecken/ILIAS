@@ -31,6 +31,13 @@ class ilLTICronOutcomeService extends ilCronJob
 		return 'lti_outcome';
 	}
 
+	// cat-tms-patch start
+	public function getTitle()
+	{
+		return "lti outcome cron job.";
+	}
+	// cat-tms.-patch end
+
 	public function hasAutoActivation()
 	{
 		return false;

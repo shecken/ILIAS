@@ -373,4 +373,10 @@ class TMSPositionHelper
 		}
 		return $children;
 	}
+
+	public function getPositionTitleById(int $id): string
+	{
+		require_once("Modules/OrgUnit/classes/Positions/class.ilOrgUnitPosition.php");
+		return ilOrgUnitPosition::where([ 'id' => $id ])->first()->getTitle();
+	}
 }
