@@ -303,7 +303,7 @@ class BookableCourse {
 		if(count($search_actions) > 0) {
 			foreach($search_actions as $search_action) {
 				if($search_action->isAllowedFor($usr_id)) {
-					return array("label" => $action->getLabel(), "link" => $action->getLink($ctrl, $usr_id));
+					return array("label" => $search_action->getLabel(), "link" => $search_action->getLink($ctrl, $usr_id));
 				}
 			}
 		}
