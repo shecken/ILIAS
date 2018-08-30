@@ -253,8 +253,13 @@ class DisplayFilter
 					if ($value !== null) {
 
 						$value = $this->unserializeValue($value);
-						$start = $this->createDateTime($value["start"]);
-						$end = $this->createDateTime($value["end"]);
+						$p_start = $this->createDateTime($value["start"]);
+						$p_end = $this->createDateTime($value["end"]);
+						if($p_start && $p_end) {
+							$start = $p_start;
+							$end = $p_end;
+						}
+
 					}
 					array_push($ret, $start);
 					array_push($ret, $end);
