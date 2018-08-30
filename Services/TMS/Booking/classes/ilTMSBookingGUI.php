@@ -160,6 +160,22 @@ abstract class ilTMSBookingGUI {
 		if($approvals_plug !== false
 		   && count($approvals_plug->getCourseUtils()->getApprovalRoles($crs_ref_id)) > 0) {
 
+			$translations = new \ILIAS\TMS\TranslationsImpl(
+				array(
+					Wizard\Player::TXT_TITLE => $this->g_lng->txt('booking_with_approval'),
+					Wizard\Player::TXT_CONFIRM => $this->g_lng->txt('booking_confirm_with_approval'),
+				),
+				$this->getTranslations()
+			);
+
+			$ilias_bindings = new Booking\ILIASBindings(
+				$this->g_ctrl
+				, $this
+				, $this->parent_gui
+				, $this->parent_cmd
+				, $translations
+			);
+
 			$player = $approvals_plug->getRequestPlayer(
 				$ilias_bindings
 				, $wizard
