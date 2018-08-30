@@ -69,7 +69,9 @@ trait MyUsersHelper {
 	protected function getMembersUserHasAuthorities($user_id) {
 		require_once("Services/TMS/Positions/TMSPositionHelper.php");
 		require_once("Modules/OrgUnit/classes/Positions/UserAssignment/class.ilOrgUnitUserAssignmentQueries.php");
-		$tms_pos_helper = new \TMSPositionHelper(\ilOrgUnitUserAssignmentQueries::getInstance());
+		require_once("Services/TMS/Positions/ilTMSOrgUnitUserAssignmentQueriesWrapper.php");
+		$qq = new \ilTMSOrgUnitUserAssignmentQueriesWrapper(\ilOrgUnitUserAssignmentQueries::getInstance(), $this->g_global_cache);
+		$tms_pos_helper = new \TMSPositionHelper($qq);
 		return $tms_pos_helper->getUserIdWhereUserHasAuhtority($user_id);
 	}
 }

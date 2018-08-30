@@ -39,6 +39,7 @@ class Helper {
 		$this->g_lng = $DIC->language();
 		$this->g_factory = $DIC->ui()->factory();
 		$this->g_renderer = $DIC->ui()->renderer();
+		$this->g_global_cache = $global_cache = ilGlobalCache::getInstance(ilGlobalCache::COMP_COMPONENT);
 	}
 
 	/**
