@@ -300,12 +300,15 @@ class BookableCourse {
 			$search_actions = $this->getSearchActions();
 		}
 
-		if(count($search_actions) == 0) {
-			return null;
+		if(count($search_actions) > 0) {
+			foreach($search_actions as $search_action) {
+				if($search_action->isAllowedFor($usr_id)) {
+					return array("label" => $search_action->getLabel(), "link" => $search_action->getLink($ctrl, $usr_id));
+				}
+			}
 		}
 
-		$search_action = array_shift($search_actions);
-		return array("label" => $search_action->getLabel(), "link" => $search_action->getLink($ctrl, $usr_id));
+		return null;
 	}
 
 	/**
