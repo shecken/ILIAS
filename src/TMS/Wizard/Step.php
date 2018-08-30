@@ -76,6 +76,7 @@ interface Step {
 	 * The returned string should be shown as a confirmation to the user.
 	 *
 	 * @param	mixed   $data
+	 * @throws 	\Exception 	if step cannot be processed.
 	 * @return	string|null
 	 */
 	public function	processStep($data);

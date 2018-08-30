@@ -29,9 +29,6 @@ interface Actions {
 	const EVENT_ADMIN_CANCELED_COURSE = 'admin_canceled_user_from_course'; //C05
 	const EVENT_ADMIN_CANCELED_WAITING = 'admin_canceled_user_from_waiting'; //C06
 
-
-
-
 	/**
 	 * Book the given user on the course.
 	 *
