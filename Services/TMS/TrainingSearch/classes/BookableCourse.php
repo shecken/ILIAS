@@ -166,7 +166,6 @@ class BookableCourse {
 	use ilHandlerObjectHelper;
 	use CourseInfoHelper;
 	use CourseActionHelper;
-	use \ILIAS\TMS\MyUsersHelper;
 
 	/**
 	 * @var	CourseInfo[]|null
@@ -309,37 +308,6 @@ class BookableCourse {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Checks the bookingmodalities allows user to book
-	 *
-	 * @return bool
-	 */
-	protected function isAllowedToBook($booking_modus, $usr_id) {
-		global $DIC;
-		$g_user = $DIC->user();
-
-		if ($g_user->getId() == $usr_id
-			&& $booking_modus == "self_booking"
-		) {
-			return true;
-		}
-
-		if ($g_user->getId() == $usr_id
-			&& $booking_modus == "booking_superior"
-		) {
-			return false;
-		}
-
-		$employees = $this->getUserWhereCurrentCanBookFor((int)$g_user->getId());
-		if(array_key_exists($usr_id, $employees)
-			&& $booking_modus == "booking_superior"
-		) {
-			return true;
-		}
-
-		return false;
 	}
 
 	/**

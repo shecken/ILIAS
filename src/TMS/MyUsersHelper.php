@@ -69,9 +69,18 @@ trait MyUsersHelper {
 	protected function getMembersUserHasAuthorities($user_id) {
 		require_once("Services/TMS/Positions/TMSPositionHelper.php");
 		require_once("Modules/OrgUnit/classes/Positions/UserAssignment/class.ilOrgUnitUserAssignmentQueries.php");
-		require_once("Services/TMS/Positions/ilTMSOrgUnitUserAssignmentQueriesWrapper.php");
-		$qq = new \ilTMSOrgUnitUserAssignmentQueriesWrapper(\ilOrgUnitUserAssignmentQueries::getInstance(), $this->g_global_cache);
-		$tms_pos_helper = new \TMSPositionHelper($qq);
+		require_once("Services/TMS/Positions/ilTMSAssignmentQueriesCached.php");
+
+		$global_cache = $this->getGlobalCache();
+		if($global_cache->isActive()) {
+			$assignment_queries = new \ilTMSAssignmentQueriesCached(\ilOrgUnitUserAssignmentQueries::getInstance(), $global_cache);
+		} else {
+			$assignment_queries = new \ilTMSAssignmentQueries(\ilOrgUnitUserAssignmentQueries::getInstance());
+		}
+
+		$tms_pos_helper = new \TMSPositionHelper($assignment_queries);
 		return $tms_pos_helper->getUserIdWhereUserHasAuhtority($user_id);
 	}
+
+	abstract protected function getGlobalCache();
 }

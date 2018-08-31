@@ -1,6 +1,8 @@
 <?php
 
-class ilTMSOrgUnitUserAssignmentQueriesWrapper {
+require_once "Services/TMS/Positions/TMSAssignmentQueries.php";
+
+class ilTMSAssignmentQueriesCached implements TMSAssignmentQueries {
 	const POOL_SIZE = 100;
 	const ASSIGNMENTS = "assignments";
 	const RECURSIVE = "recursove";

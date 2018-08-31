@@ -16,7 +16,7 @@ class TMSPositionHelper
 	 */
 	protected $orgua_queries;
 
-	public function __construct(ilTMSOrgUnitUserAssignmentQueriesWrapper $orgua_queries)
+	public function __construct(TMSAssignmentQueries $orgua_queries)
 	{
 		$this->orgua_queries = $orgua_queries;
 	}
