@@ -5,7 +5,7 @@
  */
 
 class Helper {
-	use \ILIAS\TMS\MyUsersHelper;
+	use \ILIAS\TMS\CourseSearchHelper;
 
 	const F_TITLE = "f_title";
 	const F_TYPE = "f_type";
