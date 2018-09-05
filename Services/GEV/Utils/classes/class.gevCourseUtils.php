@@ -2593,16 +2593,14 @@ class gevCourseUtils
 			$worksheet->setColumn(4, 4, 12);
 		} else {
 			$columns[] = $this->gLng->txt("status");
-			$columns[] = $this->gLng->txt("birthday");
 			$columns[] = $this->gLng->txt("gev_mobile");
 			$columns[] = "Vorbedingung erfüllt";
 			$columns[] = $this->gLng->txt("gev_signature");
 
 			$worksheet->setColumn(4, 4, 8);
-			$worksheet->setColumn(5, 5, 10);
-			$worksheet->setColumn(6, 6, 14);
+			$worksheet->setColumn(5, 5, 14);
+			$worksheet->setColumn(6, 6, 12);
 			$worksheet->setColumn(7, 7, 12);
-			$worksheet->setColumn(8, 8, 12);
 		}
 
 		$row = $this->buildListMeta($workbook, $worksheet, $this->gLng->txt("gev_excel_member_title")." ".
@@ -2693,10 +2691,9 @@ class gevCourseUtils
 					$status = $user_utils->getAllIDHGBAADStatus();
 					sort($status, SORT_STRING);
 					$worksheet->write($row, 4, implode(", ", $status), $format_wrap);
-					$worksheet->write($row, 5, $user_utils->getFormattedBirthday(), $format_wrap);
-					$worksheet->write($row, 6, " ".$user_utils->getMobilePhone(), $format_wrap);
-					$worksheet->write($row, 7, $user_utils->hasFullfilledPreconditionOf($this->crs_id) ? "Ja" : "Nein", $format_wrap);
-					$worksheet->write($row, 8, " ", $format_wrap);
+					$worksheet->write($row, 5, " ".$user_utils->getMobilePhone(), $format_wrap);
+					$worksheet->write($row, 6, $user_utils->hasFullfilledPreconditionOf($this->crs_id) ? "Ja" : "Nein", $format_wrap);
+					$worksheet->write($row, 7, " ", $format_wrap);
 				}
 			}
 		}
