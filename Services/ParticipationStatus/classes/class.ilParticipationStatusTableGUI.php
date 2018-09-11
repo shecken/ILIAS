@@ -96,7 +96,9 @@ class ilParticipationStatusTableGUI extends ilTable2GUI
 		{
 			if($item["status"] === null)
 			{
-				$item["status"] = ilParticipationStatus::STATUS_NOT_SET;
+				// gev-patch start 3703
+				$item["status"] = ilParticipationStatus::STATUS_SUCCESSFUL;
+				// gev-patch end 3703
 			}
 			if($item["points"] === null && $item["status"] == ilParticipationStatus::STATUS_NOT_SET)
 			{
