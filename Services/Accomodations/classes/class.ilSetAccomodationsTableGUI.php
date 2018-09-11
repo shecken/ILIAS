@@ -147,10 +147,9 @@ class ilSetAccomodationsTableGUI extends ilTable2GUI
 	protected function fillRow($a_set)
 	{				
 		global $ilCtrl;
-		
+
 		// :TODO: test edit single user
 		$ilCtrl->setParameter($this->getParentObject(), "uid", $a_set["user_id"]);
-		$a_set["name"] .= ' [<a href="'.$ilCtrl->getLinkTarget($this->getParentObject(), "editUserAccomodations").'">edit test</a>]';
 		$ilCtrl->setParameter($this->getParentObject(), "uid", "");
 		
 		$this->tpl->setVariable("VAL_NAME", $a_set["name"]);

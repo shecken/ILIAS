@@ -397,6 +397,7 @@ class ilSetAccomodationsGUI
 	// form gui helper	
 	// 
 	
+	// gev-patch start 3733
 	/**
 	 * Add accomodations of user for course to form
 	 * 
@@ -404,9 +405,18 @@ class ilSetAccomodationsGUI
 	 * @param int $a_course_obj_id
 	 * @param int $a_user_id
 	 * @param string $a_field_name
+	 * @param bool $is_self_booking
 	 */
-	public static function addAccomodationsToForm(ilPropertyFormGUI $a_form, $a_course_obj_id, $a_user_id, $a_field_name = "acco", $a_fill_default = false)
-	{		
+	public static function addAccomodationsToForm(
+		ilPropertyFormGUI $a_form,
+		$a_course_obj_id,
+		$a_user_id,
+		$a_field_name = "acco",
+		$a_fill_default = false,
+		$is_self_booking = false
+	) {
+	// gev-patch start 3733
+
 		global $lng;
 		
 		require_once "Modules/Course/classes/class.ilObjCourse.php";
@@ -440,6 +450,13 @@ class ilSetAccomodationsGUI
 			,$accomodations->getCourseEnd()->get(IL_CAL_DATE)
 		);
 		$nights->setMode(ilAccomodationsPeriodInputGUI::MODE_OVERNIGHT);
+
+		// gev-patch start 3733
+		if($is_self_booking) {
+			$nights->setMode(ilAccomodationsPeriodInputGUI::MODE_OVERNIGHT_WITHOUT_PRE_AFTER);
+		}
+		// gev-patch end 3733
+
 		$nights->setValue($user_nights);
 		$a_form->addItem($nights);		
 	}

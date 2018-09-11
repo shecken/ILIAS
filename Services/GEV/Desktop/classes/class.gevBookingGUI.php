@@ -416,7 +416,7 @@ class gevBookingGUI
 
 		if ($this->crs_utils->isWithAccomodations()) {
 			$this->lng->loadLanguageModule("acco");
-			ilSetAccomodationsGUI::addAccomodationsToForm($form, $this->crs_id, $this->user_id, "acco", true);
+			ilSetAccomodationsGUI::addAccomodationsToForm($form, $this->crs_id, $this->user_id, "acco", true, $this->isSelfBooking());
 			if ($_POST["acco"]) {
 				$form->getItemByPostVar("acco")->setValue($_POST["acco"]);
 			} elseif ($_POST["accomodations"]) {

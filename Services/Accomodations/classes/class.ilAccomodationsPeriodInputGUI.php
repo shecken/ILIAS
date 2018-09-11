@@ -18,6 +18,9 @@ class ilAccomodationsPeriodInputGUI extends ilFormPropertyGUI
 	
 	const MODE_SIMPLE = 1;
 	const MODE_OVERNIGHT = 2;
+	// gev-patch start 3733
+	const MODE_OVERNIGHT_WITHOUT_PRE_AFTER = 3;
+	// gev-patch end 3733
 	
 	public function __construct($a_title = "", $a_postvar = "")
 	{
@@ -106,17 +109,27 @@ class ilAccomodationsPeriodInputGUI extends ilFormPropertyGUI
 	
 	protected function getPeriodAsDays($as_objects = false)
 	{
+		// gev-patch start 3733
 		$start = $this->start;
+		$end = $this->end;
 		
 		if($this->mode == self::MODE_OVERNIGHT)
 		{
 			// night before 1st day of period
 			$start = new ilDate($this->start, IL_CAL_DATE);
-			$start->increment(IL_CAL_DAY, -1); 
+			$start->increment(IL_CAL_DAY, -1);
 			$start = $start->get(IL_CAL_DATE);
-		};
-		
-		return self::convertPeriodToDays($start, $this->end, $as_objects);
+		} else if ($this->mode == self::MODE_OVERNIGHT_WITHOUT_PRE_AFTER) {
+			$start = new ilDate($this->start, IL_CAL_DATE);
+			$end = new ilDate($this->end, IL_CAL_DATE);
+
+			$start = $start->get(IL_CAL_DATE);
+			$end->increment(IL_CAL_DAY, -1);
+			$end = $end->get(IL_CAL_DATE);
+		}
+		// gev-patch end 3733
+
+		return self::convertPeriodToDays($start, $end, $as_objects);
 	}		
 		
 	public function setValue($a_value)
@@ -211,8 +224,9 @@ class ilAccomodationsPeriodInputGUI extends ilFormPropertyGUI
 		$reldate = ilDatePresentation::useRelativeDates();
 		ilDatePresentation::setUseRelativeDates(false);
 		
+		// gev-patch start 3733
 		// overnight list of dates (from/to)
-		if($this->mode == self::MODE_OVERNIGHT)
+		if($this->mode == self::MODE_OVERNIGHT || $this->mode == self::MODE_OVERNIGHT_WITHOUT_PRE_AFTER)
 		{			
 			$tpl->setVariable("OV_TXT_HEAD_FROM", $lng->txt("acco_period_input_from"));
 			$tpl->setVariable("OV_TXT_HEAD_TO", $lng->txt("acco_period_input_to"));		
@@ -238,7 +252,7 @@ class ilAccomodationsPeriodInputGUI extends ilFormPropertyGUI
 				}
 				
 				// night after last day
-				if($today == $this->end)
+				if($today == $this->end && $this->mode != self::MODE_OVERNIGHT_WITHOUT_PRE_AFTER)
 				{										
 					$tpl->setVariable("OV_TXT_FROM", ilDatePresentation::formatDate($today_obj));	
 					$tpl->setVariable("OV_TXT_TO",  $lng->txt("acco_period_input_to_last"));				
@@ -250,7 +264,7 @@ class ilAccomodationsPeriodInputGUI extends ilFormPropertyGUI
 					$tpl->setVariable("OV_TXT_TO", ilDatePresentation::formatDate($tomorrow));	
 				}
 				// night before 1st day
-				else 
+				else if ($this->mode != self::MODE_OVERNIGHT_WITHOUT_PRE_AFTER)
 				{				
 					$tpl->setVariable("OV_TXT_FROM",  $lng->txt("acco_period_input_from_first"));	
 					$tpl->setVariable("OV_TXT_TO", ilDatePresentation::formatDate($tomorrow));					
@@ -258,6 +272,8 @@ class ilAccomodationsPeriodInputGUI extends ilFormPropertyGUI
 
 				$tpl->parseCurrentBlock();
 			}
+			// gev-patch end 3733
+
 		}
 		// simple list of dates
 		else
