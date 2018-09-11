@@ -14,6 +14,7 @@ class gevCourseSearch {
 	const TAB_PRAESENZ = "onside";
 	const TAB_TOP = "top";
 	const TAB_LE = "le";
+	const TAB_GATE = "gate";
 	const TAB_WEBINAR = "webinar";
 	const TAB_SELF = "wbt";
 	const TAB_VIRTUEL_TRAINING = "virt";
@@ -122,9 +123,8 @@ class gevCourseSearch {
 			$additional_where .= " AND od.title LIKE ".$this->gDB->quote("%".$a_search_options["title"]."%", "text")."\n";
 		}
 
-		if (array_key_exists("edu_program", $a_search_options)) {
+		if (array_key_exists("edu_program", $a_search_options) && $a_search_options["edu_program"] != "") {
 			$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
-
 			$additional_join .=
 				" LEFT JOIN adv_md_values_text edu_program\n".
 				"   ON cs.obj_id = edu_program.obj_id\n".
@@ -132,6 +132,19 @@ class gevCourseSearch {
 				;
 			$additional_where .=
 				" AND edu_program.value LIKE ".$this->gDB->quote("%".$a_search_options["edu_program"]."%", "text")."\n";
+		}
+
+		if (array_key_exists("cat", $a_search_options) && $a_search_options["cat"][0] != "") {
+			$categorie_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_TOPIC);
+
+			$additional_join .=
+				" LEFT JOIN adv_md_values_text cat\n".
+				"   ON cs.obj_id = cat.obj_id\n".
+				"   AND cat.field_id = ".$this->gDB->quote($categorie_field_id, "integer")."\n";
+			$additional_where .=
+				" AND (cat.value LIKE ".$this->gDB->quote("%".$a_search_options["cat"][0]."%")."\n".
+				" OR cat.value LIKE ".$this->gDB->quote("%".$a_search_options["cat"][1]."%")."\n".
+				" OR cat.value LIKE ".$this->gDB->quote("%".$a_search_options["cat"][2]."%").")\n";
 		}
 
 		if (array_key_exists("type", $a_search_options)) {
@@ -408,6 +421,8 @@ class gevCourseSearch {
 	public function addSearchForTypeByActiveTab($a_search_opts, $a_active_tab) {
 		$options = array();
 		$edus = "";
+		$gate = "";
+		$cat = array();
 
 		switch($a_active_tab) {
 			case self::TAB_ALL:
@@ -424,6 +439,10 @@ class gevCourseSearch {
 			case self::TAB_LE:
 				$edus = "LE-Training zentral (ID)";
 				break;
+			case self::TAB_GATE:
+				$edus = "GATE";
+				$cat = ["Accelerating Technical Excellence (GATE)", "Developing Insurance Culture (GATE)", "Shaping the industry (GATE)"];
+				break;
 			case self::TAB_WEBINAR:
 				$options["webinar"] = "Webinar";
 				break;
@@ -436,6 +455,7 @@ class gevCourseSearch {
 
 		$a_search_opts["type"] = $options;
 		$a_search_opts["edu_program"] = $edus;
+		$a_search_opts["cat"] = $cat;
 
 		return $a_search_opts;
 	}
@@ -465,6 +485,11 @@ class gevCourseSearch {
 				( "gev_crs_search_le"
 				, $this->gCtrl->getLinkTargetByClass("gevCourseSearchGUI")
 				);
+			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "gate");
+			$this->search_tabs["gate"] = array
+				( "gev_crs_search_gate"
+				, $this->gCtrl->getLinkTargetByClass("gevCourseSearchGUI")
+				);
 			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "webinar");
 			$this->search_tabs["webinar"] = array
 				( "gev_crs_search_webinar"
@@ -485,16 +510,17 @@ class gevCourseSearch {
 		return $_GET["active_tab"] ? $_GET["active_tab"] : gevCourseSearch::TAB_TO_SHOW_ADVICE;
 	}
 
-	public function getCourseCounting($a_serach_opts) {
+	public function getCourseCounting($a_search_opts) {
 		if ($this->tabs_count == null) {
 			$tabs = $this->getPossibleTabs();
 			$this->tabs_count = array();
 
 			foreach (array_keys($tabs) as $key) {
-				$a_serach_opts = $this->addSearchForTypeByActiveTab($a_serach_opts,$key);
-				$this->tabs_count[$key] = count($this->getPotentiallyBookableCourseIds($a_serach_opts));
+				$a_search_opts = $this->addSearchForTypeByActiveTab($a_search_opts,$key);
+				$this->tabs_count[$key] = count($this->getPotentiallyBookableCourseIds($a_search_opts));
 			}
 		}
+
 		return $this->tabs_count;
 	}
 
