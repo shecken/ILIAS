@@ -480,14 +480,14 @@ class gevCourseSearch {
 				( "gev_crs_search_top"
 				, $this->gCtrl->getLinkTargetByClass("gevCourseSearchGUI")
 				);
-			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "le");
-			$this->search_tabs["le"] = array
-				( "gev_crs_search_le"
-				, $this->gCtrl->getLinkTargetByClass("gevCourseSearchGUI")
-				);
 			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "gate");
 			$this->search_tabs["gate"] = array
 				( "gev_crs_search_gate"
+				, $this->gCtrl->getLinkTargetByClass("gevCourseSearchGUI")
+				);
+			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "le");
+			$this->search_tabs["le"] = array
+				( "gev_crs_search_le"
 				, $this->gCtrl->getLinkTargetByClass("gevCourseSearchGUI")
 				);
 			$this->gCtrl->setParameterByClass("gevCourseSearchGUI", "active_tab", "webinar");
