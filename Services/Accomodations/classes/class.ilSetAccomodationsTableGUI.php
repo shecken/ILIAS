@@ -48,7 +48,6 @@ class ilSetAccomodationsTableGUI extends ilTable2GUI
 		$this->accomodotations = $a_accomodations;
 		$this->permissions = $a_permissions;
 		$this->user_ids = $a_user_ids;
-		$this->course_id = $a_course->getId();
 		
 		$this->setId("crsaccolist");
 		
@@ -115,13 +114,12 @@ class ilSetAccomodationsTableGUI extends ilTable2GUI
 			$edit_own = $this->permissions->setOwnAccomodations();
 			$edit_others = $this->permissions->setOthersAccomodations();					
 			$user_nights = $this->accomodotations->getAccomodationsOfUsers($a_user_ids);
-			$self_booker = $this->accomodotations->isSelfBooker($ilUser->getId(), $this->course_id);
-
+			
 			foreach(ilAccomodations::getUserNames($a_user_ids) as $user_id => $name)
 			{
-
 				$editable = false;
-				if(($user_id == $ilUser->getId() && $edit_own) || $edit_others)
+				if(($user_id == $ilUser->getId() && $edit_own) ||
+					$edit_others)
 				{
 					$has_editable = true;
 					$editable = true;
@@ -149,10 +147,9 @@ class ilSetAccomodationsTableGUI extends ilTable2GUI
 	protected function fillRow($a_set)
 	{				
 		global $ilCtrl;
-		
+
 		// :TODO: test edit single user
 		$ilCtrl->setParameter($this->getParentObject(), "uid", $a_set["user_id"]);
-		$a_set["name"] .= ' [<a href="'.$ilCtrl->getLinkTarget($this->getParentObject(), "editUserAccomodations").'">edit test</a>]';
 		$ilCtrl->setParameter($this->getParentObject(), "uid", "");
 		
 		$this->tpl->setVariable("VAL_NAME", $a_set["name"]);

@@ -11,8 +11,6 @@ require_once "Services/Accomodations/classes/class.ilAccomodationsHelper.php";
  */
 class ilAccomodations
 {
-	const TABLE_HIST_USER_COURSE_STATUS = "hist_usercoursestatus";
-
 	protected $course; // [ilObjCourse]
 	
 	protected static $instances = array(); // [array]
@@ -521,47 +519,5 @@ class ilAccomodations
 		}
 		
 		return $res;
-	}
-
-	/**
-	 * Check if user is self booker.
-	 *
-	 * @param int $user_id
-	 * @param int $crs_id
-	 * @return bool
-	 */
-	public function isSelfBooker($user_id, $crs_id)
-	{
-		assert('is_int($user_id)');
-		assert('is_int($crs_id)');
-
-		global $DIC;
-		$db = $DIC->database();
-
-		$query =
-			 "SELECT".PHP_EOL
-			."    creator_user_id,".PHP_EOL
-			."    usr_id,".PHP_EOL
-			."    hist_version,".PHP_EOL
-			."    booking_status".PHP_EOL
-			."FROM ".self::TABLE_HIST_USER_COURSE_STATUS.PHP_EOL
-			."WHERE crs_id = ".$db->quote($crs_id, "integer").PHP_EOL
-			."    AND usr_id = ".$db->quote($user_id, "integer").PHP_EOL
-			."ORDER BY hist_version".PHP_EOL
-		;
-
-		$result = $db->query($query);
-
-		$ret = array();
-		while ($row = $db->fetchAssoc($result)) {
-			$ret[] = [
-				"creator_id" => $row["creator_user_id"],
-				"user_id" => $row["usr_id"],
-				"hist_version" => $row["hist_version"],
-				"booking_status" => $row["booking_status"]
-			];
-		}
-
-		var_dump($ret);die();
 	}
 }
