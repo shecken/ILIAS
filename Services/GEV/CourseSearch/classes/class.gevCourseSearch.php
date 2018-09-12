@@ -254,6 +254,13 @@ class gevCourseSearch {
 				
 				 $additional_join.
 				 " \nWHERE cs.activation_type = 1\n".
+
+				 " \nAND (timing.timing_type = 1".
+				 "		 OR (timing.timing_type = 0 ".
+				 "			AND timing.timing_start <= ".time().
+				 "			AND timing.timing_end > ".time().
+				 "		 )".
+				 " )\n".
 				 "   \nAND oref.deleted IS NULL\n".
 				 "   AND is_template.value = ".$this->gDB->quote("Nein", "text").
 				 "   \nAND (  ( (ltype.value LIKE 'Pr_senztraining' OR ltype.value = 'Webinar')\n".
