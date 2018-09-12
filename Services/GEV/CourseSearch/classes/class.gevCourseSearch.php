@@ -269,7 +269,6 @@ class gevCourseSearch {
 				
 				 $additional_join.
 				 " \nWHERE cs.activation_type = 1\n".
-
 				 " \nAND (timing.timing_type = 1".
 				 "		 OR (timing.timing_type = 0 ".
 				 "			AND timing.timing_start <= ".time().
