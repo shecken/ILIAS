@@ -142,9 +142,11 @@ class gevCourseSearch {
 				"   ON cs.obj_id = cat.obj_id\n".
 				"   AND cat.field_id = ".$this->gDB->quote($categorie_field_id, "integer")."\n";
 			$additional_where .=
-				" AND (cat.value LIKE ".$this->gDB->quote("%".$a_search_options["cat"][0]."%")."\n".
-				" OR cat.value LIKE ".$this->gDB->quote("%".$a_search_options["cat"][1]."%")."\n".
-				" OR cat.value LIKE ".$this->gDB->quote("%".$a_search_options["cat"][2]."%").")\n";
+				" AND (";
+				foreach ($a_search_options["cat"] as $option) {
+					$additional_where .= " cat.value LIKE ".$this->gDB->quote("%".$option."%")." OR ".PHP_EOL;
+				}
+				$additional_where .= " false)";
 		}
 
 		if (array_key_exists("type", $a_search_options)) {
