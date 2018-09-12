@@ -134,7 +134,7 @@ class gevCourseSearch {
 				" AND edu_program.value LIKE ".$this->gDB->quote("%".$a_search_options["edu_program"]."%", "text")."\n";
 		}
 
-		if (array_key_exists("cat", $a_search_options) && $a_search_options["cat"][0] != "") {
+		if (array_key_exists("cat", $a_search_options) && count($a_search_options["cat"]) > 0) {
 			$categorie_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_TOPIC);
 
 			$additional_join .=
