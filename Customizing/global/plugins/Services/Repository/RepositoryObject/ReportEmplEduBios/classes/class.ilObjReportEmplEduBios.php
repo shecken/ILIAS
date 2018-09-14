@@ -76,8 +76,10 @@ class ilObjReportEmplEduBios extends ilObjReportBase
 			.'	LEFT JOIN hist_usercoursestatus as usrcrs'
 			.'		ON usr.user_id = usrcrs.usr_id'
 			.'			AND usrcrs.hist_historic = 0'
-			// removed on wish of mr drewel and ordered by CG
-			//.'			AND usrcrs.credit_points > 0'
+			// removed on wish of mr drewel and ordered by CG,
+			// rentered on wish from Hr. Drewel and VR
+			// Ticket gev_3741
+			.'			AND usrcrs.credit_points > 0'
 			.'			AND usrcrs.booking_status = \'gebucht\''
 			.'			'.$this->filterWBDImported()
 			.$this->whereConditions();
