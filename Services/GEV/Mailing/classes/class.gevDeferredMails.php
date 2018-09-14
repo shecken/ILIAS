@@ -59,7 +59,7 @@ class gevDeferredMails {
 					array(
 						"participant_sucessfull"
 						"participant_absent_excused",
-						"participant_absent_not_excused",
+						"participant_absent_not_excused"
 					),
 					array($a_recipient)
 				);
@@ -70,7 +70,7 @@ class gevDeferredMails {
 					array($a_crs_id),
 					array(
 						"trainer_added",
-						"trainer_removed",
+						"trainer_removed"
 					),
 					array($a_recipient)
 				);
@@ -94,7 +94,7 @@ class gevDeferredMails {
 					array(
 						"admin_cancel_waiting_to_cancelled_without_costs",
 						"admin_cancel_booked_to_cancelled_with_costs",
-						"admin_cancel_booked_to_cancelled_without_costs",
+						"admin_cancel_booked_to_cancelled_without_costs"
 					),
 					array($a_recipient)
 				);
