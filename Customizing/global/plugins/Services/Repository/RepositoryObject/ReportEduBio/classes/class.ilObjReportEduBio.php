@@ -106,7 +106,7 @@ class ilObjReportEduBio extends ilObjReportBase
 				->select("crs.venue")
 				->select("crs.provider")
 				->select_raw("GROUP_CONCAT(DISTINCT tutors.usr_id SEPARATOR ';') AS tutor")
-				->select("usrcrs.credit_points")
+				->select_raw("IF(usrcrs.credit_points < 0, 0, usrcrs.credit_points) AS credit_points")
 				->select("crs.fee")
 				->select("usrcrs.participation_status")
 				->select("usrcrs.okz")
