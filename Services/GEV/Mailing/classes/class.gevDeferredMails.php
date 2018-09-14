@@ -54,43 +54,62 @@ class gevDeferredMails {
 			case "participant_sucessfull":
 			case "participant_absent_excused":
 			case "participant_absent_not_excused":
-				$this->removeDeferredMails( array($a_crs_id)
-										  , array( "participant_sucessfull"
-										  		 , "participant_absent_excused"
-										  		 , "participant_absent_not_excused"
-										  		 )
-										  , array($a_recipient)
-										  );
+				$this->removeDeferredMails(
+					array($a_crs_id),
+					array(
+						"participant_sucessfull"
+						"participant_absent_excused",
+						"participant_absent_not_excused"
+					),
+					array($a_recipient)
+				);
 				break;
 			case "trainer_added":
 			case "trainer_removed":
-				$this->removeDeferredMails( array($a_crs_id)
-										  , array( "trainer_added"
-										  		 , "trainer_removed"
-										  		 )
-										  , array($a_recipient)
-										  );
+				$this->removeDeferredMails(
+					array($a_crs_id),
+					array(
+						"trainer_added",
+						"trainer_removed"
+					),
+					array($a_recipient)
+				);
 				break;
 			case "admin_cancel_booked_to_cancelled_without_costs":
 			case "admin_cancel_waiting_to_cancelled_without_costs":
-				$this->removeDeferredMails( array( $a_crs_id)
-										  , array( "admin_booking_to_waiting"
-										  		 , "admin_booking_to_booked"
-										  		 , "invitation"
-												 )
-										  , array($a_recipient)
-										  );
+				$this->removeDeferredMails(
+					array( $a_crs_id),
+					array(
+						"admin_booking_to_waiting",
+						"admin_booking_to_booked",
+						"invitation"
+					),
+					array($a_recipient)
+				);
 				break;
 			case "admin_booking_to_waiting":
 			case "admin_booking_to_booked":
-				$this->removeDeferredMails( array( $a_crs_id)
-										  , array("admin_cancel_waiting_to_cancelled_without_costs"
-												, "admin_cancel_booked_to_cancelled_with_costs"
-												, "admin_cancel_booked_to_cancelled_without_costs"
-												)
-										  , array($a_recipient)
-										  );
+				$this->removeDeferredMails(
+					array( $a_crs_id),
+					array(
+						"admin_cancel_waiting_to_cancelled_without_costs",
+						"admin_cancel_booked_to_cancelled_with_costs",
+						"admin_cancel_booked_to_cancelled_without_costs"
+					),
+					array($a_recipient)
+				);
 				break;
+			case "superior_booking_to_waiting":
+			case "superior_booking_to_waiting":
+				$this->removeDeffereMails(
+					array( $a_crs_id),
+					array(
+						"superior_booking_to_booked",
+						"superior_booking_to_booked",
+						"invitation"
+					),
+					array($a_recipient)
+				)
 		}
 	}
 	
