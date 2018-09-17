@@ -29,6 +29,7 @@ class gevDecentralTrainingMailTypeAdapter extends ilMailTypeAdapter {
 				, array("Enddatum"					, "Enddatum des Trainings")
 				, array("Endzeit"					, "Uhrzeit des Ende des Trainings")
 				, array("Buchungslink"				, "Link zum Buchungsformular des dezentralen Trainings")
+				, array("Buchungslink Teilnehmer" , "Link über den der Benutzer das Training buchen kann")
 				);
 		}
 	
