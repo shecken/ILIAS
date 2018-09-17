@@ -1,6 +1,7 @@
 <?php
 require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessWPStorno.php");
 class GevWBDSuccessWPStornoTest extends SuccessTestBase {
+	protected $backupGlobals = FALSE;
 
 	public function setUp() {
 		$this->row_id = 25;

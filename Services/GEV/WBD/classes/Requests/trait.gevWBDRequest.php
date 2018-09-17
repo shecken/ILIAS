@@ -227,7 +227,7 @@ trait gevWBDRequest{
 			foreach ($szenario as $rule => $setting) {
 				switch ($rule) {
 					case "mandatory":
-						if($setting==1 && (!is_bool($value) && trim($value) == "")){
+						if($setting==1 && (is_array($value) || (!is_bool($value) && trim($value) == ""))){
 							$errors[] = self::createError("mandatory field missing: ".$field, $this->error_group, $this->user_id, $this->row_id, $this->crs_id);
 						}
 						break;

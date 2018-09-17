@@ -58,13 +58,17 @@ class _gevWBDDataCollector extends gevWBDDataCollector {
 		$this->data = $data;
 	}
 
-	protected function getWBDInstance($user_id) {
-		$this->curr_wbd = mock_gevWBD::getInstanceByObjOrId($user_id);
-		return $this->curr_wbd;
+	public function getWBDInstance($user_id) {
+		if($this->curr_wbd[$user_id] === null) {
+			$this->curr_wbd[$user_id] = mock_gevWBD::getInstanceByObjOrId($user_id);
+		}
+		
+		return $this->curr_wbd[$user_id];
 	}
 
-	public function getCurrWBD() {
-		return $this->curr_wbd;
+	public function getCurrentDate()
+	{
+		return date("Y-m-d");
 	}
 }
 
@@ -82,6 +86,7 @@ class mock_gevWBD extends gevWBD {
 	}
 
 	public function setReturnCrsId($crs_id) {
+		var_dump($crs_id);
 		$this->crs_id = $crs_id;
 	}
 }
@@ -274,7 +279,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 											.'</soap:Envelope>'
 									),$this->row_id);
 
-		$this->data_collector->getCurrWBD()->setReturnCrsId($crs_id);
+		$this->data_collector->getWBDInstance($user_id)->setReturnCrsId($crs_id);
 		$this->data_collector->successStornoRecord($success);
 
 		$needed_case_id = array('usr_id' => $user_id

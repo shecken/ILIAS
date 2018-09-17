@@ -1,6 +1,7 @@
 <?php
 require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessWPAbfrage.php");
 class GevWBDSuccessWPAbfrageTest extends SuccessTestBase {
+	protected $backupGlobals = FALSE;
 
 	public function setUp() {
 		$this->success = new gevWBDSuccessWPAbfrage(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
@@ -43,7 +44,7 @@ class GevWBDSuccessWPAbfrageTest extends SuccessTestBase {
 					),10);
 	}
 
-	public function success_xml_error() {
+	public function success_xml_error_double_node() {
 		return array(array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 							.'<soap:Body>'
 								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
@@ -62,6 +63,7 @@ class GevWBDSuccessWPAbfrageTest extends SuccessTestBase {
 											.'<BuchungsDatum>2015-07-28T00:00:00+02:00</BuchungsDatum>'
 											.'<SeminarsDatumVon>2015-07-28T00:00:00+02:00</SeminarsDatumVon>'
 											.'<SeminarDatumBis>2015-07-28T00:00:00+02:00</SeminarDatumBis>'
+											.'<LernArt>004</LernArt>'
 											.'<LernArt>004</LernArt>'
 											.'<LernInhalt>005</LernInhalt>'
 											.'<InterneBuchungsId>21501</InterneBuchungsId>'
@@ -91,10 +93,10 @@ class GevWBDSuccessWPAbfrageTest extends SuccessTestBase {
 	}
 
 	/**
-	* @dataProvider success_xml_error
+	* @dataProvider success_xml_error_double_node
 	* @expectedException LogicException
 	*/
-	public function test_cantCreateSuccessObject($xml) {
+	public function test_xml_error_double_node($xml) {
 		$success = new gevWBDSuccessWPAbfrage($xml,10);
 		$this->assertNotInstanceOf("gevWBDSuccessWPAbfrage",$success);
 	}

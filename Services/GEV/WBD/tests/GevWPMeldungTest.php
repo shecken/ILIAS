@@ -1,7 +1,6 @@
 <?php
 require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPMeldung.php");
 class GevWPMeldungTest extends RequestTestBase {
-	
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {
@@ -73,41 +72,14 @@ class GevWPMeldungTest extends RequestTestBase {
 			);
 	}
 
-	public function xml_response_success_xml_fails() {
+	public function xml_response_error_double_node() {
 		return array(array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 							.'<soap:Body>'
 								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 									.'<WPMeldungRueckgabewert>'
 										.'<WeiterbildungsPunkteBuchungsId>2015-145-1654</WeiterbildungsPunkteBuchungsId>'
-										.'<InterneVdermittlerId>7665</InterneVdermittlerId>'
+										.'<InterneVermittlerId>7665</InterneVermittlerId>'
 										.'<VermittlerId>20150728-100390-74</VermittlerId>'
-										.'<InterneBuchungsId>21352</InterneBuchungsId>'
-										.'<BeginnErstePeriode>2015-07-28T00:00:00+02:00</BeginnErstePeriode>'
-									.'</WPMeldungRueckgabewert>'
-								.'</ns1:putResponse>'
-							.'</soap:Body>'
-						.'</soap:Envelope>'
-									))
-					,array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
-							.'<soap:Body>'
-								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
-									.'<WPMeldungRueckgabewert>'
-										.'<WeiterbildungsPunkteBuchungsId>2015-145-1654</WeiterbildungsPunkteBuchungsId>'
-										.'<InterneVdermittlerId>7665</InterneVdermittlerId>'
-										.'<VermittlerId>20150728-100390-74</VermittlerId>'
-										.'<InterneBuchungsId>21352</InterneBuchungsId>'
-										.'<BeginnErstePeriode>2015-07-28T00:00:00+02:00</BeginnErstePeriode>'
-									.'</WPMeldungRueckgabewert>'
-								.'</ns1:putResponse>'
-							.'</soap:Body>'
-						.'</soap:Envelope>'
-									))
-					,array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
-							.'<soap:Body>'
-								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
-									.'<WPMeldungRueckgabewert>'
-										.'<WeiterbildungsPunkteBuchungsId>2015-145-1654</WeiterbildungsPunkteBuchungsId>'
-										.'<InterneVdermittlerId>7665</InterneVdermittlerId>'
 										.'<VermittlerId>20150728-100390-74</VermittlerId>'
 										.'<InterneBuchungsId>21352</InterneBuchungsId>'
 										.'<BeginnErstePeriode>2015-07-28T00:00:00+02:00</BeginnErstePeriode>'
@@ -137,10 +109,10 @@ class GevWPMeldungTest extends RequestTestBase {
 
 	//Bool = False needed
 	/**
-     * @dataProvider xml_response_success_xml_fails
+     * @dataProvider xml_response_error_double_node
      * @expectedException LogicException
      */
-	public function test_parseResponseXMLErrorInXML($xml) {
+	public function test_parseResponseXMLErrorDoubleNode($xml) {
 		$this->request->createWBDSuccess($xml);
 	}
 

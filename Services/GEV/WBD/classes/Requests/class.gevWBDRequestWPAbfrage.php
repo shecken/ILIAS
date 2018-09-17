@@ -65,6 +65,7 @@ class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
 	*/
 	public function createWBDSuccess($response) {
 		$this->wbd_success = new gevWBDSuccessWPAbfrage($response,$this->user_id);
+		return $this->wbd_success;
 	}
 
 	/**

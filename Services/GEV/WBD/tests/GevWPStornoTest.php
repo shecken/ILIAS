@@ -64,39 +64,14 @@ class GevWPStornoTest extends RequestTestBase {
 			);
 	}
 
-	public function xml_response_success_xml_fails() {
+	public function xml_response_error_double_node() {
 		return array(array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 							.'<soap:Body>'
 								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 									.'<WPStornoRueckgabewert>'
 										.'<WeiterbildungsPunkteBuchungsId>2015-145-1654</WeiterbildungsPunkteBuchungsId>'
-										.'<VermitttlerId>20150728-100390-74</VermitttlerId>'
-										.'<InterneVermittlerId>21352</InterneVermittlerId>'
-										.'<BeginnErstePeriode>2015-07-28T00:00:00+02:00</BeginnErstePeriode>'
-									.'</WPStornoRueckgabewert>'
-								.'</ns1:putResponse>'
-							.'</soap:Body>'
-						.'</soap:Envelope>'
-									))
-					,array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
-							.'<soap:Body>'
-								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
-									.'<WPStornoRueckgabewert>'
-										.'<WeiterbildungsPunkteBuchungsId>2015-145-1654</WeiterbildungsPunkteBuchungsId>'
-										.'<VermitttlerId>20150728-100390-74</VermitttlerId>'
-										.'<InterneVermittlerId>21352</InterneVermittlerId>'
-										.'<BeginnErstePeriode>2015-07-28T00:00:00+02:00</BeginnErstePeriode>'
-									.'</WPStornoRueckgabewert>'
-								.'</ns1:putResponse>'
-							.'</soap:Body>'
-						.'</soap:Envelope>'
-									))
-					,array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
-							.'<soap:Body>'
-								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
-									.'<WPStornoRueckgabewert>'
-										.'<WeiterbildungsPunkteBuchungsId>2015-145-1654</WeiterbildungsPunkteBuchungsId>'
-										.'<VermitttlerId>20150728-100390-74</VermitttlerId>'
+										.'<VermittlerId>20150728-100390-74</VermittlerId>'
+										.'<VermittlerId>20150728-100390-74</VermittlerId>'
 										.'<InterneVermittlerId>21352</InterneVermittlerId>'
 										.'<BeginnErstePeriode>2015-07-28T00:00:00+02:00</BeginnErstePeriode>'
 									.'</WPStornoRueckgabewert>'
@@ -125,10 +100,10 @@ class GevWPStornoTest extends RequestTestBase {
 
 	//Bool = False needed
 	/**
-     * @dataProvider xml_response_success_xml_fails
+     * @dataProvider xml_response_error_double_node
      * @expectedException LogicException
      */
-	public function test_parseResponseXMLErrorInXML($xml) {
+	public function test_parseResponseXMLErrorDoubleNode($xml) {
 		$this->request->createWBDSuccess($xml);
 	}
 

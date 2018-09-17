@@ -89,6 +89,7 @@ class gevWBDRequestVvAenderung extends WBDRequestVvAenderung {
 	*/
 	public function createWBDSuccess($response) {
 		$this->wbd_success = new gevWBDSuccessVvAenderung($response,$this->row_id);
+		return $this->wbd_success;
 	}
 
 	/**
