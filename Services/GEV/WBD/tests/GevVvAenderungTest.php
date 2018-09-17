@@ -42,7 +42,8 @@ class GevVvAenderungTest extends RequestTestBase {
 							.'<soap:Body>'
 								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 									.'<AenderungRueckgabewert>'
-										.'<VermittlerId>20150728-100390-74</VermittlerId>'
+										.'<gutberatenId>20150728-100390-74</gutberatenId>'
+										.'<Synchronisationsstatus>1</Synchronisationsstatus>'
 									.'</AenderungRueckgabewert>'
 								.'</ns1:putResponse>'
 							.'</soap:Body>'
@@ -52,7 +53,8 @@ class GevVvAenderungTest extends RequestTestBase {
 							.'<soap:Body>'
 							.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 								.'<AenderungRueckgabewert>'
-									.'<VermittlerId>20150728-100390-74</VermittlerId>'
+									.'<gutberatenId>20150728-100390-74</gutberatenId>'
+									.'<Synchronisationsstatus>1</Synchronisationsstatus>'
 								.'</AenderungRueckgabewert>'
 							.'</ns1:putResponse>'
 							.'</soap:Body>'
@@ -62,7 +64,8 @@ class GevVvAenderungTest extends RequestTestBase {
 							.'<soap:Body>'
 							.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 								.'<AenderungRueckgabewert>'
-									.'<VermittlerId>20150728-100390-74</VermittlerId>'
+									.'<gutberatenId>20150728-100390-74</gutberatenId>'
+									.'<Synchronisationsstatus>1</Synchronisationsstatus>'
 								.'</AenderungRueckgabewert>'
 							.'</ns1:putResponse>'
 							.'</soap:Body>'
@@ -76,8 +79,8 @@ class GevVvAenderungTest extends RequestTestBase {
 							.'<soap:Body>'
 							.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 								.'<AenderungRueckgabewert>'
-									.'<VermittlerId>20150728-100390-74</VermittlerId>'
-									.'<VermittlerId>20150728-100390-74</VermittlerId>'
+									.'<gutberatenId>20150728-100390-74</gutberatenId>'
+									.'<gutberatenId>20150728-100390-74</gutberatenId>'
 								.'</AenderungRueckgabewert>'
 							.'</ns1:putResponse>'
 							.'</soap:Body>'
@@ -91,7 +94,7 @@ class GevVvAenderungTest extends RequestTestBase {
 							.'<soap:Body>'
 								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 									.'<AenderungRueckgabewert>'
-										.'<VermittlerdId>20150728-100390-74</VermittlerdId>'
+										.'<gutberatenId>20150728-100390-74</gutberatenId>'
 									.'</AenderungRueckgabewert>'
 								.'</ns1:putResponse>'
 							.'</soap:Body>'
@@ -138,7 +141,10 @@ class GevVvAenderungTest extends RequestTestBase {
 	*/
 	public function test_returnWBDSuccessObject($xml) {
 		$this->request->createWBDSuccess($xml);
-		$this->assertInstanceOf("WBDSuccess",$this->request->getWBDSuccess());
+		$object = $this->request->getWBDSuccess();
+		$this->assertInstanceOf("WBDSuccess", $object);
+		$this->assertEquals("20150728-100390-74", $object->AgentId());
+		$this->assertEquals("1", $object->SynchStatus());
 	}
 
 	/**
