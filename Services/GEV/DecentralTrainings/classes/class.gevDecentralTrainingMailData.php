@@ -41,6 +41,10 @@ class gevDecentralTrainingMailData extends ilMailData {
 			$this->booking_link = str_replace( "orange.cat06.de"
 											 , "www.generali-onlineakademie.de"
 											 , $this->booking_link);
+			$this->user_booking_link = $crs_utils->getPermanentBookingLinkGUI()->getHTML();
+			$this->user_booking_link = str_replace( "orange.cat06.de"
+											 , "www.generali-onlineakademie.de"
+											 , $this->user_booking_link);
 		}
 		else {
 			require_once("Services/GEV/Utils/classes/class.gevObjectUtils.php");
@@ -135,6 +139,14 @@ class gevDecentralTrainingMailData extends ilMailData {
 			case "BUCHUNGSLINK":
 				if ($this->booking_link !== null) {
 					$val = "<a href='".$this->booking_link."'>".$this->booking_link."</a>";
+				}
+				else {
+					$val = "";
+				}
+				break;
+			case "BUCHUNGSLINK TEILNEHMER":
+				if ($this->user_booking_link !== null) {
+					$val = "<a href='".$this->user_booking_link."'>".$this->user_booking_link."</a>";
 				}
 				else {
 					$val = "";
