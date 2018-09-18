@@ -1,5 +1,5 @@
 <?php
-require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPStorno.php");
+require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungszeitStorno.php");
 class GevWPStornoTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
@@ -14,11 +14,11 @@ class GevWPStornoTest extends RequestTestBase {
 					 ,'row_id'			=> 14521
 					);
 
-		$this->request = gevWBDRequestWPStorno::getInstance($data);
+		$this->request = gevWBDRequestBildungszeitStorno::getInstance($data);
 	}
 
 	public function test_isImplmentedRequest() {
-		$this->assertInstanceOf("gevWBDRequestWPStorno",$this->request);
+		$this->assertInstanceOf("gevWBDRequestBildungszeitStorno",$this->request);
 	}
 
 	public function xml_response_success() {

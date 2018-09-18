@@ -1,5 +1,5 @@
 <?php
-require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPMeldung.php");
+require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungszeitMeldung.php");
 class GevWPMeldungTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
@@ -19,11 +19,11 @@ class GevWPMeldungTest extends RequestTestBase {
 					  ,"bwv_id" => "22332-565-321-65" 
 					);
 
-		$this->request = gevWBDRequestWPMeldung::getInstance($data);
+		$this->request = gevWBDRequestBildungszeitMeldung::getInstance($data);
 	}
 
 	public function test_isImplmentedRequest() {
-		$this->assertInstanceOf("gevWBDRequestWPMeldung",$this->request);
+		$this->assertInstanceOf("gevWBDRequestBildungszeitMeldung",$this->request);
 	}
 
 	public function xml_response_success() {

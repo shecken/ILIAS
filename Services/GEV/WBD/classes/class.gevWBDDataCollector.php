@@ -81,7 +81,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestVVErstanlage[]
+	 * @return  gevWBDRequestKontoErstanlage[]
 	 */
 	protected function _createNewUserList($db)
 	{
@@ -114,7 +114,7 @@ class gevWBDDataCollector implements WBDDataCollector
 				$rec["degree"] = "";
 				$rec["address_info"] = "";
 
-				$object = gevWBDRequestVvErstanlage::getInstance($rec);
+				$object = gevWBDRequestKontoErstanlage::getInstance($rec);
 				if (is_array($object)) {
 					foreach ($object as $error) {
 						$this->error($error);
@@ -148,7 +148,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestVvAenderung[]
+	 * @return  gevWBDRequestKontoAenderung[]
 	 */
 	protected function _createUpdateUserList($db)
 	{
@@ -162,7 +162,7 @@ class gevWBDDataCollector implements WBDDataCollector
 			$rec["degree"] = "";
 			$rec["address_info"] = "";
 
-			$object = gevWBDRequestVvAenderung::getInstance($rec);
+			$object = gevWBDRequestKontoAenderung::getInstance($rec);
 			if (is_array($object)) {
 				foreach ($object as $error) {
 					$this->error($error);
@@ -189,7 +189,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestVermitVerwaltungTransferfaehig[]
+	 * @return  gevWBDRequestKontoTransferfaehig[]
 	 */
 	protected function _createReleaseUserList($db)
 	{
@@ -203,7 +203,7 @@ class gevWBDDataCollector implements WBDDataCollector
 			$failed_checks = $this->performPreliminaryChecks($checks_to_release, $wbd);
 
 			if (count($failed_checks) == 0) {
-				$object = gevWBDRequestVermitVerwaltungTransferfaehig::getInstance($rec);
+				$object = gevWBDRequestKontoTransferfaehig::getInstance($rec);
 				if (is_array($object)) {
 					foreach ($object as $error) {
 						$this->error($error);
@@ -237,7 +237,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestVermitVerwaltungAufnahme[]
+	 * @return  gevWBDRequestKontoAufnahme[]
 	 */
 	protected function _createAffiliateUserList($db)
 	{
@@ -250,7 +250,7 @@ class gevWBDDataCollector implements WBDDataCollector
 			$failed_checks = $this->performPreliminaryChecks($checks_to_release, $wbd);
 
 			if (count($failed_checks) == 0) {
-				$object = gevWBDRequestVermitVerwaltungAufnahme::getInstance($rec);
+				$object = gevWBDRequestKontoAufnahme::getInstance($rec);
 				if (is_array($object)) {
 					foreach ($object as $error) {
 						$this->error($error);
@@ -284,7 +284,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestWPMeldung[]
+	 * @return  gevWBDRequestBildungszeitMeldung[]
 	 */
 	protected function _createNewEduRecordList($db)
 	{
@@ -292,7 +292,7 @@ class gevWBDDataCollector implements WBDDataCollector
 		$res = $db->query($this->newEduRecordListQuery());
 
 		while ($rec = $db->fetchAssoc($res)) {
-			$object = gevWBDRequestWPMeldung::getInstance($rec);
+			$object = gevWBDRequestBildungszeitMeldung::getInstance($rec);
 			if (is_array($object)) {
 				foreach ($object as $error) {
 					$this->error($error);
@@ -320,7 +320,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestWPStorno[]
+	 * @return  gevWBDRequestBildungszeitStorno[]
 	 */
 	protected function _createStornoRecordList($db)
 	{
@@ -328,7 +328,7 @@ class gevWBDDataCollector implements WBDDataCollector
 		$res = $db->query($this->storneEduRecordListQuery(array(self::WBD_TP_SERVICE,self::WBD_TP_BASIS,self::WBD_EDU_PROVIDER), null));
 
 		while ($rec = $db->fetchAssoc($res)) {
-			$object = gevWBDRequestWPStorno::getInstance($rec);
+			$object = gevWBDRequestBildungszeitStorno::getInstance($rec);
 			if (is_array($object)) {
 				foreach ($object as $error) {
 					$this->error($error);
@@ -365,7 +365,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestWPAbfrage[]
+	 * @return  gevWBDRequestBildungAbfrage[]
 	 */
 	protected function _createWPAbfrageRecordList($db)
 	{
@@ -380,7 +380,7 @@ class gevWBDDataCollector implements WBDDataCollector
 			if (($counter + $start) % $use_every === 0) {
 				$rec["certification_period"] = "Selektiert nicht stornierte Weiterbildungsmaßnahmen aus der aktuelle Zertifizierungsperiode.";
 
-				$object = gevWBDRequestWPAbfrage::getInstance($rec);
+				$object = gevWBDRequestBildungAbfrage::getInstance($rec);
 				if (is_array($object)) {
 					foreach ($object as $error) {
 						$this->gLog->write($error);

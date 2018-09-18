@@ -1,5 +1,5 @@
 <?php
-require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVermitVerwaltungTransferfaehig.php");
+require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoTransferfaehig.php");
 class GevVermitVerwaltungTransferfaehigTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
@@ -15,11 +15,11 @@ class GevVermitVerwaltungTransferfaehigTest extends RequestTestBase {
 					  ,"row_id"=>35214
 					);
 
-		$this->request = gevWBDRequestVermitVerwaltungTransferfaehig::getInstance($data);
+		$this->request = gevWBDRequestKontoTransferfaehig::getInstance($data);
 	}
 
 	public function test_isImplmentedRequest() {
-		$this->assertInstanceOf("gevWBDRequestVermitVerwaltungTransferfaehig",$this->request);
+		$this->assertInstanceOf("gevWBDRequestKontoTransferfaehig",$this->request);
 	}
 
 	public function xml_response_success() {

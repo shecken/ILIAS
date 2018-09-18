@@ -1,5 +1,5 @@
 <?php
-require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVvErstanlage.php");
+require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoErstanlage.php");
 class GevVvErstanlageTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
@@ -34,11 +34,11 @@ class GevVvErstanlageTest extends RequestTestBase {
 					  ,"next_wbd_action"=>"1 - Erstanlage TP Service"
 					);
 
-		$this->request = gevWBDRequestVvErstanlage::getInstance($data);
+		$this->request = gevWBDRequestKontoErstanlage::getInstance($data);
 	}
 
 	public function test_isImplmentedRequest() {
-		$this->assertInstanceOf("gevWBDRequestVvErstanlage",$this->request);
+		$this->assertInstanceOf("gevWBDRequestKontoErstanlage",$this->request);
 	}
 
 	public function xml_response_success() {

@@ -1,5 +1,5 @@
 <?php
-require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPAbfrage.php");
+require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungAbfrage.php");
 class GevWPAbfrageTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
@@ -16,11 +16,11 @@ class GevWPAbfrageTest extends RequestTestBase {
 
 		$this->user_id = 10;
 
-		$this->request = gevWBDRequestWPAbfrage::getInstance($data);
+		$this->request = gevWBDRequestBildungAbfrage::getInstance($data);
 	}
 
 	public function test_isImplmentedRequest() {
-		$this->assertInstanceOf("gevWBDRequestWPAbfrage",$this->request);
+		$this->assertInstanceOf("gevWBDRequestBildungAbfrage",$this->request);
 	}
 
 	public function xml_response_success() {

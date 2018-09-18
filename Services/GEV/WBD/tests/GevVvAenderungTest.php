@@ -1,5 +1,5 @@
 <?php
-require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVvAenderung.php");
+require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoAenderung.php");
 class GevVvAenderungTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
@@ -30,11 +30,11 @@ class GevVvAenderungTest extends RequestTestBase {
 					  ,"bwv_id"=>"1212-2323-23-2323"
 					);
 
-		$this->request = gevWBDRequestVvAenderung::getInstance($data);
+		$this->request = gevWBDRequestKontoAenderung::getInstance($data);
 	}
 
 	public function test_isImplmentedRequest() {
-		$this->assertInstanceOf("gevWBDRequestVvAenderung",$this->request);
+		$this->assertInstanceOf("gevWBDRequestKontoAenderung",$this->request);
 	}
 
 	public function xml_response_success() {
