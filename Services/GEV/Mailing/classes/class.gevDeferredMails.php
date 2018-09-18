@@ -57,7 +57,7 @@ class gevDeferredMails {
 				$this->removeDeferredMails(
 					array($a_crs_id),
 					array(
-						"participant_sucessfull"
+						"participant_sucessfull",
 						"participant_absent_excused",
 						"participant_absent_not_excused"
 					),
