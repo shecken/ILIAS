@@ -1,11 +1,11 @@
-<?php
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessVvAenderung.php");
-class GevWBDSuccessVvAenderungTest extends SuccessTestBase {
+<?php{
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessKontoAenderung.php");
+class gevWBDSuccessKontoAenderungTest extends SuccessTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {
 		$this->row_id = 25;
-		$this->success = new gevWBDSuccessVvAenderung(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
+		$this->success = new gevWBDSuccessKontoAenderung(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 									.'<soap:Body>'
 										.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 											.'<AenderungRueckgabewert>'
@@ -51,16 +51,22 @@ class GevWBDSuccessVvAenderungTest extends SuccessTestBase {
 	}
 
 	public function test_isWBDSuccessVvAenderung() {
-		$this->assertInstanceOf("gevWBDSuccessVvAenderung",$this->success);
+		$this->assertInstanceOf("gevWBDSuccessKontoAenderung",$this->success);
 	}
 
 	/**
 	* @dataProvider success_xml_double_node
 	* @expectedException LogicException
 	*/
+<<<<<<< HEAD:Services/GEV/WBD/tests/GevWBDSuccessVvAenderungTest.php
 	public function test_searchedNodeMultiple($xml) {
 		$success = new gevWBDSuccessVvAenderung($xml, $this->row_id);
 		$this->assertNotInstanceOf("gevWBDSuccessVvAenderung",$success);
+=======
+	public function test_cantCreateSuccessObject($xml) {
+		$success = new gevWBDSuccessKontoAenderung($xml, $this->row_id);
+		$this->assertNotInstanceOf("gevWBDSuccessKontoAenderung",$success);
+>>>>>>> f1b04d4ae5... Rename tests:Services/GEV/WBD/tests/gevWBDSuccessKontoAenderungTest.php
 	}
 
 	/**

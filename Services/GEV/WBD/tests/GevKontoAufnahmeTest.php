@@ -1,6 +1,6 @@
 <?php
 require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoAufnahme.php");
-class GevVermitVerwaltungAufnahmeTest extends RequestTestBase {
+class GevKontoAufnahmeTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {

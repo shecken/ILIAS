@@ -1,10 +1,10 @@
 <?php
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessWPMeldung.php");
-class GevWBDSuccessWPMeldungTest extends SuccessTestBase {
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessBildungszeitMeldung.php");
+class gevWBDSuccessBildungszeitMeldungTest extends SuccessTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {
-		$this->success = new gevWBDSuccessWPMeldung(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
+		$this->success = new gevWBDSuccessBildungszeitMeldung(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 							.'<soap:Body>'
 								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 									.'<WPMeldungRueckgabewert>'
@@ -41,7 +41,7 @@ class GevWBDSuccessWPMeldungTest extends SuccessTestBase {
 	}
 
 	public function test_isWBDSuccessWPMeldung() {
-		$this->assertInstanceOf("gevWBDSuccessWPMeldung",$this->success);
+		$this->assertInstanceOf("gevWBDSuccessBildungszeitMeldung",$this->success);
 	}
 
 	/**
@@ -49,8 +49,8 @@ class GevWBDSuccessWPMeldungTest extends SuccessTestBase {
 	* @expectedException LogicException
 	*/
 	public function test_cantCreateSuccessObject($xml) {
-		$success = new gevWBDSuccessWPMeldung($xml,'2015-06-19', 6);
-		$this->assertNotInstanceOf("gevWBDSuccessWPMeldung",$success);
+		$success = new gevWBDSuccessBildungszeitMeldung($xml,'2015-06-19', 6);
+		$this->assertNotInstanceOf("gevWBDSuccessBildungszeitMeldung",$success);
 	}
 
 	public function test_agentId() {

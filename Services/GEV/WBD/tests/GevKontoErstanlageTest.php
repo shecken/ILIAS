@@ -1,6 +1,6 @@
 <?php
 require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoErstanlage.php");
-class GevVvErstanlageTest extends RequestTestBase {
+class GevKontoErstanlageTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {

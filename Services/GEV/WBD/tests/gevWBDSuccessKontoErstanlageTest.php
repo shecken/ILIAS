@@ -1,12 +1,12 @@
 <?php
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessVvErstanlage.php");
-class GevWBDSuccessVvErstanlageTest extends SuccessTestBase {
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessKontoErstanlage.php");
+class gevWBDSuccessKontoErstanlageTest extends SuccessTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {
 		$this->row_id = 25;
 
-		$this->success = new gevWBDSuccessVvErstanlage(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
+		$this->success = new gevWBDSuccessKontoErstanlage(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 									.'<soap:Body>'
 										.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 											.'<ErstanlageRueckgabewert>'
@@ -38,7 +38,7 @@ class GevWBDSuccessVvErstanlageTest extends SuccessTestBase {
 	}
 
 	public function test_isWBDSuccessVvErstanlage() {
-		$this->assertInstanceOf("gevWBDSuccessVvErstanlage",$this->success);
+		$this->assertInstanceOf("gevWBDSuccessKontoErstanlage",$this->success);
 	}
 
 	/**
@@ -46,8 +46,8 @@ class GevWBDSuccessVvErstanlageTest extends SuccessTestBase {
 	* @expectedException LogicException
 	*/
 	public function test_cantCreateSuccessObject($xml) {
-		$success = new gevWBDSuccessVvErstanlage($xml,$this->row_id, "1 - Erstanlage TP Service");
-		$this->assertNotInstanceOf("gevWBDSuccessVvErstanlage",$success);
+		$success = new gevWBDSuccessKontoErstanlage($xml,$this->row_id, "1 - Erstanlage TP Service");
+		$this->assertNotInstanceOf("gevWBDSuccessKontoErstanlage",$success);
 	}
 
 	public function test_internalAgentId() {

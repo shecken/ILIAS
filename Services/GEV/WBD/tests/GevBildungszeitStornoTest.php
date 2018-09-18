@@ -1,6 +1,6 @@
 <?php
 require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungszeitStorno.php");
-class GevWPStornoTest extends RequestTestBase {
+class GevBildungszeitStornoTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {

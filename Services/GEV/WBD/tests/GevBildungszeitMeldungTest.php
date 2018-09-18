@@ -1,6 +1,6 @@
 <?php
 require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungszeitMeldung.php");
-class GevWPMeldungTest extends RequestTestBase {
+class GevBildungszeitMeldungTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {

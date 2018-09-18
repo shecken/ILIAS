@@ -1,6 +1,6 @@
 <?php
 require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungAbfrage.php");
-class GevWPAbfrageTest extends RequestTestBase {
+class GevBildungAbfrageTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {

@@ -265,7 +265,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 		$row_id = 25;
 		$user_id = 21352;
 		$crs_id = 10;
-		$success = new gevWBDSuccessWPStorno(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
+		$success = new gevWBDSuccessBildungszeitStorno(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 												.'<soap:Body>'
 													.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 														.'<WPStornoRueckgabewert>'

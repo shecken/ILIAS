@@ -669,7 +669,7 @@ class gevWBDDataCollector implements WBDDataCollector
 	*
 	* @param array $success_data
 	*/
-	public function successNewUser(gevWBDSuccessVvErstanlage $success_data)
+	public function successNewUser(gevWBDSuccessKontoErstanlage $success_data)
 	{
 		$usr_id = $success_data->internalAgentId();
 		$usr_utils = gevUserUtils::getInstance($usr_id);
@@ -691,9 +691,9 @@ class gevWBDDataCollector implements WBDDataCollector
 	/**
 	* callback public function if update was successfull
 	*
-	* @param gevWBDSuccessVvAenderung $success_data
+	* @param gevWBDSuccessKontoAenderung $success_data
 	*/
-	public function successUpdateUser(gevWBDSuccessVvAenderung $success_data)
+	public function successUpdateUser(gevWBDSuccessKontoAenderung $success_data)
 	{
 		$row_id = $success_data->rowId();
 		$this->setLastWBDReport('hist_user', array($success_data->rowId()));
@@ -745,9 +745,9 @@ class gevWBDDataCollector implements WBDDataCollector
 	/**
 	* callback public function if report was successfull
 	*
-	* @param gevWBDSuccessWPMeldung $success_data
+	* @param gevWBDSuccessBildungszeitMeldung $success_data
 	*/
-	public function successNewEduRecord(gevWBDSuccessWPMeldung $success_data)
+	public function successNewEduRecord(gevWBDSuccessBildungszeitMeldung $success_data)
 	{
 		$this->setLastWBDReport('hist_usercoursestatus', array($success_data->rowId()));
 		$this->setBookingId($success_data->rowId(), $success_data->wbdBookingId());
@@ -764,9 +764,9 @@ class gevWBDDataCollector implements WBDDataCollector
 	/**
 	* callback public function if report was successfull
 	*
-	* @param gevWBDSuccessWPStorno $success_data
+	* @param gevWBDSuccessBildungszeitStorno $success_data
 	*/
-	public function successStornoRecord(gevWBDSuccessWPStorno $success_data)
+	public function successStornoRecord(gevWBDSuccessBildungszeitStorno $success_data)
 	{
 		$row_id = $success_data->rowId();
 		$user_id = $success_data->internalAgentId();
@@ -798,9 +798,9 @@ class gevWBDDataCollector implements WBDDataCollector
 	* callback public function if there are any WP reports for the user
 	* creates new courses id necessary
 	*
-	* @param gevWBDSuccessWPAbfrage $success_data
+	* @param gevWBDSuccessBildungAbfrage $success_data
 	*/
-	public function successWPAbfrageRecord(gevWBDSuccessWPAbfrage $success_data)
+	public function successWPAbfrageRecord(gevWBDSuccessBildungAbfrage $success_data)
 	{
 
 		$import_course_data = $success_data->importCourseData();

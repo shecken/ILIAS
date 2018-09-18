@@ -1,10 +1,10 @@
 <?php
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessWPAbfrage.php");
-class GevWBDSuccessWPAbfrageTest extends SuccessTestBase {
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessBildungAbfrage.php");
+class gevWBDSuccessBildungAbfrageTest extends SuccessTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {
-		$this->success = new gevWBDSuccessWPAbfrage(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
+		$this->success = new gevWBDSuccessBildungAbfrage(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 								.'<soap:Body>'
 									.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 										.'<WPAbfrageRueckgabewert>'
@@ -91,16 +91,22 @@ class GevWBDSuccessWPAbfrageTest extends SuccessTestBase {
 	}
 
 	public function test_isWPAbfrage() {
-		$this->assertInstanceOf("gevWBDSuccessWPAbfrage",$this->success);
+		$this->assertInstanceOf("gevWBDSuccessBildungAbfrage",$this->success);
 	}
 
 	/**
 	* @dataProvider success_xml_error_double_node
 	* @expectedException LogicException
 	*/
+<<<<<<< HEAD:Services/GEV/WBD/tests/GevWBDSuccessWPAbfrageTest.php
 	public function test_xml_error_double_node($xml) {
 		$success = new gevWBDSuccessWPAbfrage($xml,10);
 		$this->assertNotInstanceOf("gevWBDSuccessWPAbfrage",$success);
+=======
+	public function test_cantCreateSuccessObject($xml) {
+		$success = new gevWBDSuccessBildungAbfrage($xml,10);
+		$this->assertNotInstanceOf("gevWBDSuccessBildungAbfrage",$success);
+>>>>>>> f1b04d4ae5... Rename tests:Services/GEV/WBD/tests/gevWBDSuccessBildungAbfrageTest.php
 	}
 
 	public function test_agentId() {

@@ -1,11 +1,11 @@
 <?php
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessWPStorno.php");
-class GevWBDSuccessWPStornoTest extends SuccessTestBase {
-	protected $backupGlobals = FALSE;
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessBildungszeitStorno.php");
+class gevWBDSuccessBildungszeitStornoTest extends SuccessTestBase {
+	protected $backupGlobals = FALSE;	
 
 	public function setUp() {
 		$this->row_id = 25;
-		$this->success = new gevWBDSuccessWPStorno(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
+		$this->success = new gevWBDSuccessBildungszeitStorno(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 												.'<soap:Body>'
 													.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 														.'<WPStornoRueckgabewert>'
@@ -21,7 +21,7 @@ class GevWBDSuccessWPStornoTest extends SuccessTestBase {
 	}
 
 	public function test_isWBDSuccessVvAenderung() {
-		$this->assertInstanceOf("gevWBDSuccessWPStorno",$this->success);
+		$this->assertInstanceOf("gevWBDSuccessBildungszeitStorno",$this->success);
 	}
 
 	public function test_extractedValuesFromXML() {

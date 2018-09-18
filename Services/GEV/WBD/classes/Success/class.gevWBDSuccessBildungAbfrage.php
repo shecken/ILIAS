@@ -104,7 +104,7 @@ class gevWBDSuccessBildungAbfrage extends WBDSuccessBildungAbfrage {
 	public function userId() {
 		if($this->user_id === null) {
 			throw new LogicException(
-				"gevWBDSuccessWPAbfrage::internalAgentId:userId is NULL"
+				"gevWBDSuccessBildungAbfrage::internalAgentId:userId is NULL"
 			);
 		}
 

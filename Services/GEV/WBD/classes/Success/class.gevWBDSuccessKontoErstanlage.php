@@ -36,7 +36,7 @@ class gevWBDSuccessKontoErstanlage extends WBDSuccessKontoErstanlage{
 				$this->wbd_type = gevWBD::WBD_TP_BASIS;
 				break;
 			default:
-				throw new LogicException ("gevWBDSuccessVvErstanlage::__construct:no next_wbd_action");
+				throw new LogicException ("gevWBDSuccessKontoErstanlage::__construct:no next_wbd_action");
 		}
 	}
 	

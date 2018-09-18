@@ -1,6 +1,6 @@
 <?php
 require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoAenderung.php");
-class GevVvAenderungTest extends RequestTestBase {
+class GevKontoAenderungTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {

@@ -1,6 +1,6 @@
 <?php
 require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoTransferfaehig.php");
-class GevVermitVerwaltungTransferfaehigTest extends RequestTestBase {
+class GevKontoTransferfaehigTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {
