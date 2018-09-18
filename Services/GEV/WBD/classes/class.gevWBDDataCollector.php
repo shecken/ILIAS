@@ -29,13 +29,13 @@ class gevWBDDataCollector implements WBDDataCollector
 	public function __construct($lms_folder)
 	{
 		chdir($lms_folder);
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVermitVerwaltungAufnahme.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVermitVerwaltungTransferfaehig.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVvAenderung.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVvErstanlage.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPAbfrage.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPMeldung.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPStorno.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoAufnahme.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoTransferfaehig.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoAenderung.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoErstanlage.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungAbfrage.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungszeitMeldung.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungszeitStorno.php");
 		require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 		require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
