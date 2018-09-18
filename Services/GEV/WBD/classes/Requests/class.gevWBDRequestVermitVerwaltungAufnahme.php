@@ -10,21 +10,37 @@
 *
 */
 require_once("Services/GEV/WBD/classes/Requests/trait.gevWBDRequest.php");
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessVermitVerwaltungAufnahme.php");
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessKontoAufnahme.php");
 require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 
-class gevWBDRequestVermitVerwaltungAufnahme extends WBDRequestVermitVerwaltungAufnahme {
+class gevWBDRequestKontoAufnahme extends WBDRequestKontoAufnahme {
 	use gevWBDRequest;
 
 	protected $error_group;
 
 	protected function __construct($data) {
-		$this->auth_email 			= new WBDData("AuthentifizierungsEmail",$data["email"]);
-		$this->auth_mobile_phone_nr = new WBDData("AuthentifizierungsTelefonnummer",$data["mobile_phone_nr"]);
-		$this->agent_id 			= new WBDData("VermittlerId",$data["bwv_id"]);
-		$this->firstname 			= new WBDData("VorName",$data["firstname"]);
-		$this->lastname 			= new WBDData("Name",$data["lastname"]);
-		$this->birthday 			= new WBDData("Geburtsdatum", $data["birthday"]);
+		$this->auth_email = new WBDData(
+			"AuthentifizierungsEmail",
+			$data["email"]
+		);
+		$this->auth_mobile_phone_nr = new WBDData(
+			"AuthentifizierungsTelefonnummer",
+			$data["mobile_phone_nr"]
+		);
+		$this->agent_id = new WBDData(
+			"gutberatenId",
+			$data["bwv_id"]
+		);
+		$this->firstname = new WBDData(
+			"VorName",
+			$data["firstname"]
+		);
+		$this->lastname = new WBDData(
+			"Name",
+			$data["lastname"]
+		);
+		$this->birthday = new WBDData(
+			"Geburtsdatum", $data["birthday"]);
 
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
@@ -33,7 +49,12 @@ class gevWBDRequestVermitVerwaltungAufnahme extends WBDRequestVermitVerwaltungAu
 		$errors = $this->checkData();
 
 		if(!empty($errors)) {
-			throw new myLogicException("gevWBDRequestVermitVerwaltungAufnahme::__construct:checkData failed",0,null, $errors);
+			throw new myLogicException(
+				"gevWBDRequestKontoAufnahme::__construct:checkData failed",
+				0,
+				null,
+				$errors
+			);
 		}
 	}
 
@@ -41,19 +62,22 @@ class gevWBDRequestVermitVerwaltungAufnahme extends WBDRequestVermitVerwaltungAu
 		$data = self::polishInternalData($data);
 
 		try {
-			return new gevWBDRequestVermitVerwaltungAufnahme($data);
+			return new gevWBDRequestKontoAufnahme($data);
 		}catch(myLogicException $e) {
 			return $e->options();
 		}
 	}
 
 	/**
-	* creates the success object VermitVerwaltungTransferfaehig
+	* creates the success object KontoTransferfaehig
 	*
 	* @throws LogicException
 	*/
 	public function createWBDSuccess($response) {
-		$this->wbd_success = new gevWBDSuccessVermitVerwaltungAufnahme($this->user_id,$this->row_id);
+		$this->wbd_success = new gevWBDSuccessKontoAufnahme(
+			$this->user_id,
+			$this->row_id
+		);
 	}
 
 	/**
@@ -92,6 +116,11 @@ class gevWBDRequestVermitVerwaltungAufnahme extends WBDRequestVermitVerwaltungAu
 	*/
 	public function createWBDError($message) {
 		$reason = $this->parseReason($message);
-		$this->wbd_error = self::createError($reason, $this->error_group, $this->user_id, $this->row_id);
+		$this->wbd_error = self::createError(
+			$reason,
+			$this->error_group,
+			$this->user_id,
+			$this->row_id
+		);
 	}
 }

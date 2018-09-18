@@ -10,7 +10,7 @@
 */
 require_once("Services/GEV/WBD/classes/Success/trait.gevWBDSuccess.php");
 
-class gevWBDSuccessVermitVerwaltungTransferfaehig extends WBDSuccessVermitVerwaltungTransferfaehig {
+class gevWBDSuccessKontoTransferfaehig extends WBDSuccessKontoTransferfaehig {
 	use gevWBDSuccess;
 	
 	protected $usr_id;

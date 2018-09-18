@@ -11,7 +11,7 @@
 require_once("Services/GEV/WBD/classes/Success/trait.gevWBDSuccess.php");
 require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 
-class gevWBDSuccessVvErstanlage extends WBDSuccessVvErstanlage{
+class gevWBDSuccessKontoErstanlage extends WBDSuccessKontoErstanlage{
 	use gevWBDSuccess;
 
 	protected $row_id;

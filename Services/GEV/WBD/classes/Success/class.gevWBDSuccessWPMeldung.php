@@ -11,13 +11,17 @@
 require_once("Services/Calendar/classes/class.ilDate.php");
 require_once("Services/GEV/WBD/classes/Success/trait.gevWBDSuccess.php");
 
-class gevWBDSuccessWPMeldung extends WBDSuccessWPMeldung {
+class gevWBDSuccessBildungszeitMeldung extends WBDSuccessBildungszeitMeldung {
 	use gevWBDSuccess;
 	
 	protected $old_begin_of_certification;
 	protected $user_id;
 
-	public function __construct($response, $old_begin_of_certification, $user_id) {
+	public function __construct(
+		$response,
+		$old_begin_of_certification,
+		$user_id
+	) {
 		parent::__construct($response);
 
 		$begin_of_certification_period = self::nodeValue($response,self::BEGIN_OF_CERTIFICATION_PERIOD);
@@ -49,7 +53,9 @@ class gevWBDSuccessWPMeldung extends WBDSuccessWPMeldung {
 	* @return boolean
 	*/
 	public function doUpdateBeginOfCertification(){
-		if($this->begin_of_certification_period->get(IL_CAL_UNIX) != $this->old_begin_of_certification->get(IL_CAL_UNIX)) {
+		if($this->begin_of_certification_period->get(IL_CAL_UNIX) 
+			!= $this->old_begin_of_certification->get(IL_CAL_UNIX)
+		) {
 			return true;
 		}
 

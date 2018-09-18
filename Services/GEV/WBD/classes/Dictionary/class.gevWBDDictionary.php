@@ -16,7 +16,7 @@ class gevWBDDictionary implements Dictionary {
 	const SEARCH_IN_COURSE_TYPE = "course_type";
 	const SEARCH_IN_STUDY_CONTENT = "study_content";
 	const SEARCH_IN_WBD_TYPE = "wbd_type";
-	const SEARCH_IN_AGENT_STATUS = "agent_status";
+	const SEARCH_IN_GROUP_OF_PERSONS = "group_of_persons";
 	const SEARCH_IN_ADDRESS_TYPE = "address_type";
 	const SEARCH_IN_CERTIFICATION_PERIOD = "certification_period";
 
@@ -51,7 +51,7 @@ class gevWBDDictionary implements Dictionary {
 														,"wbd_type" => array("3 - TP-Service" => "ja"
 																	,"2 - TP-Basis" => "nein"
 															)
-														,"agent_status" => array("0 - aus Stellung" => "006"
+														,"group_of_persons" => array("0 - aus Stellung" => "006"
 																	,"0 - aus Rolle" => "006"
 																	,"1 - Angestellter Außendienst" => "002"
 																	,"2 - Ausschließlichkeitsvermittler" => "001"
@@ -101,7 +101,7 @@ class gevWBDDictionary implements Dictionary {
 														,"wbd_type" => array("ja" => "3 - TP-Service"
 																	,"nein" => "2 - TP-Basis"
 															)
-														,"agent_status" => array("001" => "Ausschließlichkeitsvermittler"
+														,"group_of_persons" => array("001" => "Ausschließlichkeitsvermittler"
 																	,"002" => "Angestellter Außendienst"
 																	,"003" => "Makler"
 																	,"004" => "Mehrfachagent"

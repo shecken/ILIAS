@@ -121,4 +121,11 @@ class GevWBDErrorTest extends ErrorTestBase {
 		$err = new gevWBDError($error, $group,'new_user', 2, 0);
 		$this->assertEquals($reason, $err->reason());
 	}
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function getErrorObject($errMsg,$usr_id,$row_id,$crs_id,$service) {
+		return new gevWBDError($errMsg,$usr_id,$row_id,$crs_id,$service);
+	}
 }

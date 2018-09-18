@@ -8,12 +8,12 @@
 * @version	$Id$
 *
 */
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessWPAbfrage.php");
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessBildungAbfrage.php");
 require_once("Services/GEV/WBD/classes/Requests/trait.gevWBDRequest.php");
 require_once("Services/GEV/WBD/classes/Dictionary/class.gevWBDDictionary.php");
 require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 
-class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
+class gevWBDRequestBildungAbfrage extends WBDRequestBildungAbfrage {
 	use gevWBDRequest;
 
 	protected $error_group;
@@ -24,9 +24,14 @@ class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
 		$this->defineValuesToTranslate();
 		$dic_errors = $this->translate($data, $data["user_id"], $data["row_id"]);
 
-		$this->certification_period 	= new WBDData("ZertifizierungsPeriode",$this->translate_value["ZertifizierungsPeriode"]);
-
-		$this->agent_id 				= new WBDData("VermittlerId",$data["bwv_id"]);
+		$this->certification_period  new WBDData(
+			"ZertifizierungsPeriode",
+			$this->translate_value["ZertifizierungsPeriode"]
+		);
+		$this->agent_id = new WBDData(
+			"gutberatenId",
+			$data["bwv_id"]
+		);
 
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
@@ -35,13 +40,18 @@ class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
 		$errors = $check_errors + $dic_errors;
 
 		if(!empty($errors)) {
-			throw new myLogicException("gevWBDRequestWPAbfrage::__construct:checkData failed",0,null, $errors);
+			throw new myLogicException(
+				"gevWBDRequestBildungAbfrage::__construct:checkData failed",
+				0,
+				null,
+				$errors
+			);
 		}
 	}
 
 	public static function getInstance(array $data) {
 		try {
-			return new gevWBDRequestWPAbfrage($data);
+			return new gevWBDRequestBildungAbfrage($data);
 		}catch(myLogicException $e) {
 			return $e->options();
 		}
@@ -64,8 +74,10 @@ class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
 	* @throws LogicException
 	*/
 	public function createWBDSuccess($response) {
-		$this->wbd_success = new gevWBDSuccessWPAbfrage($response,$this->user_id);
-		return $this->wbd_success;
+		$this->wbd_success = new gevWBDSuccessBildungAbfrage(
+			$response,
+			$this->user_id
+		);
 	}
 
 	/**
@@ -75,10 +87,20 @@ class gevWBDRequestWPAbfrage extends WBDRequestWPAbfrage {
 	*/
 	public function createWBDError($message) {
 		$reason = $this->parseReason($message);
-		$this->wbd_error = self::createError($reason, $this->error_group, $this->user_id, $this->row_id);
+		$this->wbd_error = self::createError(
+			$reason,
+			$this->error_group,
+			$this->user_id,
+			$this->row_id
+		);
 	}
 
 	protected function defineValuesToTranslate() {
-		$this->translate_value = array("ZertifizierungsPeriode" => array("field" => "certification_period", "group" => gevWBDDictionary::SEARCH_IN_CERTIFICATION_PERIOD));
+		$this->translate_value = array(
+			"ZertifizierungsPeriode" => array(
+				"field" => "certification_period",
+				"group" => gevWBDDictionary::SEARCH_IN_CERTIFICATION_PERIOD
+			)
+		);
 	}
 }

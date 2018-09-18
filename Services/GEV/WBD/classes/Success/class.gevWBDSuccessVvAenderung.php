@@ -10,7 +10,7 @@
 */
 require_once("Services/GEV/WBD/classes/Success/trait.gevWBDSuccess.php");
 
-class gevWBDSuccessVvAenderung extends WBDSuccessVvAenderung {
+class gevWBDSuccessKontoAenderung extends WBDSuccessKontoAenderung {
 	use gevWBDSuccess;
 
 	protected $row_id;
@@ -30,7 +30,7 @@ class gevWBDSuccessVvAenderung extends WBDSuccessVvAenderung {
 	*/
 	public function rowId() {
 		if($this->row_id === null) {
-			throw new LogicalException("gevWBDSuccessVvErstanlage::rowId:row_id is NULL");
+			throw new LogicalException("gevWBDSuccessKontoAenderung::rowId:row_id is NULL");
 		}
 		return $this->row_id;
 	}

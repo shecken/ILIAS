@@ -9,17 +9,23 @@
 *
 */
 require_once("Services/GEV/WBD/classes/Requests/trait.gevWBDRequest.php");
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessWPStorno.php");
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessBildungszeitStorno.php");
 require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 
-class gevWBDRequestWPStorno extends WBDRequestWPStorno {
+class gevWBDRequestBildungszeitStorno extends WBDRequestBildungszeitStorno {
 	use gevWBDRequest;
 
 	protected $error_group;
 
 	protected function __construct($data) {
-		$this->wbd_booking_id 	= new WBDData("WeiterbildungsPunkteBuchungsId",$data["wbd_booking_id"]);
-		$this->bwv_id 			= new WBDData("VermittlerId",$data["bwv_id"]);
+		$this->wbd_booking_id = new WBDData(
+			"WBDBuchungsId",
+			$data["wbd_booking_id"]
+		);
+		$this->bwv_id = new WBDData(
+			"gutberatenId",
+			$data["bwv_id"]
+		);
 
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
@@ -28,13 +34,18 @@ class gevWBDRequestWPStorno extends WBDRequestWPStorno {
 		$errors = $this->checkData();
 
 		if(!empty($errors)) {
-			throw new myLogicException("gevWBDRequestWPStorno::__construct:checkData failed",0,null, $errors);
+			throw new myLogicException(
+				"gevWBDRequestBildungszeitStorno::__construct:checkData failed",
+				0,
+				null,
+				$errors
+			);
 		}
 	}
 
 	public static function getInstance(array $data) {
 		try {
-			return new gevWBDRequestWPStorno($data);
+			return new gevWBDRequestBildungszeitStorno($data);
 		}catch(myLogicException $e) {
 			return $e->options();
 		}
@@ -57,7 +68,10 @@ class gevWBDRequestWPStorno extends WBDRequestWPStorno {
 	* @throws LogicException
 	*/
 	public function createWBDSuccess($response) {
-		$this->wbd_success = new gevWBDSuccessWPStorno($response,$this->row_id);
+		$this->wbd_success = new gevWBDSuccessBildungszeitStorno(
+			$response,
+			$this->row_id
+		);
 	}
 
 	/**
@@ -76,6 +90,11 @@ class gevWBDRequestWPStorno extends WBDRequestWPStorno {
 	*/
 	public function createWBDError($message) {
 		$reason = $this->parseReason($message);
-		$this->wbd_error = self::createError($reason, $this->error_group, $this->user_id, $this->row_id);
+		$this->wbd_error = self::createError(
+			$reason,
+			$this->error_group,
+			$this->user_id,
+			$this->row_id
+		);
 	}
 }
