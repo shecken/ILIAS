@@ -142,7 +142,7 @@ class gevCourseSearch {
 				"   ON cs.obj_id = cat.obj_id\n".
 				"   AND cat.field_id = ".$this->gDB->quote($categorie_field_id, "integer")."\n";
 			$additional_where .=
-				" AND (";
+				" OR (";
 				foreach ($a_search_options["cat"] as $option) {
 					$additional_where .= " cat.value LIKE ".$this->gDB->quote("%".$option."%")." OR ".PHP_EOL;
 				}
