@@ -142,7 +142,7 @@ class gevCourseSearch {
 				"   ON cs.obj_id = cat.obj_id\n".
 				"   AND cat.field_id = ".$this->gDB->quote($categorie_field_id, "integer")."\n";
 			$additional_where .=
-				" AND (";
+				" OR (";
 				foreach ($a_search_options["cat"] as $option) {
 					$additional_where .= " cat.value LIKE ".$this->gDB->quote("%".$option."%")." OR ".PHP_EOL;
 				}
@@ -437,6 +437,8 @@ class gevCourseSearch {
 				$options["prae"] = "Präsenztraining";
 				$options["webinar"] = "Webinar";
 				$options["self"] = "Selbstlernkurs";
+				$edus = "GATE";
+				$cat = ["Accelerating Technical Excellence (GATE)", "Developing Insurance Culture (GATE)", "Shaping the industry (GATE)"];
 				break;
 			case self::TAB_PRAESENZ:
 				$options["prae"] = "Präsenztraining";
