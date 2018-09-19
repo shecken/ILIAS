@@ -437,6 +437,8 @@ class gevCourseSearch {
 				$options["prae"] = "Präsenztraining";
 				$options["webinar"] = "Webinar";
 				$options["self"] = "Selbstlernkurs";
+				$edus = "GATE";
+				$cat = ["Accelerating Technical Excellence (GATE)", "Developing Insurance Culture (GATE)", "Shaping the industry (GATE)"];
 				break;
 			case self::TAB_PRAESENZ:
 				$options["prae"] = "Präsenztraining";
