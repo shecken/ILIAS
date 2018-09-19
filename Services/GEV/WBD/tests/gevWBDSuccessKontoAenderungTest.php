@@ -40,7 +40,7 @@ class gevWBDSuccessKontoAenderungTest extends SuccessTestBase {
 							.'<soap:Body>'
 								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 									.'<AenderungRueckgabewert>'
-										.'<gutberatenId>20150728-100390-74</gutberatenId>'
+										.'<Synchronisationsstatus>1</Synchronisationsstatus>'
 									.'</AenderungRueckgabewert>'
 								.'</ns1:putResponse>'
 							.'</soap:Body>'
@@ -50,7 +50,7 @@ class gevWBDSuccessKontoAenderungTest extends SuccessTestBase {
 			);
 	}
 
-	public function test_isWBDSuccessVvAenderung() {
+	public function test_isWBDSuccessKontoAenderung() {
 		$this->assertInstanceOf("gevWBDSuccessKontoAenderung",$this->success);
 	}
 
@@ -58,22 +58,15 @@ class gevWBDSuccessKontoAenderungTest extends SuccessTestBase {
 	* @dataProvider success_xml_double_node
 	* @expectedException LogicException
 	*/
-<<<<<<< HEAD:Services/GEV/WBD/tests/GevWBDSuccessVvAenderungTest.php
 	public function test_searchedNodeMultiple($xml) {
 		$success = new gevWBDSuccessVvAenderung($xml, $this->row_id);
-		$this->assertNotInstanceOf("gevWBDSuccessVvAenderung",$success);
-=======
-	public function test_cantCreateSuccessObject($xml) {
-		$success = new gevWBDSuccessKontoAenderung($xml, $this->row_id);
-		$this->assertNotInstanceOf("gevWBDSuccessKontoAenderung",$success);
->>>>>>> f1b04d4ae5... Rename tests:Services/GEV/WBD/tests/gevWBDSuccessKontoAenderungTest.php
 	}
 
 	/**
 	* @dataProvider success_xml_missing_node
 	*/
 	public function test_searchNodeMissing($xml) {
-		$success = new gevWBDSuccessVvAenderung($xml, $this->row_id);
+		$success = new gevWBDSuccessKontoAenderung($xml, $this->row_id);
 		$this->assertFalse($success->AgentId());
 	}
 

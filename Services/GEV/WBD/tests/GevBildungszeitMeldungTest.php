@@ -11,7 +11,7 @@ class GevBildungszeitMeldungTest extends RequestTestBase {
 		$data = array("title"=>"Berufsunfähigkeitsversicherung 2013"
 					  ,"begin_date" => "2015-12-20"
 					  ,"end_date" => "2015-12-20"
-					  ,"credit_points" => 5
+					  ,"learning_time" => 15
 					  ,"type" => "Virtuelles Training"
 					  ,"wbd_topic" => "Privat-Vorsorge-Lebens-/Rentenversicherung"
 					  ,"row_id"=>35214

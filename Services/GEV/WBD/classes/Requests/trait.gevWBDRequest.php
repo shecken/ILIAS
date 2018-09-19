@@ -220,7 +220,8 @@ trait gevWBDRequest{
 		
 		foreach (static::$check_szenarios as $field => $szenario) {
 			if(!array_key_exists($field, $wbd_data)) {
-				throw new LogicException("Key not found in data".$field);
+				//var_dump($wbd_data);
+				throw new LogicException("Key not found in data ".$field);
 			}
 
 			$value = $wbd_data[$field];

@@ -83,18 +83,17 @@ class GevBildungszeitStornoTest extends RequestTestBase {
 	}
 
 	public function xml_response_error() {
-		return array(array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
-												.'<soap:Body>'
-													.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
-														.'<WPStornoRueckgabewert>'
-															.'<WBDBuchungsId>2015-145-1654</WBDBuchungsId>'
-															.'<gutberatenId>20150728-100390-74</gutberatenId>'
-															.'<InterneBuchungsId>21352</InterneBuchungsId>'
-															.'<Kontobeginn>2015-07-28T00:00:00+02:00</Kontobeginn>'
-														.'</WPStornoRueckgabewert>'
-													.'</ns1:putResponse>'
-												.'</soap:Body>'
-											.'</soap:Envelope>'
+		return array(array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
+							.'<soap:Body>'
+								.'<soap:Fault>'
+									.'<faultcode>soap:Server</faultcode>'
+									.'<faultstring>Der Benutzer wurde von einem anderen TP angelegt: 5702136776</faultstring>'
+									.'<detail>'
+										.'<ns1:ExterneDoubletteException xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/" />'
+									.'</detail>'
+								.'</soap:Fault>'
+							.'</soap:Body>'
+						.'</soap:Envelope>'
 									))
 			);
 	}
@@ -115,14 +114,5 @@ class GevBildungszeitStornoTest extends RequestTestBase {
 	public function test_returnWBDSuccessObject($xml) {
 		$this->request->createWBDSuccess($xml);
 		$this->assertInstanceOf("WBDSuccess",$this->request->getWBDSuccess());
-	}
-
-	/**
-	 * @dataProvider xml_response_success
-	 * @expectedException LogicException
-	 */
-	public function test_returnWBDErrorObjectOnSuccess($xml) {
-		$this->request->createWBDSuccess($xml);
-		$this->assertInstanceOf("WBDError",$this->request->getWBDError());
 	}
 }

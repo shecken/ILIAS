@@ -32,7 +32,7 @@ class gevWBDRequestKontoAenderung extends WBDRequestKontoAenderung {
 			"AnredeSchluessel",
 			$this->translate_value["AnredeSchluessel"]
 		);
-		$this->group_of_persons  new WBDData(
+		$this->group_of_persons = new WBDData(
 			"Personenkreis",
 			$this->translate_value["Personenkreis"]
 		);

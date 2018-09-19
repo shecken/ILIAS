@@ -40,13 +40,13 @@ class gevWBDRequestBildungszeitMeldung extends WBDRequestBildungszeitMeldung {
 			"SeminarDatumVon",
 			$data["begin_date"]
 		);
-		$this->end_date = new WBDData("
-			SeminarDatumBis",
+		$this->end_date = new WBDData(
+			"SeminarDatumBis",
 			$data["end_date"]
 		);
 		$this->learning_time = new WBDData(
 			"Bildungszeit",
-			$data["credit_points"]
+			$data["learning_time"]
 		);
 		$this->internal_booking_id = new WBDData(
 			"InterneBuchungsId",

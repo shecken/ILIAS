@@ -25,9 +25,6 @@ class gevWBDSuccessKontoErstanlage extends WBDSuccessKontoErstanlage{
 		$create_date = self::nodeValue($response,self::CREATE_DATE);
 		$this->create_date = $this->createDate($create_date);
 
-		$begin_of_certification_period = self::nodeValue($response,self::BEGIN_OF_CERTIFICATION_PERIOD);
-		$this->begin_of_certification_period = $this->createDate($begin_of_certification_period);
-
 		switch ($next_wbd_action) {
 			case gevWBD::USR_WBD_NEXT_ACTION_NEW_TP_SERVICE:
 				$this->wbd_type = gevWBD::WBD_TP_SERVICE;

@@ -22,8 +22,7 @@ class GevKontoErstanlageTest extends RequestTestBase {
 					  ,"zipcode"=>"50969"
 					  ,"phone_nr"=>"0221/46757600"
 					  ,"degree"=>"Dr"
-					  ,"wbd_agent_status"=>"Makler"
-					  ,"okz"=>"OKZ1"
+					  ,"group_of_persons"=>"Makler"
 					  ,"firstname"=>"Stefan"
 					  ,"wbd_type"=>"3 - TP-Service"
 					  ,"training_pass"=>true
@@ -88,31 +87,8 @@ class GevKontoErstanlageTest extends RequestTestBase {
 								.'<ErstanlageRueckgabewert>'
 									.'<InternesPersonenkennzeichen>7665</InternesPersonenkennzeichen>'
 									.'<gutberatenId>20150728-100390-74</gutberatenId>'
+									.'<gutberatenId>20150728-100390-74</gutberatenId>'
 									.'<AnlageDatum>2015-07-28T00:00:00+02:00</AnlageDatum>'
-								.'</ErstanlageRueckgabewert>'
-							.'</ns1:putResponse>'
-							.'</soap:Body>'
-						.'</soap:Envelope>'
-				))
-					,array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
-							.'<soap:Body>'
-							.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
-								.'<ErstanlageRueckgabewert>'
-									.'<InternesPersonenkennzeichen>7665</InternesPersonenkennzeichen>'
-									.'<gutberatenId>20150728-100390-74</gutberatenId>'
-									.'<AnlagedDastum>2015-07-28T00:00:00+02:00</AnlagedDastum>'
-								.'</ErstanlageRueckgabewert>'
-							.'</ns1:putResponse>'
-							.'</soap:Body>'
-						.'</soap:Envelope>'
-				))
-					,array(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">'
-							.'<soap:Body>'
-							.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
-								.'<ErstanlageRueckgabewert>'
-									.'<InternesPersonenkennzeichen>7665</InternesPersonenkennzeichen>'
-									.'<gutberatenId>20150728-100390-74</gutberatenId>'
-									.'<AnlagedsaDatum>2015-07-28T00:00:00+02:00</AnlagedsaDatum>'
 								.'</ErstanlageRueckgabewert>'
 							.'</ns1:putResponse>'
 							.'</soap:Body>'

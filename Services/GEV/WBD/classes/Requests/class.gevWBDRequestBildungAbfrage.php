@@ -24,7 +24,7 @@ class gevWBDRequestBildungAbfrage extends WBDRequestBildungAbfrage {
 		$this->defineValuesToTranslate();
 		$dic_errors = $this->translate($data, $data["user_id"], $data["row_id"]);
 
-		$this->certification_period  new WBDData(
+		$this->certification_period = new WBDData(
 			"ZertifizierungsPeriode",
 			$this->translate_value["ZertifizierungsPeriode"]
 		);

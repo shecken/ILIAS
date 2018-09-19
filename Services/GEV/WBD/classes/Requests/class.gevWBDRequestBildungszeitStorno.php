@@ -22,7 +22,7 @@ class gevWBDRequestBildungszeitStorno extends WBDRequestBildungszeitStorno {
 			"WBDBuchungsId",
 			$data["wbd_booking_id"]
 		);
-		$this->bwv_id = new WBDData(
+		$this->agent_id = new WBDData(
 			"gutberatenId",
 			$data["bwv_id"]
 		);

@@ -26,7 +26,8 @@ class gevWBDSuccessKontoErstanlageTest extends SuccessTestBase {
 								.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 									.'<ErstanlageRueckgabewert>'
 										.'<InternesPersonenkennzeichen>7665</InternesPersonenkennzeichen>'
-										.'<gutberatenIda>20150728-100390-74</gutberatenIda>'
+										.'<gutberatenId>20150728-100390-74</gutberatenId>'
+										.'<gutberatenId>20150728-100390-74</gutberatenId>'
 										.'<AnlageDatum>2015-07-28T00:00:00+02:00</AnlageDatum>'
 									.'</ErstanlageRueckgabewert>'
 								.'</ns1:putResponse>'
@@ -56,9 +57,5 @@ class gevWBDSuccessKontoErstanlageTest extends SuccessTestBase {
 
 	public function test_agentId() {
 		$this->assertInternalType("string", $this->success->agentId());
-	}
-
-	public function test_beginOfCertificationPeriod() {
-		$this->assertInstanceOf("ilDate", $this->success->beginOfCertificationPeriod());
 	}
 }

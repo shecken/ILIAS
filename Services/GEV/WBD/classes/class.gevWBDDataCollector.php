@@ -704,7 +704,7 @@ class gevWBDDataCollector implements WBDDataCollector
 	*
 	* @param gevWBDSuccessVermitVerwaltungTransferfaehig $success_data
 	*/
-	public function successReleaseUser(gevWBDSuccessVermitVerwaltungTransferfaehig $success_data)
+	public function successReleaseUser(gevWBDRequestKontoTransferfaehig $success_data)
 	{
 		$row_id = $success_data->rowId();
 		$usr_id = $success_data->usrId();
@@ -725,7 +725,7 @@ class gevWBDDataCollector implements WBDDataCollector
 	*
 	* @param array $success_data
 	*/
-	public function successAffiliateUser(gevWBDSuccessVermitVerwaltungAufnahme $success_data)
+	public function successAffiliateUser(gevWBDRequestKontoAufnahme $success_data)
 	{
 		$usr_id = $success_data->usrId();
 		$row_id = $success_data->rowId();

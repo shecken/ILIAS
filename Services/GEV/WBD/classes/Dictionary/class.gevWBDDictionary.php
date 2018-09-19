@@ -23,7 +23,7 @@ class gevWBDDictionary implements Dictionary {
 	static $mappings = array(
 		"toWBDName" => array(
 			"gender" => array(
-				"m" => "001"
+				"m" => "001",
 				"f" => "002",
 				"w" => "002"
 			),

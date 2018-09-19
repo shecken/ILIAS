@@ -11,7 +11,7 @@ class gevWBDSuccessBildungszeitStornoTest extends SuccessTestBase {
 														.'<WPStornoRueckgabewert>'
 															.'<WBDBuchungsId>2015-145-1654</WBDBuchungsId>'
 															.'<gutberatenId>20150728-100390-74</gutberatenId>'
-															.'<InterneBuchungsId>21352</InterneBuchungsId>'
+															.'<InternesPersonenkennzeichen>21352</InternesPersonenkennzeichen>'
 															.'<Kontobeginn>2015-07-28T00:00:00+02:00</Kontobeginn>'
 														.'</WPStornoRueckgabewert>'
 													.'</ns1:putResponse>'
