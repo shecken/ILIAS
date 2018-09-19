@@ -109,7 +109,8 @@ class gevDeferredMails {
 						"invitation"
 					),
 					array($a_recipient)
-				)
+				);
+				break;
 		}
 	}
 	
