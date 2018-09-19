@@ -113,7 +113,8 @@ class gevCourseSearch {
 		$type_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_TYPE);
 		$bk_deadl_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_BOOKING_DEADLINE);
 		$schedule_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_SCHEDULE);
-		
+		$ep_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
+
 		// include search options 
 		$additional_join = "";
 		$additional_where = "";
@@ -124,33 +125,14 @@ class gevCourseSearch {
 		}
 
 		if (array_key_exists("edu_program", $a_search_options) && $a_search_options["edu_program"] != "") {
-			$edu_program_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
-			$additional_join .=
-				" LEFT JOIN adv_md_values_text edu_program\n".
-				"   ON cs.obj_id = edu_program.obj_id\n".
-				"   AND edu_program.field_id = ".$this->gDB->quote($edu_program_field_id, "integer")."\n";
-				;
 			$additional_where .=
-				" AND edu_program.value LIKE ".$this->gDB->quote("%".$a_search_options["edu_program"]."%", "text")."\n";
+				" AND ep.value LIKE ".$this->gDB->quote("%".$a_search_options["edu_program"]."%", "text")."\n";
 		}
 
-		if (array_key_exists("cat", $a_search_options) && count($a_search_options["cat"]) > 0) {
-			$categorie_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_TOPIC);
-
-			$additional_join .=
-				" LEFT JOIN adv_md_values_text cat\n".
-				"   ON cs.obj_id = cat.obj_id\n".
-				"   AND cat.field_id = ".$this->gDB->quote($categorie_field_id, "integer")."\n";
-			$additional_where .=
-				" OR (";
-				foreach ($a_search_options["cat"] as $option) {
-					$additional_where .= " cat.value LIKE ".$this->gDB->quote("%".$option."%")." OR ".PHP_EOL;
-				}
-				$additional_where .= " false)";
-		}
-
-		if (array_key_exists("type", $a_search_options)) {
+		if (array_key_exists("type", $a_search_options) || array_key_exists("all", $a_search_options)) {
 			$types = $a_search_options["type"];
+			$all = $a_search_options["all"];
+
 			$is_prae = false;
 			if(in_array("Präsenztraining", $types)) {
 				$additional_where .= " AND (ltype.value LIKE 'Pr_senztraining'\n";
@@ -166,7 +148,9 @@ class gevCourseSearch {
 				} else {
 					$additional_where .= " AND ";
 				}
-				$additional_where .=$this->gDB->in("ltype.value", $types, $negate = false, $a_type = "text").$close_bracked."\n";
+				$additional_where .=$this->gDB->in("ltype.value", $types, $negate = false, $a_type = "text")."\n";
+				$additional_where .= " OR ep.value LIKE ".$this->gDB->quote($all, "text")."\n";
+				$additional_where .= $close_bracked;
 			} else if ($is_prae) {
 				$additional_where .= ")";
 			}
@@ -237,6 +221,22 @@ class gevCourseSearch {
 				"       OR (end_date.value IS NULL AND NOT start_date.value < ".$this->gDB->quote(date("Y-m-d", $a_search_options["period"]["start"]))."))\n"
 				;
 		}
+
+		if (array_key_exists("cat", $a_search_options) && count($a_search_options["cat"]) > 0) {
+			$categorie_field_id = $this->gev_set->getAMDFieldId(gevSettings::CRS_AMD_TOPIC);
+
+			$additional_join .=
+				" LEFT JOIN adv_md_values_text cat\n".
+				"   ON cs.obj_id = cat.obj_id\n".
+				"   AND cat.field_id = ".$this->gDB->quote($categorie_field_id, "integer")."\n";
+			$additional_where .=
+				" OR (";
+				foreach ($a_search_options["cat"] as $option) {
+					$additional_where .= " cat.value LIKE ".$this->gDB->quote("%".$option."%")." OR ".PHP_EOL;
+				}
+				$additional_where .= " false)";
+		}
+
 		$hour = $this->gDB->quote(date("H"), "text");
 		$minute = $this->gDB->quote(date("i"),"text");
 		// try to narrow down the set as much as possible to avoid permission checks
@@ -266,7 +266,10 @@ class gevCourseSearch {
 				 // this is knowledge from course timings
 				 " \nLEFT JOIN crs_items timing\n".
 				 "   ON timing.obj_id = oref.ref_id\n".
-				
+				 // this is knowledge from course edu
+				 " \nLEFT JOIN adv_md_values_text ep\n".
+				 "   ON cs.obj_id = ep.obj_id\n".
+				 "   AND ep.field_id = ".$this->gDB->quote($ep_field_id, "integer")."\n".
 				 $additional_join.
 				 " \nWHERE cs.activation_type = 1\n".
 				 " \nAND (timing.timing_type = 1".
@@ -281,6 +284,7 @@ class gevCourseSearch {
 				 "            AND start_date.value > ".$this->gDB->quote(date("Y-m-d"), "text").
 				 "\n		    )\n".
 				 "		 OR (".$this->gDB->in("ltype.value", array("Selbstlernkurs"), false, "text").
+				 "		 OR ".$this->gDB->in("ep.value", array("GATE"), false, "text").
 				 "			\n)\n".
 				 "\n		 OR (ltype.value = 'Webinar' AND start_date.value = ".$this->gDB->quote(date("Y-m-d"), "text").
 			 	 "	\n		AND (\n".
@@ -437,7 +441,7 @@ class gevCourseSearch {
 				$options["prae"] = "Präsenztraining";
 				$options["webinar"] = "Webinar";
 				$options["self"] = "Selbstlernkurs";
-				$edus = "GATE";
+				$all = "GATE";
 				$cat = ["Accelerating Technical Excellence (GATE)", "Developing Insurance Culture (GATE)", "Shaping the industry (GATE)"];
 				break;
 			case self::TAB_PRAESENZ:
@@ -466,6 +470,7 @@ class gevCourseSearch {
 		$a_search_opts["type"] = $options;
 		$a_search_opts["edu_program"] = $edus;
 		$a_search_opts["cat"] = $cat;
+		$a_search_opts["all"] = $all;
 
 		return $a_search_opts;
 	}
