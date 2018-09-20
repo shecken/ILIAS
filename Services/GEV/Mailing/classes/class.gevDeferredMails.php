@@ -100,7 +100,7 @@ class gevDeferredMails {
 				break;
 			case "superior_booking_to_waiting":
 			case "admin_booking_to_waiting":
-				$this->removeDeffereMails(
+				$this->removeDeferredMails(
 					array( $a_crs_id),
 					array(
 						"admin_booking_to_booked",
