@@ -46,7 +46,15 @@ class ilGEVMailingPlugin extends ilEventHookPlugin
 		require_once "Services/GEV/Utils/classes/class.gevCourseUtils.php";
 		$crs_utils = gevCourseUtils::getInstance($crs_id);
 
-		if ($os == ilCourseBooking::STATUS_WAITING && $ns == ilCourseBooking::STATUS_BOOKED) {
+		global $ilAccess, $ilUser;
+		$ref_id = array_shift(ilObject::_getAllReferences($crs_id));
+		$book_access = $ilAccess->checkAccess("book_users", "", $ref_id);
+
+		if (
+			$os == ilCourseBooking::STATUS_WAITING &&
+			$ns == ilCourseBooking::STATUS_BOOKED &&
+			($ilUser->getId() == $usr_id || ($ilUser->getId() != $usr_id && !$book_access))
+		) {
 			if (!$crs_utils->isSelflearning() && !$crs_utils->isCoaching()) {
 				$mails->send("participant_waiting_to_booked", array($usr_id));
 			}
