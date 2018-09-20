@@ -39,7 +39,7 @@ class gevDecentralTrainingMailData extends ilMailData {
 			require_once("Services/Link/classes/class.ilLink.php");
 			$this->booking_link = ilLink::_getLink($this->request->createdObjId(), 'gevcrsbookingtrainer');
 			$this->booking_link = str_replace( "orange.cat06.de"
-											 , "www.generali-onlineakademie.de"
+											 , "generali-onlineakademie.de"
 											 , $this->booking_link);
 
 			if ($crs_utils->isDecentralTraining()) {
@@ -49,7 +49,7 @@ class gevDecentralTrainingMailData extends ilMailData {
 			}
 			$this->user_booking_link = ilLink::_getStaticLink($crs_utils->getId(), $type, true, "");
 			$this->user_booking_link = str_replace( "orange.cat06.de"
-											 , "www.generali-onlineakademie.de"
+											 , "generali-onlineakademie.de"
 											 , $this->user_booking_link);
 		}
 		else {
