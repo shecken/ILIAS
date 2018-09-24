@@ -1051,8 +1051,8 @@ class ilCourseBookingAdminGUI
 				$crs_utils = gevCourseUtils::getInstance($this->getCourse()->getId());
 
 				if (!$crs_utils->isDecentralTraining() && !$crs_utils->isSelflearning() && !$crs_utils->isCoaching()) {
-					$automails->sendDeffered("admin_booking_to_booked", array($user_id));
-					$automails->sendDeffered("invitation", array($user_id));
+					$automails->sendDeferred("admin_booking_to_booked", array($user_id));
+					$automails->sendDeferred("invitation", array($user_id));
 				}
 				// gev-patch end
 			}
