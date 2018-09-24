@@ -36,6 +36,7 @@ class ilGEVMailingPlugin extends ilEventHookPlugin
 		require_once("Services/CourseBooking/classes/class.ilCourseBooking.php");
 		require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
 
+		$is_admin = false;
 		$os = $a_parameter["old_status"];
 		$ns = $a_parameter["new_status"];
 		$usr_id = intval($a_parameter["user_id"]);
@@ -47,14 +48,28 @@ class ilGEVMailingPlugin extends ilEventHookPlugin
 		$crs_utils = gevCourseUtils::getInstance($crs_id);
 
 		global $ilAccess, $ilUser;
+
+		if($ilUser->getId() != $usr_id) {
+			$is_admin = true;
+		}
+
 		$ref_id = array_shift(ilObject::_getAllReferences($crs_id));
 		$book_access = $ilAccess->checkAccess("book_users", "", $ref_id);
 
 		if ($os == ilCourseBooking::STATUS_WAITING && $ns == ilCourseBooking::STATUS_BOOKED) {
 			if (!$crs_utils->isSelflearning() && !$crs_utils->isCoaching()) {
-				$mails->send("participant_waiting_to_booked", array($usr_id));
+				if ($is_admin) {
+					$mails->sendDeferred("participant_waiting_to_booked", array($usr_id));
+				} else {
+					$mails->send("participant_waiting_to_booked", array($usr_id));
+				}
 			}
-			$mails->send("invitation", array($usr_id));
+
+			if ($is_admin) {
+				$mails->sendDeferred("invitation", array($usr_id));
+			} else {
+				$mails->send("invitation", array($usr_id));
+			}
 		}
 	}
 
