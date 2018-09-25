@@ -75,6 +75,8 @@ class gevDeferredMails {
 					array($a_recipient)
 				);
 				break;
+			case "admin_cancel_booked_to_cancelled_with_budget_costs":
+			case "admin_cancel_booked_to_cancelled_with_costs":
 			case "admin_cancel_booked_to_cancelled_without_costs":
 			case "admin_cancel_waiting_to_cancelled_without_costs":
 				$this->removeDeferredMails(
@@ -91,6 +93,7 @@ class gevDeferredMails {
 				$this->removeDeferredMails(
 					array( $a_crs_id),
 					array(
+						"admin_cancel_booked_to_cancelled_with_budget_costs",
 						"admin_cancel_waiting_to_cancelled_without_costs",
 						"admin_cancel_booked_to_cancelled_with_costs",
 						"admin_cancel_booked_to_cancelled_without_costs",
@@ -105,6 +108,7 @@ class gevDeferredMails {
 					array( $a_crs_id),
 					array(
 						"admin_booking_to_booked",
+						"admin_cancel_booked_to_cancelled_with_budget_costs",
 						"admin_cancel_waiting_to_cancelled_without_costs",
 						"admin_cancel_booked_to_cancelled_with_costs",
 						"admin_cancel_booked_to_cancelled_without_costs",
@@ -131,6 +135,7 @@ class gevDeferredMails {
 													)) == 0;
 			case "admin_cancel_booked_to_cancelled_without_costs":
 			case "admin_cancel_waiting_to_cancelled_without_costs":
+			case "admin_cancel_booked_to_cancelled_with_budget_costs":
 				return count($this->getDeferredMails( array( $a_crs_id)
 													, array( "admin_booking_to_waiting"
 														   , "admin_booking_to_booked"
@@ -144,6 +149,7 @@ class gevDeferredMails {
 													, array("admin_cancel_waiting_to_cancelled_without_costs"
 															, "admin_cancel_booked_to_cancelled_with_costs"
 															, "admin_cancel_booked_to_cancelled_without_costs"
+															, "admin_cancel_booked_to_cancelled_with_budget_costs"
 															)
 													, array($a_recipient)
 													)) == 0;
