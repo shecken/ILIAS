@@ -1,0 +1,32 @@
+delete_user#:#Benutzer stornieren
+participant_list#:#Teilnehmerliste bearbeiten
+trouble_shooting_title#:#Trouble Shooting
+trouble_shooting_description#:#Verändert Daten in der Datenbank
+delete_usr_course_not_finished#:#Kurs ist nicht finalisiert. Sie können den Benutzer nachbuchen.
+delete_usr_wbd_booking_form_title#:#WBD Buchungsdaten
+delete_usr_wbd_booking_date#:#WBD Buchungstag
+delete_usr_wbd_booking_id#:#WBD Buchungsnummer
+back_to_form#:#Zurück
+delete_usr_form_title#:#Benutzer stornieren
+delete_usr_usr_id#:#Benutzername
+delete_usr_crs_id#:#Kurs Referenz Id
+delete_usr_remove_from_course#:#Benutzer stornieren
+cancel#:#Abbrechen
+add_list_course_not_finalized#:#Kurs ist nicht finalisiert. Sie können die Teilnehmerliste hinzufügen.
+add_list_no_list_uploaded#:#Keine Teilnehmerliste hochgeladen.
+add_list_list_not_uploaded#:#Teilnehmerliste wurde nicht hochgeladen.
+add_list_list_uploaded#:#Teilnehmerliste erfolgreich hochgeladen.
+add_list_form_title#:#Teilnehmerliste hinzufügen
+add_list_crs_id#:#Kurs Referenz Id
+add_list_participant_list_file#:#Teilnehmerliste
+add_list_add_list#:#Hinzufügen
+change_list_course_not_finalized#:#Kurs ist nicht finalisiert. Sie können die Teilnehmerliste austauschen.
+change_list_no_list_uploaded#:#Keine Teilnehmerliste hochgeladen.
+change_list_list_not_changed#:#Teilnehmerliste wurde nicht ausgetauscht.
+change_list_list_changed#:#Teilnehmerliste wurde erfolgreich ausgetauscht.
+change_list_form_title#:#Teilnehmerliste austauschen
+change_list_crs_id#:#Kurs Referenz Id
+change_list_participant_list_file#:#Teilnehmerliste
+change_list_change_list#:#Austauschen
+change_list#:#Teilnehmerliste austauschen
+add_list#:#Teilnehmerliste hinzufügen
