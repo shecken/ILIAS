@@ -41,14 +41,4 @@ class ilDeleteUserDB implements DeleteUserDB {
 		$query = "UPDATE crs_pstatus_crs SET state = ".self::TEMP_STATE." WHERE crs_id = ".$crs_id;
 		$this->db->manipulate($query);
 	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function setCourseFinalized($crs_id)
-	{
-		assert('is_int($crs_id)');
-		$query = "UPDATE crs_pstatus_crs SET state = ".self::FINALIZED_STATE." WHERE crs_id = ".$crs_id;
-		$this->db->manipulate($query);
-	}
 }

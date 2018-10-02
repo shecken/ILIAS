@@ -41,6 +41,13 @@ class ilTroubleShootingPlugin extends ilCronHookPlugin {
 		return new ilChangeListActions(new ilChangeListDB($ilDB));
 	}
 
+	public function getTransferActions()
+	{
+		global $ilDB;
+		require_once __DIR__."/TransferUser/TransferActions.php";
+		return new TransferActions($ilDB);
+	}
+
 	public function getTxtClosure()
 	{
 		return function($code) {

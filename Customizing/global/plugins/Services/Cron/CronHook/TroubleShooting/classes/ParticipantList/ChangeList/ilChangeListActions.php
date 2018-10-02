@@ -21,4 +21,17 @@ class ilChangeListActions {
 		assert('is_int($crs_id)');
 		return $this->db->isCourseFinalized($crs_id);
 	}
+
+	/**
+	 * Set a course to finalized state
+	 *
+	 * @param int 	$crs_id
+	 *
+	 * @return void
+	 */
+	public function setCourseFinalized($crs_id)
+	{
+		assert('is_int($crs_id)');
+		return $this->db->setCourseFinalized($crs_id);
+	}
 }

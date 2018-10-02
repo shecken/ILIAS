@@ -17,11 +17,11 @@ class ilDeleteUserActions {
 	 *
 	 * @return string[]
 	 */
-	public function getHistRowForCourseAndUserId($crs_id, $user_id)
+	public function getWBDBookingInfos($crs_id, $user_id)
 	{
 		assert('is_int($crs_id)');
 		assert('is_int($user_id)');
-		return $this->db->getHistRowForCourseAndUserId($crs_id, $user_id);
+		return $this->db->getWBDBookingInfos($crs_id, $user_id);
 	}
 
 	/**

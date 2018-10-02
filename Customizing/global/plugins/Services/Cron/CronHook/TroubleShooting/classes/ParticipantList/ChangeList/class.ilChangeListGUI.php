@@ -59,7 +59,7 @@ class ilChangeListGUI {
 
 		$post = $_POST;
 		$crs_ref_id = $post[self::CRS_ID];
-		$crs = ilObject::getInstanceByRefId($crs_ref_id);
+		$crs = ilObjectFactory::getInstanceByRefId($crs_ref_id);
 		$file = $post[self::FILE];
 
 		if(!$this->actions->isCourseFinalized($crs->getId())) {
@@ -81,10 +81,12 @@ class ilChangeListGUI {
 		$participation_status->deleteAttendanceList();
 		if(!$participation_status->uploadAttendanceList($_FILES[self::FILE]))
 		{
-			ilUtil::sendSuccess($lng->txt("change_list_list_not_changed"), true);
+			ilUtil::sendSuccess($this->txt("change_list_list_not_changed"), true);
 		} else {
-			ilUtil::sendSuccess($lng->txt("change_list_list_changed"), true);
+			ilUtil::sendSuccess($this->txt("change_list_list_changed"), true);
 		}
+
+		$this->actions->setCourseFinalized($crs->getId());
 
 		$this->ctrl->redirect($this, self::CMD_SHOW_FORM);
 	}
@@ -96,9 +98,11 @@ class ilChangeListGUI {
 		$form->setFormAction($this->ctrl->getFormAction($this));
 
 		$ti = new ilNumberInputGUI($this->txt("change_list_crs_id"), self::CRS_ID);
+		$ti->setRequired(true);
 		$form->addItem($ti);
 
 		$fi = new ilFileInputGUI($this->txt("change_list_participant_list_file"), self::FILE);
+		$fi->setRequired(true);
 		$form->addItem($fi);
 
 		$form->addCommandButton(self::CMD_CHANGE_LIST, $this->txt("change_list_change_list"));

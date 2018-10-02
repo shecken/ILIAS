@@ -59,7 +59,7 @@ class ilAddListGUI {
 
 		$post = $_POST;
 		$crs_ref_id = $post[self::CRS_ID];
-		$crs = ilObject::getInstanceByRefId($crs_ref_id);
+		$crs = ilObjectFactory::getInstanceByRefId($crs_ref_id);
 		$file = $post[self::FILE];
 
 		if(!$this->actions->isCourseFinalized($crs->getId())) {
@@ -80,10 +80,12 @@ class ilAddListGUI {
 		$participation_status = ilParticipationStatus::getInstance($crs);
 		if(!$participation_status->uploadAttendanceList($_FILES[self::FILE]))
 		{
-			ilUtil::sendSuccess($lng->txt("add_list_list_not_uploaded"), true);
+			ilUtil::sendSuccess($this->txt("add_list_list_not_uploaded"), true);
 		} else {
-			ilUtil::sendSuccess($lng->txt("add_list_list_uploaded"), true);
+			ilUtil::sendSuccess($this->txt("add_list_list_uploaded"), true);
 		}
+
+		$this->actions->setCourseFinalized($crs->getId());
 
 		$this->ctrl->redirect($this, self::CMD_SHOW_FORM);
 	}
@@ -95,9 +97,11 @@ class ilAddListGUI {
 		$form->setFormAction($this->ctrl->getFormAction($this));
 
 		$ti = new ilNumberInputGUI($this->txt("add_list_crs_id"), self::CRS_ID);
+		$ti->setRequired(true);
 		$form->addItem($ti);
 
 		$fi = new ilFileInputGUI($this->txt("add_list_participant_list_file"), self::FILE);
+		$fi->setRequired(true);
 		$form->addItem($fi);
 
 		$form->addCommandButton(self::CMD_ADD_LIST, $this->txt("add_list_add_list"));

@@ -4,11 +4,15 @@ require_once "Services/Component/classes/class.ilPluginConfigGUI.php";
 require_once __DIR__."/DeleteUserFromCourse/class.ilDeleteUserFromCourseGUI.php";
 require_once __DIR__."/ParticipantList/class.ilParticipantListGUI.php";
 require_once __DIR__."/SetParticipationStatus/class.ilSetParticipationStatusGUI.php";
+require_once __DIR__."/TransferUser/class.ilTransferUserGUI.php";
+require_once __DIR__."/RefreshCertificate/class.ilRefreshCertificateGUI.php";
 
 /**
  * @ilCtrl_Calls ilTroubleShootingConfigGUI: ilDeleteUserFromCourseGUI
  * @ilCtrl_Calls ilTroubleShootingConfigGUI: ilParticipantListGUI
  * @ilCtrl_Calls ilTroubleShootingConfigGUI: ilSetParticipationStatusGUI
+ * @ilCtrl_Calls ilTroubleShootingConfigGUI: ilTransferUserGUI
+ * @ilCtrl_Calls ilTroubleShootingConfigGUI: ilRefreshCertificateGUI
  * @ilCtrl_isCalledBy ilTroubleShootingConfigGUI: ilObjComponentSettingsGUI
  */
 
@@ -18,6 +22,8 @@ class ilTroubleShootingConfigGUI extends ilPluginConfigGUI
 	const TAB_DELETE_USER = "delete_user";
 	const TAB_PARTICIPANT_LIST = "participant_list";
 	const TAB_PARTICIPATION_STATUS = "participation_status";
+	const TAB_TRANSFER_USER = "transfer_user";
+	const TAB_REFRESH_CERTIFICATE = "refresh_certificate";
 
 	public function __construct()
 	{
@@ -65,6 +71,30 @@ class ilTroubleShootingConfigGUI extends ilPluginConfigGUI
 				);
 				$this->g_ctrl->forwardCommand($gui);
 				break;
+			case "iltransferusergui":
+				$this->setTabActive(self::TAB_TRANSFER_USER);
+				$gui = new ilTransferUserGUI(
+					$this->g_ctrl,
+					$this->g_tabs,
+					$this->g_tpl,
+					$this->plugin_object->getTxtClosure(),
+					$this->plugin_object->getTransferActions()
+				);
+				$this->g_ctrl->forwardCommand($gui);
+				break;
+			case "ilrefreshcertificategui":
+				$this->setTabActive(self::TAB_REFRESH_CERTIFICATE);
+				require_once __DIR__."/RefreshCertificate/RefreshCertificateHelper.php";
+				$transer_actions = $this->plugin_object->getTransferActions();
+				$gui = new ilRefreshCertificateGUI(
+					$this->g_ctrl,
+					$this->g_tabs,
+					$this->g_tpl,
+					$this->plugin_object->getTxtClosure(),
+					new RefreshCertificateHelper()
+				);
+				$this->g_ctrl->forwardCommand($gui);
+				break;
 			default:
 				switch($cmd) {
 					case self::CMD_CONFIGURE:
@@ -106,6 +136,18 @@ class ilTroubleShootingConfigGUI extends ilPluginConfigGUI
 			self::TAB_PARTICIPATION_STATUS,
 			$this->plugin_object->txt(self::TAB_PARTICIPATION_STATUS),
 			$this->g_ctrl->getLinkTargetByClass('ilSetParticipationStatusGUI', ilSetParticipationStatusGUI::CMD_SHOW_FORM)
+		);
+
+		$this->g_tabs->addTab(
+			self::TAB_TRANSFER_USER,
+			$this->plugin_object->txt(self::TAB_TRANSFER_USER),
+			$this->g_ctrl->getLinkTargetByClass('ilTransferUserGUI', ilTransferUserGUI::CMD_SHOW_FORM)
+		);
+
+		$this->g_tabs->addTab(
+			self::TAB_REFRESH_CERTIFICATE,
+			$this->plugin_object->txt(self::TAB_REFRESH_CERTIFICATE),
+			$this->g_ctrl->getLinkTargetByClass('ilRefreshCertificateGUI', ilRefreshCertificateGUI::CMD_REFRESH_CERTIFICATE)
 		);
 	}
 

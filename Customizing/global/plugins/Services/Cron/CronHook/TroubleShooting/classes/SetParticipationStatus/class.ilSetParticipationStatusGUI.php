@@ -66,16 +66,16 @@ class ilSetParticipationStatusGUI {
 	{
 		require_once "Services/Form/classes/class.ilPropertyFormGUI.php";
 		$form = new ilPropertyFormGUI();
-		$form->setTitle($this->txt(""));
+		$form->setTitle($this->txt("set_status_title"));
 		$form->setFormAction($this->ctrl->getFormAction($this));
 
-		$ti = new ilTextInputGUI($this->txt("delete_usr_usr_id"), self::F_USR_LOGIN);
+		$ti = new ilTextInputGUI($this->txt("set_status_usr_id"), self::F_USR_LOGIN);
 		$ti->setRequired(true);
 		$autocomplete_link = $this->ctrl->getLinkTarget($this, self::CMD_AUTOCOMPLETE, "", true);
 		$ti->setDataSource($autocomplete_link);
 		$form->addItem($ti);
 
-		$ti = new ilNumberInputGUI($this->txt("delete_usr_crs_id"), self::F_CRS_ID);
+		$ti = new ilNumberInputGUI($this->txt("set_status_crs_id"), self::F_CRS_ID);
 		$ti->setRequired(true);
 		$form->addItem($ti);
 
@@ -85,28 +85,60 @@ class ilSetParticipationStatusGUI {
 			gevSettings::CRS_USR_STATE_NOT_EXCUSED_VAL => self::CRS_USR_STATE_NOT_EXCUSED
 		);
 
-		$group = new ilRadioGroupInputGUI($this->txt(""), self::F_PARTICIPATION_STATUS);
+		$group = new ilRadioGroupInputGUI($this->txt("set_status_status"), self::F_PARTICIPATION_STATUS);
 		$group->setRequired(true);
 
-		foreach ($oprions as $key => $lang) {
+		foreach ($options as $key => $lang) {
 			$option = new ilRadioOption($this->txt($lang));
 			$option->setValue($key);
 
 			if($key == gevSettings::CRS_USR_STATE_SUCCESS_VAL) {
-				$ni = new ilNumberInputGUI($this->txt(""), self::F_LEARNING_TIME);
+				$ni = new ilNumberInputGUI($this->txt("set_status_wbd_time"), self::F_LEARNING_TIME);
+				$ni->setInfo($this->txt("set_status_wbd_time_info"));
 				$ni->setRequired(true);
 				$ni->allowDecimals(false);
-				$ni->setMinValue(0);
+				$ni->setMinValue(3);
 				$option->addSubItem($ni);
 			}
 			$group->addOption($option);
 		}
 		$form->addItem($group);
 
+		$form->addCommandButton(self::CMD_SET_PARTICIPATION_STATUS, $this->txt("set_status_set"));
+		$form->addCommandButton(self::CMD_SHOW_FORM, $this->txt("cancel"));
+
 		return $form;
 	}
 
+	protected function setParticipationStatus()
+	{
+		$form = $this->initForm();
 
+		if(!$form->checkInput()) {
+			$form->setValuesByPost();
+			$this->showForm($form);
+			return;
+		}
+
+		$post = $_POST;
+		$login = $post[self::F_USR_LOGIN];
+		$user_id = (int)ilObjUser::_lookupId($login);
+
+		$crs_ref_id = $post[self::F_CRS_ID];
+		$crs = ilObjectFactory::getInstanceByRefId($crs_ref_id);
+
+		$status = (int)$post[self::F_PARTICIPATION_STATUS];
+		$learning_time = 0;
+		if($status == gevSettings::CRS_USR_STATE_SUCCESS_VAL) {
+			$learning_time = (int)$post[self::F_LEARNING_TIME];
+		}
+
+		$this->updateDataTable($user_id, $crs, $status, $learning_time);
+		$this->executeHistorizingEvent($user_id, $crs->getId());
+
+		ilUtil::sendSuccess($this->txt("set_status_success"), true);
+		$this->ctrl->redirect($this, self::CMD_SHOW_FORM);
+	}
 
 	protected function userfieldAutocomplete()
 	{
@@ -121,13 +153,13 @@ class ilSetParticipationStatusGUI {
 		exit();
 	}
 
-	protected function updateDataTable($usr_id, $crs, $state, $cpoints) {
+	protected function updateDataTable($usr_id, $crs, $status, $learning_time) {
 		$crs_utils = gevCourseUtils::getInstanceByObj($crs);
-		$crs_utils->setParticipationStatusAndPoints($usr_id, $state, $cpoints);
+		$crs_utils->setParticipationStatusAndPoints($usr_id, $status, $learning_time);
 	}
 
-	protected function executeHistorizingEvent($usr_id) {
-		$params = array("crs_obj_id" => $this->crs_utils->getId()
+	protected function executeHistorizingEvent($usr_id, $crs_id) {
+		$params = array("crs_obj_id" => $crs_id
 						,"user_id" => $usr_id);
 
 		require_once "Services/UserCourseStatusHistorizing/classes/class.ilUserCourseStatusHistorizingAppEventListener.php";

@@ -63,13 +63,15 @@ class ilDeleteUserFromCourseGUI {
 
 		$post = $_POST;
 		$crs_ref_id = (int)$post[self::CRS_ID];
-		$crs = ilObjectFactory::getInstanceByObjId($crs_ref_id);
+		$crs = ilObjectFactory::getInstanceByRefId($crs_ref_id);
 
 		if(!$this->actions->isCourseFinalized($crs->getId())) {
 			ilUtil::sendInfo($this->txt("delete_usr_course_not_finished"));
+			$form->setValuesByPost();
+			$this->showForm($form);
 			return;
 		}
-		$login = $post[self::CRS_ID];
+		$login = $post[self::USR_LOGIN];
 		$user_id = (int)ilObjUser::_lookupId($login);
 
 		$wbd_booking_infos = $this->actions->getWBDBookingInfos($crs->getId(), $user_id);
@@ -79,7 +81,10 @@ class ilDeleteUserFromCourseGUI {
 		$bookings->cancelWithoutCosts($user_id);
 		$this->actions->setCourseFinalized($crs->getId());
 
-		if($wbd_booking_infos["wbd_booking_id"] != self::WBD_BOOKING_ID_EMPTY_VALUE) {
+		ilUtil::sendSuccess($this->txt("delete_usr_successful"), true);
+		if(!is_null($wbd_booking_infos)
+			&& $wbd_booking_infos["wbd_booking_id"] != self::WBD_BOOKING_ID_EMPTY_VALUE
+		) {
 			$this->showWBDBookingIdInfo($wbd_booking_infos);
 			return;
 		}
@@ -119,6 +124,7 @@ class ilDeleteUserFromCourseGUI {
 		$form->addItem($ti);
 
 		$ti = new ilNumberInputGUI($this->txt("delete_usr_crs_id"), self::CRS_ID);
+		$ti->setRequired(true);
 		$form->addItem($ti);
 
 		$form->addCommandButton(self::CMD_DELETE_USER, $this->txt("delete_usr_remove_from_course"));
