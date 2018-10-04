@@ -13,6 +13,24 @@ require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 
 class gevAgentRegistrationGUI
 {
+	const F_CONNECTION = "f_connection";
+	const F_GEV_MEDIATOR_NUMBER = "gev_mediator_number";
+	const F_DIMAK_MEDIATOR_NUMBER = "dimak_mediator_number";
+	const F_MEDIATOR_NUMBER = "mediator_number";
+	const F_EMAIL = "email";
+	const F_GENDER = "gender";
+	const F_TITLE = "title";
+	const F_LASTNAME = "lastname";
+	const F_FIRSTNAME = "firstname";
+	const F_COMPANY_NAME = "company_name";
+	const F_USERNAME = "username";
+	const F_PASSWORD = "password";
+	const F_B_PHONE = "b_phone";
+	const F_ACCEPT_TERMS = "accept_terms";
+
+	const V_CON_GEV = "gev";
+	const V_CON_DIMAK = "dimak";
+
 	protected static $VALID_AGENT_STATUSES = [
 		"608",
 		"650",
@@ -128,46 +146,40 @@ class gevAgentRegistrationGUI
 		return $this->gev_jobnumber_DB;
 	}
 
-	protected function startAgentRegistration($a_form = null)
+	protected function startAgentRegistration($form = null)
 	{
 		// get stellennummer and email
 		require_once("Services/CaTUIComponents/classes/class.catTitleGUI.php");
-
 		$title = new catTitleGUI("gev_registration", null, "GEV_img/ico-head-registration.png");
-
 		$tpl = new ilTemplate("tpl.gev_agent_registration.html", false, false, "Services/GEV/Registration");
 
-		if ($a_form !== null) {
-			$form = $a_form;
-			$form->setValuesByPost();
-		} else {
+		if (is_null($form)) {
 			$form = $this->buildRegistrationForm();
 		}
-		$tpl->setVariable("FORM", $form->getHTML());
 
+		$tpl->setVariable("FORM", $form->getHTML());
 		return  $title->render()
 			  . $tpl->get();
 	}
 
 	protected function registerAgent()
 	{
-		$res = $this->checkForm();
+		list($form, $error) = $this->checkForm();
 
-		if (!$res[1]) {
-			return $this->startAgentRegistration($res[0]);
+		if ($error) {
+			$form->setValuesByPost();
+			return $this->startAgentRegistration($form);
 		}
 
-		$form = $res[0];
-
 		$user = new ilObjUser();
-		$user->setLogin($form->getInput("username"));
-		$user->setEmail($form->getInput("email"));
-		$user->setPasswd($form->getInput("password"));
-		$user->setLastname($form->getInput("lastname"));
-		$user->setFirstname($form->getInput("firstname"));
-		$user->setGender($form->getInput("gender"));
-		$user->setUTitle($form->getInput("title"));
-		$user->setPhoneOffice($form->getInput("b_phone"));
+		$user->setLogin($form->getInput(self::F_USERNAME));
+		$user->setEmail($form->getInput(self::F_EMAIL));
+		$user->setPasswd($form->getInput(self::F_PASSWORD));
+		$user->setLastname($form->getInput(self::F_LASTNAME));
+		$user->setFirstname($form->getInput(self::F_FIRSTNAME));
+		$user->setGender($form->getInput(self::F_GENDER));
+		$user->setUTitle($form->getInput(self::F_TITLE));
+		$user->setPhoneOffice($form->getInput(self::F_B_PHONE));
 
 		// is not active, owner is root
 		$user->setActive(0, 6);
@@ -183,8 +195,8 @@ class gevAgentRegistrationGUI
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 		$user_utils = gevUserUtils::getInstanceByObj($user);
 
-		$user_utils->setEmail($form->getInput("email"));
-		$user_utils->setCompanyName($form->getInput("company_name"));
+		$user_utils->setEmail($form->getInput(self::F_EMAIL));
+		$user_utils->setCompanyName($form->getInput(self::F_COMPANY_NAME));
 
 		require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 		require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
@@ -192,7 +204,7 @@ class gevAgentRegistrationGUI
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 
 		$user_id = $user->getId();
-		$jobnumber = $form->getInput("position");
+		$jobnumber = $form->getInput(self::F_MEDIATOR_NUMBER);
 		$data = $this->getEntriesForJobnumber($jobnumber);
 		$vermittlerstatus = $data['agent_status'];
 
@@ -214,8 +226,8 @@ class gevAgentRegistrationGUI
 
 		global $ilAuth;
 
-		$ilAuth->username = $form->getInput("username");
-		$ilAuth->password = $form->getInput("password");
+		$ilAuth->username = $form->getInput(self::F_USERNAME);
+		$ilAuth->password = $form->getInput(self::F_PASSWORD);
 
 		$ilAuth->login();
 
@@ -241,20 +253,35 @@ class gevAgentRegistrationGUI
 			$err = true;
 		}
 
-		if ($_POST["chb1"] != 1) {
+		if ($_POST[self::F_ACCEPT_TERMS] != 1) {
 			$err = true;
-			$chb = $form->getItemByPostVar("chb1");
+			$chb = $form->getItemByPostVar(self::F_ACCEPT_TERMS);
 			$chb->setAlert($this->lng->txt("evg_mandatory"));
 		}
 
-		$jobnumber = $form->getInput("position");
-
-		if (!$this->checkValidJobnumber($jobnumber) || !$this->isAgent($jobnumber)) {
-			$err = true;
-			$form->getItemByPostVar("position")->setAlert($this->lng->txt("gev_evg_registration_not_found"));
+		$connection = $form->getInput(self::F_CONNECTION);
+		if($connection == self::V_CON_GEV) {
+			$jobnumber = $form->getInput(self::F_GEV_MEDIATOR_NUMBER);
+			if (!$this->checkJobnumber($jobnumber)) {
+				$err = true;
+				$form->getItemByPostVar(self::F_GEV_MEDIATOR_NUMBER)->setAlert($this->lng->txt("gev_evg_registration_not_found"));
+			}
 		}
 
-		return array($form, !$err);
+		if($connection == self::V_CON_DIMAK) {
+			$jobnumber = $form->getInput(self::F_DIMAK_MEDIATOR_NUMBER);
+			if (!$this->checkJobnumber($jobnumber)) {
+				$err = true;
+				$form->getItemByPostVar(self::F_DIMAK_MEDIATOR_NUMBER)->setAlert($this->lng->txt("gev_evg_registration_not_found"));
+			}
+		}
+
+		return array($form, $err);
+	}
+
+	protected function checkJobNumber($jobnumber)
+	{
+		return $this->checkValidJobnumber($jobnumber) && $this->isAgent($jobnumber);
 	}
 
 	protected function buildRegistrationForm()
@@ -262,63 +289,68 @@ class gevAgentRegistrationGUI
 		require_once("Services/Calendar/classes/class.ilDate.php");
 		require_once("Services/Form/classes/class.ilPropertyFormGUI.php");
 		require_once("Services/Form/classes/class.ilFormSectionHeaderGUI.php");
-		require_once("Services/Form/classes/class.ilTextInputGUI.php");
-		require_once("Services/Form/classes/class.ilDateTimeInputGUI.php");
-		require_once("Services/Form/classes/class.ilRadioGroupInputGUI.php");
-		require_once("Services/Form/classes/class.ilRadioOption.php");
-		require_once("Services/Form/classes/class.ilEMailInputGUI.php");
-		require_once("Services/Form/classes/class.ilNonEditableValueGUI.php");
-		require_once("Services/Form/classes/class.ilPasswordInputGUI.php");
-		require_once("Services/Form/classes/class.ilUserLoginInputGUI.php");
-		require_once("Services/Form/classes/class.ilHiddenInputGUI.php");
 
 		$form = new ilPropertyFormGUI();
 		$form->addCommandButton("registerAgent", $this->lng->txt("register"));
 		$form->setFormAction($this->ctrl->getFormAction($this));
 
-		$position = new ilTextInputGUI($this->lng->txt("gev_position"), "position");
-		$position->setSize(40);
-		$position->setRequired(true);
-		$form->addItem($position);
+		$connection = new ilRadioGroupInputGUI($this->lng->txt("gev_connection"), self::F_CONNECTION);
+		$option = new ilRadioOption($this->lng->txt("gev_mediator_number"), self::V_CON_GEV);
+		$number = new ilTextInputGUI("", self::F_GEV_MEDIATOR_NUMBER);
+		$number->setSize(40);
+		$number->setRequired(true);
+		$number->setInfo($this->lng->txt("gev_mediator_number_info"));
+		$option->addSubItem($number);
+		$connection->addOption($option);
 
-		$email = new ilEMailInputGUI($this->lng->txt("evg_email"), "email");
+		$option = new ilRadioOption($this->lng->txt("dimak_mediator_number"), self::V_CON_DIMAK);
+		$number = new ilTextInputGUI("", self::F_DIMAK_MEDIATOR_NUMBER);
+		$number->setSize(40);
+		$number->setRequired(true);
+		$number->setInfo($this->lng->txt("dimak_mediator_number_info"));
+		$option->addSubItem($number);
+		$connection->addOption($option);
+		$connection->setRequired(true);
+		$form->addItem($connection);
+
+		$email = new ilEMailInputGUI($this->lng->txt("evg_email"), self::F_EMAIL);
 		$email->setSize(40);
 		$email->setRequired(true);
 		$form->addItem($email);
 
-		$gender = new ilRadioGroupInputGUI($this->lng->txt("salutation"), "gender");
+		$gender = new ilRadioGroupInputGUI($this->lng->txt("salutation"), self::F_GENDER);
 		$gender->addOption(new ilRadioOption($this->lng->txt("salutation_m"), "m"));
 		$gender->addOption(new ilRadioOption($this->lng->txt("salutation_f"), "f"));
 		$gender->setRequired(true);
 		$form->addItem($gender);
 
-		$title = new ilTextInputGUI($this->lng->txt("title"), "title");
+		$title = new ilTextInputGUI($this->lng->txt("title"), self::F_TITLE);
 		$form->addItem($title);
-		$lastname = new ilTextInputGUI($this->lng->txt("lastname"), "lastname");
+		$lastname = new ilTextInputGUI($this->lng->txt("lastname"), self::F_LASTNAME);
 		$lastname->setRequired(true);
 		$form->addItem($lastname);
 
-		$firstname = new ilTextInputGUI($this->lng->txt("firstname"), "firstname");
+		$firstname = new ilTextInputGUI($this->lng->txt("firstname"), self::F_FIRSTNAME);
 		$firstname->setRequired(true);
 		$form->addItem($firstname);
 
-		$company_name = new ilTextInputGUI($this->lng->txt("gev_company_name"), "company_name");
+		$company_name = new ilTextInputGUI($this->lng->txt("gev_company_name"), self::F_COMPANY_NAME);
 		$company_name->setRequired(true);
 		$form->addItem($company_name);
 
-		$username = new ilUserLoginInputGUI($this->lng->txt("gev_username_free"), "username");
+		$username = new ilUserLoginInputGUI($this->lng->txt("gev_username_free"), self::F_USERNAME);
 		$username->setRequired(true);
 		$form->addItem($username);
 
-		$password1 = new ilPasswordInputGUI($this->lng->txt("password"), "password");
+		$password1 = new ilPasswordInputGUI($this->lng->txt("password"), self::F_PASSWORD);
 		$password1->setRequired(true);
 		$form->addItem($password1);
 
-		$b_phone = new ilTextInputGUI($this->lng->txt("gev_profile_phone"), "b_phone");
+		$b_phone = new ilTextInputGUI($this->lng->txt("gev_profile_phone"), self::F_B_PHONE);
 		$b_phone->setRequired(true);
 		$form->addItem($b_phone);
 
-		$chb1 = new ilCheckboxInputGUI("", "chb1");
+		$chb1 = new ilCheckboxInputGUI("", self::F_ACCEPT_TERMS);
 		$chb1->setOptionTitle($this->lng->txt("uvg_toc"));
 		$chb1->setRequired(true);
 		$form->addItem($chb1);
