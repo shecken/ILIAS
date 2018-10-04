@@ -100,7 +100,7 @@ class ilParticipationStatusTableGUI extends ilTable2GUI
 				$item["status"] = ilParticipationStatus::STATUS_SUCCESSFUL;
 				// gev-patch end 3703
 			}
-			if($item["points"] === null && $item["status"] == ilParticipationStatus::STATUS_NOT_SET)
+			if($item["points"] === null && in_array($item["status"], [ilParticipationStatus::STATUS_SUCCESSFUL, ilParticipationStatus::STATUS_NOT_SET]))
 			{
 				$item["points"] = $max;
 			}
