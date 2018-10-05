@@ -89,7 +89,6 @@ class ilStartUpGUI
 		{
 			$status = $_GET["auth_stat"];
 		}
-		
 		if($ilAuth->getAuth() && !$status)
 		{			
 			// deprecated?
@@ -99,7 +98,7 @@ class ilStartUpGUI
 			}			
 			$this->processStartingPage();
 		}
-		
+
 		// if authentication of soap user failed, but email address is
 		// known, show users and ask for password
 		if ($status == AUTH_SOAP_NO_ILIAS_USER_BUT_EMAIL)
@@ -1159,7 +1158,13 @@ class ilStartUpGUI
 		$client_id = $_COOKIE["ilClientId"];
 		ilUtil::setCookie("ilClientId","");
 
+		// cat-patch start
+		$url = $_SERVER["HTTP_REFERER"];
+		if (strpos($url, ILIAS_HTTP_PATH) !== false) {
+			ilUtil::redirect("dialog_login.php");
+		}
 		ilUtil::redirect("ilias.php");
+		// cat-patch end
 
 		//$this->showLogin();
 
