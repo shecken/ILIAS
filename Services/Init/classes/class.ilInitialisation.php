@@ -1501,7 +1501,7 @@ class ilInitialisation
 	 */
 	protected static function showingLoginForm($a_current_script)
 	{		
-		if($a_current_script == "login.php")
+		if($a_current_script == "login.php" || $a_current_script == "dialog_login.php")
 		{
 			return true;
 		}
