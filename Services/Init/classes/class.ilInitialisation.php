@@ -1501,8 +1501,10 @@ class ilInitialisation
 	 */
 	protected static function showingLoginForm($a_current_script)
 	{		
+		// cat-patch start
 		if($a_current_script == "login.php" || $a_current_script == "dialog_login.php")
 		{
+		// cat-patch end
 			return true;
 		}
 		
