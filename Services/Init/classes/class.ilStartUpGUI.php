@@ -1158,13 +1158,7 @@ class ilStartUpGUI
 		$client_id = $_COOKIE["ilClientId"];
 		ilUtil::setCookie("ilClientId","");
 
-		// cat-patch start
-		$url = $_SERVER["HTTP_REFERER"];
-		if (strpos($url, ILIAS_HTTP_PATH) !== false) {
-			ilUtil::redirect("dialog_login.php");
-		}
 		ilUtil::redirect("ilias.php");
-		// cat-patch end
 
 		//$this->showLogin();
 
