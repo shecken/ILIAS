@@ -56,9 +56,8 @@ class gevAgentOfferGUI {
 			default:
 				throw new ilException("gevAgentOfferGUI: Can't forward to '$next_class'");
 		}
-		
-		$this->tpl->setContent($ret);
-		$this->tpl->show();
+		echo json_encode($ret);
+		die();
 	}
 }
 
