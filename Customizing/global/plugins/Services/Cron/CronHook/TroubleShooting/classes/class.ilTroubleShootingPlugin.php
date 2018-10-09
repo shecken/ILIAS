@@ -8,13 +8,13 @@ class ilTroubleShootingPlugin extends ilCronHookPlugin {
 
 	function getCronJobInstances() {
 		require_once $this->getDirectory()."/classes/class.ilTroubleShootingJob.php";
-		$job = new ilTroubleShootingJob();
+		$job = new ilTroubleShootingJob($this);
 		return array($job);
 	}
 
 	function getCronJobInstance($a_job_id) {
 		require_once $this->getDirectory()."/classes/class.ilTroubleShootingJob.php";
-		return new ilTroubleShootingJob();
+		return new ilTroubleShootingJob($this);
 	}
 
 	public function getDeleteUserActions()
