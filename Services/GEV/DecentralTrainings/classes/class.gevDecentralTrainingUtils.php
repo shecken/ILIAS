@@ -157,7 +157,6 @@ class gevDecentralTrainingUtils
 		$edu_prog_field_id = $settings_utils->getAMDFieldId(gevSettings::CRS_AMD_EDU_PROGRAMM);
 		$is_tmplt_field_id = $settings_utils->getAMDFieldId(gevSettings::CRS_AMD_IS_TEMPLATE);
 		$presence_flexible_tpl_id = $settings_utils->getDctTplFlexPresenceObjId();
-		var_dump($presence_flexible_tpl_id);
 		$webinar_flexible_tpl_id = $settings_utils->getDctTplFlexWebinarObjId();
 
 		$query = $this->templateBaseQuery();
