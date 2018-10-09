@@ -1,0 +1,22 @@
+{
+	"name":"plugin-DiMAkImport",
+	"minimum-stability": "dev",
+	"description": "Dependencies of a mediator number import plugin",
+	"license": "GPL v3",
+	"authors": [
+		{
+			"name":"Stefan Hecken",
+			"email":"stefan.hecken@concepts-and-training.de",
+			"homepage":"https://concepts-and-training.de",
+			"role":"Developer"
+		}
+	],
+	"require": {
+		"box/spout": "2.7.2"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"CaT\\Plugins\\DiMAkImport\\" : "./classes"
+		}
+	}
+}
