@@ -67,7 +67,6 @@ class gevUserProfileGUI
 			$err = false;
 			$telno = $form->getInput("p_phone");
 			$telno_field = $form->getItemByPostVar("p_phone");
-
 			if ($form->getInput("username") !== $this->user->getLogin()
 			   && ilObjUser::_loginExists($form->getInput("username"))) {
 				$username_field = $form->getItemByPostVar("username");
@@ -168,6 +167,7 @@ class gevUserProfileGUI
 		$username = new ilUserLoginInputGUI($this->lng->txt("gev_username_free"), "username");
 		$username->setRequired(true);
 		$username->setValue($this->user->getLogin());
+		$username->setCurrentUserId($this->user->getId());
 		$form->addItem($username);
 
 		$pw = new ilPasswordInputGUI($this->lng->txt("passwd"), "passwd");
