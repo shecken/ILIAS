@@ -44,7 +44,7 @@ class gevAgentRegistrationGUI
 	 */
 	protected $gev_jobnumber_DB;
 
-	public function __construct()
+	public function __construct($data_actions)
 	{
 		global $lng, $ilCtrl, $tpl, $ilLog, $ilDB;
 
@@ -55,6 +55,7 @@ class gevAgentRegistrationGUI
 		$this->db = &$ilDB;
 		$this->import = null;
 		$this->stellennummer_data = null;
+		$this->data_actions = $data_actions;
 
 		$this->tpl->getStandardTemplate();
 	}
@@ -269,14 +270,19 @@ class gevAgentRegistrationGUI
 		}
 
 		if($connection == self::V_CON_DIMAK) {
-			$jobnumber = $form->getInput(self::F_DIMAK_MEDIATOR_NUMBER);
-			if (!$this->checkJobnumber($jobnumber)) {
+			$mediator_number = $form->getInput(self::F_DIMAK_MEDIATOR_NUMBER);
+			if (!$this->checkDimakMediatorNumber($mediator_number)) {
 				$err = true;
 				$form->getItemByPostVar(self::F_DIMAK_MEDIATOR_NUMBER)->setAlert($this->lng->txt("gev_evg_registration_not_found"));
 			}
 		}
 
 		return array($form, $err);
+	}
+
+	protected function checkDimakMediatorNumber($mediator_number)
+	{
+		return $this->data_actions->checkAgendNumber($mediator_number);
 	}
 
 	protected function checkJobNumber($jobnumber)
