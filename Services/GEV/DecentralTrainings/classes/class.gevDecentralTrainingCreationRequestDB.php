@@ -46,7 +46,7 @@ class gevDecentralTrainingCreationRequestDB
 			"        , ".$ilDB->quote($settings->venueObjId(), "integer")."\n".
 			"        , ".$ilDB->quote($settings->venueRoomNr(), "text")."\n".
 			"        , ".$ilDB->quote($settings->venueText(), "text")."\n".
-			"        , ".$ilDB->quote($settings->orguRefId(), "integer")."\n".
+			"        , ".$ilDB->quote(null, "integer")."\n".
 			"        , ".$ilDB->quote($settings->description(), "text")."\n".
 			"        , ".$ilDB->quote($settings->orgaInfo(), "text")."\n".
 			"        , ".$ilDB->quote($settings->webinarLink(), "text")."\n".
@@ -88,7 +88,7 @@ class gevDecentralTrainingCreationRequestDB
 			"     , venue_obj_id = ".$ilDB->quote($settings->venueObjId(), "integer")."\n".
 			"     , venue_room_nr = ".$ilDB->quote($settings->venueRoomNr(), "text")."\n".
 			"     , venue_text = ".$ilDB->quote($settings->venueText(), "text")."\n".
-			"     , orgu_ref_id= ".$ilDB->quote($settings->orguRefId(), "integer")."\n".
+			"     , orgu_ref_id= ".$ilDB->quote(null, "integer")."\n".
 			"     , description = ".$ilDB->quote($settings->description(), "text")."\n".
 			"     , orga_info = ".$ilDB->quote($settings->orgaInfo(), "text")."\n".
 			"     , webinar_link = ".$ilDB->quote($settings->webinarLink(), "text")."\n".
@@ -295,7 +295,7 @@ class gevDecentralTrainingCreationRequestDB
 								  )
 	{
 		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingSettings.php");
-		return new gevDecentralTrainingSettings($a_start_datetime, $a_end_datetime, $a_venue_obj_id, $a_venue_room_nr, $a_venue_text, $a_orgu_ref_id, $a_description, $a_orga_info, $a_webinar_link, $a_webinar_password, $a_title, $a_vc_type, $a_training_category, $a_target_group, $a_gdv_topic, $a_tmp_path_string, $a_added_files, $periods);
+		return new gevDecentralTrainingSettings($a_start_datetime, $a_end_datetime, $a_venue_obj_id, $a_venue_room_nr, $a_venue_text, $a_description, $a_orga_info, $a_webinar_link, $a_webinar_password, $a_title, $a_vc_type, $a_training_category, $a_target_group, $a_gdv_topic, $a_tmp_path_string, $a_added_files, $periods);
 	}
 
 	protected function newCreationRequest($a_user_id, $a_template_obj_id, array $a_trainer_ids, gevDecentralTrainingSettings $a_settings, $a_request_id, $a_session_id, ilDateTime $a_requested_ts = null, ilDateTime $a_finished_ts = null, $a_created_obj_id = null)

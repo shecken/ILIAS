@@ -575,7 +575,6 @@ class gevDecentralTrainingGUI
 		$new_vals["desc"] = $_POST["description"] ? $_POST["description"] : null;
 		$new_vals["date"] = $_POST["date"]["date"];
 		$new_vals["time"] = $_POST["time"];
-		$new_vals["orgu_id"] = $_POST["orgu_id"];
 		$new_vals["venue_id"] = null;
 		$new_vals["venue_room_nr"] = null;
 		$new_vals["venue_free"] = null;
@@ -851,7 +850,6 @@ class gevDecentralTrainingGUI
 			$vc_type = null;
 		}
 
-		$orgu_id = $a_form->getInput("orgu_id");
 		$description = $a_form->getInput("description");
 		$orgaInfo = $a_form->getInput("orgaInfo");
 
@@ -912,7 +910,6 @@ class gevDecentralTrainingGUI
 			$venue_obj_id ? (int)$venue_obj_id : null,
 			$venue_room_nr,
 			$venue_text,
-			$orgu_id ? (int)$orgu_id : null,
 			$description ? $description : "",
 			$orgaInfo ? $orgaInfo : "",
 			$webinar_link,
@@ -1225,16 +1222,6 @@ class gevDecentralTrainingGUI
 			}
 			$form->addItem($venue_free_text);
 		}
-		require_once("Services/TEP/classes/class.ilTEP.php");
-		$org_info = ilTEP::getPossibleOrgUnitsForDecentralTrainingEntriesSeparated();
-		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingOrgUnitSelectionInputGUI.php");
-		$orgu_selection = new gevDecentralTrainingOrgUnitSelectionInputGUI($org_info, "orgu_id", false, false);
-		if ($a_fill) {
-			$orgu_selection->setValue($a_form_values["orgu_id"]);
-		}
-		$orgu_selection->setRecursive(false);
-		$orgu_selection->setDisabled($a_form_values["no_changes_allowed"]);
-		$form->addItem($orgu_selection);
 
 		/*************************
 		* ORGANISTION
@@ -1466,18 +1453,6 @@ class gevDecentralTrainingGUI
 			}
 			$form->addItem($venue_free_text);
 		}
-		require_once("Services/TEP/classes/class.ilTEP.php");
-
-		$org_info = ilTEP::getPossibleOrgUnitsForDecentralTrainingEntriesSeparated();
-		require_once("Services/GEV/DecentralTrainings/classes/class.gevDecentralTrainingOrgUnitSelectionInputGUI.php");
-		$orgu_selection = new gevDecentralTrainingOrgUnitSelectionInputGUI($org_info, "orgu_id", false, false);
-		if ($a_fill) {
-			$orgu_selection->setValue($a_form_values["orgu_id"]);
-		}
-		$orgu_selection->setRecursive(false);
-		$orgu_selection->setDisabled($a_form_values["no_changes_allowed"]);
-		$form->addItem($orgu_selection);
-
 
 		/*************************
 		* ORGANISTION
@@ -1765,7 +1740,6 @@ class gevDecentralTrainingGUI
 
 		$training_info["credit_points"] = gevCourseUtils::getInstance($a_template_id)->getCreditPoints();
 		$training_info["no_changes_allowed"] = false;
-		$training_info["orgu_id"] = "";
 
 
 		foreach ($tmp as $day => $time_period) {
@@ -1776,42 +1750,6 @@ class gevDecentralTrainingGUI
 				= (int)$aux_end[0] * 60 + (int)$aux_end[1] - ((int)$aux_begin[0] * 60 + (int)$aux_begin[1]);
 			$training_info['schedule_starts_'.$day] = new ilDateTime("1970-01-01 ".$aux_times[0].":00", IL_CAL_DATETIME);
 			$training_info['schedule_ends_'.$day] = new ilDateTime("1970-01-01 ".$aux_times[1].":00", IL_CAL_DATETIME);
-		}
-
-		$trainer_orgus = array();
-		foreach ($trainer_ids as $key => $trainer_id) {
-			$usr_utils = gevUserUtils::getInstance($trainer_id);
-			if ($usr_utils->isUVGDBV()) {
-				if ($usr_utils->isSuperior()) {
-					$sup_ids = array($usr_utils->getId());
-				} else {
-					$sup_ids = gevOrgUnitUtils::getSuperiorsOfUser($usr_utils->getId());
-				}
-
-				foreach ($sup_ids as $sup_id) {
-					$pers_org_unit = $uvg_org_units->getOrgUnitIdOf($sup_id);
-					if ($pers_org_unit) {
-						try {
-							$above_ref_id = gevOrgUnitUtils::getBDOf(gevObjectUtils::getRefId($pers_org_unit));
-							$trainer_orgus[] = $above_ref_id;
-						} catch (Exception $e) {
-							$this->log->write("no BD found for user: ".$usr_utils->getId());
-						}
-					}
-				}
-			} else {
-				$trainer_orgus = null;
-				break;
-			}
-		}
-
-		if ($trainer_orgus !== null) {
-			$trainer_orgus = array_unique($trainer_orgus);
-			if (count($trainer_orgus) == 1) {
-				$training_info["orgu_id"] = $trainer_orgus[0];
-			} else {
-				$training_info["orgu_id"] = $uvg_org_units->getBaseRefId();
-			}
 		}
 		return $training_info;
 	}
@@ -1834,7 +1772,6 @@ class gevDecentralTrainingGUI
 			, "venue_free_text" => $crs_utils->getVenueFreeText()
 			, "webinar_link" => $crs_utils->getVirtualClassLink()
 			, "webinar_password" => $crs_utils->getVirtualClassPassword()
-			, "orgu_id" => $crs_utils->getTEPOrguId()
 			, "invitation_preview" => $crs_utils->getInvitationMailPreview()
 			, "orgaInfo" => $crs_utils->getOrgaInfo()
 			, "credit_points" => $crs_utils->getCreditPoints()
@@ -1905,7 +1842,6 @@ class gevDecentralTrainingGUI
 			, "venue_free_text" => $request->settings()->venueText()
 			, "webinar_link" => $request->settings()->webinarLink()
 			, "webinar_password" => $request->settings()->webinarPassword()
-			, "orgu_id" => $request->settings()->orguRefId()
 			, "invitation_preview" => ""
 			, "orgaInfo" => $request->settings()->orgaInfo()
 			, "webinar_vc_type" => $request->settings()->vcType()
