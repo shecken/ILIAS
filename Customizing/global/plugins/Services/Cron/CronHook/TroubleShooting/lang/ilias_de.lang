@@ -1,0 +1,69 @@
+delete_user#:#Benutzer stornieren
+participant_list#:#Teilnehmerliste bearbeiten
+trouble_shooting_title#:#Trouble Shooting
+trouble_shooting_description#:#Verändert Daten in der Datenbank
+delete_usr_course_not_finished#:#Kurs ist nicht finalisiert. Sie können den Benutzer stornieren.
+delete_usr_wbd_booking_form_title#:#WBD Buchungsdaten
+delete_usr_wbd_booking_date#:#WBD Buchungstag
+delete_usr_wbd_booking_id#:#WBD Buchungsnummer
+back_to_form#:#Zurück
+delete_usr_form_title#:#Benutzer stornieren
+delete_usr_usr_id#:#Benutzername
+delete_usr_crs_id#:#Kurs Referenz Id
+delete_usr_remove_from_course#:#Benutzer stornieren
+cancel#:#Abbrechen
+add_list_course_not_finalized#:#Kurs ist nicht finalisiert. Sie können die Teilnehmerliste hinzufügen.
+add_list_no_list_uploaded#:#Keine Teilnehmerliste hochgeladen.
+add_list_list_not_uploaded#:#Teilnehmerliste wurde nicht hochgeladen.
+add_list_list_uploaded#:#Teilnehmerliste erfolgreich hochgeladen.
+add_list_form_title#:#Teilnehmerliste hinzufügen
+add_list_crs_id#:#Kurs Referenz Id
+add_list_participant_list_file#:#Teilnehmerliste
+add_list_add_list#:#Hinzufügen
+change_list_course_not_finalized#:#Kurs ist nicht finalisiert. Sie können die Teilnehmerliste austauschen.
+change_list_no_list_uploaded#:#Keine Teilnehmerliste hochgeladen.
+change_list_list_not_changed#:#Teilnehmerliste wurde nicht ausgetauscht.
+change_list_list_changed#:#Teilnehmerliste wurde erfolgreich ausgetauscht.
+change_list_form_title#:#Teilnehmerliste austauschen
+change_list_crs_id#:#Kurs Referenz Id
+change_list_participant_list_file#:#Teilnehmerliste
+change_list_change_list#:#Austauschen
+change_list#:#Teilnehmerliste austauschen
+add_list#:#Teilnehmerliste hinzufügen
+trans_user_transfer_user#:#Benutzer übertragen
+transfer_user#:#Benutzer übertragen
+trans_user_user_to_delete#:#Benutzer (Inaktivierung)
+trans_user_user_to_delete_info#:#Benutzer der nach dem Übertrag inaktiv sein soll.
+trans_user_user_to_keep#:#Benutzer (Aktiv)
+trans_user_user_to_keep_info#:#Benutzer der nach dem Übertrag aktiv sein soll.
+trans_user_transfer#:#Übertragen
+trans_user_not_possible#:#Übertragung wegen offener Kurse nicht möglich
+trans_user_open_courses#:#Offene Kurse
+refresh_certificate#:#Zertifikat aktualisieren
+refresh_all#:#Alle je Kurs
+refresh_some#:#Alle je Benutzer und Kurs
+refresh_cert_all_title#:#Alle je Kurs
+refresh_cert_all_description#:#Alle Zertifikate des angegeben Kurses werden aktualisiert.
+refresh_cert_all_crs_id#:#Kurs Id
+refresh_cert_all_refresh#:#Aktualisieren
+refresh_cert_all_refresh_success#:#Die Zertifiakte wurden erfolgreich aktualisiert.
+refresh_cert_all_no_successful_participants#:#Kein Benutzer gefunden die den Kurs erfolgreich absolviert haben.
+refresh_cert_some_title#:#Alle je Benutzer und Kurs
+refresh_cert_some_description#:#Die Zertifikate angegebenen Benutzer werden für den Kurs aktualisiert.
+refresh_cert_some_user#:#Benutzer
+refresh_cert_some_crs_id#:# Kurs Id
+refresh_cert_some_refresh#:#Aktualisieren
+refresh_cert_some_refresh_success#:#Die Zertifikate der Benutzer wurden erfolgreich aktualisiert.
+refresh_cert_some_no_successful_participants#:#Keiner der angegebenen Benutzer hat den Kurs erfolgreich absolviert.
+set_status_title#:#Teilnahmestatus ändern
+set_status_usr_id#:#Benutzer
+set_status_crs_id#:#Kurs Id
+set_status_status#:#Teilnahmestatus
+set_status_wbd_time#:#WBD-Zeit
+set_status_wbd_time_info#:#Die Umrechnung lautet wie folgt: 1 Pkt = 15Minuten
+set_status_set#:#Teilnahmestatus setzen
+participation_status#:#Teilnahmestatus ändern
+status_successful#:#Erfolgreich
+status_absent_excused#:#Abwesend (entschuldigt)
+status_absent_not_excused#:#Abwesend (unentschuldigt)
+delete_usr_successful#:#Der Benutzer wurde erfolgreich storniert.
