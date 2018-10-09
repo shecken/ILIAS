@@ -66,8 +66,7 @@ class ilTroubleShootingConfigGUI extends ilPluginConfigGUI
 					$this->g_ctrl,
 					$this->g_tabs,
 					$this->g_tpl,
-					$this->plugin_object->getTxtClosure(),
-					null
+					$this->plugin_object->getTxtClosure()
 				);
 				$this->g_ctrl->forwardCommand($gui);
 				break;

@@ -20,17 +20,16 @@ class ilSetParticipationStatusGUI {
 	const CMD_SET_PARTICIPATION_STATUS = "setParticipationStatus";
 	const CMD_AUTOCOMPLETE = "userfieldAutocomplete";
 
-	public function __construct(ilCtrl $ctrl,
+	public function __construct(
+		ilCtrl $ctrl,
 		ilTabsGUI $tabs,
 		ilTemplate $tpl,
-		Closure $txt,
-		$actions
+		Closure $txt
 	) {
 		$this->ctrl = $ctrl;
 		$this->tabs = $tabs;
 		$this->tpl = $tpl;
 		$this->txt = $txt;
-		$this->actions = $actions;
 	}
 
 	public function executeCommand()

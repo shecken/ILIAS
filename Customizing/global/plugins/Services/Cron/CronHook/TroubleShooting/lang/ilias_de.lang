@@ -37,7 +37,7 @@ trans_user_user_to_delete_info#:#Benutzer der nach dem Übertrag inaktiv sein so
 trans_user_user_to_keep#:#Benutzer (Aktiv)
 trans_user_user_to_keep_info#:#Benutzer der nach dem Übertrag aktiv sein soll.
 trans_user_transfer#:#Übertragen
-trans_user_not_possible#:#Übertragung wegen offener Kurse nicht Möglich
+trans_user_not_possible#:#Übertragung wegen offener Kurse nicht möglich
 trans_user_open_courses#:#Offene Kurse
 refresh_certificate#:#Zertifikat aktualisieren
 refresh_all#:#Alle je Kurs
@@ -47,7 +47,7 @@ refresh_cert_all_description#:#Alle Zertifikate des angegeben Kurses werden aktu
 refresh_cert_all_crs_id#:#Kurs Id
 refresh_cert_all_refresh#:#Aktualisieren
 refresh_cert_all_refresh_success#:#Die Zertifiakte wurden erfolgreich aktualisiert.
-refresh_cert_all_no_successful_participants#:#Keiner Benutzer gefunden die den Kurs erfolgreich absolviert haben.
+refresh_cert_all_no_successful_participants#:#Kein Benutzer gefunden die den Kurs erfolgreich absolviert haben.
 refresh_cert_some_title#:#Alle je Benutzer und Kurs
 refresh_cert_some_description#:#Die Zertifikate angegebenen Benutzer werden für den Kurs aktualisiert.
 refresh_cert_some_user#:#Benutzer

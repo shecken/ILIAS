@@ -17,7 +17,6 @@ class ilRefreshAllGUI
 		RefreshCertificateHelper $helper
 	) {
 		$this->ctrl = $ctrl;
-		$this->tabs = $tabs;
 		$this->tpl = $tpl;
 		$this->txt = $txt;
 		$this->helper = $helper;

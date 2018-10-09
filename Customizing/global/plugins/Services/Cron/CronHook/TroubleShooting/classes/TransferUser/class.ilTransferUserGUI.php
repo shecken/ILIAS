@@ -14,7 +14,8 @@ class ilTransferUserGUI {
 	const CMD_TRANSFER_USER = "transferUser";
 	const CMD_AUTOCOMPLETE = "userfieldAutocomplete";
 
-	public function __construct(ilCtrl $ctrl,
+	public function __construct(
+		ilCtrl $ctrl,
 		ilTabsGUI $tabs,
 		ilTemplate $tpl,
 		Closure $txt,

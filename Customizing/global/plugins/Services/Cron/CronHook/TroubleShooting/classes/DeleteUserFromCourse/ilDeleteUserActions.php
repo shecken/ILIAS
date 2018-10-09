@@ -10,7 +10,7 @@ class ilDeleteUserActions {
 	}
 
 	/**
-	 * Get last hostory information for user and course
+	 * Get last history information for user and course
 	 *
 	 * @param int 	$crs_id
 	 * @param int 	$user_id
