@@ -5,6 +5,11 @@
  * Trouble Shooting scripts to fix usage errors
  */
 class ilTroubleShootingJob extends ilCronJob {
+
+	public function __construct($plugin)
+	{
+		$this->plugin = $plugin;
+	}
 	/**
 	 * @inheritdoc
 	 */
@@ -16,14 +21,14 @@ class ilTroubleShootingJob extends ilCronJob {
 	 * @inheritdoc
 	 */
 	public function getTitle() {
-		return $this->gLng->txt("trouble_shooting_title");
+		return $this->plugin->txt("trouble_shooting_title");
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function getDescription() {
-		return $this->gLng->txt("trouble_shooting_description");
+		return $this->plugin->txt("trouble_shooting_description");
 	}
 
 	/**
