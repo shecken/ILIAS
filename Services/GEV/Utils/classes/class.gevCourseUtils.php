@@ -2544,19 +2544,18 @@ class gevCourseUtils
 		$worksheet = $workbook->addWorksheet();
 		$worksheet->setLandscape();
 
-		$columns = array( $this->gLng->txt("gender")
-						, $this->gLng->txt("firstname")
-						, $this->gLng->txt("lastname")
-						, $this->gLng->txt("gev_org_unit_short")
-						);
+		$columns = array(
+			$this->gLng->txt("firstname"),
+			$this->gLng->txt("lastname"),
+			$this->gLng->txt("cost_centre")
+		);
 
 		$format_wrap = $workbook->addFormat(array("bottom" => 1));
 		$format_wrap->setTextWrap();
 
-		$worksheet->setColumn(0, 0, 10);	// gender
-		$worksheet->setColumn(1, 1, 12); 	// firstname
-		$worksheet->setColumn(2, 2, 12);	// lastname
-		$worksheet->setColumn(3, 3, 25);	// org-unit
+		$worksheet->setColumn(0, 0, 10);	// firstname
+		$worksheet->setColumn(1, 1, 12); 	// lastname
+		$worksheet->setColumn(2, 2, 12);	// org-unit
 
 		if ($a_type == self::MEMBERLIST_HOTEL) {
 			$columns[] = $this->gLng->txt("gev_hotel_self_payment_pre_arr");
@@ -2564,10 +2563,10 @@ class gevCourseUtils
 			$columns[] = $this->gLng->txt('gev_cnt_overnights');
 			$columns[] = $this->gLng->txt('gev_hotel_pre_arrival');
 
-			$worksheet->setColumn(4, 4, 25);	// Selbstzahler
-			$worksheet->setColumn(5, 5, 20);	// status
-			$worksheet->setColumn(6, 6, 20);	// overnights
-			$worksheet->setColumn(7, 7, 20);	// pre_arrival
+			$worksheet->setColumn(3, 3, 25);	// Selbstzahler
+			$worksheet->setColumn(4, 4, 25);	// status
+			$worksheet->setColumn(5, 5, 20);	// overnights
+			$worksheet->setColumn(6, 6, 20);	// pre_arrival
 
 			$date_format = 'd.m.Y';
 			$start_day = $this->getStartDate();
@@ -2590,17 +2589,15 @@ class gevCourseUtils
 		} elseif ($a_type == self::MEMBERLIST_PARTICIPANT) {
 			$columns[] = "Funktion";
 
-			$worksheet->setColumn(4, 4, 12);
+			$worksheet->setColumn(3, 3, 12);
 		} else {
 			$columns[] = $this->gLng->txt("status");
 			$columns[] = $this->gLng->txt("gev_mobile");
-			$columns[] = "Vorbedingung erfüllt";
 			$columns[] = $this->gLng->txt("gev_signature");
 
-			$worksheet->setColumn(4, 4, 8);
-			$worksheet->setColumn(5, 5, 14);
-			$worksheet->setColumn(6, 6, 12);
-			$worksheet->setColumn(7, 7, 12);
+			$worksheet->setColumn(3, 3, 8);
+			$worksheet->setColumn(4, 4, 14);
+			$worksheet->setColumn(5, 5, 24);
 		}
 
 		$row = $this->buildListMeta($workbook, $worksheet, $this->gLng->txt("gev_excel_member_title")." ".
@@ -2647,10 +2644,9 @@ class gevCourseUtils
 				}
 				$ou_title = implode(', ', $ou_title);
 
-				$worksheet->writeString($row, 0, $user_utils->getGender(), $format_wrap);
-				$worksheet->writeString($row, 1, $user_utils->getFirstname(), $format_wrap);
-				$worksheet->writeString($row, 2, $user_utils->getLastname(), $format_wrap);
-				$worksheet->writeString($row, 3, $ou_title, $format_wrap);
+				$worksheet->writeString($row, 0, $user_utils->getFirstname(), $format_wrap);
+				$worksheet->writeString($row, 1, $user_utils->getLastname(), $format_wrap);
+				$worksheet->writeString($row, 2, $ou_title, $format_wrap);
 				if ($a_type == self::MEMBERLIST_HOTEL) {
 					$on_det = $user_utils->getOvernightDetailsForCourse($this->getCourse());
 					usort($on_det, function ($d_a, $d_b) {
@@ -2664,12 +2660,12 @@ class gevCourseUtils
 						}
 					});
 
-					$worksheet->write($row, 4, $user_utils->paysPrearrival() ? "Ja" : "Nein", $format_wrap);
+					$worksheet->write($row, 3, $user_utils->paysPrearrival() ? "Ja" : "Nein", $format_wrap);
 					$status = $user_utils->getAllIDHGBAADStatus();
 					sort($status, SORT_STRING);
-					$worksheet->write($row, 5, implode(", ", $status), $format_wrap);
+					$worksheet->write($row, 4, implode(", ", $status), $format_wrap);
 					$on_fmla =  '=COUNTIF(H'.($row+1).':'.$on_column.($row+1).';"X")';
-					$worksheet->write($row, 6, $on_fmla, $format_wrap);
+					$worksheet->write($row, 5, $on_fmla, $format_wrap);
 					$day_iterator = new ilDate($this->getStartDate()->increment(ilDate::DAY, -1), IL_CAL_UNIX);
 					$count_days = 1;
 					$on_day = array_shift($on_det);
@@ -2681,19 +2677,18 @@ class gevCourseUtils
 								$on_day = array_shift($on_det);
 							}
 						}
-						$worksheet->write($row, 6 + $count_days, $has_overnight, $format_wrap);
+						$worksheet->write($row, 5 + $count_days, $has_overnight, $format_wrap);
 						$day_iterator = new ilDate($day_iterator->increment(ilDateTime::DAY, 1), IL_CAL_UNIX);
 						$count_days++;
 					}
 				} elseif ($a_type == self::MEMBERLIST_PARTICIPANT) {
-					$worksheet->write($row, 4, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
+					$worksheet->write($row, 3, $user_utils->getFunctionAtCourse($this->crs_id), $format_wrap);
 				} else {
 					$status = $user_utils->getAllIDHGBAADStatus();
 					sort($status, SORT_STRING);
-					$worksheet->write($row, 4, implode(", ", $status), $format_wrap);
-					$worksheet->write($row, 5, " ".$user_utils->getMobilePhone(), $format_wrap);
-					$worksheet->write($row, 6, $user_utils->hasFullfilledPreconditionOf($this->crs_id) ? "Ja" : "Nein", $format_wrap);
-					$worksheet->write($row, 7, " ", $format_wrap);
+					$worksheet->write($row, 3, implode(", ", $status), $format_wrap);
+					$worksheet->write($row, 4, " ".$user_utils->getMobilePhone(), $format_wrap);
+					$worksheet->write($row, 5, " ", $format_wrap);
 				}
 			}
 		}
