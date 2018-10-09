@@ -10,10 +10,10 @@
 */
 require_once("Services/GEV/WBD/classes/Dictionary/class.gevWBDDictionary.php");
 require_once("Services/GEV/WBD/classes/Requests/trait.gevWBDRequest.php");
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessWPMeldung.php");
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessBildungszeitMeldung.php");
 require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 
-class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
+class gevWBDRequestBildungszeitMeldung extends WBDRequestBildungszeitMeldung {
 	use gevWBDRequest;
 
 	protected $error_group;
@@ -24,15 +24,38 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 		$this->defineValuesToTranslate();
 		$dic_errors = $this->translate($data, $data["user_id"], $data["row_id"], $data["crs_id"]);
 
-		$this->type 				= new WBDData("LernArt",$this->translate_value["LernArt"]);
-		$this->wbd_topic 			= new WBDData("LernInhalt",$this->translate_value["LernInhalt"]);
-
-		$this->title 				= new WBDData("Weiterbildung",$data["title"]);
-		$this->begin_date 			= new WBDData("SeminarDatumVon",$data["begin_date"]);
-		$this->end_date 			= new WBDData("SeminarDatumBis",$data["end_date"]);
-		$this->credit_points 		= new WBDData("WeiterbildungsPunkte",$data["credit_points"]);
-		$this->internal_booking_id	= new WBDData("InterneBuchungsId",$data["row_id"]);
-		$this->agent_id 			= new WBDData("VermittlerId",$data["bwv_id"]);
+		$this->type = new WBDData(
+			"LernArt",
+			$this->translate_value["LernArt"]
+		);
+		$this->wbd_topic = new WBDData(
+			"LernInhalt",
+			$this->translate_value["LernInhalt"]
+		);
+		$this->title = new WBDData(
+			"NameBildungsmassnahme",
+			$data["title"]
+		);
+		$this->begin_date = new WBDData(
+			"SeminarDatumVon",
+			$data["begin_date"]
+		);
+		$this->end_date = new WBDData(
+			"SeminarDatumBis",
+			$data["end_date"]
+		);
+		$this->learning_time = new WBDData(
+			"Bildungszeit",
+			$data["learning_time"]
+		);
+		$this->internal_booking_id = new WBDData(
+			"InterneBuchungsId",
+			$data["row_id"]
+		);
+		$this->agent_id = new WBDData(
+			"gutberatenId",
+			$data["bwv_id"]
+		);
 
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
@@ -43,13 +66,18 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 		$errors = $check_errors + $dic_errors;
 
 		if(!empty($errors)) {
-			throw new myLogicException("gevWBDRequestWPMeldung::__construct:checkData failed",0,null, $errors);
+			throw new myLogicException(
+				"gevWBDRequestBildungszeitMeldung::__construct:checkData failed",
+				0,
+				null,
+				$errors
+			);
 		}
 	}
 
 	public static function getInstance(array $data) {
 		try {
-			return new gevWBDRequestWPMeldung($data);
+			return new gevWBDRequestBildungszeitMeldung($data);
 		}catch(myLogicException $e) {
 			return $e->options();
 		}
@@ -72,7 +100,11 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 	* @throws LogicException
 	*/
 	public function createWBDSuccess($response) {
-		$this->wbd_success = new gevWBDSuccessWPMeldung($response, $this->begin_of_certification, $this->user_id);
+		$this->wbd_success = new gevWBDSuccessBildungszeitMeldung(
+			$response,
+			$this->begin_of_certification,
+			$this->user_id
+		);
 	}
 
 	/**
@@ -100,12 +132,25 @@ class gevWBDRequestWPMeldung extends WBDRequestWPMeldung {
 	*/
 	public function createWBDError($message) {
 		$reason = $this->parseReason($message);
-		$this->wbd_error = self::createError($reason, $this->error_group, $this->user_id, $this->row_id, $this->crs_id);
+		$this->wbd_error = self::createError(
+			$reason,
+			$this->error_group,
+			$this->user_id,
+			$this->row_id,
+			$this->crs_id
+		);
 	}
 
 	protected function defineValuesToTranslate() {
-		$this->translate_value = array("LernArt" => array("field" => "type", "group" => gevWBDDictionary::SEARCH_IN_COURSE_TYPE)
-									 , "LernInhalt" => array("field" => "wbd_topic", "group" => gevWBDDictionary::SEARCH_IN_STUDY_CONTENT)
-								);
+		$this->translate_value = array(
+			"LernArt" => array(
+				"field" => "type",
+				"group" => gevWBDDictionary::SEARCH_IN_COURSE_TYPE
+			),
+			"LernInhalt" => array(
+				"field" => "wbd_topic",
+				"group" => gevWBDDictionary::SEARCH_IN_STUDY_CONTENT
+			)
+		);
 	}
 }

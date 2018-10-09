@@ -11,7 +11,7 @@
 require_once("Services/GEV/WBD/classes/Success/trait.gevWBDSuccess.php");
 require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 
-class gevWBDSuccessVvErstanlage extends WBDSuccessVvErstanlage{
+class gevWBDSuccessKontoErstanlage extends WBDSuccessKontoErstanlage{
 	use gevWBDSuccess;
 
 	protected $row_id;
@@ -25,9 +25,6 @@ class gevWBDSuccessVvErstanlage extends WBDSuccessVvErstanlage{
 		$create_date = self::nodeValue($response,self::CREATE_DATE);
 		$this->create_date = $this->createDate($create_date);
 
-		$begin_of_certification_period = self::nodeValue($response,self::BEGIN_OF_CERTIFICATION_PERIOD);
-		$this->begin_of_certification_period = $this->createDate($begin_of_certification_period);
-
 		switch ($next_wbd_action) {
 			case gevWBD::USR_WBD_NEXT_ACTION_NEW_TP_SERVICE:
 				$this->wbd_type = gevWBD::WBD_TP_SERVICE;
@@ -36,7 +33,7 @@ class gevWBDSuccessVvErstanlage extends WBDSuccessVvErstanlage{
 				$this->wbd_type = gevWBD::WBD_TP_BASIS;
 				break;
 			default:
-				throw new LogicException ("gevWBDSuccessVvErstanlage::__construct:no next_wbd_action");
+				throw new LogicException ("gevWBDSuccessKontoErstanlage::__construct:no next_wbd_action");
 		}
 	}
 	

@@ -11,7 +11,7 @@
 require_once("Services/Calendar/classes/class.ilDate.php");
 require_once("Services/GEV/WBD/classes/Success/trait.gevWBDSuccess.php");
 
-class gevWBDSuccessWPStorno extends WBDSuccessWPStorno {
+class gevWBDSuccessBildungszeitStorno extends WBDSuccessBildungszeitStorno {
 	use gevWBDSuccess;
 	
 	public function __construct($response,$row_id) {

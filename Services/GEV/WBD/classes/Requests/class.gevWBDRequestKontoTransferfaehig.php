@@ -10,18 +10,27 @@
 *
 */
 require_once("Services/GEV/WBD/classes/Requests/trait.gevWBDRequest.php");
-require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessVermitVerwaltungTransferfaehig.php");
+require_once("Services/GEV/WBD/classes/Success/class.gevWBDSuccessKontoTransferfaehig.php");
 require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 
-class gevWBDRequestVermitVerwaltungTransferfaehig extends WBDRequestVermitVerwaltungTransferfaehig {
+class gevWBDRequestKontoTransferfaehig extends WBDRequestKontoTransferfaehig {
 	use gevWBDRequest;
 
 	protected $error_group;
 
 	protected function __construct($data) {
-		$this->auth_email 			= new WBDData("AuthentifizierungsEmail",$data["email"]);
-		$this->auth_mobile_phone_nr = new WBDData("AuthentifizierungsTelefonnummer",$data["mobile_phone_nr"]);
-		$this->agent_id 			= new WBDData("VermittlerId",$data["bwv_id"]);
+		$this->auth_email = new WBDData(
+			"AuthentifizierungsEmail",
+			$data["email"]
+		);
+		$this->auth_mobile_phone_nr = new WBDData(
+			"AuthentifizierungsTelefonnummer",
+			$data["mobile_phone_nr"]
+		);
+		$this->agent_id = new WBDData(
+			"gutberatenId",
+			$data["bwv_id"]
+		);
 
 		$this->user_id = $data["user_id"];
 		$this->row_id = $data["row_id"];
@@ -30,7 +39,12 @@ class gevWBDRequestVermitVerwaltungTransferfaehig extends WBDRequestVermitVerwal
 		$errors = $this->checkData();
 
 		if(!empty($errors)) {
-			throw new myLogicException("gevWBDRequestVermitVerwaltungTransferfaehig::__construct:checkData failed",0,null, $errors);
+			throw new myLogicException(
+				"gevWBDRequestKontoTransferfaehig::__construct:checkData failed",
+				0,
+				null,
+				$errors
+			);
 		}
 	}
 
@@ -38,7 +52,7 @@ class gevWBDRequestVermitVerwaltungTransferfaehig extends WBDRequestVermitVerwal
 		$data = self::polishInternalData($data);
 
 		try {
-			return new gevWBDRequestVermitVerwaltungTransferfaehig($data);
+			return new gevWBDRequestKontoTransferfaehig($data);
 		}catch(myLogicException $e) {
 			return $e->options();
 		}
@@ -61,7 +75,10 @@ class gevWBDRequestVermitVerwaltungTransferfaehig extends WBDRequestVermitVerwal
 	* @throws LogicException
 	*/
 	public function createWBDSuccess($response) {
-		$this->wbd_success = new gevWBDSuccessVermitVerwaltungTransferfaehig($this->user_id,$this->row_id);
+		$this->wbd_success = new gevWBDSuccessKontoTransferfaehig(
+			$this->user_id,
+			$this->row_id
+		);
 	}
 
 	/**
@@ -89,6 +106,11 @@ class gevWBDRequestVermitVerwaltungTransferfaehig extends WBDRequestVermitVerwal
 	*/
 	public function createWBDError($message) {
 		$reason = $this->parseReason($message);
-		$this->wbd_error = self::createError($reason, $this->error_group, $this->user_id, $this->row_id);
+		$this->wbd_error = self::createError(
+			$reason,
+			$this->error_group,
+			$this->user_id,
+			$this->row_id
+		);
 	}
 }

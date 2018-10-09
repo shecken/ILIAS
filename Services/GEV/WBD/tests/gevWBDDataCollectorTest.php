@@ -58,13 +58,17 @@ class _gevWBDDataCollector extends gevWBDDataCollector {
 		$this->data = $data;
 	}
 
-	protected function getWBDInstance($user_id) {
-		$this->curr_wbd = mock_gevWBD::getInstanceByObjOrId($user_id);
-		return $this->curr_wbd;
+	public function getWBDInstance($user_id) {
+		if($this->curr_wbd[$user_id] === null) {
+			$this->curr_wbd[$user_id] = mock_gevWBD::getInstanceByObjOrId($user_id);
+		}
+		
+		return $this->curr_wbd[$user_id];
 	}
 
-	public function getCurrWBD() {
-		return $this->curr_wbd;
+	public function getCurrentDate()
+	{
+		return date("Y-m-d");
 	}
 }
 
@@ -260,13 +264,13 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 		$row_id = 25;
 		$user_id = 21352;
 		$crs_id = 10;
-		$success = new gevWBDSuccessWPStorno(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
+		$success = new gevWBDSuccessBildungszeitStorno(simplexml_load_string('<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope">'
 												.'<soap:Body>'
 													.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 														.'<WPStornoRueckgabewert>'
 															.'<WeiterbildungsPunkteBuchungsId>2015-145-1654</WeiterbildungsPunkteBuchungsId>'
-															.'<VermittlerId>20150728-100390-74</VermittlerId>'
-															.'<InterneVermittlerId>'.$user_id.'</InterneVermittlerId>'
+															.'<gutberatenId>20150728-100390-74</gutberatenId>'
+															.'<InternesPersonenkennzeichen>'.$user_id.'</InternesPersonenkennzeichen>'
 															.'<BeginnErstePeriode>2015-07-28T00:00:00+02:00</BeginnErstePeriode>'
 														.'</WPStornoRueckgabewert>'
 													.'</ns1:putResponse>'
@@ -274,7 +278,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 											.'</soap:Envelope>'
 									),$this->row_id);
 
-		$this->data_collector->getCurrWBD()->setReturnCrsId($crs_id);
+		$this->data_collector->getWBDInstance($user_id)->setReturnCrsId($crs_id);
 		$this->data_collector->successStornoRecord($success);
 
 		$needed_case_id = array('usr_id' => $user_id
@@ -299,8 +303,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 					  ,"zipcode"=>"50969"
 					  ,"phone_nr"=>"0221/46757600"
 					  ,"degree"=>"Dr"
-					  ,"wbd_agent_status"=>"Makler"
-					  ,"okz"=>"OKZ1"
+					  ,"group_of_persons"=>"Makler"
 					  ,"firstname"=>"Stefan"
 					  ,"wbd_type"=>"3 - TP-Service"
 					  ,"user_id"=>290
@@ -316,8 +319,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 					  ,"zipcode"=>"50969"
 					  ,"phone_nr"=>"0221/46757600"
 					  ,"degree"=>"Dr"
-					  ,"wbd_agent_status"=>"Makler"
-					  ,"okz"=>"OKZ1"
+					  ,"group_of_persons"=>"Makler"
 					  ,"firstname"=>"Stefan"
 					  ,"wbd_type"=>"3 - TP-Service"
 					  ,"user_id"=>290
@@ -337,7 +339,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 					  ,"zipcode"=>"50969"
 					  ,"phone_nr"=>"0221/46757600"
 					  ,"degree"=>"Dr"
-					  ,"wbd_agent_status"=>"Makler"
+					  ,"group_of_persons"=>"Makler"
 					  ,"okz"=>""
 					  ,"firstname"=>"Stefan"
 					  ,"wbd_type"=>"3 - TP-Service"
@@ -354,8 +356,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 					  ,"zipcode"=>"50969"
 					  ,"phone_nr"=>"0221/46757600"
 					  ,"degree"=>"Dr"
-					  ,"wbd_agent_status"=>"Makler"
-					  ,"okz"=>"OKZ1"
+					  ,"group_of_persons"=>"Makler"
 					  ,"firstname"=>"Stefan"
 					  ,"wbd_type"=>""
 					  ,"user_id"=>290
@@ -369,8 +370,8 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 					.'<soap:Body>'
 						.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 							.'<ErstanlageRueckgabewert>'
-								.'<TpInterneVermittlerId>7665</TpInterneVermittlerId>'
-								.'<VermittlerId>20150728-100390-74</VermittlerId>'
+								.'<InternesPersonenkennzeichen>7665</InternesPersonenkennzeichen>'
+								.'<gutberatenId>20150728-100390-74</gutberatenId>'
 								.'<AnlageDatum>2015-07-28T00:00:00+02:00</AnlageDatum>'
 								.'<BeginnZertifizierungsPeriode>2015-07-28T00:00:00+02:00</BeginnZertifizierungsPeriode>'
 							.'</ErstanlageRueckgabewert>'
@@ -382,8 +383,8 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 						.'<soap:Body>'
 						.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 							.'<ErstanlageRueckgabewert>'
-								.'<TpInterneVermittlerId>7665</TpInterneVermittlerId>'
-								.'<VermittlerId>20150728-100390-74</VermittlerId>'
+								.'<InternesPersonenkennzeichen>7665</InternesPersonenkennzeichen>'
+								.'<gutberatenId>20150728-100390-74</gutberatenId>'
 								.'<AnlageDatum>2015-07-28T00:00:00+02:00</AnlageDatum>'
 								.'<BeginnZertifizierungsPeriode>2015-07-28T00:00:00+02:00</BeginnZertifizierungsPeriode>'
 							.'</ErstanlageRueckgabewert>'
@@ -395,8 +396,8 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 						.'<soap:Body>'
 						.'<ns1:putResponse xmlns:ns1="http://erstanlage.stammdaten.external.service.wbd.gdv.de/">'
 							.'<ErstanlageRueckgabewert>'
-								.'<TpInterneVermittlerId>7665</TpInterneVermittlerId>'
-								.'<VermittlerId>20150728-100390-74</VermittlerId>'
+								.'<InternesPersonenkennzeichen>7665</InternesPersonenkennzeichen>'
+								.'<gutberatenId>20150728-100390-74</gutberatenId>'
 								.'<AnlageDatum>2015-07-28T00:00:00+02:00</AnlageDatum>'
 								.'<BeginnZertifizierungsPeriode>2015-07-28T00:00:00+02:00</BeginnZertifizierungsPeriode>'
 							.'</ErstanlageRueckgabewert>'
@@ -420,8 +421,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 					  ,"zipcode"=>"50969"
 					  ,"phone_nr"=>"0221/46757600"
 					  ,"degree"=>"Dr"
-					  ,"wbd_agent_status"=>"Makler"
-					  ,"okz"=>"OKZ1"
+					  ,"group_of_persons"=>"Makler"
 					  ,"firstname"=>"Stefan"
 					  ,"user_id"=>290
 					  ,"street"=>"Vorgebirgstr. 338"
@@ -444,8 +444,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 					  ,"zipcode"=>"50969"
 					  ,"phone_nr"=>"0221/46757600"
 					  ,"degree"=>"Dr"
-					  ,"wbd_agent_status"=>"Makler"
-					  ,"okz"=>"OKZ1"
+					  ,"group_of_persons"=>"Makler"
 					  ,"firstname"=>"Stefan"
 					  ,"user_id"=>290
 					  ,"street"=>"Vorgebirgstr. 338"
@@ -477,7 +476,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 		return array(array("title"=>"Berufsunfähigkeitsversicherung 2013"
 					  ,"begin_date" => "2015-12-20"
 					  ,"end_date" => "2015-12-20"
-					  ,"credit_points" => 5
+					  ,"learning_time" => 15
 					  ,"type" => "Virtuelles Training"
 					  ,"wbd_topic" => "Privat-Vorsorge-Lebens-/Rentenversicherung"
 					  ,"row_id"=>35214
@@ -490,7 +489,7 @@ class gevWBDDataCollectorTest extends PHPUnit_Framework_TestCase {
 		return array(array("title"=>"Berufsunfähigkeitsversicherung 2013"
 					  ,"begin_date" => "2015-12-20"
 					  ,"end_date" => "2015-12-20"
-					  ,"credit_points" => 5
+					  ,"learning_time" => 15
 					  ,"type" => ""
 					  ,"wbd_topic" => "Privat-Vorsorge-Lebens-/Rentenversicherung"
 					  ,"row_id"=>35214

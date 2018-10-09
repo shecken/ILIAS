@@ -1,6 +1,6 @@
 <?php
-require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVermitVerwaltungAufnahme.php");
-class GevVermitVerwaltungAufnahmeTest extends RequestTestBase {
+require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoAufnahme.php");
+class GevKontoAufnahmeTest extends RequestTestBase {
 	protected $backupGlobals = FALSE;
 
 	public function setUp() {
@@ -18,11 +18,11 @@ class GevVermitVerwaltungAufnahmeTest extends RequestTestBase {
 					  ,"firstname"=>"Stefan"
 					);
 
-		$this->request = gevWBDRequestVermitVerwaltungAufnahme::getInstance($data);
+		$this->request = gevWBDRequestKontoAufnahme::getInstance($data);
 	}
 
 	public function test_isImplmentedRequest() {
-		$this->assertInstanceOf("gevWBDRequestVermitVerwaltungAufnahme",$this->request);
+		$this->assertInstanceOf("gevWBDRequestKontoAufnahme",$this->request);
 	}
 
 	public function xml_response_error() {

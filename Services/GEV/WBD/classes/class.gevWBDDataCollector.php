@@ -29,13 +29,13 @@ class gevWBDDataCollector implements WBDDataCollector
 	public function __construct($lms_folder)
 	{
 		chdir($lms_folder);
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVermitVerwaltungAufnahme.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVermitVerwaltungTransferfaehig.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVvAenderung.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestVvErstanlage.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPAbfrage.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPMeldung.php");
-		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestWPStorno.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoAufnahme.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoTransferfaehig.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoAenderung.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestKontoErstanlage.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungAbfrage.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungszeitMeldung.php");
+		require_once("Services/GEV/WBD/classes/Requests/class.gevWBDRequestBildungszeitStorno.php");
 		require_once("Services/GEV/WBD/classes/Error/class.gevWBDError.php");
 		require_once("Services/GEV/WBD/classes/class.gevWBD.php");
 		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
@@ -81,7 +81,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestVVErstanlage[]
+	 * @return  gevWBDRequestKontoErstanlage[]
 	 */
 	protected function _createNewUserList($db)
 	{
@@ -114,7 +114,7 @@ class gevWBDDataCollector implements WBDDataCollector
 				$rec["degree"] = "";
 				$rec["address_info"] = "";
 
-				$object = gevWBDRequestVvErstanlage::getInstance($rec);
+				$object = gevWBDRequestKontoErstanlage::getInstance($rec);
 				if (is_array($object)) {
 					foreach ($object as $error) {
 						$this->error($error);
@@ -148,7 +148,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestVvAenderung[]
+	 * @return  gevWBDRequestKontoAenderung[]
 	 */
 	protected function _createUpdateUserList($db)
 	{
@@ -162,7 +162,7 @@ class gevWBDDataCollector implements WBDDataCollector
 			$rec["degree"] = "";
 			$rec["address_info"] = "";
 
-			$object = gevWBDRequestVvAenderung::getInstance($rec);
+			$object = gevWBDRequestKontoAenderung::getInstance($rec);
 			if (is_array($object)) {
 				foreach ($object as $error) {
 					$this->error($error);
@@ -189,7 +189,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestVermitVerwaltungTransferfaehig[]
+	 * @return  gevWBDRequestKontoTransferfaehig[]
 	 */
 	protected function _createReleaseUserList($db)
 	{
@@ -203,7 +203,7 @@ class gevWBDDataCollector implements WBDDataCollector
 			$failed_checks = $this->performPreliminaryChecks($checks_to_release, $wbd);
 
 			if (count($failed_checks) == 0) {
-				$object = gevWBDRequestVermitVerwaltungTransferfaehig::getInstance($rec);
+				$object = gevWBDRequestKontoTransferfaehig::getInstance($rec);
 				if (is_array($object)) {
 					foreach ($object as $error) {
 						$this->error($error);
@@ -237,7 +237,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestVermitVerwaltungAufnahme[]
+	 * @return  gevWBDRequestKontoAufnahme[]
 	 */
 	protected function _createAffiliateUserList($db)
 	{
@@ -250,7 +250,7 @@ class gevWBDDataCollector implements WBDDataCollector
 			$failed_checks = $this->performPreliminaryChecks($checks_to_release, $wbd);
 
 			if (count($failed_checks) == 0) {
-				$object = gevWBDRequestVermitVerwaltungAufnahme::getInstance($rec);
+				$object = gevWBDRequestKontoAufnahme::getInstance($rec);
 				if (is_array($object)) {
 					foreach ($object as $error) {
 						$this->error($error);
@@ -284,7 +284,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestWPMeldung[]
+	 * @return  gevWBDRequestBildungszeitMeldung[]
 	 */
 	protected function _createNewEduRecordList($db)
 	{
@@ -292,7 +292,8 @@ class gevWBDDataCollector implements WBDDataCollector
 		$res = $db->query($this->newEduRecordListQuery());
 
 		while ($rec = $db->fetchAssoc($res)) {
-			$object = gevWBDRequestWPMeldung::getInstance($rec);
+			$data["learning_time"] = $data["credit_points"] * 15;
+			$object = gevWBDRequestBildungszeitMeldung::getInstance($rec);
 			if (is_array($object)) {
 				foreach ($object as $error) {
 					$this->error($error);
@@ -320,7 +321,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestWPStorno[]
+	 * @return  gevWBDRequestBildungszeitStorno[]
 	 */
 	protected function _createStornoRecordList($db)
 	{
@@ -328,7 +329,7 @@ class gevWBDDataCollector implements WBDDataCollector
 		$res = $db->query($this->storneEduRecordListQuery(array(self::WBD_TP_SERVICE,self::WBD_TP_BASIS,self::WBD_EDU_PROVIDER), null));
 
 		while ($rec = $db->fetchAssoc($res)) {
-			$object = gevWBDRequestWPStorno::getInstance($rec);
+			$object = gevWBDRequestBildungszeitStorno::getInstance($rec);
 			if (is_array($object)) {
 				foreach ($object as $error) {
 					$this->error($error);
@@ -365,7 +366,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 	/**
 	 * @param	ilDB 	$db
-	 * @return  gevWBDRequestWPAbfrage[]
+	 * @return  gevWBDRequestBildungAbfrage[]
 	 */
 	protected function _createWPAbfrageRecordList($db)
 	{
@@ -380,7 +381,7 @@ class gevWBDDataCollector implements WBDDataCollector
 			if (($counter + $start) % $use_every === 0) {
 				$rec["certification_period"] = "Selektiert nicht stornierte Weiterbildungsmaßnahmen aus der aktuelle Zertifizierungsperiode.";
 
-				$object = gevWBDRequestWPAbfrage::getInstance($rec);
+				$object = gevWBDRequestBildungAbfrage::getInstance($rec);
 				if (is_array($object)) {
 					foreach ($object as $error) {
 						$this->gLog->write($error);
@@ -545,7 +546,7 @@ class gevWBDDataCollector implements WBDDataCollector
 
 		$sql = "SELECT hist_usercoursestatus.row_id, hist_user.user_id\n"
 					.", hist_usercoursestatus.begin_date, hist_usercoursestatus.end_date\n"
-					.", FLOOR(hist_usercoursestatus.credit_points/3) credit_points, hist_course.type, hist_course.wbd_topic\n"
+					.", hist_usercoursestatus.credit_points, hist_course.type, hist_course.wbd_topic\n"
 					.", hist_course.crs_id"
 					.", hist_course.title, hist_user.bwv_id\n"
 					.", hist_user.begin_of_certification\n"
@@ -669,7 +670,7 @@ class gevWBDDataCollector implements WBDDataCollector
 	*
 	* @param array $success_data
 	*/
-	public function successNewUser(gevWBDSuccessVvErstanlage $success_data)
+	public function successNewUser(gevWBDSuccessKontoErstanlage $success_data)
 	{
 		$usr_id = $success_data->internalAgentId();
 		$usr_utils = gevUserUtils::getInstance($usr_id);
@@ -691,9 +692,9 @@ class gevWBDDataCollector implements WBDDataCollector
 	/**
 	* callback public function if update was successfull
 	*
-	* @param gevWBDSuccessVvAenderung $success_data
+	* @param gevWBDSuccessKontoAenderung $success_data
 	*/
-	public function successUpdateUser(gevWBDSuccessVvAenderung $success_data)
+	public function successUpdateUser(gevWBDSuccessKontoAenderung $success_data)
 	{
 		$row_id = $success_data->rowId();
 		$this->setLastWBDReport('hist_user', array($success_data->rowId()));
@@ -704,7 +705,7 @@ class gevWBDDataCollector implements WBDDataCollector
 	*
 	* @param gevWBDSuccessVermitVerwaltungTransferfaehig $success_data
 	*/
-	public function successReleaseUser(gevWBDSuccessVermitVerwaltungTransferfaehig $success_data)
+	public function successReleaseUser(gevWBDRequestKontoTransferfaehig $success_data)
 	{
 		$row_id = $success_data->rowId();
 		$usr_id = $success_data->usrId();
@@ -725,7 +726,7 @@ class gevWBDDataCollector implements WBDDataCollector
 	*
 	* @param array $success_data
 	*/
-	public function successAffiliateUser(gevWBDSuccessVermitVerwaltungAufnahme $success_data)
+	public function successAffiliateUser(gevWBDRequestKontoAufnahme $success_data)
 	{
 		$usr_id = $success_data->usrId();
 		$row_id = $success_data->rowId();
@@ -745,9 +746,9 @@ class gevWBDDataCollector implements WBDDataCollector
 	/**
 	* callback public function if report was successfull
 	*
-	* @param gevWBDSuccessWPMeldung $success_data
+	* @param gevWBDSuccessBildungszeitMeldung $success_data
 	*/
-	public function successNewEduRecord(gevWBDSuccessWPMeldung $success_data)
+	public function successNewEduRecord(gevWBDSuccessBildungszeitMeldung $success_data)
 	{
 		$this->setLastWBDReport('hist_usercoursestatus', array($success_data->rowId()));
 		$this->setBookingId($success_data->rowId(), $success_data->wbdBookingId());
@@ -764,9 +765,9 @@ class gevWBDDataCollector implements WBDDataCollector
 	/**
 	* callback public function if report was successfull
 	*
-	* @param gevWBDSuccessWPStorno $success_data
+	* @param gevWBDSuccessBildungszeitStorno $success_data
 	*/
-	public function successStornoRecord(gevWBDSuccessWPStorno $success_data)
+	public function successStornoRecord(gevWBDSuccessBildungszeitStorno $success_data)
 	{
 		$row_id = $success_data->rowId();
 		$user_id = $success_data->internalAgentId();
@@ -798,9 +799,9 @@ class gevWBDDataCollector implements WBDDataCollector
 	* callback public function if there are any WP reports for the user
 	* creates new courses id necessary
 	*
-	* @param gevWBDSuccessWPAbfrage $success_data
+	* @param gevWBDSuccessBildungAbfrage $success_data
 	*/
-	public function successWPAbfrageRecord(gevWBDSuccessWPAbfrage $success_data)
+	public function successWPAbfrageRecord(gevWBDSuccessBildungAbfrage $success_data)
 	{
 
 		$import_course_data = $success_data->importCourseData();
