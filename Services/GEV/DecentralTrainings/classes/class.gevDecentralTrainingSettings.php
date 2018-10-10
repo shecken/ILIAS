@@ -26,9 +26,6 @@ class gevDecentralTrainingSettings
 	// @var string|null		A free form Venue.
 	protected $venue_text;
 
-	// @var int|null		Reference Id of the org unit the training is made for.
-	protected $orgu_ref_id;
-
 	// @var string			Description to be used for the training.
 	protected $description;
 
@@ -50,17 +47,30 @@ class gevDecentralTrainingSettings
 	//@var array			Schedule
 	protected $periods;
 
-	public function __construct( ilDateTime $a_start_datetime, ilDateTime $a_end_datetime, $a_venue_obj_id, $a_venue_room_nr, $a_venue_text, $a_orgu_ref_id, $a_description, $a_orga_info, $a_webinar_link, $a_webinar_password, $a_title, $a_vc_type, $a_training_category, $a_target_group, $a_gdv_topic, $a_tmp_path_string, $a_added_files, $a_periods = null
-							   )
-	{
+	public function __construct(
+		ilDateTime $a_start_datetime,
+		ilDateTime $a_end_datetime,
+		$a_venue_obj_id,
+		$a_venue_room_nr,
+		$a_venue_text,
+		$a_description,
+		$a_orga_info,
+		$a_webinar_link,
+		$a_webinar_password,
+		$a_title,
+		$a_vc_type,
+		$a_training_category,
+		$a_target_group,
+		$a_gdv_topic,
+		$a_tmp_path_string,
+		$a_added_files,
+		$a_periods = null
+	) {
 
 		assert($a_venue_obj_id === null || is_int($a_venue_obj_id));
 		assert($venue_room_nr == null || is_string($venue_room_nr));
 		assert($a_venue_text === null || is_string($a_venue_text));
 		assert($a_venue_obj_id === null || $a_venue_text === null);
-
-		assert($a_orgu_ref_id === null || is_int($a_orgu_ref_id));
-		assert($a_orgu_ref_id === null || ilObject::_lookupType($a_orgu_ref_id, true) == "orgu");
 
 		assert(is_string($a_description));
 		assert(is_string($a_orga_info));
@@ -84,7 +94,6 @@ class gevDecentralTrainingSettings
 		$this->venue_room_nr = $a_venue_room_nr;
 		$this->venue_text = $a_venue_text;
 		$this->trainer_ids = $a_trainer_ids;
-		$this->orgu_ref_id = $a_orgu_ref_id;
 		$this->description = $a_description;
 		$this->orga_info = $a_orga_info;
 		$this->webinar_link = $a_webinar_link;
@@ -146,11 +155,6 @@ class gevDecentralTrainingSettings
 	public function venueText()
 	{
 		return $this->venue_text;
-	}
-
-	public function orguRefId()
-	{
-		return $this->orgu_ref_id;
 	}
 
 	public function description()
@@ -226,7 +230,6 @@ class gevDecentralTrainingSettings
 			$this->throwException("Training already finalized.");
 		}
 
-		$crs_utils->setTEPOrguId($this->orguRefId());
 		$crs->setDescription($this->description());
 
 		$start = explode(" ", $this->start()->get(IL_CAL_DATETIME));
