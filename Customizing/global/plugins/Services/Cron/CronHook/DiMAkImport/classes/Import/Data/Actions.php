@@ -13,13 +13,15 @@ class Actions {
 		$this->db->truncate();
 	}
 
-	public function save($file_path)
+	public function save($agent_number)
 	{
-		$this->db->save($file_path);
+		assert('is_int($agent_number)');
+		$this->db->save($agent_number);
 	}
 
 	public function checkAgendNumber($agent_number)
 	{
+		assert('is_int($agent_number)');
 		return $this->db->checkAgendNumber($agent_number);
 	}
 }

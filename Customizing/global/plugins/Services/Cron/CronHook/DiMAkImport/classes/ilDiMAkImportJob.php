@@ -24,6 +24,7 @@ class ilDiMAkImportJob extends \ilCronJob
 		$this->error_collection = $error_collection;
 		$this->error_notification = $error_notification;
 		$this->file_config = $plugin->getFileActions()->read();
+		$this->actions = $this->plugin->getDataActions();
 	}
 	/**
 	 * @inheritdoc
@@ -83,6 +84,9 @@ class ilDiMAkImportJob extends \ilCronJob
 		$this->import->reset();
 		\ilCronManager::ping($this->getId());
 
+		$this->actions->truncate();
+		\ilCronManager::ping($this->getId());
+
 		$path = $this->file_config->getPath();
 		if(is_null($path) || $path == "") {
 			$cron_result->setStatus(\ilCronJobResult::STATUS_CRASHED);
@@ -100,13 +104,29 @@ class ilDiMAkImportJob extends \ilCronJob
 			return $cron_result;
 		}
 
-		$file_path = $this->import->getDataFilePath();
-		if($file_path == "") {
-			$this->sendErrors(array("No data filepath"));
-			$cron_result->setStatus(\ilCronJobResult::STATUS_OK);
-			return $cron_result;
+		$file_data = $this->import->getFileData();
+		$err = array();
+		$save = array();
+		foreach($file_data as $number) {
+			$e = false;
+			if(!is_numeric($number)) {
+				$err[] = $number." is not a number.";
+				$e = true;
+			}
+
+			if(strlen($number) > 32) {
+				$err[] = $number." is longer then 32 diggest.";
+				$e = true;
+			}
+
+			if(!$e) {
+				$this->actions->save((int)$number);
+			}
 		}
-		$this->saveAgentNumbers($file_path);
+
+		if(count($err) > 0) {
+			$this->sendErrors($err);
+		}
 
 		$cron_result->setStatus(\ilCronJobResult::STATUS_OK);
 		return $cron_result;
@@ -121,13 +141,5 @@ class ilDiMAkImportJob extends \ilCronJob
 		}
 		$this->error_notification->notifyAboutErrors($this->error_collection);
 		\ilCronManager::ping($this->getId());
-	}
-
-	protected function saveAgentNumbers($file_path)
-	{
-		$actions = $this->plugin->getDataActions();
-		$actions->truncate();
-		$actions->save($file_path);
-		return;
 	}
 }

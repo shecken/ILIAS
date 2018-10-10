@@ -69,7 +69,7 @@ class ImportFiles
 		}
 
 		if($import) {
-			$this->file_path = $storage_path.DIRECTORY_SEPARATOR.$files[self::KEY_DATA_FILE];
+			$this->file_content = $this->readFile($files[self::KEY_DATA_FILE], $storage_path);
 		}
 	}
 
@@ -122,12 +122,12 @@ class ImportFiles
 	public function reset()
 	{
 		$this->file_path = "";
-		$this->errors = array();
+		$this->file_content = "";
 	}
 
-	public function getDataFilePath()
+	public function getFileData()
 	{
-		return $this->file_path;
+		return $this->file_content;
 	}
 
 	public function getErrors()

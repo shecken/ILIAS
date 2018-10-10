@@ -16,14 +16,19 @@ class ilDB implements DB {
 		$this->db->manipulate($query);
 	}
 
-	public function save($file_path)
+	public function save($agent_number)
 	{
-		$query = "LOAD DATA INFILE ".$this->db->quote($file_path, "text")." INTO TABLE ".self::TABLE_NAME;
-		$this->db->query($query);
+		assert('is_int($agent_number)');
+		$values = array(
+			"agent_number" => array("integer", $agent_number)
+		);
+
+		$this->db->insert(self::TABLE_NAME, $values);
 	}
 
 	public function checkAgendNumber($agent_number)
 	{
+		assert('is_int($agent_number)');
 		$query = "SELECT count(agent_number) AS cnt".PHP_EOL
 			." FROM ".self::TABLE_NAME.PHP_EOL
 			." WHERE agent_number = ".$this->db->qoute($agent_number, "integer");
