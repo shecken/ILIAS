@@ -149,7 +149,7 @@ class gevEffectivenessAnalysis {
 	public function getUserIdsForFirstMail($superior_id) {
 		$my_employees = $this->getEmployeesOf($superior_id);
 
-		return $this->eff_analysis_db->getUserIdsForFirstMail($my_employees, $superior_id);
+		return $this->eff_analysis_db->getUserIdsForFirstMail($my_employees, $superior_id, self::$reason_for_eff_analysis);
 	}
 
 	/**
@@ -162,7 +162,7 @@ class gevEffectivenessAnalysis {
 	public function getUserIdsForReminder($superior_id) {
 		$my_employees = $this->getEmployeesOf($superior_id);
 
-		return $this->eff_analysis_db->getUserIdsForReminder($my_employees, $superior_id);
+		return $this->eff_analysis_db->getUserIdsForReminder($my_employees, $superior_id, self::$reason_for_eff_analysis);
 	}
 
 	/**
