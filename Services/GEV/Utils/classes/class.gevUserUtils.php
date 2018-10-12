@@ -582,11 +582,26 @@ class gevUserUtils {
 				 // this is knowledge from the course amd plugin
 /*				 " LEFT JOIN adv_md_values_int bk_deadl ".
 				 "   ON cs.obj_id = bk_deadl.obj_id ".
-				 "   AND bk_deadl.field_id = ".$this->db->quote($bk_deadl_field_id, "integer").*/
+				 "   AND bk_deadl.field_id = ".$this->db->quote($bk_deadl_field_id, "integer").
+*/
+
+				 //activation from crs_items
+				 " LEFT JOIN crs_items ci".
+				 " ON ci.obj_id = (Select ref_id FROM object_reference WHERE obj_id = cs.obj_id)".
+
 				 $additional_join.
+
 				 " WHERE cs.activation_type = 1".
+/*
 				 "   AND cs.activation_start < ".time().
 				 "   AND cs.activation_end > ".time().
+*/
+				 "	AND (ci.timing_type = 1".
+				 "		OR (ci.timing_type = 0 ".
+				 "			AND ci.timing_start <= ".time().
+				 "			AND ci.timing_end > ".time().
+				 "		)".
+				 "  )".
 				 "   AND oref.deleted IS NULL".
 				 "   AND is_template.value = ".$this->db->quote(gevSettings::NO, "text").
 				 "   AND (".
