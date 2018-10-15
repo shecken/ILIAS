@@ -26,7 +26,7 @@ if (!$result) {
 	$tpl->setCurrentBlock("content");
 	$tpl->setVariable("ERROR_MESSAGE","Der von ihnen verwendete Link wurde bereits benutzt ".
 									  "oder ist abgelaufen. Bitte wenden sie sich bei Fragen an ".
-											  "<a href='mailto:bildungspunkte.de@generali.com' class='blue'>bildungspunkte.de@generali.com</a></b>.");
+											  "<a href='mailto:generali-onlineakademie.de@generali.com' class='blue'>generali-onlineakademie.de@generali.com</a></b>.");
 	$tpl->setVariable("SRC_IMAGE", ilUtil::getImagePath("mess_failure.png"));
 	$tpl->parseCurrentBlock();
 }
