@@ -543,7 +543,7 @@ gev#:#date_stable_desc#:#Feste Dauer. Letzter Tag automatisch eingestellt.
 gev#:#gev_event_title#:#Veranstaltungstitel
 gev#:#gev_evg_registration#:#Registrierung: Generali Online Akademie
 gev#:#gev_evg_registration_header_note#:#Hier können Sie einen neuen Benutzer mit Ihren Daten aus der IV-Datenbank anlegen.
-gev#:#gev_evg_registration_not_found#:#Zu Ihrer Eingabe konnte kein passender Datensatz gefunden werden. Versuchen Sie es erneut oder wenden Sie sich an <a href="mailto:bildungspunkte.de@generali.com" class="blue">bildungspunkte.de@generali.com</a>.
+gev#:#gev_evg_registration_not_found#:#Zu Ihrer Eingabe konnte kein passender Datensatz gefunden werden. Versuchen Sie es erneut oder wenden Sie sich an <a href="mailto:generali-onlineakademie.de@generali.com" class="blue">generali-onlineakademie.de@generali.com</a>.
 gev#:#gev_evg_registration_success#:#Ihre Eingabe konnte eindeutig zugeordnet werden.
 gev#:#gev_excel_course_title#:#Generelle Angaben zum Training
 gev#:#gev_excel_member_row_title#:#Mitgliederliste
@@ -688,7 +688,7 @@ gev#:#gev_agent_registration_label#:#Erstregistrierung als:
 gev#:#gev_na_registration_label#:#Erstregistrierung als:
 gev#:#gev_agent_registration_button#:#unabhängiger Vertriebspartner
 gev#:#gev_na_registration_button#:#Nebenberufsagentur / VA-Praktikant
-gev#:#gev_registration_posttext#:#Bei Rückfragen wenden Sie sich an: <a href="mailto:bildungspunkte.de@generali.com" class="blue">bildungspunkte.de@generali.com</a>
+gev#:#gev_registration_posttext#:#Bei Rückfragen wenden Sie sich an: <a href="mailto:generali-onlineakademie.de@generali.com" class="blue">generali-onlineakademie.de@generali.com</a>
 gev#:#gev_rep_attendance_by_employee_desc#:#Hier sehen Sie die Buchungen und Trainingsteilnahmen Ihrer Mitarbeiter / Vertriebspartner.<br>Bitte wählen Sie:<ul><li>Zeitraum des Reports</li><li>OrgEinheit, falls Ihnen mehrere Einheiten zugeordnet sind</li><li>Trainingstitel (alle Titel in Klammern gehören zur VA-Grundausbildung)</li><li>Teilnahmestatus, z.B. zeige nur TN, die teilgenommen haben</li></ul>Bei Klick auf die Spaltenüberschrift der Ergebnistabelle (z.B. ADP-Nummer) erfolgt eine Sortierung der Tabelle nach diesem Kriterium.
 gev#:#gev_rep_attendance_by_employee_title#:#Teilnahme nach Mitarbeiter / Vertriebspartner.
 gev#:#gev_rep_billing_title#:#Rechnungen
@@ -779,8 +779,8 @@ gev#:#gev_wbd_registration_cb_mandatory#:#Sie müssen dieses Feld bestätigen, u
 gev#:#gev_wbd_registration_create_bwv_id#:#Die Generali soll für mich ein Weiterbildungskonto eröffnen.
 gev#:#gev_wbd_registration_create_bwv_id_cmd#:#Kontoeröffnung
 gev#:#gev_wbd_registration_finished_create_bwv_id#:#Vielen Dank, wir werden für Sie ein Konto in der Weiterbildungsdatenbank (WBD) des BWV e.V. sowie ein Nutzerkonto bei der Trusted German Insurance Cloud (TGIC) eröffnen.<br />Dieser Prozess wird in den nächsten Tagen abgeschlossen werden.<br />Nach Eröffnung Ihres Kontos erhalten Sie von dort insgesamt 3 Systemmails mit Ihrer Benutzerkennung, Ihrem Passwort und Ihrer Vermittler-ID.
-gev#:#gev_wbd_registration_finished_has_bwv_id_service#:#Vielen Dank, wir werden Ihre bei uns erworbenen Weiterbildungspunkte unter dieser Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto:Bildungspunkte.de@Generali.com">Bildungspunkte.de@Generali.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.
-gev#:#gev_wbd_registration_finished_no_bwv_id_service#:#Vielen Dank für die Anmeldung an der Generali Online Akademie. Wir werden Ihre bei uns erworbenen Weiterbildungspunkte in der Generali Online Akademie sammeln und nach Eingabe Ihrer GDV Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto:Bildungspunkte.de@Generali.com">Bildungspunkte.de@Generali.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.<br><br>Bitte beachten Sie, daß die Weiterbildungspunkte verfallen, sofern Sie Ihre GDV Vermittler-ID nicht innerhalb von 12 Monaten in Ihren Profildaten ergänzen.
+gev#:#gev_wbd_registration_finished_has_bwv_id_service#:#Vielen Dank, wir werden Ihre bei uns erworbenen Weiterbildungspunkte unter dieser Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto:generali-onlineakademie.de@generali.com">generali-onlineakademie.de@generali.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.
+gev#:#gev_wbd_registration_finished_no_bwv_id_service#:#Vielen Dank für die Anmeldung an der Generali Online Akademie. Wir werden Ihre bei uns erworbenen Weiterbildungspunkte in der Generali Online Akademie sammeln und nach Eingabe Ihrer GDV Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto:generali-onlineakademie.de@generali.com">generali-onlineakademie.de@generali.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.<br><br>Bitte beachten Sie, daß die Weiterbildungspunkte verfallen, sofern Sie Ihre GDV Vermittler-ID nicht innerhalb von 12 Monaten in Ihren Profildaten ergänzen.
 gev#:#gev_wbd_registration_finished_has_bwv_id#:#Vielen Dank, wir werden Ihre bei uns erworbenen Weiterbildungspunkte unter dieser Vermittler-ID an die zentrale Weiterbildungsdatenbank melden.
 gev#:#gev_wbd_registration_finished_no_bwv_id#:#Vielen Dank für die Anmeldung an der Generali Online Akademie. Wir werden Ihre bei uns erworbenen Weiterbildungspunkte in der Generali Online Akademie sammeln und nach Eingabe Ihrer GDV Vermittler-ID an die zentrale Weiterbildungsdatenbank (WBD) melden. <br><br>Bitte beachten Sie, daß die Weiterbildungspunkte verfallen, sofern Sie Ihre GDV Vermittler-ID nicht innerhalb von 12 Monaten in Ihren Profildaten ergänzen.
 gev#:#gev_wbd_registration_has_bwv_id#:#Ich habe bereits eine GDV Vermittler-ID
@@ -1269,7 +1269,7 @@ gev#:#gev_dec_training_presence_fix#:#Präsenztraining (fester Ablaufplan)
 gev#:#gev_dec_training_webinar_fix#:#Webinar (fester Ablaufplan)
 gev#:#gev_dec_training_presence_flex#:#Präsenztraining (flexible Bausteine)
 gev#:#gev_dec_training_webinar_flex#:#Webinar (flexible Bausteine)
-gev#:#gev_dec_training_notice#:#Für nähere Informationen wenden Sie sich bitte an die Abteilung Außendienstentwicklung, Telefon 089 5121 1919, Mail <a href="mailto:Bildungspunkte.de@generali.com">Bildungspunkte.de@generali.com</a>
+gev#:#gev_dec_training_notice#:#Für nähere Informationen wenden Sie sich bitte an die Abteilung Außendienstentwicklung, Telefon 089 5121 1919, Mail <a href="mailto:generali-onlineakademie.de@generali.com">generali-onlineakademie.de@generali.com</a>
 gev#:#gev_dec_training_title#:#Titel
 gev#:#gev_dec_training_duration#:#Zeitraum
 gev#:#gev_dec_training_venue#:#Orte und Anbieter
