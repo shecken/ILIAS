@@ -34,7 +34,9 @@ class gevRegistrationGUI {
 		switch ($next_class) {
 			case "gevagentregistrationgui":
 				require_once("Services/GEV/Registration/classes/class.gevAgentRegistrationGUI.php");
-				$gui = new gevAgentRegistrationGUI();
+				require_once("Customizing/global/plugins/Services/Cron/CronHook/DiMAkImport/classes/class.ilDiMAkImportPlugin.php");
+				$plugin = new ilDiMAkImportPlugin();
+				$gui = new gevAgentRegistrationGUI($plugin->getDataActions());
 				$this->ctrl->forwardCommand($gui);
 				return;
 			case "gevnaregistrationgui":

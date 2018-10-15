@@ -1,0 +1,7 @@
+dimak_mediator_number_import#:#Import von DiMAk Vermittlernummern
+tab_file_configuration#:#Ablageort der Dateien
+fs_configuration#:#Ablageort
+file_path#:#Dateipfad
+save#:#Speichern
+cancel#:#Abbrechen
+path_not_accessed#:#Dateipfad darf nicht gelesen werden.

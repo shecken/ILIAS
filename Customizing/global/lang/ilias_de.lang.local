@@ -1890,3 +1890,8 @@ gev#:#xwbe_copy#:#Report über Fehler bei der WBD-Meldung kopieren
 gev#:#xwbp_copy#:#Report über gemeldete Bildungspunkte kopieren
 gev#:#xtas_copy#:#Assessment Center für [KARRIEREZIEL] kopieren
 gev#:#no_mail_template#:#Es ist ein Fehler bei dem Mailversand aufgetreten, da eine Mailvorlage nicht verfügbar ist.
+gev#:#gev_connection#:#Wählen Sie Ihre Anbindung
+gev#:#gev_mediator_number#:#Generali Vermittlernummer
+gev#:#dimak_mediator_number#:#Dialog Vermittlernummer
+gev#:#gev_mediator_number_info#:#Bitte geben Sie Ihre Generali Vermittlernummer ein.
+gev#:#dimak_mediator_number_info#:#Bitte geben Sie Ihre Dialog Vermittlernummer ein.
