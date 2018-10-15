@@ -165,6 +165,7 @@ class gevEffectivenessAnalysisDB {
 				." FROM eff_analysis_due_date\n"
 				." JOIN hist_course hcrs\n"
 				."     ON eff_analysis_due_date.crs_id = hcrs.crs_id\n"
+				."        AND hcrs.hist_historic = 0\n"
 				." JOIN hist_user husr\n"
 				."    ON husr.user_id = eff_analysis_due_date.user_id\n"
 				."        AND husr.hist_historic = 0\n"
@@ -213,6 +214,7 @@ class gevEffectivenessAnalysisDB {
 				." FROM eff_analysis_due_date\n"
 				." JOIN hist_course hcrs\n"
 				."     ON eff_analysis_due_date.crs_id = hcrs.crs_id\n"
+				."        AND hcrs.hist_historic = 0\n"
 				." LEFT JOIN eff_analysis\n"
 				."     ON eff_analysis.crs_id = eff_analysis_due_date.crs_id\n"
 				."         AND eff_analysis.user_id = eff_analysis_due_date.user_id\n"
@@ -328,7 +330,10 @@ class gevEffectivenessAnalysisDB {
 			$start = $filter[gevEffectivenessAnalysis::F_PERIOD]["start"]->get(IL_CAL_DATE);
 			$end = $filter[gevEffectivenessAnalysis::F_PERIOD]["end"]->get(IL_CAL_DATE);
 
-			$where .= "     AND hcrs.begin_date >= ".$this->gDB->quote($start, "text"). " AND hcrs.begin_date <= ".$this->gDB->quote($end, "text")."\n";
+			$where .= "     AND ("
+			."         (hcrs.begin_date >= ".$this->gDB->quote($start, "text"). " AND hcrs.begin_date <= ".$this->gDB->quote($end, "text").")\n"
+			."         OR hcrs.begin_date = '0000-00-00'\n"
+			."     )\n";
 		}
 
 		if(isset($filter[gevEffectivenessAnalysis::F_TITLE]) && $filter[gevEffectivenessAnalysis::F_TITLE] != "") {
