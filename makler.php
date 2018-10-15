@@ -13,6 +13,10 @@
 require_once("Services/Init/classes/class.ilInitialisation.php");
 require_once("Services/GEV/Utils/classes/class.gevSettings.php");
 require_once("Services/User/classes/class.ilObjUser.php");
+require_once "Services/Style/classes/class.ilStyleDefinition.php";
+
+ilStyleDefinition::setCurrentSkin("dimak");
+ilStyleDefinition::setCurrentStyle("dimak");
 
 ilInitialisation::initILIAS();
 $GLOBALS["ilUser"] = new ilObjUser(gevSettings::getInstance()->getAgentOfferUserId());
