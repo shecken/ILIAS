@@ -304,7 +304,13 @@ class gevEffectivenessAnalysis {
 		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
 
 		$user_utils = gevUserUtils::getInstance($user_id);
-		$orgus = $user_utils->getOrgUnitsWhereUserIsDirectSuperior();
+
+		$orgus = array_map(
+			function($orgu) {
+				return $orgu["ref_id"];
+			},
+			$user_utils->getOrgUnitsWhereUserIsDirectSuperior()
+		);
 
 		$empl = gevOrgUnitUtils::getEmployeesIn($orgus);
 
