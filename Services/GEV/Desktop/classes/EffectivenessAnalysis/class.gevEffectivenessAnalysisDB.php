@@ -176,6 +176,7 @@ class gevEffectivenessAnalysisDB {
 				." WHERE ".$this->gDB->in("eff_analysis_due_date.user_id", $employees, false, "integer")."\n"
 				."     AND eff_analysis_due_date.due_date <= DATE_SUB(CURDATE(), INTERVAL 15 DAY)\n"
 				."     AND eff_analysis_due_date.due_date != '0000-00-00'\n"
+				."     AND hcrs.begin_date != '0000-00-00'\n"
 				."     AND ".$this->gDB->in("hcrs.reason_for_training", $reason_for_eff_analysis, false, "text")."\n"
 				." GROUP BY eff_analysis_due_date.user_id, eff_analysis_due_date.crs_id\n"
 				." HAVING send_first = true AND eff_analysis.crs_id IS NULL\n";
@@ -222,6 +223,7 @@ class gevEffectivenessAnalysisDB {
 				." WHERE ".$this->gDB->in("eff_analysis_due_date.user_id", $employees, false, "integer")."\n"
 				."     AND eff_analysis_due_date.due_date <= DATE_SUB(CURDATE(), INTERVAL 15 DAY)\n"
 				."     AND eff_analysis_due_date.due_date != '0000-00-00'\n"
+				."     AND hcrs.begin_date != '0000-00-00'\n"
 				."     AND ".$this->gDB->in("hcrs.reason_for_training", $reason_for_eff_analysis, false, "text")."\n"
 				." GROUP BY eff_analysis_due_date.user_id, eff_analysis_due_date.crs_id\n"
 				." HAVING send_second = true AND eff_analysis.crs_id IS NULL\n";
@@ -323,10 +325,7 @@ class gevEffectivenessAnalysisDB {
 			$start = $filter[gevEffectivenessAnalysis::F_PERIOD]["start"]->get(IL_CAL_DATE);
 			$end = $filter[gevEffectivenessAnalysis::F_PERIOD]["end"]->get(IL_CAL_DATE);
 
-			$where .= "     AND ("
-			."         (hcrs.begin_date >= ".$this->gDB->quote($start, "text"). " AND hcrs.begin_date <= ".$this->gDB->quote($end, "text").")\n"
-			."         OR hcrs.begin_date = '0000-00-00'\n"
-			."     )\n";
+			$where .= "     AND hcrs.begin_date >= ".$this->gDB->quote($start, "text"). " AND hcrs.begin_date <= ".$this->gDB->quote($end, "text")."\n";
 		}
 
 		if(isset($filter[gevEffectivenessAnalysis::F_TITLE]) && $filter[gevEffectivenessAnalysis::F_TITLE] != "") {
