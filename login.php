@@ -43,6 +43,17 @@ if (isset($_GET["client_id"])) {
 	$_COOKIE["ilClientId"] = $_GET["client_id"];
 }
 
+// gev-patch start
+$http_host = $_SERVER["HTTP_HOST"];
+$server_name = $_SERVER["SERVER_NAME"];
+$names = ["dialog-maklerakademie.de", "www.dialog-maklerakademie.de"];
+if(	in_array($http_host, $names)
+	|| in_array($server_name, $names)
+) {
+	header("Location: dialog_login.php");
+}
+// gev-patch end
+
 require_once("Services/Init/classes/class.ilInitialisation.php");
 ilInitialisation::initILIAS();
 
