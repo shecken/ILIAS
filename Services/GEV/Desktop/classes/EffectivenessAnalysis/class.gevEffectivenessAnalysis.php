@@ -147,7 +147,7 @@ class gevEffectivenessAnalysis {
 	 * @return mixed[]
 	 */
 	public function getUserIdsForFirstMail($superior_id) {
-		$my_employees = $this->getEmployeesOf($superior_id);
+		$my_employees = $this->getEmployeesForMailOf($superior_id);
 
 		return $this->eff_analysis_db->getUserIdsForFirstMail($my_employees, $superior_id, self::$reason_for_eff_analysis);
 	}
@@ -160,7 +160,7 @@ class gevEffectivenessAnalysis {
 	 * @return mixed[]
 	 */
 	public function getUserIdsForReminder($superior_id) {
-		$my_employees = $this->getEmployeesOf($superior_id);
+		$my_employees = $this->getEmployeesForMailOf($superior_id);
 
 		return $this->eff_analysis_db->getUserIdsForReminder($my_employees, $superior_id, self::$reason_for_eff_analysis);
 	}
@@ -286,6 +286,27 @@ class gevEffectivenessAnalysis {
 		if(empty($empl) || (count($empl) == 1 && !$empl[0])) {
 			return array();
 		}
+
+		return $empl;
+	}
+
+	/**
+	 * Get employees of user filtered by login id org unit
+	 *
+	 * @param int 		$user_id
+	 * @param string[] 	$filter_orgunit 	values from org unit filter
+	 * @param int 		$login_id			login id of filtered user
+	 *
+	 * @return int[]
+	 */
+	protected function getEmployeesForMailOf($user_id) {
+		require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+		require_once("Services/GEV/Utils/classes/class.gevOrgUnitUtils.php");
+
+		$user_utils = gevUserUtils::getInstance($user_id);
+		$orgus = $user_utils->getOrgUnitsWhereUserIsDirectSuperior();
+
+		$empl = gevOrgUnitUtils::getEmployeesIn($orgus);
 
 		return $empl;
 	}
