@@ -280,6 +280,7 @@ class gevEffectivenessAnalysisDB {
 				."        AND husrorgu2.rol_title = ".$this->gDB->quote("Vorgesetzter", "text")."\n"
 				." LEFT JOIN hist_user husr2\n"
 				."    ON husrorgu2.usr_id = husr2.user_id\n"
+				."        AND husr2.hist_historic = 0\n"
 				." LEFT JOIN ".self::TABLE_FINISHED_EFF_ANA." effa\n"
 				."    ON effa.crs_id = dued_eff_ana.crs_id\n"
 				."        AND effa.user_id = dued_eff_ana.user_id\n"
