@@ -150,12 +150,12 @@ class gevExpressRegistrationGUI
 		ilUtil::sendSuccess(sprintf($booked ? $this->g_lng->txt("gev_was_booked_self")
 											  : $this->g_lng->txt("gev_was_booked_waiting_self"), $this->crs_utils->getTitle()), true);
 
-		ilUtil::redirect("makler.php");
+		ilUtil::redirect("https://dialog-maklerakademie.de/dialog_login.php");
 	}
 
 	protected function toMaklerOffer()
 	{
-		ilUtil::redirect("makler.php");
+		ilUtil::redirect("https://dialog-maklerakademie.de/dialog_login.php");
 	}
 
 	/**
