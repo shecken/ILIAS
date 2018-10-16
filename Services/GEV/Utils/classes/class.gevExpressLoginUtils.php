@@ -3,6 +3,14 @@ require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 
 class gevExpressLoginUtils {
 	static protected $instance = null;
+
+	protected static $VALID_AGENT_STATUSES = [
+		"608",
+		"650",
+		"651",
+		"674",
+		"679"
+	];
 	
 	protected function __construct(){
 		global $ilDB;
@@ -60,41 +68,36 @@ class gevExpressLoginUtils {
 		return $this->user->getID();
 	}
 
-	protected function getImport() {
-		if ($this->import === null) {
-			require_once("gev_utils.php");
-			$this->import = get_gev_import();
-		}
-		
-		return $this->import;
+	/**
+	 * Check for valid jobnumber.
+	 *
+	 * @param 	string 	$jobnumber
+	 * @return 	bool
+	 */
+	public function isValidStellennummer($jobnumber)
+	{
+		assert('is_string($jobnumber)');
+
+		return $this->getImport()->checkForJobnumber($jobnumber);
 	}
 
-	protected function loadStellennummerData($a_stellennummer) {
-		if ($this->stellennummer_data === null) {
-			$import = $this->getImport();
-			$this->stellennummer_data = $import->get_stelle($a_stellennummer);
-		}
-	}
-	
-	protected function getStellennummerData($a_stellennummer) {
-		$this->loadStellennummerData($a_stellennummer);
+	/**
+	 * Check whether 'vermittlerstatus' is a agent status.
+	 *
+	 * @param 	string 	$jobnumber
+	 * @return 	bool	true = is a agent; false = isn't a agent
+	 */
+	public function isAgent($jobnumber)
+	{
+		assert('is_string($jobnumber)');
 
-		if ($this->stellennummer_data["stellennummer"] != $a_stellennummer) {
-			throw new Exception("gevRegistrationGUI::getStellennummerData: stellennummer does not match.");
+		$status = $this->getImport()->getAgentStatus($jobnumber);
+
+		if ($status != -1 && in_array($status, self::$VALID_AGENT_STATUSES)) {
+			return true;
 		}
 
-		return $this->stellennummer_data;
-	}
-	
-	public function isValidStellennummer($a_stellennummer) {
-		$this->loadStellennummerData($a_stellennummer);
-		return $this->stellennummer_data !== false 
-			&& $this->stellennummer_data["stellennummer"] == $a_stellennummer;
-	}
-	
-	public function isAgent($a_stellennummer) {
-		$data = $this->getStellennummerData($a_stellennummer);
-		return $data["agent"] == 1;
+		return false;
 	}
 
 	public function setExpressUserExperienceDate($a_usr_id){
@@ -130,5 +133,20 @@ class gevExpressLoginUtils {
 		}
 
 		return $isExpressUser;
+	}
+
+	/**
+	 * Get the gev adp db.
+	 *
+	 * @return 	gevADPDB
+	 */
+	protected function getImport()
+	{
+		if ($this->gev_jobnumber_DB === null) {
+			require_once("./Services/GEV/Import/classes/class.gevJobnumberDB.php");
+			$this->gev_jobnumber_DB = new gevJobnumberDB($this->db);
+		}
+
+		return $this->gev_jobnumber_DB;
 	}
 }
