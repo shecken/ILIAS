@@ -206,6 +206,7 @@ class gevAgentRegistrationGUI
 
 		$user_id = $user->getId();
 
+		$connection = $form->getInput(self::F_CONNECTION);
 		if($connection == self::V_CON_GEV) {
 			$jobnumber = $form->getInput(self::F_GEV_MEDIATOR_NUMBER);
 		}
