@@ -54,10 +54,10 @@ class gevExpressLoginUtils {
 		$user_utils->setCompanyName($a_form->getInput("institution"));
 		$user_utils->setJobNumber($a_form->getInput("vnumber"));
 
-		$data = $this->getStellennummerData($user_utils->getJobNumber());
-		$user_utils->setADPNumberGEV($data["adp"]);
+		$data = $this->getEntriesForJobnumber($user_utils->getJobNumber());
+		$user_utils->setADPNumberGEV($data["jobnumber"]);
 		$user_utils->setAgentKey($data["vms"]);
-		
+
 		require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
 		$role_utils = gevRoleUtils::getInstance();
 		$role_utils->assignUserToGlobalRole($this->user->getId(), "ExpressUser");
@@ -98,6 +98,19 @@ class gevExpressLoginUtils {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get entries for jobnumber.
+	 *
+	 * @param 	string 	$jobnumber
+	 * @param 	array
+	 */
+	protected function getEntriesForJobnumber($jobnumber)
+	{
+		assert('is_string($jobnumber)');
+
+		return $this->getImport()->getEntryByJobnumber($jobnumber);
 	}
 
 	public function setExpressUserExperienceDate($a_usr_id){
