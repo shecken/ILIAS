@@ -311,18 +311,16 @@ class gevAgentRegistrationGUI
 
 		$connection = new ilRadioGroupInputGUI($this->lng->txt("gev_connection"), self::F_CONNECTION);
 		$option = new ilRadioOption($this->lng->txt("gev_mediator_number"), self::V_CON_GEV);
-		$number = new ilTextInputGUI("", self::F_GEV_MEDIATOR_NUMBER);
+		$number = new ilTextInputGUI($this->lng->txt("gev_mediator_number_info"), self::F_GEV_MEDIATOR_NUMBER);
 		$number->setSize(40);
 		$number->setRequired(true);
-		$number->setInfo($this->lng->txt("gev_mediator_number_info"));
 		$option->addSubItem($number);
 		$connection->addOption($option);
 
 		$option = new ilRadioOption($this->lng->txt("dimak_mediator_number"), self::V_CON_DIMAK);
-		$number = new ilTextInputGUI("", self::F_DIMAK_MEDIATOR_NUMBER);
+		$number = new ilTextInputGUI($this->lng->txt("dimak_mediator_number_info"), self::F_DIMAK_MEDIATOR_NUMBER);
 		$number->setSize(40);
 		$number->setRequired(true);
-		$number->setInfo($this->lng->txt("dimak_mediator_number_info"));
 		$option->addSubItem($number);
 		$connection->addOption($option);
 		$connection->setRequired(true);
