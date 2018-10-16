@@ -5,7 +5,7 @@ require_once __DIR__."/Configuration/class.FileConfigurationGUI.php";
 
 /**
  * @ilCtrl_Calls ilDiMAkImportConfigGUI: FileConfigurationGUI
- * @ilCtrl_isCalledBy ilUserOrguImportConfigGUI: ilObjComponentSettingsGUI
+ * @ilCtrl_isCalledBy ilDiMAkImportConfigGUI: ilObjComponentSettingsGUI
  */
 
 class ilDiMAkImportConfigGUI extends ilPluginConfigGUI
