@@ -52,16 +52,16 @@ class gevCourseSearchTableGUI extends catAccordionTableGUI {
 		$this->setRowTemplate("tpl.gev_course_search_row.html", "Services/GEV/CourseSearch");
 
 		//$this->addColumn("", "expand", "20px");
-		$this->addColumn("", "expand", "0px", false, "catTableExpandButton");
+		$this->addColumn("", "expand", "40px", false, "catTableExpandButton");
 		$this->addColumn($this->gLng->txt("title"), "title");
-		$this->addColumn($this->gLng->txt("status"));
-		$this->addColumn($this->gLng->txt("gev_learning_type"), "type");
-		$this->addColumn($this->gLng->txt("gev_location"), "location");
-		$this->addColumn($this->gLng->txt("date"), "date");
-		$this->addColumn($this->gLng->txt("gev_wb_time"), "points");
-		$this->addColumn("&euro;", "fee");
+		$this->addColumn($this->gLng->txt("status"), null, "65px");
+		$this->addColumn($this->gLng->txt("gev_learning_type"), "type", "115px");
+		$this->addColumn($this->gLng->txt("gev_location"), "location", "170px");
+		$this->addColumn($this->gLng->txt("date"), "date", "125px");
+		$this->addColumn($this->gLng->txt("gev_wb_time"), "points", "70px");
+		$this->addColumn("&euro;", "fee", "60px");
 		//$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', "", "20px");
-		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', null, "20px", false);
+		$this->addColumn('<img src="'.ilUtil::getImagePath("gev_action.png").'" />', null, "40px", false);
 		
 		$this->book_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-booking.png").'" />';
 		$this->email_img = '<img src="'.ilUtil::getImagePath("GEV_img/ico-key-invitation.png").'" />';
