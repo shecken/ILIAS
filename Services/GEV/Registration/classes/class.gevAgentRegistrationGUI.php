@@ -205,7 +205,16 @@ class gevAgentRegistrationGUI
 		require_once("Modules/OrgUnit/classes/class.ilObjOrgUnit.php");
 
 		$user_id = $user->getId();
-		$jobnumber = $form->getInput(self::F_MEDIATOR_NUMBER);
+
+		$connection = $form->getInput(self::F_CONNECTION);
+		if($connection == self::V_CON_GEV) {
+			$jobnumber = $form->getInput(self::F_GEV_MEDIATOR_NUMBER);
+		}
+
+		if($connection == self::V_CON_DIMAK) {
+			$jobnumber = $form->getInput(self::F_DIMAK_MEDIATOR_NUMBER);
+		}
+
 		$data = $this->getEntriesForJobnumber($jobnumber);
 		$vermittlerstatus = $data['agent_status'];
 
