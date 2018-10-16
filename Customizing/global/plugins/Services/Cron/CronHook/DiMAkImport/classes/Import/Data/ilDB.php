@@ -31,7 +31,7 @@ class ilDB implements DB {
 		assert('is_int($agent_number)');
 		$query = "SELECT count(agent_number) AS cnt".PHP_EOL
 			." FROM ".self::TABLE_NAME.PHP_EOL
-			." WHERE agent_number = ".$this->db->qoute($agent_number, "integer");
+			." WHERE agent_number = ".$this->db->quote($agent_number, "integer");
 
 		$res = $this->db->query($query);
 		$row = $this->db->fetchAssoc($res);
