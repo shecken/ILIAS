@@ -46,11 +46,19 @@ if (isset($_GET["client_id"])) {
 // gev-patch start
 $http_host = $_SERVER["HTTP_HOST"];
 $server_name = $_SERVER["SERVER_NAME"];
+$request_uri = $_SERVER["REQUEST_URI"];
 $names = ["dialog-maklerakademie.de", "www.dialog-maklerakademie.de"];
-if(	in_array($http_host, $names)
+
+if(in_array($http_host, $names)
 	|| in_array($server_name, $names)
 ) {
-	header("Location: dialog_login.php");
+	$target = "Location: dialog_login.php";
+
+	if(strpos($request_uri, "target=") != false) {
+		$target .= str_replace("/login.php", "", $request_uri);
+	}
+
+	header($target);
 }
 // gev-patch end
 
