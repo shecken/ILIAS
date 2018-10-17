@@ -209,20 +209,21 @@ class gevAgentRegistrationGUI
 		$connection = $form->getInput(self::F_CONNECTION);
 		if($connection == self::V_CON_GEV) {
 			$jobnumber = $form->getInput(self::F_GEV_MEDIATOR_NUMBER);
+			$data = $this->getEntriesForJobnumber($jobnumber);
+			$vermittlerstatus = $data['agent_status'];
+
+			$user_utils->setADPNumberGEV($data["jobnumber"]);
+			$user_utils->setJobNumber($data["jobnumber"]);
+			$user_utils->setAgentKey($data["vms"]);
+
+			$role_title = gevSettings::$VMS_ROLE_MAPPING[$vermittlerstatus][0];
 		}
 
 		if($connection == self::V_CON_DIMAK) {
 			$jobnumber = $form->getInput(self::F_DIMAK_MEDIATOR_NUMBER);
+			$role_title = "VP";
 		}
 
-		$data = $this->getEntriesForJobnumber($jobnumber);
-		$vermittlerstatus = $data['agent_status'];
-
-		$user_utils->setADPNumberGEV($data["jobnumber"]);
-		$user_utils->setJobNumber($data["jobnumber"]);
-		$user_utils->setAgentKey($data["vms"]);
-
-		$role_title = gevSettings::$VMS_ROLE_MAPPING[$vermittlerstatus][0];
 		$role_utils = gevRoleUtils::getInstance();
 		$role_utils->assignUserToGlobalRole($user_id, $role_title);
 
