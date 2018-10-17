@@ -84,7 +84,6 @@ class ilDiMAkImportJob extends \ilCronJob
 		$this->import->reset();
 		\ilCronManager::ping($this->getId());
 
-		$this->actions->truncate();
 		\ilCronManager::ping($this->getId());
 
 		$path = $this->file_config->getPath();
@@ -104,6 +103,7 @@ class ilDiMAkImportJob extends \ilCronJob
 			return $cron_result;
 		}
 
+		$this->actions->truncate();
 		$file_data = $this->import->getFileData();
 		$err = array();
 		$save = array();
