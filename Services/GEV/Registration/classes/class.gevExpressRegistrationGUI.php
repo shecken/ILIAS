@@ -128,11 +128,11 @@ class gevExpressRegistrationGUI
 	 * Show succes mail and redirect to makler main page
 	 *
 	 * @param int 		$a_status
-	 * @param boolean 	$a_isSelfLerning
+	 * @param boolean 	$a_isSelfLearning
 	 *
 	 * @return null
 	 */
-	protected function finalizedBookingRedirect($a_status, $a_isSelfLerning)
+	protected function finalizedBookingRedirect($a_status, $a_isSelfLearning)
 	{
 		require_once("Services/GEV/Mailing/classes/class.gevCrsAutoMails.php");
 		$booked = $a_status == ilCourseBooking::STATUS_BOOKED;
