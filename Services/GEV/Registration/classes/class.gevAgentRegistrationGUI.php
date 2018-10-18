@@ -16,7 +16,6 @@ class gevAgentRegistrationGUI
 	const F_CONNECTION = "f_connection";
 	const F_GEV_MEDIATOR_NUMBER = "gev_mediator_number";
 	const F_DIMAK_MEDIATOR_NUMBER = "dimak_mediator_number";
-	const F_MEDIATOR_NUMBER = "mediator_number";
 	const F_EMAIL = "email";
 	const F_GENDER = "gender";
 	const F_TITLE = "title";
@@ -214,13 +213,15 @@ class gevAgentRegistrationGUI
 
 			$user_utils->setADPNumberGEV($data["jobnumber"]);
 			$user_utils->setJobNumber($data["jobnumber"]);
-			$user_utils->setAgentKey($data["vms"]);
+			$user_utils->setAgentPositionVFS($data["vms_text"]);
 
 			$role_title = gevSettings::$VMS_ROLE_MAPPING[$vermittlerstatus][0];
 		}
 
 		if($connection == self::V_CON_DIMAK) {
 			$jobnumber = $form->getInput(self::F_DIMAK_MEDIATOR_NUMBER);
+			$user_utils->setADPNumberGEV($jobnumber);
+			$user_utils->setJobNumber($jobnumber);
 			$role_title = "VP";
 		}
 

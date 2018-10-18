@@ -2,6 +2,13 @@
 require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 
 class gevExpressLoginUtils {
+	const F_CONNECTION = "f_connection";
+	const F_GEV_MEDIATOR_NUMBER = "gev_mediator_number";
+	const F_DIMAK_MEDIATOR_NUMBER = "dimak_mediator_number";
+
+	const V_CON_GEV = "gev";
+	const V_CON_DIMAK = "dimak";
+
 	static protected $instance = null;
 
 	protected static $VALID_AGENT_STATUSES = [
@@ -52,11 +59,21 @@ class gevExpressLoginUtils {
 		$user_utils = gevUserUtils::getInstanceByObj($this->user);
 
 		$user_utils->setCompanyName($a_form->getInput("institution"));
-		$user_utils->setJobNumber($a_form->getInput("vnumber"));
+		$connection = $a_form->getInput(self::F_CONNECTION);
+		if($connection == self::V_CON_GEV) {
+			$jobnumber = $a_form->getInput(self::F_GEV_MEDIATOR_NUMBER);
+			$data = $this->getEntriesForJobnumber($jobnumber);
 
-		$data = $this->getEntriesForJobnumber($user_utils->getJobNumber());
-		$user_utils->setADPNumberGEV($data["jobnumber"]);
-		$user_utils->setAgentKey($data["vms"]);
+			$user_utils->setADPNumberGEV($data["jobnumber"]);
+			$user_utils->setJobNumber($data["jobnumber"]);
+			$user_utils->setAgentPositionVFS($data["vms_text"]);
+		}
+
+		if($connection == self::V_CON_DIMAK) {
+			$jobnumber = $a_form->getInput(self::F_DIMAK_MEDIATOR_NUMBER);
+			$user_utils->setADPNumberGEV($jobnumber);
+			$user_utils->setJobNumber($jobnumber);
+		}
 
 		require_once("Services/GEV/Utils/classes/class.gevRoleUtils.php");
 		$role_utils = gevRoleUtils::getInstance();
