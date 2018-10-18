@@ -774,9 +774,9 @@ gev#:#gev_wbd_reg_pending#:#Ihre Anmeldung bei der WBD wird in Kürze erfolgen.
 gev#:#gev_wbd_registration#:#Erstregistrierung
 gev#:#gev_wbd_registration_basic#:#Erstregistrierung
 gev#:#gev_wbd_registration_basic_back#:#Zurück zur Eingabe der GDV Vermittler-ID
-gev#:#gev_wbd_registration_basic_header_note#:#Bitte wählen Sie Ihren gewünschte Option aus
+gev#:#gev_wbd_registration_basic_header_note#:#Bitte wählen Sie Ihre gewünschte Option aus
 gev#:#gev_wbd_registration_cb_mandatory#:#Sie müssen dieses Feld bestätigen, um die WBD-Registrierung abschließen zu können.
-gev#:#gev_wbd_registration_create_bwv_id#:#Die Generali soll für mich ein Weiterbildungskonto bei Weiterbildungsdatenbank (WBD)  des GDV eröffnen.
+gev#:#gev_wbd_registration_create_bwv_id#:#Die Generali soll für mich ein Weiterbildungskonto bei der Weiterbildungsdatenbank (WBD)  des GDV eröffnen.
 gev#:#gev_wbd_registration_create_bwv_id_cmd#:#Kontoeröffnung
 gev#:#gev_wbd_registration_finished_create_bwv_id#:#Vielen Dank, wir werden für Sie ein Konto in der Weiterbildungsdatenbank (WBD) des BWV e.V. sowie ein Nutzerkonto bei der Trusted German Insurance Cloud (TGIC) eröffnen.<br />Dieser Prozess wird in den nächsten Tagen abgeschlossen werden.<br />Nach Eröffnung Ihres Kontos erhalten Sie von dort insgesamt 3 Systemmails mit Ihrer Benutzerkennung, Ihrem Passwort und Ihrer Vermittler-ID.
 gev#:#gev_wbd_registration_finished_has_bwv_id_service#:#Vielen Dank, wir werden Ihre bei uns erworbenen Weiterbildungszeiten unter dieser Vermittler-ID an die zentrale Weiterbildungsdatenbank melden. Bitte wenden Sie sich an <a style="blue" href="mailto:generali-onlineakademie.de@generali.com">generali-onlineakademie.de@generali.com</a>, um ggf. einen Wechsel des Trusted Partners durchzuführen.
@@ -786,7 +786,7 @@ gev#:#gev_wbd_registration_finished_no_bwv_id#:#Vielen Dank für Ihre Anmeldung 
 gev#:#gev_wbd_registration_has_bwv_id#:#Ich habe bereits eine GDV Vermittler-ID
 gev#:#gev_wbd_registration_has_bwv_id_cmd#:#Weiter
 gev#:#gev_wbd_registration_has_bwv_id_cmd_service#:#Weiter
-gev#:#gev_wbd_registration_header_note#:#Bitte wählen Sie Ihren gewünschte Option aus.
+gev#:#gev_wbd_registration_header_note#:#Bitte wählen Sie Ihre gewünschte Option aus.
 gev#:#gev_wbd_registration_no_bwv_id#:#Nein, ich möchte mich ohne GDV Vermittler-ID registrieren. (Vermittler-ID kann bei Bedarf im Profil nachgetragen werden)
 gev#:#gev_wbd_registration_no_bwv_id_cmd#:#Anmeldung
 gev#:#gev_wbd_registration_question_basis#:#Haben Sie ein Weiterbildungskonto im Rahmen der Brancheninitiative „gut beraten“?
