@@ -140,7 +140,7 @@ class ilBookUserGUI {
 			$this->ctrl->redirect($this, self::CMD_SHOW_FORM);
 		}
 
-		$utils->bookCourse($user_id)
+		$utils->bookCourse($user_id);
 		$this->setParticipationStatus($user_id, $crs, $status, $learning_time);
 
 		ilUtil::sendSuccess($this->txt("book_user_success"), true);
