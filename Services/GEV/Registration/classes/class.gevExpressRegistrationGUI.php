@@ -396,9 +396,9 @@ class gevExpressRegistrationGUI
 				$checkToU->setValue(1);
 				$checkToU->setChecked(false);
 				$optExp->addSubItem($checkToU);
+			}
 
 			$form->addItem($regType);
-		}
 
 		return $form;
 	}
