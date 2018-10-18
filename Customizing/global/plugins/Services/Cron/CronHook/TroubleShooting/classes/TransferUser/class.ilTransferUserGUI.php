@@ -159,7 +159,8 @@ class ilTransferUserGUI {
 		$form = new ilPropertyFormGUI();
 		$form->setTitle($this->txt("trans_user_not_possible"));
 
-		$ne = new ilNoneEditableGUI($this->txt("trans_user_open_courses"));
+		require_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
+		$ne = new ilNonEditableValueGUI($this->txt("trans_user_open_courses"));
 		$text = "<ul><li>";
 		$text .= join("</li><li>", $blockers);
 		$text .= "</li></ul>";
