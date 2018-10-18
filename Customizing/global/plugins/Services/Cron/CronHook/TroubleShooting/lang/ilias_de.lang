@@ -77,3 +77,4 @@ book_user_wbd_time_info#:#Die Umrechnung lautet wie folgt: 1 Pkt = 15Minuten
 book_user_set#:#Buchen
 book_user_success#:#Der Benutzer wurde erfolgreich auf das Training gebucht
 book_user_user_booked#:#Benutzer ist bereits auf dem Kurs gebucht.
+set_status_success#:#Der Teilnahmestatus wurde erfolgreich gesetzt.
