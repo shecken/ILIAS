@@ -160,6 +160,17 @@ class gevCrsMailingGUI extends ilMailingGUI {
 		}
 	}
 
+	/**
+	 * Show a table of all entries in the mail log.
+	 */
+	protected function showLog() {
+		require_once("Services/Mailing/classes/class.ilMailLogTableGUI.php");
+
+		$log_gui = new ilMailLogTableGUI($this->getMailLog(), $this, "showLog");
+
+		$this->tpl->setContent($log_gui->getHTML());
+	}
+
 	protected function setSubTabs() {
 		// add sub tab for invitation mails here
 		if($this->invitationMailTabVisible()) {
