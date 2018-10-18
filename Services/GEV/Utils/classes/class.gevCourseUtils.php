@@ -386,6 +386,26 @@ class gevCourseUtils
 		return $this->crs_participations;
 	}
 
+	public function insertParticipationStatusAndPoints($user_id, $state, $cpoints)
+	{
+		if (!is_numeric($state)) {
+			throw new Exception("gevCourseUtils::setParticipationStatusAndPoints:state is not an integer");
+		}
+
+		if (!is_numeric($cpoints)) {
+			throw new Exception("gevCourseUtils::setParticipationStatusAndPoints:cpoints is not an integer");
+		}
+
+		$values = [
+			"user_id" => ["integer", $user_id],
+			"crs_id" => ["integer", $this->getId()],
+			"status" => ["integer", $state],
+			"cpoints" => ["integer", $cpoints]
+		];
+
+		$this->gIldb->insert("crs_pstatus_usr", $values);
+	}
+
 	public function setParticipationStatusAndPoints($user_id, $state, $cpoints)
 	{
 		if (!is_numeric($state)) {
