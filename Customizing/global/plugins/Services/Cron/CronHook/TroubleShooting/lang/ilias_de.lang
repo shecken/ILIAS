@@ -46,7 +46,7 @@ refresh_cert_all_title#:#Alle je Kurs
 refresh_cert_all_description#:#Alle Zertifikate des angegeben Kurses werden aktualisiert.
 refresh_cert_all_crs_id#:#Kurs Id
 refresh_cert_all_refresh#:#Aktualisieren
-refresh_cert_all_refresh_success#:#Die Zertifiakte wurden erfolgreich aktualisiert.
+refresh_cert_all_refresh_success#:#Die Zertifikate wurden erfolgreich aktualisiert.
 refresh_cert_all_no_successful_participants#:#Kein Benutzer gefunden die den Kurs erfolgreich absolviert haben.
 refresh_cert_some_title#:#Alle je Benutzer und Kurs
 refresh_cert_some_description#:#Die Zertifikate angegebenen Benutzer werden für den Kurs aktualisiert.
