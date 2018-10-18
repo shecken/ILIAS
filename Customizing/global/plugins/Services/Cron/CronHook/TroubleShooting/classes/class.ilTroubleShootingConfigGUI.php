@@ -30,11 +30,12 @@ class ilTroubleShootingConfigGUI extends ilPluginConfigGUI
 
 	public function __construct()
 	{
-		global $ilCtrl, $ilTabs, $tpl, $lng;
+		global $ilCtrl, $ilTabs, $tpl, $lng, $ilUser;
 		$this->g_tabs = $ilTabs;
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tpl = $tpl;
 		$this->g_lng = $lng;
+		$this->g_user = $ilUser;
 	}
 
 	public function performCommand($cmd)
@@ -103,7 +104,8 @@ class ilTroubleShootingConfigGUI extends ilPluginConfigGUI
 					$this->g_ctrl,
 					$this->g_tabs,
 					$this->g_tpl,
-					$this->plugin_object->getTxtClosure()
+					$this->plugin_object->getTxtClosure(),
+					$this->g_user
 				);
 				$this->g_ctrl->forwardCommand($gui);
 				break;

@@ -25,12 +25,14 @@ class ilBookUserGUI {
 		ilCtrl $ctrl,
 		ilTabsGUI $tabs,
 		ilTemplate $tpl,
-		Closure $txt
+		Closure $txt,
+		ilObjUser $user
 	) {
 		$this->ctrl = $ctrl;
 		$this->tabs = $tabs;
 		$this->tpl = $tpl;
 		$this->txt = $txt;
+		$this->user = $user;
 	}
 
 	public function executeCommand()
@@ -168,7 +170,7 @@ class ilBookUserGUI {
 
 	protected function updateDataTable($usr_id, $crs, $status, $learning_time) {
 		$crs_utils = gevCourseUtils::getInstanceByObj($crs);
-		$crs_utils->insertParticipationStatusAndPoints($usr_id, $status, $learning_time);
+		$crs_utils->insertParticipationStatusAndPoints($this->user->getId(), $usr_id, $status, $learning_time);
 	}
 
 	protected function executeHistorizingEvent($usr_id, $crs_id) {
