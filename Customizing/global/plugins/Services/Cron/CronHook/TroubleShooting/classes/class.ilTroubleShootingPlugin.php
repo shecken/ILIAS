@@ -21,7 +21,7 @@ class ilTroubleShootingPlugin extends ilCronHookPlugin {
 	{
 		global $ilDB;
 		require_once __DIR__."/DeleteUserFromCourse/ilDeleteUserActions.php";
-		require_once __DIR__."/DeleteUserFromCourse/ilDeleteuserDB.php";
+		require_once __DIR__."/DeleteUserFromCourse/ilDeleteUserDB.php";
 		return new ilDeleteUserActions(new ilDeleteuserDB($ilDB));
 	}
 
