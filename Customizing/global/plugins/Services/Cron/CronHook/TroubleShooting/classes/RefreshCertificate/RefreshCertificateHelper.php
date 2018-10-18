@@ -27,6 +27,10 @@ class RefreshCertificateHelper
 		$this->rehistorizeCertificate($crs_id, $usr_id, $cert);
 	}
 
+	private function createCertificate($crs_id, $usr_id, $certificate) {
+		return  $certificate->outCertificate(array("user_id" => $usr_id), false);
+	}
+
 	private function rehistorizeCertificate($crs_id, $usr_id, $cert) {
 		$case_id = array("crs_id" => $crs_id, "usr_id" => $usr_id);
 		$data = array("certificate" => $cert);
