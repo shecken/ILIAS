@@ -67,3 +67,13 @@ status_successful#:#Erfolgreich
 status_absent_excused#:#Abwesend (entschuldigt)
 status_absent_not_excused#:#Abwesend (unentschuldigt)
 delete_usr_successful#:#Der Benutzer wurde erfolgreich storniert.
+book_user#:#Teilnehmer buchen
+book_user_title#:#Teilnehmer buchen
+book_user_usr_id#:#Benutzer
+book_user_crs_id#:#Kurs Id
+book_user_status#:#Teilnahmestatus
+book_user_wbd_time#:#WBD-Zeit
+book_user_wbd_time_info#:#Die Umrechnung lautet wie folgt: 1 Pkt = 15Minuten
+book_user_set#:#Buchen
+book_user_success#:#Der Benutzer wurde erfolgreich auf das Training gebucht
+book_user_user_booked#:#Benutzer ist bereits auf dem Kurs gebucht.
