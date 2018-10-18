@@ -2,6 +2,7 @@
 /* Copyright (c) 1998-2014 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
+require_once("Services/GEV/Utils/classes/class.gevExpressLoginUtils.php");
 
 /**
 * Command class for registration of an express user.
@@ -11,16 +12,32 @@ require_once("Services/GEV/Utils/classes/class.gevUserUtils.php");
 */
 class gevExpressRegistrationGUI
 {
+	const F_CONNECTION = "f_connection";
+	const F_GEV_MEDIATOR_NUMBER = "gev_mediator_number";
+	const F_DIMAK_MEDIATOR_NUMBER = "dimak_mediator_number";
+	const F_MEDIATOR_NUMBER = "mediator_number";
+
+	const V_CON_GEV = "gev";
+	const V_CON_DIMAK = "dimak";
+
+	protected static $VALID_AGENT_STATUSES = [
+		"608",
+		"650",
+		"651",
+		"674",
+		"679"
+	];
 
 	public function __construct()
 	{
-		global $lng, $ilCtrl, $tpl, $ilLog, $ilAuth;
+		global $lng, $ilCtrl, $tpl, $ilLog, $ilAuth, $ilDB;
 
 		$this->g_lng = $lng;
 		$this->g_ctrl = $ilCtrl;
 		$this->g_tpl = $tpl;
 		$this->g_log = $ilLog;
 		$this->g_auth = $ilAuth;
+		$this->g_db = $ilDB;
 
 		$this->crs_id = null;
 		$this->user_id = null;
@@ -85,7 +102,6 @@ class gevExpressRegistrationGUI
 		$this->crs_id = $_GET["crs_id"];
 
 		//register new express user
-		require_once("Services/GEV/Utils/classes/class.gevExpressLoginUtils.php");
 		$expLoginUtils = gevExpressLoginUtils::getInstance();
 		$this->user_id = $expLoginUtils->registerExpressUser($form);
 
@@ -178,15 +194,92 @@ class gevExpressRegistrationGUI
 			$chb->setAlert($this->g_lng->txt("evg_mandatory"));
 		}
 
-		require_once("Services/GEV/Utils/classes/class.gevExpressLoginUtils.php");
-		$expLoginUtils = gevExpressLoginUtils::getInstance();
-		$stellennummer = $form->getInput("vnumber");
-		if (!($expLoginUtils->isValidStellennummer($stellennummer) && $expLoginUtils->isAgent($stellennummer))) {
-			$err = true;
-			$form->getItemByPostVar("vnumber")->setAlert($this->g_lng->txt("gev_evg_registration_not_found"));
+		$connection = $form->getInput(gevExpressLoginUtils::F_CONNECTION);
+		if($connection == gevExpressLoginUtils::V_CON_GEV) {
+			$jobnumber = $form->getInput(gevExpressLoginUtils::F_GEV_MEDIATOR_NUMBER);
+			if (!$this->checkJobnumber($jobnumber)) {
+				$err = true;
+				$form->getItemByPostVar(gevExpressLoginUtils::F_GEV_MEDIATOR_NUMBER)->setAlert($this->g_lng->txt("gev_evg_registration_not_found"));
+			}
+		}
+
+		if($connection == gevExpressLoginUtils::V_CON_DIMAK) {
+			$mediator_number = $form->getInput(gevExpressLoginUtils::F_DIMAK_MEDIATOR_NUMBER);
+			if (!$this->checkDimakMediatorNumber($mediator_number)) {
+				$err = true;
+				$form->getItemByPostVar(gevExpressLoginUtils::F_DIMAK_MEDIATOR_NUMBER)->setAlert($this->g_lng->txt("gev_evg_registration_not_found"));
+			}
 		}
 
 		return array($form, $err);
+	}
+
+	protected function checkDimakMediatorNumber($mediator_number)
+	{
+		return $this->getActions()->checkAgendNumber($mediator_number);
+	}
+
+	protected function checkJobNumber($jobnumber)
+	{
+		return $this->checkValidJobnumber($jobnumber) && $this->isAgent($jobnumber);
+	}
+
+	/**
+	 * Check for valid jobnumber.
+	 *
+	 * @param 	string 	$jobnumber
+	 * @return 	bool
+	 */
+	protected function checkValidJobnumber($jobnumber)
+	{
+		assert('is_string($jobnumber)');
+
+		return $this->getDB()->checkForJobnumber($jobnumber);
+	}
+
+	/**
+	 * Check whether 'vermittlerstatus' is a agent status.
+	 *
+	 * @param 	string 	$jobnumber
+	 * @return 	bool	true = is a agent; false = isn't a agent
+	 */
+	protected function isAgent($jobnumber)
+	{
+		assert('is_string($jobnumber)');
+
+		$status = $this->getDB()->getAgentStatus($jobnumber);
+
+		if ($status != -1 && in_array($status, self::$VALID_AGENT_STATUSES)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the gev adp db.
+	 *
+	 * @return 	gevADPDB
+	 */
+	protected function getDB()
+	{
+		if ($this->gev_jobnumber_DB === null) {
+			require_once("./Services/GEV/Import/classes/class.gevJobnumberDB.php");
+			$this->gev_jobnumber_DB = new gevJobnumberDB($this->g_db);
+		}
+
+		return $this->gev_jobnumber_DB;
+	}
+
+	protected function getActions()
+	{
+		if(is_null($this->data_actions)) {
+			require_once("Customizing/global/plugins/Services/Cron/CronHook/DiMAkImport/classes/class.ilDiMAkImportPlugin.php");
+			$plugin = new ilDiMAkImportPlugin();
+			$this->data_actions = $plugin->getDataActions();
+		}
+
+		return $this->data_actions;
 	}
 
 	/**
@@ -269,9 +362,22 @@ class gevExpressRegistrationGUI
 			$inputInstitution = new ilTextInputGUI($this->g_lng->txt('gev_login_express_companyname'), "institution");
 			$optExp->addSubItem($inputInstitution);
 
-			$inputVNumber = new ilTextInputGUI($this->g_lng->txt('gev_login_express_vnumber'), "vnumber");
-			$inputVNumber->setRequired(true);
-			$optExp->addSubItem($inputVNumber);
+			$connection = new ilRadioGroupInputGUI($this->g_lng->txt("gev_connection"), gevExpressLoginUtils::F_CONNECTION);
+			$option = new ilRadioOption($this->g_lng->txt("gev_mediator_number"), gevExpressLoginUtils::V_CON_GEV);
+			$number = new ilTextInputGUI($this->g_lng->txt("gev_mediator_number_info"), gevExpressLoginUtils::F_GEV_MEDIATOR_NUMBER);
+			$number->setSize(40);
+			$number->setRequired(true);
+			$option->addSubItem($number);
+			$connection->addOption($option);
+
+			$option = new ilRadioOption($this->g_lng->txt("dimak_mediator_number"), gevExpressLoginUtils::V_CON_DIMAK);
+			$number = new ilTextInputGUI($this->g_lng->txt("dimak_mediator_number_info"), gevExpressLoginUtils::F_DIMAK_MEDIATOR_NUMBER);
+			$number->setSize(40);
+			$number->setRequired(true);
+			$option->addSubItem($number);
+			$connection->addOption($option);
+			$connection->setRequired(true);
+			$optExp->addSubItem($connection);
 
 			$inputEMail = new ilEMailInputGUI($this->g_lng->txt('email'), "email");
 			$inputEMail->setRequired(true);
