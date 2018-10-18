@@ -19,15 +19,15 @@ cat_create_xreb#:#Bildungsbiografie erzeugen
 xreb_content#:#Report
 xreb_properties#:#Eigenschaften
 my_edu_bio#:#Meine Bildungsbiografie
-my_edu_bio_desc#:#Hier sehen Sie Ihre Bildungspunkte und die von Ihnen besuchten Trainings.
-others_edu_bio_desc#:#Hier sehen Sie die Bildungspunkte und besuchten Trainings von %s.<br>In der Zeile „Zeitraum“ können Sie den Auswertungszeitraum verändern, indem Sie die Voreinstellung verändern und auf die Schaltfläche „Filter“ klicken. Voreingestellt ist immer das laufende Kalenderjahr.<br>Bei Klick auf die Spaltenüberschrift der Ergebnistabelle (z.B. Titel) erfolgt eine Sortierung der Tabelle nach diesem Kriterium.
-others_edu_bio#:#Hier sehen Sie die Bildungspunkte und die von %s besuchten Trainings.
-wbd_transfer_on#:#Ihre Bildungspunkte werden an die WBD gemeldet.
+my_edu_bio_desc#:#Hier sehen Sie Ihre Weiterbildungszeiten und die von Ihnen besuchten Trainings.
+others_edu_bio_desc#:#Hier sehen Sie die Weiterbildungszeiten und besuchten Trainings von %s.<br>In der Zeile „Zeitraum“ können Sie den Auswertungszeitraum verändern, indem Sie die Voreinstellung verändern und auf die Schaltfläche „Filter“ klicken. Voreingestellt ist immer das laufende Kalenderjahr.<br>Bei Klick auf die Spaltenüberschrift der Ergebnistabelle (z.B. Titel) erfolgt eine Sortierung der Tabelle nach diesem Kriterium.
+others_edu_bio#:#Hier sehen Sie die Weiterbildungszeiten und die von %s besuchten Trainings.
+wbd_transfer_on#:#Ihre Weiterbildungszeiten werden an die WBD gemeldet.
 wbd_reg_pending#:#Ihre Anmeldung bei der WBD wird in Kürze erfolgen.
 points_at_end_of_cert_year#:#voraussichtliche Punkte bis zum Ende des aktuellen Zertifizierungsjahres
-points_in_academy#:#Witerbildungspunkte in der Generali Online Akademie im ausgewählten Zeitraum
+points_in_academy#:#Weiterbildungszeiten in der Generali Online Akademie im ausgewählten Zeitraum
 points_in_five_years#:#Punkte im 5-Jahres-Zeitraum
-points_in_wbd#:#Bildungspunkte in der WBD im ausgewählten Zeitraum<br><small>Die Angaben erfolgen ohne Gewähr. Die verbindliche Angabe Ihrer Weiterbildungspunkte erhalten Sie ausschließlich auf den Seiten der WBD.</small>
+points_in_wbd#:#Weiterbildungszeiten in der WBD im ausgewählten Zeitraum<br><small>Die Angaben erfolgen ohne Gewähr. Die verbindliche Angabe Ihrer Weiterbildungszeiten erhalten Sie ausschließlich auf den Seiten der WBD.</small>
 points_in_wbd_cert_period#:#Punkte in der aktuellen Zertifizierungsperiode
 points_in_wbd_cert_year#:#Punkte im aktuellen Zertifizierungsjahr
 training_id#:#ID
@@ -42,7 +42,7 @@ fee#:#Kosten
 status#:#Status
 period#:#Zeitraum:
 until#:#bis
-wbd_role_no_service_warning#:#Sie sind nach der Bildungsinitiative &quot;gut beraten&quot; aufgrund Ihrer Funktion verpflichtet, Weiterbildungspunkte zu sammeln. Bisher konnten wir für Sie noch keine Weiterbildungspunkte an die Weiterbildungsdatenbank melden. Bitte kontaktieren Sie uns dringend per Mail <a href="mailto:generali-onlineakademie.de@generali.com">&quot;generali-onlineakademie.de@generali.com&quot;</a> oder per Telefon unter &quot;089 5121-1919&quot;.
+wbd_role_no_service_warning#:#Sie sind nach der Bildungsinitiative &quot;gut beraten&quot; aufgrund Ihrer Funktion verpflichtet, Weiterbildungszeiten zu sammeln. Bisher konnten wir für Sie noch keine Weiterbildungszeiten an die Weiterbildungsdatenbank melden. Bitte kontaktieren Sie uns dringend per Mail <a href="mailto:generali-onlineakademie.de@generali.com">&quot;generali-onlineakademie.de@generali.com&quot;</a> oder per Telefon unter &quot;089 5121-1919&quot;.
 sum_hist_points#:#erwirkte Weiterbildungsstunden im Sinne der IDD: 
 u_access_violation_show_self#:#Sie haben nicht die Berechtigung um die Bildungsbiografie des angefragten Benutzers zu sehen. Sie sehen nun Ihre eigene.
 wb_time#:#WB-Zeit

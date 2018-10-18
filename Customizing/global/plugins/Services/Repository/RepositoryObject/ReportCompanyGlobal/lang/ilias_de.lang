@@ -25,7 +25,7 @@ header_part#:#Teilnahmen <br> (Teilnahmestatus vorhanden)
 bookings#:#Buchungen
 participations#:#Teilnahmen
 members#:#Teilnehmer
-edupoints#:#Weiterbildungspunkte
+edupoints#:#Weiterbildungszeiten
 type#:#Typ
 period#:#Zeitraum
 until#:#bis
@@ -44,7 +44,7 @@ yes#:#Ja
 no#:#Nein
 xrcg_content#:#Report
 xrcg_properties#:#Eigenschaften
-edu_points#:#Weiterbildungspunkte
+edu_points#:#Weiterbildungszeiten
 participations#:#Teilnahmen
 filter_no_wbd_imported#:#Keine Trainings aus der WBD
 crs_filter_topics#:#Trainingskategorien
