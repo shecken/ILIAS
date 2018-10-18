@@ -326,7 +326,8 @@ class gevExpressRegistrationGUI
 		require_once("Services/Form/classes/class.ilRadioOption.php");
 
 		$form = new ilPropertyFormGUI();
-		$this->g_ctrl->setParameter($this, "crs_id", $_GET["crs_id"]);
+		$crs_id = $_GET["crs_id"];
+		$this->g_ctrl->setParameter($this, "crs_id", $crs_id);
 		$form->setFormAction($this->g_ctrl->getFormAction($this));
 		$form->addCommandButton('next', $this->g_lng->txt('next'));
 		$form->setId("expresslogin");
@@ -342,58 +343,62 @@ class gevExpressRegistrationGUI
 		$optNew->setValue("redirectNewLogin");
 		$regType->addOption($optNew);
 
-		$optExp = new ilRadioOption($this->g_lng->txt('gev_login_express_no_login'));
-		$optExp->setValue("registerExpUser");
-		$regType->addOption($optExp);
-			$gender = new ilRadioGroupInputGUI($this->g_lng->txt("salutation"), "gender");
-			$gender->addOption(new ilRadioOption($this->g_lng->txt("salutation_m"), "m"));
-			$gender->addOption(new ilRadioOption($this->g_lng->txt("salutation_f"), "f"));
-			$gender->setRequired(true);
-			$optExp->addSubItem($gender);
+		$this->crs_utils = gevCourseUtils::getInstance($crs_id);
 
-			$inputName = new ilTextInputGUI($this->g_lng->txt('firstname'), "firstname");
-			$inputName->setRequired(true);
-			$optExp->addSubItem($inputName);
+		if(!$this->crs_utils->isSelflearning()) {
+			$optExp = new ilRadioOption($this->g_lng->txt('gev_login_express_no_login'));
+			$optExp->setValue("registerExpUser");
+			$regType->addOption($optExp);
+				$gender = new ilRadioGroupInputGUI($this->g_lng->txt("salutation"), "gender");
+				$gender->addOption(new ilRadioOption($this->g_lng->txt("salutation_m"), "m"));
+				$gender->addOption(new ilRadioOption($this->g_lng->txt("salutation_f"), "f"));
+				$gender->setRequired(true);
+				$optExp->addSubItem($gender);
 
-			$inputSurName = new ilTextInputGUI($this->g_lng->txt('lastname'), "lastname");
-			$inputSurName->setRequired(true);
-			$optExp->addSubItem($inputSurName);
+				$inputName = new ilTextInputGUI($this->g_lng->txt('firstname'), "firstname");
+				$inputName->setRequired(true);
+				$optExp->addSubItem($inputName);
 
-			$inputInstitution = new ilTextInputGUI($this->g_lng->txt('gev_login_express_companyname'), "institution");
-			$optExp->addSubItem($inputInstitution);
+				$inputSurName = new ilTextInputGUI($this->g_lng->txt('lastname'), "lastname");
+				$inputSurName->setRequired(true);
+				$optExp->addSubItem($inputSurName);
 
-			$connection = new ilRadioGroupInputGUI($this->g_lng->txt("gev_connection"), gevExpressLoginUtils::F_CONNECTION);
-			$option = new ilRadioOption($this->g_lng->txt("gev_mediator_number"), gevExpressLoginUtils::V_CON_GEV);
-			$number = new ilTextInputGUI($this->g_lng->txt("gev_mediator_number_info"), gevExpressLoginUtils::F_GEV_MEDIATOR_NUMBER);
-			$number->setSize(40);
-			$number->setRequired(true);
-			$option->addSubItem($number);
-			$connection->addOption($option);
+				$inputInstitution = new ilTextInputGUI($this->g_lng->txt('gev_login_express_companyname'), "institution");
+				$optExp->addSubItem($inputInstitution);
 
-			$option = new ilRadioOption($this->g_lng->txt("dimak_mediator_number"), gevExpressLoginUtils::V_CON_DIMAK);
-			$number = new ilTextInputGUI($this->g_lng->txt("dimak_mediator_number_info"), gevExpressLoginUtils::F_DIMAK_MEDIATOR_NUMBER);
-			$number->setSize(40);
-			$number->setRequired(true);
-			$option->addSubItem($number);
-			$connection->addOption($option);
-			$connection->setRequired(true);
-			$optExp->addSubItem($connection);
+				$connection = new ilRadioGroupInputGUI($this->g_lng->txt("gev_connection"), gevExpressLoginUtils::F_CONNECTION);
+				$option = new ilRadioOption($this->g_lng->txt("gev_mediator_number"), gevExpressLoginUtils::V_CON_GEV);
+				$number = new ilTextInputGUI($this->g_lng->txt("gev_mediator_number_info"), gevExpressLoginUtils::F_GEV_MEDIATOR_NUMBER);
+				$number->setSize(40);
+				$number->setRequired(true);
+				$option->addSubItem($number);
+				$connection->addOption($option);
 
-			$inputEMail = new ilEMailInputGUI($this->g_lng->txt('email'), "email");
-			$inputEMail->setRequired(true);
-			$optExp->addSubItem($inputEMail);
+				$option = new ilRadioOption($this->g_lng->txt("dimak_mediator_number"), gevExpressLoginUtils::V_CON_DIMAK);
+				$number = new ilTextInputGUI($this->g_lng->txt("dimak_mediator_number_info"), gevExpressLoginUtils::F_DIMAK_MEDIATOR_NUMBER);
+				$number->setSize(40);
+				$number->setRequired(true);
+				$option->addSubItem($number);
+				$connection->addOption($option);
+				$connection->setRequired(true);
+				$optExp->addSubItem($connection);
 
-			$inputPhone = new ilTextInputGUI($this->g_lng->txt('gev_login_express_phone_number'), "phone");
-			$inputPhone->setRequired(true);
-			$optExp->addSubItem($inputPhone);
+				$inputEMail = new ilEMailInputGUI($this->g_lng->txt('email'), "email");
+				$inputEMail->setRequired(true);
+				$optExp->addSubItem($inputEMail);
 
-			$checkToU = new ilCheckboxInputGUI('', "tou");
-			$checkToU->setOptionTitle($this->g_lng->txt('gev_login_express_agreement'));
-			$checkToU->setValue(1);
-			$checkToU->setChecked(false);
-			$optExp->addSubItem($checkToU);
+				$inputPhone = new ilTextInputGUI($this->g_lng->txt('gev_login_express_phone_number'), "phone");
+				$inputPhone->setRequired(true);
+				$optExp->addSubItem($inputPhone);
 
-		$form->addItem($regType);
+				$checkToU = new ilCheckboxInputGUI('', "tou");
+				$checkToU->setOptionTitle($this->g_lng->txt('gev_login_express_agreement'));
+				$checkToU->setValue(1);
+				$checkToU->setChecked(false);
+				$optExp->addSubItem($checkToU);
+
+			$form->addItem($regType);
+		}
 
 		return $form;
 	}
