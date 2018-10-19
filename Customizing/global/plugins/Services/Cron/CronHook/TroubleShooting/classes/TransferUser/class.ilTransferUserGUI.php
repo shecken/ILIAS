@@ -162,10 +162,12 @@ class ilTransferUserGUI {
 		$form->setTitle($this->txt("trans_user_not_possible"));
 		$form->setFormAction($this->ctrl->getFormAction($this));
 
+		$ref_ids_blocker = $this->getRefIdsFor($blockers);
+
 		require_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
 		$ne = new ilNonEditableValueGUI($this->txt("trans_user_open_courses"), "", true);
 		$text = "<ul><li>";
-		$text .= join("</li><li>", $blockers);
+		$text .= join("</li><li>", $ref_ids_blocker);
 		$text .= "</li></ul>";
 		$ne->setValue($text);
 		$form->addItem($ne);
@@ -175,6 +177,14 @@ class ilTransferUserGUI {
 		$this->tpl->setContent($form->getHtml());
 	}
 
+	protected function getRefIdsFor(array $blockers)
+	{
+		return array_map(function($crs_id) {
+				return array_shift(ilObject::_getAllReferences($crs_id));
+			},
+			$blockers
+		);
+	}
 
 	protected function userfieldAutocomplete()
 	{
