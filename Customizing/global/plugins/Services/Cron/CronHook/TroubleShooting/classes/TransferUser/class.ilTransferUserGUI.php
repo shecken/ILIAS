@@ -151,7 +151,7 @@ class ilTransferUserGUI {
 		$lUser->updateLogin($lUser->getLogin() . " INAKTIV");
 		gevUserUtils::setUserActiveState($lUser->getId(), 0);
 
-		ilUtil::sendSuccess(sprintf($this->txt("trans_user_success", $lUser->getLogin(), $eUser->getLogin())), true);
+		ilUtil::sendSuccess(sprintf($this->txt("trans_user_success"), $lUser->getLogin(), $eUser->getLogin()), true);
 
 		$this->ctrl->redirect($this, self::CMD_SHOW_FORM);
 	}
