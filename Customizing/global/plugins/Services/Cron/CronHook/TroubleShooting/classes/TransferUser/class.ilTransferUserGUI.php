@@ -7,8 +7,8 @@ require_once "Services/GEV/Utils/classes/class.gevCourseUtils.php";
 class ilTransferUserGUI {
 	use PluginLanguage;
 
-	const F_LUSER = "f_lUser";
-	const F_EUSER = "f_eUser";
+	const F_L_USER = "f_l_user";
+	const F_E_USER = "f_e_user";
 
 	const CMD_SHOW_FORM = "showForm";
 	const CMD_TRANSFER_USER = "transferUser";
@@ -64,14 +64,14 @@ class ilTransferUserGUI {
 		$form->setTitle($this->txt("trans_user_transfer_user"));
 		$form->setFormAction($this->ctrl->getFormAction($this));
 
-		$ti = new ilTextInputGUI($this->txt("trans_user_user_to_delete"), self::F_LUSER);
+		$ti = new ilTextInputGUI($this->txt("trans_user_user_to_delete"), self::F_L_USER);
 		$ti->setInfo($this->txt("trans_user_user_to_delete_info"));
 		$ti->setRequired(true);
 		$autocomplete_link = $this->ctrl->getLinkTarget($this, self::CMD_AUTOCOMPLETE, "", true);
 		$ti->setDataSource($autocomplete_link);
 		$form->addItem($ti);
 
-		$ti = new ilTextInputGUI($this->txt("trans_user_user_to_keep"), self::F_EUSER);
+		$ti = new ilTextInputGUI($this->txt("trans_user_user_to_keep"), self::F_E_USER);
 		$ti->setInfo($this->txt("trans_user_user_to_keep_info"));
 		$ti->setRequired(true);
 		$autocomplete_link = $this->ctrl->getLinkTarget($this, self::CMD_AUTOCOMPLETE, "", true);
@@ -95,11 +95,11 @@ class ilTransferUserGUI {
 
 		$post = $_POST;
 
-		$login = $post[self::F_LUSER];
+		$login = $post[self::F_L_USER];
 		$user_id = (int)ilObjUser::_lookupId($login);
 		$lUser = new ilObjUser($user_id);
 
-		$login = $post[self::F_EUSER];
+		$login = $post[self::F_E_USER];
 		$user_id = (int)ilObjUser::_lookupId($login);
 		$eUser = new ilObjUser($user_id);
 
@@ -134,8 +134,8 @@ class ilTransferUserGUI {
 		$this->actions->changeCrsWhereStatusIsHigher(
 			$lUser_crs_infos,
 			$eUser_crs_infos,
-			$eUser->getId(),
-			$lUser->getId()
+			$lUser->getId(),
+			$eUser->getId()
 		);
 
 		$lUser_crs_infos = $utils_lUser->coursesAfter($today);
@@ -151,6 +151,8 @@ class ilTransferUserGUI {
 		$lUser->updateLogin($lUser->getLogin() . " INAKTIV");
 		gevUserUtils::setUserActiveState($lUser->getId(), 0);
 
+		ilUtil::sendSuccess(sprintf($this->txt("trans_user_success", $lUser->getLogin(), $eUser->getLogin())), true);
+
 		$this->ctrl->redirect($this, self::CMD_SHOW_FORM);
 	}
 
@@ -158,9 +160,10 @@ class ilTransferUserGUI {
 	{
 		$form = new ilPropertyFormGUI();
 		$form->setTitle($this->txt("trans_user_not_possible"));
+		$form->setFormAction($this->ctrl->getFormAction($this));
 
 		require_once "Services/Form/classes/class.ilNonEditableValueGUI.php";
-		$ne = new ilNonEditableValueGUI($this->txt("trans_user_open_courses"));
+		$ne = new ilNonEditableValueGUI($this->txt("trans_user_open_courses"), "", true);
 		$text = "<ul><li>";
 		$text .= join("</li><li>", $blockers);
 		$text .= "</li></ul>";
