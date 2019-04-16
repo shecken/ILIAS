@@ -28,7 +28,7 @@ class ilCertificateGUIFactory
      * @return ilCertificateGUI
      * @throws ilException
      */
-    public function create(\ilObject $object) : ilCertificateGUI
+    public function create(\ilObject $object): ilCertificateGUI
     {
         global $DIC;
 
@@ -147,7 +147,22 @@ class ilCertificateGUIFactory
                     $DIC->toolbar(),
                     $placeholderDescriptionObject
                 );
-
+            case 'prg':
+                $adapter = new ilStudyProgrammeCertificateAdapter($object);
+                $placeholderDescriptionObject =
+                    new ilStudyProgrammePlaceholderDescription();
+                $placeholderValuesObject =
+                    new ilStudyProgrammePlaceholderValues();
+                $formFactory = new ilCertificateSettingsStudyProgrammeFormRepository(
+                    $object,
+                    $certificatePath,
+                    true,
+                    $DIC->language(),
+                    $DIC->ctrl(),
+                    $DIC->access(),
+                    $DIC->toolbar(),
+                    $placeholderDescriptionObject
+                );
                 break;
             default:
                 throw new ilException(sprintf('The type "%s" is currently not defined for certificates', $type));
