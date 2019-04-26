@@ -15289,3 +15289,10 @@ rbac#:#rbac_add_recommended_content#:#Empfohlender Inhalt
 rbac#:#rbac_add_recommended_content_info#:#Weist das aktuelle Objekt '%1' allen Benutzern der Rolle als empfohlenden Inhalt zu.
 dash#:#dash_member_main_alt#:#Eine Ansicht der Mitgliedschaften kann auch direkt im Haupmenü eingebunden werden.
 dash#:#dash_click_here#:#Hier klicken
+prg#:#assignment_date#:#Beitrittsdatum
+prg#:#completion_date#:#Abschlussdatum
+prg#:#prg_no_deadline#:#Kein Bearbeitungszeitraum
+prg#:#prg_deadline_period#:#Bearbeitungszeitraum individuell festgelegt
+prg#:#prg_deadline_period_desc#:#Das Programm muss innerhalb des angegebenen Zeitraums abgeschlossen werden.
+prg#:#prg_deadline_date#:#Bearbeitungszeitraum bis zu einem festen Stichtag
+prg#:#prg_deadline_date_desc#:#Das Programm muss bis zu einem Stichtag abgeschlossen werden.
