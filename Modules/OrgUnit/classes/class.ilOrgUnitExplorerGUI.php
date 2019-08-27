@@ -170,9 +170,7 @@ class ilOrgUnitExplorerGUI extends ilTreeExplorerGUI implements TreeRecursion
      */
     public function isNodeSelectable($a_node) : bool
     {
-        $current_node = filter_input(INPUT_GET, 'item_ref_id');
-
-        return !($a_node['child'] === $current_node || $this->tree->isGrandChild($current_node, $a_node['child']));
+		return $a_node["type"] = "orgu";
     }
 }
 
