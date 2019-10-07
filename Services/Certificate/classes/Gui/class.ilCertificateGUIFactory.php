@@ -147,7 +147,6 @@ class ilCertificateGUIFactory
                 );
                 break;
             case 'prg':
-                $adapter = new ilStudyProgrammeCertificateAdapter($object);
                 $placeholderDescriptionObject =
                 new ilStudyProgrammePlaceholderDescription();
                 $placeholderValuesObject =
