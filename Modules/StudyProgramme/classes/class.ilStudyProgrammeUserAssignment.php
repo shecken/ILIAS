@@ -2,6 +2,7 @@
 
 /* Copyright (c) 2015 Richard Klees <richard.klees@concepts-and-training.de> Extended GPL, see docs/LICENSE */
 
+declare(strict_types=1);
 
 /**
  * Represents one assignment of a user to a study programme.
@@ -10,34 +11,52 @@
  *
  * @author : Richard Klees <richard.klees@concepts-and-training.de>
  */
-class ilStudyProgrammeUserAssignment {
-	public $assignment; // ilStudyProgrammeAssignment
+class ilStudyProgrammeUserAssignment
+{
+	/**
+	 * @var ilStudyProgrammeAssignment
+	 */
+	public $assignment;
 
 	/**
 	 * @var ilStudyProgrammeUserProgressDB
 	 */
 	private $sp_user_progress_db;
-	protected $assignment_repository;
-	protected $progress_repository;
-	protected $log;
+
 	/**
-	 * Throws when id does not refer to a study programme assignment.
-	 *
-	 * @throws ilException
-	 * @param int | ilStudyProgrammeAssignment $a_id_or_model
+	 * @var ilStudyProgrammeAssignmentRepository
 	 */
+	protected $assignment_repository;
+
+	/**
+	 * @var ilStudyProgrammeProgressRepository
+	 */
+	protected $progress_repository;
+
+	/**
+	 * @var ilLogger
+	 */
+	protected $log;
+
+    /**
+     * @var ilAppEventHandler
+     */
+    protected $event_handler;
+
 	public function __construct(
 		ilStudyProgrammeAssignment $assignment,
-		\ilStudyProgrammeUserProgressDB $sp_user_progress_db,
-		\ilStudyProgrammeAssignmentRepository $assignment_repository,
-		\ilStudyProgrammeProgressRepository $progress_repository,
-		\ilLogger $log
+		ilStudyProgrammeUserProgressDB $sp_user_progress_db,
+		ilStudyProgrammeAssignmentRepository $assignment_repository,
+		ilStudyProgrammeProgressRepository $progress_repository,
+		ilLogger $log,
+        ilAppEventHandler $event_handler
 	) {
 		$this->assignment = $assignment;
 		$this->sp_user_progress_db = $sp_user_progress_db;
 		$this->assignment_repository = $assignment_repository;
 		$this->progress_repository = $progress_repository;
 		$this->log = $log;
+        $this->event_handler = $event_handler;
 	}
 
 
@@ -56,9 +75,9 @@ class ilStudyProgrammeUserAssignment {
 	 * Throws when program this assignment is about has no ref id.
 	 *
 	 * @throws ilException
-	 * @return ilObjStudyProgramme
 	 */
-	public function getStudyProgramme() {
+	public function getStudyProgramme() : ilObjStudyProgramme
+	{
 		$refs = ilObject::_getAllReferences($this->assignment->getRootId());
 		if (!count($refs)) {
 			throw new ilException("ilStudyProgrammeUserAssignment::getStudyProgramme: "
@@ -96,6 +115,8 @@ class ilStudyProgrammeUserAssignment {
 	/**
 	 * Assign the user belonging to this assignemnt to the prg
 	 * belonging to this assignemnt again.
+	 *
+	 * @throws ilException
 	 */
 	public function restartAssignment()
 	{
@@ -103,6 +124,12 @@ class ilStudyProgrammeUserAssignment {
 		$this->assignment_repository->update(
 			$this->assignment->setRestartedAssignmentId($restarted->getId())
 		);
+
+		$params = [
+		    "usr_id" => (int)$this->getUserId(),
+            "ref_id" => (int)$this->getStudyProgramme()->getRefId()
+        ];
+		$this->event_handler->raise("Modules/StudyProgramme", "userReAssigned", $params);
 		return $restarted;
 	}
 
@@ -117,6 +144,8 @@ class ilStudyProgrammeUserAssignment {
 
 	/**
 	 * Remove this assignment.
+	 *
+	 * @throws ilException
 	 */
 	public function deassign() {
 		$this->getStudyProgramme()->removeAssignment($this);

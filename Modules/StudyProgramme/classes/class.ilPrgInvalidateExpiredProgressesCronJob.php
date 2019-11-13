@@ -4,7 +4,25 @@
 class ilPrgInvalidateExpiredProgressesCronJob extends ilCronJob
 {
 
+	/**
+	 * @var ilStudyProgrammeUserProgressDB
+	 */
 	protected $user_progress_db;
+
+	/**
+	 * @var ilObjUser
+	 */
+	protected $usr;
+
+	/**
+	 * @var ilLog
+	 */
+	protected $log;
+
+	/**
+	 * @var ilLanguage
+	 */
+	protected $lng;
 
 	public function __construct()
 	{
@@ -97,10 +115,9 @@ class ilPrgInvalidateExpiredProgressesCronJob extends ilCronJob
 	{
 		$result = new ilCronJobResult();
 		$result->setStatus(ilCronJobResult::STATUS_OK);
-		$usr_id = $this->usr && $this->usr->getId() ? $this->usr->getId() : SYSTEM_USER_ID;
 		foreach ($this->user_progress_db->getExpiredSuccessfulInstances() as $progress) {
 			try {
-				$progress->invalidate($usr_id);
+				$progress->invalidate();
 			} catch (ilException $e) {
 				$this->log->write('an error occured: '.$e->getMessage());
 			}

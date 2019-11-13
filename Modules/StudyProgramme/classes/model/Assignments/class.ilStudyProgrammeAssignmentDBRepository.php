@@ -108,22 +108,28 @@ implements ilStudyProgrammeAssignmentRepository
 		return $return;
 	}
 
-
 	protected function loadDueToRestart()
 	{
 		$q = 'SELECT '.self::FIELD_ID
-			.'	,'.self::FIELD_USR_ID
-			.'	,'.self::FIELD_ROOT_PRG_ID
-			.'	,'.self::FIELD_LAST_CHANGE
-			.'	,'.self::FIELD_LAST_CHANGE_BY
-			.'	,'.self::FIELD_RESTART_DATE
-			.'	,'.self::FIELD_RESTARTED_ASSIGNMENT_ID
-			.'	FROM '.self::TABLE
-			.'	WHERE '.self::FIELD_RESTARTED_ASSIGNMENT_ID.' = '
-						.$this->db->quote(ilStudyProgrammeAssignment::NO_RESTARTED_ASSIGNMENT,'integer')
-			.'		AND '.self::FIELD_RESTART_DATE.' IS NOT NULL'
-			.'		AND DATE('.self::FIELD_RESTART_DATE.') <= '
-						.$this->db->quote((new DateTime())->format(ilStudyProgrammeAssignment::DATE_FORMAT),'text');
+			.', '.self::FIELD_USR_ID
+			.', '.self::FIELD_ROOT_PRG_ID
+			.', '.self::FIELD_LAST_CHANGE
+			.', '.self::FIELD_LAST_CHANGE_BY
+			.', '.self::FIELD_RESTART_DATE
+			.', '.self::FIELD_RESTARTED_ASSIGNMENT_ID.PHP_EOL
+			.' FROM '.self::TABLE.PHP_EOL
+			.' WHERE '.self::FIELD_RESTARTED_ASSIGNMENT_ID
+			.' = '.$this->db->quote(
+				ilStudyProgrammeAssignment::NO_RESTARTED_ASSIGNMENT,
+				'integer'
+			).PHP_EOL
+			.'    AND '.self::FIELD_RESTART_DATE.' IS NOT NULL'.PHP_EOL
+			.'    AND DATE('.self::FIELD_RESTART_DATE.') <= '
+			.$this->db->quote(
+				(new DateTime())->format(
+					ilStudyProgrammeAssignment::DATE_FORMAT),
+				'text'
+			);
 		$res = $this->db->query($q);
 		while($rec = $this->db->fetchAssoc($res)) {
 			yield $rec;

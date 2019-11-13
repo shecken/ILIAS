@@ -124,7 +124,13 @@ class ilStudyProgrammeAppEventListener {
 						break;
 				}
 				break;
-
+            case "Modules/StudyProgramme":
+                switch ($a_event) {
+                    case "userReAssigned":
+                        self::sendReAssignedMail($a_parameter);
+                        break;
+                }
+                break;
 			default:
 				throw new ilException("ilStudyProgrammeAppEventListener::handleEvent: "
 									 ."Won't handle events of '$a_component'.");
@@ -261,4 +267,11 @@ class ilStudyProgrammeAppEventListener {
 		ilObjStudyProgramme::removeMemberFromProgrammes($src_type, $obj_id, $usr_id);
 	}
 
+	private static function sendReAssignedMail(array $params) : void
+    {
+        $usr_id = $params['usr_id'];
+        $ref_id = $params['ref_id'];
+
+        ilObjStudyProgramme::sendReAssignedMail($ref_id, $usr_id);
+    }
 }

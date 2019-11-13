@@ -1,21 +1,53 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types = 1);
 
 class ilStudyProgrammeUserAssignmentDB
 {
+	/**
+	 * @var ilStudyProgrammeUserProgressDB
+	 */
+	protected $sp_user_progress_db;
+
+	/**
+	 * @var ilStudyProgrammeAssignmentRepository
+	 */
+	protected $assignment_repository;
+
+	/**
+	 * @var ilStudyProgrammeProgressRepository
+	 */
+	protected $progress_repository;
+
+	/**
+	 * @var ilTree
+	 */
+	protected $tree;
+
+	/**
+	 * @var ilLogger
+	 */
+	protected $log;
+
+    /**
+     * @var ilAppEventHandler
+     */
+	protected $event_handler;
+
 	public function __construct(
-		\ilStudyProgrammeUserProgressDB $sp_user_progress_db,
-		\ilStudyProgrammeAssignmentRepository $assignment_repository,
-		\ilStudyProgrammeProgressRepository $progress_repository,
-		\ilTree $tree,
-		\ilLogger $log
-	)
-	{
+		ilStudyProgrammeUserProgressDB $sp_user_progress_db,
+        ilStudyProgrammeAssignmentRepository $assignment_repository,
+		ilStudyProgrammeProgressRepository $progress_repository,
+		ilTree $tree,
+		ilLogger $log,
+        ilAppEventHandler $event_handler
+	) {
 		$this->sp_user_progress_db = $sp_user_progress_db;
 		$this->assignment_repository = $assignment_repository;
 		$this->progress_repository = $progress_repository;
 		$this->tree = $tree;
 		$this->log = $log;
-
+		$this->event_handler = $event_handler;
 	}
 
 	public function getInstanceById(int $id)
@@ -85,7 +117,10 @@ class ilStudyProgrammeUserAssignmentDB
 		}, array_values($assignments)); // use array values since we want keys 0...
 	}
 
-	public function getDueToRestartInstances()
+	/**
+	 * @return ilStudyProgrammeUserAssignment[]
+	 */
+	public function getDueToRestartInstances() : array
 	{
 		return array_map(
 			function($ass) {

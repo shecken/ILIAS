@@ -307,10 +307,9 @@ class ilStudyProgrammeUserProgress {
 	 * Throws when status is not STATUS_COMPLETED, STATUS_ACCREDITED, STATUS_NOT_RELEVANT.
 	 *
 	 * @throws ilException
-	 * @param int $a_user_id The user who performed the operation.
-	 * @return $this
 	 */
-	public function invalidate() {
+	public function invalidate() : ilStudyProgrammeUserProgress
+	{
 		$status = array(ilStudyProgrammeProgress::STATUS_COMPLETED
 			, ilStudyProgrammeProgress::STATUS_ACCREDITED
 			, ilStudyProgrammeProgress::STATUS_NOT_RELEVANT

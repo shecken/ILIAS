@@ -1,50 +1,135 @@
 <?php
 
-
 /* Copyright (c) 2015 Richard Klees <richard.klees@concepts-and-training.de> Extended GPL, see docs/LICENSE */
+/* Copyright (c) 2019 Stefan Hecken <stefan.hecken@concepts-and-training.de> Extended GPL, see docs/LICENSE */
 
+declare(strict_types=1);
 
 /**
  * Class ilObjStudyProgramme
  *
  * @author : Richard Klees <richard.klees@concepts-and-training.de>
  */
-class ilObjStudyProgramme extends ilContainer {
-	protected $settings; // ilStudyProgramme | null
-	protected $parent; // ilObjStudyProgramme | null | false
-	protected $children; // [ilObjStudyProgramme] | null
-	protected $lp_children; // [ilStudyProgrammeLeaf] | null;
-
-	// GLOBALS from ILIAS
-	public $webdir;
-	public $tree;
-	public $ilUser;
-
-	protected $db;
-	protected $plugin_admin;
-
-	// Wrapped static ilObjectFactory of ILIAS.
-	public $object_factory;
+class ilObjStudyProgramme extends ilContainer
+{
+	/**
+	 * @var ilStudyProgrammeSettings | null
+	 */
+	protected $settings;
 
 	/**
-	 * @var ilOrgUnitObjectTypePositionSetting
+	 * @var ilObjStudyProgramme | null | false
 	 */
-	protected $ps;
-	// Cache for study programmes
-	static public $study_programme_cache = null;
+	protected $parent;
+
+	/**
+	 * @var ilObjStudyProgramme[] | null
+	 */
+	protected $children;
+
+	/**
+	 * @var ilStudyProgrammeLeaf[] | null
+	 */
+	protected $lp_children;
+
+	/**
+	 * @var ilStudyProgrammeTypeDBRepository
+	 */
+	protected $type_repository;
+
+	/**
+	 * @var ilStudyProgrammeAssignmentDBRepository
+	 */
+	protected $assignment_repository;
+
+	/**
+	 * @var ilStudyProgrammeProgressDBRepository
+	 */
+	protected $progress_repository;
+
+	/**
+	 * @var ilStudyProgrammeProgressDBRepository
+	 */
+	protected $auto_categories_repository;
+
+	/**
+	 * @var ilStudyProgrammeAutoMembershipsDBRepository
+	 */
+	protected $auto_memberships_repository;
+
+	/**
+	 * @var ilStudyProgrammeMembershipSourceReaderFactory
+	 */
+	protected $membersourcereader_factory;
 
 	/**
 	 * @var ilStudyProgrammeUserProgressDB
 	 */
+	protected $progress_db;
+
+	/**
+	 * @var ilStudyProgrammeUserAssignmentDB
+	 */
+	protected $assignment_db;
+
+	/**
+	 * @var ilStudyProgrammeEvents
+	 */
+	protected $events;
+
+	// GLOBALS from ILIAS
+
+	/**
+	 * @var \ILIAS\Filesystem\Filesystem
+	 */
+	public $webdir;
+
+	/**
+	 * @var ilTree
+	 */
+	public $tree;
+
+	/**
+	 * @var ilObjUser
+	 */
+	public $ilUser;
+
+	/**
+	 * @var ilDBInterface
+	 */
+	protected $db;
+
+	/**
+	 * @var ilPluginAdmin
+	 */
+	protected $plugin_admin;
+
+	/**
+	 * @var ilStudyProgrammeSettingsDBRepository
+	 */
+	protected $settings_repository;
+
+	/**
+	 * Wrapped static ilObjectFactory of ILIAS.
+	 * @var ilObjectFactoryWrapper | null
+	 */
+	public $object_factory;
+
+	/**
+	 * @var ilOrgUnitObjectTypePositionSetting | null
+	 */
+	protected $ps;
+
+	/**
+	 * @var ilObjStudyProgrammeCache | null
+	 */
+	static public $study_programme_cache = null;
 
 	/**
 	 * ATTENTION: After using the constructor the object won't be in the cache.
 	 * This could lead to unexpected behaviour when using the tree navigation.
-	 *
-	 * @param int  $a_id
-	 * @param bool $a_call_by_reference
 	 */
-	public function __construct($a_id = 0, $a_call_by_reference = true) {
+	public function __construct(int $a_id = 0, bool $a_call_by_reference = true) {
 		$this->type = "prg";
 		$this->settings = null;
 		$this->settings_repository =
@@ -61,8 +146,6 @@ class ilObjStudyProgramme extends ilContainer {
 			ilStudyProgrammeDIC::dic()['model.AutoMemberships.ilStudyProgrammeAutoMembershipsRepository'];
 		$this->membersourcereader_factory =
 			ilStudyProgrammeDIC::dic()['model.AutoMemberships.ilStudyProgrammeMembershipSourceReaderFactory'];
-
-
 
 		$this->progress_db = ilStudyProgrammeDIC::dic()['ilStudyProgrammeUserProgressDB'];
 		$this->assignment_db = ilStudyProgrammeDIC::dic()['ilStudyProgrammeUserAssignmentDB'];
@@ -118,7 +201,6 @@ class ilObjStudyProgramme extends ilContainer {
 		$this->lp_children = null;
 	}
 
-
 	/**
 	 * Get an instance of ilObjStudyProgramme, use cache.
 	 *
@@ -143,7 +225,6 @@ class ilObjStudyProgramme extends ilContainer {
 		self::$study_programme_cache->addInstance($obj);
 		return $obj;
 	}
-
 
 	////////////////////////////////////
 	// CRUD
@@ -216,14 +297,12 @@ class ilObjStudyProgramme extends ilContainer {
 		$this->readSettings();
 	}
 
-
 	public function create() {
 		$id = parent::create();
 		$this->createSettings();
 
 		return $id;
 	}
-
 
 	public function update() {
 		parent::update();
@@ -1042,31 +1121,34 @@ class ilObjStudyProgramme extends ilContainer {
 		}
 		$ass_mod = $this->assignment_repository->createFor($this->settings->getObjId(), $a_usr_id, $a_assigning_usr_id);
 		$ass = $this->assignment_db->getInstanceByModel($ass_mod);
-		$this->applyToSubTreeNodes(function(ilObjStudyProgramme $node) use ($ass_mod, $a_assigning_usr_id) {
-			$progress = $node->createProgressForAssignment($ass_mod);
-			if ($node->getStatus() != ilStudyProgrammeSettings::STATUS_ACTIVE) {
-				$this->progress_repository->update(
-					$progress->setStatus(ilStudyProgrammeProgress::STATUS_NOT_RELEVANT)
-				);
-			} else {
-				$deadline_date = null;
-				if($deadline_date = $node->getDeadlineDate()) {
+		$this->applyToSubTreeNodes(
+			function(ilObjStudyProgramme $node) use ($ass_mod, $a_assigning_usr_id) {
+				$progress = $node->createProgressForAssignment($ass_mod);
+				if ($node->getStatus() != ilStudyProgrammeSettings::STATUS_ACTIVE) {
 					$this->progress_repository->update(
-						$progress->setDeadline($deadline_date)
+						$progress->setStatus(ilStudyProgrammeProgress::STATUS_NOT_RELEVANT)
 					);
+				} else {
+					$deadline_date = null;
+					if($deadline_date = $node->getDeadlineDate()) {
+						$this->progress_repository->update(
+							$progress->setDeadline($deadline_date)
+						);
+					}
+					if($deadline_period = $node->getDeadlinePeriod()) {
+						$deadline_date = new DateTime();
+						$deadline_date->add(new DateInterval('P'.$deadline_period.'D'));
+						$this->progress_repository->update(
+							$progress->setDeadline($deadline_date)
+						);
+					}
+					if($deadline_date) {
+						$this->progress_db->getInstanceById($progress->getId())->recalculateFailedToDeadline();
+					}
 				}
-				if($deadline_period = $node->getDeadlinePeriod()) {
-					$deadline_date = new DateTime();
-					$deadline_date->add(new DateInterval('P'.$deadline_period.'D'));
-					$this->progress_repository->update(
-						$progress->setDeadline($deadline_date)
-					);
-				}
-				if($deadline_date) {
-					$this->progress_db->getInstanceById($progress->getId())->recalculateFailedToDeadline();
-				}
-			}
-		},true);
+			},
+			true
+		);
 
 		$this->events->userAssigned($ass);
 
@@ -1839,6 +1921,37 @@ class ilObjStudyProgramme extends ilContainer {
 		}
 		return $possible_subobjects;
 	}
-}
 
-?>
+	public static function sendReAssignedMail(int $ref_id, int $usr_id) : bool
+	{
+		global $DIC;
+		$lng = $DIC['lng'];
+		$lng->loadLanguageModule("prg");
+		$senderFactory = $DIC["mail.mime.sender.factory"];
+
+		$prg = ilObjStudyProgramme::getInstanceByRefId($ref_id);
+
+		$mail = new ilMimeMail();
+		$mail->From($senderFactory->system());
+
+		$mailOptions = new \ilMailOptions($usr_id);
+		$mail->To($mailOptions->getExternalEmailAddresses());
+
+		$subject = $lng->txt("re_assigned_mail_subject");
+		$mail->Subject($subject);
+
+        $gender = ilObjUser::_lookupGender($usr_id);
+        $name = ilObjUser::_lookupFullname($usr_id);
+
+		$body = sprintf(
+			$lng->txt("re_assigned_mail_body"),
+            $lng->txt("mail_salutation_".$gender),
+            $name,
+            $prg->getTitle()
+		);
+		$mail->Body($body);
+
+		return $mail->Send();
+	}
+
+}

@@ -2,10 +2,29 @@
 
 class ilPrgRestartAssignmentsCronJob extends ilCronJob
 {
-	protected $user_progress_db;
+	/**
+	 * @var ilStudyProgrammeUserAssignmentDB
+	 */
+	protected $user_assignments_db;
 
-	public function __construct()
-	{
+	/**
+	 * @var ilObjUser
+	 */
+	protected $usr;
+
+	/**
+	 * @var ilLog
+	 */
+	protected $log;
+
+	/**
+	 * @var ilLanguage
+	 */
+	protected $lng;
+
+	public function __construct(
+
+	) {
 		global $DIC;
 
 		$this->user_assignments_db = ilStudyProgrammeDIC::dic()['ilStudyProgrammeUserAssignmentDB'];

@@ -176,7 +176,8 @@ class ilStudyProgrammeDIC
 				$dic['model.Assignment.ilStudyProgrammeAssignmentRepository'],
 				$dic['model.Progress.ilStudyProgrammeProgressRepository'],
 				$DIC['tree'],
-				$DIC['ilLog']
+				$DIC['ilLog'],
+                $DIC['ilAppEventHandler']
 			);
 		};
 		$dic['ilOrgUnitObjectTypePositionSetting'] = function($dic) {
