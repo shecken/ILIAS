@@ -15817,3 +15817,11 @@ prg#:#restart_period_info#:#Automatische Wiederaufnahme vor Ablauf der Qualifika
 prg#:#access_ctr_by_orgu_position#:#Berechtigungen anhand Positionen in Organisationseinheiten
 prg#:#could_not_add_users_no_permissons#:#Konnte %d Benutzer wegen mangelnder Berechtigung nicht hinzufügen.
 prg#:#not_a_valid_cat_id#:#%s entspricht keiner Kategorie.
+prg#:#re_assigned_mail_subject#:#Erneute Teilnahme am Studienprogramm
+prg#:#re_assigned_mail_body#:#%s %s,<br \><br \>Sie wurden erneut dem Studienprogramm '%s' als Teilnehmer zugeordnet.
+prg#:#info_to_re_assign_mail_subject#:#Erinnerung zur erneuten Teilnahme am Studienprogramm
+prg#:#info_to_re_assign_mail_body#:#%s %s,<br \><br \>Die Gültigekeit ihrer Teilnahme am Studienprogramm '%s' läuft bald ab. Bitte melden Sie sich erneut an.
+prg#:#prg_user_not_restarted_time_input#:#Erinnerungsmail Neustart
+prg#:#prg_user_not_restarted_time_input_info#:#Erinnert den Benutzer x Tage vor der invalidierung, dass er das Programm neu starten muss.
+prg#:#prg_processing_ends_no_success#:#Erinnerungsmail Fehlschlag
+prg#:#prg_processing_ends_no_success_info#:#Erinnert den Benutzer x Tage vor Ablauf des Programms, dass er gefährdet ist nicht zu bestehen.
