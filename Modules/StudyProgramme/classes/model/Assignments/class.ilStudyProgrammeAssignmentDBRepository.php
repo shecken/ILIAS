@@ -155,6 +155,49 @@ implements ilStudyProgrammeAssignmentRepository
 		$this->deleteDB($assignment->getId());
 	}
 
+    /**
+     * @throws ilException
+     */
+	public function getDashboardInstancesforUser(int $usr_id)
+    {
+        global $DIC;
+        $db = $DIC['ilDB'];
+
+        $q = 'SELECT '.self::FIELD_ID
+            .', '.self::FIELD_USR_ID
+            .', '.self::FIELD_ROOT_PRG_ID
+            .', '.self::FIELD_LAST_CHANGE
+            .', '.self::FIELD_LAST_CHANGE_BY
+            .', '.self::FIELD_RESTART_DATE
+            .', '.self::FIELD_RESTARTED_ASSIGNMENT_ID
+            .' FROM '.self::TABLE
+            .' WHERE '.self::FIELD_USR_ID .' = '.$usr_id
+            .' ORDER BY '.self::FIELD_ROOT_PRG_ID.', '.self::FIELD_ID
+        ;
+
+        $ret = [];
+        $assignments = [];
+        $res = $db->query($q);
+        $prg = 0;
+        while($row = $db->fetchAssoc($res)) {
+            if($prg == 0) {
+                $prg = $row['root_prg_id'];
+            }
+
+            if($prg != $row['root_prg_id']) {
+                $ret[$prg] = $assignments;
+                $prg = $row['root_prg_id'];
+                $assignments = [];
+            }
+            $assignments[(int)$row['id']] = $this->assignmentByRow($row);
+        }
+
+        $ret[$prg] = $assignments;
+
+        return $ret;
+    }
+
+
 	protected function assignmentByRow(array $row) : ilStudyProgrammeAssignment
 	{
 		return (new ilStudyProgrammeAssignment($row[self::FIELD_ID]))

@@ -15812,3 +15812,9 @@ prg#:#could_not_add_users_no_permissons#:#Could not assign %d Users due to lacki
 prg#:#not_a_valid_cat_id#:#%s is not a valid ref-id of a category.
 prg#:#prg_mail_permanent_link#:#Click on the following link to find all of the information you need regarding the study programm:
 prg#:#prg_title#:#Title
+prg#:#prg_dash_label_valid#:#Valid:
+prg#:#prg_dash_label_minimum#:#Minimum Completion:
+prg#:#prg_dash_label_gain#:#Current Completion:
+prg#:#prg_dash_label_status#:#Status:
+prg#:#prg_dash_label_finish_until#:#Finish until:
+prg#:#prg_dash_label_restart_from#:#Restart from:

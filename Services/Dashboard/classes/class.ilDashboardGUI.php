@@ -882,13 +882,15 @@ class ilDashboardGUI
 	 */
 	protected function renderStudyProgrammes()
 	{
-		$st_block = new ilPDStudyProgrammeSimpleListGUI();
-		$html = $st_block->getHTML();
-		if ($html == "") {
-			$st_block = new ilPDStudyProgrammeExpandableListGUI();
-			$html = $st_block->getHTML();
+		return "";
+		try{
+			$st_block = new ilStudyProgrammeDashboardViewGUI();
+			return $st_block->getHTML();
+		} catch( Exception $e) {
+			$this->log->error($e->getMessage());
 		}
-		return $html;
+
+		return "";
 	}
 
 	/**

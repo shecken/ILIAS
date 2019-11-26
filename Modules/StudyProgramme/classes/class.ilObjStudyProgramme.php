@@ -1244,7 +1244,7 @@ class ilObjStudyProgramme extends ilContainer {
 	 *
 	 * @throws ilException
 	 * @param int $a_assignment_id
-	 * @return ilStudyProgrammUserProgress
+	 * @return ilStudyProgrammeUserProgress
 	 */
 	public function getProgressForAssignment($a_assignment_id) {
 		return $this->progress_db->getInstanceForAssignment($this->getId(), $a_assignment_id);
@@ -1752,7 +1752,7 @@ class ilObjStudyProgramme extends ilContainer {
 	 *
 	 * ATTENTION: Only use the model object if you know what you are doing.
 	 *
-	 * @return ilStudyProgramme
+	 * @return ilStudyProgrammeSettings
 	 */
 	public function getRawSettings() {
 		return $this->settings;
