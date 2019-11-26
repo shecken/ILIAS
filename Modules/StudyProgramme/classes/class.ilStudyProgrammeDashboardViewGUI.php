@@ -99,11 +99,12 @@ class ilStudyProgrammeDashboardViewGUI extends ilBlockGUI {
     public function getDataSectionContent() {
         $content = "";
         $this->il_lng->loadLanguageModule('prg');
+        $tpl = new ilTemplate('tpl.dashboard_view.html', false, false, "Modules/StudyProgramme");
         foreach ($this->users_assignments as $assignments) {
             /** @var ilStudyProgrammeUserAssignment $assignment */
             foreach ($assignments as $assignment) {
                 if(!$this->isReadable($assignment)) {
-                    continue;
+                    continue 2;
                 }
             }
             ksort($assignments);
@@ -133,9 +134,42 @@ class ilStudyProgrammeDashboardViewGUI extends ilBlockGUI {
             $current_percents = $max_points / 100 * $current_progress->getAmountOfPoints();
 
             $deadline = $current_prg_settings->getDeadlineDate();
+            $restart_date = $current->getRestartDate();
+            $valid = true;
+
+            if($this->doesNotExpireIsValidAndInProgress($validation_expires, $valid, $current_status)) {
+                $content .= $this->printNotExpireIsValidAndInProgress($tpl);
+            }
+
+            if($this->doesNotExpireIsValidAndCompleted($validation_expires, $valid, $current_status)) {
+                $content .= $this->printNotExpireIsValidAndCompleted($tpl);
+            }
+
+            if($this->doesNotExpireIsNotValidAndInProgress($validation_expires, $valid, $current_status)) {
+                $content .= $this->printNotExpireIsNotValidAndInProgress($tpl);
+            }
+
+            if($this->doesNotExpireIsNotValidAndCompleted($validation_expires, $valid, $current_status)) {
+                $content .= $this->printNotExpireIsNotValidAndCompleted($tpl);
+            }
+
+            if($this->doesExpireIsValidAndInProgress($validation_expires, $valid, $current_status)) {
+                $content .= $this->printExpireIsValidAndInProgress($tpl);
+            }
+
+            if($this->doesExpireIsValidAndCompleted($validation_expires, $valid, $current_status)) {
+                $content .= $this->printExpireIsValidAndCompleted($tpl);
+            }
+
+            if($this->doesExpireIsNotValidAndInProgress($validation_expires, $valid, $current_status)) {
+                $content .= $this->printExpireIsNotValidAndInProgress($tpl);
+            }
+
+            if($this->doesExpireIsNotValidAndCompleted($validation_expires, $valid, $current_status)) {
+                $content .= $this->printExpireIsNotValidAndCompleted($tpl);
+            }
 
 
-            $tpl = new ilTemplate('tpl.dashboard_view.html', false, false, "Modules/StudyProgramme");
             $tpl->setVariable('LABEL_VALID', $this->txt('prg_dash_label_valid'));
             $tpl->setVariable('LABEL_MINIMUM', $this->txt('prg_dash_label_minimum'));
             $tpl->setVariable('LABEL_GAIN', $this->txt('prg_dash_label_gain'));
@@ -143,11 +177,124 @@ class ilStudyProgrammeDashboardViewGUI extends ilBlockGUI {
 
             $tpl->setVariable('LABEL_FINISH_UNTIL', $this->txt('prg_dash_label_finish_until'));
             $tpl->setVariable('LABEL_RESTART_FROM', $this->txt('prg_dash_label_restart_from'));
-
-            $content .= $tpl->get();
         }
         return $content;
+    }
 
+    protected function doesNotExpireIsValidAndInProgress($validation_expires, $valid, $current_status) : bool
+    {
+        return
+            ! $validation_expires &&
+            $valid &&
+            $current_status == ilStudyProgrammeProgress::STATUS_IN_PROGRESS
+        ;
+    }
+
+    protected function doesNotExpireIsValidAndCompleted($validation_expires, $valid, $current_status) : bool
+    {
+        $status = [ilStudyProgrammeProgress::STATUS_ACCREDITED, ilStudyProgrammeProgress::STATUS_COMPLETED];
+        return
+            ! $validation_expires &&
+            $valid &&
+            in_array($current_status, $status)
+        ;
+    }
+
+    protected function doesNotExpireIsNotValidAndInProgress($validation_expires, $valid, $current_status) : bool
+    {
+        return
+            ! $validation_expires &&
+            ! $valid &&
+            $current_status == ilStudyProgrammeProgress::STATUS_IN_PROGRESS
+        ;
+    }
+
+    protected function doesNotExpireIsNotValidAndCompleted($validation_expires, $valid, $current_status) : bool
+    {
+        $status = [ilStudyProgrammeProgress::STATUS_ACCREDITED, ilStudyProgrammeProgress::STATUS_COMPLETED];
+        return
+            ! $validation_expires &&
+            ! $valid &&
+            in_array($current_status, $status)
+        ;
+    }
+
+    protected function doesExpireIsValidAndInProgress($validation_expires, $valid, $current_status) : bool
+    {
+        return
+            $validation_expires &&
+            $valid &&
+            $current_status == ilStudyProgrammeProgress::STATUS_IN_PROGRESS
+        ;
+    }
+
+    protected function doesExpireIsValidAndCompleted($validation_expires, $valid, $current_status) : bool
+    {
+        $status = [ilStudyProgrammeProgress::STATUS_ACCREDITED, ilStudyProgrammeProgress::STATUS_COMPLETED];
+        return
+            $validation_expires &&
+            $valid &&
+            in_array($current_status, $status)
+        ;
+    }
+
+    protected function doesExpireIsNotValidAndInProgress($validation_expires, $valid, $current_status) : bool
+    {
+        return
+            $validation_expires &&
+            ! $valid &&
+            $current_status == ilStudyProgrammeProgress::STATUS_IN_PROGRESS
+        ;
+    }
+
+    protected function doesExpireIsNotValidAndCompleted($validation_expires, $valid, $current_status) : bool
+    {
+        $status = [ilStudyProgrammeProgress::STATUS_ACCREDITED, ilStudyProgrammeProgress::STATUS_COMPLETED];
+        return
+            $validation_expires &&
+            ! $valid &&
+            in_array($current_status, $status)
+        ;
+    }
+
+    protected function printNotExpireIsValidAndInProgress(ilGlobalTemplateInterface $tpl) : string
+    {
+        return $tpl->get();
+    }
+
+    protected function printNotExpireIsValidAndCompleted(ilGlobalTemplateInterface $tpl) : string
+    {
+        return $tpl->get();
+    }
+
+    protected function printNotExpireIsNotValidAndInProgress(ilGlobalTemplateInterface $tpl) : string
+    {
+        return $tpl->get();
+    }
+
+    protected function printNotExpireIsNotValidAndCompleted(ilGlobalTemplateInterface $tpl) : string
+    {
+        return $tpl->get();
+    }
+
+    protected function printExpireIsValidAndInProgress(ilGlobalTemplateInterface $tpl) : string
+    {
+        return $tpl->get();
+    }
+
+    protected function printExpireIsValidAndCompleted(ilGlobalTemplateInterface $tpl) : string
+    {
+        return $tpl->get();
+    }
+
+    protected function printExpireIsNotValidAndInProgress(ilGlobalTemplateInterface $tpl) : string
+    {
+        return $tpl->get();
+    }
+
+    protected function printExpireIsNotValidAndCompleted(ilGlobalTemplateInterface $tpl) : string
+    {
+        return $tpl->get();
     }
 
     /**
