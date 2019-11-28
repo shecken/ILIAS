@@ -20,7 +20,7 @@ include_once 'Services/UIComponent/AdvancedSelectionList/classes/class.ilAdvance
  * @ilCtrl_Calls ilDashboardGUI: ilPortfolioRepositoryGUI, ilObjChatroomGUI
  * @ilCtrl_Calls ilDashboardGUI: ilMyStaffGUI
  * @ilCtrl_Calls ilDashboardGUI: ilGroupUserActionsGUI, ilAchievementsGUI
- * @ilCtrl_Calls ilDashboardGUI: ilPDSelectedItemsBlockGUI, ilPDMembershipBlockGUI, ilDashboardRecommendedContentGUI
+ * @ilCtrl_Calls ilDashboardGUI: ilPDSelectedItemsBlockGUI, ilPDMembershipBlockGUI, ilDashboardRecommendedContentGUI, ilStudyProgrammeDashboardViewGUI
  *
  */
 class ilDashboardGUI
@@ -76,6 +76,8 @@ class ilDashboardGUI
 	 */
 	protected $action_menu;
 
+	protected $log;
+
 	/**
 	* constructor
 	*/
@@ -96,7 +98,7 @@ class ilDashboardGUI
 		$ilMainMenu = $DIC["ilMainMenu"];
 		$ilUser = $DIC->user();
 		$ilErr = $DIC["ilErr"];
-		
+		$this->log = $DIC['ilLog'];
 		
 		$this->tpl = $tpl;
 		$this->lng = $lng;
@@ -303,7 +305,10 @@ class ilDashboardGUI
 				$gui = new ilDashboardRecommendedContentGUI();
 				$this->ctrl->forwardCommand($gui);
 				break;
-
+			case "ilstudyprogrammedashboardviewgui":
+				$gui = new ilStudyProgrammeDashboardViewGUI();
+				$this->ctrl->forwardCommand($gui);
+				break;
 			default:
 				$this->getStandardTemplates();
 				$this->setTabs();
@@ -831,9 +836,9 @@ class ilDashboardGUI
 
 	/**
 	 * Get main content
-	 * @return string
+	 * @throws ilException
 	 */
-	protected function getMainContent()
+	protected function getMainContent() : string
 	{
 		$tpl = new ilTemplate("tpl.dashboard.html", true, true, "Services/Dashboard");
 		$settings = new ilPDSelectedItemsBlockViewSettings($this->user);
@@ -878,15 +883,14 @@ class ilDashboardGUI
 	/**
 	 * Render study programmes
 	 *
-	 * @return string
+	 * @throws ilException
 	 */
-	protected function renderStudyProgrammes()
+	protected function renderStudyProgrammes() : string
 	{
-		return "";
 		try{
-			$st_block = new ilStudyProgrammeDashboardViewGUI();
+			$st_block = ilStudyProgrammeDIC::dic()['ilStudyProgrammeDashboardViewGUI'];
 			return $st_block->getHTML();
-		} catch( Exception $e) {
+		} catch(ilStudyProgrammeDashboardException $e) {
 			$this->log->error($e->getMessage());
 		}
 

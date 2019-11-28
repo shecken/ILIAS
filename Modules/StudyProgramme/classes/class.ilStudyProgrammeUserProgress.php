@@ -96,7 +96,7 @@ class ilStudyProgrammeUserProgress {
 	/**
 	 * Get the status of the progress.
 	 *
-	 * @return ilStudyProgrammeProgress::$STATUS
+	 * @return int
 	 */
 	public function getStatus() {
 		return $this->progress->getStatus();

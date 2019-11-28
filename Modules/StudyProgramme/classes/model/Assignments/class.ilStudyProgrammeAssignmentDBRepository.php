@@ -192,7 +192,9 @@ implements ilStudyProgrammeAssignmentRepository
             $assignments[(int)$row['id']] = $this->assignmentByRow($row);
         }
 
-        $ret[$prg] = $assignments;
+        if(count($assignments) > 0) {
+            $ret[$prg] = $assignments;
+        }
 
         return $ret;
     }

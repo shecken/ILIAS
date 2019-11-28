@@ -110,7 +110,7 @@ class ilStudyProgrammeSettings{
 
 	/**
 	 * The date, before which a user has to finish the prg, before he/she automaticaly fails.
-	 * @var int | DateTime
+	 * @var DateTime | null
 	 */
 	protected $deadline_date = null;
 
@@ -415,6 +415,12 @@ class ilStudyProgrammeSettings{
 	public function getAccessControlByOrguPositions() : bool
 	{
 		return $this->access_ctrl_positions;
+	}
+
+	public function validationExpires() : bool
+	{
+		return ! is_null($this->getValidityOfQualificationDate()) ||
+                $this->getValidityOfQualificationPeriod() != -1;
 	}
 }
 
