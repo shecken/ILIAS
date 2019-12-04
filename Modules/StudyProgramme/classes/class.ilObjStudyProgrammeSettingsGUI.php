@@ -321,6 +321,7 @@ class ilObjStudyProgrammeSettingsGUI
 	                    $prg_processing_ends_not_successful_days = $values[5][self::PROP_SEND_RISKY_TO_FAIL_MAIL][0];
 						$prg->setProcessingEndsNotSuccessfulDays($prg_processing_ends_not_successful_days);
 					}
+
 					$prg->setSendReAssignedMail($send_re_assigned_mail);
 					$prg->setSendInfoToReAssignMail($send_info_to_re_assign_mail);
 					$prg->setSendRiskyToFailMail($send_risky_to_fail_mail);
@@ -541,6 +542,7 @@ class ilObjStudyProgrammeSettingsGUI
 			)
 			->withValue($prg->shouldSendReAssignedMail())
 		;
+
 		$send_info_to_re_assign_mail = $ff->optionalGroup(
 				[ $prg_not_restarted_input
 				],

@@ -15953,3 +15953,9 @@ prg#:#prg_update_expire_date#:#Ablauf Qualifikation erfolgreich aktualisiert.
 prg#:#update_deadline#:#Stichtag erfolgreich aktualisiert.
 prg#:#error_updating_expire_date#:#Ein Fehler ist während der Aktualisierung von 'Ablauf Qualifikation' aufgetreten.
 prg#:#error_updating_deadline#:#Ein Fehler ist während der Aktualisierung von 'Stichtag' aufgetreten.
+prg#:#send_re_assigned_mail#:#E-Mail erneute Teilnahme
+prg#:#send_re_assigned_mail_info#:#Versende eine E-Mail, bei einer automatischen erneuten Teilnahme am Sudienprogramm.
+prg#:#send_info_to_re_assign_mail#:#E-Mail Erinnerung Neustart
+prg#:#send_info_to_re_assign_mail_info#:#Versende eine E-Mail um den Benutzer daran zu erinnern das Studienprogramm neu zu starten.
+prg#:#send_risky_to_fail_mail#:#E-Mail bei Fehlschlag
+prg#:#send_risky_to_fail_mail_info#:#Versende eine E-Mail, wenn dem Benutzer ein Fehlschlag des Studienprogramms droht.

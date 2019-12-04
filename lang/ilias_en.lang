@@ -15936,3 +15936,9 @@ prg#:#update_expire_date#:#Successfuly update expire date.
 prg#:#update_deadline#:#Successfuly update deadline.
 prg#:#error_updating_expire_date#:#Error during updating expire date.
 prg#:#error_updating_deadline#:#Error during updating deadline.
+prg#:#send_re_assigned_mail#:#E-mail renewed participation
+prg#:#send_re_assigned_mail_info#:#Send an e-mail to automatically re-join the sudy program.
+prg#:#send_info_to_re_assign_mail#:#E-mail reminder restart
+prg#:#send_info_to_re_assign_mail_info#:#Send an e-mail to remind the user to restart the study program.
+prg#:#send_risky_to_fail_mail#:#E-mail in case of failure
+prg#:#send_risky_to_fail_mail_info#:#Send an e-mail if the user is at risk of failure of the study program.
