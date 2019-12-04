@@ -15942,3 +15942,14 @@ prg#:#send_info_to_re_assign_mail#:#E-mail reminder restart
 prg#:#send_info_to_re_assign_mail_info#:#Send an e-mail to remind the user to restart the study program.
 prg#:#send_risky_to_fail_mail#:#E-mail in case of failure
 prg#:#send_risky_to_fail_mail_info#:#Send an e-mail if the user is at risk of failure of the study program.
+prg#:#select_crs#:#Search for Courses
+prg#:#select_grp#:#Search for Groups
+prg#:#select_role#:#Search for Roles
+prg#:#select_org#:#Search for Organisational Unit
+prg#:#label_crs#:#Course Name
+prg#:#label_grp#:#Group Name
+prg#:#label_role#:#Role Name
+prg#:#modal_member_auto_select_title#:#Select Source for auto assignment
+prg#:#prg_auto_member_select_crs#:#Courses
+prg#:#prg_auto_member_select_grp#:#Groups
+prg#:#prg_auto_member_select_role#:#Roles

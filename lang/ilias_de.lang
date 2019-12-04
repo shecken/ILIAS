@@ -15959,3 +15959,14 @@ prg#:#send_info_to_re_assign_mail#:#E-Mail Erinnerung Neustart
 prg#:#send_info_to_re_assign_mail_info#:#Versende eine E-Mail um den Benutzer daran zu erinnern das Studienprogramm neu zu starten.
 prg#:#send_risky_to_fail_mail#:#E-Mail bei Fehlschlag
 prg#:#send_risky_to_fail_mail_info#:#Versende eine E-Mail, wenn dem Benutzer ein Fehlschlag des Studienprogramms droht.
+prg#:#select_crs#:#Nach Kursen suchen
+prg#:#select_grp#:#Nach Gruppen suchen
+prg#:#select_role#:#Nach Rollen suchen
+prg#:#select_org#:#Nach Organisationseinheiten suchen
+prg#:#label_crs#:#Kursname
+prg#:#label_grp#:#Gruppenname
+prg#:#label_role#:#Rollenname
+prg#:#modal_member_auto_select_title#:#Quelle für automatische Zuweisung wählen
+prg#:#prg_auto_member_select_crs#:#Kurse
+prg#:#prg_auto_member_select_grp#:#Gruppen
+prg#:#prg_auto_member_select_role#:#Rollen
